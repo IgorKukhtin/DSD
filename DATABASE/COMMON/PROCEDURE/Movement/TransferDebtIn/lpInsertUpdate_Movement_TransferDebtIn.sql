@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_Movement_TransferDebtIn()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtIn (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtIn (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (приход)>
@@ -18,7 +20,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtIn(
     IN inPaidKindToId        Integer   , -- Виды форм оплаты
     IN inContractFromId      Integer   , -- Договора
     IN inContractToId        Integer   , -- Договора
-    IN inPartnerId           Integer   , -- Контрагент
+    IN inPartnerId           Integer   , -- Контрагент кому
+    IN inPartnerFromId       Integer   , -- Контрагент от кого
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -110,6 +113,9 @@ BEGIN
      -- сохранили связь с <Контрагент>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
 
+     -- сохранили связь с <Контрагент>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartnerFrom(), ioId, inPartnerFromId);
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
@@ -123,6 +129,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 02.02.16         * add inPartnerFromId
  01.12.14         * add InvNumberMark
  03.09.14         * add inChecked
  20.06.14                                                       * add InvNumberPartner

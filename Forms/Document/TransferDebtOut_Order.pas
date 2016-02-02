@@ -116,6 +116,9 @@ type
     actPrint_TTN: TdsdPrintAction;
     mactPrint_TTN: TMultiAction;
     bbPrint_TTN: TdxBarButton;
+    cxLabel19: TcxLabel;
+    edPartnerFrom: TcxButtonEdit;
+    GuidesPartnerFrom: TdsdGuides;
   private
     { Private declarations }
   public

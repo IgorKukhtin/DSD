@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarCh
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 
 
@@ -23,7 +24,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtOut(
     IN inPaidKindToId        Integer   , -- Виды форм оплаты
     IN inContractFromId      Integer   , -- Договора
     IN inContractToId        Integer   , -- Договора
-    IN inPartnerId           Integer   , -- Контрагент
+    IN inPartnerId           Integer   , -- Контрагент (кому)
+    IN inPartnerFromId       Integer   , -- Контрагент (от кого)
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -85,8 +87,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindTo(), ioId, inPaidKindToId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractTo(), ioId, inContractToId);
-     -- сохранили связь с <Контрагент>
+     -- сохранили связь с <Контрагент (кому)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
+     -- сохранили связь с <Контрагент (от кого)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartnerFrom(), ioId, inPartnerFromId);
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -101,6 +106,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 02.02.16         * add inPartnerFromId
  17.12.14         * add inInvNumberOrder
  03.09.14         * add inChecked
  20.06.14                                                       * add InvNumberPartner

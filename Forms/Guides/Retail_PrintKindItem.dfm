@@ -598,7 +598,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       end>
     Params = <
       item
-        Name = 'IdBranchId'
+        Name = 'inBranchId'
         Value = Null
         Component = GuidesBranch
         ComponentItem = 'Key'

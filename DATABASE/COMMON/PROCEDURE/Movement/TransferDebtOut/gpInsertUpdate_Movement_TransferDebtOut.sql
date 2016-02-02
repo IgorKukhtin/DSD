@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
@@ -22,7 +22,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
     IN inContractToId        Integer   , -- Договор (кому)
     IN inPaidKindFromId      Integer   , -- Виды форм оплаты (от кого)
     IN inPaidKindToId        Integer   , -- Виды форм оплаты (кому)
-    IN inPartnerId           Integer   , -- Контрагент
+    IN inPartnerId           Integer   , -- Контрагент (кому)
+    IN inPartnerfromId       Integer   , -- Контрагент (от кого)
     IN inDocumentTaxKindId_inf Integer  , -- Тип формирования налогового документа
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
@@ -58,6 +59,7 @@ BEGIN
                                                    , inContractFromId   := inContractFromId
                                                    , inContractToId     := inContractToId
                                                    , inPartnerId        := inPartnerId
+                                                   , inPartnerFromId        := inPartnerFromId
                                                    , inUserId           := vbUserId
                                                     );
      -- Комментарий

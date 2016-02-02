@@ -143,6 +143,9 @@ type
     ceComment: TcxTextEdit;
     actOpenTax: TdsdOpenForm;
     bbOpenTax: TdxBarButton;
+    cxLabel19: TcxLabel;
+    edPartnerFrom: TcxButtonEdit;
+    GuidesPartnerFrom: TdsdGuides;
   private
     { Private declarations }
   public

@@ -10,17 +10,17 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Width = 1043
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1073
+    ExplicitWidth = 1043
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1043
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
+      ExplicitWidth = 1043
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1043
         Height = 478
-        ExplicitWidth = 1073
+        ExplicitWidth = 1043
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -175,6 +175,21 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object colPartnerFromCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1086#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'PartnerFromCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object colPartnerFromName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1086#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'PartnerFromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
@@ -191,7 +206,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
             Width = 40
           end
           object colPartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -459,7 +474,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   end
   inherited Panel: TPanel
     Width = 1043
-    ExplicitWidth = 1073
+    ExplicitWidth = 1043
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end

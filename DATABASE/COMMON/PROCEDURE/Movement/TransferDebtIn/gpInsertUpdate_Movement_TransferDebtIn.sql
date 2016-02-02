@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
@@ -19,7 +21,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtIn(
     IN inContractToId        Integer   , -- Договор (кому)
     IN inPaidKindFromId      Integer   , -- Виды форм оплаты (от кого)
     IN inPaidKindToId        Integer   , -- Виды форм оплаты (кому)
-    IN inPartnerId           Integer   , -- Контрагент
+    IN inPartnerId           Integer   , -- Контрагент кому
+    IN inPartnerFromId       Integer   , -- Контрагент от кого
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -47,6 +50,7 @@ BEGIN
                                                   , inContractFromId   := inContractFromId
                                                   , inContractToId     := inContractToId
                                                   , inPartnerId        := inPartnerId
+                                                  , inPartnerFromId    := inPartnerFromId
                                                   , inUserId           := vbUserId
                                                    ) AS tmp;
 
@@ -60,6 +64,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 02.02.16         * add inPartnerFromId
  01.12.14         * add inInvNumberMark               
  03.09.14         * add inChecked
  20.06.14                                                       * add InvNumberPartner
