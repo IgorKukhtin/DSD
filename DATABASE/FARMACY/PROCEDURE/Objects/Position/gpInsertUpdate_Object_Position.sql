@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Position()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position(Integer,Integer,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Position(
  INOUT ioId	             Integer   ,    -- ключ объекта <Должности> 
