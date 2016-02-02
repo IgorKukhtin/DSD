@@ -50,6 +50,7 @@ type
     actSPPrintProcNameReturnIn: TdsdExecStoredProc;
     spGetReportNameReturnIn: TdsdStoredProc;
     bbPrintReturnIn: TdxBarButton;
+    clBranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public
