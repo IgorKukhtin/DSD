@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PrintKindItem (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean);
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PrintKindItem (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PrintKindItem (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat);
+
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PrintKindItem(
     IN inIsMovement      Boolean,   -- Накладная
@@ -11,13 +13,15 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Object_PrintKindItem(
     IN inIsPack          Boolean,   -- Упаковочный
     IN inIsSpec          Boolean,   -- Спецификация
     IN inIsTax           Boolean,   -- Налоговая
+    IN inIsTransportBill Boolean,   -- Транспортная
     IN inCountMovement   TFloat,   -- Накладная
     IN inCountAccount    TFloat,   -- Счет
     IN inCountTransport  TFloat,   -- ТТН
     IN inCountQuality    TFloat,   -- Качественное
     IN inCountPack       TFloat,   -- Упаковочный
     IN inCountSpec       TFloat,   -- Спецификация
-    IN inCountTax        TFloat    -- Налоговая
+    IN inCountTax        TFloat,   -- Налоговая
+    IN inCountTransportBill TFloat -- Транспортная
 )
 RETURNS Integer
 AS
@@ -36,6 +40,7 @@ BEGIN
                          UNION ALL SELECT zc_Enum_PrintKind_Pack()      :: TVarChar || '+' || CASE WHEN inCountPack      > 0 THEN inCountPack      ELSE 1 END :: TVarChar AS ValueId WHERE inIsPack = TRUE
                          UNION ALL SELECT zc_Enum_PrintKind_Spec()      :: TVarChar || '+' || CASE WHEN inCountSpec      > 0 THEN inCountSpec      ELSE 1 END :: TVarChar AS ValueId WHERE inIsSpec = TRUE
                          UNION ALL SELECT zc_Enum_PrintKind_Tax()       :: TVarChar || '+' || CASE WHEN inCountTax       > 0 THEN inCountTax       ELSE 1 END :: TVarChar AS ValueId WHERE inIsTax = TRUE
+                         UNION ALL SELECT zc_Enum_PrintKind_TransportBill() :: TVarChar || '+' || CASE WHEN inCountTransportBill > 0 THEN inCountTransportBill ELSE 1 END :: TVarChar AS ValueId WHERE inIsTransportBill = TRUE
                                   ) AS tmp
                          ORDER BY tmp.ValueId
                         ) AS tmp
@@ -64,6 +69,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.16         * add TransportBill
  20.05.15                                        *
 */
 

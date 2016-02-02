@@ -43,6 +43,22 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceGoodsProperty
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -58,50 +74,6 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
-      end
-      object GLNCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' GLN '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
-        DataBinding.FieldName = 'GLNCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object GLNCodeCorporate: TcxGridDBColumn
-        Caption = #1050#1086#1076' GLN '#1055#1086#1089#1090#1072#1074#1097#1080#1082' '
-        DataBinding.FieldName = 'GLNCodeCorporate'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object GoodsPropertyName: TcxGridDBColumn
-        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsPropertyName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceGoodsProperty
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object clOperDateOrder: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1103#1074#1082#1080
-        DataBinding.FieldName = 'OperDateOrder'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
       end
       object isMovement: TcxGridDBColumn
         Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -246,10 +218,46 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         Options.Editing = False
         Width = 68
       end
+      object isTransportBill: TcxGridDBColumn
+        Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
+        DataBinding.FieldName = 'isTransportBill'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountTransportBill: TcxGridDBColumn
+        Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountTransportBill'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object cxLabel6: TcxLabel
+    Left = 642
+    Top = 134
+    Caption = #1060#1080#1083#1080#1072#1083':'
+  end
+  object edBranch: TcxButtonEdit
+    Left = 694
+    Top = 133
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 236
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -327,6 +335,18 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         end
         item
           Visible = True
+          ItemName = 'bbBranchLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBranch'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -397,6 +417,20 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
       Category = 0
+    end
+    object bbBranchLabel: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbBranch: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edBranch
     end
   end
   object ActionList: TActionList
@@ -562,7 +596,14 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'IdBranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 144
     Top = 152
@@ -628,6 +669,27 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         ParamType = ptInputOutput
       end
       item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outBranchName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BranchName'
+        DataType = ftString
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
         Name = 'ioisMovement'
         Value = Null
         Component = ClientDataSet
@@ -680,6 +742,14 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isTax'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioisTransportBill'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isTransportBill'
         DataType = ftBoolean
         ParamType = ptInputOutput
       end
@@ -738,9 +808,61 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         ComponentItem = 'CountTax'
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountTransportBill'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountTransportBill'
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     PackSize = 1
     Left = 392
     Top = 120
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
+      end>
+    Left = 768
+    Top = 120
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesBranch
+      end
+      item
+        Component = edBranch
+      end>
+    Left = 400
+    Top = 168
   end
 end

@@ -21,7 +21,8 @@ uses
   dxSkinsdxBarPainter, dsdDB, Datasnap.DBClient, dsdAddOn, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter, cxButtonEdit, cxCurrencyEdit;
+  cxGrid, cxSplitter, cxButtonEdit, cxCurrencyEdit, cxContainer, dsdGuides,
+  cxTextEdit, cxMaskEdit, cxLabel;
 
 type
   TJuridical_PrintKindItemForm = class(TParentForm)
@@ -92,6 +93,11 @@ type
     isPack: TcxGridDBColumn;
     isSpec: TcxGridDBColumn;
     isTax: TcxGridDBColumn;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
+    bbBranchLabel: TdxBarControlContainerItem;
+    bbBranch: TdxBarControlContainerItem;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
