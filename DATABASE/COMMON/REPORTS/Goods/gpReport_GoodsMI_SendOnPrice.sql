@@ -206,10 +206,10 @@ BEGIN
 
            -- 1.1. вес, без AnalyzerId, т.е. это со склада, на транзит, с транзита
          , (tmpOperationGroup.OperCount_real) :: TFloat AS OperCount_total
-         , ((tmpOperationGroup.OperCount_real     - tmpOperationGroup.OperCount_Change          + tmpOperationGroup.OperCount_40200          * -1)) :: TFloat AS OperCount_real
-         , ((tmpOperationGroup.OperCount_110000_A - tmpOperationGroup.OperCount_Change_110000_A + tmpOperationGroup.OperCount_40200_110000_A * -1)) :: TFloat AS OperCount_110000_A
-         , ((tmpOperationGroup.OperCount_110000_P - tmpOperationGroup.OperCount_Change_110000_P + tmpOperationGroup.OperCount_40200_110000_P * -1)) :: TFloat AS OperCount_110000_P
-         , ((tmpOperationGroup.OperCount          - tmpOperationGroup.OperCount_Change_real     + tmpOperationGroup.OperCount_40200_real     * -1)) :: TFloat AS OperCount
+         , ((tmpOperationGroup.OperCount_real     - tmpOperationGroup.OperCount_Change          + tmpOperationGroup.OperCount_40200          * 1)) :: TFloat AS OperCount_real
+         , ((tmpOperationGroup.OperCount_110000_A - tmpOperationGroup.OperCount_Change_110000_A + tmpOperationGroup.OperCount_40200_110000_A * 1)) :: TFloat AS OperCount_110000_A
+         , ((tmpOperationGroup.OperCount_110000_P - tmpOperationGroup.OperCount_Change_110000_P + tmpOperationGroup.OperCount_40200_110000_P * 1)) :: TFloat AS OperCount_110000_P
+         , ((tmpOperationGroup.OperCount          - tmpOperationGroup.OperCount_Change_real     + tmpOperationGroup.OperCount_40200_real     * 1)) :: TFloat AS OperCount
 
            -- 2.1. вес - Скидка за вес
          , (tmpOperationGroup.OperCount_Change)          :: TFloat AS OperCount_Change
@@ -240,9 +240,9 @@ BEGIN
          , (tmpOperationGroup.SummIn_real)                                        :: TFloat AS SummIn_branch_total  -- склад (итог: с потерями и скидкой) Себестоимость филиальная (для подразделений завода здесь заводская)
          , (tmpOperationGroup.SummIn_real + tmpOperationGroup.SummIn_60000)       :: TFloat AS SummIn_zavod_total   -- склад (итог: с потерями и скидкой) Себестоимость к заводская
 
-         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * -1) :: TFloat AS SummIn_branch_real   -- филиальная (для подразделений завода здесь заводская)
-         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * -1
-          + tmpOperationGroup.SummIn_60000 - tmpOperationGroup.SummIn_Change_60000 + tmpOperationGroup.SummIn_40200_60000 * -1) :: TFloat AS SummIn_zavod_real    -- к филиальной добавили заводскую
+         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * 1) :: TFloat AS SummIn_branch_real   -- филиальная (для подразделений завода здесь заводская)
+         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * 1
+          + tmpOperationGroup.SummIn_60000 - tmpOperationGroup.SummIn_Change_60000 + tmpOperationGroup.SummIn_40200_60000 * 1) :: TFloat AS SummIn_zavod_real    -- к филиальной добавили заводскую
 
          , (tmpOperationGroup.SummIn_110000_A + tmpOperationGroup.SummIn_60000_A) :: TFloat AS SummIn_110000_A -- здесь уже филиальная + заводская
          , (tmpOperationGroup.SummIn_110000_P + tmpOperationGroup.SummIn_60000_P) :: TFloat AS SummIn_110000_P -- здесь уже филиальная + заводская
@@ -384,7 +384,9 @@ BEGIN
                                   ELSE 0
                              END) AS SummIn
                         -- 1.3. Сумма***, без AnalyzerId (на самом деле для OperCount_Partner)
-                      , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200()
+                      , SUM (CASE WHEN MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()
+                                       THEN -1 * MIContainer.Amount
+                                  WHEN MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101() AND MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummOut_Partner_60000

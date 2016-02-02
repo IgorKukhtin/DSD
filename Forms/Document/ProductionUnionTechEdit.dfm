@@ -38,7 +38,7 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 169
+    Width = 173
   end
   object ceRealWeight: TcxCurrencyEdit [4]
     Left = 8
@@ -112,22 +112,22 @@
     Width = 115
   end
   object cxLabel4: TcxLabel [14]
-    Left = 270
+    Left = 268
     Top = 105
-    Caption = #1050#1091#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
+    Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
   end
   object ceСuterCount: TcxCurrencyEdit [15]
-    Left = 270
+    Left = 268
     Top = 125
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 15
-    Width = 80
+    Width = 82
   end
   object cxLabel11: TcxLabel [16]
     Left = 370
     Top = 105
-    Caption = #1050#1091#1090#1077#1088#1086#1074' '#1079#1072#1103#1074#1082#1072
+    Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1079#1072#1103#1074#1082#1072
   end
   object ceСuterCountOrder: TcxCurrencyEdit [17]
     Left = 370
@@ -136,15 +136,15 @@
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 17
-    Width = 85
+    Width = 91
   end
   object cxLabel13: TcxLabel [18]
-    Left = 462
+    Left = 466
     Top = 105
     Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
   end
   object ceAmountOrder: TcxCurrencyEdit [19]
-    Left = 462
+    Left = 466
     Top = 125
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -180,7 +180,7 @@
     Top = 75
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 169
+    Width = 173
   end
   object cxLabel8: TcxLabel [24]
     Left = 370
@@ -198,7 +198,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 25
-    Width = 169
+    Width = 173
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
@@ -227,7 +227,7 @@
       end
       item
         Name = 'OperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -370,7 +370,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'OperDate'
         DataType = ftDateTime

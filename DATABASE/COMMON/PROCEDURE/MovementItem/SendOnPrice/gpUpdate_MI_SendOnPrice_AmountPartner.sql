@@ -10,15 +10,16 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbBranchFromId Integer;
-   DECLARE vbBranchToId Integer;
+   DECLARE vbBranchId_from Integer;
+   DECLARE vbBranchId_to Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendOnPrice_Branch());
 
+
      -- определяем от кого/кому - филиал или нет
-     SELECT COALESCE (ObjectLink_Unit_BranchFrom.ChildObjectId, zc_Branch_Basis()), COALESCE (ObjectLink_Unit_BranchTo.ChildObjectId, zc_Branch_Basis()) --<> zc_Branch_Basis()
-     INTO vbBranchFromId, vbBranchToId
+     SELECT COALESCE (ObjectLink_Unit_BranchFrom.ChildObjectId, zc_Branch_Basis()), COALESCE (ObjectLink_Unit_BranchTo.ChildObjectId, zc_Branch_Basis())
+            INTO vbBranchId_from, vbBranchId_to
      FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -34,9 +35,12 @@ BEGIN
                                 AND ObjectLink_Unit_BranchTo.DescId = zc_ObjectLink_Unit_Branch()
      WHERE Movement.Id = inMovementId; 
 
-
-     IF (vbBranchFromId = zc_Branch_Basis()) AND (vbBranchToId <> zc_Branch_Basis())
+     -- проверка
+     IF NOT (vbBranchId_from = zc_Branch_Basis() AND vbBranchId_to <> zc_Branch_Basis())
      THEN
+        RAISE EXCEPTION 'Ошибка.Перенести данные возможно только для <Приход на филиал>.';
+     END IF;
+
 
      -- распровели
      PERFORM gpUnComplete_Movement_SendOnPrice (inMovementId:= inMovementId, inSession:= inSession);
@@ -61,9 +65,6 @@ BEGIN
      FROM MovementItem
      WHERE MovementId = inMovementId;
 
-     ELSE 
-        RAISE EXCEPTION 'Перенос данных запрещен.Приход не на филиал.';
-     END IF;
 
 END;
 $BODY$

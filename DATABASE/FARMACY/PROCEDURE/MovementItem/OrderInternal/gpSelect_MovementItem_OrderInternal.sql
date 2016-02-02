@@ -52,7 +52,7 @@ BEGIN
            , tmpMI.CalcAmount
            , NULLIF(tmpMI.Amount,0)                                 AS Amount
            , tmpMI.Price * tmpMI.CalcAmount                         AS Summ
-           , FALSE                                                  AS isErased
+           , COALESCE (tmpMI.isErased, FALSE)                       AS isErased
            , tmpMI.Price
            , tmpMI.MinimumLot
            , tmpMI.PartionGoodsDate
@@ -121,6 +121,7 @@ BEGIN
                             , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(Object_Goods.MinimumLot, 1)) 
                                * COALESCE(Object_Goods.MinimumLot, 1)                          AS CalcAmountAll
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
+                            , MovementItem.isErased
                                
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId

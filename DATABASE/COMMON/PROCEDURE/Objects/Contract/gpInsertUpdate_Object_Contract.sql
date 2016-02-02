@@ -97,6 +97,94 @@ BEGIN
    -- проверка уникальности для свойства <Номер договора>
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
+
+   -- пытаемся найти <Прайс-лист>
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (inPriceListId, 0) = 0
+   THEN
+       -- нашли
+       inPriceListId:= (SELECT ObjectLink_PriceList.ChildObjectId
+                        FROM ObjectLink
+                             INNER JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                   ON ObjectLink_InfoMoney.ObjectId = ObjectLink.ObjectId
+                                                  AND ObjectLink_InfoMoney.ChildObjectId = inInfoMoneyId
+                                                  AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                             INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                   ON ObjectLink_PriceList.ObjectId = ObjectLink.ObjectId
+                                                  AND ObjectLink_PriceList.ChildObjectId > 0
+                                                  AND ObjectLink_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                             LEFT JOIN ObjectLink AS ObjectLink_ContractTag
+                                                  ON ObjectLink_ContractTag.ObjectId = ObjectLink.ObjectId
+                                                 AND ObjectLink_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+                        WHERE ObjectLink.ChildObjectId = inJuridicalId
+                          AND ObjectLink.DescId = zc_ObjectLink_Contract_Juridical()
+                          AND COALESCE (ObjectLink_ContractTag.ChildObjectId, 0) = COALESCE (inContractTagId, 0)
+                        LIMIT 1
+                       );
+   END IF;
+
+   -- проверка - у других договоров тогда прайса быть не должно
+   IF COALESCE (inPriceListId, 0) = 0 AND EXISTS (SELECT 1
+                                                  FROM ObjectLink
+                                                       INNER JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                                             ON ObjectLink_InfoMoney.ObjectId = ObjectLink.ObjectId
+                                                                            AND ObjectLink_InfoMoney.ChildObjectId = inInfoMoneyId
+                                                                            AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                                       INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                                             ON ObjectLink_PriceList.ObjectId = ObjectLink.ObjectId
+                                                                            AND ObjectLink_PriceList.ChildObjectId > 0
+                                                                            AND ObjectLink_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                                  WHERE ObjectLink.ChildObjectId = inJuridicalId
+                                                    AND ObjectLink.DescId = zc_ObjectLink_Contract_Juridical()
+                                                  LIMIT 1
+                                                 )
+   THEN
+       RAISE EXCEPTION 'Ошибка.В даннном договоре для <УП статья назначения> = <%> должен быть установлен Прайс-лист = <%> или <%>.', lfGet_Object_ValueData (inInfoMoneyId)
+                       , lfGet_Object_ValueData ((SELECT MAX (ObjectLink_PriceList.ChildObjectId)
+                                                  FROM ObjectLink
+                                                       INNER JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                                             ON ObjectLink_InfoMoney.ObjectId = ObjectLink.ObjectId
+                                                                            AND ObjectLink_InfoMoney.ChildObjectId = inInfoMoneyId
+                                                                            AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                                       INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                                             ON ObjectLink_PriceList.ObjectId = ObjectLink.ObjectId
+                                                                            AND ObjectLink_PriceList.ChildObjectId > 0
+                                                                            AND ObjectLink_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                                  WHERE ObjectLink.ChildObjectId = inJuridicalId
+                                                    AND ObjectLink.DescId = zc_ObjectLink_Contract_Juridical()
+                                                ))
+                       , CASE WHEN           0 < (SELECT MIN (ObjectLink_PriceList.ChildObjectId)
+                                                  FROM ObjectLink
+                                                       INNER JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                                             ON ObjectLink_InfoMoney.ObjectId = ObjectLink.ObjectId
+                                                                            AND ObjectLink_InfoMoney.ChildObjectId = inInfoMoneyId
+                                                                            AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                                       INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                                             ON ObjectLink_PriceList.ObjectId = ObjectLink.ObjectId
+                                                                            AND ObjectLink_PriceList.ChildObjectId > 0
+                                                                            AND ObjectLink_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                                  WHERE ObjectLink.ChildObjectId = inJuridicalId
+                                                    AND ObjectLink.DescId = zc_ObjectLink_Contract_Juridical()
+                                                  HAVING MAX (ObjectLink_PriceList.ChildObjectId) <> MIN (ObjectLink_PriceList.ChildObjectId)
+                                                )
+                                  THEN
+                         lfGet_Object_ValueData ((SELECT MIN (ObjectLink_PriceList.ChildObjectId)
+                                                  FROM ObjectLink
+                                                       INNER JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                                             ON ObjectLink_InfoMoney.ObjectId = ObjectLink.ObjectId
+                                                                            AND ObjectLink_InfoMoney.ChildObjectId = inInfoMoneyId
+                                                                            AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                                       INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                                             ON ObjectLink_PriceList.ObjectId = ObjectLink.ObjectId
+                                                                            AND ObjectLink_PriceList.ChildObjectId > 0
+                                                                            AND ObjectLink_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                                  WHERE ObjectLink.ChildObjectId = inJuridicalId
+                                                    AND ObjectLink.DescId = zc_ObjectLink_Contract_Juridical()
+                                                ))
+                              ELSE 'любой другой'
+                         END
+      ;
+   END IF;
+
    -- проверка уникальность <Номер договора> для !!!одного!! Юр. лица и !!!одной!! Статьи
    IF TRIM (inInvNumber) <> '' AND TRIM (inInvNumber) <> '-' -- and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
    THEN
