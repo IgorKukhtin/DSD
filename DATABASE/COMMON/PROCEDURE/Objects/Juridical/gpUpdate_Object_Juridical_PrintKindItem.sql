@@ -76,27 +76,27 @@ BEGIN
                                                      , inUserId          := vbUserId
                                                       );
 
-     -- возвращаем параметры
-     SELECT tmp.isMovement, tmp.isAccount, tmp.isTransport
+    -- возвращаем параметры
+SELECT tmp.isMovement, tmp.isAccount, tmp.isTransport
           , tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax, tmp.isTransportBill
           , tmp.CountMovement, tmp.CountAccount, tmp.CountTransport
           , tmp.CountQuality, tmp.CountPack, tmp.CountSpec, tmp.CountTax, tmp.CountTransportBill
-    INTO ioIsMovement, ioIsAccount, ioIsTransport, ioIsQuality, ioIsPack, ioIsSpec, ioIsTax, ioisTransportBill
-       , ioCountMovement,ioCountAccount, ioCountTransport, ioCountQuality, ioCountPack, ioCountSpec, ioCountTax, ioCountTransportBill 
-       , outBranchName
-    FROM Object AS Object_Juridical
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem
-                              ON ObjectLink_Juridical_PrintKindItem.ObjectId = Object_Juridical.Id
-                             AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
-                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-         LEFT JOIN ObjectLink AS ObjectLink_Retail_PrintKindItem
-                              ON ObjectLink_Retail_PrintKindItem.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
-                             AND ObjectLink_Retail_PrintKindItem.DescId = zc_ObjectLink_Retail_PrintKindItem()
-         LEFT JOIN lpSelect_Object_PrintKindItem() AS tmp ON tmp.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
 
-    WHERE Object_Juridical.Id = ioId;
+          , Object_Branch.ValueData  AS BranchName
+
+    INTO ioisMovement, ioisAccount, ioisTransport, ioisQuality, ioisPack, ioisSpec, ioisTax, ioisTransportBill
+       , ioCountMovement,ioCountAccount, ioCountTransport, ioCountQuality, ioCountPack, ioCountSpec, ioCountTax, ioCountTransportBill
+       , outBranchName  
+    FROM ObjectLink AS ObjectLink_PrintKindItem
+       INNER JOIN lpSelect_Object_PrintKindItem() AS tmp ON tmp.Id = ObjectLink_PrintKindItem.ChildObjectId
+
+       LEFT JOIN ObjectLink AS ObjectLink_Branch
+                            ON ObjectLink_Branch.ObjectId = ObjectLink_PrintKindItem.ObjectId
+                           AND ObjectLink_Branch.DescId = zc_ObjectLink_BranchPrintKindItem_Branch()
+       LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Branch.ChildObjectId
+        
+    WHERE ObjectLink_PrintKindItem.DescId = zc_ObjectLink_BranchPrintKindItem_PrintKindItem()  
+    and ObjectLink_PrintKindItem.ObjectId = ioId;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
