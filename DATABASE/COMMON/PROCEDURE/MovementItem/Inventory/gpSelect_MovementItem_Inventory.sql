@@ -37,7 +37,7 @@ BEGIN
      RETURN QUERY
        WITH tmpPrice AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                               , lfObjectHistory_PriceListItem.ValuePrice AS Price
-                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) + INTERVAL '1 DAY')
                               AS lfObjectHistory_PriceListItem
                          WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                         )

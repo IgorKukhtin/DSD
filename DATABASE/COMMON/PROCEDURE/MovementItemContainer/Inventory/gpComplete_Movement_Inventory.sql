@@ -1225,7 +1225,7 @@ BEGIN
                        , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
                         )
         )
-     OR (vbOperDate >= '31.12.2015' AND vbPriceListId <> 0
+     OR (vbOperDate > '31.12.2015' AND vbPriceListId <> 0
         AND vbUnitId IN (8411   -- Склад ГП ф.Киев
                        , 428365 -- Склад возвратов ф.Киев
                         )
@@ -1478,6 +1478,15 @@ BEGIN
      -- !!!формируется свойство <ContainerId>!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), _tmpItem.MovementItemId, _tmpItem.ContainerId_Goods)
      FROM _tmpItem;
+
+     -- !!!формируется свойство <Price>!!!
+     IF vbPriceListId <> 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), _tmpItem.MovementItemId, COALESCE (lfSelect.ValuePrice, 0))
+         FROM _tmpItem
+              LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate + INTERVAL '1 DAY')
+                     AS lfSelect ON lfSelect.GoodsId = _tmpItem.GoodsId;
+     END IF;
 
      -- !!!формируется свойство <Цена>!!!
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Price(), _tmpItem.PartionGoodsId, Price_Partion)
