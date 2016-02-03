@@ -102,7 +102,7 @@ BEGIN
                                             MovementItem
                                         WHERE
                                             MovementItem.MovementId = vbMovementId
-                                        AND MovementItem_Income.isErased = FALSE
+                                        AND MovementItem.isErased = FALSE
                                       ) AS T1
                                 WHERE
                                     T1.Ord = 1

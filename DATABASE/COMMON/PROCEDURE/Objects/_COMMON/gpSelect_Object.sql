@@ -19,9 +19,9 @@ $BODY$BEGIN
         Object.ValueData, 
         ObjectDesc.ItemName
    FROM Object 
-   JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
-  WHERE (Object.DescId = inDescId OR 0 = inDescId);
-
+        JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+   WHERE (Object.DescId = inDescId OR (0 = inDescId AND Object.DescId NOT IN (zc_Object_Goods(), zc_Object_LinkGoods(), zc_object_PartionMovement(), zc_object_PartionMovementItem(), zc_Object_Price())));
+ 
   
 END;$BODY$
 
@@ -39,5 +39,6 @@ ALTER FUNCTION gpSelect_Object(Integer, TVarChar)
 
 */
 
+-- select count (*)   FROM Object  WHERE DescId IN ( zc_Object_PartionGoods())
 -- тест
 -- SELECT * FROM gpSelect_Object('2')

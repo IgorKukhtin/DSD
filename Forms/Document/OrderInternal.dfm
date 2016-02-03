@@ -556,7 +556,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 70
           end
           object AmountPartnerPrior: TcxGridDBColumn [28]
-            Caption = #1085#1077' '#1086#1090#1075#1091#1078'. '#1079#1072#1103#1074#1082#1072
+            Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'AmountPartnerPrior'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -564,7 +564,7 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object AmountPartner: TcxGridDBColumn [29]
             Caption = #1089#1077#1075#1086#1076#1085#1103' '#1079#1072#1103#1074#1082#1072
@@ -703,7 +703,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 60
           end
           object CuterCount: TcxGridDBColumn [42]
-            Caption = #1047#1072#1082#1072#1079' '#1082#1091#1090#1077#1088#1086#1074
+            Caption = #1047#1072#1082#1072#1079' '#1082#1091#1090#1090#1077#1088#1086#1074
             DataBinding.FieldName = 'CuterCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -724,7 +724,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 60
           end
           object CuterCountSecond: TcxGridDBColumn [44]
-            Caption = #1044#1086#1079#1072#1082#1072#1079' '#1082#1091#1090#1077#1088#1086#1074
+            Caption = #1044#1086#1079#1072#1082#1072#1079' '#1082#1091#1090#1090#1077#1088#1086#1074
             DataBinding.FieldName = 'CuterCountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

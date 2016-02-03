@@ -63,7 +63,7 @@ BEGIN
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
              , MovementFloat_InvNumberTransport.ValueData AS InvNumberTransport
 
-             , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+             , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
 

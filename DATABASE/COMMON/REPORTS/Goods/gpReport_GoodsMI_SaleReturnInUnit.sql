@@ -156,8 +156,8 @@ BEGIN
                                , MovementItem.ObjectId AS GoodsId
                                , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
 
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ MovementItem.Amount ELSE 0 END) AS Amount_Count
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ MovementItem.Amount ELSE 0 END
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE 0 END) AS Amount_Count
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE 0 END
                                     * CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
@@ -190,6 +190,9 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                                           ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -460,4 +463,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit (inStartDate:= '31.08.2015', inEndDate:= '31.08.2015', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit (inStartDate:= 01.02.2016, inEndDate:= 01.02.2016, inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());

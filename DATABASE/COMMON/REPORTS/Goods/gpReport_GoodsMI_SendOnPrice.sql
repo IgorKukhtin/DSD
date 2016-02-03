@@ -315,8 +315,8 @@ BEGIN
 
                   -- 1.3. Сумма, без AnalyzerId (на самом деле для OperCount_Partner)
                 , SUM (tmpContainer.SummOut_Partner_60000) AS SummOut_Partner_real
-                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_A
-                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_P
+                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_80401()  /*AND tmpContainer.isActive = TRUE  */THEN -1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_A
+                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_80401() /*AND tmpContainer.isActive = FALSE */THEN  1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_P
 
                   -- 2.1. Кол-во - Скидка за вес
                 , SUM (tmpContainer.OperCount_Change * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS OperCount_Change_real
@@ -379,14 +379,18 @@ BEGIN
                                   ELSE 0
                              END) AS OperCount
                         -- 1.2. Себестоимость, без AnalyzerId
-                      , SUM (CASE WHEN MIContainer.AnalyzerId NOT IN (zc_Enum_AnalyzerId_SummOut_110101(), zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_LossSumm_20200()) AND MIContainer.DescId = zc_MIContainer_Summ()
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
+                                   AND MIContainer.AnalyzerId NOT IN (zc_Enum_AnalyzerId_SummOut_80401(), zc_Enum_AnalyzerId_SummIn_80401(), zc_Enum_AnalyzerId_LossSumm_20200())
+                                   AND MIContainer.AccountId NOT IN (zc_Enum_AnalyzerId_SummOut_80401(), zc_Enum_AnalyzerId_SummIn_80401())
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummIn
                         -- 1.3. Сумма***, без AnalyzerId (на самом деле для OperCount_Partner)
-                      , SUM (CASE WHEN MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()
+                      , SUM (CASE WHEN MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_80401() AND MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()
                                        THEN -1 * MIContainer.Amount
-                                  WHEN MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101() AND MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()
+                                  WHEN MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_80401() AND MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()
+                                       THEN -1 * MIContainer.Amount
+                                  WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummOut_80401()) -- !!!обязательно последним, т.к. эта сумма есть и в AccountId!!!
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummOut_Partner_60000
