@@ -100,7 +100,7 @@ BEGIN
     INSERT INTO _tmpUnit (UnitId, UnitId_by, isActive)
        SELECT tmpFrom.UnitId, COALESCE (tmpTo.UnitId, 0), FALSE FROM tmpFrom LEFT JOIN tmpTo ON tmpTo.UnitId > 0
       UNION
-       SELECT tmpTo.UnitId, COALESCE (tmpFrom.UnitId, 0), TRUE FROM tmpTo LEFT JOIN tmpFrom ON tmpFrom.UnitId > 0 WHERE vbIsBranch = FALSE;
+       SELECT tmpTo.UnitId, COALESCE (tmpFrom.UnitId, 0), TRUE FROM tmpTo LEFT JOIN tmpFrom ON tmpFrom.UnitId > 0 WHERE vbIsBranch = FALSE
       ;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
