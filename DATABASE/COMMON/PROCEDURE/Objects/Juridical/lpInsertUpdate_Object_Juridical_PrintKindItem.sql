@@ -43,7 +43,7 @@ BEGIN
    IF inCountTransportBill > 0 THEN inIsTransportBill:= TRUE; ELSE inIsTransportBill:= FALSE; END IF; 
 
    -- !!!поиск или создание!!!
-   vbId_calc := lpInsertFind_Object_PrintKindItem(inisMovement, inisAccount, inisTransport, inisQuality, inisPack, inisSpec, inisTax , inCountMovement, inCountAccount, inCountTransport, inCountQuality, inCountPack, inCountSpec, inCountTax);
+   vbId_calc := lpInsertFind_Object_PrintKindItem(inisMovement, inisAccount, inisTransport, inisQuality, inisPack, inisSpec, inisTax, inisTransportBill, inCountMovement, inCountAccount, inCountTransport, inCountQuality, inCountPack, inCountSpec, inCountTax, inCountTransportBill);
    
 
    vbObjectId:= (SELECT ObjectLink_Branch.ObjectId         -- Object_BranchPrintKindItem.Id 

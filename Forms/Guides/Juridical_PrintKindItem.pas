@@ -58,33 +58,17 @@ type
     GridStoredProc: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clInfoMoneyGroupCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationCode: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    clGLNCode: TcxGridDBColumn;
     clOKPO: TcxGridDBColumn;
-    clIsCorporate: TcxGridDBColumn;
     clJuridicalGroupName: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
-    clPriceListName: TcxGridDBColumn;
     actChoicePriceListForm: TOpenChoiceForm;
     actChoicePriceListPromoForm: TOpenChoiceForm;
-    clPriceListPromoName: TcxGridDBColumn;
-    clStartPromo: TcxGridDBColumn;
-    clEndPromo: TcxGridDBColumn;
-    clGoodsPropertyName: TcxGridDBColumn;
-    clRetailReportName: TcxGridDBColumn;
     actChoiceRetailReportForm: TOpenChoiceForm;
     actChoiceJuridicalGroup: TOpenChoiceForm;
     clRetailName: TcxGridDBColumn;
     actChoiceRetailForm: TOpenChoiceForm;
-    InfoMoneyName_all: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
-    clisTaxSummary: TcxGridDBColumn;
     spUpdate: TdsdStoredProc;
     isMovement: TcxGridDBColumn;
     isAccount: TcxGridDBColumn;
@@ -98,6 +82,7 @@ type
     bbBranchLabel: TdxBarControlContainerItem;
     bbBranch: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
+    clBranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

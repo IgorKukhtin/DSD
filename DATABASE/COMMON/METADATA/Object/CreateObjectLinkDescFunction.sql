@@ -1176,6 +1176,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_BranchPrintKindItem_Retail() RETURNS In
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_BranchPrintKindItem_Retail', 'Связь с торговой сетью', zc_Object_BranchPrintKindItem(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BranchPrintKindItem_Retail');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_BranchPrintKindItem_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BranchPrintKindItem_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_BranchPrintKindItem_Juridical', 'Связь с юр.лицом', zc_Object_BranchPrintKindItem(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BranchPrintKindItem_Juridical');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_BranchPrintKindItem_PrintKindItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BranchPrintKindItem_PrintKindItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_BranchPrintKindItem_PrintKindItem', 'Связь с Элементами печати', zc_Object_BranchPrintKindItem(), zc_Object_PrintKindItem() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BranchPrintKindItem_PrintKindItem');

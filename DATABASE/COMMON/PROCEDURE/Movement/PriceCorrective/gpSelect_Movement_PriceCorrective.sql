@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , Comment TVarChar
+             , BranchName TVarChar
               )
 AS
 $BODY$
@@ -41,6 +42,26 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
+  , tmpAccessKeyBranch AS (SELECT zc_Enum_Process_AccessKey_DocumentBread() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr()) AS BranchId
+                           UNION
+                           SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr()) AS BranchId
+                           UNION
+                           SELECT zc_Enum_Process_AccessKey_DocumentKiev() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev()) AS BranchId
+                           UNION
+                           SELECT zc_Enum_Process_AccessKey_DocumentOdessa() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa()) AS BranchId
+                           UNION
+                           SELECT zc_Enum_Process_AccessKey_DocumentZaporozhye() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye()) AS BranchId
+                           UNION
+                           SELECT zc_Enum_Process_AccessKey_DocumentKrRog() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog()) AS BranchId
+                           UNION
+                           SELECT zc_Enum_Process_AccessKey_DocumentNikolaev() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev()) AS BranchId
+                           UNION
+                           SELECT zc_Enum_Process_AccessKey_DocumentKharkov() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov()) AS BranchId
+                           UNION
+                           SELECT zc_Enum_Process_AccessKey_DocumentCherkassi() AS AccessKeyId, (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi()) AS BranchId
+                          )
+
+
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -84,6 +105,7 @@ BEGIN
            , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
 
            , MovementString_Comment.ValueData           AS Comment
+           , Object_Branch.ValueData                    AS BranchName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -93,7 +115,9 @@ BEGIN
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
+            LEFT JOIN tmpAccessKeyBranch ON tmpAccessKeyBranch.AccessKeyId = Movement.AccessKeyId
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpAccessKeyBranch.BranchId
+            
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()

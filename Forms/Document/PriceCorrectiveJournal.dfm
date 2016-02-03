@@ -103,15 +103,25 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clBranchName: TcxGridDBColumn [0]
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
+          end
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 78
           end
-          inherited colOperDate: TcxGridDBColumn [1]
+          inherited colOperDate: TcxGridDBColumn [2]
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          inherited colInvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 45
