@@ -97,7 +97,7 @@ BEGIN
             '6' :: TVarChar AS LineNo,
             ''::TVarChar as GroupName,
             'Позиции'::TVarChar as LineName,
-            (SELECT STRING_AGG( DISTINCT MI_PromoGoods.GoodsName, chr(13)) 
+            (SELECT STRING_AGG( DISTINCT MI_PromoGoods.GoodsCode :: TVarChar || ' ' || MI_PromoGoods.GoodsName, chr(13)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId
                AND MI_PromoGoods.IsErased = FALSE)::TEXT AS LineValue

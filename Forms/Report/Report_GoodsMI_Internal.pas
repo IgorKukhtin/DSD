@@ -68,18 +68,13 @@ type
     bbLocation: TdxBarControlContainerItem;
     bbGoodsKind: TdxBarControlContainerItem;
     bbPartionGoods: TdxBarControlContainerItem;
-    Summ_calc: TcxGridDBColumn;
     AmountOut: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
-    AmountIn_10500: TcxGridDBColumn;
-    AmountIn_10500_Weight: TcxGridDBColumn;
-    AmountIn_40200: TcxGridDBColumn;
-    AmountIn_40200_Weight: TcxGridDBColumn;
-    SummIn_10500: TcxGridDBColumn;
-    SummIn_40200: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     edPriceList: TcxButtonEdit;
     PriceListGuides: TdsdGuides;
+    Price_PriceList: TcxGridDBColumn;
+    SummOut_PriceList: TcxGridDBColumn;
   private
     { Private declarations }
   public

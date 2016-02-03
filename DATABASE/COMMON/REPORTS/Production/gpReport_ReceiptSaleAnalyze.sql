@@ -229,7 +229,7 @@ BEGIN
            GROUP BY tmpContainer.GoodsId
                   , tmpContainer.GoodsKindId
            )
-
+/*
            , tmp_Send AS (SELECT gpReport.GoodsId, gpReport.GoodsKindId
                                , SUM (gpReport.AmountIn)       AS Amount_Count
                                , SUM (gpReport.SummIn_branch)  AS Amount_Summ
@@ -255,8 +255,8 @@ BEGIN
                                , 0 AS Amount_Summ
                                , 0 AS Amount_SummIn
 
-                               , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/) AS Amount_CountRet
-                               , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/
+                               , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) / *MovementItem.Amount* /) AS Amount_CountRet
+                               , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) / *MovementItem.Amount* /
                                     * CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
@@ -318,26 +318,29 @@ BEGIN
                           GROUP BY MIContainer.ObjectId_Analyzer
                                  , MIContainer.ObjectIntId_Analyzer
                          )
-/*
+*/
+
           , tmp_Send AS  (SELECT MovementItem.ObjectId                         AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
 
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -MovementItem.Amount- ELSE 0 END) AS Amount_Count
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -MovementItem.Amount- ELSE 0 END
-                                    * CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*COALESCE (MIFloat_AmountChangePercent.ValueData, 0)*/ ELSE 0 END) AS Amount_Count
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_Summ.ValueData, 0) ELSE 0 END -- COALESCE (MIFloat_AmountPartner.ValueData, 0) /*COALESCE (MIFloat_AmountChangePercent.ValueData, 0)*/ ELSE 0 END
+                                    /** CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                      END * 1.2
+                                      END * 1.2*/
                                      ) AS Amount_Summ
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_SummPriceList.ValueData, 0) ELSE 0 END) AS Amount_Summ_PriceList
                                , 0 AS Amount_SummIn
 
-                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -MovementItem.Amount- ELSE 0 END) AS Amount_CountRet
-                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -MovementItem.Amount- ELSE 0 END
-                                    * CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END) AS Amount_CountRet
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_Summ.ValueData, 0) ELSE 0 END -- COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END
+                                    /** CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                      END * 1.2
+                                      END * 1.2*/
                                      ) AS Amount_SummRet
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_SummPriceList.ValueData, 0) ELSE 0 END) AS Amount_SummRet_PriceList
                                , 0 AS Amount_SummInRet
 
                           FROM Movement
@@ -358,13 +361,22 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                               /*LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                                           ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()*/
 
-                               LEFT JOIN MovementItemFloat AS MIFloat_Price
+                               LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                           ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummPriceList
+                                                           ON MIFloat_SummPriceList.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummPriceList.DescId = zc_MIFloat_SummPriceList()
+                               /*LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()*/
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -382,22 +394,30 @@ BEGIN
                                , MIContainer.ObjectIntId_Analyzer AS GoodsKindId
                                , 0 AS Amount_Count
                                , 0 AS Amount_Summ
+                               , 0 AS Amount_Summ_PriceList
                                , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_SummIn
 
                                , 0 AS Amount_CountRet
                                , 0 AS Amount_SummRet
+                               , 0 AS Amount_SummRet_PriceList
                                , SUM (CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_SummInRet
                           FROM _tmpUnit
                                INNER JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                                AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_in()
                                                                AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                               AND MIContainer.AccountId NOT IN (zc_Enum_Account_110101() -- Транзит + товар в пути
+                                                                                               , zc_Enum_AnalyzerId_SummIn_110101()
+                                                                                               , zc_Enum_AnalyzerId_SummOut_110101()
+                                                                                               , zc_Enum_AnalyzerId_SummIn_80401()
+                                                                                               , zc_Enum_AnalyzerId_SummOut_80401()
+                                                                                                )
                                LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                           WHERE (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
                           GROUP BY MIContainer.ObjectId_Analyzer
                                  , MIContainer.ObjectIntId_Analyzer
                          )
-*/
+
         , tmpReceipt AS (SELECT tmp.GoodsId, tmp.GoodsKindId, MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
                          FROM (SELECT tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId FROM tmpMIContainer GROUP BY tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId
                               UNION 
@@ -452,13 +472,13 @@ BEGIN
                  , tmp_Send.GoodsKindId
                  , SUM (tmp_Send.Amount_Count)          AS OperCount_sale
                  , SUM (tmp_Send.Amount_SummIn)         AS SummIn_sale
-                 , SUM (tmp_Send.Amount_Summ)           AS SummOut_PriceList_sale
+                 , SUM (tmp_Send.Amount_Summ_PriceList) AS SummOut_PriceList_sale
                  , SUM (tmp_Send.Amount_Summ)           AS SummOut_sale
 
-                 , SUM (tmp_Send.Amount_CountRet)         AS OperCount_return
-                 , SUM (tmp_Send.Amount_SummInRet)        AS SummIn_return
-                 , SUM (tmp_Send.Amount_SummRet)          AS SummOut_PriceList_return
-                 , SUM (tmp_Send.Amount_SummRet)          AS SummOut_return
+                 , SUM (tmp_Send.Amount_CountRet)          AS OperCount_return
+                 , SUM (tmp_Send.Amount_SummInRet)         AS SummIn_return
+                 , SUM (tmp_Send.Amount_SummRet_PriceList) AS SummOut_PriceList_return
+                 , SUM (tmp_Send.Amount_SummRet)           AS SummOut_return
 
                  , 0 AS Summ1
                  , 0 AS Summ2
@@ -991,4 +1011,4 @@ ALTER FUNCTION gpReport_ReceiptSaleAnalyze (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_ReceiptSaleAnalyze (inStartDate:= '01.11.2015', inEndDate:= '01.11.2015', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_ReceiptSaleAnalyze (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
