@@ -214,6 +214,10 @@ type
     N82: TMenuItem;
     actSheetWorkTime: TdsdOpenForm;
     N83: TMenuItem;
+    actReport_LiquidForm: TdsdOpenForm;
+    N84: TMenuItem;
+    actReportMovementIncomeForm: TdsdOpenForm;
+    N85: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

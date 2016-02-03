@@ -22,6 +22,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbBranchId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) 
@@ -37,6 +38,44 @@ BEGIN
 
      -- определяем ключ доступа
      --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PriceCorrective());
+
+     -- определяем ключ доступа
+     IF COALESCE (ioId, 0) = 0
+     THEN vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PriceCorrective());
+     ELSE vbAccessKeyId:= (SELECT Movement.AccessKeyId FROM Movement WHERE Movement.Id = ioId);
+     END IF;
+
+     -- определяется филиал
+     vbBranchId:= CASE WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentBread()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKrRog()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentNikolaev()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKharkov()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentCherkassi()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
+                  END;
+     -- проверка
+     IF COALESCE (vbBranchId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Невозможно определить <Филиал>.';
+     END IF;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -65,6 +104,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+
+     -- сохранили связь с <филиал>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, vbBranchId);
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
