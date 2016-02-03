@@ -1,0 +1,63 @@
+-- 1. check 1
+select count(*) , BillNumber, BillDate from _Bill where BillKind = 1 group by BillNumber, BillDate having count (*) > 1 order by 3 desc
+
+-- 2. check 2+3+4
+select MovementId
+from(
+select _CashOperation.Id, Movement.Id as MovementId -- , Movement2.*
+from _CashOperation
+     inner join _Bill on _Bill.Id = _CashOperation.DocumentId and BillKind = 1
+     left join Movement on Movement.InvNumber = _Bill.BillNumber and Movement.OperDate = _Bill.BillDate and Movement.StatusId = zc_Enum_Status_Complete()
+                      and Movement.DescId = zc_Movement_Income()
+                      and Movement.Id not in (140089 , 655705)
+--     left join Movement as Movement2 on Movement2.InvNumber = _Bill.BillNumber and Movement2.OperDate = _Bill.BillDate and Movement2.StatusId = zc_Enum_Status_UnComplete()
+--                      and Movement2.DescId = zc_Movement_Income()
+where _CashOperation.OperDate between '2015-01-01' and '2015-12-31'
+-- and Movement.Id >0 and Movement2.Id > 0  
+) as aa
+group by MovementId having count(*) > 1
+
+
+-- 3.
+update Movement  set StatusId = zc_Enum_Status_Erased()
+where Movement.DescId = zc_Movement_BankAccount()
+  AND Movement.OperDate BETWEEN '01.01.2015' AND '31.12.2015'
+  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+  AND Movement.Id not in (319442, 931449)
+;
+
+-- 4.
+select _CashOperation.Id, Movement.Id as MovementId , MovementLinkObject_from.ObjectId, ObjectDesc.*
+     , gpInsertUpdate_Movement_BankAccount (ioId                   := 0
+                                          , inInvNumber            := platNumber :: TVarChar
+                                          , inOperDate             := _CashOperation.OperDate
+                                          , inAmountIn             := case when OperSumm > 0 then OperSumm else 0 end
+                                          , inAmountOut            := case when OperSumm < 0 then -1 * OperSumm else 0 end
+                                          , inAmountSumm           := 0 
+
+                                          , inBankAccountId        := 1648977 -- house-1 1020650 -- ПриватБанк
+                                          , inComment              := remark
+                                          , inMoneyPlaceId         := MovementLinkObject_from.ObjectId
+                                          , inIncomeMovementId     := Movement.Id
+                                          , inContractId           := MovementLinkObject.ObjectId
+                                          , inInfoMoneyId          := ObjectLink_Contract_InfoMoney.ObjectId
+
+                                          , inCurrencyId           := 1020649 -- Гривна
+                                          , inCurrencyPartnerValue := 0
+                                          , inParPartnerValue      := 0
+                                          , inSession              := '3'
+                                           )
+
+from _CashOperation
+     inner join _Bill on _Bill.Id = _CashOperation.DocumentId and BillKind = 1
+     left join Movement on Movement.InvNumber = _Bill.BillNumber and Movement.OperDate = _Bill.BillDate and Movement.StatusId = zc_Enum_Status_Complete()
+                      and Movement.DescId = zc_Movement_Income()
+                      and Movement.Id not in (140089 , 655705)
+     left join MovementLinkObject on MovementLinkObject.MovementId = Movement.Id and MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
+     left join MovementLinkObject as MovementLinkObject_from on MovementLinkObject_from.MovementId = Movement.Id and MovementLinkObject_from.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                 ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject.ObjectId
+                                AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+where _CashOperation.OperDate between '2015-01-01' and '2015-12-31'
+            LEFT JOIN Object on Object.Id = MovementLinkObject_from.ObjectId
+            LEFT JOIN ObjectDesc on ObjectDesc.Id = Object.DescId

@@ -56,18 +56,20 @@ BEGIN
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и для формирования Аналитик в проводках
      SELECT Movement.DescId
           , Movement.OperDate
-          , CASE WHEN Movement.DescId = zc_Movement_TransferDebtIn()
+          , MovementLinkObject_PartnerFrom.ObjectId AS PartnerId_From
+          /*, CASE WHEN Movement.DescId = zc_Movement_TransferDebtIn()
                       THEN MovementLinkObject_Partner.ObjectId
                  WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
                       THEN MovementLinkObject_Partner.ObjectId
                  ELSE 0
-            END AS PartnerId_From
-          , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut()
+            END AS PartnerId_From*/
+          , MovementLinkObject_Partner.ObjectId AS PartnerId_To
+          /*, CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut()
                       THEN MovementLinkObject_Partner.ObjectId
                  WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
                       THEN MovementLinkObject_Partner.ObjectId
                  ELSE 0
-            END AS PartnerId_To
+            END AS PartnerId_To*/
           , COALESCE (MovementLinkObject_From.ObjectId, 0)                      AS FromId
           , COALESCE (MovementLinkObject_To.ObjectId, 0)                        AS ToId
           , CASE WHEN View_Constant_isCorporate_From.InfoMoneyId IS NOT NULL
@@ -107,6 +109,9 @@ BEGIN
                , vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
      FROM Movement
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerFrom
+                                       ON MovementLinkObject_PartnerFrom.MovementId = Movement.Id
+                                      AND MovementLinkObject_PartnerFrom.DescId = zc_MovementLinkObject_PartnerFrom()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                        ON MovementLinkObject_Partner.MovementId = inMovementId
                                       AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
@@ -691,3 +696,31 @@ $BODY$
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 267275 , inSession:= '2')
 -- SELECT * FROM lpComplete_Movement_TransferDebt_all (inMovementId:= 267275, inUserId:= zfCalc_UserAdmin() :: Integer)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 267275 , inSession:= '2')
+
+/*
+ select *
+-- select  lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), a.Id, FromId)
+from 
+(
+select distinct ContainerLinkObject.ObjectId as FromId, Movement.Id
+from Movement 
+            JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            JOIN MovementItemContainer   ON MovementItemContainer.MovementId = Movement.Id
+                                   and MovementItemContainer.isActive = false -- case when Movement.DescId = zc_Movement_TransferDebtOut() then true else false end
+            -- JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+            JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MovementItemContainer.ContainerId
+                                    and ContainerLinkObject.DescId = zc_ContainerLinkObject_Juridical()
+                                    -- and ContainerLinkObject.ObjectId <> MovementLinkObject_To.ObjectId
+
+where Movement.DescId in (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut())
+  and Movement.OperDate between '01.01.2016' and '01.02.2016'
+--  and Movement.Id = 3085412 
+--  and Movement.OperDate between '01.12.2015' and '31.12.2015'
+) as a
+  /*left          JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = a.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+*/
+*/
