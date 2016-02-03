@@ -16,23 +16,51 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbObjectId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbOperDate TDateTime;
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternal());
-     vbUserId := inSession;
-   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+    vbUserId := inSession;
+    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     SELECT MovementLinkObject.ObjectId INTO vbUnitId
     FROM MovementLinkObject
     WHERE MovementLinkObject.MovementId = inMovementId
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
+
+    -- определим дату документа
+    SELECT date_trunc('day', Movement.OperDate)  INTO vbOperDate
+    FROM Movement
+    WHERE Movement.Id = inMovementId;
       
      PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
 
      OPEN Cursor1 FOR
+     WITH  tmpCheck AS (SELECT MI_Check.ObjectId                  AS GoodsId
+                             , SUM(-MIContainer.Amount) ::TFloat  AS Amount
+                        FROM Movement AS Movement_Check
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                               INNER JOIN MovementItem AS MI_Check
+                                                       ON MI_Check.MovementId = Movement_Check.Id
+                                                      AND MI_Check.DescId = zc_MI_Master()
+                                                      AND MI_Check.isErased = FALSE
+                               LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                                     ON MIContainer.MovementItemId = MI_Check.Id
+                                                                    AND MIContainer.DescId = zc_MIContainer_Count() 
+                         WHERE Movement_Check.DescId = zc_Movement_Check()
+                         AND date_trunc('day', Movement_Check.OperDate) = vbOperDate -- CURRENT_DATE
+                          AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                        GROUP BY  MI_Check.ObjectId 
+                        HAVING SUM(MI_Check.Amount) <> 0 
+                        )
+                   
+     
        SELECT
              tmpMI.Id                   AS Id
            , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)              AS GoodsId
@@ -69,11 +97,14 @@ BEGIN
                 END AS PartionGoodsDateColor   
            , Remains.Amount                                         AS RemainsInUnit
            , Object_Price_View.MCSValue                             AS MCS
+           , COALESCE (Object_Price_View.MCSIsClose, FALSE)         AS MCSIsClose
+           , COALESCE (Object_Price_View.MCSNotRecalc, FALSE)       AS MCSNotRecalc
            , Income.Income_Amount                                   AS Income_Amount
            , tmpMI.AmountSecond                                     AS AmountSecond
            , NULLIF(tmpMI.AmountAll,0)                              AS AmountAll
            , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
            , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
+           , tmpCheck.Amount  ::tfloat                                                 AS CheckAmount
            
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
@@ -222,7 +253,12 @@ BEGIN
                             Movement_Income.StatusId = zc_Enum_Status_UnComplete()
                         GROUP BY
                             MovementItem_Income.ObjectId
-                      ) AS Income ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Income.Income_GoodsId;
+                      ) AS Income ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Income.Income_GoodsId
+                      
+             LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
+
+
+;
         RETURN NEXT Cursor1;
      
 
@@ -252,6 +288,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.02.16         *
  23.03.15                         * 
  05.02.15                         * 
  12.11.14                         * add MinimumLot
