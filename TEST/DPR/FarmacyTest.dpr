@@ -378,7 +378,9 @@ uses
   Member in '..\..\FormsFarmacy\Guides\Member.pas' {MemberForm: TParentForm},
   MemberEdit in '..\..\FormsFarmacy\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   SheetWorkTimeJournal in '..\..\FormsFarmacy\Document\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm: TParentForm},
-  SheetWorkTime in '..\..\FormsFarmacy\Document\SheetWorkTime.pas' {SheetWorkTimeForm: TParentForm};
+  SheetWorkTime in '..\..\FormsFarmacy\Document\SheetWorkTime.pas' {SheetWorkTimeForm: TParentForm},
+  Report_Liquid in '..\..\FormsFarmacy\Report\Report_Liquid.pas' {Report_LiquidForm: TParentForm},
+  Report_MovementIncome in '..\..\FormsFarmacy\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
