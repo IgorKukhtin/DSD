@@ -23,7 +23,6 @@ type
     rdUnit: TRefreshDispatcher;
     UnitGuides: TdsdGuides;
     dxBarButton1: TdxBarButton;
-    colGoodsId: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
@@ -43,6 +42,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     clGoodsGroupName: TcxGridDBColumn;
     clNDSKindName: TcxGridDBColumn;
+    colFromName: TcxGridDBColumn;
   private
     { Private declarations }
   public

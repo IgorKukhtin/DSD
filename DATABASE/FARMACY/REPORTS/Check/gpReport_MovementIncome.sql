@@ -14,6 +14,7 @@ RETURNS TABLE (
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
+  FromName       TVarChar,
   Amount         TFloat,
   Price          TFloat,
   PriceWithVAT   TFloat,
@@ -36,6 +37,7 @@ BEGIN
     WITH tmpMovementIncome AS ( SELECT Movement_Income.Id AS MovementId
                                      , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
                                      , ObjectFloat_NDSKind_NDS.ValueData          AS NDS
+                                     , Object_From.ValueData                      AS FromName
                                 FROM Movement AS Movement_Income
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement_Income.Id
@@ -45,7 +47,12 @@ BEGIN
                                                              ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                             AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
                                                             AND date_trunc('day', MovementDate_Branch.ValueData) between inDateStart AND inDateFinal
-
+                                                            
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                  ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                     LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                     
                                      LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                                ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Income.Id
                                                               AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -68,7 +75,7 @@ BEGIN
            , Object_Goods_View.GoodsName                    AS GoodsName
            , Object_Goods_View.GoodsGroupName               AS GoodsGroupName
            , Object_Goods_View.NDSKindName                  AS NDSKindName
-
+           , tmpMovementIncome.FromName
            , SUM(MI_Income.Amount)::TFloat                  AS Amount
 
            , MIFloat_Price.ValueData      ::TFloat                 AS Price
@@ -115,6 +122,7 @@ BEGIN
            ,Object_Goods_View.GoodsName
            ,Object_Goods_View.GoodsGroupName
            ,Object_Goods_View.NDSKindName 
+           , tmpMovementIncome.FromName
            , MIFloat_Price.ValueData 
            , CASE WHEN tmpMovementIncome.PriceWithVAT 
                   THEN  MIFloat_Price.ValueData
