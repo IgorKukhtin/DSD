@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                AreaId Integer, AreaName TVarChar,
                PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
+               UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
                isLeaf Boolean, isPartionDate Boolean,
                isErased Boolean
 ) AS
@@ -96,6 +97,9 @@ BEGIN
            , Object_Partner.ObjectCode    AS PartnerCode
            , Object_Partner.ValueData     AS PartnerName
 
+           , Object_Unit_HistoryCost.ObjectCode    AS UnitCode_HistoryCost
+           , Object_Unit_HistoryCost.ValueData     AS UnitName_HistoryCost
+
            , Object_Unit_View.isLeaf
            , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
            , Object_Unit_View.isErased
@@ -103,6 +107,11 @@ BEGIN
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
+                                 ON ObjectLink_Unit_HistoryCost.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
+            LEFT JOIN Object AS Object_Unit_HistoryCost ON Object_Unit_HistoryCost.Id = ObjectLink_Unit_HistoryCost.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
                                  ON ObjectLink_Unit_Contract.ObjectId = Object_Unit_View.Id
@@ -200,6 +209,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS PartnerCode
            , CAST ('' as TVarChar)  AS PartnerName
+
+           , CAST (0 as Integer)    AS UnitCode_HistoryCost
+           , CAST ('' as TVarChar)  AS UnitName_HistoryCost
 
            , TRUE AS isLeaf
            , FALSE AS isPartionDate

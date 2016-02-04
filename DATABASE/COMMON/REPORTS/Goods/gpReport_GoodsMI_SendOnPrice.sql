@@ -183,10 +183,14 @@ BEGIN
                                                                     , zc_Enum_AccountGroup_110000() -- Транзит
                                                                      )
                         UNION
-                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_110101() AS AccountId -- Сумма, забалансовый счет, приход транзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
+                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_110101() AS AccountId -- Сумма, не совсем забалансовый счет, приход транзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         UNION
-                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, забалансовый счет, расходтранзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
-                        ) 
+                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, не совсем забалансовый счет, расход транзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
+                        UNION
+                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_80401() AS AccountId -- Сумма, не совсем забалансовый счет, приход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
+                        UNION
+                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_80401() AS AccountId -- Сумма, не совсем забалансовый счет, расход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
+                        )
        SELECT Movement.InvNumber
          , Movement.OperDate
          , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -439,8 +443,9 @@ BEGIN
                                                       AND MIContainer.ObjectExtId_Analyzer   = _tmpUnit.UnitId_by
                                                       -- AND ((MIContainer.isActive = FALSE AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_SummIn_110101())
                                                       --   OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SummIn_110101()))
-                                                      AND (MIContainer.isActive = FALSE
-                                                        OR (MIContainer.isActive = TRUE AND MIContainer.AccountId =  zc_Enum_Account_110101()))
+                                                      AND ((MIContainer.isActive = FALSE AND COALESCE (MIContainer.AccountId, 0) NOT IN (zc_Enum_AnalyzerId_SummIn_80401()))
+                                                        OR (MIContainer.isActive = TRUE AND MIContainer.AccountId IN (zc_Enum_Account_110101(), zc_Enum_AnalyzerId_SummIn_80401())))
+                                                      AND COALESCE (MIContainer.AccountId, 0) <>  zc_Enum_Account_100301() -- Прибыль текущего периода
                  GROUP BY CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                         , MIContainer.WhereObjectId_analyzer
                         , MIContainer.ObjectExtId_Analyzer

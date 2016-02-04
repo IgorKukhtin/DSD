@@ -2,8 +2,10 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 535
   ClientWidth = 1020
+  ExplicitLeft = -247
+  ExplicitTop = -113
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -106,7 +108,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           object clBranchName: TcxGridDBColumn [0]
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -342,10 +343,10 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     Width = 1020
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object cxLabel14: TcxLabel
       Left = 615

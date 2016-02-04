@@ -44,7 +44,6 @@ object UnitForm: TUnitForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -234,6 +233,21 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object UnitCode_HistoryCost: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
+        DataBinding.FieldName = 'UnitCode_HistoryCost'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object UnitName_HistoryCost: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
+        DataBinding.FieldName = 'UnitName_HistoryCost'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

@@ -78,6 +78,8 @@ type
     PartnerCode: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
     PersonalSheetWorkTimeName: TcxGridDBColumn;
+    UnitCode_HistoryCost: TcxGridDBColumn;
+    UnitName_HistoryCost: TcxGridDBColumn;
   private
     { Private declarations }
   public
