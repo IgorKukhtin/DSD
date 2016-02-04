@@ -19,6 +19,7 @@ RETURNS TABLE (
   PriceWithVAT   TFloat,
   PriceSale      TFloat,
   Summa          TFloat,
+  SummaWithVAT   TFloat,
   SummaSale      TFloat,
   SummaMargin    TFloat)
 AS
@@ -71,17 +72,25 @@ BEGIN
            , SUM(MI_Income.Amount)::TFloat                  AS Amount
 
            , MIFloat_Price.ValueData      ::TFloat                 AS Price
+
            , CASE WHEN tmpMovementIncome.PriceWithVAT 
                   THEN  MIFloat_Price.ValueData
                   ELSE (MIFloat_Price.ValueData * (1 + tmpMovementIncome.NDS/100))
              END                                     ::TFloat          AS PriceWithVAT
+
            , COALESCE(MIFloat_PriceSale.ValueData,0) ::TFloat                 AS PriceSale
 
            , SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_Price.ValueData)::NUMERIC (16, 2))    ::TFloat AS Summa
-           , SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))::TFloat AS SummaSale
+
+           , SUM(MI_Income.Amount *(CASE WHEN tmpMovementIncome.PriceWithVAT 
+                                           THEN  MIFloat_Price.ValueData 
+                                           ELSE (MIFloat_Price.ValueData * (1 + tmpMovementIncome.NDS/100)) 
+                                     END))                                                 ::TFloat          AS SummaWithVAT
+
+           , SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))  ::TFloat AS SummaSale
            
            , (SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))
-             - SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_Price.ValueData)::NUMERIC (16, 2))) ::TFloat AS SummaMargin
+             - SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_Price.ValueData)::NUMERIC (16, 2)))   ::TFloat AS SummaMargin
 
 
         FROM tmpMovementIncome 
