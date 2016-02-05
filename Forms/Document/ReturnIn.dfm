@@ -47,7 +47,7 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm_vat
+              Column = colAmountSummVat
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -76,7 +76,7 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm_vat
+              Column = colAmountSummVat
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -240,9 +240,9 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountSumm_vat: TcxGridDBColumn [15]
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'AmountSumm_vat'
+          object colAmountSummVat: TcxGridDBColumn [15]
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'AmountSummVat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
@@ -2628,6 +2628,12 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftFloat
       end
       item
+        Name = 'outAmountSummVat'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSummVat'
+      end
+      item
         Name = 'inHeadCount'
         Value = Null
         Component = MasterCDS
@@ -3322,8 +3328,8 @@ inherited ReturnInForm: TReturnInForm
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 632
-    Top = 218
+    Left = 616
+    Top = 226
   end
   object TaxCorrectiveDS: TDataSource
     DataSet = TaxCorrectiveCDS

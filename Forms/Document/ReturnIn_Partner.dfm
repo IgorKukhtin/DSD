@@ -21,6 +21,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       inherited cxGrid: TcxGrid
         Width = 1145
         Height = 447
+        ExplicitLeft = -3
         ExplicitWidth = 1145
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -47,7 +48,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm_vat
+              Column = colAmountSummVat
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -76,7 +77,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm_vat
+              Column = colAmountSummVat
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -203,7 +204,17 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 91
           end
-          object Price_Pricelist: TcxGridDBColumn [11]
+          object colAmountSummVat: TcxGridDBColumn [11]
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'AmountSummVat'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object Price_Pricelist: TcxGridDBColumn [12]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -214,7 +225,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [12]
+          object Price_Pricelist_vat: TcxGridDBColumn [13]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,16 +235,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object colAmountSumm_vat: TcxGridDBColumn [13]
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'AmountSumm_vat'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
           end
           object isCheck_Pricelist: TcxGridDBColumn [14]
             Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1087#1088#1072#1081#1089#1072
@@ -268,9 +269,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -2542,6 +2540,12 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         DataType = ftFloat
       end
       item
+        Name = 'outAmountSummVat'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSummVat'
+      end
+      item
         Name = 'inHeadCount'
         Value = Null
         Component = MasterCDS
@@ -2571,8 +2575,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ComponentItem = 'AssetId'
         ParamType = ptInput
       end>
-    Left = 160
-    Top = 368
+    Left = 184
+    Top = 376
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn_Partner'

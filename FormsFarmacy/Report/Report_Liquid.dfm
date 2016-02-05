@@ -61,7 +61,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Column = StartSum
             end
             item
-              Format = '+,0.00;-,0.00;0.00;'
+              Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummaIncome
             end>
@@ -91,30 +91,35 @@ inherited Report_LiquidForm: TReport_LiquidForm
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            Width = 62
           end
           object EndAmount: TcxGridDBColumn
             Caption = #1050#1086#1083' '#1082#1086#1085
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            Width = 62
           end
           object StartSum: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095
             DataBinding.FieldName = 'StartSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            Width = 62
           end
           object EndSum: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1085
             DataBinding.FieldName = 'EndSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            Width = 62
           end
           object SummaIncome: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083
             DataBinding.FieldName = 'SummaIncome'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
+            Width = 62
           end
         end
       end
@@ -172,9 +177,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0

@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
-             , AmountSumm TFloat, AmountSumm_vat TFloat
+             , AmountSumm TFloat, AmountSummVat TFloat
              , MovementId_Partion Integer, PartionMovementName TVarChar
              , isErased Boolean
              , MovementPromo TVarChar, PricePromo TFloat
@@ -37,6 +37,7 @@ $BODY$
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbPriceWithVAT_pl Boolean;
   DECLARE vbVATPercent_pl TFloat;
+  DECLARE vbVATPercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnIn());
@@ -45,6 +46,9 @@ BEGIN
 
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
+     -- % с НДС
+     vbVATPercent:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_VATPercent());
+
      -- Цены с НДС (прайс)
      vbPriceWithVAT_pl:= COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inPriceListId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE);
      -- Цены (прайс)
@@ -228,6 +232,7 @@ BEGIN
            , 0 ::Integer                AS AssetId
            , '' ::TVarChar              AS AssetName
            , CAST (NULL AS TFloat)      AS AmountSumm
+           , CAST (NULL AS TFloat)      AS AmountSummVat
 
            , CAST (0  AS Integer)       AS MovementId_Partion
            , CAST ('' AS TVarChar)  	AS PartionMovementName
@@ -288,9 +293,13 @@ BEGIN
              END :: TFloat 		        AS AmountSumm
 
            , CASE WHEN tmpResult.CountForPrice > 0
-                       THEN CAST (tmpResult.AmountPartner * tmpPrice.Price_Pricelist_vat / tmpResult.CountForPrice AS NUMERIC (16, 2))
-                   ELSE CAST (tmpResult.AmountPartner * tmpPrice.Price_Pricelist_vat AS NUMERIC (16, 2))
-             END :: TFloat 		        AS AmountSumm_vat
+                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* tmpResult.Price) * tmpResult.AmountPartner/tmpResult.CountForPrice) AS NUMERIC (16, 2)) 
+                                 END
+                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(tmpResult.Price * tmpResult.AmountPartner AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* tmpResult.Price) * tmpResult.AmountPartner) AS NUMERIC (16, 2) ) 
+                                 END
+             END:: TFloat 		        AS AmountSummVat
 
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
@@ -473,6 +482,15 @@ BEGIN
                    ELSE CAST (tmpResult.AmountPartner * tmpResult.Price AS NUMERIC (16, 2))
              END :: TFloat 		        AS AmountSumm
 
+           , CASE WHEN tmpResult.CountForPrice > 0
+                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* tmpResult.Price) * tmpResult.AmountPartner/tmpResult.CountForPrice) AS NUMERIC (16, 2)) 
+                                 END
+                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(tmpResult.Price * tmpResult.AmountPartner AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* tmpResult.Price) * tmpResult.AmountPartner) AS NUMERIC (16, 2) ) 
+                                 END
+             END:: TFloat 		        AS AmountSummVat
+
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
@@ -519,6 +537,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, TDateTime, Bool
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.02.16         * 
  31.03.15         * add GoodsGroupNameFull
  14.04.14                                                        * inOperDate
  08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100
