@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
+   OUT outAmountSummVat         TFloat    , -- Сумма с НДС расчетная
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -19,9 +20,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbVATPercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn_Partner());
+
+    -- Цена с НДС, % НДС 
+     SELECT MB_PriceWithVAT.ValueData , MF_VATPercent.ValueData
+    INTO vbPriceWithVAT, vbVATPercent
+     FROM MovementBoolean AS MB_PriceWithVAT 
+         LEFT JOIN MovementFloat AS MF_VATPercent
+                                 ON MF_VATPercent.MovementId = MB_PriceWithVAT.MovementId
+                                AND MF_VATPercent.DescId = zc_MovementFloat_VATPercent()
+     WHERE MB_PriceWithVAT.MovementId = inMovementId 
+       AND MB_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT();
+
 
      -- сохранили <Элемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
@@ -41,7 +55,14 @@ BEGIN
                                               , inUserId             := vbUserId
                                                ) AS tmp;
 
-
+    outAmountSummVat:= CASE WHEN ioCountForPrice > 0
+                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(inPrice * inAmountPartner/ioCountForPrice AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* inPrice) * inAmountPartner/ioCountForPrice) AS NUMERIC (16, 2)) 
+                                 END
+                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(inPrice * inAmountPartner AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* inPrice) * inAmountPartner) AS NUMERIC (16, 2) ) 
+                                 END
+                        END;
 
 
 END;

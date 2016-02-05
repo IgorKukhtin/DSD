@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 650
   ClientWidth = 1104
   ExplicitWidth = 1120
-  ExplicitHeight = 685
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -43,6 +43,11 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSummVat
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -67,6 +72,11 @@ inherited ReturnInForm: TReturnInForm
             item
               Kind = skSum
               Column = colPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSummVat
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -230,7 +240,17 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object clPartionMovementName: TcxGridDBColumn [15]
+          object colAmountSummVat: TcxGridDBColumn [15]
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'AmountSummVat'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object clPartionMovementName: TcxGridDBColumn [16]
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -245,7 +265,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
-          object PricePromo: TcxGridDBColumn [16]
+          object PricePromo: TcxGridDBColumn [17]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -256,7 +276,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object MovementPromo: TcxGridDBColumn [17]
+          object MovementPromo: TcxGridDBColumn [18]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -2608,6 +2628,12 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftFloat
       end
       item
+        Name = 'outAmountSummVat'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSummVat'
+      end
+      item
         Name = 'inHeadCount'
         Value = Null
         Component = MasterCDS
@@ -3302,8 +3328,8 @@ inherited ReturnInForm: TReturnInForm
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 632
-    Top = 218
+    Left = 616
+    Top = 226
   end
   object TaxCorrectiveDS: TDataSource
     DataSet = TaxCorrectiveCDS

@@ -35,35 +35,35 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = colPlanAmount
+              Column = StartAmount
             end
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = FactAmount
+              Column = StartSum
             end
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = colDiffAmount
+              Column = SummaIncome
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
-              Column = colPlanAmount
+              Column = StartAmount
             end
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
-              Column = FactAmount
+              Column = StartSum
             end
             item
-              Format = '+,0.00;-,0.00;0.00;'
+              Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = colDiffAmount
+              Column = SummaIncome
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -74,9 +74,9 @@ inherited Report_LiquidForm: TReport_LiquidForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colPlanDate: TcxGridDBColumn
+          object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'PlanDate'
+            DataBinding.FieldName = 'OperDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'DD.MM.YYYY (DDD)'
             Width = 61
@@ -86,58 +86,40 @@ inherited Report_LiquidForm: TReport_LiquidForm
             DataBinding.FieldName = 'UnitName'
             Width = 154
           end
-          object colPlanAmount: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085
-            DataBinding.FieldName = 'PlanAmount'
+          object StartAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083' '#1085#1072#1095
+            DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            Width = 62
           end
-          object colPlanAmountAccum: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083'.'
-            DataBinding.FieldName = 'PlanAmountAccum'
+          object EndAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083' '#1082#1086#1085
+            DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            Width = 62
           end
-          object FactAmount: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090
-            DataBinding.FieldName = 'FactAmount'
+          object StartSum: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095
+            DataBinding.FieldName = 'StartSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            Width = 62
           end
-          object colFactAmountAccum: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1089' '#1085#1072#1082#1086#1087#1083'.'
-            DataBinding.FieldName = 'FactAmountAccum'
+          object EndSum: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1085
+            DataBinding.FieldName = 'EndSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            Width = 62
           end
-          object colDiffAmount: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072
-            DataBinding.FieldName = 'DiffAmount'
+          object SummaIncome: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083
+            DataBinding.FieldName = 'SummaIncome'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
-          end
-          object colDiffAmountAccum: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089' '#1085#1072#1082#1086#1087#1083'.'
-            DataBinding.FieldName = 'DiffAmountAccum'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
-          end
-          object colPercentMake: TcxGridDBColumn
-            AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
-            Caption = '% '#1074#1099#1087'.'
-            DataBinding.FieldName = 'PercentMake'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00%'
-            HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
-          end
-          object colPercentMakeAccum: TcxGridDBColumn
-            AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
-            Caption = '% '#1074#1099#1087'. '#1089' '#1085#1072#1082#1086#1087#1083'.'
-            DataBinding.FieldName = 'PercentMakeAccum'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00%'
-            HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
-            Width = 72
+            Width = 62
           end
         end
       end

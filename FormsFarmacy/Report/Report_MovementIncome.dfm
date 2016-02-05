@@ -3,7 +3,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 736
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 752
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,6 +24,17 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         ExplicitWidth = 736
         ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaSale
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
@@ -45,6 +55,11 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colGoodsName
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -54,19 +69,20 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colFromName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
-          end
-          object colGoodsId: TcxGridDBColumn
-            Caption = #1048#1044' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsId'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 27
           end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
@@ -95,13 +111,31 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Width = 49
           end
           object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1086' '#1089'/'#1089
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 62
+          end
+          object colSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object colSummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
           end
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
@@ -115,15 +149,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'PriceSale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 66
-          end
-          object colSumma: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1089'/'#1089
-            DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
