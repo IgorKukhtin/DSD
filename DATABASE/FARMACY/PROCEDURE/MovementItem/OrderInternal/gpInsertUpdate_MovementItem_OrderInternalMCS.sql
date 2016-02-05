@@ -79,7 +79,11 @@ BEGIN
                                                                                                           ,inAmountManual:= NULL
                                                                                                           ,inPrice      := Object_Price.Price
                                                                                                           ,inUserId     := vbUserId)
-                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)) - COALESCE(Income.Amount_Income,0))::TFloat)
+                                            ,inValueData       := CASE WHEN Object_Price.MCSValue BETWEEN 0.2 AND 1 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
+                                                                            THEN CEIL  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
+                                                                            ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
+                                                                  END :: TFloat
+                                            )
         from Object_Price_View AS Object_Price
             -- LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                 -- ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -156,9 +160,12 @@ BEGIN
             Object_Price.MCSValue,
             Object_Goods_View.MinimumLot,
             Income.Amount_Income
-        HAVING
-            floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)) - COALESCE(Income.Amount_Income,0)) > 0;
-        --Пересчитываем ручное количество для строк с авторасчетом
+        HAVING CASE WHEN Object_Price.MCSValue BETWEEN 0.2 AND 1 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
+                         THEN CEIL  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
+                    ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
+               END > 0;
+
+        -- Пересчитываем ручное количество для строк с авторасчетом
         PERFORM
             lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
                                             ,inMovementItemId := MovementItemSaved.Id

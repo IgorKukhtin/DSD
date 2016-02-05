@@ -22,8 +22,13 @@ BEGIN
      END IF;
 
 
-     IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 10
-     THEN RETURN; END IF;
+     IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 10
+     THEN 
+         IF EXTRACT ('MINUTES' FROM CURRENT_TIMESTAMP) BETWEEN 30 AND 59
+         THEN 
+             RETURN; 
+         END IF;
+     END IF;
 
 
 

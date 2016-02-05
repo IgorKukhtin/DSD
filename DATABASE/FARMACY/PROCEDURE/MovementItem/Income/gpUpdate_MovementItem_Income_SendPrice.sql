@@ -27,19 +27,29 @@ BEGIN
      END IF;
 
      -- определяем Категорию расчета
-
      SELECT Object_MarginCategoryLink.MarginCategoryId  INTO vbMarginCategoryId
        FROM Object_MarginCategoryLink_View AS Object_MarginCategoryLink 
-                          JOIN Movement_Income_View ON Movement_Income_View.Id = inMovementId
-                                                   AND Movement_Income_View.FromId = Object_MarginCategoryLink.JuridicalId
-                                                   AND ((Movement_Income_View.ToId = Object_MarginCategoryLink.UnitId) OR ( COALESCE(Object_MarginCategoryLink.UnitId, 0) = 0 ));
+            INNER JOIN Movement ON Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Income()
+            INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                         AND MovementLinkObject_From.ObjectId = Object_MarginCategoryLink.JuridicalId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+       WHERE MovementLinkObject_To.ObjectId = Object_MarginCategoryLink.UnitId OR COALESCE (Object_MarginCategoryLink.UnitId, 0) = 0;
+
             
-      SELECT ObjectFloat_Percent.valuedata INTO vbJuridicalPercent      
-            FROM Movement_Income_View 
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Percent
-                                           ON ObjectFloat_Percent.ObjectId = Movement_Income_View.FromId
-                                          AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
-           WHERE Movement_Income_View.Id = inMovementId;
+     --
+     SELECT ObjectFloat_Percent.valuedata INTO vbJuridicalPercent      
+     FROM Movement
+          INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Percent
+                                ON ObjectFloat_Percent.ObjectId = MovementLinkObject_From.ObjectId
+                               AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+     WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Income();
             
             
      IF COALESCE(vbMarginCategoryId, 0) = 0

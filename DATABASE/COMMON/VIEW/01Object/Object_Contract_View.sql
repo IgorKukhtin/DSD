@@ -39,10 +39,19 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , ObjectLink_Contract_ContractTermKind.ChildObjectId AS ContractTermKindId
 
          -- !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
-       , ObjectFloat_ChangePercent.ValueData         AS ChangePercent
-       , ObjectFloat_ChangePrice.ValueData           AS ChangePrice
+       -- , ObjectFloat_ChangePercent.ValueData         AS ChangePercent
+       -- , ObjectFloat_ChangePrice.ValueData           AS ChangePrice
+       , View_ContractCondition_Value.ChangePercent
+       , View_ContractCondition_Value.ChangePercentPartner
+       , View_ContractCondition_Value.ChangePrice
+
+       , View_ContractCondition_Value.DayCalendar
+       , View_ContractCondition_Value.DayBank
+       , View_ContractCondition_Value.DelayDay
        
   FROM Object_Contract_InvNumber_View
+       LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
+
        LEFT JOIN ObjectDate AS ObjectDate_Start
                             ON ObjectDate_Start.ObjectId = Object_Contract_InvNumber_View.ContractId
                            AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
@@ -76,12 +85,12 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                            AND ObjectLink_Contract_ContractTermKind.DescId = zc_ObjectLink_Contract_ContractTermKind()
 
        -- !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
-       LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercent
+       /*LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercent
                              ON ObjectFloat_ChangePercent.ObjectId = Object_Contract_InvNumber_View.ContractId
                             AND ObjectFloat_ChangePercent.DescId = zc_ObjectFloat_Contract_ChangePercent()  
        LEFT JOIN ObjectFloat AS ObjectFloat_ChangePrice
                              ON ObjectFloat_ChangePrice.ObjectId = Object_Contract_InvNumber_View.ContractId
-                            AND ObjectFloat_ChangePrice.DescId = zc_ObjectFloat_Contract_ChangePrice()  
+                            AND ObjectFloat_ChangePrice.DescId = zc_ObjectFloat_Contract_ChangePrice()*/
   ;
 
 

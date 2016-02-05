@@ -990,6 +990,7 @@ LANGUAGE PLPGSQL VOLATILE;
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8462, 8459); -- Склад Брак -> Склад Реализации 
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8461, 8459); -- Склад Возвратов -> Склад Реализации 
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 256716, 8459); -- Склад УТИЛЬ -> Склад Реализации 
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428365, 428365 ); -- Склад возвратов ф.Киев
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 309599, 301309); -- Склад возвратов ф.Запорожье -> Склад гп ф.Запорожье
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428366 , 428366 ); -- Склад возвратов ф.Кривой Рог
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428364 , 428364 ); -- Склад возвратов ф.Николаев (Херсон)
@@ -1000,8 +1001,8 @@ LANGUAGE PLPGSQL VOLATILE;
 -- SELECT MIN (MovementItemContainer.OperDate), MAX (MovementItemContainer.OperDate), Count(*), MovementDesc.Code FROM MovementItemContainer left join Movement on Movement.Id = MovementId left join MovementDesc on MovementDesc.Id = Movement.DescId where MovementItemContainer.OperDate between '01.01.2013' and '31.01.2013' group by MovementDesc.Code;
 -- SELECT StartDate, EndDate, Count(*) FROM HistoryCost GROUP BY StartDate, EndDate ORDER BY 1;
 
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2014', inEndDate:= '25.11.2014', inBranchId:= 0, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '26.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- филиал Киев
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест

@@ -1,33 +1,33 @@
 inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
-  ClientHeight = 534
+  ClientHeight = 399
   ClientWidth = 1028
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -112
+  ExplicitLeft = -238
   ExplicitWidth = 1044
-  ExplicitHeight = 569
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 1028
-    Height = 454
+    Height = 319
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1028
-    ExplicitHeight = 454
-    ClientRectBottom = 454
+    ExplicitHeight = 319
+    ClientRectBottom = 319
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
-      ExplicitHeight = 454
+      ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Width = 1028
-        Height = 454
+        Height = 319
         ExplicitWidth = 1028
-        ExplicitHeight = 454
+        ExplicitHeight = 319
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -128,11 +128,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_branch_real
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_zavod_real
             end
             item
@@ -148,17 +143,7 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_branch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_zavod
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummIn_Change_branch
             end
             item
               Format = ',0.####'
@@ -178,17 +163,7 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_Change_branch_real
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_Change_zavod_real
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummIn_40200_branch
             end
             item
               Format = ',0.####'
@@ -204,11 +179,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummIn_40200_110000_P
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummIn_40200_branch_real
             end
             item
               Format = ',0.####'
@@ -238,11 +208,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_Partner_branch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_Partner_zavod
             end
             item
@@ -258,22 +223,12 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_Partner_branch_real
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_Partner_zavod_real
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_total
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummIn_branch_total
             end
             item
               Format = ',0.####'
@@ -384,11 +339,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_branch_real
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_zavod_real
             end
             item
@@ -404,17 +354,7 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_branch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_zavod
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummIn_Change_branch
             end
             item
               Format = ',0.####'
@@ -434,17 +374,7 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_Change_branch_real
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_Change_zavod_real
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummIn_40200_branch
             end
             item
               Format = ',0.####'
@@ -460,11 +390,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummIn_40200_110000_P
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummIn_40200_branch_real
             end
             item
               Format = ',0.####'
@@ -494,11 +419,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_Partner_branch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_Partner_zavod
             end
             item
@@ -514,22 +434,12 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummIn_Partner_branch_real
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummIn_Partner_zavod_real
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_total
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummIn_branch_total
             end
             item
               Format = ',0.####'
@@ -896,31 +806,9 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummIn_branch_total: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. '#1080#1090#1086#1075' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'SummIn_branch_total'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object SummIn_zavod_total: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' '#1080#1090#1086#1075' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'SummIn_zavod_total'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummIn_branch_real: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'SummIn_branch_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -962,18 +850,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummIn_branch: TcxGridDBColumn
-            Caption = '***'#1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'SummIn_branch'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 70
-          end
           object SummIn_zavod: TcxGridDBColumn
             Caption = '***'#1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'SummIn_zavod'
@@ -984,17 +860,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
-            Width = 70
-          end
-          object SummIn_Change_branch: TcxGridDBColumn
-            Caption = '***'#1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. ('#1089#1082'.1%)'
-            DataBinding.FieldName = 'SummIn_Change_branch'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object SummIn_Change_zavod: TcxGridDBColumn
@@ -1030,31 +895,9 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummIn_Change_branch_real: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. ('#1089#1082'.1%)'
-            DataBinding.FieldName = 'SummIn_Change_branch_real'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object SummIn_Change_zavod_real: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' ('#1089#1082'.1%)'
             DataBinding.FieldName = 'SummIn_Change_zavod_real'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummIn_40200_branch: TcxGridDBColumn
-            Caption = '***'#1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
-            DataBinding.FieldName = 'SummIn_40200_branch'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1096,17 +939,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummIn_40200_branch_real: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
-            DataBinding.FieldName = 'SummIn_40200_branch_real'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object SummIn_40200_zavod_real: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
             DataBinding.FieldName = 'SummIn_40200_zavod_real'
@@ -1118,18 +950,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummIn_Partner_branch: TcxGridDBColumn
-            Caption = '***'#1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. ('#1087#1086#1082'.)'
-            DataBinding.FieldName = 'SummIn_Partner_branch'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 70
-          end
           object SummIn_Partner_zavod: TcxGridDBColumn
             Caption = '***'#1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' ('#1087#1086#1082'.)'
             DataBinding.FieldName = 'SummIn_Partner_zavod'
@@ -1139,7 +959,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 70
           end
           object SummIn_Partner_A: TcxGridDBColumn
@@ -1151,24 +970,11 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 70
           end
           object SummIn_Partner_P: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' ('#1087#1086#1082'. '#1090#1088'.-)'
             DataBinding.FieldName = 'SummIn_Partner_110000_P'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 70
-          end
-          object SummIn_Partner_branch_real: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. ('#1087#1086#1082'.)'
-            DataBinding.FieldName = 'SummIn_Partner_branch_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1229,17 +1035,6 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object PriceIn_branch: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1092#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'PriceIn_branch'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
           end
           object PriceIn_zavod: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076

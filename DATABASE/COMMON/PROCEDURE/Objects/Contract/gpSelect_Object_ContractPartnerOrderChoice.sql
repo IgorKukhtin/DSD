@@ -127,8 +127,8 @@ BEGIN
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
-       , View_ContractCondition_Value.ChangePercent
-       , View_ContractCondition_Value.DelayDay
+       , Object_Contract_View.ChangePercent
+       , Object_Contract_View.DelayDay
        , ObjectFloat_PrepareDayCount.ValueData  AS PrepareDayCount
        , ObjectFloat_DocumentDayCount.ValueData AS DocumentDayCount
 
@@ -236,7 +236,7 @@ BEGIN
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
- 	LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+ 	/*LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                         INNER JOIN ObjectFloat AS ObjectFloat_Value
@@ -250,7 +250,7 @@ BEGIN
                                              AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                    WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                  )*/ Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_View.ContractId
+                  ) Object_ContractCondition_Value View AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_View.ContractId*/
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
