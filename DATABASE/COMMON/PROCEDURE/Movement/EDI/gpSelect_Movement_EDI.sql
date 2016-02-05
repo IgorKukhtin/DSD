@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FileName TVarChar
              , DateRegistered  TDateTime
              , InvNumberRegistered TVarChar
+             , PersonalSigningName TVarChar
              , isCheck Boolean
              , isElectron Boolean
              , isError Boolean
@@ -109,6 +110,8 @@ BEGIN
            , MovementString_FileName.ValueData              AS FileName
            , MovementDate_DateRegistered.ValueData          AS DateRegistered
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
+
+           , COALESCE (Object_PersonalSigning.ValueData, COALESCE (Object_PersonalBookkeeper.ValueData, ''))  ::TVarChar    AS PersonalSigningName
 
            , CASE WHEN (MovementLinkMovement_Sale.MovementId IS NOT NULL OR MovementLinkMovement_MasterEDI.MovementId IS NOT NULL)
                    AND (COALESCE (MovementFloat_TotalCountPartner.ValueData, 0) <> COALESCE (MovementFloat_TotalCountPartner_Sale.ValueData, 0)
@@ -270,6 +273,21 @@ BEGIN
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
                                                 AND Movement_Order.StatusId = zc_Enum_Status_Complete()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
+                                 ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract_InvNumber.ContractId
+                                AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+            LEFT JOIN Object AS Object_PersonalSigning ON Object_PersonalSigning.Id = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                         ON MovementLinkObject_Branch.MovementId = Movement_Tax.Id
+                                        AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                 ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                                AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+            LEFT JOIN Object AS Object_PersonalBookkeeper ON Object_PersonalBookkeeper.Id = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
 
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate

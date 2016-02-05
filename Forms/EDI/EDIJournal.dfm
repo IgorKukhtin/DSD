@@ -3,9 +3,9 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitTop = -31
+  ExplicitLeft = -181
   ExplicitWidth = 1300
-  ExplicitHeight = 488
+  ExplicitHeight = 491
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -436,6 +436,13 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object clPersonalSigningName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
+            DataBinding.FieldName = 'PersonalSigningName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end
@@ -1193,7 +1200,7 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDatePartner_Sale'
           DataType = ftDateTime
@@ -1792,7 +1799,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOrderOperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -1937,7 +1944,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOrderOperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -1949,7 +1956,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inPartnerOperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -1961,7 +1968,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOperDateTax'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -1973,7 +1980,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOperDateSaleLink'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -2003,7 +2010,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inComDocDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -2065,8 +2072,8 @@ inherited EDIJournalForm: TEDIJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 192
-    Top = 160
+    Left = 376
+    Top = 136
   end
   object DBChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2208,21 +2215,21 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDatePartner_Sale'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDatePartner_Sale'
         DataType = ftDateTime
       end
       item
         Name = 'OperDate_Tax'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate_Tax'
         DataType = ftDateTime
       end
       item
         Name = 'OperDate_TaxCorrective'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate_TaxCorrective'
         DataType = ftDateTime
@@ -2268,7 +2275,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDate_Order'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate_Order'
         DataType = ftDateTime
@@ -2385,7 +2392,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDatePartner_Sale'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDatePartner_Sale'
         DataType = ftDateTime
@@ -2405,7 +2412,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDate_Order'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate_Order'
         DataType = ftDateTime
@@ -2549,8 +2556,8 @@ inherited EDIJournalForm: TEDIJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 679
-    Top = 72
+    Left = 647
+    Top = 64
   end
   object spInsert_Protocol_EDIReceipt: TdsdStoredProc
     StoredProcName = 'gpInsert_Protocol_EDIReceipt'
@@ -2577,7 +2584,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOperMonth'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -2595,7 +2602,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inDateRegistered'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end>
@@ -2774,7 +2781,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end
