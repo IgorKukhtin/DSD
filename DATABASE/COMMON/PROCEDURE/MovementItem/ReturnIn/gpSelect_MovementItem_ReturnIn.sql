@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
-             , AmountSumm TFloat
+             , AmountSumm TFloat, AmountSumm_vat TFloat
              , MovementId_Partion Integer, PartionMovementName TVarChar
              , isErased Boolean
              , MovementPromo TVarChar, PricePromo TFloat
@@ -286,6 +286,11 @@ BEGIN
                        THEN CAST (tmpResult.AmountPartner * tmpResult.Price / tmpResult.CountForPrice AS NUMERIC (16, 2))
                    ELSE CAST (tmpResult.AmountPartner * tmpResult.Price AS NUMERIC (16, 2))
              END :: TFloat 		        AS AmountSumm
+
+           , CASE WHEN tmpResult.CountForPrice > 0
+                       THEN CAST (tmpResult.AmountPartner * tmpPrice.Price_Pricelist_vat / tmpResult.CountForPrice AS NUMERIC (16, 2))
+                   ELSE CAST (tmpResult.AmountPartner * tmpPrice.Price_Pricelist_vat AS NUMERIC (16, 2))
+             END :: TFloat 		        AS AmountSumm_vat
 
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName

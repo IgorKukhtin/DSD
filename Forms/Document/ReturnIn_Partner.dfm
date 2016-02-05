@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1145
   ExplicitWidth = 1161
-  ExplicitHeight = 672
+  ExplicitHeight = 675
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -43,6 +43,11 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSumm_vat
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -67,6 +72,11 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             item
               Kind = skSum
               Column = colPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSumm_vat
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -215,7 +225,17 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn [13]
+          object colAmountSumm_vat: TcxGridDBColumn [13]
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'AmountSumm_vat'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object isCheck_Pricelist: TcxGridDBColumn [14]
             Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1087#1088#1072#1081#1089#1072
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -223,7 +243,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 59
           end
-          object PricePromo: TcxGridDBColumn [14]
+          object PricePromo: TcxGridDBColumn [15]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -234,7 +254,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object MovementPromo: TcxGridDBColumn [15]
+          object MovementPromo: TcxGridDBColumn [16]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -248,6 +268,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
