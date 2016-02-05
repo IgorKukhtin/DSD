@@ -259,6 +259,7 @@ object PersonalForm: TPersonalForm
           ItemName = 'bbInsert'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbEdit'
         end
@@ -468,6 +469,13 @@ object PersonalForm: TPersonalForm
           Name = 'MaskId'
           Value = Null
           ParamType = ptInput
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberId'
+          ParamType = ptInput
         end>
       isShowModal = False
       DataSource = DataSource
@@ -517,6 +525,13 @@ object PersonalForm: TPersonalForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberId'
           ParamType = ptInput
         end>
       isShowModal = False

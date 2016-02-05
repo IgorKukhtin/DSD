@@ -1,9 +1,12 @@
 -- Function: gpGet_Object_Personal(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Object_Personal (Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Object_Personal (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Personal (Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Personal(
     IN inId          Integer,       -- Сотрудники
+    IN inMemberId    Integer,       -- физ.лицо 
     IN inMaskId      Integer   ,    -- id для копирования
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -50,9 +53,9 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)   AS MemberId
-           , CAST (0 as Integer)   AS MemberCode
-           , CAST ('' as TVarChar) AS MemberName
+             COALESCE (Object_Member.Id, 0)         :: Integer   AS MemberId
+           , COALESCE (Object_Member.ObjectCode, 0) :: Integer   AS MemberCode
+           , COALESCE (Object_Member.ValueData, '') :: TVarChar  AS MemberName
 
            , CAST (0 as Integer)   AS PositionId
            , CAST ('' as TVarChar) AS PositionName
@@ -67,7 +70,10 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS DateOut
            , FALSE AS isDateOut
            , FALSE AS isOfficial
-           , TRUE  AS isMain;
+           , FALSE AS isMain
+         FROM Object AS Object_Member 
+         WHERE Object_Member.Id = COALESCE(inMemberId,0) ;
+
   END IF;
 
   IF COALESCE (inId, 0) <> 0
@@ -104,7 +110,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -116,3 +122,5 @@ ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postg
 
 -- тест
 -- SELECT * FROM gpGet_Object_Personal (100, '2')
+
+--select * from gpGet_Object_Personal(Id := 0 ::Integer, inMemberId := 942571::Integer , inMaskId := False ,  inSession := '3'::TVarChar);

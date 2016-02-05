@@ -272,12 +272,17 @@
   object dsdFormParams: TdsdFormParams
     Params = <
       item
+        Name = 'MaskId'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
       end
       item
-        Name = 'MaskId'
+        Name = 'MemberId'
         Value = Null
         ParamType = ptInputOutput
       end>
@@ -297,7 +302,14 @@
         ParamType = ptInput
       end
       item
-        Name = 'MaskId'
+        Name = 'inMemberId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'InMaskId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'MaskId'
@@ -404,8 +416,8 @@
     Top = 48
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 304
-    Top = 196
+    Left = 280
+    Top = 204
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
