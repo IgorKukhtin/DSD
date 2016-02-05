@@ -461,6 +461,11 @@ BEGIN
                                  , tmpMIContainer.PartionGoodsId
                           )
 
+           , tmpUnitBaza AS (-- Подразделения для расчета "нормы" !!!временно!!!
+                             SELECT Object.Id AS UnitId
+                             FROM Object
+                             WHERE Object.Id = 8458
+                          )
          , tmpPriceStart AS (-- Цены Прайс начальные !!!временно * 1.2!!!
                              SELECT lfObjectHistory_PriceListItem.GoodsId
                                   , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
@@ -535,7 +540,7 @@ BEGIN
                                  , tmpContainer_Count.PartionGoodsId
                                  , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN MIContainer.MovementItemId ELSE NULL END AS MovementItemId
                                  , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN MIContainer.MovementId     ELSE NULL END AS MovementId
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE AND MIContainer.WhereObjectId_Analyzer <> MIContainer.ObjectExtId_Analyzer THEN MIContainer.Amount ELSE 0 END) AS CountOut_byPF
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE AND tmpUnitBaza.UnitId > 0 /*MIContainer.WhereObjectId_Analyzer <> MIContainer.ObjectExtId_Analyzer*/ THEN MIContainer.Amount ELSE 0 END) AS CountOut_byPF
 
                                  , -1 * SUM (CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.Amount                    ELSE 0 END) AS CountOut_byCount
                                  ,      SUM (CASE WHEN MIContainer.isActive = FALSE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END) AS Count_onCount
@@ -546,6 +551,7 @@ BEGIN
                                  INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId    = tmpContainer_Count.ContainerId_begin
                                                                                 -- AND MIContainer.isActive       = FALSE
                                                                                 AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                 LEFT JOIN tmpUnitBaza ON tmpUnitBaza.UnitId = MIContainer.ObjectExtId_Analyzer
                                  LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                              ON MIFloat_Count.MovementItemId = MIContainer.MovementItemId
                                                             AND MIFloat_Count.DescId         = zc_MIFloat_Count()

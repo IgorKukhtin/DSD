@@ -1148,10 +1148,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceDialogForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalDialogForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListForm'));

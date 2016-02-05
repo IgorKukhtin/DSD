@@ -33,6 +33,8 @@ CREATE OR REPLACE VIEW Object_ContractCondition_ValueView AS
        INNER JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                              ON ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = tmpContractConditionKind.Id
                             AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+       INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                                    AND Object_ContractCondition.isErased = FALSE
        INNER JOIN ObjectFloat AS ObjectFloat_Value
                               ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()

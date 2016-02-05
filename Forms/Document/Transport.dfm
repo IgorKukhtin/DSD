@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
-  ClientHeight = 547
+  ClientHeight = 411
   ClientWidth = 1200
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -292,24 +292,27 @@
     Left = 0
     Top = 126
     Width = 1200
-    Height = 421
+    Height = 285
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetIncome
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 421
+    ExplicitHeight = 421
+    ClientRectBottom = 285
     ClientRectRight = 1200
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 397
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1200
-        Height = 252
+        Height = 116
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 252
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -555,11 +558,12 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 257
+        Top = 121
         Width = 1200
         Height = 140
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 257
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -851,23 +855,26 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 252
+        Top = 116
         Width = 1200
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 252
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
+      ExplicitHeight = 397
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
         Width = 1200
-        Height = 397
+        Height = 261
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 397
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -961,6 +968,7 @@
                 ImageIndex = 13
                 Value = 3
               end>
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
@@ -968,6 +976,7 @@
           object clincInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
@@ -975,12 +984,14 @@
           object clincInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1095#1077#1082#1072
             DataBinding.FieldName = 'InvNumberPartner'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
           object clincOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1087#1088#1072#1074#1082#1080
             DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
@@ -995,6 +1006,7 @@
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
@@ -1009,6 +1021,7 @@
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
@@ -1023,6 +1036,7 @@
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
@@ -1030,6 +1044,7 @@
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -1045,12 +1060,14 @@
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object clincFuelName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
@@ -1059,7 +1076,9 @@
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
@@ -1067,7 +1086,9 @@
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
@@ -1075,7 +1096,9 @@
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -1084,7 +1107,9 @@
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'AmountSummTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -1101,19 +1126,20 @@
             Width = 55
           end
           object clincChangePrice: TcxGridDBColumn
-            Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
+            Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077', '#1075#1088#1085' '#1079#1072' 1'#1083'.'
             DataBinding.FieldName = 'ChangePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 45
           end
           object clincPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
@@ -1121,7 +1147,9 @@
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
@@ -1129,8 +1157,10 @@
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
@@ -1152,6 +1182,9 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1600,6 +1633,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = RouteChoiceForm
@@ -1613,6 +1647,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1629,6 +1664,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1799,7 +1835,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridIncomeDBTableView
       Action = SourceFuel_ObjectChoiceForm
@@ -1813,7 +1848,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIIncome
       StoredProcList = <
         item
@@ -1830,7 +1864,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIIncome
       StoredProcList = <
         item
@@ -2029,7 +2062,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementUnCompleteIncome
       StoredProcList = <
         item
@@ -2053,7 +2085,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementCompleteIncome
       StoredProcList = <
         item
@@ -2077,7 +2108,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementSetErasedIncome
       StoredProcList = <
         item

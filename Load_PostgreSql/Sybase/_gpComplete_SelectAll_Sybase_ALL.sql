@@ -43,6 +43,7 @@ BEGIN
                           WHERE  ObjectLink.DescId = zc_ObjectLink_Unit_Branch()
                              AND ObjectLink.ChildObjectId > 0 
                              AND ObjectLink.ChildObjectId <> zc_Branch_Basis()
+                             -- AND ObjectLink.ChildObjectId = 8379 -- филиал Киев
                         /*SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье
                     UNION SELECT 309599 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Запорожье
                     UNION SELECT 346093  AS UnitId, NULL AS isMain  -- Склад ГП ф.Одесса
@@ -387,5 +388,5 @@ create table dba._pgMovementReComlete
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 */
 -- тест
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.12.2015', inEndDate:= '31.12.2015', inIsBefoHistoryCost:= TRUE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.11.2015', inEndDate:= '01.11.2015', inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inIsBefoHistoryCost:= TRUE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inIsBefoHistoryCost:= FALSE)

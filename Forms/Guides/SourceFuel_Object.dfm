@@ -97,14 +97,20 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
       object clChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
         DataBinding.FieldName = 'ChangePercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object clChangePrice: TcxGridDBColumn
-        Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
+        Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077', '#1075#1088#1085' '#1079#1072' 1'#1083'.'
         DataBinding.FieldName = 'ChangePrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
@@ -291,71 +297,84 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
           DataType = ftString
         end
         item
           Name = 'GoodsId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
         end
         item
           Name = 'GoodsCode'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsCode'
         end
         item
           Name = 'GoodsName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
         end
         item
           Name = 'FuelName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'FuelName'
           DataType = ftString
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractId'
         end
         item
           Name = 'InvNumber'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InvNumber'
         end
         item
           Name = 'ChangePercent'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ChangePercent'
         end
         item
           Name = 'ChangePrice'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ChangePrice'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindId'
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindName'
         end>
@@ -384,12 +403,13 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 40
     Top = 208
   end
@@ -425,7 +445,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end>

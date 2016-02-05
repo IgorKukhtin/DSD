@@ -667,7 +667,7 @@ begin
   if C_DOC_VER <> '7' then
      DECLAR.DECLARBODY.H10G1D := FormatDateTime('ddmmyyyy',
         HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARBODY.H10G2S := 'Неграш';
+  DECLAR.DECLARBODY.H10G2S := HeaderDataSet.FieldByName('N10').asString; // 'Неграш';
 
   if SendToFTP then
     lDirectory := ExtractFilePath(ParamStr(0))
@@ -936,7 +936,7 @@ begin
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT')
     .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R04G11 := DECLAR.DECLARBODY.R04G7;
-  DECLAR.DECLARBODY.H10G1S := 'Неграш';
+  DECLAR.DECLARBODY.H10G1S := HeaderDataSet.FieldByName('N10').asString; //'Неграш';
 
   // путь к файлу
   if SendToFTP then

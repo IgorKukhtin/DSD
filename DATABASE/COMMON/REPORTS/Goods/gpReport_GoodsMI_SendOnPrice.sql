@@ -48,34 +48,25 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , OperCount_Partner_real     TFloat  -- вес покупателя (по дате покупателя, т.е. факт)
              , OperCount_sh_Partner_real  TFloat  -- шт. покупателя (по дате покупателя, т.е. факт)
 
-             , SummIn_branch_total          TFloat  -- склад (итог: с потерями и скидкой) Себестоимость филиальная (для подразделений завода здесь заводская)
              , SummIn_zavod_total           TFloat  -- склад (итог: с потерями и скидкой) Себестоимость к заводская
-             , SummIn_branch_real           TFloat  -- склад Себестоимость филиальная (для подразделений завода здесь заводская)
              , SummIn_zavod_real            TFloat  -- склад Себестоимость к заводская
              , SummIn_110000_A              TFloat  -- склад Себестоимость транзит приход (филиальная + заводская)
              , SummIn_110000_P              TFloat  -- склад Себестоимость транзит расход (филиальная + заводская)
-             , SummIn_branch                TFloat  -- *склад Себестоимость филиальная (для подразделений завода здесь заводская) + (по дате покупателя, т.е. информативно)
              , SummIn_zavod                 TFloat  -- *склад Себестоимость к заводская + (по дате покупателя, т.е. информативно)
 
-             , SummIn_Change_branch         TFloat  -- *Скидка за вес Себестоимость филиальная (для подразделений завода здесь заводская) + (по дате склада, т.е. информативно)
              , SummIn_Change_zavod          TFloat  -- *Скидка за вес Себестоимость заводская + (по дате склада, т.е. информативно)
              , SummIn_Change_110000_A       TFloat  -- *Скидка за вес склад Себестоимость транзит приход (филиальная + заводская) + (по дате склада, т.е. информативно)
              , SummIn_Change_110000_P       TFloat  -- *Скидка за вес склад Себестоимость транзит расход (филиальная + заводская) + (по дате склада, т.е. информативно)
-             , SummIn_Change_branch_real    TFloat  -- Скидка за вес Себестоимость филиальная (для подразделений завода здесь заводская) + (по дате покупателя, т.е. факт)
              , SummIn_Change_zavod_real     TFloat  -- Скидка за вес Себестоимость заводская + (по дате покупателя, т.е. факт)
 
-             , SummIn_40200_branch          TFloat  -- *Разница в весе Себестоимость филиальная (для подразделений завода здесь заводская) + (по дате склада, т.е. информативно)
              , SummIn_40200_zavod           TFloat  -- *Разница в весе Себестоимость заводская + (по дате склада, т.е. информативно)
              , SummIn_40200_110000_A        TFloat  -- *Разница в весе склад Себестоимость транзит приход (филиальная + заводская) + (по дате склада, т.е. информативно)
              , SummIn_40200_110000_P        TFloat  -- *Разница в весе склад Себестоимость транзит расход (филиальная + заводская) + (по дате склада, т.е. информативно)
-             , SummIn_40200_branch_real     TFloat  -- Разница в весе Себестоимость филиальная (для подразделений завода здесь заводская) + (по дате покупателя, т.е. факт)
              , SummIn_40200_zavod_real      TFloat  -- Разница в весе Себестоимость заводская + (по дате покупателя, т.е. факт)
 
-             , SummIn_Partner_branch        TFloat  -- *Покупатель Себестоимость филиальная (для подразделений завода здесь заводская) + (по дате склада, т.е. информативно)
              , SummIn_Partner_zavod         TFloat  -- *Покупатель Себестоимость заводская + (по дате склада, т.е. информативно)
              , SummIn_Partner_110000_A      TFloat  -- *Покупатель Себестоимость транзит приход (филиальная + заводская) + (по дате склада, т.е. информативно)
              , SummIn_Partner_110000_P      TFloat  -- *Покупатель Себестоимость транзит расход (филиальная + заводская) + (по дате склада, т.е. информативно)
-             , SummIn_Partner_branch_real   TFloat  -- Покупатель Себестоимость филиальная (для подразделений завода здесь заводская) + (по дате покупателя, т.е. факт)
              , SummIn_Partner_zavod_real    TFloat  -- Покупатель Себестоимость заводская + (по дате покупателя, т.е. факт)
 
              , SummOut_Partner              TFloat  -- *Покупатель сумма (по дате склада, т.е. информативно)
@@ -83,7 +74,6 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , SummOut_Partner_110000_P     TFloat  -- *Покупатель сумма транзит расход (по дате склада, т.е. информативно)
              , SummOut_Partner_real         TFloat  -- Покупатель сумма (по дате покупателя, т.е. факт)
 
-             , PriceIn_branch               TFloat  -- 
              , PriceIn_zavod                TFloat  -- 
              , PriceOut_Partner             TFloat  -- 
 
@@ -179,17 +169,12 @@ BEGIN
     RETURN QUERY
      WITH tmpAccount AS (SELECT Object_Account_View.AccountGroupId, Object_Account_View.AccountId
                          FROM Object_Account_View
-                         WHERE Object_Account_View.AccountGroupId IN (zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
-                                                                    , zc_Enum_AccountGroup_110000() -- Транзит
+                         WHERE Object_Account_View.AccountGroupId IN (zc_Enum_AccountGroup_110000() -- Транзит
                                                                      )
                         UNION
-                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_110101() AS AccountId -- Сумма, не совсем забалансовый счет, приход транзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
+                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId -- Сумма, не совсем забалансовый счет, приход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         UNION
-                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, не совсем забалансовый счет, расход транзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
-                        UNION
-                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_80401() AS AccountId -- Сумма, не совсем забалансовый счет, приход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
-                        UNION
-                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_80401() AS AccountId -- Сумма, не совсем забалансовый счет, расход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
+                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, не совсем забалансовый счет, расход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         )
        SELECT Movement.InvNumber
          , Movement.OperDate
@@ -241,50 +226,39 @@ BEGIN
          , tmpOperationGroup.OperCount_sh_Partner_real    :: TFloat AS OperCount_sh_Partner_real
 
            -- 1.2. Себестоимость, без AnalyzerId, т.е. филиальная + заводская и это со склада, на транзит, с транзита (!!!в транзите филиальной нет!!!)
-         , (tmpOperationGroup.SummIn_real)                                        :: TFloat AS SummIn_branch_total  -- склад (итог: с потерями и скидкой) Себестоимость филиальная (для подразделений завода здесь заводская)
-         , (tmpOperationGroup.SummIn_real + tmpOperationGroup.SummIn_60000)       :: TFloat AS SummIn_zavod_total   -- склад (итог: с потерями и скидкой) Себестоимость к заводская
+         , (tmpOperationGroup.SummIn_real)     :: TFloat AS SummIn_zavod_total   -- склад (итог: с потерями и скидкой) Себестоимость к заводская
 
-         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * 1) :: TFloat AS SummIn_branch_real   -- филиальная (для подразделений завода здесь заводская)
-         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * 1
-          + tmpOperationGroup.SummIn_60000 - tmpOperationGroup.SummIn_Change_60000 + tmpOperationGroup.SummIn_40200_60000 * 1) :: TFloat AS SummIn_zavod_real    -- к филиальной добавили заводскую
+         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change + tmpOperationGroup.SummIn_40200 * 1) :: TFloat AS SummIn_zavod_real  -- к филиальной добавили заводскую
 
-         , (tmpOperationGroup.SummIn_110000_A + tmpOperationGroup.SummIn_60000_A) :: TFloat AS SummIn_110000_A -- здесь уже филиальная + заводская
-         , (tmpOperationGroup.SummIn_110000_P + tmpOperationGroup.SummIn_60000_P) :: TFloat AS SummIn_110000_P -- здесь уже филиальная + заводская
-         , (tmpOperationGroup.SummIn - tmpOperationGroup.SummIn_60000 + tmpOperationGroup.SummIn_60000_A - tmpOperationGroup.SummIn_60000_P) :: TFloat AS SummIn_branch   -- филиальная (для подразделений завода здесь заводская)
-         , (tmpOperationGroup.SummIn)                                             :: TFloat AS SummIn_zavod    -- к филиальной добавили заводскую
+         , (tmpOperationGroup.SummIn_110000_A) :: TFloat AS SummIn_110000_A -- здесь уже филиальная + заводская
+         , (tmpOperationGroup.SummIn_110000_P) :: TFloat AS SummIn_110000_P -- здесь уже филиальная + заводская
+         , (tmpOperationGroup.SummIn)          :: TFloat AS SummIn_zavod    -- к филиальной добавили заводскую
 
            -- 2.2. Себестоимость - Скидка за вес
-         , tmpOperationGroup.SummIn_Change                                                :: TFloat AS SummIn_Change_branch  --
-         , (tmpOperationGroup.SummIn_Change + tmpOperationGroup.SummIn_Change_60000)      :: TFloat AS SummIn_Change_zavod   -- филиальная (для подразделений завода здесь заводская)
-         , tmpOperationGroup.SummIn_Change_110000_A                                       :: TFloat AS SummIn_Change_110000_A -- здесь уже филиальная + заводская
-         , tmpOperationGroup.SummIn_Change_110000_P                                       :: TFloat AS SummIn_Change_110000_P -- здесь уже филиальная + заводская
-         , (tmpOperationGroup.SummIn_Change_real - tmpOperationGroup.SummIn_Change_60000) :: TFloat AS SummIn_Change_branch_real  --
-         , (tmpOperationGroup.SummIn_Change_real)                                         :: TFloat AS SummIn_Change_zavod_real   -- филиальная (для подразделений завода здесь заводская)
+         , (tmpOperationGroup.SummIn_Change)          :: TFloat AS SummIn_Change_zavod   -- филиальная (для подразделений завода здесь заводская)
+         , tmpOperationGroup.SummIn_Change_110000_A   :: TFloat AS SummIn_Change_110000_A -- здесь уже филиальная + заводская
+         , tmpOperationGroup.SummIn_Change_110000_P   :: TFloat AS SummIn_Change_110000_P -- здесь уже филиальная + заводская
+         , (tmpOperationGroup.SummIn_Change_real)     :: TFloat AS SummIn_Change_zavod_real   -- филиальная (для подразделений завода здесь заводская)
 
            -- 3.2. Себестоимость - Разница в весе
-         , tmpOperationGroup.SummIn_40200                                                :: TFloat AS SummIn_40200_branch  --
-         , (tmpOperationGroup.SummIn_40200 + tmpOperationGroup.SummIn_40200_60000)       :: TFloat AS SummIn_40200_zavod   -- филиальная (для подразделений завода здесь заводская)
-         , tmpOperationGroup.SummIn_40200_110000_A                                       :: TFloat AS SummIn_40200_110000_A -- здесь уже филиальная + заводская
-         , tmpOperationGroup.SummIn_40200_110000_P                                       :: TFloat AS SummIn_40200_110000_P -- здесь уже филиальная + заводская
-         , (tmpOperationGroup.SummIn_40200_real - tmpOperationGroup.SummIn_40200_60000)  :: TFloat AS SummIn_40200_branch_real  --
-         , (tmpOperationGroup.SummIn_40200_real)                                         :: TFloat AS SummIn_40200_zavod_real   -- филиальная (для подразделений завода здесь заводская)
+         , (tmpOperationGroup.SummIn_40200 )          :: TFloat AS SummIn_40200_zavod   -- филиальная (для подразделений завода здесь заводская)
+         , tmpOperationGroup.SummIn_40200_110000_A    :: TFloat AS SummIn_40200_110000_A -- здесь уже филиальная + заводская
+         , tmpOperationGroup.SummIn_40200_110000_P    :: TFloat AS SummIn_40200_110000_P -- здесь уже филиальная + заводская
+         , (tmpOperationGroup.SummIn_40200_real)      :: TFloat AS SummIn_40200_zavod_real   -- филиальная (для подразделений завода здесь заводская)
 
            -- 5.2. Себестоимость у покупателя
-         , tmpOperationGroup.SummIn_Partner                                                       :: TFloat AS SummIn_Partner_branch   -- филиальная (для подразделений завода здесь заводская)
-         , (tmpOperationGroup.SummIn_Partner + tmpOperationGroup.SummIn_Partner_60000)            :: TFloat AS SummIn_Partner_zavod    -- к филиальной добавили заводскую
-         , (tmpOperationGroup.SummIn_Partner_110000_A + tmpOperationGroup.SummIn_Partner_60000_A) :: TFloat AS SummIn_Partner_110000_A -- здесь уже филиальная + заводская
-         , (tmpOperationGroup.SummIn_Partner_110000_P + tmpOperationGroup.SummIn_Partner_60000_P) :: TFloat AS SummIn_Partner_110000_P -- здесь уже филиальная + заводская
-         , (tmpOperationGroup.SummIn_Partner_real - tmpOperationGroup.SummIn_Partner_60000 + tmpOperationGroup.SummIn_Partner_60000_A - tmpOperationGroup.SummIn_Partner_60000_P) :: TFloat AS SummIn_Partner_branch_real   -- филиальная (для подразделений завода здесь заводская)
-         , (tmpOperationGroup.SummIn_Partner_real)                                                :: TFloat AS SummIn_Partner_zavod_real    -- к филиальной добавили заводскую
+         , (tmpOperationGroup.SummIn_Partner)         :: TFloat AS SummIn_Partner_zavod    -- к филиальной добавили заводскую
+         , (tmpOperationGroup.SummIn_Partner_110000_A):: TFloat AS SummIn_Partner_110000_A -- здесь уже филиальная + заводская
+         , (tmpOperationGroup.SummIn_Partner_110000_P):: TFloat AS SummIn_Partner_110000_P -- здесь уже филиальная + заводская
+         , (tmpOperationGroup.SummIn_Partner_real)    :: TFloat AS SummIn_Partner_zavod_real    -- к филиальной добавили заводскую
 
            -- 5.3. Сумма у покупателя
-         , (tmpOperationGroup.SummOut_Partner_real + tmpOperationGroup.SummOut_Partner_110000_A - tmpOperationGroup.SummOut_Partner_110000_P) :: TFloat AS SummOut_Partner
-         , tmpOperationGroup.SummOut_Partner_110000_A                                     :: TFloat AS SummOut_Partner_110000_A
-         , tmpOperationGroup.SummOut_Partner_110000_P                                     :: TFloat AS SummOut_Partner_110000_P
-         , tmpOperationGroup.SummOut_Partner_real                                         :: TFloat AS SummOut_Partner_real
+         , (tmpOperationGroup.SummIn_Partner + tmpOperationGroup.SummOut_Partner_real + tmpOperationGroup.SummOut_Partner_110000_A - tmpOperationGroup.SummOut_Partner_110000_P) :: TFloat AS SummOut_Partner
+         , (tmpOperationGroup.SummIn_Partner_110000_A + tmpOperationGroup.SummOut_Partner_110000_A) :: TFloat AS SummOut_Partner_110000_A
+         , (tmpOperationGroup.SummIn_Partner_110000_P + tmpOperationGroup.SummOut_Partner_110000_P) :: TFloat AS SummOut_Partner_110000_P
+         , (tmpOperationGroup.SummIn_Partner_real     + tmpOperationGroup.SummOut_Partner_real)     :: TFloat AS SummOut_Partner_real
 
            -- Цена с/с
-         , CAST (CASE WHEN tmpOperationGroup.OperCount_Partner_real <> 0 THEN (tmpOperationGroup.SummIn_Partner_real - tmpOperationGroup.SummIn_Partner_60000 + tmpOperationGroup.SummIn_Partner_60000_A - tmpOperationGroup.SummIn_Partner_60000_P) / tmpOperationGroup.OperCount_Partner_real ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS PriceIn_branch
          , CAST (CASE WHEN tmpOperationGroup.OperCount_Partner_real <> 0 THEN  tmpOperationGroup.SummIn_Partner_real                                           / tmpOperationGroup.OperCount_Partner_real ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS PriceIn_zavod
 
            -- Цена покупателя
@@ -311,16 +285,13 @@ BEGIN
                   -- 1.2. Себестоимость, без AnalyzerId
                 , SUM (tmpContainer.SummIn) AS SummIn
                 , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL                         THEN tmpContainer.SummIn ELSE 0 END) AS SummIn_real
-                , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_60000()  THEN tmpContainer.SummIn ELSE 0 END) AS SummIn_60000
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummIn ELSE 0 END) AS SummIn_110000_A
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummIn ELSE 0 END) AS SummIn_110000_P
-                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  THEN -1 * tmpContainer.SummIn ELSE 0 END) AS SummIn_60000_A
-                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() THEN  1 * tmpContainer.SummIn ELSE 0 END) AS SummIn_60000_P
 
                   -- 1.3. Сумма, без AnalyzerId (на самом деле для OperCount_Partner)
                 , SUM (tmpContainer.SummOut_Partner_60000) AS SummOut_Partner_real
-                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_80401()  /*AND tmpContainer.isActive = TRUE  */THEN -1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_A
-                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_80401() /*AND tmpContainer.isActive = FALSE */THEN  1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_P
+                , SUM (CASE WHEN tmpAccount.AccountGroupId >= 0 AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_A
+                , SUM (CASE WHEN tmpAccount.AccountGroupId >= 0 AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_P
 
                   -- 2.1. Кол-во - Скидка за вес
                 , SUM (tmpContainer.OperCount_Change * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS OperCount_Change_real
@@ -330,7 +301,6 @@ BEGIN
                   -- 2.2. Себестоимость - Скидка за вес
                 , SUM (tmpContainer.SummIn_Change) AS SummIn_Change_real
                 , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL                         THEN tmpContainer.SummIn_Change ELSE 0 END) AS SummIn_Change
-                , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_60000()  THEN tmpContainer.SummIn_Change ELSE 0 END) AS SummIn_Change_60000
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummIn_Change ELSE 0 END) AS SummIn_Change_110000_A
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummIn_Change ELSE 0 END) AS SummIn_Change_110000_P
 
@@ -342,7 +312,6 @@ BEGIN
                   -- 3.2. Себестоимость - Разница в весе
                 , SUM (tmpContainer.SummIn_40200) AS SummIn_40200_real
                 , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL                         THEN tmpContainer.SummIn_40200 ELSE 0 END) AS SummIn_40200
-                , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_60000()  THEN tmpContainer.SummIn_40200 ELSE 0 END) AS SummIn_40200_60000
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummIn_40200 ELSE 0 END) AS SummIn_40200_110000_A
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummIn_40200 ELSE 0 END) AS SummIn_40200_110000_P
 
@@ -361,11 +330,8 @@ BEGIN
                   -- 5.2. Себестоимость у покупателя
                 , SUM (tmpContainer.SummIn_Partner) AS SummIn_Partner_real
                 , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL                         THEN tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner
-                , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_60000()  THEN tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner_60000
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner_110000_A
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner_110000_P
-                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  THEN -1 * tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner_60000_A
-                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() THEN  1 * tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner_60000_P
 
            FROM (SELECT CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                       , MIContainer.WhereObjectId_analyzer AS FromId
@@ -375,7 +341,7 @@ BEGIN
                       , MIContainer.ContainerId_analyzer
                       , MIContainer.ContainerIntId_analyzer
                       , MIContainer.isActive
-                      , COALESCE (MIContainer.AccountId, 0) AS AccountId
+                      , CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_SummOut_110101()) THEN MIContainer.AnalyzerId ELSE COALESCE (MIContainer.AccountId, 0) END AS AccountId
 
                         -- 1.1. Кол-во, без AnalyzerId
                       , SUM (CASE WHEN MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200() AND MIContainer.DescId = zc_MIContainer_Count()
@@ -390,11 +356,7 @@ BEGIN
                                   ELSE 0
                              END) AS SummIn
                         -- 1.3. Сумма***, без AnalyzerId (на самом деле для OperCount_Partner)
-                      , SUM (CASE WHEN MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_80401() AND MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()
-                                       THEN -1 * MIContainer.Amount
-                                  WHEN MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_80401() AND MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()
-                                       THEN -1 * MIContainer.Amount
-                                  WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummOut_80401()) -- !!!обязательно последним, т.к. эта сумма есть и в AccountId!!!
+                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummOut_80401(), zc_Enum_AnalyzerId_SummOut_110101())
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummOut_Partner_60000
@@ -441,10 +403,10 @@ BEGIN
                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                       AND MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                       AND MIContainer.ObjectExtId_Analyzer   = _tmpUnit.UnitId_by
-                                                      -- AND ((MIContainer.isActive = FALSE AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_SummIn_110101())
-                                                      --   OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SummIn_110101()))
-                                                      AND ((MIContainer.isActive = FALSE AND COALESCE (MIContainer.AccountId, 0) NOT IN (zc_Enum_AnalyzerId_SummIn_80401()))
-                                                        OR (MIContainer.isActive = TRUE AND MIContainer.AccountId IN (zc_Enum_Account_110101(), zc_Enum_AnalyzerId_SummIn_80401())))
+                                                      AND (MIContainer.isActive = FALSE
+                                                        OR (MIContainer.isActive = TRUE AND MIContainer.AccountId IN (zc_Enum_Account_110101()))
+                                                        OR MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummOut_80401(), zc_Enum_AnalyzerId_SummOut_110101())
+                                                          )
                                                       AND COALESCE (MIContainer.AccountId, 0) <>  zc_Enum_Account_100301() -- Прибыль текущего периода
                  GROUP BY CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                         , MIContainer.WhereObjectId_analyzer
@@ -453,7 +415,7 @@ BEGIN
                         , CASE WHEN inIsGoodsKind    = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE 0 END
                         , MIContainer.ContainerId_analyzer       
                         , MIContainer.ContainerIntId_analyzer
-                        , MIContainer.AccountId
+                        , CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_SummOut_110101()) THEN MIContainer.AnalyzerId ELSE COALESCE (MIContainer.AccountId, 0) END
                         , MIContainer.isActive
                   ) AS tmpContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
