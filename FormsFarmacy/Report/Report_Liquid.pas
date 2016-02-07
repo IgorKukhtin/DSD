@@ -20,7 +20,7 @@ uses
 type
   TReport_LiquidForm = class(TAncestorReportForm)
     dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    bbStart: TdxBarControlContainerItem;
     cxLabel3: TcxLabel;
     dxBarControlContainerItem3: TdxBarControlContainerItem;
     ceUnit: TcxButtonEdit;
@@ -29,8 +29,6 @@ type
     dxBarControlContainerItem4: TdxBarControlContainerItem;
     colOperDate: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
-    StartAmount: TcxGridDBColumn;
-    EndAmount: TcxGridDBColumn;
     StartSum: TcxGridDBColumn;
     EndSum: TcxGridDBColumn;
     SummaIncome: TcxGridDBColumn;
@@ -58,6 +56,10 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     actQuasiSchedule: TBooleanStoredProcAction;
     bbQuasiSchedule: TdxBarButton;
+    clSummaSale: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    bb: TdxBarControlContainerItem;
+    bbEnd: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

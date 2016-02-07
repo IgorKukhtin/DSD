@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
+RETURNS TABLE (Id Integer, MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
@@ -36,8 +36,9 @@ BEGIN
    RETURN QUERY 
      SELECT 
            Object_Personal_View.PersonalId   AS Id
-         , Object_Personal_View.PersonalCode AS MemberCode
-         , Object_Personal_View.PersonalName AS MemberName
+         , Object_Member.Id                  AS MemberId
+         , Object_Member.ObjectCode          AS MemberCode
+         , Object_Member.ValueData           AS MemberName
 
          , Object_Personal_View.PositionId
          , Object_Personal_View.PositionCode
@@ -53,19 +54,23 @@ BEGIN
 
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut_user AS DateOut
-         , Object_Personal_View.isDateOut
-         , Object_Personal_View.isMain
-         , Object_Personal_View.isOfficial
+         , COALESCE (Object_Personal_View.isDateOut, FALSE) AS isDateOut
+         , COALESCE (Object_Personal_View.isMain, FALSE) AS isMain
+         , COALESCE (Object_Personal_View.isOfficial, FALSE) AS isOfficial
          
-         , Object_Personal_View.isErased
-     FROM Object_Personal_View
+         , COALESCE (Object_Personal_View.isErased, FALSE) AS isErased
+     FROM Object AS Object_Member
+          LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = Object_Member.Id
+                                        AND  (Object_Personal_View.isErased = FALSE OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE))
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
           LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
 
-     WHERE (Object_Personal_View.isErased = FALSE
+     WHERE Object_Member.DescId = zc_Object_Member()
+        AND (Object_Member.isErased = FALSE OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE))
+      /* And (Object_Personal_View.isErased = FALSE
             OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)
            )
-       AND (inIsPeriod = FALSE
+       */AND (inIsPeriod = FALSE
             OR (inIsPeriod = TRUE AND ((Object_Personal_View.DateIn BETWEEN inStartDate AND inEndDate)
                                     OR (Object_Personal_View.DateOut BETWEEN inStartDate AND inEndDate)
                                     OR (Object_Personal_View.DateIn < inStartDate
@@ -76,6 +81,7 @@ BEGIN
     UNION ALL
         SELECT
            0   AS Id
+         , 0 AS MemberId
          , 0 AS MemberCode
          , CAST ('УДАЛИТЬ' as TVarChar)  AS MemberName
          , 0 AS PositionId

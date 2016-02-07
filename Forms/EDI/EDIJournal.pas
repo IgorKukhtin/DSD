@@ -179,6 +179,7 @@ type
     FileName: TcxGridDBColumn;
     DateRegistered: TcxGridDBColumn;
     InvNumberRegistered: TcxGridDBColumn;
+    clPersonalSigningName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -70,13 +70,18 @@ type
     actUpdateIsMain: TdsdExecStoredProc;
     bbUpdateIsMain: TdxBarButton;
     actPositionChoice: TOpenChoiceForm;
-    spInsertUpdate: TdsdStoredProc;
+    spInsertUpdate_Property: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     actUnitChoice: TOpenChoiceForm;
     actInsertMask: TdsdInsertUpdateAction;
     bbCopy: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bb: TdxBarButton;
+    spInsertUpdate: TdsdStoredProc;
+    spUpdateisDateOut: TdsdStoredProc;
+    spUpdate_isMain: TdsdStoredProc;
+    actUpdateIsDateOut: TdsdExecStoredProc;
+    bbDateOut: TdxBarButton;
   private
     { Private declarations }
   public
