@@ -1,22 +1,22 @@
 inherited Report_LiquidForm: TReport_LiquidForm
   Caption = #1054#1090#1095#1077#1090' '#1051#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080' '#1090#1086#1095#1082#1080
   ClientHeight = 575
-  ClientWidth = 797
+  ClientWidth = 1053
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 813
+  ExplicitWidth = 1069
   ExplicitHeight = 613
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 48
-    Width = 797
+    Width = 1053
     Height = 527
     TabOrder = 3
     ExplicitTop = 48
     ExplicitWidth = 797
     ExplicitHeight = 527
     ClientRectBottom = 527
-    ClientRectRight = 797
+    ClientRectRight = 1053
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
@@ -25,9 +25,10 @@ inherited Report_LiquidForm: TReport_LiquidForm
       ExplicitWidth = 797
       ExplicitHeight = 503
       inherited cxGrid: TcxGrid
-        Width = 797
+        Width = 1053
         Height = 276
-        ExplicitWidth = 797
+        ExplicitTop = -6
+        ExplicitWidth = 967
         ExplicitHeight = 276
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -35,7 +36,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = StartAmount
             end
             item
               Format = ',0.00;-,0.00'
@@ -48,12 +48,65 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Kind = skSum
               Position = spFooter
               Column = SummaIncome
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = EndSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = StartSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaIncome
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaCheck
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSendIn
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSendOut
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaOrderExternal
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaOrderInternal
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaReturnIn
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
-              Column = StartAmount
             end
             item
               Format = ',0.00;-,0.00'
@@ -64,6 +117,50 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummaIncome
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = EndSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaCheck
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSendIn
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSendOut
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaOrderExternal
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaOrderInternal
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaReturnIn
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -79,66 +176,127 @@ inherited Report_LiquidForm: TReport_LiquidForm
             DataBinding.FieldName = 'OperDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'DD.MM.YYYY (DDD)'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 61
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 154
           end
-          object StartAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083' '#1085#1072#1095
-            DataBinding.FieldName = 'StartAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            Width = 62
-          end
-          object EndAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083' '#1082#1086#1085
-            DataBinding.FieldName = 'EndAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            Width = 62
-          end
           object StartSum: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095
+            Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'StartSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            Width = 62
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
           end
           object EndSum: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1085
+            Caption = #1050#1086#1085#1077#1095#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'EndSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            Width = 62
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
           end
           object SummaIncome: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083
+            Caption = #1055#1088#1080#1093#1086#1076' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083
             DataBinding.FieldName = 'SummaIncome'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
-            Width = 62
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 96
+          end
+          object clSummaCheck: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1082#1072#1089#1089#1077' '
+            DataBinding.FieldName = 'SummaCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object clSummaSale: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
+          object clSummaSendIn: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1085#1072' '#1090#1086#1095#1082#1091
+            DataBinding.FieldName = 'SummaSendIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object clSummaSendOut: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1089' '#1090#1086#1095#1082#1080
+            DataBinding.FieldName = 'SummaSendOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object clSummaOrderExternal: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1103#1082#1080'  '#1074#1085#1077#1096#1085#1080#1080
+            DataBinding.FieldName = 'SummaOrderExternal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object clSummaOrderInternal: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1080
+            DataBinding.FieldName = 'SummaOrderInternal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object clSummaReturnIn: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'SummaReturnIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
           end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 276
-        Width = 797
+        Width = 1053
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
+        ExplicitWidth = 797
       end
       object grChart: TcxGrid
         Left = 0
         Top = 284
-        Width = 797
+        Width = 1053
         Height = 219
         Align = alBottom
         TabOrder = 2
+        ExplicitWidth = 797
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramLine.Active = True
@@ -177,16 +335,18 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitWidth = 967
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
-        Width = 797
+        Width = 1053
         Height = 503
         Align = alClient
         DataSource = MasterDS
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
+        ExplicitWidth = 967
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -259,49 +419,50 @@ inherited Report_LiquidForm: TReport_LiquidForm
     end
   end
   inherited Panel: TPanel
-    Width = 797
+    Width = 1053
     Height = 22
     Visible = False
     ExplicitWidth = 797
     ExplicitHeight = 22
     inherited deStart: TcxDateEdit
-      Left = 159
+      Left = 127
       Top = 0
       EditValue = 42248d
-      ExplicitLeft = 159
+      ExplicitLeft = 127
       ExplicitTop = 0
     end
     inherited deEnd: TcxDateEdit
-      Left = 19
+      Left = 280
       Top = 0
-      ExplicitLeft = 19
+      EditValue = 42248d
+      ExplicitLeft = 280
       ExplicitTop = 0
-      ExplicitWidth = 30
-      Width = 30
+      ExplicitWidth = 81
+      Width = 81
     end
     inherited cxLabel1: TcxLabel
-      Left = 123
+      Left = 64
       Top = 1
-      Caption = #1052#1077#1089#1103#1094':'
-      ExplicitLeft = 123
+      Caption = #1053#1072#1095'.'#1076#1072#1090#1072':'
+      ExplicitLeft = 64
       ExplicitTop = 1
-      ExplicitWidth = 39
+      ExplicitWidth = 56
     end
     inherited cxLabel2: TcxLabel
-      Left = 5
+      Left = 13
       Top = 1
       Caption = '-'
-      ExplicitLeft = 5
+      ExplicitLeft = 13
       ExplicitTop = 1
       ExplicitWidth = 8
     end
     object cxLabel3: TcxLabel
-      Left = 244
+      Left = 388
       Top = 1
       Caption = '  '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 334
+      Left = 478
       Top = 0
       Properties.Buttons = <
         item
@@ -314,6 +475,11 @@ inherited Report_LiquidForm: TReport_LiquidForm
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 289
+    end
+    object cxLabel4: TcxLabel
+      Left = 217
+      Top = 1
+      Caption = #1050#1086#1085'.'#1076#1072#1090#1072':'
     end
   end
   inherited ActionList: TActionList
@@ -378,9 +544,16 @@ inherited Report_LiquidForm: TReport_LiquidForm
     StoredProcName = 'gpSelect_Report_Liquid'
     Params = <
       item
-        Name = 'inMonth'
+        Name = 'inStartDate'
         Value = 41395d
         Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42248d
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -435,7 +608,15 @@ inherited Report_LiquidForm: TReport_LiquidForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem2'
+          ItemName = 'bbStart'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEnd'
         end
         item
           Visible = True
@@ -453,16 +634,16 @@ inherited Report_LiquidForm: TReport_LiquidForm
         end>
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = #1052#1077#1089#1103#1094
+      Caption = #1053#1072#1095'.'#1076#1072#1090#1072
       Category = 0
-      Hint = #1052#1077#1089#1103#1094
+      Hint = #1053#1072#1095'.'#1076#1072#1090#1072
       Visible = ivAlways
       Control = cxLabel1
     end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = #1052#1077#1089#1103#1094
+    object bbStart: TdxBarControlContainerItem
+      Caption = #1053#1072#1095'.'#1076#1072#1090#1072
       Category = 0
-      Hint = #1052#1077#1089#1103#1094
+      Hint = #1053#1072#1095'.'#1076#1072#1090#1072
       Visible = ivAlways
       Control = deStart
     end
@@ -483,6 +664,20 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object bbQuasiSchedule: TdxBarButton
       Action = actQuasiSchedule
       Category = 0
+    end
+    object bb: TdxBarControlContainerItem
+      Caption = #1050#1086#1085' '#1076#1072#1090#1072
+      Category = 0
+      Hint = #1050#1086#1085' '#1076#1072#1090#1072
+      Visible = ivAlways
+      Control = cxLabel4
+    end
+    object bbEnd: TdxBarControlContainerItem
+      Caption = #1050#1086#1085'.'#1076#1072#1090#1072
+      Category = 0
+      Hint = #1050#1086#1085'.'#1076#1072#1090#1072
+      Visible = ivAlways
+      Control = deEnd
     end
   end
   inherited PeriodChoice: TPeriodChoice

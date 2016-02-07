@@ -540,6 +540,27 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchName'
+          DataType = ftString
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -708,8 +729,8 @@ object UserForm: TUserForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 448
-    Top = 32
+    Left = 392
+    Top = 96
   end
   object spUserRole: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UserRole'
@@ -721,7 +742,7 @@ object UserForm: TUserForm
     Params = <>
     PackSize = 1
     Left = 528
-    Top = 40
+    Top = 152
   end
   object spInsertUpdateUserRole: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_UserRole'
@@ -756,7 +777,7 @@ object UserForm: TUserForm
   object RoleDS: TDataSource
     DataSet = RoleCDS
     Left = 488
-    Top = 72
+    Top = 104
   end
   object RoleCDS: TClientDataSet
     Aggregates = <>
@@ -765,8 +786,8 @@ object UserForm: TUserForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 440
-    Top = 80
+    Left = 432
+    Top = 128
   end
   object PeriodCloseDS: TDataSource
     DataSet = PeriodCloseCDS

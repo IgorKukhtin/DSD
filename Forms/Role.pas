@@ -54,8 +54,8 @@ type
     Panel1: TPanel;
     UserGrid: TcxGrid;
     UserView: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn2: TcxGridDBColumn;
+    colCodeUser: TcxGridDBColumn;
+    colNameUser: TcxGridDBColumn;
     UserLevel: TcxGridLevel;
     ActionDS: TDataSource;
     ActionCDS: TClientDataSet;

@@ -115,7 +115,7 @@ object RoleForm: TRoleForm
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object cxGridDBColumn1: TcxGridDBColumn
+        object colCodeUser: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'Code'
           Visible = False
@@ -123,7 +123,7 @@ object RoleForm: TRoleForm
           HeaderAlignmentVert = vaCenter
           Width = 95
         end
-        object cxGridDBColumn2: TcxGridDBColumn
+        object colNameUser: TcxGridDBColumn
           Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
           DataBinding.FieldName = 'Name'
           PropertiesClassName = 'TcxButtonEditProperties'
@@ -134,7 +134,31 @@ object RoleForm: TRoleForm
               Kind = bkEllipsis
             end>
           HeaderAlignmentVert = vaCenter
-          Width = 224
+          Width = 167
+        end
+        object BranchName: TcxGridDBColumn
+          Caption = #1060#1080#1083#1080#1072#1083
+          DataBinding.FieldName = 'BranchName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 64
+        end
+        object UnitName: TcxGridDBColumn
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          DataBinding.FieldName = 'UnitName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 63
+        end
+        object PositionName: TcxGridDBColumn
+          Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+          DataBinding.FieldName = 'PositionName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 64
         end
       end
       object UserLevel: TcxGridLevel
@@ -619,6 +643,7 @@ object RoleForm: TRoleForm
     object UserChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1042#1099#1073#1086#1088' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
       FormName = 'TUserForm'
       FormNameParam.Value = ''
@@ -636,12 +661,34 @@ object RoleForm: TRoleForm
           Component = UserCDS
           ComponentItem = 'Name'
           DataType = ftString
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = UserCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = UserCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = UserCDS
+          ComponentItem = 'PositionName'
+          DataType = ftString
         end>
       isShowModal = False
     end
     object UserUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateUserRole
       StoredProcList = <
         item
@@ -652,6 +699,7 @@ object RoleForm: TRoleForm
     object ProcessAccessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ProcessChoiceForm'
       FormName = 'TProcessForm'
       FormNameParam.Value = ''
@@ -675,6 +723,7 @@ object RoleForm: TRoleForm
     object ProcessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ProcessChoiceForm'
       FormName = 'TProcessForm'
       FormNameParam.Value = ''
@@ -698,6 +747,7 @@ object RoleForm: TRoleForm
     object ActionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ActionChoiceForm'
       FormName = 'TActionForm'
       FormNameParam.Value = ''
@@ -721,6 +771,7 @@ object RoleForm: TRoleForm
     object ProcessAccessUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateProcessAccess
       StoredProcList = <
         item
@@ -732,6 +783,7 @@ object RoleForm: TRoleForm
     object ProcessUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateRoleProcess
       StoredProcList = <
         item
@@ -743,6 +795,7 @@ object RoleForm: TRoleForm
     object ActionUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateRoleAction
       StoredProcList = <
         item
@@ -805,7 +858,7 @@ object RoleForm: TRoleForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 64
+    Left = 56
     Top = 120
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
