@@ -1111,7 +1111,7 @@ BEGIN
        -- это 2 или 6 проводки для расчета суммы по ценам (!!!нужна при расчете суммы "ушло"!!!)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId
             , _tmpItemSumm.ContainerId_To AS ContainerId -- !!!не ошибка, т.к. это виртуальная проводка, а ContainerId_From иногда = 0!!!
-            , CASE WHEN tmpTransit.AccountId = 0 THEN _tmpItemSumm.AccountId_To ELSE tmpTransit.AccountId END AS AccountId   -- есть счет
+            , CASE WHEN tmpTransit.AccountId = 0 THEN vbAccountId_GoodsTransit ELSE tmpTransit.AccountId END AS AccountId   -- есть счет
             , tmpTransit.AnalyzerId                   AS AnalyzerId             -- есть аналитика
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение !!!не ошибка, т.к. надо при расчете суммы "ушло"!!!
@@ -1121,7 +1121,7 @@ BEGIN
             , NULL                                    AS ParentId               -- !!!т.е. не будут привязаны к "приходу"!!!
             , _tmpItemSumm.OperSumm_Account_60000 * CASE WHEN tmpTransit.AnalyzerId = zc_Enum_AnalyzerId_SummOut_80401()
                                                               THEN -1
-                                                         WHEN tmpTransit.AnalyzerId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpTransit.OperDate = OperDate
+                                                         WHEN tmpTransit.AnalyzerId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpTransit.OperDate = vbOperDate
                                                               THEN -1
                                                          WHEN tmpTransit.AnalyzerId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpTransit.OperDate = vbOperDatePartner
                                                               THEN -1

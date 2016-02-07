@@ -138,6 +138,10 @@ type
     PartnerTagName: TcxGridDBColumn;
     SummProfit_branch: TcxGridDBColumn;
     SummProfit_zavod: TcxGridDBColumn;
+    SummOut_Promo: TcxGridDBColumn;
+    SummOut_Promo_110000_A: TcxGridDBColumn;
+    SummOut_Promo_110000_P: TcxGridDBColumn;
+    SummOut_Promo_real: TcxGridDBColumn;
   private
     { Private declarations }
   public

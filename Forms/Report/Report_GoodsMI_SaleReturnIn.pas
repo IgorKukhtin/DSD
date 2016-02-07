@@ -124,6 +124,7 @@ type
     GoodsPlatformName: TcxGridDBColumn;
     cbContract: TcxCheckBox;
     bbContract: TdxBarControlContainerItem;
+    Sale_Summ_10250: TcxGridDBColumn;
   private
     { Private declarations }
   public
