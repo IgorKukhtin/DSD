@@ -44,7 +44,7 @@ $BODY$BEGIN
         JOIN Object AS ObjectUser ON ObjectUser.Id = ObjectLink_UserRole_User.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                        ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                        ON ObjectLink_User_Member.ObjectId = ObjectLink_UserRole_User.ChildObjectId
                        AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
