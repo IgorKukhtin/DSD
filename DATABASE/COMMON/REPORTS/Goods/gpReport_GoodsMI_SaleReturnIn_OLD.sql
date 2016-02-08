@@ -40,7 +40,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AccountName TVarChar
-             , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10300 TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
+             , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
              , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
@@ -384,6 +384,7 @@ BEGIN
 
          , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
          , tmpOperationGroup.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
+         , 0                                    :: TFloat  AS Sale_Summ_10250
          , tmpOperationGroup.Sale_Summ_10300    :: TFloat  AS Sale_Summ_10300
          , tmpOperationGroup.Sale_SummCost      :: TFloat  AS Sale_SummCost
          , tmpOperationGroup.Sale_SummCost_10500:: TFloat  AS Sale_SummCost_10500
@@ -674,4 +675,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate:= '01.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inAreaId:= 0, inRetailId:= 1, inJuridicalId:= 0, inPaidKindId:= 0, inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inBranchId:= 0, inAreaId:= 0, inRetailId:= 1, inJuridicalId:= 0, inPaidKindId:= 0, inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());

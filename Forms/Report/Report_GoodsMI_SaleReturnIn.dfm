@@ -5,6 +5,7 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -574
   ExplicitWidth = 1382
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -133,6 +134,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10300
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_10250
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -243,6 +249,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10300
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_10250
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -651,7 +662,7 @@
             Width = 70
           end
           object Sale_Summ_10200: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089' '#1086#1087#1090'. '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_Summ_10200'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -660,6 +671,16 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object Sale_Summ_10250: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'Sale_Summ_10250'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object Sale_Summ_10300: TcxGridDBColumn
             Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'

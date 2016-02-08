@@ -35,7 +35,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AccountName TVarChar
-             , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10300 TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
+             , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
              , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
@@ -245,7 +245,7 @@ BEGIN
              , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
              , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName, tmp.InfoMoneyCode, tmp.InfoMoneyName, tmp.InfoMoneyName_all
              , tmp.AccountName
-             , tmp.Sale_Summ, tmp.Sale_Summ_10200, tmp.Sale_Summ_10300, tmp.Sale_SummCost, tmp.Sale_SummCost_10500, tmp.Sale_SummCost_40200
+             , tmp.Sale_Summ, tmp.Sale_Summ_10200, tmp.Sale_Summ_10250, tmp.Sale_Summ_10300, tmp.Sale_SummCost, tmp.Sale_SummCost_10500, tmp.Sale_SummCost_40200
              , tmp.Sale_Amount_Weight , tmp.Sale_Amount_Sh, tmp.Sale_AmountPartner_Weight , tmp.Sale_AmountPartner_Sh
              , tmp.Return_Summ, tmp.Return_Summ_10300, tmp.Return_SummCost, tmp.Return_SummCost_40200
              , tmp.Return_Amount_Weight, tmp.Return_Amount_Sh, tmp.Return_AmountPartner_Weight, tmp.Return_AmountPartner_Sh
@@ -267,6 +267,7 @@ BEGIN
                                          , inIsTradeMark
                                          , inIsGoods
                                          , inIsGoodsKind
+                                         , FALSE
                                          , inSession
                                           ) AS tmp
     UNION ALL
@@ -332,6 +333,7 @@ BEGIN
 
          , tmpOperationGroup.Amount_Summ          :: TFloat  AS Sale_Summ
          , 0    :: TFloat  AS Sale_Summ_10200
+         , 0    :: TFloat  AS Sale_Summ_10250
          , 0    :: TFloat  AS Sale_Summ_10300
          , 0      :: TFloat  AS Sale_SummCost
          , 0  :: TFloat  AS Sale_SummCost_10500
@@ -463,4 +465,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit (inStartDate:= 01.02.2016, inEndDate:= 01.02.2016, inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());

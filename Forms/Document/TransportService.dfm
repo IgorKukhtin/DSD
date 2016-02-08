@@ -4,7 +4,7 @@
   ClientWidth = 597
   AddOnFormData.isSingle = False
   ExplicitWidth = 603
-  ExplicitHeight = 366
+  ExplicitHeight = 363
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -279,7 +279,7 @@
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.InputKind = ikMask
     Properties.Kind = ckDateTime
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 35
     Width = 129
   end
@@ -361,8 +361,15 @@
       end
       item
         Name = 'inStartRunPlan'
-        Value = Null
+        Value = 'NULL'
         Component = edStartRunPlan
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartRun'
+        Value = 'NULL'
+        Component = edStartRun
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -484,7 +491,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -665,13 +672,13 @@
       end
       item
         Name = 'StartRunPlan'
-        Value = Null
+        Value = 'NULL'
         Component = edStartRunPlan
         DataType = ftDateTime
       end
       item
         Name = 'StartRun'
-        Value = Null
+        Value = 'NULL'
         Component = edStartRun
         DataType = ftDateTime
       end>

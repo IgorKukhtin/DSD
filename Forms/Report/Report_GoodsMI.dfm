@@ -5,6 +5,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -230
   ExplicitWidth = 1036
   ExplicitHeight = 569
   PixelsPerInch = 96
@@ -363,6 +364,26 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = SummProfit_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Promo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Promo_110000_A
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Promo_110000_P
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Promo_real
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -699,6 +720,26 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = SummProfit_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Promo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Promo_110000_A
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Promo_110000_P
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Promo_real
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1471,6 +1512,49 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object SummOut_Promo: TcxGridDBColumn
+            Caption = '***'#1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080
+            DataBinding.FieldName = 'SummOut_Promo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummOut_Promo_110000_A: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080' ('#1090#1088'.+)'
+            DataBinding.FieldName = 'SummOut_Promo_110000_A'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummOut_Promo_110000_P: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080' ('#1090#1088'.-)'
+            DataBinding.FieldName = 'SummOut_Promo_110000_P'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummOut_Promo_real: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080
+            DataBinding.FieldName = 'SummOut_Promo_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object SummOut_Change: TcxGridDBColumn
             Caption = '***'#1057#1091#1084#1084#1072' (-)'#1089#1082#1080#1076#1082'. (+)'#1085#1072#1094#1077#1085#1082#1072
             DataBinding.FieldName = 'SummOut_Change'
@@ -2012,7 +2096,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end
@@ -2021,7 +2105,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end>
@@ -2136,7 +2220,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end
@@ -2145,7 +2229,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end>

@@ -101,6 +101,11 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , SummOut_Diff_110000_P        TFloat  -- *Разница с оптовыми ценами транзит расход (по дате склада, т.е. информативно)
              , SummOut_Diff_real            TFloat  -- Разница с оптовыми ценами (по дате покупателя, т.е. факт)
 
+             , SummOut_Promo                TFloat  -- *Скидка Акция (по дате склада, т.е. информативно)
+             , SummOut_Promo_110000_A       TFloat  -- *Скидка Акция транзит приход (по дате склада, т.е. информативно)
+             , SummOut_Promo_110000_P       TFloat  -- *Скидка Акция транзит расход (по дате склада, т.е. информативно)
+             , SummOut_Promo_real           TFloat  -- Скидка Акция (по дате покупателя, т.е. факт)
+
              , SummOut_Change               TFloat  -- *Скидка дополнительная (по дате склада, т.е. информативно)
              , SummOut_Change_110000_A      TFloat  -- *Скидка дополнительная транзит приход (по дате склада, т.е. информативно)
              , SummOut_Change_110000_P      TFloat  -- *Скидка дополнительная транзит расход (по дате склада, т.е. информативно)
@@ -345,14 +350,21 @@ BEGIN
          , tmpOperationGroup.SummOut_Diff_110000_P                                      :: TFloat AS SummOut_Diff_110000_P
          , tmpOperationGroup.SummOut_Diff_real                                          :: TFloat AS SummOut_Diff_real
 
-           -- 5.3.3. Сумма у покупателя Скидка / Наценка дополнительная
+           -- 5.3.3. Сумма у покупателя Скидка Акция
+         -- , tmpOperationGroup.SummOut_Promo                                               :: TFloat AS SummOut_Promo
+         , (tmpOperationGroup.SummOut_Promo_real + tmpOperationGroup.SummOut_Promo_110000_A - tmpOperationGroup.SummOut_Promo_110000_P) :: TFloat AS SummOut_Promo
+         , tmpOperationGroup.SummOut_Promo_110000_A                                      :: TFloat AS SummOut_Promo_110000_A
+         , tmpOperationGroup.SummOut_Promo_110000_P                                      :: TFloat AS SummOut_Promo_110000_P
+         , tmpOperationGroup.SummOut_Promo_real                                          :: TFloat AS SummOut_Promo_real
+
+           -- 5.3.4. Сумма у покупателя Скидка / Наценка дополнительная
          -- , tmpOperationGroup.SummOut_Change                                               :: TFloat AS SummOut_Change
          , (tmpOperationGroup.SummOut_Change_real + tmpOperationGroup.SummOut_Change_110000_A - tmpOperationGroup.SummOut_Change_110000_P) :: TFloat AS SummOut_Change
          , tmpOperationGroup.SummOut_Change_110000_A                                      :: TFloat AS SummOut_Change_110000_A
          , tmpOperationGroup.SummOut_Change_110000_P                                      :: TFloat AS SummOut_Change_110000_P
          , tmpOperationGroup.SummOut_Change_real                                          :: TFloat AS SummOut_Change_real
 
-           -- 5.3.4. Сумма у покупателя
+           -- 5.3.5. Сумма у покупателя
          , (tmpOperationGroup.SummOut_Partner_real + tmpOperationGroup.SummOut_Partner_110000_A - tmpOperationGroup.SummOut_Partner_110000_P) :: TFloat AS SummOut_Partner
          , tmpOperationGroup.SummOut_Partner_110000_A                                     :: TFloat AS SummOut_Partner_110000_A
          , tmpOperationGroup.SummOut_Partner_110000_P                                     :: TFloat AS SummOut_Partner_110000_P
@@ -493,12 +505,20 @@ BEGIN
                 -- , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL THEN tmpContainer.SummOut_PriceList ELSE 0 END) AS SummOut_PriceList
                 , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_PriceList ELSE 0 END) AS SummOut_PriceList_110000_A
                 , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_PriceList ELSE 0 END) AS SummOut_PriceList_110000_P
+
                   -- 5.3.2. Сумма у покупателя Разница с оптовыми ценами
                 , SUM (tmpContainer.SummOut_Diff) AS SummOut_Diff_real
                 -- , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL THEN tmpContainer.SummOut_Diff ELSE 0 END) AS SummOut_Diff
                 , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_Diff ELSE 0 END) AS SummOut_Diff_110000_A
                 , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_Diff ELSE 0 END) AS SummOut_Diff_110000_P
-                  -- 5.3.3. Сумма у покупателя Скидка дополнительная
+
+                  -- 5.3.3. Сумма у покупателя Скидка Акция
+                , SUM (tmpContainer.SummOut_Promo) AS SummOut_Promo_real
+                -- , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL THEN tmpContainer.SummOut_Promo ELSE 0 END) AS SummOut_Promo
+                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_Promo ELSE 0 END) AS SummOut_Promo_110000_A
+                , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_Promo ELSE 0 END) AS SummOut_Promo_110000_P
+
+                  -- 5.3.4. Сумма у покупателя Скидка дополнительная
                 , SUM (tmpContainer.SummOut_Change) AS SummOut_Change_real
                 -- , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL THEN tmpContainer.SummOut_Change ELSE 0 END) AS SummOut_Change
                 , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_Change ELSE 0 END) AS SummOut_Change_110000_A
@@ -581,7 +601,11 @@ BEGIN
                                   WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                   ELSE 0
                              END) AS SummOut_Diff
-                        -- 5.3.3. Сумма у покупателя Скидка / Наценка дополнительная
+                        -- 5.3.3. Сумма у покупателя Скидка Акция
+                      , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10250()     THEN 1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
+                                  ELSE 0
+                             END) AS SummOut_Promo
+                        -- 5.3.4. Сумма у покупателя Скидка / Наценка дополнительная
                       , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()     THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                   WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                   ELSE 0
@@ -722,4 +746,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015',  inDescId:= 5, inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0, inUnitGroupId:=0, inUnitId:= 8459, inGoodsGroupId:= 0, inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsPartionGoods:= TRUE, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016',  inDescId:= 5, inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0, inUnitGroupId:=0, inUnitId:= 8459, inGoodsGroupId:= 0, inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsPartionGoods:= TRUE, inSession:= zfCalc_UserAdmin()); -- Склад Реализации

@@ -139,7 +139,8 @@ BEGIN
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10100(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 121, inName:= 'Сумма, реализация, у покупателя (по оптовым ценам)', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10100');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 122, inName:= 'Сумма, реализация, Разница с оптовыми ценами', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10200');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10300(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 123, inName:= 'Сумма, реализация, Скидка дополнительная', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10300');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10250(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 123, inName:= 'Сумма, реализация, Скидка Акция', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10250');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10300(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 124, inName:= 'Сумма, реализация, Скидка дополнительная', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10300');
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInCount_10800(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 201, inName:= 'Кол-во, возврат, от покупателя', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInCount_10800');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInCount_40200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 202, inName:= 'Кол-во, возврат, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInCount_40200');
@@ -308,14 +309,18 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime2()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 102, inName:= 'Ставка за время (с экспедитором без холодильника), грн/ч'  , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime2');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime3()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 103, inName:= 'Ставка за время (без экспедитора без холодильника), грн/ч' , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime3');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime4()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 104, inName:= 'Ставка за время (с экспедитором с холодильником), грн/ч'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime4');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistance()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 105, inName:= 'Ставка за пробег, грн/км'         , inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistance');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistanceInt() , inDescId:= zc_Object_ContractConditionKind(), inCode:= 106, inName:= 'Ставка за пробег, грн/км город'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistanceInt');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistanceExt() , inDescId:= zc_Object_ContractConditionKind(), inCode:= 107, inName:= 'Ставка за пробег, грн/км межгород', inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistanceExt');
-
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportOneTrip()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 108, inName:= 'Ставка за маршрут в одну сторону, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportOneTrip');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportRoundTrip(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 109, inName:= 'Ставка за маршрут в обе стороны, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportRoundTrip');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 110, inName:= 'Ставка за точку, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportWeight()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 111, inName:= 'Ставка за вывоз, грн/кг'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportWeight');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime5()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 105, inName:= 'Ставка за время (напрямую с экспедитором), грн/ч'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime5');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime6()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 106, inName:= 'Ставка за время (напрямую без экспедитора), грн/ч'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime6');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime7()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 107, inName:= 'Ставка за время (через диспетчера с экспедитором), грн/ч'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime7');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime8()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 108, inName:= 'Ставка за время (через диспетчера без экспедитора), грн/ч'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime8');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistance()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 115, inName:= 'Ставка за пробег, грн/км'         , inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistance');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistanceInt() , inDescId:= zc_Object_ContractConditionKind(), inCode:= 116, inName:= 'Ставка за пробег, грн/км город'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistanceInt');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistanceExt() , inDescId:= zc_Object_ContractConditionKind(), inCode:= 117, inName:= 'Ставка за пробег, грн/км межгород', inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistanceExt');
+     
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportOneTrip()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 118, inName:= 'Ставка за маршрут в одну сторону, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportOneTrip');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportRoundTrip(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 119, inName:= 'Ставка за маршрут в обе стороны, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportRoundTrip');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 120, inName:= 'Ставка за точку, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportWeight()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 121, inName:= 'Ставка за вывоз, грн/кг'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportWeight');
 
      -- !!! Типы пролонгаций договоров
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractTermKind_Long(), inDescId:= zc_Object_ContractTermKind(), inCode:= 1, inName:= 'Бессрочный' , inEnumName:= 'zc_Enum_ContractTermKind_Long');
@@ -646,6 +651,8 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10102, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10102');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10201, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10202, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10202');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10251, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10251');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10252, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10252');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10301, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10301');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10302, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10302');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10401, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10401');

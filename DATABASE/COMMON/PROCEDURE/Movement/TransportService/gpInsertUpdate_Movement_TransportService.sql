@@ -4,8 +4,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -14,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
     IN inOperDate                 TDateTime , -- Дата документа
   
     IN inStartRunPlan             TDateTime , -- Дата/Время выезда план
+    IN inStartRun                 TDateTime , -- Дата/Время выезда факт
 
  INOUT ioAmount                   TFloat    , -- Сумма
     IN inWeightTransport          TFloat    , -- Вывоз факт, кг
@@ -182,6 +182,9 @@ BEGIN
 
      -- сохранили связь с <Дата/Время выезда план>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), ioId, inStartRunPlan);
+     -- сохранили связь с <Дата/Время выезда факт>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRun(), ioId, inStartRun);
+
 
      -- сохранили связь с <Подразделение (Место отправки)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), ioId, inUnitForwardingId);
