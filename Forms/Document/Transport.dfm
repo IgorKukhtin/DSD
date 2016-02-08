@@ -295,16 +295,14 @@
     Height = 285
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetIncome
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 421
     ClientRectBottom = 285
     ClientRectRight = 1200
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 397
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -312,7 +310,6 @@
         Height = 116
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 252
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -563,7 +560,6 @@
         Height = 140
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 257
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -860,13 +856,11 @@
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 252
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitHeight = 397
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -874,7 +868,6 @@
         Height = 261
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 397
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -1633,7 +1626,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = RouteChoiceForm
@@ -1647,7 +1639,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1664,7 +1655,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1835,6 +1825,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridIncomeDBTableView
       Action = SourceFuel_ObjectChoiceForm
@@ -1848,6 +1839,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIIncome
       StoredProcList = <
         item
@@ -1864,6 +1856,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIIncome
       StoredProcList = <
         item
@@ -2062,6 +2055,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompleteIncome
       StoredProcList = <
         item
@@ -2085,6 +2079,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompleteIncome
       StoredProcList = <
         item
@@ -2108,6 +2103,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedIncome
       StoredProcList = <
         item

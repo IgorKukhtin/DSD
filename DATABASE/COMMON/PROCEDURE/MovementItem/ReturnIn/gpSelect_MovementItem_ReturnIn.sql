@@ -293,13 +293,13 @@ BEGIN
              END :: TFloat 		        AS AmountSumm
 
            , CASE WHEN tmpResult.CountForPrice > 0
-                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* tmpResult.Price) * tmpResult.AmountPartner/tmpResult.CountForPrice) AS NUMERIC (16, 2)) 
+                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST (tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice AS NUMERIC (16, 2))
+                                                                 ELSE CAST ((1 + vbVATPercent / 100) * CAST ((tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                  END
-                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(tmpResult.Price * tmpResult.AmountPartner AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* tmpResult.Price) * tmpResult.AmountPartner) AS NUMERIC (16, 2) ) 
+                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST (tmpResult.Price * tmpResult.AmountPartner AS NUMERIC (16, 2))
+                                                                 ELSE CAST ((1 + vbVATPercent / 100) * CAST ((tmpResult.Price * tmpResult.AmountPartner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                  END
-             END:: TFloat 		        AS AmountSummVat
+             END :: TFloat 		        AS AmountSummVat
 
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
@@ -483,13 +483,13 @@ BEGIN
              END :: TFloat 		        AS AmountSumm
 
            , CASE WHEN tmpResult.CountForPrice > 0
-                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* tmpResult.Price) * tmpResult.AmountPartner/tmpResult.CountForPrice) AS NUMERIC (16, 2)) 
+                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST (tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice AS NUMERIC (16, 2))
+                                                                 ELSE CAST ((1 + vbVATPercent / 100) * CAST ((tmpResult.Price * tmpResult.AmountPartner/tmpResult.CountForPrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                  END
-                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(tmpResult.Price * tmpResult.AmountPartner AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* tmpResult.Price) * tmpResult.AmountPartner) AS NUMERIC (16, 2) ) 
+                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST (tmpResult.Price * tmpResult.AmountPartner AS NUMERIC (16, 2))
+                                                                 ELSE CAST ((1 + vbVATPercent / 100) * CAST ((tmpResult.Price * tmpResult.AmountPartner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                  END
-             END:: TFloat 		        AS AmountSummVat
+             END :: TFloat 		        AS AmountSummVat
 
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
