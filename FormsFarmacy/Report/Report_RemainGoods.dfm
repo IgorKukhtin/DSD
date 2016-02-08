@@ -25,6 +25,12 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         ExplicitWidth = 676
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colOperAmount
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
@@ -35,6 +41,11 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
               Format = ',0.00'
               Kind = skSum
               Column = colSumSale
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colOperAmount
             end>
           Styles.Content = nil
           Styles.Inactive = nil
