@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpselect_report_liquid(
     IN insession tvarchar)
   RETURNS TABLE(Operdate tdatetime, Unitname tvarchar
               --, Startamount tfloat, Endamount tfloat
-              , Startsum tfloat, Endsum tfloat
+              , Startsum tfloat
+              , EndSum tfloat
               , Summaincome tfloat
               , SummaCheck tfloat
               , SummaSale tfloat
@@ -79,68 +80,35 @@ BEGIN
         WITH containerCount AS (SELECT 
                                     container.Id
                                   , container.Amount
-                                  ,CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE
-                                               THEN MIFloat_Price.ValueData / (1 + ObjectFloat_NDSKind_NDS.ValueData/100)
-                                               ELSE MIFloat_Price.ValueData
-                                            END::TFloat AS PriceWithOutVAT
                                   , container.ObjectID 
                                   , Container.WhereObjectId AS UnitId
                                 FROM 
                                     container
-                                    LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                                        ON CLI_MI.ContainerId = container.Id
-                                                                       AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                    LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                                    LEFT OUTER JOIN MovementItem AS MI_Income
-                                                                 ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                                      ON MIFloat_Price.MovementItemId = MI_Income.Id
-                                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                    LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                              ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
-                                                             AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
-                                                                 ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
-                                                                AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                                    LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                          ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
-                                                         AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+                                   
                                 WHERE container.descid = zc_container_count()
                                   AND (Container.WhereObjectId = inUnitId OR inUnitId = 0) 
                           )
 
-   , tmpRem AS(SELECT --Object_Goods_View.Id                         as Id
-                     DD.UnitId
-                  --  , Object_Price.Price                           as PriceOut
+   , tmpRem AS(SELECT DD.UnitId
                     , SUM (DD.OperAmount * Object_Price.Price)::TFloat as SumOut
-                    , SUM (DD.OperAmountEND * Object_Price.Price)::TFloat as SumOut1
-                    , SUM (DD.OperAmount2 * Object_Price.Price)::TFloat as SumOut2
-               FROM (
-                    SELECT SUM(DD.OperAmount)    AS OperAmount, 
-                           SUM(DD.OperAmountEND) AS OperAmountEND, 
-                           SUM(DD.OperAmount2)    AS OperAmount2,
-                           DD.UnitId,
-                           DD.ObjectId
-                    FROM (SELECT SUM(DD.OperAmount) AS OperAmount, 
+                    , SUM (DD.OperAmountEND * Object_Price.Price)::TFloat as SumOutEnd
+                 
+               FROM (     SELECT SUM(DD.OperAmount)    AS OperAmount, 
                                  SUM(DD.OperAmountEND) AS OperAmountEND,
-                                 SUM(DD.OperAmount2) AS OperAmount2,
                                  DD.UnitId,
                                  DD.ObjectID 
                           FROM (SELECT containerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS OperAmount
-                                     , containerCount.Amount - COALESCE(SUM(CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS OperAmountEND
-                                     , containerCount.Amount - COALESCE(SUM(CASE WHEN MIContainer.OperDate >= inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS OperAmount2
+                                     , containerCount.Amount - COALESCE(SUM(CASE WHEN MIContainer.OperDate  > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS OperAmountEND
                                      , containerCount.UnitId
                                      , containerCount.ObjectID 
                                 FROM containerCount
                                     LEFT JOIN MovementItemContainer AS MIContainer 
                                                                     ON MIContainer.ContainerId = containerCount.Id
-                                                                   AND MIContainer.OperDate > inStartDate
+                                                                   AND date_trunc('day', MIContainer.OperDate ) > inStartDate
                                 GROUP BY containerCount.Id, containerCount.ObjectID, containerCount.Amount, containerCount.UnitId--, containerCount.PriceWithOutVAT
                                ) AS DD
                           GROUP BY DD.UnitId,DD.ObjectID
-                          ) AS DD
-                    GROUP BY DD.UnitId,DD.ObjectID
-                    HAVING (SUM(DD.OperAmount) <> 0)
+                   
                     ) AS DD
                    LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = DD.ObjectId
 
@@ -150,33 +118,35 @@ BEGIN
             GROUP BY DD.UnitId
            )
 
-      , tmpRemains  AS (SELECT --Object_Goods_View.Id                         as Id
-                               DD.UnitId
+   /*   , tmpRemains  AS (SELECT DD.UnitId
                              , DD.OperDate
-                  --  , Object_Price.Price                           as PriceOut
-                             , SUM (DD.OperSummAmount * Object_Price.Price)::TFloat as SumOut
-                             , SUM (DD.OperAmount * Object_Price.Price)::TFloat as SumOut1
+                             , SUM (DD.OperSummAmount * Object_Price.Price)::TFloat as SumOutSumm
+                             , SUM (DD.OperAmount * Object_Price.Price)::TFloat as SumOut
+                             , SUM (DD.OperAmount1 * Object_Price.Price)::TFloat as SumOut1
                         FROM (
                     SELECT SUM(DD.OperAmount)     AS OperAmount, 
+                           SUM(DD.OperAmount1)     AS OperAmount1, 
                            SUM(DD.OperSummAmount) AS OperSummAmount, 
                            DD.UnitId,
                            DD.ObjectId,
                            DD.OperDate
                     FROM (SELECT DD.OperDate, 
                                  SUM(DD.OperAmount)                         AS OperAmount, 
+                                 SUM(DD.OperAmount1)                         AS OperAmount1, 
                                  SUM (OperSummAmount)  AS OperSummAmount,
                                  DD.UnitId,
                                  DD.ObjectID 
                           FROM (SELECT date_trunc('day', _TIME.PlanDate) AS OperDate
                                      , containerCount.Amount - COALESCE(SUM(CASE WHEN date_trunc('day', MIContainer.OperDate) > _TIME.PlanDate THEN MIContainer.Amount ELSE 0 END), 0) AS OperAmount
                                      , COALESCE(SUM(MIContainer.Amount), 0) AS OperSummAmount
+                                     , containerCount.Amount - COALESCE(SUM(CASE WHEN date_trunc('day', MIContainer.OperDate) between inStartDate and _TIME.PlanDate THEN MIContainer.Amount ELSE 0 END), 0) AS OperAmount1
                                      , containerCount.UnitId
                                      , containerCount.ObjectID 
                                 FROM containerCount
                                     LEFT JOIN MovementItemContainer AS MIContainer 
                                                                     ON MIContainer.ContainerId = containerCount.Id
-                                                                   AND MIContainer.OperDate > inStartDate
-                                    LEFT JOIN _TIME ON _TIME.PlanDate = MIContainer.OperDate
+                                                                   AND date_trunc('day', MIContainer.OperDate ) > inStartDate
+                                    LEFT JOIN _TIME ON _TIME.PlanDate = date_trunc('day', MIContainer.OperDate )
                                     
                                 GROUP BY containerCount.Id, containerCount.ObjectID, containerCount.Amount, containerCount.UnitId
                                        , date_trunc('day', MIContainer.OperDate),_TIME.PlanDate --, containerCount.PriceWithOutVAT
@@ -184,7 +154,7 @@ BEGIN
                           GROUP BY DD.UnitId,DD.ObjectID, DD.OperDate
                           ) AS DD
                     GROUP BY DD.UnitId,DD.OperDate, DD.ObjectId
-                    --HAVING (SUM(DD.OperAmount) <> 0
+                  
                     
                     ) AS DD
                    LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = DD.ObjectId
@@ -193,8 +163,20 @@ BEGIN
                                                     ON DD.ObjectId = Object_Price.GoodsId
                                                    AND Object_Price.UnitId = DD.UnitId   
             GROUP BY DD.UnitId, DD.OperDate
-                       )                          
+                       )                          */
 
+    /*     rem AS ( select Object_Unit.Id AS UnitId
+                       , _TIME.PlanDate AS Operdate
+                       , sum (tmp.sumout) as sumout
+                   from _TIME
+                        LEFT JOIN Object AS Object_Unit ON 1=1
+                                        AND Object_Unit.DescId = zc_Object_Unit()
+                                        AND Object_Unit.Id = 183292  --inUnitId OR inUnitId=0) 
+                        LEFT JOIN  gpSelect_GoodsOnUnitRemains(inUnitId:= Object_Unit.Id, inRemainsDate:=_TIME.PlanDate, insession:='3') as tmp on 1 = 1
+
+                   group by Object_Unit.Id, _TIME.PlanDate
+         )
+      */    
 
    ,      tmpMovementIncome AS (SELECT  date_trunc('day', MovementDate_Branch.ValueData) AS BranchDate
                                             , SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))  ::TFloat AS SummaIncome      
@@ -368,12 +350,15 @@ BEGIN
                                  GROUP BY MovementLinkObject_Unit.ObjectId
                                         , date_trunc('day', Movement_OrderInternal.OperDate) 
                      )
+                     
            
 
                     SELECT _TIME.PlanDate::TDateTime AS OperDate
                          , Object_Unit.ValueData     ::TVarChar                          AS UnitName
-                         , tmpRem.SumOut   ::TFloat AS StartSum--   , tmpRemains.StartSum      ::TFloat AS StartSum
-                         , tmpRem.SumOut2     ::TFloat AS EndSum--  , tmpRemains.EndSum        ::TFloat AS EndSum
+                         , CASE WHEN _TIME.PlanDate = inStartDate THEN COALESCE(tmpRem.SumOut,0) ELSE 0 END    ::TFloat AS StartSum--   , tmpRemains.StartSum      ::TFloat AS StartSum
+
+                         , CASE WHEN _TIME.PlanDate = inEndDate THEN COALESCE(tmpRem.SumOutEnd,0) ELSE 0 END  ::TFloat AS EndSum --tmpRem.SumOut2     ::TFloat AS EndSum--  , tmpRemains.EndSum        ::TFloat AS EndSum
+
                          , tmpMovementIncome.SummaIncome    ::TFloat AS SummaIncome
                          , tmpCheck.SummaCheck              ::TFloat AS SummaCheck
                          , tmpMovementSale.SummaSale        ::TFloat AS SummaSale
@@ -386,10 +371,10 @@ BEGIN
                         LEFT JOIN Object AS Object_Unit ON 1=1
                                         AND Object_Unit.DescId = zc_Object_Unit()
                                         AND (Object_Unit.Id = inUnitId OR inUnitId=0) 
-                        LEFT JOIN tmpRem ON tmpRem.UnitId = Object_Unit.Id--tmpRemains.OperDate = _TIME.PlanDate
+                       /* LEFT JOIN tmpRem ON tmpRem.UnitId = Object_Unit.Id--tmpRemains.OperDate = _TIME.PlanDate
                                            -- AND tmpRemains.UnitId = Object_Unit.Id
                         LEFT JOIN tmpRemains ON tmpRemains.UnitId = Object_Unit.Id
-                                            AND tmpRemains.OperDate = _TIME.PlanDate
+                                            AND tmpRemains.OperDate = _TIME.PlanDate*/
                         LEFT JOIN tmpMovementIncome ON tmpMovementIncome.BranchDate = _TIME.PlanDate
                                                    AND tmpMovementIncome.UnitId     = Object_Unit.Id
                         LEFT JOIN (SELECT tmpMovementCheck.OperDate
@@ -408,7 +393,9 @@ BEGIN
                                                           AND tmpMovementOrderExternal.UnitId   = Object_Unit.Id  
                         LEFT JOIN tmpMovementOrderInternal ON tmpMovementOrderInternal.OperDate = _TIME.PlanDate
                                                           AND tmpMovementOrderInternal.UnitId   = Object_Unit.Id                                                   
-                                                                
+
+                        LEFT JOIN tmpRem ON /* Rem.OperDate = _TIME.PlanDate
+                                     AND */tmpRem.UnitId   = Object_Unit.Id  
                         --LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Coalesce(tmpRemains.UnitId,tmpMovementIncome.UnitId ) 
 
 

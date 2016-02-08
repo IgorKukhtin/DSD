@@ -38,10 +38,6 @@ type
     grChartDBChartView1: TcxGridDBChartView;
     dgDate: TcxGridDBChartDataGroup;
     dgUnit: TcxGridDBChartDataGroup;
-    serPlanAmount: TcxGridDBChartSeries;
-    serPlanAmountAccum: TcxGridDBChartSeries;
-    serFactAmount: TcxGridDBChartSeries;
-    serFactAmountAccum: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
     cxDBPivotGrid1: TcxDBPivotGrid;
     pcolPlanDate: TcxDBPivotGridField;
