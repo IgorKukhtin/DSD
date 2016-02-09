@@ -1,35 +1,34 @@
 inherited Report_LiquidForm: TReport_LiquidForm
   Caption = #1054#1090#1095#1077#1090' '#1051#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080' '#1090#1086#1095#1082#1080
-  ClientHeight = 575
+  ClientHeight = 600
   ClientWidth = 1053
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 1069
-  ExplicitHeight = 613
+  ExplicitHeight = 638
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 48
     Width = 1053
-    Height = 527
+    Height = 552
     TabOrder = 3
     ExplicitTop = 48
-    ExplicitWidth = 797
-    ExplicitHeight = 527
-    ClientRectBottom = 527
+    ExplicitWidth = 1053
+    ExplicitHeight = 552
+    ClientRectBottom = 552
     ClientRectRight = 1053
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 797
-      ExplicitHeight = 503
+      ExplicitWidth = 1053
+      ExplicitHeight = 528
       inherited cxGrid: TcxGrid
         Width = 1053
-        Height = 276
-        ExplicitTop = -6
-        ExplicitWidth = 967
-        ExplicitHeight = 276
+        Height = 312
+        ExplicitWidth = 1053
+        ExplicitHeight = 152
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -233,7 +232,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
             Width = 77
           end
           object clSummaSendIn: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1085#1072' '#1090#1086#1095#1082#1091
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1090#1086#1095#1082#1091
             DataBinding.FieldName = 'SummaSendIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -242,7 +241,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
             Width = 82
           end
           object clSummaSendOut: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1089' '#1090#1086#1095#1082#1080
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1090#1086#1095#1082#1080
             DataBinding.FieldName = 'SummaSendOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -251,7 +250,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
             Width = 82
           end
           object clSummaOrderExternal: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1103#1082#1080'  '#1074#1085#1077#1096#1085#1080#1080
+            Caption = #1047#1072#1103#1082#1080' '#1074#1085#1077#1096#1085#1080#1077
             DataBinding.FieldName = 'SummaOrderExternal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -260,7 +259,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
             Width = 82
           end
           object clSummaOrderInternal: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1080
+            Caption = #1047#1072#1103#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077
             DataBinding.FieldName = 'SummaOrderInternal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -269,7 +268,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
             Width = 82
           end
           object clSummaReturnIn: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090
+            Caption = #1042#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'SummaReturnIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -281,50 +280,65 @@ inherited Report_LiquidForm: TReport_LiquidForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 276
+        Top = 312
         Width = 1053
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitWidth = 797
+        ExplicitTop = 152
       end
       object grChart: TcxGrid
         Left = 0
-        Top = 284
+        Top = 320
         Width = 1053
-        Height = 219
+        Height = 208
         Align = alBottom
         TabOrder = 2
-        ExplicitWidth = 797
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
-          DiagramLine.Active = True
+          DiagramColumn.Active = True
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
           object dgDate: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'plandate'
+            DataBinding.FieldName = 'OperDate'
             DisplayText = #1044#1072#1090#1072
           end
           object dgUnit: TcxGridDBChartDataGroup
             DataBinding.FieldName = 'unitname'
             DisplayText = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
           end
-          object serPlanAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'planamount'
-            DisplayText = #1055#1083#1072#1085
+          object serSummaIncome: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaIncome'
+            DisplayText = #1055#1088#1080#1093#1086#1076
           end
-          object serPlanAmountAccum: TcxGridDBChartSeries
-            DataBinding.FieldName = 'planamountaccum'
-            DisplayText = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
+          object serSummaCheck: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaCheck'
+            DisplayText = #1055#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1082#1072#1089#1089#1077' '
           end
-          object serFactAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'factamount'
-            DisplayText = #1060#1072#1082#1090
+          object serSummaSale: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale'
+            DisplayText = #1055#1088#1086#1076#1072#1078#1072' '#1076#1086#1082'.'
           end
-          object serFactAmountAccum: TcxGridDBChartSeries
-            DataBinding.FieldName = 'factamountaccum'
-            DisplayText = #1060#1072#1082#1090' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
+          object serSummaOrderExternal: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaOrderExternal'
+            DisplayText = #1047#1072#1103#1082#1080' '#1074#1085#1077#1096#1085#1080#1077
+          end
+          object serSummaOrderInternal: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaOrderInternal'
+            DisplayText = #1047#1072#1103#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077
+          end
+          object serSummaSendIN: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSendIN'
+            DisplayText = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1090#1086#1095#1082#1091
+          end
+          object serSummaSendOut: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSendOut'
+            DisplayText = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1090#1086#1095#1082#1080
+          end
+          object serSummaReturnIn: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaReturnIn'
+            DisplayText = #1042#1086#1079#1074#1088#1072#1090
           end
         end
         object grChartLevel1: TcxGridLevel
@@ -335,18 +349,16 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitWidth = 967
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
         Width = 1053
-        Height = 503
+        Height = 528
         Align = alClient
         DataSource = MasterDS
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitWidth = 967
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -422,7 +434,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
     Width = 1053
     Height = 22
     Visible = False
-    ExplicitWidth = 797
+    ExplicitWidth = 1053
     ExplicitHeight = 22
     inherited deStart: TcxDateEdit
       Left = 127
@@ -483,6 +495,8 @@ inherited Report_LiquidForm: TReport_LiquidForm
     end
   end
   inherited ActionList: TActionList
+    Left = 79
+    Top = 287
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -679,6 +693,12 @@ inherited Report_LiquidForm: TReport_LiquidForm
       Visible = ivAlways
       Control = deEnd
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 584
+  end
+  inherited PopupMenu: TPopupMenu
+    Top = 296
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil

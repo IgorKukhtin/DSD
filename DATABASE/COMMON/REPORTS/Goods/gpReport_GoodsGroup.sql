@@ -48,30 +48,35 @@ BEGIN
 
 
     RETURN QUERY
-    WITH tmpSendOnPrice_out AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
-                                                                       , inEndDate      := inEndDate
-                                                                       , inDescId       := zc_Movement_SendOnPrice()
-                                                                       , inFromId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
-                                                                       , inToId         := 0
-                                                                       , inGoodsGroupId := inGoodsGroupId
-                                                                       , inIsMO_all     := FALSE
-                                                                       , inSession      := ''
-                                                                        ) AS gpReport)
-        , tmpSendOnPrice_in AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
-                                                                       , inEndDate      := inEndDate
-                                                                       , inDescId       := zc_Movement_SendOnPrice()
-                                                                       , inFromId       := 0
-                                                                       , inToId         := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
-                                                                       , inGoodsGroupId := inGoodsGroupId
-                                                                       , inIsMO_all     := FALSE
-                                                                       , inSession      := ''
-                                                                        ) AS gpReport)
+    WITH tmpSendOnPrice_out AS (SELECT * FROM gpReport_GoodsMI_SendOnPrice (inStartDate    := inStartDate
+                                                                          , inEndDate      := inEndDate
+                                                                          , inFromId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                          , inToId         := 0
+                                                                          , inGoodsGroupId := inGoodsGroupId
+                                                                          , inIsTradeMark  := FALSE
+                                                                          , inIsGoods      := FALSE
+                                                                          , inIsGoodsKind  := FALSE
+                                                                          , inIsMovement   := FALSE
+                                                                          , inSession      := ''
+                                                                           ) AS gpReport)
+        , tmpSendOnPrice_in AS (SELECT * FROM gpReport_GoodsMI_SendOnPrice (inStartDate    := inStartDate
+                                                                          , inEndDate      := inEndDate
+                                                                          , inFromId       := 0
+                                                                          , inToId         := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                          , inGoodsGroupId := inGoodsGroupId
+                                                                          , inIsTradeMark  := FALSE
+                                                                          , inIsGoods      := FALSE
+                                                                          , inIsGoodsKind  := FALSE
+                                                                          , inIsMovement   := FALSE
+                                                                          , inSession      := ''
+                                                                           ) AS gpReport)
                   , tmpLoss AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
                                                                        , inEndDate      := inEndDate
                                                                        , inDescId       := zc_Movement_Loss()
                                                                        , inFromId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inToId         := 0
                                                                        , inGoodsGroupId := inGoodsGroupId
+                                                                       , inPriceListId  := 0
                                                                        , inIsMO_all     := FALSE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
@@ -81,6 +86,7 @@ BEGIN
                                                                        , inFromId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inToId         := 0
                                                                        , inGoodsGroupId := inGoodsGroupId
+                                                                       , inPriceListId  := 0
                                                                        , inIsMO_all     := FALSE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
@@ -91,6 +97,7 @@ BEGIN
                                                                        , inToId         := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inGoodsGroupId := inGoodsGroupId
                                                                        , inIsMO_all     := FALSE
+                                                                       , inPriceListId  := 0
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
                            , tmpSale AS (SELECT * FROM gpReport_GoodsMI (inStartDate         := inStartDate
@@ -312,21 +319,16 @@ BEGIN
                       UNION ALL
                        -- 1.1. SendOnPrice - Out
                        SELECT zc_Movement_SendOnPrice()       AS MovementDescId
-                            , tmp.LocationCode                AS LocationCode
-                            , tmp.LocationName                AS LocationName
-                            , tmp.LocationCode_by             AS ObjectByCode
-                            , tmp.LocationName_by             AS ObjectByName
+                            , tmp.FromCode                    AS LocationCode
+                            , tmp.FromName                    AS LocationName
+                            , tmp.ToCode                      AS ObjectByCode
+                            , tmp.ToName                      AS ObjectByName
                             , 0                               AS PaidKindId
 
-                            , tmp.AmountIn_Weight             AS AmountOut
-                            , CASE WHEN vbIsBranch = TRUE THEN tmp.SummOut_branch ELSE tmp.SummOut_zavod END AS SummOut
-                            , tmp.SummOut_branch              AS SummOut_branch
-                            , CASE WHEN tmp.LocationCode_by IN (22121, 22122, 22081, 22082)
-                                        THEN tmp.SummIn_branch
-                                   WHEN tmp.LocationCode IN (22121, 22122, 22081, 22082)
-                                        THEN tmp.SummOut_branch
-                                   ELSE tmp.Summ_calc
-                              END AS SummPartnerOut
+                            , SUM (tmp.OperCount_Partner)     AS AmountOut
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner) ELSE SUM (tmp.SummIn_Partner_zavod) END AS SummOut
+                            , SUM (tmp.SummOut_Partner)       AS SummOut_branch
+                            , SUM (tmp.SummOut_Partner)       AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummIn_branch
@@ -338,44 +340,43 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , tmp.SummOut_zavod               AS Summ
-                            , tmp.SummOut_branch              AS Summ_branch
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner) ELSE SUM (tmp.SummIn_Partner_zavod) END AS Summ
+                            , SUM (tmp.SummOut_Partner)       AS Summ_branch
 
-                            , tmp.AmountOut_Weight - tmp.AmountIn_Weight AS Amount_Change
-                            , tmp.SummOut_zavod    - tmp.SummIn_zavod    AS Summ_Change_branch
-                            , tmp.SummOut_zavod    - tmp.SummIn_zavod    AS Summ_Change_zavod
-                            , 0                               AS Amount_40200 
-                            , 0                               AS Summ_40200_branch
-                            , 0                               AS Summ_40200_zavod
-                            , 0                               AS Amount_Loss 
-                            , 0                               AS Summ_Loss_branch
-                            , 0                               AS Summ_Loss_zavod
+                            , SUM (tmp.OperCount_Change)      AS Amount_Change
+                            , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_branch
+                            , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_zavod
+                            , SUM (tmp.OperCount_40200)       AS Amount_40200 
+                            , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_branch
+                            , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_zavod
+                            , SUM (tmp.OperCount_Loss)        AS Amount_Loss
+                            , SUM (tmp.SummIn_Loss)           AS Summ_Loss_branch
+                            , SUM (tmp.SummIn_Loss_zavod)     AS Summ_Loss_zavod
                             , FALSE                           AS isActive
                             , FALSE                           AS isReprice
                             , TRUE                            AS isPage3
                        FROM tmpSendOnPrice_out AS tmp
+                       GROUP BY tmp.FromCode
+                              , tmp.FromName
+                              , tmp.ToCode
+                              , tmp.ToName
                       UNION ALL
                        -- 1.2. SendOnPrice - In
                        SELECT zc_Movement_SendOnPrice()       AS MovementDescId
-                            , tmp.LocationCode_by             AS LocationCode
-                            , tmp.LocationName_by             AS LocationName
-                            , tmp.LocationCode                AS ObjectByCode
-                            , tmp.LocationName                AS ObjectByName
+                            , tmp.ToCode                      AS LocationCode
+                            , tmp.ToName                      AS LocationName
+                            , tmp.FromCode                    AS ObjectByCode
+                            , tmp.FromName                    AS ObjectByName
                             , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
                             , 0                               AS SummOut_branch
                             , 0                               AS SummPartnerOut
-                            , tmp.AmountIn_Weight             AS AmountIn
-                            , CASE WHEN vbIsBranch = TRUE THEN tmp.SummIn_branch ELSE tmp.SummIn_zavod END AS SummIn
-                            , tmp.SummIn_branch               AS SummIn_branch
-                            , CASE WHEN tmp.LocationCode_by IN (22121, 22122, 22081, 22082)
-                                        THEN tmp.SummIn_branch
-                                   WHEN tmp.LocationCode IN (22121, 22122, 22081, 22082)
-                                        THEN tmp.SummOut_branch
-                                   ELSE tmp.Summ_calc
-                              END AS SummPartnerIn
+                            , SUM (tmp.OperCount_Partner)     AS AmountIn
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner) ELSE SUM (tmp.SummIn_Partner_zavod) END AS SummIn
+                            , SUM (tmp.SummOut_Partner)       AS SummIn_branch
+                            , SUM (tmp.SummIn_Partner_zavod)  AS SummPartnerIn
 
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
@@ -383,15 +384,15 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , tmp.SummIn_zavod                AS Summ
-                            , tmp.SummIn_branch               AS Summ_branch
+                            , SUM (tmp.SummIn_Partner_zavod)  AS Summ
+                            , SUM (tmp.SummOut_Partner)       AS Summ_branch
 
-                            , 0                               AS Amount_Change
-                            , 0                               AS Summ_Change_branch
-                            , 0                               AS Summ_Change_zavod
-                            , 0                               AS Amount_40200 
-                            , 0                               AS Summ_40200_branch
-                            , 0                               AS Summ_40200_zavod
+                            , SUM (tmp.OperCount_Change)      AS Amount_Change
+                            , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_branch
+                            , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_zavod
+                            , SUM (tmp.OperCount_40200)       AS Amount_40200
+                            , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_branch
+                            , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_zavod
                             , 0                               AS Amount_Loss 
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
@@ -400,6 +401,10 @@ BEGIN
                             , FALSE                           AS isReprice
                             , TRUE                            AS isPage3
                        FROM tmpSendOnPrice_in AS tmp
+                       GROUP BY tmp.FromCode
+                              , tmp.FromName
+                              , tmp.ToCode
+                              , tmp.ToName
                       UNION ALL
                        -- 2. Loss
                        SELECT zc_Movement_Loss()              AS MovementDescId
@@ -1230,4 +1235,4 @@ ALTER FUNCTION gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Inte
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsGroup (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsGroup (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
