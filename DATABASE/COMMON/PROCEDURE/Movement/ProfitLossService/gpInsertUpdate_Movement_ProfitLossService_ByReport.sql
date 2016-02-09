@@ -42,7 +42,7 @@ BEGIN
                                                       , inOperDate          := inEndDate
                                                       , inAmountIn          := 0  :: tfloat
                                                       , inAmountOut         := Sum_Bonus
-                                                      , inBonusValue        := Value
+                                                      , inBonusValue        := CAST (Value AS NUMERIC (16, 2))
                                                       , inComment           := Comment
                                                       , inContractId        := ContractId_find
                                                       , inContractMasterId  := ContractId_master

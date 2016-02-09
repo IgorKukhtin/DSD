@@ -19,46 +19,53 @@ BEGIN
 
   --
   INSERT INTO SoldTable (OperDate, InvNumber
-                       , JuridicalId, PartnerId, InfoMoneyId, PaidKindId, BranchId, RetailId, AreaId, PartnerTagId, ContractId, ContractTagId , ContractTagGroupId
-                       , PersonalId, PersonalTradeId, BranchId_Personal
-                       , TradeMarkId, GoodsGroupAnalystId, GoodsTagId, GoodsGroupId, GoodsId, GoodsKindId, MeasureId
+                       , AccountId
+                       , BranchId, JuridicalGroupId, JuridicalId, PartnerId, InfoMoneyId, PaidKindId, RetailId, RetailReportId
+                       , AreaId, PartnerTagId
+                       , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName
+                       , ContractId, ContractTagId, ContractTagGroupId
+                       , PersonalId, UnitId_Personal, BranchId_Personal, PersonalTradeId, UnitId_PersonalTrade
+                       , GoodsPlatformId, TradeMarkId, GoodsGroupAnalystId, GoodsTagId, GoodsGroupId, GoodsId, GoodsKindId, MeasureId
                        , RegionId, ProvinceId, CityKindId, CityId, ProvinceCityId, StreetKindId, StreetId
-                       , Sale_Summ, Sale_Summ_10300, Sale_SummCost, Sale_SummCost_10500, Sale_SummCost_40200, Sale_Amount_Weight, Sale_Amount_Sh, Sale_AmountPartner_Weight, Sale_AmountPartner_Sh, Sale_Amount_10500_Weight, Sale_Amount_40200_Weight
-                       , Actions_Summ, Actions_Weight
-                       , Return_Summ, Return_Summ_10300, Return_SummCost, Return_SummCost_40200, Return_Amount_Weight, Return_Amount_Sh, Return_AmountPartner_Weight, Return_AmountPartner_Sh, Return_Amount_40200_Weight
+
+                       , Actions_Weight, Actions_Sh, Actions_SummCost, Actions_Summ
+                       , Sale_Summ, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300, Sale_SummCost, Sale_SummCost_10500, Sale_SummCost_40200
+                       , Sale_Amount_Weight, Sale_Amount_Sh, Sale_AmountPartner_Weight, Sale_AmountPartner_Sh, Sale_Amount_10500_Weight, Sale_Amount_40200_Weight
+                       , Return_Summ, Return_Summ_10300, Return_SummCost, Return_SummCost_40200
+                       , Return_Amount_Weight, Return_Amount_Sh, Return_AmountPartner_Weight, Return_AmountPartner_Sh, Return_Amount_40200_Weight
                        , SaleReturn_Summ, SaleReturn_Summ_10300, SaleReturn_SummCost, SaleReturn_SummCost_40200, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
                        , BonusBasis, Bonus, Plan_Weight, Plan_Summ
                        , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ
-                       -- , Address
                         )
 
-   WITH tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
-                             , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
-                        FROM Constant_ProfitLoss_AnalyzerId_View
-                       ) 
+   WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
+      , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.* FROM Constant_ProfitLoss_AnalyzerId_View) 
       , tmpOperation_SaleReturn
                      AS (SELECT MIContainer.OperDate
                               , '' :: TVarChar                        AS InvNumber
                               , CLO_Juridical.ObjectId                AS JuridicalId
-                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MovementLinkObject_Partner.ObjectId END AS PartnerId
+                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
                               , CLO_InfoMoney.ObjectId                AS InfoMoneyId
                               , CLO_PaidKind.ObjectId                 AS PaidKindId
                               , MILinkObject_Branch.ObjectId          AS BranchId
                               , CLO_Contract.ObjectId                 AS ContractId
 
-                              , MIContainer.ObjectId_Analyzer                 AS GoodsId
-                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                              , MIContainer.ObjectId_Analyzer         AS GoodsId
+                              , MIContainer.ObjectIntId_Analyzer      AS GoodsKindId
 
+                              , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE AND MIFloat_PromoMovement.ValueData > 0 THEN 1 * MIContainer.Amount ELSE 0 END) AS Actions_Summ
                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ
                               , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Return_Summ
 
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10200() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ_10200
+                              , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10250() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ_10250
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ_10300
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount ELSE 0 END) AS Return_Summ_10300
 
                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
                               , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_Amount
 
+                              , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() AND MIFloat_PromoMovement.ValueData > 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS Actions_AmountPartner
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_AmountPartner
 
@@ -66,6 +73,7 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200()     THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount_40200
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_Amount_40200
 
+                              , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() AND MIFloat_PromoMovement.ValueData > 0 THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Actions_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sale_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sale_SummCost_10500
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() THEN      COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sale_SummCost_40200
@@ -91,25 +99,21 @@ BEGIN
                                                             ON CLO_Contract.ContainerId = MIContainer.ContainerId_Analyzer
                                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
 
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                                           ON MovementLinkObject_Partner.MovementId = MIContainer.MovementId
-                                                          AND MovementLinkObject_Partner.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_PriceCorrective() THEN zc_MovementLinkObject_Partner() ELSE tmpAnalyzer.MLO_DescId END
-
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                               ON MILinkObject_GoodsKind.MovementItemId = MIContainer.MovementItemId
-                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
                                                               AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                              LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                          ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                          GROUP BY MIContainer.OperDate
                                 , CLO_Juridical.ObjectId
-                                , MIContainer.MovementDescId, MovementLinkObject_Partner.ObjectId
+                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
                                 , CLO_InfoMoney.ObjectId
                                 , CLO_PaidKind.ObjectId
                                 , MILinkObject_Branch.ObjectId
                                 , CLO_Contract.ObjectId
                                 , MIContainer.ObjectId_Analyzer
-                                , MILinkObject_GoodsKind.ObjectId
+                                , MIContainer.ObjectIntId_Analyzer
                         )
        
           , tmpBonus AS (SELECT COALESCE (MIDate_OperDate.ValueData, MovementItemContainer.OperDate)      AS OperDate
@@ -209,23 +213,27 @@ BEGIN
                  , tmpOperation_SaleReturn.GoodsId
                  , tmpOperation_SaleReturn.GoodsKindId
 
-                 , (tmpOperation_SaleReturn.Sale_Summ)   AS Sale_Summ
-                 , (tmpOperation_SaleReturn.Return_Summ) AS Return_Summ
+                 , (tmpOperation_SaleReturn.Actions_Summ) AS Actions_Summ
+                 , (tmpOperation_SaleReturn.Sale_Summ)    AS Sale_Summ
+                 , (tmpOperation_SaleReturn.Return_Summ)  AS Return_Summ
 
                  , (tmpOperation_SaleReturn.Sale_Summ_10200)   AS Sale_Summ_10200
+                 , (tmpOperation_SaleReturn.Sale_Summ_10250)   AS Sale_Summ_10250
                  , (tmpOperation_SaleReturn.Sale_Summ_10300)   AS Sale_Summ_10300
                  , (tmpOperation_SaleReturn.Return_Summ_10300) AS Return_Summ_10300
 
-                 , (tmpOperation_SaleReturn.Sale_Amount)   AS Sale_Amount
-                 , (tmpOperation_SaleReturn.Return_Amount) AS Return_Amount
+                 , (tmpOperation_SaleReturn.Sale_Amount)    AS Sale_Amount
+                 , (tmpOperation_SaleReturn.Return_Amount)  AS Return_Amount
 
-                 , (tmpOperation_SaleReturn.Sale_AmountPartner)   AS Sale_AmountPartner
-                 , (tmpOperation_SaleReturn.Return_AmountPartner) AS Return_AmountPartner
+                 , (tmpOperation_SaleReturn.Actions_AmountPartner) AS Actions_AmountPartner
+                 , (tmpOperation_SaleReturn.Sale_AmountPartner)    AS Sale_AmountPartner
+                 , (tmpOperation_SaleReturn.Return_AmountPartner)  AS Return_AmountPartner
 
                  , (tmpOperation_SaleReturn.Sale_Amount_10500)
                  , (tmpOperation_SaleReturn.Sale_Amount_40200)
                  , (tmpOperation_SaleReturn.Return_Amount_40200)
 
+                 , (tmpOperation_SaleReturn.Actions_SummCost)    AS Actions_SummCost
                  , (tmpOperation_SaleReturn.Sale_SummCost)       AS Sale_SummCost
                  , (tmpOperation_SaleReturn.Sale_SummCost_10500) AS Sale_SummCost_10500
                  , (tmpOperation_SaleReturn.Sale_SummCost_40200) AS Sale_SummCost_40200
@@ -250,16 +258,19 @@ BEGIN
                  , tmpBonus.GoodsId
                  , tmpBonus.GoodsKindId
 
+                 , 0 AS Actions_Summ
                  , 0 AS Sale_Summ
                  , 0 AS Return_Summ
 
                  , 0 AS Sale_Summ_10200
+                 , 0 AS Sale_Summ_10250
                  , 0 AS Sale_Summ_10300
                  , 0 AS Return_Summ_10300
 
                  , 0 AS Sale_Amount
                  , 0 AS Return_Amount
 
+                 , 0 AS Actions_AmountPartner
                  , 0 AS Sale_AmountPartner
                  , 0 AS Return_AmountPartner
 
@@ -267,6 +278,7 @@ BEGIN
                  , 0 AS Sale_Amount_40200
                  , 0 AS Return_Amount_40200
 
+                 , 0 AS Actions_SummCost
                  , 0 AS Sale_SummCost
                  , 0 AS Sale_SummCost_10500
                  , 0 AS Sale_SummCost_40200
@@ -292,23 +304,27 @@ BEGIN
                  , tmpOperation_all.GoodsId
                  , tmpOperation_all.GoodsKindId
 
-                 , SUM (tmpOperation_all.Sale_Summ)   AS Sale_Summ
-                 , SUM (tmpOperation_all.Return_Summ) AS Return_Summ
+                 , SUM (tmpOperation_all.Actions_Summ) AS Actions_Summ
+                 , SUM (tmpOperation_all.Sale_Summ)    AS Sale_Summ
+                 , SUM (tmpOperation_all.Return_Summ)  AS Return_Summ
 
                  , SUM (tmpOperation_all.Sale_Summ_10200)   AS Sale_Summ_10200
+                 , SUM (tmpOperation_all.Sale_Summ_10200)   AS Sale_Summ_10250
                  , SUM (tmpOperation_all.Sale_Summ_10300)   AS Sale_Summ_10300
                  , SUM (tmpOperation_all.Return_Summ_10300) AS Return_Summ_10300
 
                  , SUM (tmpOperation_all.Sale_Amount)   AS Sale_Amount
                  , SUM (tmpOperation_all.Return_Amount) AS Return_Amount
 
-                 , SUM (tmpOperation_all.Sale_AmountPartner)   AS Sale_AmountPartner
-                 , SUM (tmpOperation_all.Return_AmountPartner) AS Return_AmountPartner
+                 , SUM (tmpOperation_all.Actions_AmountPartner) AS Actions_AmountPartner
+                 , SUM (tmpOperation_all.Sale_AmountPartner)    AS Sale_AmountPartner
+                 , SUM (tmpOperation_all.Return_AmountPartner)  AS Return_AmountPartner
 
                  , SUM (tmpOperation_all.Sale_Amount_10500)   AS Sale_Amount_10500
                  , SUM (tmpOperation_all.Sale_Amount_40200)   AS Sale_Amount_40200
                  , SUM (tmpOperation_all.Return_Amount_40200) AS Return_Amount_40200
 
+                 , SUM (tmpOperation_all.Actions_SummCost)    AS Actions_SummCost
                  , SUM (tmpOperation_all.Sale_SummCost)       AS Sale_SummCost
                  , SUM (tmpOperation_all.Sale_SummCost_10500) AS Sale_SummCost_10500
                  , SUM (tmpOperation_all.Sale_SummCost_40200) AS Sale_SummCost_40200
@@ -335,13 +351,16 @@ BEGIN
 
       SELECT tmpResult.OperDate
            , tmpResult.InvNumber
+           , 0 AS AccountId
 
+           , tmpResult.BranchId
+           , ObjectLink_JuridicalGroup.ChildObjectId AS JuridicalGroupId
            , tmpResult.JuridicalId
-           , COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId) AS PartnerId
+           , tmpResult.PartnerId
            , tmpResult.InfoMoneyId
            , tmpResult.PaidKindId
-           , tmpResult.BranchId
            , ObjectLink_Juridical_Retail.ChildObjectId             AS RetailId
+           , ObjectLink_Juridical_RetailReport.ChildObjectId       AS RetailReportId
            , View_Partner_Address.AreaId                
            , View_Partner_Address.PartnerTagId          
            , tmpResult.ContractId 
@@ -349,9 +368,12 @@ BEGIN
            , ObjectLink_ContractTag_ContractTagGroup.ChildObjectId AS ContractTagGroupId
 
            , ObjectLink_Partner_Personal.ChildObjectId             AS PersonalId
-           , ObjectLink_Partner_PersonalTrade.ChildObjectId        AS PersonalTradeId
+           , ObjectLink_Personal_Unit.ChildObjectId                AS UnitId_Personal
            , ObjectLink_Unit_Branch.ChildObjectId                  AS BranchId_Personal
+           , ObjectLink_Partner_PersonalTrade.ChildObjectId        AS PersonalTradeId
+           , ObjectLink_PersonalTrade_Unit.ChildObjectId           AS UnitId_PersonalTrade
 
+           , ObjectLink_Goods_GoodsPlatform.ChildObjectId          AS GoodsPlatformId
            , ObjectLink_Goods_TradeMark.ChildObjectId              AS TradeMarkId
            , ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId      AS GoodsGroupAnalystId
            , ObjectLink_Goods_GoodsTag.ChildObjectId               AS GoodsTagId
@@ -368,7 +390,14 @@ BEGIN
            , View_Partner_Address.StreetKindId          
            , View_Partner_Address.StreetId              
 
+           , tmpResult.Actions_AmountPartner_Weight AS Actions_Weight
+           , tmpResult.Actions_AmountPartner_Sh     AS Actions_Sh
+           , tmpResult.Actions_SummCost
+           , tmpResult.Actions_Summ
+
            , tmpResult.Sale_Summ
+           , tmpResult.Sale_Summ_10200
+           , tmpResult.Sale_Summ_10250
            , tmpResult.Sale_Summ_10300
            , tmpResult.Sale_SummCost
            , tmpResult.Sale_SummCost_10500
@@ -379,9 +408,6 @@ BEGIN
            , tmpResult.Sale_AmountPartner_Sh
            , tmpResult.Sale_Amount_10500_Weight
            , tmpResult.Sale_Amount_40200_Weight
-
-           , tmpResult.Sale_Summ_10200 AS Actions_Summ
-           , 0                         AS Actions_Weight
 
            , tmpResult.Return_Summ
            , tmpResult.Return_Summ_10300
@@ -421,10 +447,12 @@ BEGIN
                  , tmpOperation.GoodsId
                  , tmpOperation.GoodsKindId
 
-                 , SUM (tmpOperation.Sale_Summ)   AS Sale_Summ
-                 , SUM (tmpOperation.Return_Summ) AS Return_Summ
+                 , SUM (tmpOperation.Actions_Summ) AS Actions_Summ
+                 , SUM (tmpOperation.Sale_Summ)    AS Sale_Summ
+                 , SUM (tmpOperation.Return_Summ)  AS Return_Summ
 
                  , SUM (tmpOperation.Sale_Summ_10200)   AS Sale_Summ_10200
+                 , SUM (tmpOperation.Sale_Summ_10250)   AS Sale_Summ_10250
                  , SUM (tmpOperation.Sale_Summ_10300)   AS Sale_Summ_10300
                  , SUM (tmpOperation.Return_Summ_10300) AS Return_Summ_10300
 
@@ -438,10 +466,14 @@ BEGIN
                  , SUM (tmpOperation.Return_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_AmountPartner_Weight
                  , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpOperation.Return_AmountPartner ELSE 0 END) AS Return_AmountPartner_Sh
 
+                 , SUM (tmpOperation.Actions_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Actions_AmountPartner_Weight
+                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpOperation.Actions_AmountPartner ELSE 0 END) AS Actions_AmountPartner_Sh
+
                  , SUM (tmpOperation.Sale_Amount_10500 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_10500_Weight
                  , SUM (tmpOperation.Sale_Amount_40200 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_40200_Weight
                  , SUM (tmpOperation.Return_Amount_40200 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_Amount_40200_Weight
 
+                 , SUM (tmpOperation.Actions_SummCost)    AS Actions_SummCost
                  , SUM (tmpOperation.Sale_SummCost)       AS Sale_SummCost
                  , SUM (tmpOperation.Sale_SummCost_10500) AS Sale_SummCost_10500
                  , SUM (tmpOperation.Sale_SummCost_40200) AS Sale_SummCost_40200
@@ -474,12 +506,7 @@ BEGIN
                    , tmpOperation.GoodsKindId
            ) AS tmpResult
 
-           LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpResult.PartnerId AND 1 = 0
-
-           LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
-           /*LEFT JOIN ObjectString AS ObjectString_Address
-                                  ON ObjectString_Address.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
-                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()*/
+           LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                 ON ObjectLink_Goods_TradeMark.ObjectId = tmpResult.GoodsId
@@ -507,6 +534,9 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = tmpResult.JuridicalId
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                                ON ObjectLink_Juridical_RetailReport.ObjectId = tmpResult.JuridicalId
+                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_Retail()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                 ON ObjectLink_Partner_Personal.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
@@ -521,6 +551,9 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
+                                ON ObjectLink_PersonalTrade_Unit.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+                               AND ObjectLink_PersonalTrade_Unit.DescId = zc_ObjectLink_Personal_Unit()
      UNION ALL
       SELECT MovementItemContainer.OperDate
            , '' :: TVarChar                                        AS InvNumber

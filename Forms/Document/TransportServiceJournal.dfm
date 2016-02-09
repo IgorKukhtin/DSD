@@ -43,6 +43,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clCountPoint
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTrevelTime
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -64,6 +69,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clCountPoint
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTrevelTime
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -162,6 +172,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object clTrevelTime: TcxGridDBColumn
             Caption = #1042#1088#1077#1084#1103' '#1074' '#1087#1091#1090#1080', '#1095
             DataBinding.FieldName = 'TrevelTime'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -346,10 +359,10 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     Width = 1212
     ExplicitWidth = 1212
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -838,5 +851,26 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     PackSize = 1
     Left = 504
     Top = 164
+  end
+  object frxPDFExport1: TfrxPDFExport
+    UseFileCache = True
+    ShowProgress = True
+    OverwritePrompt = False
+    DataOnly = False
+    PrintOptimized = False
+    Outline = False
+    Background = False
+    HTMLTags = True
+    Author = 'FastReport'
+    Subject = 'FastReport PDF export'
+    ProtectionFlags = [ePrint, eModify, eCopy, eAnnot]
+    HideToolbar = False
+    HideMenubar = False
+    HideWindowUI = False
+    FitWindow = False
+    CenterWindow = False
+    PrintScaling = False
+    Left = 408
+    Top = 192
   end
 end

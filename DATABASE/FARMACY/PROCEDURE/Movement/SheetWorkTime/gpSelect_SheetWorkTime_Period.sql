@@ -25,32 +25,7 @@ BEGIN
      IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 14473)) -- Персонал ввод справочников
      THEN vbMemberId:= 0;
      ELSE
-         vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId
-                       FROM ObjectLink AS ObjectLink_User_Member
-                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                         AND ObjectLink_User_Member.ObjectId = vbUserId
-                         AND vbUserId NOT IN (439994 -- Опимах А.М.
-                                            , 300527 -- Пономаренко А.Р.
-                                            , 439923 -- Васильева Л.Я.
-                                            , 439925 -- Новиков Д.В.
-                                             )
-                      UNION
-                       SELECT ObjectLink_User_Member.ChildObjectId
-                       FROM ObjectLink AS ObjectLink_User_Member
-                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                         AND ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 439994 -- Опимах А.М.
-                                                                         THEN 439613 -- Шворников Р.И.
-                                                                    WHEN vbUserId = 300527 -- Пономаренко А.Р.
-                                                                         THEN 300523 -- Бабенко В.П.
-                                                                    WHEN vbUserId IN (439923, 439925) -- Васильева Л.Я. + Новиков Д.В.
-                                                                         THEN 439917 -- Маховская М.В.
-                                                               END
-                         AND vbUserId IN (439994 -- Опимах А.М.
-                                        , 300527 -- Пономаренко А.Р.
-                                        , 439923 -- Васильева Л.Я.
-                                        , 439925 -- Новиков Д.В.
-                                         )
-                      );
+         vbMemberId:= 0;
      END IF;
 
 
@@ -58,13 +33,10 @@ BEGIN
      vbEndDate := date_trunc ('MONTH', inEndDate);        -- последнее число месяца
  
      RETURN QUERY 
-       WITH tmpList AS (SELECT DISTINCT ObjectLink.ObjectId AS UnitId
+       WITH tmpList AS (SELECT DISTINCT ObjectLink.ChildObjectId AS UnitId
                         FROM ObjectLink
-                             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                  ON ObjectLink_Personal_Member.ObjectId = ObjectLink.ChildObjectId
-                                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                        WHERE ObjectLink.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
-                          AND (ObjectLink_Personal_Member.ChildObjectId = vbMemberId OR vbMemberId = 0)
+                        WHERE ObjectLink.DescId = zc_ObjectLink_Personal_Unit()
+                          AND ObjectLink.ChildObjectId > 0
                        )
        SELECT
              Period.OperDate::TDateTime

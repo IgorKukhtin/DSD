@@ -204,9 +204,12 @@ order by 1 limit 1
     -- находим свойство <УП статья назначения>
     -- SELECT ObjectId INTO vbInfoMoneyId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_InfoMoney() AND MovementId = vbMovementItemId;
 
+    --
+    CREATE TEMP TABLE _tmpContract_find ON COMMIT DROP AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = vbJuridicalId);
+
     -- 1.1. находим свойство <Договор> "по умолчанию" для inAmount > 0
     SELECT MAX (View_Contract.ContractId) INTO vbContractId
-    FROM Object_Contract_View AS View_Contract
+    FROM _tmpContract_find AS View_Contract
          INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
                                          AND InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
                                          AND inAmount > 0
@@ -223,7 +226,7 @@ order by 1 limit 1
     IF COALESCE (vbContractId, 0) = 0
     THEN
         SELECT MAX (View_Contract.ContractId) INTO vbContractId
-        FROM Object_Contract_View AS View_Contract
+        FROM _tmpContract_find AS View_Contract
              INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
                                              AND (InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
                                                   OR InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500())) -- Общефирменные + Маркетинг
@@ -242,7 +245,7 @@ order by 1 limit 1
     IF COALESCE (vbContractId, 0) = 0
     THEN
         SELECT MAX (View_Contract.ContractId) INTO vbContractId
-        FROM Object_Contract_View AS View_Contract
+        FROM _tmpContract_find AS View_Contract
              INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
                                              AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
                                              AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
@@ -287,13 +290,13 @@ order by 1 limit 1
               WHERE InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
                 AND inAmount < 0
              ) AS tmpInfoMoney
-             LEFT JOIN Object_Contract_View AS View_Contract
+             LEFT JOIN _tmpContract_find AS View_Contract
                                             ON View_Contract.JuridicalId = vbJuridicalId
                                            AND View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
                                            AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                            AND View_Contract.isErased = FALSE
                                            AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
-             LEFT JOIN Object_Contract_View AS View_Contract_next
+             LEFT JOIN _tmpContract_find AS View_Contract_next
                                             ON View_Contract_next.JuridicalId = vbJuridicalId
                                            AND View_Contract_next.InfoMoneyId = tmpInfoMoney.InfoMoneyId_next
                                            AND View_Contract_next.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
@@ -305,7 +308,7 @@ order by 1 limit 1
         IF COALESCE (vbContractId, 0) = 0
         THEN 
             SELECT MAX (View_Contract.ContractId) INTO vbContractId
-            FROM Object_Contract_View AS View_Contract
+            FROM _tmpContract_find AS View_Contract
             WHERE View_Contract.JuridicalId = vbJuridicalId
               AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
               AND View_Contract.isErased = FALSE

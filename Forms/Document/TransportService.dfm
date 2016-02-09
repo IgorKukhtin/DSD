@@ -187,8 +187,8 @@
   object ceDistance: TcxCurrencyEdit [23]
     Left = 312
     Top = 87
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 23
     Width = 91
   end
@@ -200,8 +200,8 @@
   object cePrice: TcxCurrencyEdit [25]
     Left = 409
     Top = 87
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 25
     Width = 83
   end
@@ -213,8 +213,8 @@
   object ceCountPoint: TcxCurrencyEdit [27]
     Left = 312
     Top = 129
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 27
     Width = 129
   end
@@ -226,8 +226,8 @@
   object ceTrevelTime: TcxCurrencyEdit [29]
     Left = 456
     Top = 129
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 29
     Width = 129
   end
@@ -291,8 +291,8 @@
   object ceWeightTransport: TcxCurrencyEdit [37]
     Left = 503
     Top = 87
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 37
     Width = 82
   end

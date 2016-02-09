@@ -19,7 +19,7 @@ RETURNS TABLE (BranchName TVarChar
              , SendOnPriceOutSumm TFloat, SendOnPriceOutWeight TFloat
              , Sale_40208_Summ TFloat, Sale_40208_Weight TFloat
              , Sale_10500_Summ TFloat, Sale_10500_Weight TFloat
-             , Sale_10200_Summ TFloat
+             , Sale_10200_Summ TFloat, Sale_10250_Summ TFloat
              , Sale_10300_Summ TFloat
              , LossSumm TFloat, LossWeight TFloat
              , InventorySumm TFloat, InventoryWeight TFloat   
@@ -116,12 +116,13 @@ BEGIN
                                       THEN -1 * MIContainer.Amount                                        ---- Сумма с/с, реализация, Разница в весе
                                       ELSE 0 END) AS SummSale_40208
    
-                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                                        AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500()  -- Сумма с/с, реализация, Скидка за вес
                                       THEN -1 * MIContainer.Amount                                        
                                       ELSE 0 END) AS SummSale_10500
                           , 0 AS SummSale_10200
+                          , 0 AS SummSale_10250
                           , 0 AS SummSale_10300
                           , 0 AS SummSaleReal  
                           , 0 AS SummReturnIn_10200
@@ -242,21 +243,25 @@ BEGIN
                           , 0 AS SummSale_40208
                           , 0 AS SummSale_10500
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
-                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами т.е. это сумма акции
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами
                                       THEN -1 * MIContainer.Amount                                        
                                       ELSE 0 END) AS SummSale_10200
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10250()  -- Сумма, реализация, Скидка Акция
+                                      THEN -1 * MIContainer.Amount                                        
+                                      ELSE 0 END) AS SummSale_10250
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
-                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()  -- скидка по накладной,
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()  -- Сумма, реализация, Скидка дополнительная
                                       THEN -1 * MIContainer.Amount                                        
                                       ELSE 0 END) AS SummSale_10300
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SummSaleReal
 
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
-                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами т.е. это сумма акции
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами
                                       THEN MIContainer.Amount                                        
                                       ELSE 0 END) AS SummReturnIn_10200
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
-                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300()  -- скидка по накладной,
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300()  -- Сумма, реализация, Скидка дополнительная
                                       THEN MIContainer.Amount                                        
                                       ELSE 0 END) AS SummReturnIn_10300
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN -1 * MIContainer.Amount ELSE 0 END) AS SummReturnInReal
@@ -503,7 +508,8 @@ BEGIN
         , CAST (SUM (tmpAll.SummSale_10500)               AS TFloat) AS Sale_10500_Summ
         , CAST (SUM (tmpAll.CountSale_10500)              AS TFloat) AS Sale_10500_Weight
 
-        , CAST (SUM (tmpAll.SummSale_10200)               AS TFloat) AS Sale_10200_Summ
+        , CAST (SUM (tmpAll.SummSale_10200 + tmpAll.SummSale_10250) AS TFloat) AS Sale_10200_Summ
+        , CAST (SUM (tmpAll.SummSale_10250)               AS TFloat) AS Sale_10250_Summ
         , CAST (SUM (tmpAll.SummSale_10300)               AS TFloat) AS Sale_10300_Summ
         
         , CAST (SUM (tmpAll.SummLoss)                     AS TFloat) AS LossSumm
@@ -557,6 +563,7 @@ BEGIN
                         , CAST (SUM (tmpGoodsSumm.SummSale_40208) AS NUMERIC (16, 2)) AS SummSale_40208
                         , CAST (SUM (tmpGoodsSumm.SummSale_10500) AS NUMERIC (16, 2)) AS SummSale_10500
                         , CAST (SUM (tmpGoodsSumm.SummSale_10200) AS NUMERIC (16, 2)) AS SummSale_10200
+                        , CAST (SUM (tmpGoodsSumm.SummSale_10250) AS NUMERIC (16, 2)) AS SummSale_10250
                         , CAST (SUM (tmpGoodsSumm.SummSale_10300) AS NUMERIC (16, 2)) AS SummSale_10300
                         , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice) AS NUMERIC (16, 2)) AS SummInventory_RePrice
 
@@ -618,6 +625,7 @@ BEGIN
                         , 0 AS SummSale_40208
                         , 0 AS SummSale_10500
                         , 0 AS SummSale_10200
+                        , 0 AS SummSale_10250
                         , 0 AS SummSale_10300
                         , 0 AS SummInventory_RePrice
                         , 0 AS SummStart_Vz
@@ -671,12 +679,10 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  22.11.15         * 
-
 */
 
 -- тест

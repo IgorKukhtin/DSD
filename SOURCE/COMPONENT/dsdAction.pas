@@ -4,7 +4,7 @@ interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
   cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
-  cxGridDBTableView, frxClass, cxGridCustomView, Dialogs, Controls,
+  cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls;
 
 type

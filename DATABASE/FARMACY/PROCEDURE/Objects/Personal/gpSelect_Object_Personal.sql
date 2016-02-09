@@ -58,16 +58,16 @@ BEGIN
          , COALESCE (Object_Personal_View.isMain, FALSE) AS isMain
          , COALESCE (Object_Personal_View.isOfficial, FALSE) AS isOfficial
          
-         , COALESCE (Object_Personal_View.isErased, FALSE) AS isErased
+         , COALESCE (Object_Personal_View.isErased, Object_Member.isErased) AS isErased
      FROM Object AS Object_Member
           LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = Object_Member.Id
                                         AND  (Object_Personal_View.isErased = FALSE OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE))
-          LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
-          LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
+          -- LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
+          -- LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
 
      WHERE Object_Member.DescId = zc_Object_Member()
         AND (Object_Member.isErased = FALSE OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE))
-      /* And (Object_Personal_View.isErased = FALSE
+      /* AND (Object_Personal_View.isErased = FALSE
             OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)
            )
        */AND (inIsPeriod = FALSE

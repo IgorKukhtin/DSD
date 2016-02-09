@@ -12,13 +12,16 @@ CREATE TABLE SoldTable
 (
    OperDate            TDateTime
  , InvNumber           TVarChar
+ , AccountId          Integer
 
+ , BranchId           Integer
+ , JuridicalGroup     Integer -- ***
  , JuridicalId        Integer
  , PartnerId          Integer
  , InfoMoneyId        Integer
  , PaidKindId         Integer
- , BranchId           Integer
  , RetailId           Integer
+ , RetailReportId     Integer -- ***
  , AreaId             Integer
  , PartnerTagId       Integer
  , ContractId         Integer 
@@ -26,9 +29,12 @@ CREATE TABLE SoldTable
  , ContractTagGroupId Integer 
 
  , PersonalId             Integer
- , PersonalTradeId        Integer
+ , UnitId_Personal        Integer -- ***
  , BranchId_Personal      Integer
+ , PersonalTradeId        Integer -- ***
+ , UnitId_PersonalTrade   Integer
 
+ , GoodsPlatformId     Integer -- ***
  , TradeMarkId         Integer
  , GoodsGroupAnalystId Integer
  , GoodsTagId          Integer
@@ -46,6 +52,8 @@ CREATE TABLE SoldTable
  , StreetId              Integer
                            
  , Sale_Summ                 TFloat
+ , Sale_Summ_10200           TFloat -- ***
+ , Sale_Summ_10250           TFloat -- ***
  , Sale_Summ_10300           TFloat
  , Sale_SummCost             TFloat
  , Sale_SummCost_10500       TFloat
@@ -57,7 +65,9 @@ CREATE TABLE SoldTable
  , Sale_Amount_10500_Weight  TFloat
  , Sale_Amount_40200_Weight  TFloat
 
+ , Actions_Sh                TFloat -- ***
  , Actions_Weight            TFloat
+ , Actions_SummCost          TFloat -- ***
  , Actions_Summ              TFloat
 
  , Return_Summ                 TFloat

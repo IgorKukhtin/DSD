@@ -96,6 +96,8 @@ BEGIN
                                         , tmp.isTax, tmp.CountTax
                                    FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpPartnerJuridical.JuridicalId FROM tmpPartnerJuridical LIMIT 1)) AS tmp
                                   )
+           , tmpJuridical_find AS (SELECT DISTINCT tmpPartnerJuridical.JuridicalId FROM tmpPartnerJuridical)
+           , tmpContract_find AS (SELECT Object_Contract_View.* FROM tmpJuridical_find INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = tmpJuridical_find.JuridicalId)
            , tmpPartnerContract AS (SELECT tmpPartnerJuridical.ObjectDescId
                                          , tmpPartnerJuridical.PartnerId
                                          , tmpPartnerJuridical.PartnerCode
@@ -108,10 +110,11 @@ BEGIN
                                          , Object_Contract_View.InfoMoneyId      AS InfoMoneyId
                                          , tmpPartnerJuridical.JuridicalId
                                     FROM tmpPartnerJuridical
-                                         LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = tmpPartnerJuridical.JuridicalId
-                                                                       AND Object_Contract_View.InfoMoneyId IN (inInfoMoneyId, zc_Enum_InfoMoney_30301()) -- Доходы + Переработка + Переработка
-                                                                       AND Object_Contract_View.isErased = FALSE
-                                                                       AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                         LEFT JOIN tmpContract_find AS Object_Contract_View
+                                                                    ON Object_Contract_View.JuridicalId = tmpPartnerJuridical.JuridicalId
+                                                                   AND Object_Contract_View.InfoMoneyId IN (inInfoMoneyId, zc_Enum_InfoMoney_30301()) -- Доходы + Переработка + Переработка
+                                                                   AND Object_Contract_View.isErased = FALSE
+                                                                   AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                     )
       , tmpPartnerContract_find AS (SELECT tmpPartnerContract.ObjectDescId
                                          , tmpPartnerContract.PartnerId

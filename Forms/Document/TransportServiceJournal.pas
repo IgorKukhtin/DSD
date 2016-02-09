@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit,
-  cxButtonEdit, cxBlobEdit;
+  cxButtonEdit, cxBlobEdit, frxClass, frxExportPDF;
 
 type
   TTransportServiceJournalForm = class(TAncestorJournalForm)
@@ -42,6 +42,7 @@ type
     StartRunPlan: TcxGridDBColumn;
     clWeightTransport: TcxGridDBColumn;
     clContractCode: TcxGridDBColumn;
+    frxPDFExport1: TfrxPDFExport;
   private
     { Private declarations }
   public
