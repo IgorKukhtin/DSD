@@ -57,8 +57,8 @@ type
     HeaderCDS: TClientDataSet;
     RefreshDispatcher: TRefreshDispatcher;
     cxGridDBBandedTableView: TcxGridDBBandedTableView;
-    BandcolMemberlCode: TcxGridDBBandedColumn;
-    BandcolMemberName: TcxGridDBBandedColumn;
+    BandcolPersonalCode: TcxGridDBBandedColumn;
+    BandcolPersonalName: TcxGridDBBandedColumn;
     BandcolPositionName: TcxGridDBBandedColumn;
     BandcolPersonalGroupName: TcxGridDBBandedColumn;
     TemplateColumn: TcxGridDBBandedColumn;

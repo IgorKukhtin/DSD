@@ -451,7 +451,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Personal'
+    StoredProcName = 'gpSelect_Object_Personal_choice'
     DataSet = ClientDataSet
     DataSets = <
       item

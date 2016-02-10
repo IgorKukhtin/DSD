@@ -9,7 +9,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SheetWorkTime (Integer, Inte
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SheetWorkTime(
     IN inMovementItemId      Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- ключ Документа
-    IN inMemberId            Integer   , -- физлицо
+    IN inPersonalId            Integer   , -- физлицо
     IN inPositionId          Integer   , -- Должность
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
     IN inAmount              TFloat    , -- Количество часов факт
@@ -20,7 +20,7 @@ $BODY$
 BEGIN
      
      -- сохранили <Элемент документа>
-     inMovementItemId := lpInsertUpdate_MovementItem (inMovementItemId, zc_MI_Master(), inMemberId, inMovementId, inAmount, NULL);
+     inMovementItemId := lpInsertUpdate_MovementItem (inMovementItemId, zc_MI_Master(), inPersonalId, inMovementId, inAmount, NULL);
      
      -- сохранили связь с <Группировки Сотрудников>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalGroup(), InMovementItemId, inPersonalGroupId);
