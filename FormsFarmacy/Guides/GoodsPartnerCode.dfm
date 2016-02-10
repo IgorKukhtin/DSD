@@ -1,27 +1,29 @@
 inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
-  ClientHeight = 423
-  ClientWidth = 919
+  ClientHeight = 432
+  ClientWidth = 976
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 935
-  ExplicitHeight = 461
+  ExplicitWidth = 992
+  ExplicitHeight = 470
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 919
-    Height = 397
-    ExplicitWidth = 900
-    ExplicitHeight = 397
-    ClientRectBottom = 397
-    ClientRectRight = 919
+    Width = 976
+    Height = 406
+    ExplicitWidth = 976
+    ExplicitHeight = 406
+    ClientRectBottom = 406
+    ClientRectRight = 976
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 900
-      ExplicitHeight = 397
+      ExplicitWidth = 976
+      ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 919
-        Height = 397
-        ExplicitWidth = 900
-        ExplicitHeight = 397
+        Width = 976
+        Height = 406
+        ExplicitLeft = 40
+        ExplicitTop = -40
+        ExplicitWidth = 976
+        ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -40,51 +42,80 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
           end
           object colGoodsMainName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsMainName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 187
+            Width = 161
           end
           object clCodeInt: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'GoodsCodeInt'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 64
           end
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072' ('#1089#1090#1088#1086#1082')'
             DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 107
+            Width = 87
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 189
+            Width = 177
           end
           object clMakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 110
           end
           object clMinimumLot: TcxGridDBColumn
-            Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
+            Caption = #1052#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
             DataBinding.FieldName = 'MinimumLot'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = '0'
-            Width = 134
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
+            Width = 58
           end
           object colIsUpload: TcxGridDBColumn
             Caption = #1042#1099#1075#1088'.'
             DataBinding.FieldName = 'IsUpload'
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1077#1090#1089#1103' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 41
+          end
+          object colIsPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'IsPromo'
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1074#1072#1088' '#1091#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1082#1094#1080#1080
+            Width = 48
+          end
+          object colUpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 48
+          end
+          object colUpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
           end
         end
       end
@@ -269,6 +300,9 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           StoredProc = spUpdate_Goods_IsUpload
+        end
+        item
+          StoredProc = spUpdate_Goods_Promo
         end>
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
@@ -391,8 +425,8 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 48
+    Left = 72
+    Top = 56
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
@@ -655,6 +689,20 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         ComponentItem = 'MinimumLot'
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'outUpdateDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'UpdateDate'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outUpdateName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UpdateName'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 344
@@ -792,5 +840,43 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     PackSize = 1
     Left = 672
     Top = 312
+  end
+  object spUpdate_Goods_Promo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsPromo'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outUpdateDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'UpdateDate'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outUpdateName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UpdateName'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 368
   end
 end

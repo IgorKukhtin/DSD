@@ -58,6 +58,9 @@ type
     actDelete_ObjectFloat_Goods_IsUpload: TdsdExecStoredProc;
     actDoLoadIsUpload: TExecuteImportSettingsAction;
     dxBarButton2: TdxBarButton;
+    spUpdate_Goods_Promo: TdsdStoredProc;
+    colUpdateName: TcxGridDBColumn;
+    colUpdateDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

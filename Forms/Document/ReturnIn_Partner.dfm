@@ -21,7 +21,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       inherited cxGrid: TcxGrid
         Width = 1145
         Height = 447
-        ExplicitLeft = -3
         ExplicitWidth = 1145
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
