@@ -6,7 +6,10 @@ DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalSettingsRetail(Integer);
 CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalSettingsRetail(
     IN inRetailId   Integer       -- сессия пользователя
 )
-RETURNS TABLE (JuridicalId Integer, MainJuridicalId Integer, ContractId Integer, isPriceClose boolean, Bonus TFloat) AS
+RETURNS TABLE (JuridicalId Integer, MainJuridicalId Integer, ContractId Integer
+             , isPriceClose boolean
+             , Bonus TFloat, PriceLimit TFloat
+) AS
 $BODY$
 BEGIN
 
@@ -19,6 +22,7 @@ BEGIN
                , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
                , COALESCE(ObjectBoolean_isPriceClose.ValueData, false) AS isPriceClose 
                , ObjectFloat_Bonus.ValueData AS Bonus 
+               , COALESCE(ObjectFloat_PriceLimit.ValueData,0) AS PriceLimit
             FROM ObjectLink AS ObjectLink_JuridicalSettings_Retail
 
                  JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical 
@@ -40,6 +44,10 @@ BEGIN
                  LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
                                        ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                       AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
+
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PriceLimit 
+                                       ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                      AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
 
                WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
                  AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = inRetailId;

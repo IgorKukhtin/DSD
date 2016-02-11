@@ -1,21 +1,21 @@
 inherited Report_LiquidForm: TReport_LiquidForm
   Caption = #1054#1090#1095#1077#1090' '#1051#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080' '#1090#1086#1095#1082#1080
-  ClientHeight = 600
+  ClientHeight = 579
   ClientWidth = 1053
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 1069
-  ExplicitHeight = 638
+  ExplicitHeight = 617
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 48
     Width = 1053
-    Height = 552
+    Height = 531
     TabOrder = 3
     ExplicitTop = 48
     ExplicitWidth = 1053
     ExplicitHeight = 552
-    ClientRectBottom = 552
+    ClientRectBottom = 531
     ClientRectRight = 1053
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -26,9 +26,9 @@ inherited Report_LiquidForm: TReport_LiquidForm
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
         Width = 1053
-        Height = 312
+        Height = 323
         ExplicitWidth = 1053
-        ExplicitHeight = 152
+        ExplicitHeight = 312
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -200,8 +200,10 @@ inherited Report_LiquidForm: TReport_LiquidForm
             DataBinding.FieldName = 'EndSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 74
           end
           object SummaIncome: TcxGridDBColumn
@@ -280,21 +282,22 @@ inherited Report_LiquidForm: TReport_LiquidForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 312
+        Top = 323
         Width = 1053
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitTop = 152
+        ExplicitTop = 312
       end
       object grChart: TcxGrid
         Left = 0
-        Top = 320
+        Top = 331
         Width = 1053
-        Height = 208
+        Height = 176
         Align = alBottom
         TabOrder = 2
+        ExplicitTop = 496
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -349,16 +352,18 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitHeight = 528
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
         Width = 1053
-        Height = 528
+        Height = 507
         Align = alClient
         DataSource = MasterDS
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
+        ExplicitHeight = 528
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -439,14 +444,14 @@ inherited Report_LiquidForm: TReport_LiquidForm
     inherited deStart: TcxDateEdit
       Left = 127
       Top = 0
-      EditValue = 42248d
+      EditValue = 42370d
       ExplicitLeft = 127
       ExplicitTop = 0
     end
     inherited deEnd: TcxDateEdit
       Left = 280
       Top = 0
-      EditValue = 42248d
+      EditValue = 42371d
       ExplicitLeft = 280
       ExplicitTop = 0
       ExplicitWidth = 81
@@ -709,7 +714,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
-        Component = deStart
       end>
     Left = 88
     Top = 176

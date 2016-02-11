@@ -318,6 +318,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadLoadFormTest;

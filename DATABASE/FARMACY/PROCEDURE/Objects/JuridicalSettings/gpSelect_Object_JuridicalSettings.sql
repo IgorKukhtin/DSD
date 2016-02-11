@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
-               isPriceClose Boolean, Bonus TFloat, 
+               isPriceClose Boolean, Bonus TFloat, PriceLimit TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar, isErased boolean,
                StartDate TDateTime, EndDate TDateTime) AS
@@ -28,6 +28,7 @@ BEGIN
            , Object_Juridical.ValueData
            , COALESCE(JuridicalSettings.isPriceClose, FALSE)
            , JuridicalSettings.Bonus
+           , JuridicalSettings.PriceLimit
            , LastPriceList_View.ContractId AS ContractId
            , Contract.ValueData AS ContractName
            , ObjectLink_JuridicalRetail.ObjectId AS MainJuridicalId
@@ -50,6 +51,7 @@ BEGIN
                       , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
                       , COALESCE(ObjectBoolean_isPriceClose.ValueData, false) AS isPriceClose 
                       , ObjectFloat_Bonus.ValueData AS Bonus 
+                      , COALESCE(ObjectFloat_PriceLimit.ValueData,0) AS PriceLimit  
                       , ObjectLink_JuridicalSettings_Retail.ObjectId AS JuridicalSettingsId
 
                       , ObjectDate_StartDate.ValueData AS StartDate
@@ -77,6 +79,10 @@ BEGIN
                                        ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                       AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
 
+                 LEFT JOIN ObjectFloat AS ObjectFloat_PriceLimit 
+                                       ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                      AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
+
                  LEFT JOIN ObjectDate AS ObjectDate_StartDate 
                                       ON ObjectDate_StartDate.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                      AND ObjectDate_StartDate.DescId = zc_ObjectDate_Contract_Start()
@@ -102,6 +108,7 @@ ALTER FUNCTION gpSelect_Object_JuridicalSettings(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.02.16         * add PriceLimit Ограничение "Цена до"
  17.02.15                         *
  21.01.15                         *
  13.10.14                         *

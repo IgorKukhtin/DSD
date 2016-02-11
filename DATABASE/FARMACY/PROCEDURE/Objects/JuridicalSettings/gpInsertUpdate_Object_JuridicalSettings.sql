@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Установки для ценовых групп>
@@ -11,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
     IN inContractId              Integer   ,    -- Договор
     IN inisPriceClose            Boolean   ,    -- Закрыт прайс
     IN inBonus                   TFloat    ,    -- % бонусирования
+    IN inPriceLimit              TFloat    ,    -- Цена до
     IN inStartDate               TDateTime ,    -- 
     IN inEndDate                 TDateTime ,    -- 
     IN inSession                 TVarChar       -- сессия пользователя
@@ -45,6 +48,9 @@ BEGIN
 
    -- % бонусирования
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalSettings_Bonus(), ioId, inBonus);
+   -- Цена до
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalSettings_PriceLimit(), ioId, inPriceLimit);
+
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);
@@ -63,6 +69,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.02.16
  26.01.16         *                
  17.02.15                          *
  21.01.15                          *

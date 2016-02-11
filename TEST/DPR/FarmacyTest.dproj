@@ -152,14 +152,6 @@
 			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\GoodsGroup.pas">
-				<Form>GoodsGroupForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsGroupEdit.pas">
-				<Form>GoodsGroupEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Measure.pas">
 				<Form>MeasureForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1150,6 +1142,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\SheetWorkTimeAddRecord.pas">
 				<Form>SheetWorkTimeAddRecordForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsGroup.pas">
+				<Form>GoodsGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsGroupEdit.pas">
+				<Form>GoodsGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsGroup_Object.pas">
+				<Form>GoodsGroup_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
