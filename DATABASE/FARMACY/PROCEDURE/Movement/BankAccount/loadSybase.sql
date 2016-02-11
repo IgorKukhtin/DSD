@@ -36,7 +36,8 @@ select _CashOperation.Id, Movement.Id as MovementId , MovementLinkObject_from.Ob
                                           , inAmountSumm           := 0 
 
                                           -- , inBankAccountId        := 1648977 -- house-1
-                                          , inBankAccountId        := 1693572 -- house-2-¿—Õ¡-4 
+                                          -- , inBankAccountId        := 1693572 -- house-2-¿—Õ¡-4 
+                                          , inBankAccountId        := 1694740 -- house-3-¿—Õ¡-3 
                                           , inComment              := remark
                                           , inMoneyPlaceId         := MovementLinkObject_from.ObjectId
                                           , inIncomeMovementId     := Movement.Id
