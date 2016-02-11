@@ -28,7 +28,7 @@ BEGIN
            , Object_Juridical.ValueData
            , COALESCE(JuridicalSettings.isPriceClose, FALSE)
            , JuridicalSettings.Bonus
-           , JuridicalSettings.PriceLimit
+           , JuridicalSettings.PriceLimit :: TFloat AS PriceLimit
            , LastPriceList_View.ContractId AS ContractId
            , Contract.ValueData AS ContractName
            , ObjectLink_JuridicalRetail.ObjectId AS MainJuridicalId

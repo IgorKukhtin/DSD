@@ -89,7 +89,8 @@ BEGIN
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
           , min(PriceList.amount) OVER (PARTITION BY MovementItemOrder.Id) AS MinPrice
           , CASE 
-              WHEN Goods.isTOP THEN PriceList.amount
+              WHEN Goods.isTOP = TRUE OR COALESCE(JuridicalSettings.PriceLimit, 0) >= PriceList.Amount
+                   THEN PriceList.amount
               ELSE (PriceList.amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat 
             END AS FinalPrice          
           , COALESCE(JuridicalSettings.Bonus, 0)::TFloat AS Bonus

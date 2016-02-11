@@ -37,7 +37,9 @@ select _CashOperation.Id, Movement.Id as MovementId , MovementLinkObject_from.Ob
 
                                           -- , inBankAccountId        := 1648977 -- house-1
                                           -- , inBankAccountId        := 1693572 -- house-2-姥土-4 
-                                          , inBankAccountId        := 1694740 -- house-3-姥土-3 
+                                          -- , inBankAccountId        := 1694740 -- house-3-姥土-3 
+                                          -- , inBankAccountId        := 1702164 -- house-4-姥土
+                                          , inBankAccountId        := 1705473 -- house-5-姥土-2
                                           , inComment              := remark
                                           , inMoneyPlaceId         := MovementLinkObject_from.ObjectId
                                           , inIncomeMovementId     := Movement.Id
