@@ -2,6 +2,7 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1102#1088' '#1083#1080#1094
   ClientWidth = 793
   ExplicitWidth = 809
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -59,6 +60,12 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
+          end
+          object colPriceLimit: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1086
+            DataBinding.FieldName = 'PriceLimit'
+            HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' "'#1062#1077#1085#1072' '#1076#1086'"'
+            Width = 70
           end
           object colStartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
@@ -163,6 +170,14 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Bonus'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceLimit'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceLimit'
         DataType = ftFloat
         ParamType = ptInput
       end

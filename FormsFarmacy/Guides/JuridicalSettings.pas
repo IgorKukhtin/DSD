@@ -25,6 +25,7 @@ type
     colStartDate: TcxGridDBColumn;
     colEndDate: TcxGridDBColumn;
     colName: TcxGridDBColumn;
+    colPriceLimit: TcxGridDBColumn;
   private
     { Private declarations }
   public

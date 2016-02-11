@@ -135,13 +135,13 @@ BEGIN
          ) AS D
          LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = D.Key[1]
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.Key[2]
-         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]
+         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[3]
          LEFT JOIN (SELECT DISTINCT tmpMI.PersonalId, tmpMI.PositionId, tmpMI.PersonalGroupId, tmpMI.isErased
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
                    ) AS tmp ON tmp.PersonalId = D.Key[1]
                            AND tmp.PositionId = D.Key[2]
-                           AND tmp.PersonalGroupId = D.Key[4]
+                           AND tmp.PersonalGroupId = D.Key[3]
         ';
 
 
