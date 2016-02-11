@@ -96,7 +96,7 @@ BEGIN
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                        ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                      AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                      AND MovementLinkObject_Partner.DescId = CASE WHEN Movement.DescId = zc_Movement_TransferDebtIn() THEN zc_MovementLinkObject_PartnerFrom() ELSE zc_MovementLinkObject_Partner() END
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -134,7 +134,12 @@ BEGIN
     ;
 
      -- проверка - проведенные/удаленные документы Изменять нельзя
-     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Формирование <Корректировки к налоговой> на основании документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
+     END IF;
+     -- проверка - проведенные/удаленные документы Изменять нельзя
+     IF vbStatusId <> zc_Enum_Status_Complete() AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
      THEN
          RAISE EXCEPTION 'Ошибка.Формирование <Корректировки к налоговой> на основании документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
@@ -344,11 +349,8 @@ BEGIN
                               , Movement.OperDate
                               , COALESCE (MB_Registered.ValueData, FALSE) AS isRegistered
                               , SUM (MovementItem.Amount) AS Amount
-                         FROM MovementLinkObject AS MLO_From
-                              INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                                              ON MovementLinkMovement_Master.MovementId = MLO_From.MovementId
-                                                             AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-                              INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Master.MovementChildId
+                         FROM MovementLinkObject AS MLO_To
+                              INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                                  AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '12 MONTH' AND vbOperDate - INTERVAL '1 DAY'
@@ -368,8 +370,8 @@ BEGIN
                               LEFT JOIN MovementBoolean AS MB_Registered
                                                         ON MB_Registered.MovementId = Movement.Id
                                                        AND MB_Registered.DescId = zc_MovementBoolean_Registered()
-                         WHERE MLO_From.ObjectId = vbFromId
-                           AND MLO_From.DescId = zc_MovementLinkObject_From()
+                         WHERE MLO_To.ObjectId = vbFromId
+                           AND MLO_To.DescId = zc_MovementLinkObject_To()
                            AND Movement.OperDate < '01.02.2016'
                            AND vbBranchId = zc_Branch_Kiev()
                          GROUP BY Movement.Id
@@ -591,8 +593,13 @@ BEGIN
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), inMovementId, inDocumentTaxKindId);
      END IF;
 
-     IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+     IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
      THEN
+          -- удалили связь <Налогового документа> с <Корректировка цены>
+          DELETE FROM MovementLinkMovement WHERE MovementId IN (SELECT MovementId_Corrective FROM _tmpMovement_PriceCorrective)
+                                             AND MovementChildId IN (SELECT MovementId FROM _tmpMovement_PriceCorrective)
+                                             AND DescId = zc_MovementLinkMovement_Master();
+     ELSE
           -- сформировали связь <Налогового документа> с <Возврат от покупателя> или <Перевод долга (приход)> или <Корректировка цены>
           PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), MovementId_Corrective, inMovementId)
           FROM (SELECT DISTINCT MovementId_Corrective FROM _tmpResult) AS tmpResult_update;

@@ -325,17 +325,17 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerFrom
+                                         ON MovementLinkObject_PartnerFrom.MovementId = Movement.Id
+                                        AND MovementLinkObject_PartnerFrom.DescId = zc_MovementLinkObject_PartnerFrom()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_PartnerFrom.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
             LEFT JOIN ObjectString AS ObjectString_FromAddress
-                                   ON ObjectString_FromAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_From.Id)
+                                   ON ObjectString_FromAddress.ObjectId = COALESCE (MovementLinkObject_PartnerFrom.ObjectId, Object_From.Id)
                                   AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
 
 

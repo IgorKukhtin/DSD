@@ -2,7 +2,7 @@
 DO $$ 
     BEGIN
      
-      IF NOT (EXISTS(Select table_name From INFORMATION_SCHEMA.tables Where Table_Name = lower ('_CashOperation'))) THEN
+      IF 1=1 or NOT (EXISTS(Select table_name From INFORMATION_SCHEMA.tables Where Table_Name = lower ('_CashOperation'))) THEN
          CREATE TABLE _CashOperation
          (
           ID             Integer NOT NULL,
@@ -27,7 +27,7 @@ DO $$
       END IF;
 
 
-      IF NOT (EXISTS(Select table_name From INFORMATION_SCHEMA.tables Where Table_Name = lower ('_Bill'))) THEN
+      IF 1=1 or NOT (EXISTS(Select table_name From INFORMATION_SCHEMA.tables Where Table_Name = lower ('_Bill'))) THEN
          CREATE TABLE _Bill
          (
           ID             Integer NOT NULL,
