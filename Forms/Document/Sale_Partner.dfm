@@ -12,19 +12,17 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Height = 256
     ExplicitTop = 166
     ExplicitWidth = 1259
-    ExplicitHeight = 246
+    ExplicitHeight = 256
     ClientRectBottom = 256
     ClientRectRight = 1259
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1259
-      ExplicitHeight = 222
+      ExplicitHeight = 232
       inherited cxGrid: TcxGrid
         Width = 1259
         Height = 232
-        ExplicitLeft = 3
-        ExplicitTop = 96
         ExplicitWidth = 1259
-        ExplicitHeight = 222
+        ExplicitHeight = 232
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1022,6 +1020,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -3130,6 +3132,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <

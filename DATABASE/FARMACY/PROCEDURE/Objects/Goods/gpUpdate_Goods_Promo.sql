@@ -1,45 +1,42 @@
--- Function: gpInsertUpdate_Object_Goods()
+-- Function: gpUpdate_Object_Goods_Promo()
 
-DROP FUNCTION IF EXISTS gpUpdate_Goods_MinimumLot(Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_Promo(Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Goods_MinimumLot(
+CREATE OR REPLACE FUNCTION gpUpdate_Goods_Promo(
     IN inId                  Integer   ,    -- ключ объекта <Товар>
-    IN inMinimumLot          TFloat    ,    -- Групповая упаковка
-   OUT outUpdateDate         TDateTime ,
-   OUT outUpdateName         TVarChar  ,
+    IN inisPromo             Boolean   ,    -- Акция
+   OUT outUpdateDate         TDateTime ,    -- дата последнего редактирования
+   OUT outUpdateName         TVarChar  ,    -- Пользователь последнего редактирования
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS record AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMinimumLot TFloat; 
+   DECLARE vbisPromo Boolean;
 BEGIN
 
-   IF COALESCE(inId, 0) = 0 THEN
+    IF COALESCE(inId, 0) = 0 THEN
       RETURN;
-   END IF;
+    END IF;
 
-   vbUserId := lpGetUserBySession (inSession);
+    vbUserId := lpGetUserBySession (inSession);
 
-   IF inMinimumLot = 0 THEN 
-      inMinimumLot := NULL;
-   END IF;   	
 
     -- Получаем сохраненное значение св-ва
-    vbMinimumLot:=COALESCE((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_Goods_MinimumLot() AND ObjectFloat.ObjectId = inId),0);
+    vbisPromo:=COALESCE((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_Goods_Promo() AND OB.ObjectId = inId),False);
 
+    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Promo(), inId, inisPromo);
 
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(), inId, inMinimumLot);
-
-   IF COALESCE(inMinimumLot,0) <> vbMinimumLot 
-   THEN
-          -- сохранили свойство <Дата корректировки>
+     -- !!!протокол конкретного свойства объекта!!!
+     IF vbisPromo <> inisPromo 
+     THEN
+         -- сохранили свойство <Дата корректировки>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
          -- сохранили свойство <Пользователь (корректировка)>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), inId, vbUserId);
-   
-   END IF;
+     END IF;
 
+     -- 
           outUpdateDate:=COALESCE((SELECT ObjectDate.ValueData FROM ObjectDate WHERE ObjectDate.ObjectId = inId AND ObjectDate.DescId = zc_ObjectDate_Protocol_Update()),Null) ::TDateTime;    
 
           outUpdateName:=COALESCE((SELECT Object.ValueData
@@ -47,21 +44,20 @@ BEGIN
                                      LEFT JOIN Object ON Object.Id = ObjectLink.ChildObjectId
                                    WHERE ObjectLink.ObjectId = inId AND ObjectLink.DescId =  zc_ObjectLink_Protocol_Update()),'') ::TVarChar;    
 
+          
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Goods_MinimumLot(Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_Goods_Promo(Integer, Boolean, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 11.11.14                        *
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 10.02.16         *
 */
 
--- тест
--- SELECT * FROM gpInsertUpdate_Object_Goods
+--select * from gpUpdate_Goods_Promo(inId := 559417 , inIsPromo := 'True' ,  inSession := '3');

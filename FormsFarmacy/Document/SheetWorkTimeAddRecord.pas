@@ -14,21 +14,18 @@ uses
 type
 
   TSheetWorkTimeAddRecordForm = class(TAncestorEditDialogForm)
-    ceMember: TcxButtonEdit;
+    cePersonal: TcxButtonEdit;
     cePosition: TcxButtonEdit;
-    cePositionLevel: TcxButtonEdit;
     ceUnit: TcxButtonEdit;
     cepersonalgroup: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
-    MemberGuides: TdsdGuides;
+    PersonalGuides: TdsdGuides;
     PositionGuides: TdsdGuides;
-    PositionLevelGuides: TdsdGuides;
     UnitGuides: TdsdGuides;
     PersonalGroupGuides: TdsdGuides;
     GuidesFiller: TGuidesFiller;

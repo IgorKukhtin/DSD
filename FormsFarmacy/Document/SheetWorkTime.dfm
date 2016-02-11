@@ -100,9 +100,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Options.Moving = False
           Width = 50
         end>
-      object BandcolMemberlCode: TcxGridDBBandedColumn
+      object BandcolPersonalCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'MemberCode'
+        DataBinding.FieldName = 'PersonalCode'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Options.Moving = False
@@ -111,9 +111,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object BandcolMemberName: TcxGridDBBandedColumn
+      object BandcolPersonalName: TcxGridDBBandedColumn
         Caption = #1060#1048#1054
-        DataBinding.FieldName = 'MemberName'
+        DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentVert = vaCenter
         MinWidth = 67
         Options.Editing = False
@@ -278,6 +278,18 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       FloatClientWidth = 51
       FloatClientHeight = 93
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate'
+        end
         item
           Visible = True
           ItemName = 'bbStatic'
@@ -494,7 +506,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object InsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1074' '#1090#1072#1073#1077#1083#1100
       ImageIndex = 0
@@ -503,7 +514,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'MemberId'
+          Name = 'PersonalId'
           Value = '0'
         end
         item
@@ -533,7 +544,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object UpdateAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       ImageIndex = 1
@@ -542,10 +552,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'MemberId'
+          Name = 'PersonalId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberId'
+          ComponentItem = 'PersonalId'
         end
         item
           Name = 'PositionId'
@@ -690,10 +700,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMemberId'
+        Name = 'inPersonalId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MemberId'
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item
@@ -809,10 +819,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMemberId'
+        Name = 'inPersonalId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MemberId'
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item

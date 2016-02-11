@@ -1,11 +1,11 @@
 -- Function: gpMI_SheetWorkTime_SetErased()
 
 DROP FUNCTION IF EXISTS gpMI_SheetWorkTime_SetErased(Integer, Integer, Integer, Integer, Integer, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpMI_SheetWorkTime_SetErased(Integer, Integer, Integer, Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpMI_SheetWorkTime_SetErased(   
-    IN inMemberId            Integer   , -- Ключ физ. лицо
+    IN inPersonalId          Integer   , -- Ключ физ. лицо
     IN inPositionId          Integer   , -- Должность
-    IN inPositionLevelId     Integer   , -- Разряд
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
     IN inOperDate            TDateTime , -- дата (месяц, за который будут удалены все данные по этому сотруднику + ...)
@@ -38,15 +38,12 @@ BEGIN
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                            AND MovementLinkObject_Unit.ObjectId  = inUnitId
                               INNER JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
-                                                                          AND MI_SheetWorkTime.ObjectId  = inMemberId
+                                                                          AND MI_SheetWorkTime.ObjectId  = inPersonalId
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
                                                                      ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND COALESCE (MIObject_Position.ObjectId, 0) = COALESCE (inPositionId, 0)
                                                                     AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-                              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
-                                                                     ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
-                                                                    AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
-                                                                    AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
+                             
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                      ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)

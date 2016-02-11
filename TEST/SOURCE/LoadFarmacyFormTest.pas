@@ -713,6 +713,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalGroupFormTest;
@@ -796,6 +798,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeAddRecordForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
+
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

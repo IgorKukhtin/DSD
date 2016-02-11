@@ -380,7 +380,8 @@ uses
   SheetWorkTimeJournal in '..\..\FormsFarmacy\Document\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm: TParentForm},
   SheetWorkTime in '..\..\FormsFarmacy\Document\SheetWorkTime.pas' {SheetWorkTimeForm: TParentForm},
   Report_Liquid in '..\..\FormsFarmacy\Report\Report_Liquid.pas' {Report_LiquidForm: TParentForm},
-  Report_MovementIncome in '..\..\FormsFarmacy\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm};
+  Report_MovementIncome in '..\..\FormsFarmacy\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm},
+  SheetWorkTimeAddRecord in '..\..\FormsFarmacy\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

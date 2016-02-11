@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEG
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
-    IN inMemberId            Integer   , -- Ключ физ. лицо
+    IN inPersonalId          Integer   , -- Ключ сотрудник
     IN inPositionId          Integer   , -- Должность
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
@@ -95,7 +95,7 @@ BEGIN
                                                                     AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
                           WHERE 
                               MI_SheetWorkTime.MovementId = vbMovementId AND
-                              MI_SheetWorkTime.ObjectId = inMemberId);
+                              MI_SheetWorkTime.ObjectId = inPersonalId);
 
 
      -- определяется признак Создание/Корректировка
@@ -104,7 +104,7 @@ BEGIN
     -- сохранили
     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime (inMovementItemId      := vbMovementItemId  -- Ключ объекта <Элемент документа>
                                                      , inMovementId          := vbMovementId      -- ключ Документа
-                                                     , inMemberId            := inMemberId        -- Физ. лицо
+                                                     , inPersonalId          := inPersonalId      -- сотрудник
                                                      , inPositionId          := inPositionId      -- Должность
                                                      , inPersonalGroupId     := inPersonalGroupId -- Группировка Сотрудника
                                                      , inAmount              := vbValue           -- Количество часов факт
@@ -127,6 +127,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10,02,16         * member->Personal
  26.01.16         * 
  07.01.14                         * Replace inPersonalId <> inMemberId
  17.10.13                         *

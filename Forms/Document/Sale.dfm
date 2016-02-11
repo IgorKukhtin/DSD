@@ -1,29 +1,29 @@
 ﻿inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
-  ClientHeight = 465
+  ClientHeight = 645
   ClientWidth = 1261
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1277
-  ExplicitHeight = 503
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1261
-    Height = 299
+    Height = 479
     ExplicitTop = 166
     ExplicitWidth = 1261
-    ExplicitHeight = 246
-    ClientRectBottom = 299
+    ExplicitHeight = 479
+    ClientRectBottom = 479
     ClientRectRight = 1261
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1261
-      ExplicitHeight = 222
+      ExplicitHeight = 455
       inherited cxGrid: TcxGrid
         Width = 1261
-        Height = 275
+        Height = 455
         ExplicitWidth = 1261
-        ExplicitHeight = 222
+        ExplicitHeight = 455
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1221,6 +1221,10 @@
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -3295,8 +3299,8 @@
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 644
-    Top = 334
+    Left = 572
+    Top = 238
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -3606,6 +3610,9 @@
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <

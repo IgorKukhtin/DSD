@@ -33,7 +33,7 @@ BEGIN
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
                                           SELECT tmpOperDate.operdate
                                                , MI_SheetWorkTime.Amount
-                                               , COALESCE(MI_SheetWorkTime.ObjectId, 0) AS MemberId
+                                               , COALESCE(MI_SheetWorkTime.ObjectId, 0) AS PersonalId
                                                , COALESCE(MIObject_Position.ObjectId, 0) AS PositionId
                                                , COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
                                                , MIObject_WorkTimeKind.ObjectId
@@ -87,9 +87,9 @@ BEGIN
     
 
      vbQueryText := '
-        SELECT Object_Member.Id             AS MemberId
-               , Object_Member.ObjectCode   AS MemberCode
-               , Object_Member.ValueData    AS MemberName
+          SELECT Object_Personal.Id         AS PersonalId
+               , Object_Personal.ObjectCode AS PersonalCode
+               , Object_Personal.ValueData  AS PersonalName
                , Object_Position.Id         AS PositionId
                , Object_Position.ValueData  AS PositionName
                , Object_PersonalGroup.Id         AS PersonalGroupId
@@ -98,7 +98,7 @@ BEGIN
                || vbFieldNameText ||
         ' FROM
          (SELECT * FROM CROSSTAB (''
-                                    SELECT ARRAY[COALESCE (Movement_Data.MemberId, Object_Data.MemberId)               -- AS MemberId
+                                    SELECT ARRAY[COALESCE (Movement_Data.PersonalId, Object_Data.PersonalId)           -- AS PersonalId
                                                , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)           -- AS PositionId
                                                , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
                                                 ] :: Integer[]
@@ -109,7 +109,7 @@ BEGIN
                                     FROM (SELECT * FROM tmpMI WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE) AS Movement_Data
                                         FULL JOIN  
                                          (SELECT tmpOperDate.operdate, 0, 
-                                                 COALESCE(MemberId, 0) AS MemberId, 
+                                                 COALESCE(PersonalId, 0) AS PersonalId, 
                                                  COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId, 
                                                  COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId  
                                             FROM tmpOperDate, Object_Personal_View 
@@ -126,20 +126,20 @@ BEGIN
                                               AND ObjectLink_Personal_Unit.ChildObjectId = ' || inUnitId :: TVarChar ||
                                         ') AS Object_Data
                                            ON Object_Data.OperDate = Movement_Data.OperDate
-                                          AND Object_Data.MemberId = Movement_Data.MemberId
+                                          AND Object_Data.PersonalId = Movement_Data.PersonalId
                                           AND Object_Data.PositionId = Movement_Data.PositionId
                                           AND Object_Data.PersonalGroupId = Movement_Data.PersonalGroupId
                                   order by 1,2''
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = D.Key[1]
+         LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = D.Key[1]
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.Key[2]
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]
-         LEFT JOIN (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PersonalGroupId, tmpMI.isErased
+         LEFT JOIN (SELECT DISTINCT tmpMI.PersonalId, tmpMI.PositionId, tmpMI.PersonalGroupId, tmpMI.isErased
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
-                   ) AS tmp ON tmp.MemberId = D.Key[1]
+                   ) AS tmp ON tmp.PersonalId = D.Key[1]
                            AND tmp.PositionId = D.Key[2]
                            AND tmp.PersonalGroupId = D.Key[4]
         ';
