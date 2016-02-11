@@ -51,7 +51,7 @@ BEGIN
                       , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
                       , COALESCE(ObjectBoolean_isPriceClose.ValueData, false) AS isPriceClose 
                       , ObjectFloat_Bonus.ValueData AS Bonus 
-                      , COALESCE(ObjectFloat_PriceLimit.ValueData,0) AS PriceLimit  
+                      , COALESCE(ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
                       , ObjectLink_JuridicalSettings_Retail.ObjectId AS JuridicalSettingsId
 
                       , ObjectDate_StartDate.ValueData AS StartDate
