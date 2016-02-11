@@ -92,23 +92,27 @@ BEGIN
 
     -- Сумма платежа
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
-                zc_Container_SummIncomeMovementPayment()
+         SELECT zc_Container_SummIncomeMovementPayment()
               , zc_Movement_BankAccount()  
               , inMovementId
               , lpInsertFind_Container(
-                          inContainerDescId := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
-                          inParentId        := NULL               , -- Главный Container
-                          inObjectId := lpInsertFind_Object_PartionMovement(Movement_BankAccount_View.IncomeId), -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
-                          inBusinessId := NULL, -- Бизнесы
+                          inContainerDescId   := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
+                          inParentId          := NULL               , -- Главный Container
+                          inObjectId          := lpInsertFind_Object_PartionMovement (Movement_BankAccount_View.IncomeId), -- Объект (Счет или Товар или ...)
+                          inJuridicalId_basis := COALESCE (MovementLinkObject_Juridical.ObjectId, _tmpItem.JuridicalId_Basis), -- Главное юридическое лицо
+                          inBusinessId        := NULL, -- Бизнесы
                           inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL) -- <элемент с/с> - необычная аналитика счета) 
-              , null
-              ,  OperSumm
+                          inObjectCostId      := NULL) -- <элемент с/с> - необычная аналитика счета) 
+              , NULL
+              , OperSumm
               , _tmpItem.OperDate
-           FROM _tmpItem, Movement_BankAccount_View
-         WHERE Movement_BankAccount_View.Id =  inMovementId;
+         FROM _tmpItem
+              INNER JOIN Movement_BankAccount_View ON Movement_BankAccount_View.Id = inMovementId
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                           ON MovementLinkObject_Juridical.MovementId = Movement_BankAccount_View.IncomeId
+                                          AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                          AND _tmpItem.OperDate < '01.01.2016' -- !!!только для загрузки из Sybase!!!
+        ;
 
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 

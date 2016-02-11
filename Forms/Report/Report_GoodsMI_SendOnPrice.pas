@@ -94,6 +94,8 @@ type
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
+    Summ_pl: TcxGridDBColumn;
+    Summ_pl_real: TcxGridDBColumn;
   private
     { Private declarations }
   public

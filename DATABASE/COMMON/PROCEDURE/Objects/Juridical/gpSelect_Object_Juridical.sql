@@ -74,6 +74,11 @@ BEGIN
                                                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                                      WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Branch_Constraint
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                    UNION
+                                     SELECT DISTINCT ObjectLink_Contract_JuridicalDocument.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Contract_JuridicalDocument
+                                     WHERE ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0
+                                       AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
                                     )
 ,  tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
 
@@ -116,8 +121,8 @@ BEGIN
        , Object_PriceList.Id         AS PriceListId
        , Object_PriceList.ValueData  AS PriceListName
 
-       , Object_PriceListPromo.Id         AS PriceListPromoId
-       , Object_PriceListPromo.ValueData  AS PriceListPromoName
+       , NULL :: Integer  AS PriceListPromoId   -- Object_PriceListPromo.Id         AS PriceListPromoId
+       , ''   :: TVarChar AS PriceListPromoName -- Object_PriceListPromo.ValueData  AS PriceListPromoName
 
        , Object_PriceList_Prior.Id         AS PriceListId_Prior
        , Object_PriceList_Prior.ValueData  AS PriceListName_Prior
@@ -128,8 +133,10 @@ BEGIN
        , Object_PriceList_30201.Id         AS PriceListId_30201
        , Object_PriceList_30201.ValueData  AS PriceListName_30201
        
-       , ObjectDate_StartPromo.ValueData AS StartPromo
-       , ObjectDate_EndPromo.ValueData   AS EndPromo       
+       --, ObjectDate_StartPromo.ValueData AS StartPromo
+       , NULL :: TDateTime                 AS StartPromo
+       --, ObjectDate_EndPromo.ValueData   AS EndPromo       
+       , NULL :: TDateTime                 AS EndPromo       
 
        , Object_Juridical.isErased AS isErased
        
@@ -156,13 +163,13 @@ BEGIN
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id 
                              AND ObjectFloat_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
 
-        LEFT JOIN ObjectDate AS ObjectDate_StartPromo
+        /*LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                              ON ObjectDate_StartPromo.ObjectId = Object_Juridical.Id
                             AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
 
         LEFT JOIN ObjectDate AS ObjectDate_EndPromo
                              ON ObjectDate_EndPromo.ObjectId = Object_Juridical.Id
-                            AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()
+                            AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()*/
                                
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
@@ -196,10 +203,10 @@ BEGIN
                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Juridical_PriceList.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
+        /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
-        LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Juridical_PriceListPromo.ChildObjectId
+        LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = NULL -- ObjectLink_Juridical_PriceListPromo.ChildObjectId*/
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList_Prior
                              ON ObjectLink_Juridical_PriceList_Prior.ObjectId = Object_Juridical.Id 

@@ -27,6 +27,13 @@ BEGIN
    UNION SELECT 104, 'data'::TVarChar, 'С\с продажа' :: TVarChar, 'Sale_SummCost'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
 
+   UNION SELECT 105, 'data'::TVarChar, 'Скидка от опт.цен.' :: TVarChar, 'Sale_Summ_10200'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+   UNION SELECT 106, 'data'::TVarChar, 'Скидка Акции' :: TVarChar, 'Sale_Summ_10250'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+   UNION SELECT 106, 'data'::TVarChar, 'Скидка доп.' :: TVarChar, 'Sale_Summ_10300'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+
    UNION SELECT 111, 'data'::TVarChar, 'Кол.вес возврат' :: TVarChar, 'Return_AmountPartner_Weight'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    -- UNION SELECT 112, 'data'::TVarChar, 'Кол.шт. возврат' :: TVarChar, 'Return_Amount_Sh'::TVarChar, ',0.###'::TVarChar, 
@@ -99,6 +106,8 @@ BEGIN
 
    UNION SELECT 161, 'data'::TVarChar, 'Акции кг'::TVarChar, 'Actions_Weight'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+   UNION SELECT 162, 'data'::TVarChar, 'Акции с/с'::TVarChar, 'Actions_SummCost'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 162, 'data'::TVarChar, 'Акции сумма'::TVarChar, 'Actions_Summ'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
 
@@ -137,8 +146,8 @@ BEGIN
    UNION SELECT 33, 'dimension'::TVarChar, 'Филиал (супервайзер)'::TVarChar, 'BranchPersonalName'::TVarChar, ''::TVarChar,
                  'Object'::TVarChar, 'ObjectBranchPersonal'::TVarChar, 'BranchId_Personal'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
 
-   UNION SELECT 40, 'dimension'::TVarChar, 'Адрес'::TVarChar, 'Address'::TVarChar, ''::TVarChar, 
-                 ''::TVarChar, ''::TVarChar,'Address'::TVarChar,''::TVarChar,''::TVarChar
+   /*UNION SELECT 40, 'dimension'::TVarChar, 'Адрес'::TVarChar, 'Address'::TVarChar, ''::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,'Address'::TVarChar,''::TVarChar,''::TVarChar*/
 
    UNION SELECT 41, 'dimension'::TVarChar, 'Область'::TVarChar, 'RegionName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectRegion'::TVarChar, 'RegionId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
@@ -155,6 +164,8 @@ BEGIN
    UNION SELECT 47, 'dimension'::TVarChar, 'Улица'::TVarChar, 'StreetName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectStreet'::TVarChar, 'StreetId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
 
+   UNION SELECT 50, 'dimension'::TVarChar, 'Производственная площадка' :: TVarChar, 'GoodsPlatformName'::TVarChar, ''::TVarChar, 
+                 'Object'::TVarChar, 'ObjectGoodsPlatform'::TVarChar, 'GoodsPlatformId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
    UNION SELECT 51, 'dimension'::TVarChar, 'Торговая марка' :: TVarChar, 'TradeMarkName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectTradeMark'::TVarChar, 'TradeMarkId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
    UNION SELECT 52, 'dimension'::TVarChar, 'Группа аналитики' :: TVarChar, 'GoodsGroupAnalystName'::TVarChar, ''::TVarChar, 

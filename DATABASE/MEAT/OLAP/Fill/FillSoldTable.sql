@@ -22,14 +22,13 @@ BEGIN
                        , AccountId
                        , BranchId, JuridicalGroupId, JuridicalId, PartnerId, InfoMoneyId, PaidKindId, RetailId, RetailReportId
                        , AreaId, PartnerTagId
-                       , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName
                        , ContractId, ContractTagId, ContractTagGroupId
                        , PersonalId, UnitId_Personal, BranchId_Personal, PersonalTradeId, UnitId_PersonalTrade
-                       , GoodsPlatformId, TradeMarkId, GoodsGroupAnalystId, GoodsTagId, GoodsGroupId, GoodsId, GoodsKindId, MeasureId
+                       , GoodsPlatformId, TradeMarkId, GoodsGroupAnalystId, GoodsTagId, GoodsGroupId, GoodsGroupStatId, GoodsId, GoodsKindId, MeasureId
                        , RegionId, ProvinceId, CityKindId, CityId, ProvinceCityId, StreetKindId, StreetId
 
                        , Actions_Weight, Actions_Sh, Actions_SummCost, Actions_Summ
-                       , Sale_Summ, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300, Sale_SummCost, Sale_SummCost_10500, Sale_SummCost_40200
+                       , Sale_Summ, Sale_Summ_10200, Sale_Summ_10250, Sale_Summ_10300, Sale_SummCost, Sale_SummCost_10500, Sale_SummCost_40200
                        , Sale_Amount_Weight, Sale_Amount_Sh, Sale_AmountPartner_Weight, Sale_AmountPartner_Sh, Sale_Amount_10500_Weight, Sale_Amount_40200_Weight
                        , Return_Summ, Return_Summ_10300, Return_SummCost, Return_SummCost_40200
                        , Return_Amount_Weight, Return_Amount_Sh, Return_AmountPartner_Weight, Return_AmountPartner_Sh, Return_Amount_40200_Weight
@@ -103,7 +102,7 @@ BEGIN
                                                                ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
                                                               AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
                               LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                          ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                          ON MIFloat_PromoMovement.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                          GROUP BY MIContainer.OperDate
                                 , CLO_Juridical.ObjectId
@@ -309,7 +308,7 @@ BEGIN
                  , SUM (tmpOperation_all.Return_Summ)  AS Return_Summ
 
                  , SUM (tmpOperation_all.Sale_Summ_10200)   AS Sale_Summ_10200
-                 , SUM (tmpOperation_all.Sale_Summ_10200)   AS Sale_Summ_10250
+                 , SUM (tmpOperation_all.Sale_Summ_10250)   AS Sale_Summ_10250
                  , SUM (tmpOperation_all.Sale_Summ_10300)   AS Sale_Summ_10300
                  , SUM (tmpOperation_all.Return_Summ_10300) AS Return_Summ_10300
 
@@ -347,8 +346,10 @@ BEGIN
                    , tmpOperation_all.ContractId
 
                    , tmpOperation_all.GoodsId
-                   , tmpOperation_all.GoodsKindId)
+                   , tmpOperation_all.GoodsKindId
+            )
 
+      -- –≈«”À‹“¿“
       SELECT tmpResult.OperDate
            , tmpResult.InvNumber
            , 0 AS AccountId
@@ -378,6 +379,7 @@ BEGIN
            , ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId      AS GoodsGroupAnalystId
            , ObjectLink_Goods_GoodsTag.ChildObjectId               AS GoodsTagId
            , ObjectLink_Goods_GoodsGroup.ChildObjectId             AS GoodsGroupId
+           , ObjectLink_Goods_GoodsGroupStat.ChildObjectId         AS GoodsGroupStatId
            , tmpResult.GoodsId
            , tmpResult.GoodsKindId
            , ObjectLink_Goods_Measure.ChildObjectId                AS MeasureId
@@ -402,6 +404,7 @@ BEGIN
            , tmpResult.Sale_SummCost
            , tmpResult.Sale_SummCost_10500
            , tmpResult.Sale_SummCost_40200
+
            , tmpResult.Sale_Amount_Weight
            , tmpResult.Sale_Amount_Sh
            , tmpResult.Sale_AmountPartner_Weight
@@ -413,6 +416,7 @@ BEGIN
            , tmpResult.Return_Summ_10300
            , tmpResult.Return_SummCost
            , tmpResult.Return_SummCost_40200
+
            , tmpResult.Return_Amount_Weight
            , tmpResult.Return_Amount_Sh
            , tmpResult.Return_AmountPartner_Weight
@@ -431,8 +435,6 @@ BEGIN
 
            , 0, 0
            , 0, 0, 0
-
-           -- , COALESCE (ObjectString_Address.ValueData, '') AS Address
 
       FROM (SELECT tmpOperation.OperDate
                  , tmpOperation.InvNumber
@@ -508,6 +510,9 @@ BEGIN
 
            LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmpResult.GoodsId
+                               AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                 ON ObjectLink_Goods_TradeMark.ObjectId = tmpResult.GoodsId
                                AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
@@ -520,6 +525,9 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpResult.GoodsId
                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpResult.GoodsId
+                               AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                 ON ObjectLink_Goods_Measure.ObjectId = tmpResult.GoodsId
                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -531,15 +539,18 @@ BEGIN
                                 ON ObjectLink_ContractTag_ContractTagGroup.ObjectId = ObjectLink_Contract_ContractTag.ChildObjectId
                                AND ObjectLink_ContractTag_ContractTagGroup.DescId = zc_ObjectLink_ContractTag_ContractTagGroup()
 
+           LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup
+                                ON ObjectLink_JuridicalGroup.ObjectId = tmpResult.JuridicalId
+                               AND ObjectLink_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = tmpResult.JuridicalId
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
                                 ON ObjectLink_Juridical_RetailReport.ObjectId = tmpResult.JuridicalId
-                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_Retail()
+                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                ON ObjectLink_Partner_Personal.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
+                                ON ObjectLink_Partner_Personal.ObjectId = tmpResult.PartnerId
                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                 ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Partner_Personal.ChildObjectId
@@ -549,40 +560,47 @@ BEGIN
                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
+                                ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpResult.PartnerId
                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
            LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
                                 ON ObjectLink_PersonalTrade_Unit.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
                                AND ObjectLink_PersonalTrade_Unit.DescId = zc_ObjectLink_Personal_Unit()
      UNION ALL
+      -- Â˘Â –≈«”À‹“¿“
       SELECT MovementItemContainer.OperDate
            , '' :: TVarChar                                        AS InvNumber
+           , 0                                                     AS AccountId
+
+           , 0                                                     AS BranchId
+           , ObjectLink_JuridicalGroup.ChildObjectId               AS JuridicalGroupId
            , CLO_Juridical.ObjectId                                AS JuridicalId
-           , 0 AS PartnerId
+           , 0                                                     AS PartnerId
            , CLO_InfoMoney.ObjectId                                AS InfoMoneyId
            , CLO_PaidKind.ObjectId                                 AS PaidKindId
-           , 0 AS BranchId
            , ObjectLink_Juridical_Retail.ChildObjectId             AS RetailId
+           , ObjectLink_Juridical_RetailReport.ChildObjectId       AS RetailReportId
            , 0 AS AreaId
            , 0 AS PartnerTagId
            , CLO_Contract.ObjectId                                 AS ContractId
            , ObjectLink_Contract_ContractTag.ChildObjectId         AS ContractTagId
            , ObjectLink_ContractTag_ContractTagGroup.ChildObjectId AS ContractTagGroupId
 
-           , 0 AS PersonalId, 0 AS PersonalTradeId, 0 AS BranchId_Personal
-           , 0 AS TradeMarkId, 0 AS GoodsGroupAnalystId, 0 AS GoodsTagId, 0 AS GoodsGroupId, 0 AS GoodsId, 0 AS GoodsKindId, 0 AS MeasureId
+           , 0 AS PersonalId, 0 AS UnitId_Personal, 0 AS BranchId_Personal, 0 AS PersonalTradeId, 0 AS UnitId_PersonalTrade
+           , 0 AS GoodsPlatformId, 0 AS TradeMarkId, 0 AS GoodsGroupAnalystId, 0 AS GoodsTagId, 0 AS GoodsGroupId, 0 AS GoodsGroupStatId, 0 AS GoodsId, 0 AS GoodsKindId, 0 AS MeasureId
            , 0 AS RegionId, 0 AS ProvinceId, 0 AS CityKindId, 0 AS CityId, 0 AS ProvinceCityId, 0 AS StreetKindId, 0 AS StreetId
 
-           , 0 AS Sale_Summ, 0 AS Sale_Summ_10300, 0 AS Sale_SummCost, 0 AS Sale_SummCost_10500, 0 AS Sale_SummCost_40200, 0 AS Sale_Amount_Weight, 0 AS Sale_Amount_Sh, 0 AS Sale_AmountPartner_Weight, 0 AS Sale_AmountPartner_Sh, 0 AS Sale_Amount_10500_Weight, 0 AS Sale_Amount_40200_Weight
-           , 0 AS Actions_Summ, 0 AS Actions_Weight
-           , 0 AS Return_Summ, 0 AS Return_Summ_10300, 0 AS Return_SummCost, 0 AS Return_SummCost_40200, 0 AS Return_Amount_Weight, 0 AS Return_Amount_Sh, 0 AS Return_AmountPartner_Weight, 0 AS Return_AmountPartner_Sh, 0 AS Return_Amount_40200_Weight
+           , 0 AS Actions_Weight, 0 AS Actions_Sh, 0 AS Actions_SummCost, 0 AS Actions_Summ
+           , 0 AS Sale_Summ, 0 AS Sale_Summ_10200, 0 AS Sale_Summ_10250, 0 AS Sale_Summ_10300, 0 AS Sale_SummCost, 0 AS Sale_SummCost_10500, 0 AS Sale_SummCost_40200
+           , 0 AS Sale_Amount_Weight, 0 AS Sale_Amount_Sh, 0 AS Sale_AmountPartner_Weight, 0 AS Sale_AmountPartner_Sh, 0 AS Sale_Amount_10500_Weight, 0 AS Sale_Amount_40200_Weight
+           , 0 AS Return_Summ, 0 AS Return_Summ_10300, 0 AS Return_SummCost, 0 AS Return_SummCost_40200
+           , 0 AS Return_Amount_Weight, 0 AS Return_Amount_Sh, 0 AS Return_AmountPartner_Weight, 0 AS Return_AmountPartner_Sh, 0 AS Return_Amount_40200_Weight
            , 0 AS SaleReturn_Summ, 0 AS SaleReturn_Summ_10300, 0 AS SaleReturn_SummCost, 0 AS SaleReturn_SummCost_40200, 0 AS SaleReturn_Amount_Weight, 0 AS SaleReturn_Amount_Sh
            , 0 AS BonusBasis, 0 AS Bonus
            , 0 AS Plan_Weight, 0 AS Plan_Summ
-           , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN -1 * MovementItemContainer.Amount ELSE 0 END) AS Money_Summ
-           , SUM (CASE WHEN Movement.DescId = zc_Movement_SendDebt() THEN -1 * MovementItemContainer.Amount ELSE 0 END) AS SendDebt_Summ
-           , SUM (-1 * MovementItemContainer.Amount) AS Money_SendDebt_Summ
-           -- , '' :: TVarChar AS Address
+           , -1 * SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MovementItemContainer.Amount ELSE 0 END) AS Money_Summ
+           , -1 * SUM (CASE WHEN Movement.DescId = zc_Movement_SendDebt() THEN MovementItemContainer.Amount ELSE 0 END) AS SendDebt_Summ
+           , -1 * SUM (MovementItemContainer.Amount) AS Money_SendDebt_Summ
+
    FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
@@ -596,9 +614,15 @@ BEGIN
         LEFT JOIN ContainerLinkObject AS CLO_PaidKind ON CLO_PaidKind.ContainerId = Container.Id AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
         LEFT JOIN ContainerLinkObject AS CLO_Contract ON CLO_Contract.ContainerId = Container.Id AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
 
+           LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup
+                                ON ObjectLink_JuridicalGroup.ObjectId = CLO_Juridical.ObjectId
+                               AND ObjectLink_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = CLO_Juridical.ObjectId
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                                ON ObjectLink_Juridical_RetailReport.ObjectId = CLO_Juridical.ObjectId
+                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
                                 ON ObjectLink_Contract_ContractTag.ObjectId = CLO_Contract.ObjectId
                                AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
@@ -609,9 +633,12 @@ BEGIN
     GROUP BY MovementItemContainer.OperDate
            , CLO_PaidKind.ObjectId 
            , CLO_Juridical.ObjectId
+           , CLO_Juridical.ObjectId
            , CLO_Contract.ObjectId
            , CLO_InfoMoney.ObjectId
+           , ObjectLink_JuridicalGroup.ChildObjectId
            , ObjectLink_Juridical_Retail.ChildObjectId
+           , ObjectLink_Juridical_RetailReport.ChildObjectId
            , ObjectLink_Contract_ContractTag.ChildObjectId
            , ObjectLink_ContractTag_ContractTagGroup.ChildObjectId
    ;
@@ -655,5 +682,4 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 */
 -- ÚÂÒÚ
 -- SELECT * FROM SoldTable where OperDate = '03.09.2015'
--- SELECT * FROM FillSoldTable ('01.11.2014', '31.12.2014', zfCalc_UserAdmin()) 
--- SELECT * FROM FillSoldTable ('01.07.2015', '31.07.2015', zfCalc_UserAdmin()) 
+-- SELECT * FROM FillSoldTable ('01.01.2016', '01.01.2016', zfCalc_UserAdmin()) 

@@ -239,6 +239,16 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_sh_Partner_real
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_pl
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_pl_real
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -450,6 +460,16 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_sh_Partner_real
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_pl
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_pl_real
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1004,6 +1024,16 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object Summ_pl: TcxGridDBColumn
+            Caption = '***'#1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089
+            DataBinding.FieldName = 'Summ_pl'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object SummOut_Partner_110000_A: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1090#1088'.+)'
             DataBinding.FieldName = 'SummOut_Partner_110000_A'
@@ -1035,6 +1065,16 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object Summ_pl_real: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089
+            DataBinding.FieldName = 'Summ_pl_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object PriceIn_zavod: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076

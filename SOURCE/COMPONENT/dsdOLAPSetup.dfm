@@ -474,7 +474,7 @@ object OLAPSetupForm: TOLAPSetupForm
         object deStart: TcxDateEdit
           Left = 536
           Top = 3
-          EditValue = 41640d
+          EditValue = 42370d
           Properties.SaveTime = False
           Properties.ShowTime = False
           TabOrder = 15
@@ -488,7 +488,7 @@ object OLAPSetupForm: TOLAPSetupForm
         object deEnd: TcxDateEdit
           Left = 739
           Top = 3
-          EditValue = 41640d
+          EditValue = 42370d
           Properties.SaveTime = False
           Properties.ShowTime = False
           TabOrder = 17
@@ -661,5 +661,30 @@ object OLAPSetupForm: TOLAPSetupForm
     PackSize = 1
     Left = 72
     Top = 104
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 320
+    Top = 112
   end
 end

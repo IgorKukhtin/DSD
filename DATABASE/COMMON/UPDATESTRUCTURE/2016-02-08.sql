@@ -17,6 +17,9 @@ DO $$
         IF NOT (EXISTS(Select Column_Name From INFORMATION_SCHEMA.COLUMNS Where Table_Name = lower('SoldTable') AND Column_Name = lower('GoodsPlatformId'))) THEN
             ALTER TABLE SoldTable ADD COLUMN GoodsPlatformId Integer;
         END IF;
+        IF NOT (EXISTS(Select Column_Name From INFORMATION_SCHEMA.COLUMNS Where Table_Name = lower('SoldTable') AND Column_Name = lower('GoodsGroupStatId'))) THEN
+            ALTER TABLE SoldTable ADD COLUMN GoodsGroupStatId Integer;
+        END IF;
         IF NOT (EXISTS(Select Column_Name From INFORMATION_SCHEMA.COLUMNS Where Table_Name = lower('SoldTable') AND Column_Name = lower('JuridicalGroupId'))) THEN
             ALTER TABLE SoldTable ADD COLUMN JuridicalGroupId Integer;
         END IF;

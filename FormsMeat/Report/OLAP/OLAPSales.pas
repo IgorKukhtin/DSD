@@ -9,7 +9,8 @@ uses DataModul, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, c
   cxGridBandedTableView, cxGridDBBandedTableView, cxGrid, cxTextEdit, cxMemo,
   cxRichEdit, cxLabel, Vcl.ExtCtrls, Vcl.Controls, cxCustomPivotGrid,
   cxDBPivotGrid, Vcl.Forms, dsdOLAP, dsdAddOn, cxPropertiesStore, dxBarExtItems,
-  dxBar, dsdDB, Datasnap.DBClient, dsdAction;
+  dxBar, dsdDB, Datasnap.DBClient, dsdAction, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
 

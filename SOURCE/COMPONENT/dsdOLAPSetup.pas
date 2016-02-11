@@ -11,7 +11,8 @@ uses
   cxClasses, cxGridCustomView, cxGrid, cxMaskEdit, cxButtonEdit, cxDBLabel,
   Vcl.ExtCtrls, Vcl.Forms, System.Classes, Datasnap.DBClient, Vcl.Menus,
   cxButtons, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxCalendar,
-  dsdOLAP, cxRadioGroup, dsdDB;
+  dsdOLAP, cxRadioGroup, dsdDB, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, cxPropertiesStore;
 
 type
   TOLAPSetupForm = class(TForm)
@@ -84,6 +85,7 @@ type
     DataFieldsisOLAPFilter: TBooleanField;
     cxButton3: TcxButton;
     cxButton4: TcxButton;
+    cxPropertiesStore: TcxPropertiesStore;
     procedure btnRunOlapClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure DimensionFieldsAfterScroll(DataSet: TDataSet);

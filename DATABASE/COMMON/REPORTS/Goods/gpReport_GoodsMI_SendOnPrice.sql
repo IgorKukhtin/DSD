@@ -74,6 +74,9 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , SummOut_Partner_110000_P     TFloat  -- *Покупатель сумма транзит расход (по дате склада, т.е. информативно)
              , SummOut_Partner_real         TFloat  -- Покупатель сумма (по дате покупателя, т.е. факт)
 
+             , Summ_pl                      TFloat
+             , Summ_pl_real                 TFloat
+
              , PriceIn_zavod                TFloat  -- 
              , PriceOut_Partner             TFloat  -- 
 
@@ -171,10 +174,48 @@ BEGIN
                          FROM Object_Account_View
                          WHERE Object_Account_View.AccountGroupId IN (zc_Enum_AccountGroup_110000() -- Транзит
                                                                      )
-                        UNION
+                        /*UNION
                          SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId -- Сумма, не совсем забалансовый счет, приход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         UNION
                          SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, не совсем забалансовый счет, расход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
+                        */
+                        )
+    , tmpMovement_pl AS (SELECT Movement.Id, Movement.OperDate, MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                              , MovementLinkObject_From.ObjectId AS FromId
+                              , MovementLinkObject_To.ObjectId   AS ToId
+                         FROM Movement
+                              LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                     ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                                    AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+                                                 AND _tmpUnit.UnitId_by = MovementLinkObject_To.ObjectId
+                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.DescId = zc_Movement_SendOnPrice()
+                        UNION
+                         SELECT Movement.Id, Movement.OperDate, MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                              , MovementLinkObject_From.ObjectId AS FromId
+                              , MovementLinkObject_To.ObjectId   AS ToId
+                         FROM MovementDate AS MovementDate_OperDatePartner
+                              INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                                 AND Movement.DescId = zc_Movement_SendOnPrice()
+                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+                                                 AND _tmpUnit.UnitId_by = MovementLinkObject_To.ObjectId
+                         WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                         )
        SELECT Movement.InvNumber
          , Movement.OperDate
@@ -258,6 +299,9 @@ BEGIN
          , (tmpOperationGroup.SummIn_Partner_110000_P + tmpOperationGroup.SummOut_Partner_110000_P) :: TFloat AS SummOut_Partner_110000_P
          , (tmpOperationGroup.SummIn_Partner_real     + tmpOperationGroup.SummOut_Partner_real)     :: TFloat AS SummOut_Partner_real
 
+         , tmpOperationGroup.Summ_pl      :: TFloat AS Summ_pl
+         , tmpOperationGroup.Summ_pl_real :: TFloat AS Summ_pl_real
+
            -- Цена с/с
          , CAST (CASE WHEN tmpOperationGroup.OperCount_Partner_real <> 0 THEN  tmpOperationGroup.SummIn_Partner_real                                           / tmpOperationGroup.OperCount_Partner_real ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS PriceIn_zavod
 
@@ -290,8 +334,8 @@ BEGIN
 
                   -- 1.3. Сумма, без AnalyzerId (на самом деле для OperCount_Partner)
                 , SUM (tmpContainer.SummOut_Partner_60000) AS SummOut_Partner_real
-                , SUM (CASE WHEN tmpAccount.AccountGroupId >= 0 AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_A
-                , SUM (CASE WHEN tmpAccount.AccountGroupId >= 0 AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_P
+                , SUM (CASE WHEN /*tmpAccount.AccountGroupId >= 0*/ tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_A
+                , SUM (CASE WHEN /*tmpAccount.AccountGroupId >= 0*/ tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummOut_Partner_60000 ELSE 0 END) AS SummOut_Partner_110000_P
 
                   -- 2.1. Кол-во - Скидка за вес
                 , SUM (tmpContainer.OperCount_Change * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS OperCount_Change_real
@@ -332,6 +376,9 @@ BEGIN
                 , SUM (CASE WHEN tmpAccount.AccountGroupId IS NULL                         THEN tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = TRUE  THEN -1 * tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner_110000_A
                 , SUM (CASE WHEN tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND tmpContainer.isActive = FALSE THEN  1 * tmpContainer.SummIn_Partner ELSE 0 END) AS SummIn_Partner_110000_P
+
+                , SUM (tmpContainer.Summ_pl) AS Summ_pl
+                , SUM (tmpContainer.Summ_pl_real) AS Summ_pl_real
 
            FROM (SELECT CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                       , MIContainer.WhereObjectId_analyzer AS FromId
@@ -397,6 +444,9 @@ BEGIN
                                   ELSE 0
                              END) AS SummIn_Partner
 
+                      , 0 AS Summ_pl
+                      , 0 AS Summ_pl_real
+
                  FROM _tmpUnit
                       INNER JOIN MovementItemContainer AS MIContainer
                                                        ON MIContainer.MovementDescId = zc_Movement_SendOnPrice()
@@ -417,6 +467,52 @@ BEGIN
                         , MIContainer.ContainerIntId_analyzer
                         , CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_SummOut_110101()) THEN MIContainer.AnalyzerId ELSE COALESCE (MIContainer.AccountId, 0) END
                         , MIContainer.isActive
+                UNION ALL
+                 SELECT CASE WHEN inIsMovement = TRUE THEN tmpMovement_pl.Id ELSE 0 END AS MovementId
+                      , tmpMovement_pl.FromId
+                      , tmpMovement_pl.ToId
+                      , MovementItem.ObjectId AS GoodsId
+                      , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
+                      , 0     AS ContainerId_analyzer
+                      , 0     AS ContainerIntId_analyzer
+                      , FALSE AS isActive
+                      , 0     AS AccountId
+
+                      , 0 AS OperCount
+                      , 0 AS SummIn
+                      , 0 AS SummOut_Partner_60000
+
+                      , 0 AS OperCount_Change
+                      , 0 AS SummIn_Change
+
+                      , 0 AS OperCount_40200
+                      , 0 AS SummIn_40200
+
+                      , 0 AS OperCount_Loss
+                      , 0 AS SummIn_Loss
+
+                      , 0 AS OperCount_Partner
+                      , 0 AS SummIn_Partner
+
+                      , SUM (CASE WHEN tmpMovement_pl.OperDate BETWEEN inStartDate AND inEndDate THEN COALESCE (MIFloat_SummPriceList.ValueData, 0)  ELSE 0 END) AS Summ_pl
+                      , SUM (CASE WHEN tmpMovement_pl.OperDatePartner BETWEEN inStartDate AND inEndDate THEN COALESCE (MIFloat_SummPriceList.ValueData, 0)  ELSE 0 END) AS Summ_pl_real
+
+                 FROM tmpMovement_pl
+                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement_pl.Id
+                                             AND MovementItem.DescId     = zc_MI_Master()
+                                             AND MovementItem.isErased   = FALSE
+                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                      LEFT JOIN MovementItemFloat AS MIFloat_SummPriceList
+                                                  ON MIFloat_SummPriceList.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_SummPriceList.DescId = zc_MIFloat_SummPriceList()
+
+                 GROUP BY CASE WHEN inIsMovement = TRUE THEN tmpMovement_pl.Id ELSE 0 END
+                        , tmpMovement_pl.FromId
+                        , tmpMovement_pl.ToId
+                        , MovementItem.ObjectId
+                        , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
                   ) AS tmpContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
      

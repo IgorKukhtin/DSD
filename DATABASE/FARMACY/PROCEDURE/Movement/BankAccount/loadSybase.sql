@@ -35,7 +35,8 @@ select _CashOperation.Id, Movement.Id as MovementId , MovementLinkObject_from.Ob
                                           , inAmountOut            := case when OperSumm < 0 then -1 * OperSumm else 0 end
                                           , inAmountSumm           := 0 
 
-                                          , inBankAccountId        := 1648977 -- house-1 1020650 -- ПриватБанк
+                                          -- , inBankAccountId        := 1648977 -- house-1
+                                          , inBankAccountId        := 1693572 -- house-2-АСНБ-4 
                                           , inComment              := remark
                                           , inMoneyPlaceId         := MovementLinkObject_from.ObjectId
                                           , inIncomeMovementId     := Movement.Id
@@ -58,6 +59,8 @@ from _CashOperation
             LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                  ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject.ObjectId
                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-where _CashOperation.OperDate between '2015-01-01' and '2015-12-31'
+
             LEFT JOIN Object on Object.Id = MovementLinkObject_from.ObjectId
             LEFT JOIN ObjectDesc on ObjectDesc.Id = Object.DescId
+
+where _CashOperation.OperDate between '2015-01-01' and '2015-12-31'

@@ -46,7 +46,7 @@ object OLAPSalesForm: TOLAPSalesForm
         Left = 0
         Top = 0
         Align = alTop
-        Caption = 'lblRepName'
+        Caption = #1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1090#1095#1077#1090
         ParentFont = False
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clWindowText
@@ -155,8 +155,8 @@ object OLAPSalesForm: TOLAPSalesForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -188,6 +188,10 @@ object OLAPSalesForm: TOLAPSalesForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbExcel'
