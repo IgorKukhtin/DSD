@@ -58,8 +58,6 @@ uses
   cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
   MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
-  GoodsGroup in '..\..\Forms\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
-  GoodsGroupEdit in '..\..\Forms\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
   Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm: TParentForm},
   Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
@@ -381,7 +379,10 @@ uses
   SheetWorkTime in '..\..\FormsFarmacy\Document\SheetWorkTime.pas' {SheetWorkTimeForm: TParentForm},
   Report_Liquid in '..\..\FormsFarmacy\Report\Report_Liquid.pas' {Report_LiquidForm: TParentForm},
   Report_MovementIncome in '..\..\FormsFarmacy\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm},
-  SheetWorkTimeAddRecord in '..\..\FormsFarmacy\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm};
+  SheetWorkTimeAddRecord in '..\..\FormsFarmacy\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
+  GoodsGroup in '..\..\FormsFarmacy\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
+  GoodsGroupEdit in '..\..\FormsFarmacy\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
+  GoodsGroup_Object in '..\..\FormsFarmacy\Guides\GoodsGroup_Object.pas' {GoodsGroup_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
