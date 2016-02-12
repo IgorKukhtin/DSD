@@ -793,7 +793,8 @@ uses
   BranchJuridical in '..\..\Forms\Guides\BranchJuridical.pas' {BranchJuridicalForm: TParentForm},
   BranchJuridicalEdit in '..\..\Forms\Guides\BranchJuridicalEdit.pas' {BranchJuridicalEditForm: TParentForm},
   Report_BalanceDialog in '..\..\Forms\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
-  Report_ProfitLossDialog in '..\..\Forms\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm};
+  Report_ProfitLossDialog in '..\..\Forms\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm},
+  Movement_DateDialog in '..\..\Forms\Document\Movement_DateDialog.pas' {Movement_DateDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

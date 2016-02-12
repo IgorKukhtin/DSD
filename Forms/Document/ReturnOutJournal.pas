@@ -55,6 +55,7 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     Comment: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -84,6 +84,7 @@ type
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

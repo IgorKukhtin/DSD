@@ -63,18 +63,19 @@ BEGIN
                 )
         )
 
- , tmpDateLastPay AS (SELECT Object_Movement.ObjectCode AS MovementId
-                           , MAX(MIContainer.OperDate)::TDateTime AS LastDatePay
-                      FROM Object AS Object_Movement
-                       LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
-                                          AND Container.ObjectId = Object_Movement.Id
-                                          AND Container.KeyValue like '%,'||inJuridical_BasisId||';%'
+ , tmpContainerDate AS (SELECT Object_Movement.ObjectCode           AS MovementId
+                             , Container.Amount                     AS PaySumm 
+                             , MAX(MIContainer.OperDate)::TDateTime AS LastDatePay
+                        FROM Object AS Object_Movement
+                         LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
+                                            AND Container.ObjectId = Object_Movement.Id
+                                            AND Container.KeyValue like '%,'||inJuridical_BasisId||';%'
 
-                       LEFT OUTER JOIN MovementItemContainer AS MIContainer
-                                                             ON MIContainer.ContainerId = Container.Id
-                                                            AND MIContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
-                      WHERE Object_Movement.DescId = zc_Object_PartionMovement()
-                      GROUP BY Object_Movement.ObjectCode
+                         LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                               ON MIContainer.ContainerId = Container.Id
+                                                              AND MIContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
+                        WHERE Object_Movement.DescId = zc_Object_PartionMovement()
+                        GROUP BY Object_Movement.ObjectCode, Container.Amount
                       )
 
 
@@ -125,9 +126,14 @@ BEGIN
             Object_From.ValueData as FromName,
             Object_To.ValueData as ToName
 
-          , MovementDate_Payment.ValueData     AS PaymentDate
+          , CASE WHEN tmpContainerDate.PaySumm > 0.01
+                   OR Movement.StatusId <> zc_Enum_Status_Complete()
+                 THEN MovementDate_Payment.ValueData
+            END::TDateTime        AS PaymentDate 
+          
           , MovementDate_Branch.ValueData      AS BranchDate
-          , tmpDateLastPay.LastDatePay         AS DateLastPay
+          , tmpContainerDate.LastDatePay       AS DateLastPay
+
         FROM(
             SELECT 
                 tmpContainer.MovementId,
@@ -201,7 +207,7 @@ BEGIN
                             AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
 
     
-      LEFT JOIN tmpDateLastPay ON tmpDateLastPay.MovementId = Movement.Id
+      LEFT JOIN tmpContainerDate ON tmpContainerDate.MovementId = Movement.Id
 
   ORDER BY Operation.OperationSort;
                                   
@@ -235,4 +241,4 @@ ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, Intege
 */
 
 -- тест
--- select * from gpReport_JuridicalCollation(inStartDate := ('07.09.2015')::TDateTime , inEndDate := ('26.11.2015')::TDateTime , inJuridicalId := 183317 , inJuridical_BasisId := 393052 ,  inSession := '3');
+--select * from gpReport_JuridicalCollation(inStartDate := ('07.09.2015')::TDateTime , inEndDate := ('26.11.2015')::TDateTime , inJuridicalId := 183317 , inJuridical_BasisId := 393052 ,  inSession := '3');

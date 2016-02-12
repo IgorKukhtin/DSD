@@ -673,6 +673,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TServiceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceForm');
+
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
@@ -723,6 +724,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGlobalConstForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGlobalConstForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_DateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_DateDialogForm');
 
 end;
 
