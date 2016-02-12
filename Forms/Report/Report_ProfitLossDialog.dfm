@@ -39,7 +39,7 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
   object deEnd: TcxDateEdit
     Left = 131
     Top = 70
-    EditValue = 42005d
+    EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
@@ -47,7 +47,7 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
   object deStart: TcxDateEdit
     Left = 131
     Top = 29
-    EditValue = 42005d
+    EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90

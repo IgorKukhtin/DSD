@@ -2,7 +2,7 @@ object Movement_DateDialogForm: TMovement_DateDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1042#1099#1073#1086#1088' '#1087#1077#1088#1080#1086#1076#1072' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+  Caption = #1042#1099#1073#1086#1088' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
   ClientHeight = 191
   ClientWidth = 392
   Color = clBtnFace
@@ -39,7 +39,7 @@ object Movement_DateDialogForm: TMovement_DateDialogForm
   object deEnd: TcxDateEdit
     Left = 131
     Top = 70
-    EditValue = 42005d
+    EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
@@ -47,7 +47,7 @@ object Movement_DateDialogForm: TMovement_DateDialogForm
   object deStart: TcxDateEdit
     Left = 131
     Top = 29
-    EditValue = 42005d
+    EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90

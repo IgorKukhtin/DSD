@@ -22,7 +22,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 430
     object cbAllGuide: TCheckBox
       Tag = 1
       Left = 15
@@ -211,7 +210,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 654
     object Label1: TLabel
       Left = 6
       Top = 24
@@ -299,6 +297,14 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 5
     end
+    object Edit1: TEdit
+      Left = 32
+      Top = 304
+      Width = 104
+      Height = 21
+      TabOrder = 6
+      Text = 'Edit1'
+    end
   end
   object ButtonPanel: TPanel
     Left = 0
@@ -308,7 +314,6 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 974
     object Gauge: TGauge
       Left = 0
       Top = 0

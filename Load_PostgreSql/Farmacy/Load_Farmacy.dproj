@@ -86,7 +86,6 @@
 				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\Storage.pas"/>
-			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConvert.pas"/>
 			<DCCReference Include="..\..\SOURCE\CommonData.pas"/>
 			<DCCReference Include="..\..\SOURCE\Authentication.pas"/>
@@ -144,6 +143,7 @@
 			<DCCReference Include="..\..\SOURCE\dsdException.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\StatusXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\RecadvXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -54,6 +54,7 @@ type
     cbCashOperation: TCheckBox;
     cbBill: TCheckBox;
     toZConnection: TZConnection;
+    Edit1: TEdit;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure CloseButtonClick(Sender: TObject);
@@ -90,14 +91,14 @@ implementation
 
 {$R *.dfm}
 
-uses Authentication, CommonData, Storage, DBClient;
+uses Authentication, CommonData, Storage, DBClient
+   , UtilConst;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.myExecToStoredProc:Boolean;
 begin
   result:=false;
-  toStoredProc.Execute;
-  result:=true;
+  try toStoredProc.Execute; result:=true; except ShowMessage('myExecToStoredProc'); end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.myEnabledCB (cb:TCheckBox);
@@ -555,6 +556,14 @@ begin
         Add('select CashOperation.*');
         Add('from dba.CashOperation');
         Add('where CashOperation.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        try if StrToInt(Edit1.Text) <> 0 then
+            begin
+                 Add(' and CashOperation.Id = ' + Edit1.Text);
+                 gc_isShowTimeMode:=true;
+                 gc_isDebugMode:=true;
+            end;
+        except
+        end;
         Add('order by OperDate,Id');
         Open;
         cbCashOperation.Caption:='1.1. ('+IntToStr(RecordCount)+') CashOperation';
@@ -586,18 +595,21 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Params.ParamByName('inId').Value            :=FieldByName('Id').AsInteger;
-             toStoredProc.Params.ParamByName('inCashID').Value        :=FieldByName('CashID').AsInteger;
-             toStoredProc.Params.ParamByName('inOperDate').Value      :=FieldByName('OperDate').AsDateTime;
-             toStoredProc.Params.ParamByName('inClientID').Value      :=FieldByName('ClientID').AsInteger;
-             toStoredProc.Params.ParamByName('inSpendingID').Value    :=FieldByName('SpendingID').AsInteger;
-             toStoredProc.Params.ParamByName('inOperSumm').Value      :=FieldByName('OperSumm').AsFloat;
-             toStoredProc.Params.ParamByName('inDocumentID').Value    :=FieldByName('DocumentID').AsInteger;
-             toStoredProc.Params.ParamByName('inRemark').Value        :=FieldByName('Remark').AsString;
-             toStoredProc.Params.ParamByName('inisPlat').Value        :=FieldByName('isPlat').AsInteger;
-             toStoredProc.Params.ParamByName('inPlatNumber').Value    :=FieldByName('PlatNumber').AsInteger;
-             toStoredProc.Params.ParamByName('inContragentSumm').Value:=FieldByName('ContragentSumm').AsFloat;
-             if not myExecToStoredProc then ;//exit;
+             try toStoredProc.Params.ParamByName('inId').Value            :=FieldByName('Id').AsInteger;           except ShowMessage('Id');end;
+             try toStoredProc.Params.ParamByName('inCashID').Value        :=FieldByName('CashID').AsInteger;       except ShowMessage('CashID');end;
+             try toStoredProc.Params.ParamByName('inOperDate').Value      :=FieldByName('OperDate').AsDateTime;    except ShowMessage('OperDate');end;
+             try toStoredProc.Params.ParamByName('inClientID').Value      :=FieldByName('ClientID').AsInteger;     except ShowMessage('ClientID');end;
+             try toStoredProc.Params.ParamByName('inSpendingID').Value    :=FieldByName('SpendingID').AsInteger;   except ShowMessage('SpendingID');end;
+             try toStoredProc.Params.ParamByName('inOperSumm').Value      :=FieldByName('OperSumm').AsFloat;       except ShowMessage('OperSumm');end;
+             try toStoredProc.Params.ParamByName('inDocumentID').Value    :=FieldByName('DocumentID').AsInteger;   except ShowMessage('DocumentID');end;
+             try toStoredProc.Params.ParamByName('inRemark').Value        :=FieldByName('Remark').AsString;        except ShowMessage('Remark');end;
+             try toStoredProc.Params.ParamByName('inisPlat').Value        :=FieldByName('isPlat').AsInteger;       except ShowMessage('isPlat');end;
+             try toStoredProc.Params.ParamByName('inPlatNumber').Value    :=FieldByName('PlatNumber').AsInteger;   except ShowMessage('PlatNumber');end;
+             try toStoredProc.Params.ParamByName('inContragentSumm').Value:=FieldByName('ContragentSumm').AsFloat; except ShowMessage('ContragentSumm');end;
+             if not myExecToStoredProc then ShowMessage (FieldByName('Remark').AsString
+                                              +#10+#13 + IntToStr(FieldByName('isPlat').AsInteger)
+                                              +#10+#13 + IntToStr(FieldByName('PlatNumber').AsInteger)
+                                              +#10+#13 + FloatToStr(FieldByName('ContragentSumm').AsFloat));//exit;
              //
              Next;
              Application.ProcessMessages;

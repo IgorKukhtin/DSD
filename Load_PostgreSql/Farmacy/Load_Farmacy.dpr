@@ -4,7 +4,6 @@ uses
   Vcl.Forms,
   Main in 'Main.pas' {MainForm},
   Storage in '..\..\SOURCE\Storage.pas',
-  UtilConst in '..\..\SOURCE\UtilConst.pas',
   UtilConvert in '..\..\SOURCE\UtilConvert.pas',
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',
@@ -53,7 +52,8 @@ uses
   dsdDataSetDataLink in '..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
   dsdException in '..\..\SOURCE\dsdException.pas',
   StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
-  RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas',
+  UtilConst in '..\..\SOURCE\UtilConst.pas';
 
 {$R *.res}
 
