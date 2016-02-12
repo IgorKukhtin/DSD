@@ -1147,7 +1147,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceDialogForm');
-  exit;
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExternalListForm');
@@ -1156,8 +1156,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
 
