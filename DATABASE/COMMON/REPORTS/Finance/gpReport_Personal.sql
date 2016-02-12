@@ -42,7 +42,13 @@ BEGIN
          RETURN;
      END IF;
 
+     -- !!! права пользователей !!!
+     IF EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
+     THEN
+         inBranchId:= (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
+     END IF;
 
+     -- !!! округление !!!
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
      -- Результат
@@ -178,4 +184,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Personal (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inServiceDate:= '05.08.2014', inIsServiceDate:= false, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
+-- SELECT * FROM gpReport_Personal (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inServiceDate:= '01.01.2016', inIsServiceDate:= false, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');

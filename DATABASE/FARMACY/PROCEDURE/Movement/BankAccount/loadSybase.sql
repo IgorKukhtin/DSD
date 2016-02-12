@@ -1,3 +1,14 @@
+/*
+House - ÿ‡ÔËÓ ».¿.
+House4 - ÿ‡ÔËÓ ƒ.√.
+House2 - ¿—Õ¡
+House3 - ¿—Õ¡-1
+House3new - ¬“-1
+House6new - ÕÂ¡ÓÎÂÈ
+House12 - ¿—Õ¡-2 
+House7 - ¿—Õ¡-4
+House8 - ¿—Õ¡-3
+*/
 -- 1. check 1
 select count(*) , BillNumber, BillDate from _Bill where BillKind = 1 group by BillNumber, BillDate having count (*) > 1 order by 3 desc
 
@@ -39,7 +50,8 @@ select _CashOperation.Id, Movement.Id as MovementId , MovementLinkObject_from.Ob
                                           -- , inBankAccountId        := 1693572 -- house-2-¿—Õ¡-4 
                                           -- , inBankAccountId        := 1694740 -- house-3-¿—Õ¡-3 
                                           -- , inBankAccountId        := 1702164 -- house-4-¿—Õ¡
-                                          , inBankAccountId        := 1705473 -- house-5-¿—Õ¡-2
+                                          -- , inBankAccountId        := 1705473 -- house-5-¿—Õ¡-2
+                                          , inBankAccountId        := 1726712 -- house-6-ÕÂ ·ÓÎÂÈ
                                           , inComment              := remark
                                           , inMoneyPlaceId         := MovementLinkObject_from.ObjectId
                                           , inIncomeMovementId     := Movement.Id
