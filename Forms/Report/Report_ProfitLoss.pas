@@ -67,6 +67,8 @@ type
     PivotAddOn: TPivotAddOn;
     PeriodChoice: TPeriodChoice;
     dxBarStatic: TdxBarStatic;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
   public
   end;

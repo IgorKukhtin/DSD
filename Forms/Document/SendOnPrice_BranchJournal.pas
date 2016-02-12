@@ -62,6 +62,7 @@ type
     N13: TMenuItem;
     N14: TMenuItem;
     N15: TMenuItem;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

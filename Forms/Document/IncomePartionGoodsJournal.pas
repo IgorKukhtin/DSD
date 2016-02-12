@@ -118,6 +118,7 @@ type
     colPartionGoods: TcxGridDBColumn;
     colTotalCount_unit: TcxGridDBColumn;
     colTotalCount_diff: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

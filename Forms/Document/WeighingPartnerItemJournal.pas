@@ -107,6 +107,7 @@ type
     GuidesGoodsGroup: TdsdGuides;
     GuidesGoods: TdsdGuides;
     isBarCode: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

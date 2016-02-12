@@ -14,6 +14,7 @@ object Report_BalanceForm: TReport_BalanceForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -43,7 +44,7 @@ object Report_BalanceForm: TReport_BalanceForm
       Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 10
+      Left = 4
       Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
@@ -297,6 +298,14 @@ object Report_BalanceForm: TReport_BalanceForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -330,6 +339,10 @@ object Report_BalanceForm: TReport_BalanceForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -461,12 +474,41 @@ object Report_BalanceForm: TReport_BalanceForm
     object dsdExecStoredProc1: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetBalanceParam
       StoredProcList = <
         item
           StoredProc = spGetBalanceParam
         end>
       Caption = 'dsdExecStoredProc1'
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_BalanceDialogForm'
+      FormNameParam.Value = 'TReport_BalanceDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -491,6 +533,7 @@ object Report_BalanceForm: TReport_BalanceForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 208
     Top = 208
   end
@@ -504,6 +547,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Top = 48
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -628,6 +672,7 @@ object Report_BalanceForm: TReport_BalanceForm
         ComponentItem = 'BusinessName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 288
     Top = 304
   end

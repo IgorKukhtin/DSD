@@ -70,6 +70,8 @@ type
     dsdExecStoredProc1: TdsdExecStoredProc;
     bbStaticText: TdxBarButton;
     pvPaidKindName: TcxDBPivotGridField;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
   public
   end;

@@ -112,6 +112,7 @@ type
     bbCopyTaxCorrective: TdxBarButton;
     isCopy: TcxGridDBColumn;
     colPersonalSigningName: TcxGridDBColumn;
+    ExecuteDialog1: TExecuteDialog;
   private
     { Private declarations }
   public

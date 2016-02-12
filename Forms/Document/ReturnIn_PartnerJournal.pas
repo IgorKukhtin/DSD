@@ -108,6 +108,7 @@ type
     N14: TMenuItem;
     MovementPromo: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

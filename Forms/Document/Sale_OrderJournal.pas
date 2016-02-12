@@ -189,6 +189,7 @@ type
     actPrint_Transport_ReportName: TdsdExecStoredProc;
     mactPrint_Transport: TMultiAction;
     bbPrint_Transport: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

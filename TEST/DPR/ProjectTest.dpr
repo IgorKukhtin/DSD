@@ -791,7 +791,11 @@ uses
   Report_GoodsMI_SendOnPrice in '..\..\Forms\Report\Report_GoodsMI_SendOnPrice.pas' {Report_GoodsMI_SendOnPriceForm: TParentForm},
   Report_GoodsMI_SendOnPriceDialog in '..\..\Forms\Report\Report_GoodsMI_SendOnPriceDialog.pas' {Report_GoodsMI_SendOnPriceDialogForm: TParentForm},
   BranchJuridical in '..\..\Forms\Guides\BranchJuridical.pas' {BranchJuridicalForm: TParentForm},
-  BranchJuridicalEdit in '..\..\Forms\Guides\BranchJuridicalEdit.pas' {BranchJuridicalEditForm: TParentForm};
+  BranchJuridicalEdit in '..\..\Forms\Guides\BranchJuridicalEdit.pas' {BranchJuridicalEditForm: TParentForm},
+  Report_BalanceDialog in '..\..\Forms\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
+  Report_ProfitLossDialog in '..\..\Forms\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm},
+  Movement_DateDialog in '..\..\Forms\Document\Movement_DateDialog.pas' {Movement_DateDialogForm: TParentForm},
+  Movement_Date1Dialog in '..\..\Forms\Document\Movement_Date1Dialog.pas' {Movement_Date1DialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

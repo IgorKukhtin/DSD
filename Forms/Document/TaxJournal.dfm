@@ -2,6 +2,7 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog1
   ExplicitWidth = 1126
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -426,7 +427,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Action = actRefresh
       Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080'>'
       TabOrder = 4
-      Width = 262
+      Width = 198
     end
     object cxLabel14: TcxLabel
       Left = 650
@@ -901,6 +902,41 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftString
         end>
       isShowModal = True
+      OpenBeforeShow = True
+    end
+    object ExecuteDialog1: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_DateDialogForm'
+      FormNameParam.Value = 'TMovement_DateDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'IsPartnerDate'
+          Value = 'False'
+          Component = edIsRegisterDate
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
     object mactCopyTaxCorrective: TMultiAction

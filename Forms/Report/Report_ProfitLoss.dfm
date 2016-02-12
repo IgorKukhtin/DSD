@@ -14,6 +14,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -268,6 +269,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -290,7 +299,9 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       WholeRow = False
     end
     object dxBarStatic: TdxBarStatic
+      Caption = '     '
       Category = 0
+      Hint = '     '
       Visible = ivAlways
     end
     object bbRefresh: TdxBarButton
@@ -299,6 +310,10 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
     object bbToExcel: TdxBarButton
       Action = actExportToExcel
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
@@ -434,6 +449,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'ProfitLossGroupName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ProfitLossGroupName'
           DataType = ftString
@@ -446,6 +462,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'ProfitLossDirectionName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ProfitLossDirectionName'
           DataType = ftString
@@ -458,6 +475,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'ProfitLossName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ProfitLossName'
           DataType = ftString
@@ -470,6 +488,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'BranchName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'BranchName'
           DataType = ftString
@@ -479,12 +498,40 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object dsdExecStoredProc1: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetProfitLostParam
       StoredProcList = <
         item
           StoredProc = spGetProfitLostParam
         end>
       Caption = 'dsdExecStoredProc1'
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_ProfitLossDialogForm'
+      FormNameParam.Value = 'TReport_ProfitLossDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -509,6 +556,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 120
     Top = 192
   end
@@ -625,6 +673,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'ProfitLossGroupName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'ProfitLossGroupName'
         DataType = ftString
@@ -637,6 +686,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'ProfitLossDirectionName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'ProfitLossDirectionName'
         DataType = ftString
@@ -649,6 +699,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'ProfitLossName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'ProfitLossName'
         DataType = ftString
@@ -661,10 +712,12 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'BranchName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'BranchName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 288
     Top = 304
   end

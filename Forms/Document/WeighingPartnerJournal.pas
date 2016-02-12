@@ -107,6 +107,7 @@ type
     colInvNumberPartner_Tax: TcxGridDBColumn;
     colOperDate_Tax: TcxGridDBColumn;
     colMovementDescNumber: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

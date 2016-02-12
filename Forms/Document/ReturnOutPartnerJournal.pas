@@ -57,6 +57,7 @@ type
     ChangePercentTo: TcxGridDBColumn;
     PaidKindFromName: TcxGridDBColumn;
     ContractFromName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

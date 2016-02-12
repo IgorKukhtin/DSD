@@ -94,6 +94,7 @@ type
     DateRegistered_notNull: TcxGridDBColumn;
     isCopy: TcxGridDBColumn;
     colisPartner: TcxGridDBColumn;
+    ExecuteDialog1: TExecuteDialog;
   private
     { Private declarations }
   public

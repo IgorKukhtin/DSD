@@ -88,6 +88,7 @@ type
     colTotalCountTare: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     colIsProductionIn: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;
