@@ -39,6 +39,7 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     colTotalCountChild: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

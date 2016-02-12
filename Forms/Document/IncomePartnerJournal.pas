@@ -122,6 +122,7 @@ type
     actSimpleReCompleteList: TMultiAction;
     actReCompleteList: TMultiAction;
     N1: TMenuItem;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

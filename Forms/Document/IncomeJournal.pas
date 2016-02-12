@@ -122,6 +122,7 @@ type
     N1: TMenuItem;
     colTotalCount_unit: TcxGridDBColumn;
     colTotalCount_diff: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

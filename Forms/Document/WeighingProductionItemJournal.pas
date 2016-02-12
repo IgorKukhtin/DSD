@@ -94,6 +94,7 @@ type
     cxLabel4: TcxLabel;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

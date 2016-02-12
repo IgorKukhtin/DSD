@@ -727,7 +727,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_DateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_DateDialogForm');
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Date1DialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_Date1DialogForm');
 end;
 
 
