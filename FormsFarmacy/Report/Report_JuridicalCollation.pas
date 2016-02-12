@@ -50,6 +50,9 @@ type
     edJuridicalBasis: TcxButtonEdit;
     cxLabel3: TcxLabel;
     JuridicalBasisGuide: TdsdGuides;
+    colPaymentDate: TcxGridDBColumn;
+    colDateLastPay: TcxGridDBColumn;
+    colBranchDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

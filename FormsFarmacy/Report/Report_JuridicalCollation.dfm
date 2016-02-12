@@ -11,19 +11,19 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Width = 893
     Height = 312
     TabOrder = 3
-    ExplicitTop = 57
+    ExplicitTop = 77
     ExplicitWidth = 893
-    ExplicitHeight = 332
+    ExplicitHeight = 312
     ClientRectBottom = 312
     ClientRectRight = 893
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 893
-      ExplicitHeight = 332
+      ExplicitHeight = 312
       inherited cxGrid: TcxGrid
         Width = 893
         Height = 312
         ExplicitWidth = 893
-        ExplicitHeight = 332
+        ExplicitHeight = 312
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -156,6 +156,32 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 55
+          end
+          object colPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colDateLastPay: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
+            DataBinding.FieldName = 'DateLastPay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colBranchDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074' '#1072#1087#1090#1077#1082#1077
+            DataBinding.FieldName = 'BranchDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 60
           end
         end
       end

@@ -27,6 +27,7 @@ RETURNS TABLE(
   , Operationsort Integer
   , FromName TVarChar
   , ToName TVarChar
+  , PaymentDate TDateTime, BranchDate TDateTime, DateLastPay TDateTime
   )
 AS
 $BODY$
@@ -61,6 +62,22 @@ BEGIN
                     inJuridical_BasisId = 0
                 )
         )
+
+ , tmpDateLastPay AS (SELECT Object_Movement.ObjectCode AS MovementId
+                           , MAX(MIContainer.OperDate)::TDateTime AS LastDatePay
+                      FROM Object AS Object_Movement
+                       LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
+                                          AND Container.ObjectId = Object_Movement.Id
+                                          AND Container.KeyValue like '%,'||inJuridical_BasisId||';%'
+
+                       LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                             ON MIContainer.ContainerId = Container.Id
+                                                            AND MIContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
+                      WHERE Object_Movement.DescId = zc_Object_PartionMovement()
+                      GROUP BY Object_Movement.ObjectCode
+                      )
+
+
         SELECT 
             CASE 
                 WHEN Operation.OperationSort = 0
@@ -107,6 +124,10 @@ BEGIN
             Operation.OperationSort,
             Object_From.ValueData as FromName,
             Object_To.ValueData as ToName
+
+          , MovementDate_Payment.ValueData     AS PaymentDate
+          , MovementDate_Branch.ValueData      AS BranchDate
+          , tmpDateLastPay.LastDatePay         AS DateLastPay
         FROM(
             SELECT 
                 tmpContainer.MovementId,
@@ -171,6 +192,17 @@ BEGIN
       LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
       LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
       
+      LEFT JOIN MovementDate AS MovementDate_Payment
+                             ON MovementDate_Payment.MovementId =  Movement.Id
+                            AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+
+      LEFT JOIN MovementDate AS MovementDate_Branch
+                             ON MovementDate_Branch.MovementId = Movement.Id
+                            AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+    
+      LEFT JOIN tmpDateLastPay ON tmpDateLastPay.MovementId = Movement.Id
+
   ORDER BY Operation.OperationSort;
                                   
 END;
@@ -185,6 +217,7 @@ ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, Intege
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 12.02.16         * add PaymentDate, BranchDate, DateLastPay
  12.01.16                                                       * Clear
  14.11.14         * add inCurrencyId
  21.08.14                                        * add ContractComment
@@ -202,4 +235,4 @@ ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, Intege
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.12.2015', inEndDate:= '01.01.2016', inJuridicalId:= 59610, inJuridical_BasisId := 0, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_JuridicalCollation(inStartDate := ('07.09.2015')::TDateTime , inEndDate := ('26.11.2015')::TDateTime , inJuridicalId := 183317 , inJuridical_BasisId := 393052 ,  inSession := '3');
