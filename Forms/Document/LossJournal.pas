@@ -37,6 +37,7 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     ArticleLossName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

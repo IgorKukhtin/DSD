@@ -3,7 +3,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   ClientHeight = 537
   ClientWidth = 841
   ExplicitWidth = 857
-  ExplicitHeight = 572
+  ExplicitHeight = 575
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

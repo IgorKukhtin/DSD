@@ -795,7 +795,7 @@ uses
   Report_BalanceDialog in '..\..\Forms\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
   Report_ProfitLossDialog in '..\..\Forms\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm},
   Movement_DateDialog in '..\..\Forms\Document\Movement_DateDialog.pas' {Movement_DateDialogForm: TParentForm},
-  Movement_Date1Dialog in '..\..\Forms\Document\Movement_Date1Dialog.pas' {Movement_Date1DialogForm: TParentForm};
+  Movement_PeriodDialog in '..\..\Forms\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

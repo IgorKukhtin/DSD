@@ -1,4 +1,4 @@
-unit Movement_Date1Dialog;
+unit Movement_PeriodDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TMovement_Date1DialogForm = class(TParentForm)
+  TMovement_PeriodDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -34,6 +34,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMovement_Date1DialogForm);
+  RegisterClass(TMovement_PeriodDialogForm);
 
 end.

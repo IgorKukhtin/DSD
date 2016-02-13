@@ -689,8 +689,8 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TMovement_Date1DialogForm'
-      FormNameParam.Value = 'TMovement_Date1DialogForm'
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item

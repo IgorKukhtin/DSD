@@ -39,6 +39,7 @@ type
     colTotalCountKg: TcxGridDBColumn;
     colTotalCountSh: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

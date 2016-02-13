@@ -1,4 +1,4 @@
-object Movement_Date1DialogForm: TMovement_Date1DialogForm
+object Movement_PeriodDialogForm: TMovement_PeriodDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog

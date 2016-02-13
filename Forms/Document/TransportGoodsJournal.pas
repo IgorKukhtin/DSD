@@ -53,6 +53,7 @@ type
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public
