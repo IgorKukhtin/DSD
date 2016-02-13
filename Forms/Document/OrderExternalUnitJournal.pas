@@ -68,6 +68,7 @@ type
     PartnerName: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

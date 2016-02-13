@@ -37,6 +37,7 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colTotalSum: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

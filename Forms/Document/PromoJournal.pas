@@ -51,6 +51,7 @@ type
     actUpdate_Promo_Data_after: TdsdExecStoredProc;
     mactUpdate_Movement_Promo_Data_all: TMultiAction;
     colChangePercentName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

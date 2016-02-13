@@ -37,6 +37,7 @@ type
     bbPrint: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

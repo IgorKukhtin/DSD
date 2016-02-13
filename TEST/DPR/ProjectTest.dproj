@@ -2521,8 +2521,8 @@
 				<Form>Movement_DateDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Movement_Date1Dialog.pas">
-				<Form>Movement_Date1DialogForm</Form>
+			<DCCReference Include="..\..\Forms\Document\Movement_PeriodDialog.pas">
+				<Form>Movement_PeriodDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

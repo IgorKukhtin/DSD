@@ -71,6 +71,7 @@ type
     OperDatePartner_sale: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
     MovementPromo: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public
