@@ -380,8 +380,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ByPartionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ByPartionGoodsForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
 
