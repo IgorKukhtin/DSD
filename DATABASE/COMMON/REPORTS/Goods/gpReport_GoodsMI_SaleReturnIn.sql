@@ -487,11 +487,11 @@ BEGIN
           , Object_GoodsPlatform.ValueData     AS GoodsPlatformName
 
           , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
-          , Object_Branch.ObjectCode    AS BranchCode
-          , Object_Branch.ValueData     AS BranchName
-          , Object_Juridical.ObjectCode AS JuridicalCode
-          , Object_Juridical.ValueData  AS JuridicalName
-          , ObjectHistory_JuridicalDetails_View.OKPO
+          , Object_Branch.ObjectCode         AS BranchCode
+          , Object_Branch.ValueData          AS BranchName
+          , Object_Juridical.ObjectCode      AS JuridicalCode
+          , Object_Juridical.ValueData       AS JuridicalName
+          , '' :: TVarChar                   AS OKPO
 
           , Object_Retail.ValueData       AS RetailName
           , Object_RetailReport.ValueData AS RetailReportName
@@ -529,7 +529,7 @@ BEGIN
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
-          , Object_Account_View.AccountName_all AS AccountName
+          , '' :: TVarChar AS AccountName
 
          , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
          , tmpOperationGroup.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
@@ -610,7 +610,6 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-          -- LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
 
           LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpOperationGroup.PartnerId
@@ -633,7 +632,7 @@ BEGIN
                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
           LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
-          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+          -- LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpOperationGroup.ContractId
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
 
@@ -651,7 +650,6 @@ BEGIN
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
           LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
-          LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpOperationGroup.ChildAccountId
     ;
 
 END;

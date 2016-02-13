@@ -1,13 +1,13 @@
 /*
-House - Øàïèðî È.À.
++House - Øàïèðî È.À.
 House4 - Øàïèðî Ä.Ã.
-House2 - ÀÑÍÁ
-House3 - ÀÑÍÁ-1
-House3new - ÂÒ-1
-House6new - ÍåÁîëåé
-House12 - ÀÑÍÁ-2 
-House7 - ÀÑÍÁ-4
-House8 - ÀÑÍÁ-3
++House2 - ÀÑÍÁ
+-- House3 - ÀÑÍÁ-1
+-- House3new - ÂÒ-1
++House6new - ÍåÁîëåé
++House12 - ÀÑÍÁ-2 
++House7 - ÀÑÍÁ-4
++House8 - ÀÑÍÁ-3
 */
 -- 1. check 1
 select count(*) , BillNumber, BillDate from _Bill where BillKind = 1 group by BillNumber, BillDate having count (*) > 1 order by 3 desc
@@ -38,7 +38,7 @@ where Movement.DescId = zc_Movement_BankAccount()
 ;
 
 -- 4.
-select _CashOperation.Id, Movement.Id as MovementId , MovementLinkObject_from.ObjectId, ObjectDesc.*
+select Movement.Id as MovementId, _CashOperation.*, MovementLinkObject_from.ObjectId, ObjectDesc.*
      , gpInsertUpdate_Movement_BankAccount (ioId                   := 0
                                           , inInvNumber            := platNumber :: TVarChar
                                           , inOperDate             := _CashOperation.OperDate

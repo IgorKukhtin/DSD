@@ -63,6 +63,7 @@ requires
   cxVerticalGridRS16,
   fs16,
   frx16,
+  frxe16,
   frxDB16,
   ZLibEx;
 

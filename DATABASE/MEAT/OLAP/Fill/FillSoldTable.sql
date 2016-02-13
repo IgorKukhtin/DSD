@@ -18,7 +18,7 @@ BEGIN
 
 
   --
-  INSERT INTO SoldTable (OperDate, InvNumber
+  INSERT INTO SoldTable (OperDate
                        , AccountId
                        , BranchId, JuridicalGroupId, JuridicalId, PartnerId, InfoMoneyId, PaidKindId, RetailId, RetailReportId
                        , AreaId, PartnerTagId
@@ -41,7 +41,6 @@ BEGIN
       , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.* FROM Constant_ProfitLoss_AnalyzerId_View) 
       , tmpOperation_SaleReturn
                      AS (SELECT MIContainer.OperDate
-                              , '' :: TVarChar                        AS InvNumber
                               , CLO_Juridical.ObjectId                AS JuridicalId
                               , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
                               , CLO_InfoMoney.ObjectId                AS InfoMoneyId
@@ -116,7 +115,6 @@ BEGIN
                         )
        
           , tmpBonus AS (SELECT COALESCE (MIDate_OperDate.ValueData, MovementItemContainer.OperDate)      AS OperDate
-                              , '' :: TVarChar                                                            AS InvNumber
                               , COALESCE (MILinkObject_Juridical.ObjectId, CLO_Juridical.ObjectId)        AS JuridicalId
                               , COALESCE (MILinkObject_Partner.ObjectId, 0)                               AS PartnerId
                               , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, CLO_InfoMoney.ObjectId) AS InfoMoneyId
@@ -200,7 +198,6 @@ BEGIN
                         )
           , tmpOperation_all AS 
            (SELECT tmpOperation_SaleReturn.OperDate
-                 , tmpOperation_SaleReturn.InvNumber
 
                  , tmpOperation_SaleReturn.JuridicalId
                  , tmpOperation_SaleReturn.PartnerId
@@ -245,7 +242,6 @@ BEGIN
             FROM tmpOperation_SaleReturn
            UNION ALL
             SELECT tmpBonus.OperDate
-                 , tmpBonus.InvNumber
 
                  , tmpBonus.JuridicalId
                  , tmpBonus.PartnerId
@@ -291,7 +287,6 @@ BEGIN
 
           , tmpOperation AS 
            (SELECT tmpOperation_all.OperDate
-                 , tmpOperation_all.InvNumber
 
                  , tmpOperation_all.JuridicalId
                  , tmpOperation_all.PartnerId
@@ -336,7 +331,6 @@ BEGIN
 
             FROM tmpOperation_all
             GROUP BY tmpOperation_all.OperDate
-                   , tmpOperation_all.InvNumber
 
                    , tmpOperation_all.JuridicalId
                    , tmpOperation_all.PartnerId
@@ -351,7 +345,6 @@ BEGIN
 
       -- –≈«”À‹“¿“
       SELECT tmpResult.OperDate
-           , tmpResult.InvNumber
            , 0 AS AccountId
 
            , tmpResult.BranchId
@@ -437,7 +430,6 @@ BEGIN
            , 0, 0, 0
 
       FROM (SELECT tmpOperation.OperDate
-                 , tmpOperation.InvNumber
 
                  , tmpOperation.JuridicalId
                  , tmpOperation.PartnerId
@@ -495,7 +487,6 @@ BEGIN
                                       AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
             GROUP BY tmpOperation.OperDate
-                   , tmpOperation.InvNumber
 
                    , tmpOperation.JuridicalId
                    , tmpOperation.PartnerId
@@ -568,7 +559,6 @@ BEGIN
      UNION ALL
       -- Â˘Â –≈«”À‹“¿“
       SELECT MovementItemContainer.OperDate
-           , '' :: TVarChar                                        AS InvNumber
            , 0                                                     AS AccountId
 
            , 0                                                     AS BranchId

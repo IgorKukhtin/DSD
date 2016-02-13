@@ -6,12 +6,13 @@
 */
 
 -- DROP TABLE SoldTable;
+-- ALTER TABLE SoldTable DROP COLUMN InvNumber;
 
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE SoldTable
 (
    OperDate           TDateTime
- , InvNumber          TVarChar
+--  , InvNumber          TVarChar
  , AccountId          Integer -- ***
 
  , BranchId           Integer
@@ -102,7 +103,7 @@ CREATE TABLE SoldTable
  , SaleReturn_Profit      TFloat
  , SaleReturnBonus_Profit TFloat
 
- , Address TVarChar
+-- , Address TVarChar
 )
 WITH (
   OIDS=FALSE

@@ -1,8 +1,7 @@
 -- Function: gpReport_Goods_Movement ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inStartDate    TDateTime ,
@@ -20,6 +19,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inIsGoods      Boolean   , --
     IN inIsGoodsKind  Boolean   , --
     IN inIsContract   Boolean   , --
+    IN inIsJuridical  Boolean   , -- ***
+    IN inIsCost       Boolean   , -- ***
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -50,28 +51,24 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
-   DECLARE vbIsGoods Boolean;
-   DECLARE vbIsPartner Boolean;
-   DECLARE vbIsJuridical Boolean;
-   DECLARE vbIsJuridicalBranch Boolean;
-   DECLARE vbIsCost Boolean;
-
-   DECLARE vbObjectId_Constraint_Branch Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
-     vbUserId:= lpGetUserBySession (inSession);
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
+    vbUserId:= lpGetUserBySession (inSession);
 
+
+    -- для оптимизации
+    ANALYZE _tmpGoods;
+    ANALYZE _tmpPartner;
+    ANALYZE _tmpJuridical;
+    ANALYZE _tmpJuridicalBranch;
 
 
     -- Результат
     RETURN QUERY
-
     -- собираем все данные
-    WITH  tmpOperationGroup2 AS
-                        (SELECT SoldTable.AccountId AS ChildAccountId
-                              , SoldTable.BranchId
+    WITH  tmpOperationGroup AS
+                        (SELECT SoldTable.BranchId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalGroupId   ELSE 0 END AS JuridicalGroupId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalId        ELSE 0 END AS JuridicalId
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.PartnerId          END AS PartnerId
@@ -93,9 +90,20 @@ BEGIN
                               , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN SoldTable.GoodsPlatformId     ELSE 0 END AS GoodsPlatformId
                               , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN SoldTable.TradeMarkId         ELSE 0 END AS TradeMarkId
                               , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN SoldTable.GoodsGroupAnalystId ELSE 0 END AS GoodsGroupAnalystId
-                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsTagId     ELSE 0 END AS GoodsTagId
-                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsId     ELSE 0 END AS GoodsId
-                              , CASE WHEN inIsGoodsKind = TRUE THEN SoldTable.GoodsKindId ELSE 0 END AS GoodsKindId
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsGroupId     ELSE 0 END AS GoodsGroupId
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsGroupStatId ELSE 0 END AS GoodsGroupStatId
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsTagId       ELSE 0 END AS GoodsTagId
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsId          ELSE 0 END AS GoodsId
+                              , CASE WHEN inIsGoodsKind = TRUE THEN SoldTable.GoodsKindId      ELSE 0 END AS GoodsKindId
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.MeasureId        ELSE 0 END AS MeasureId
+
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.RegionId       END AS RegionId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.ProvinceId     END AS ProvinceId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.CityKindId     END AS CityKindId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.CityId         END AS CityId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.ProvinceCityId END AS ProvinceCityId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetKindId   END AS StreetKindId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END AS StreetId
 
                               , SUM (SoldTable.Sale_Summ) AS Sale_Summ
                               , SUM (SoldTable.Return_Summ) AS Return_Summ
@@ -119,36 +127,62 @@ BEGIN
                               , SUM (SoldTable.Sale_Amount_40200_Weight)    AS Sale_Amount_40200_Weight
                               , SUM (SoldTable.Return_Amount_40200_Weight)  AS Return_Amount_40200_Weight
 
-                              , SUM (SoldTable.Sale_SummCost) AS Sale_SummCost
-                              , SUM (SoldTable.Sale_SummCost_10500) AS Sale_SummCost_10500
-                              , SUM (SoldTable.Sale_SummCost_40200) AS Sale_SummCost_40200
+                              , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost       ELSE 0 END) AS Sale_SummCost
+                              , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost_10500 ELSE 0 END) AS Sale_SummCost_10500
+                              , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost_40200 ELSE 0 END) AS Sale_SummCost_40200
 
-                              , SUM (SoldTable.Return_SummCost) AS Return_SummCost
-                              , SUM (SoldTable.Return_SummCost_40200) AS Return_SummCost_40200
+                              , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost       ELSE 0 END) AS Return_SummCost
+                              , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost_40200 ELSE 0 END) AS Return_SummCost_40200
                          FROM SoldTable
                               LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = SoldTable.JuridicalId
                               LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = SoldTable.JuridicalId
                               LEFT JOIN _tmpPartner ON _tmpPartner.PartnerId = SoldTable.PartnerId
                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = SoldTable.GoodsId
 
-                         WHERE (SoldTable.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                         WHERE SoldTable.OperDate BETWEEN inStartDate AND inEndDate
+                           AND (SoldTable.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                            AND (SoldTable.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                            AND (SoldTable.PaidKindId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
-                           AND (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                            AND (SoldTable.BranchId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
-                           AND (_tmpPartner.PartnerId > 0 OR vbIsPartner = FALSE)
-                           AND (_tmpGoods.GoodsId > 0 OR vbIsGoods = FALSE)
-                         GROUP BY CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalId ELSE 0 END
-                                , CASE WHEN inIsContract = TRUE  THEN SoldTable.ContractId  ELSE 0 END
-                                , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.PartnerId   END
+                           AND (_tmpJuridical.JuridicalId > 0 OR inIsJuridical = FALSE)
+                           AND (_tmpPartner.PartnerId > 0 OR inIsPartner = FALSE)
+                           AND (_tmpGoods.GoodsId > 0 OR inIsGoods = FALSE)
+                         GROUP BY SoldTable.BranchId
+                              , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalGroupId   ELSE 0 END
+                              , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalId        ELSE 0 END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.PartnerId          END
+                              , SoldTable.InfoMoneyId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.RetailId           END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.RetailReportId     END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.AreaId             END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.PartnerTagId       END
+                              , CASE WHEN inIsContract = FALSE THEN 0 ELSE SoldTable.ContractId         END
+                              , CASE WHEN inIsContract = FALSE THEN 0 ELSE SoldTable.ContractTagId      END
+                              , CASE WHEN inIsContract = FALSE THEN 0 ELSE SoldTable.ContractTagGroupId END
 
-                                , SoldTable.InfoMoneyId
-                                , SoldTable.BranchId
-                                , SoldTable.AccountId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.PersonalId           END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.UnitId_Personal      END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.BranchId_Personal    END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.PersonalTradeId      END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.UnitId_PersonalTrade END
 
-                                , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN SoldTable.TradeMarkId ELSE 0 END
-                                , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsId     ELSE 0 END
-                                , CASE WHEN inIsGoodsKind = TRUE THEN SoldTable.GoodsKindId ELSE 0 END
+                              , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN SoldTable.GoodsPlatformId     ELSE 0 END
+                              , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN SoldTable.TradeMarkId         ELSE 0 END
+                              , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN SoldTable.GoodsGroupAnalystId ELSE 0 END
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsGroupId     ELSE 0 END
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsGroupStatId ELSE 0 END
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsTagId       ELSE 0 END
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsId          ELSE 0 END
+                              , CASE WHEN inIsGoodsKind = TRUE THEN SoldTable.GoodsKindId      ELSE 0 END
+                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.MeasureId        ELSE 0 END
+
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.RegionId       END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.ProvinceId     END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.CityKindId     END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.CityId         END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.ProvinceCityId END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetKindId   END
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END
                         )
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -167,37 +201,37 @@ BEGIN
           , Object_Branch.ValueData     AS BranchName
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
-          , ObjectHistory_JuridicalDetails_View.OKPO
+          , '' :: TVarChar                   AS OKPO
 
           , Object_Retail.ValueData       AS RetailName
           , Object_RetailReport.ValueData AS RetailReportName
 
-          , View_Partner_Address.AreaName
-          , View_Partner_Address.PartnerTagName
+          , Object_Area.ValueData          AS AreaName
+          , Object_PartnerTag.ValueData    AS PartnerTagName
           , ObjectString_Address.ValueData AS Address
-          , View_Partner_Address.RegionName
-          , View_Partner_Address.ProvinceName
-          , View_Partner_Address.CityKindName
-          , View_Partner_Address.CityName
-          , View_Partner_Address.ProvinceCityName
-          , View_Partner_Address.StreetKindName
-          , View_Partner_Address.StreetName
+          , Object_Region.ValueData        AS RegionName
+          , Object_Province.ValueData      AS ProvinceName
+          , Object_CityKind.ValueData      AS CityKindName
+          , Object_City.ValueData          AS CityName
+          , Object_ProvinceCity.ValueData  AS ProvinceCityName
+          , Object_StreetKind.ValueData    AS StreetKindName
+          , Object_Street.ValueData        AS StreetName
 
-          , View_Partner_Address.PartnerId
-          , View_Partner_Address.PartnerCode
-          , View_Partner_Address.PartnerName
+          , Object_Partner.Id         AS PartnerId
+          , Object_Partner.ObjectCode AS PartnerCode
+          , Object_Partner.ValueData  AS PartnerName
 
-          , View_Contract_InvNumber.ContractCode
-          , View_Contract_InvNumber.InvNumber              AS ContractNumber
-          , View_Contract_InvNumber.ContractTagName
-          , View_Contract_InvNumber.ContractTagGroupName
+          , Object_Contract.ObjectCode        AS ContractCode
+          , Object_Contract.ValueData         AS ContractNumber
+          , Object_ContractTag.ValueData      AS ContractTagName
+          , Object_ContractTagGroup.ValueData AS ContractTagGroupName
 
-          , View_Personal.PersonalName       AS PersonalName
-          , View_Personal.UnitName           AS UnitName_Personal
+          , Object_Personal.ValueData        AS PersonalName
+          , Object_UnitPersonal.ValueData    AS UnitName_Personal
           , Object_BranchPersonal.ValueData  AS BranchName_Personal
 
-          , View_PersonalTrade.PersonalName  AS PersonalTradeName
-          , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
+          , Object_PersonalTrade.ValueData     AS PersonalTradeName
+          , Object_UnitPersonalTrade.ValueData AS UnitName_PersonalTrade
 
           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -205,7 +239,7 @@ BEGIN
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
-          , Object_Account_View.AccountName_all AS AccountName
+          , '' :: TVarChar AS AccountName
 
          , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
          , tmpOperationGroup.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
@@ -241,36 +275,30 @@ BEGIN
      FROM tmpOperationGroup
           -- LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
 
-          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
-          LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
+          LEFT JOIN Object AS Object_Branch    ON Object_Branch.Id    = tmpOperationGroup.BranchId
+          LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
 
+          LEFT JOIN Object AS Object_GoodsPlatform     ON Object_GoodsPlatform.Id     = tmpOperationGroup.GoodsPlatformId
+          LEFT JOIN Object AS Object_TradeMark         ON Object_TradeMark.Id         = tmpOperationGroup.TradeMarkId
+          LEFT JOIN Object AS Object_GoodsGroupStat    ON Object_GoodsGroupStat.Id    = tmpOperationGroup.GoodsGroupStatId
           LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = tmpOperationGroup.GoodsGroupAnalystId
-          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpOperationGroup.TradeMarkId
-
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpOperationGroup.MeasureId
-
-          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpOperationGroup.GoodsTagId
-          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = tmpOperationGroup.GoodsGroupStatId
+          LEFT JOIN Object AS Object_GoodsTag          ON Object_GoodsTag.Id          = tmpOperationGroup.GoodsTagId
+          LEFT JOIN Object AS Object_Measure           ON Object_Measure.Id           = tmpOperationGroup.MeasureId
 
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpOperationGroup.GoodsGroupId
-
-          LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = tmpOperationGroup.GoodsPlatformId
-
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
-
-          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
-
-          LEFT JOIN Object AS Object_Area ON Object_Area.Id = tmpOperationGroup.AreaId
-          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = tmpOperationGroup.PartnerTagId
-
+          LEFT JOIN Object AS Object_Partner   ON Object_Partner.Id   = tmpOperationGroup.PartnerId
           LEFT JOIN ObjectString AS ObjectString_Address
                                  ON ObjectString_Address.ObjectId = Object_Partner.Id
                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = tmpOperationGroup.AreaId
+          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = tmpOperationGroup.PartnerTagId
 
           LEFT JOIN Object AS Object_Region       ON Object_Region.Id       = tmpOperationGroup.RegionId
           LEFT JOIN Object AS Object_Province     ON Object_Province.Id     = tmpOperationGroup.ProvinceId
@@ -280,17 +308,21 @@ BEGIN
           LEFT JOIN Object AS Object_StreetKind   ON Object_StreetKind.Id   = tmpOperationGroup.StreetKindId
           LEFT JOIN Object AS Object_Street       ON Object_Street.Id       = tmpOperationGroup.StreetId
 
-
-          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpOperationGroup.RetailId
-          LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = tmpOperationGroup.RetailReportId
+          LEFT JOIN Object AS Object_Retail         ON Object_Retail.Id         = tmpOperationGroup.RetailId
+          LEFT JOIN Object AS Object_RetailReport   ON Object_RetailReport.Id   = tmpOperationGroup.RetailReportId
           LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = tmpOperationGroup.JuridicalGroupId
 
-          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpOperationGroup.ContractId
+          LEFT JOIN Object AS Object_Contract         ON Object_Contract.Id         = tmpOperationGroup.ContractId
+          LEFT JOIN Object AS Object_ContractTag      ON Object_ContractTag.Id      = tmpOperationGroup.ContractTagId
+          LEFT JOIN Object AS Object_ContractTagGroup ON Object_ContractTagGroup.Id = tmpOperationGroup.ContractTagGroupId
+
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
 
-          LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = tmpOperationGroup.PersonalId
-          LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = tmpOperationGroup.BranchId_Personal
-          LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = tmpOperationGroup.PersonalTradeId
+          LEFT JOIN Object AS Object_Personal          ON Object_Personal.Id          = tmpOperationGroup.PersonalId
+          LEFT JOIN Object AS Object_UnitPersonal      ON Object_UnitPersonal.Id      = tmpOperationGroup.UnitId_Personal
+          LEFT JOIN Object AS Object_BranchPersonal    ON Object_BranchPersonal.Id    = tmpOperationGroup.BranchId_Personal
+          LEFT JOIN Object AS Object_PersonalTrade     ON Object_PersonalTrade.Id     = tmpOperationGroup.PersonalTradeId
+          LEFT JOIN Object AS Object_UnitPersonalTrade ON Object_UnitPersonalTrade.Id = tmpOperationGroup.UnitId_PersonalTrade
     ;
 
 END;
@@ -300,17 +332,15 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 21.01.16         *
- 22.03.15                                        * add inIsGoodsKind
- 11.01.15                                        * all
- 12.12.14                                        * all
- 27.10.14                                        * add inIsPartner AND inIsGoods
- 13.09.14                                        * add GoodsTagName and GroupStatName and BranchName and JuridicalGroupName
- 11.07.14                                        * add RetailName and OKPO
- 06.05.14                                        * add GoodsGroupNameFull
- 28.03.14                                        * all
- 06.02.14         *
+ 13.02.16                                        *
 */
 
+/*
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, TradeMarkId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpPartner (PartnerId Integer, JuridicalId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpJuridicalBranch (JuridicalId Integer) ON COMMIT DROP;
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inSession:= zfCalc_UserAdmin());
+SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical:= FALSE, inIsCost:= TRUE, inSession:= zfCalc_UserAdmin());
+*/
+
