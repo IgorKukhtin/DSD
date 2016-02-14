@@ -383,7 +383,8 @@ uses
   GoodsGroup in '..\..\FormsFarmacy\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
   GoodsGroupEdit in '..\..\FormsFarmacy\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
   GoodsGroup_Object in '..\..\FormsFarmacy\Guides\GoodsGroup_Object.pas' {GoodsGroup_ObjectForm: TParentForm},
-  Report_LiquidDialog in '..\..\FormsFarmacy\Report\Report_LiquidDialog.pas' {Report_LiquidDialogForm: TParentForm};
+  Report_LiquidDialog in '..\..\FormsFarmacy\Report\Report_LiquidDialog.pas' {Report_LiquidDialogForm: TParentForm},
+  Report_Wage in '..\..\FormsFarmacy\Report\Report_Wage.pas' {Report_WageForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

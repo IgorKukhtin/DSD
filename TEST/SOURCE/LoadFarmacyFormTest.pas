@@ -389,6 +389,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
 end;
 
 

@@ -133,6 +133,10 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 92
       end
+      object colTaxService: TcxGridDBColumn
+        Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
+        DataBinding.FieldName = 'TaxService'
+      end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

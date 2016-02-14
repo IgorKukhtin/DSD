@@ -53,13 +53,19 @@ object PositionForm: TPositionForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 89
+        Width = 82
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 302
+        Width = 280
+      end
+      object colTaxService: TcxGridDBColumn
+        Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
+        DataBinding.FieldName = 'TaxService'
+        HeaderAlignmentVert = vaCenter
+        Width = 57
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -67,7 +73,7 @@ object PositionForm: TPositionForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 72
       end
     end
     object cxGridLevel: TcxGridLevel

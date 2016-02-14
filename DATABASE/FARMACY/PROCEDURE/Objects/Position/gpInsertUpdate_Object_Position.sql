@@ -1,11 +1,14 @@
 -- Function: gpInsertUpdate_Object_Position()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position(Integer,Integer,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position(Integer, Integer, TFloat, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Position(
  INOUT ioId	             Integer   ,    -- ключ объекта <Должности> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <
+    IN inTaxService          TFloat    ,    -- % от выручки
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -33,18 +36,22 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Position(), vbCode_calc, inName);
 
+   -- % бонусирования
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Position_TaxService(), ioId, inTaxService);
+   
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Position(Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.02.16         * add inTaxService
  21.01.16         *
 */
 

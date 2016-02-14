@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 201
-  ClientWidth = 477
+  ClientHeight = 202
+  ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -107,9 +107,21 @@
     TabOrder = 11
     Width = 209
   end
+  object cxLabel4: TcxLabel
+    Left = 255
+    Top = 98
+    Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
+  end
+  object ceTaxService: TcxCurrencyEdit
+    Left = 255
+    Top = 121
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 13
+    Width = 209
+  end
   object ActionList: TActionList
-    Left = 320
-    Top = 112
+    Left = 224
+    Top = 144
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -170,6 +182,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inTaxService'
+        Value = Null
+        Component = ceTaxService
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inParentId'
         Value = ''
         Component = ParentGuides
@@ -191,8 +210,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 432
-    Top = 112
+    Left = 416
+    Top = 152
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -201,8 +220,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 376
-    Top = 112
+    Left = 264
+    Top = 144
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -265,10 +284,16 @@
         Component = MarginCategoryGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'TaxService'
+        Value = Null
+        Component = ceTaxService
+        DataType = ftFloat
       end>
     PackSize = 1
-    Left = 256
-    Top = 112
+    Left = 192
+    Top = 144
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'

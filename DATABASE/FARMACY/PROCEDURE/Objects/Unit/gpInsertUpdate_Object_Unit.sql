@@ -2,11 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
     IN inName                    TVarChar  ,    -- Название объекта <Подразделение>
+    IN inTaxService              TFloat    ,    -- % от выручки
     IN inParentId                Integer   ,    -- ссылка на подразделение
     IN inJuridicalId             Integer   ,    -- ссылка на Юридические лицо
     IN inMarginCategoryId        Integer   ,    -- ссылка на категорию наценок
@@ -52,6 +55,9 @@ BEGIN
    -- сохранили связь с <Категория наценок>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_MarginCategory(), ioId, inMarginCategoryId);
 
+   -- % бонусирования
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_TaxService(), ioId, inTaxService);
+
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
       -- Установить свойство лист\папка у себя
@@ -72,13 +78,14 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, tvarchar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.02.16         * 
  27.06.14         * 
  25.06.13                          *
 

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1083#1078#1085#1086#1089#1090#1100'>'
-  ClientHeight = 160
+  ClientHeight = 171
   ClientWidth = 370
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 120
+    Left = 59
+    Top = 128
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 120
+    Left = 203
+    Top = 128
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -59,11 +59,23 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 121
+  end
+  object cxLabel4: TcxLabel
+    Left = 168
+    Top = 19
+    Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
+  end
+  object ceTaxService: TcxCurrencyEdit
+    Left = 168
+    Top = 42
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 7
+    Width = 137
   end
   object ActionList: TActionList
-    Left = 304
-    Top = 104
+    Left = 299
+    Top = 112
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -118,6 +130,13 @@
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inTaxService'
+        Value = Null
+        Component = ceTaxService
+        DataType = ftFloat
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 320
@@ -130,8 +149,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 144
-    Top = 104
+    Left = 139
+    Top = 112
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Position'
@@ -155,10 +174,16 @@
         Value = ''
         Component = edMeasureName
         DataType = ftString
+      end
+      item
+        Name = 'TaxService'
+        Value = Null
+        Component = ceTaxService
+        DataType = ftFloat
       end>
     PackSize = 1
-    Left = 176
-    Top = 112
+    Left = 171
+    Top = 120
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -176,6 +201,7 @@
     Top = 80
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 168
+    Left = 264
+    Top = 8
   end
 end

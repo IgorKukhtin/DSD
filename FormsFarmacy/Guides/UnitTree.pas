@@ -11,7 +11,8 @@ uses
   ParentForm, cxTL, cxMaskEdit, cxTLdxBarBuiltInMenu, cxImageComboBox,
   cxCheckBox, dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar,
   cxPropertiesStore, Datasnap.DBClient, cxGrid, cxSplitter, cxInplaceContainer,
-  cxDBTL, cxTLData;
+  cxDBTL, cxTLData, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TUnitTreeForm = class(TParentForm)
@@ -54,6 +55,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     bbUnitChoiceForm: TdxBarButton;
     dsdOpenUnitForm: TdsdOpenForm;
+    colTaxService: TcxGridDBColumn;
   private
     { Private declarations }
   public
