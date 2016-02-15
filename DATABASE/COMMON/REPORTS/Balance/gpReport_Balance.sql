@@ -14,6 +14,7 @@ RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar
              , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , BusinessCode Integer, BusinessName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
+             , AmountActiveStart TFloat, AmountPassiveStart TFloat, AmountActiveEnd TFloat, AmountPassiveEnd TFloat
              , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
               )
 AS
@@ -124,11 +125,28 @@ BEGIN
            , Object_Business.ValueData        AS BusinessName
 
            , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart > 0 THEN tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountDebetStart
-           , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart < 0 THEN -tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
+           , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart < 0 THEN -1 * tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
            , CAST (tmpReportOperation.AmountDebet AS TFloat) AS AmountDebet
            , CAST (tmpReportOperation.AmountKredit AS TFloat) AS AmountKredit
            , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd > 0 THEN tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountDebetEnd
-           , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd < 0 THEN -tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
+           , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd < 0 THEN -1 * tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
+
+           , CAST (CASE WHEN COALESCE (Object_Account_View.AccountKindId, 0) IN (0, zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_All())
+                             THEN tmpReportOperation.AmountRemainsStart
+                        ELSE 0
+                   END AS TFloat) AS AmountActiveStart
+           , CAST (CASE WHEN Object_Account_View.AccountKindId = zc_Enum_AccountKind_Passive()
+                             THEN -1 * tmpReportOperation.AmountRemainsStart
+                        ELSE 0
+                   END AS TFloat) AS AmountPassiveStart
+           , CAST (CASE WHEN COALESCE (Object_Account_View.AccountKindId, 0) IN (0, zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_All())
+                             THEN tmpReportOperation.AmountRemainsEnd
+                        ELSE 0
+                   END AS TFloat) AS AmountActiveEnd
+           , CAST (CASE WHEN Object_Account_View.AccountKindId = zc_Enum_AccountKind_Passive()
+                             THEN -1 * tmpReportOperation.AmountRemainsEnd
+                        ELSE 0
+                   END AS TFloat) AS AmountPassiveEnd
 
            , CAST (tmpReportOperation.CountRemainsStart AS TFloat) AS CountStart
            , CAST (tmpReportOperation.CountDebet AS TFloat) AS CountDebet
@@ -307,4 +325,4 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpReport_Balance (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inSession:= '2')
+-- SELECT * FROM gpReport_Balance (inStartDate:= '01.07.2016', inEndDate:= '31.07.2016', inSession:= zfCalc_UserAdmin())

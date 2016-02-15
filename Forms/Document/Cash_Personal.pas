@@ -76,6 +76,8 @@ type
     SummSocialIn: TcxGridDBColumn;
     SummSocialAdd: TcxGridDBColumn;
     SummChild: TcxGridDBColumn;
+    SummTransport: TcxGridDBColumn;
+    SummPhone: TcxGridDBColumn;
   private
     { Private declarations }
   public

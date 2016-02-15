@@ -21,22 +21,23 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnInUnitNEW (
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
-             , TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, GoodsGroupStatName TVarChar
+             , TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar/*, GoodsGroupStatName TVarChar*/
              , GoodsPlatformName TVarChar
              , JuridicalGroupName TVarChar
              , BranchCode Integer, BranchName TVarChar
-             , JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
-             , RetailName TVarChar, RetailReportName TVarChar
+             , JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
+             , RetailName TVarChar/*, RetailReportName TVarChar*/
              , AreaName TVarChar, PartnerTagName TVarChar
-             , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
+             , Address TVarChar/*, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
+             /*, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
-             , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
+             , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar*/
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , AccountName TVarChar
-             , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
-             , Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
+
+             , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
+             , Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
+             , Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
              , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
@@ -59,13 +60,6 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
-/*
-    -- !!!т.к. нельз€ когда много данных в гриде!!!
-    IF inStartDate + (INTERVAL '62 DAY') <= inEndDate AND inIsPartner = TRUE AND inIsGoods = TRUE
-    THEN
-        inStartDate:= inEndDate + (INTERVAL '1 DAY');
-    END IF;
-*/
 
 
     vbIsJuridicalBranch:= COALESCE (inBranchId, 0) = 0;
@@ -277,7 +271,8 @@ BEGIN
     RETURN QUERY
 
     -- собираем все данные
-    WITH tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
+    WITH tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()) -- !!!ƒоходы!!!)
+       , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
                          FROM Constant_ProfitLoss_AnalyzerId_View
                          WHERE isCost = FALSE OR (isCost = TRUE AND vbIsCost = TRUE)
                         ) 
@@ -746,7 +741,6 @@ BEGIN
                               , 0                                            AS BranchId
                               , COALESCE (ContainerLO_Juridical.ObjectId, 0) AS JuridicalId
                               , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
-                              , 0 AS ChildAccountId -- MIContainer.AccountId
 
                               , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     AND tmpAccount.AccountGroupId IS NULL THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
                               , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() AND tmpAccount.AccountGroupId IS NULL THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_AmountPartner
@@ -822,12 +816,11 @@ BEGIN
                         )
 
  , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner = TRUE THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
-                              , CASE WHEN inIsPartner = TRUE THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END AS ContractId
+                              , 0 AS ContractId -- CASE WHEN inIsPartner = TRUE THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END AS ContractId
                               , CASE WHEN inIsPartner = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END AS PartnerId
 
                               , tmpOperationGroup2.InfoMoneyId
                               , tmpOperationGroup2.BranchId
-                              , tmpOperationGroup2.ChildAccountId
 
                               , _tmpGoods.TradeMarkId
                               , CASE WHEN inIsGoods = TRUE     THEN tmpOperationGroup2.GoodsId     ELSE 0 END AS GoodsId
@@ -865,9 +858,9 @@ BEGIN
                               , SUM (tmpOperationGroup2.Return_SummCost_40200) AS Return_SummCost_40200
 
                          FROM tmpOperationGroup2
-                              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
+                              /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
                                                             ON ContainerLinkObject_Contract.ContainerId = tmpOperationGroup2.ContainerId_Analyzer
-                                                           AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
+                                                           AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()*/
 
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                    ON ObjectLink_Goods_Measure.ObjectId = tmpOperationGroup2.GoodsId
@@ -883,11 +876,10 @@ BEGIN
                          WHERE (_tmpPartner.PartnerId > 0 OR vbIsPartner = FALSE)
                            AND (_tmpGoods.GoodsId > 0 OR vbIsGoods = FALSE)
                          GROUP BY CASE WHEN inIsPartner = TRUE THEN tmpOperationGroup2.JuridicalId ELSE 0 END
-                                , CASE WHEN inIsPartner = TRUE THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END
+                                -- , CASE WHEN inIsPartner = TRUE THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END
                                 , CASE WHEN inIsPartner = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END
                                 , tmpOperationGroup2.InfoMoneyId
                                 , tmpOperationGroup2.BranchId
-                                , tmpOperationGroup2.ChildAccountId
                                 , _tmpGoods.TradeMarkId
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END    
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
@@ -902,7 +894,7 @@ BEGIN
           , Object_TradeMark.ValueData         AS TradeMarkName
           , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
           , Object_GoodsTag.ValueData          AS GoodsTagName
-          , Object_GoodsGroupStat.ValueData    AS GoodsGroupStatName
+          /*, Object_GoodsGroupStat.ValueData    AS GoodsGroupStatName*/
           , Object_GoodsPlatform.ValueData     AS GoodsPlatformName
 
           , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
@@ -910,27 +902,26 @@ BEGIN
           , Object_Branch.ValueData     AS BranchName
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
-          , ObjectHistory_JuridicalDetails_View.OKPO
 
           , Object_Retail.ValueData       AS RetailName
-          , Object_RetailReport.ValueData AS RetailReportName
+          /*, Object_RetailReport.ValueData AS RetailReportName*/
 
           , View_Partner_Address.AreaName
           , View_Partner_Address.PartnerTagName
           , ObjectString_Address.ValueData AS Address
-          , View_Partner_Address.RegionName
+          /*, View_Partner_Address.RegionName
           , View_Partner_Address.ProvinceName
           , View_Partner_Address.CityKindName
           , View_Partner_Address.CityName
           , View_Partner_Address.ProvinceCityName
           , View_Partner_Address.StreetKindName
-          , View_Partner_Address.StreetName
+          , View_Partner_Address.StreetName*/
 
           , View_Partner_Address.PartnerId
           , View_Partner_Address.PartnerCode
           , View_Partner_Address.PartnerName
 
-          , View_Contract_InvNumber.ContractCode
+          /*, View_Contract_InvNumber.ContractCode
           , View_Contract_InvNumber.InvNumber              AS ContractNumber
           , View_Contract_InvNumber.ContractTagName
           , View_Contract_InvNumber.ContractTagGroupName
@@ -940,15 +931,13 @@ BEGIN
           , Object_BranchPersonal.ValueData  AS BranchName_Personal
 
           , View_PersonalTrade.PersonalName  AS PersonalTradeName
-          , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
+          , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade*/
 
           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
-
-          , Object_Account_View.AccountName_all AS AccountName
 
          , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
          , tmpOperationGroup.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
@@ -982,8 +971,6 @@ BEGIN
          , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
 
      FROM tmpOperationGroup
-          LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
-
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
@@ -1008,10 +995,10 @@ BEGIN
                               AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
           LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+          /*LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
-          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId*/
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -1029,33 +1016,32 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-          LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+          LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpOperationGroup.PartnerId
           LEFT JOIN ObjectString AS ObjectString_Address
-                                 ON ObjectString_Address.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+                                 ON ObjectString_Address.ObjectId = tmpOperationGroup.PartnerId
                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
-          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+          /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
                                ON ObjectLink_Juridical_RetailReport.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
-          LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
+          LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId*/
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
           LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
-          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
-          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpOperationGroup.ContractId
-          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
+          -- LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpOperationGroup.ContractId
+          LEFT JOIN tmpInfoMoney AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                               ON ObjectLink_Partner_Personal.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+          /*LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                               ON ObjectLink_Partner_Personal.ObjectId = tmpOperationGroup.PartnerId
                               AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
           LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -1064,11 +1050,10 @@ BEGIN
           LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                               ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+                               ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpOperationGroup.PartnerId
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-          LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+          LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId*/
 
-          LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpOperationGroup.ChildAccountId
       UNION ALL
 
      SELECT tmpSendOnPrice_group.GoodsGroupName
@@ -1080,7 +1065,7 @@ BEGIN
           , tmpSendOnPrice_group.TradeMarkName
           , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
           , Object_GoodsTag.ValueData          AS GoodsTagName
-          , Object_GoodsGroupStat.ValueData    AS GoodsGroupStatName
+          /*, Object_GoodsGroupStat.ValueData    AS GoodsGroupStatName*/
           , Object_GoodsPlatform.ValueData     AS GoodsPlatformName
 
           , '' :: TVarChar AS JuridicalGroupName
@@ -1088,27 +1073,26 @@ BEGIN
           , Object_Branch.ValueData     AS BranchName
           , Object_Unit_Parent.ObjectCode    AS JuridicalCode
           , Object_Unit_Parent.ValueData     AS JuridicalName
-          , '' :: TVarChar AS OKPO
 
           , '' :: TVarChar AS RetailName
-          , '' :: TVarChar AS RetailReportName
+          /*, '' :: TVarChar AS RetailReportName*/
 
           , Object_Area.ValueData :: TVarChar AS AreaName
           , '' :: TVarChar AS PartnerTagName
           , '' :: TVarChar AS Address
-          , '' :: TVarChar AS RegionName
+          /*, '' :: TVarChar AS RegionName
           , '' :: TVarChar AS ProvinceName
           , '' :: TVarChar AS CityKindName
           , '' :: TVarChar AS CityName
           , '' :: TVarChar AS ProvinceCityName
           , '' :: TVarChar AS StreetKindName
-          , '' :: TVarChar AS StreetName
+          , '' :: TVarChar AS StreetName*/
 
           , tmpSendOnPrice_group.LocationId_by   :: Integer  AS PartnerId
           , tmpSendOnPrice_group.LocationCode_by :: Integer  AS PartnerCode
           , tmpSendOnPrice_group.LocationName_by :: TVarChar AS PartnerName
 
-          , 0 :: Integer   ContractCode
+          /*, 0 :: Integer   ContractCode
           , '' :: TVarChar AS ContractNumber
           , '' :: TVarChar ContractTagName
           , '' :: TVarChar ContractTagGroupName
@@ -1118,15 +1102,13 @@ BEGIN
           , '' :: TVarChar AS BranchName_Personal
 
           , '' :: TVarChar AS PersonalTradeName
-          , '' :: TVarChar AS UnitName_PersonalTrade
+          , '' :: TVarChar AS UnitName_PersonalTrade*/
 
           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
-
-          , '' :: TVarChar AS AccountName
 
          , tmpSendOnPrice_group.Sale_Summ          :: TFloat  AS Sale_Summ
          , tmpSendOnPrice_group.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
@@ -1170,10 +1152,10 @@ BEGIN
                               AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
           LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+          /*LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpSendOnPrice_group.GoodsId
                               AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
-          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId*/
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
                                ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmpSendOnPrice_group.GoodsId

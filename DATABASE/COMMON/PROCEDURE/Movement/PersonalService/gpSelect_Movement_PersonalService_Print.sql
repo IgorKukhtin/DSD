@@ -53,6 +53,9 @@ BEGIN
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummCash
+           , MovementFloat_TotalSummTransportAdd.ValueData AS TotalSummTransportAdd
+           , MovementFloat_TotalSummTransport.ValueData    AS TotalSummTransport
+           , MovementFloat_TotalSummPhone.ValueData        AS TotalSummPhone
 
        FROM Movement
             LEFT JOIN MovementDate AS MovementDate_ServiceDate
@@ -109,6 +112,15 @@ BEGIN
                                     ON MovementFloat_TotalSummChild.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportAdd
+                                    ON MovementFloat_TotalSummTransportAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummTransportAdd.DescId = zc_MovementFloat_TotalSummTransportAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransport
+                                    ON MovementFloat_TotalSummTransport.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummTransport.DescId = zc_MovementFloat_TotalSummTransport()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPhone
+                                    ON MovementFloat_TotalSummPhone.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPhone.DescId = zc_MovementFloat_TotalSummPhone()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -212,6 +224,10 @@ BEGIN
 --            , MIFloat_SummSocialAdd.ValueData  AS SummSocialAdd
 --            , MIFloat_SummChild.ValueData      AS SummChild
 
+            , MIFloat_SummTransportAdd.ValueData AS SummTransportAdd
+            , MIFloat_SummTransport.ValueData    AS SummTransport
+            , MIFloat_SummPhone.ValueData        AS SummPhone
+
             , MIString_Comment.ValueData       AS Comment
          
        FROM tmpAll 
@@ -235,6 +251,16 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
+                                        ON MIFloat_SummTransportAdd.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
+                                        ON MIFloat_SummTransport.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
+                                        ON MIFloat_SummPhone.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
 
           /*  LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                         ON MIFloat_SummSocialIn.MovementItemId = tmpAll.MovementItemId

@@ -24,7 +24,7 @@ BEGIN
                        , AreaId, PartnerTagId
                        , ContractId, ContractTagId, ContractTagGroupId
                        , PersonalId, UnitId_Personal, BranchId_Personal, PersonalTradeId, UnitId_PersonalTrade
-                       , GoodsPlatformId, TradeMarkId, GoodsGroupAnalystId, GoodsTagId, GoodsGroupId, GoodsGroupStatId, GoodsId, GoodsKindId, MeasureId
+                       , BusinessId, GoodsPlatformId, TradeMarkId, GoodsGroupAnalystId, GoodsTagId, GoodsGroupId, GoodsGroupStatId, GoodsId, GoodsKindId, MeasureId
                        , RegionId, ProvinceId, CityKindId, CityId, ProvinceCityId, StreetKindId, StreetId
 
                        , Actions_Weight, Actions_Sh, Actions_SummCost, Actions_Summ
@@ -84,17 +84,16 @@ BEGIN
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               INNER JOIN ContainerLinkObject AS CLO_Juridical
-                                                             ON CLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
+                                                             ON CLO_Juridical.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                               INNER JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                             ON CLO_InfoMoney.ContainerId = MIContainer.ContainerId_Analyzer
+                                                             ON CLO_InfoMoney.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                            AND CLO_InfoMoney.ObjectId = zc_Enum_InfoMoney_30101() -- !!Готовая продукция!!!
                               INNER JOIN ContainerLinkObject AS CLO_PaidKind
-                                                             ON CLO_PaidKind.ContainerId = MIContainer.ContainerId_Analyzer
+                                                             ON CLO_PaidKind.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                               LEFT JOIN ContainerLinkObject AS CLO_Contract
-                                                            ON CLO_Contract.ContainerId = MIContainer.ContainerId_Analyzer
+                                                            ON CLO_Contract.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
 
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
@@ -141,8 +140,8 @@ BEGIN
                                                   AND Container.ObjectId = zc_Enum_Account_50401() -- !!!Расходы будущих периодов + Услуги по маркетингу!!!
 
                               LEFT JOIN ContainerLinkObject AS CLO_Juridical ON CLO_Juridical.ContainerId = Container.Id AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                              LEFT JOIN ContainerLinkObject AS CLO_PaidKind ON CLO_PaidKind.ContainerId = Container.Id AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                              LEFT JOIN ContainerLinkObject AS CLO_Contract ON CLO_Contract.ContainerId = Container.Id AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                              LEFT JOIN ContainerLinkObject AS CLO_PaidKind  ON CLO_PaidKind.ContainerId  = Container.Id AND CLO_PaidKind.DescId  = zc_ContainerLinkObject_PaidKind()
+                              LEFT JOIN ContainerLinkObject AS CLO_Contract  ON CLO_Contract.ContainerId  = Container.Id AND CLO_Contract.DescId  = zc_ContainerLinkObject_Contract()
                               LEFT JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
 
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
@@ -240,6 +239,14 @@ BEGIN
                  , 0 AS BonusBasis
                  , 0 AS Bonus
             FROM tmpOperation_SaleReturn
+                 INNER JOIN ObjectLink AS ObjectLink_InfoMoneyDestination
+                                       ON ObjectLink_InfoMoneyDestination.ObjectId = tmpOperation_SaleReturn.InfoMoneyId
+                                      AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+                                      AND ObjectLink_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100() -- !!!Доходы + Продукция!!!
+                                                                                          , zc_Enum_InfoMoneyDestination_30200() -- !!!Доходы + Мясное сырье!!!
+                                                                                          , zc_Enum_InfoMoneyDestination_30300() -- !!!Доходы + Переработка!!!
+                                                                                          , zc_Enum_InfoMoneyDestination_30500() -- !!!Доходы + Прочие доходы!!!
+                                                                                           )
            UNION ALL
             SELECT tmpBonus.OperDate
 
@@ -367,6 +374,7 @@ BEGIN
            , ObjectLink_Partner_PersonalTrade.ChildObjectId        AS PersonalTradeId
            , ObjectLink_PersonalTrade_Unit.ChildObjectId           AS UnitId_PersonalTrade
 
+           , ObjectLink_Goods_Business.ChildObjectId               AS BusinessId
            , ObjectLink_Goods_GoodsPlatform.ChildObjectId          AS GoodsPlatformId
            , ObjectLink_Goods_TradeMark.ChildObjectId              AS TradeMarkId
            , ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId      AS GoodsGroupAnalystId
@@ -501,6 +509,9 @@ BEGIN
 
            LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                                ON ObjectLink_Goods_Business.ObjectId = tmpResult.GoodsId
+                               AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
                                 ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmpResult.GoodsId
                                AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
@@ -576,7 +587,7 @@ BEGIN
            , ObjectLink_ContractTag_ContractTagGroup.ChildObjectId AS ContractTagGroupId
 
            , 0 AS PersonalId, 0 AS UnitId_Personal, 0 AS BranchId_Personal, 0 AS PersonalTradeId, 0 AS UnitId_PersonalTrade
-           , 0 AS GoodsPlatformId, 0 AS TradeMarkId, 0 AS GoodsGroupAnalystId, 0 AS GoodsTagId, 0 AS GoodsGroupId, 0 AS GoodsGroupStatId, 0 AS GoodsId, 0 AS GoodsKindId, 0 AS MeasureId
+           , 0 AS BusinessId, 0 AS GoodsPlatformId, 0 AS TradeMarkId, 0 AS GoodsGroupAnalystId, 0 AS GoodsTagId, 0 AS GoodsGroupId, 0 AS GoodsGroupStatId, 0 AS GoodsId, 0 AS GoodsKindId, 0 AS MeasureId
            , 0 AS RegionId, 0 AS ProvinceId, 0 AS CityKindId, 0 AS CityId, 0 AS ProvinceCityId, 0 AS StreetKindId, 0 AS StreetId
 
            , 0 AS Actions_Weight, 0 AS Actions_Sh, 0 AS Actions_SummCost, 0 AS Actions_Summ
@@ -598,7 +609,13 @@ BEGIN
         JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                       AND Container.DescId = zc_Container_Summ()
         INNER JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                       AND CLO_InfoMoney.ObjectId = zc_Enum_InfoMoney_30101() -- !!Готовая продукция!!!
+        INNER JOIN ObjectLink AS ObjectLink_InfoMoneyDestination
+                              ON ObjectLink_InfoMoneyDestination.ObjectId = CLO_InfoMoney.ObjectId
+                             AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+                             AND ObjectLink_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100() -- !!!Доходы + Продукция!!!
+                                                                                 , zc_Enum_InfoMoneyDestination_30200() -- !!!Доходы + Мясное сырье!!!
+                                                                                 , zc_Enum_InfoMoneyDestination_30300() -- !!!Доходы + Переработка!!!
+                                                                                  )
 
         LEFT JOIN ContainerLinkObject AS CLO_Juridical ON CLO_Juridical.ContainerId = Container.Id AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
         LEFT JOIN ContainerLinkObject AS CLO_PaidKind ON CLO_PaidKind.ContainerId = Container.Id AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()

@@ -421,8 +421,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 175
         Align = alClient
         TabOrder = 2
-        ExplicitTop = 148
-        ExplicitHeight = 132
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -448,10 +446,6 @@ object IncomeFuelForm: TIncomeFuelForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSumm
-            end
-            item
-              Kind = skSum
-              Column = colPrice
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -804,7 +798,6 @@ object IncomeFuelForm: TIncomeFuelForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitTop = 140
       end
     end
   end

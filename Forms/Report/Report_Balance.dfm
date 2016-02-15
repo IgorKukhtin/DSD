@@ -151,10 +151,10 @@ object Report_BalanceForm: TReport_BalanceForm
       Area = faData
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1044#1077#1073#1077#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
+      Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountDebetStart'
       PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DisplayFormat = ',0.00'
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       Visible = True
       UniqueName = 'AmountDebetStart'
@@ -163,61 +163,109 @@ object Report_BalanceForm: TReport_BalanceForm
       Area = faData
       AreaIndex = 1
       IsCaptionAssigned = True
-      Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
+      Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountKreditStart'
       PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DisplayFormat = ',0.00'
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       Visible = True
       UniqueName = 'AmountKreditStart'
     end
-    object pvAmountDebet: TcxDBPivotGridField
+    object pvAmountActiveStart: TcxDBPivotGridField
       Area = faData
       AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+      DataBinding.FieldName = 'AmountActiveStart'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountPassiveStart: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1055#1072#1089#1089#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+      DataBinding.FieldName = 'AmountPassiveStart'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      UniqueName = #1055#1072#1089#1089#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountDebet: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
       DataBinding.FieldName = 'AmountDebet'
       PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DisplayFormat = ',0.00'
-      Styles.ColumnHeader = dmMain.cxHeaderStyle
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+      Styles.ColumnHeader = dmMain.cxSelection
       Visible = True
       UniqueName = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
     end
     object pvAmountKredit: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 3
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
       DataBinding.FieldName = 'AmountKredit'
       PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DisplayFormat = ',0.00'
-      Styles.ColumnHeader = dmMain.cxHeaderStyle
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+      Styles.ColumnHeader = dmMain.cxSelection
       Visible = True
       UniqueName = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
     end
     object pvAmountDebetEnd: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 4
+      AreaIndex = 8
       IsCaptionAssigned = True
-      Caption = #1044#1077#1073#1077#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
+      Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountDebetEnd'
       PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DisplayFormat = ',0.00'
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       Visible = True
       UniqueName = 'AmountDebetEnd'
     end
     object pvAmountKreditEnd: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 5
+      AreaIndex = 9
       IsCaptionAssigned = True
-      Caption = #1050#1088#1077#1076#1080#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
+      Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountKreditEnd'
       PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DisplayFormat = ',0.00'
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       Visible = True
       UniqueName = 'AmountKreditEnd'
+    end
+    object pvAmountActiveEnd: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 6
+      IsCaptionAssigned = True
+      Caption = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1082#1086#1085#1077#1094
+      DataBinding.FieldName = 'AmountActiveEnd'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1082#1086#1085#1077#1094
+    end
+    object pvAmountPassiveEnd: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 7
+      IsCaptionAssigned = True
+      Caption = #1055#1072#1089#1089#1080#1074#1099' '#1085#1072' '#1082#1086#1085#1077#1094
+      DataBinding.FieldName = 'AmountPassiveEnd'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      UniqueName = #1055#1072#1089#1089#1080#1074#1099' '#1085#1072' '#1082#1086#1085#1077#1094
     end
   end
   object DataSource: TDataSource

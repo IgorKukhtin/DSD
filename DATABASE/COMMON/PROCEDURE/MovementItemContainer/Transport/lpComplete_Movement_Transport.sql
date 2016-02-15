@@ -393,7 +393,7 @@ BEGIN
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, tmpProfitLoss.MovementItemId
             , tmpProfitLoss.ContainerId_ProfitLoss
             , zc_Enum_Account_100301()                AS AccountId              -- прибыль текущего периода
-            , 0                                       AS AnalyzerId             -- в ќѕи” не нужена аналитика, т.к. большинство отчетов строитс€ на AnalyzerId <> 0
+            , 0                                       AS AnalyzerId             -- в ќѕи” как правило не нужена аналитика, т.к. большинство отчетов строитс€ на AnalyzerId <> 0
             , _tmpItem_Transport.GoodsId              AS ObjectId_Analyzer      -- “овар
             , vbCarId                                 AS WhereObjectId_Analyzer -- јвтомобиль
             , 0                                       AS ContainerId_Analyzer   -- в ќѕи” не нужен
