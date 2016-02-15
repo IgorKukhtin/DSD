@@ -15,6 +15,7 @@ RETURNS TABLE (
   PositionName        TVarChar,
 
   TaxService          TFloat,
+  TaxServicePosition  TFloat,
   TaxServicePersonal  TFloat,
   SummaSale           TFloat,
   SummaWage           TFloat
@@ -23,7 +24,6 @@ RETURNS TABLE (
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbTaxService TFloat;
    DECLARE vbTmpDate TDateTime;
 BEGIN
 
@@ -56,8 +56,6 @@ BEGIN
                                         AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService() 
                WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
                  AND (ObjectLink_Unit_Parent.ObjectId = inUnitId  OR ObjectLink_Unit_Parent.ChildObjectId = inUnitId )
-            
-                 
                )
                
  , tmpPosition AS (SELECT ObjectFloat_TaxService.ObjectId    AS PositionId
@@ -83,7 +81,34 @@ BEGIN
  
                   WHERE Object_Position.ValueData Like '%Менеджер%'
                   ) 
-
+ , tmpMovementCheck AS (SELECT date_trunc('day', Movement_Check.OperDate) ::TDateTime       AS OperDate
+                             , SUM(-MIContainer.Amount*MIFloat_Price.ValueData)::TFloat     AS SummaSale
+                             , MovementLinkObject_Unit.ObjectId                             AS UnitId  
+                        FROM Movement AS Movement_Check
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                         ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                        --AND MovementLinkObject_Unit.ObjectId = inUnitId+
+                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                           
+                           INNER JOIN MovementItem AS MI_Check
+                                    ON MI_Check.MovementId = Movement_Check.Id
+                                   AND MI_Check.DescId = zc_MI_Master()
+                                   AND MI_Check.isErased = FALSE
+                           LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = MI_Check.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                           LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                  ON MIContainer.MovementItemId = MI_Check.Id
+                                                 AND MIContainer.DescId = zc_MIContainer_Count() 
+     
+                        WHERE Movement_Check.DescId = zc_Movement_Check()
+                          AND date_trunc('day', Movement_Check.OperDate) between inDateStart AND inDateEnd
+                          AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                        GROUP BY date_trunc('day', Movement_Check.OperDate) , MovementLinkObject_Unit.ObjectId  
+                        HAVING SUM(MI_Check.Amount) <> 0 
+                       )
+                       
  , tmpListPersonal AS (
                    SELECT date_trunc('day',Movement.OperDate) AS OperDate
                         , tmpUnit.UnitId
@@ -102,22 +127,26 @@ BEGIN
                       LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
                                                        ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                                       AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-                
-                  WHERE Movement.DescId = zc_Movement_SheetWorkTime()
-                    AND date_trunc('day',Movement.OperDate) between inDateStart AND inDateEnd
-                    AND COALESCE(MI_SheetWorkTime.Amount,0)>0
-                  GROUP BY date_trunc('day',Movement.OperDate)
+                      INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                        ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
+                                                       AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+                                                       AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Work()
+                                                                               
+                   WHERE Movement.DescId = zc_Movement_SheetWorkTime()
+                     AND date_trunc('day',Movement.OperDate) between inDateStart AND inDateEnd
+                     AND COALESCE(MI_SheetWorkTime.Amount,0)>0
+                   GROUP BY date_trunc('day',Movement.OperDate)
                         , MI_SheetWorkTime.ObjectId 
                         , MIObject_Position.ObjectId 
                         , tmpUnit.UnitId
           
-               UNION
-                  SELECT tmpListDate.OperDate
-                       , tmpmanager.UnitId
-                       , tmpmanager.PersonalId
-                       , tmpmanager.PositionId
-                  FROM tmpListDate , tmpmanager 
-                       )
+                UNION
+                   SELECT tmpListDate.OperDate
+                        , tmpmanager.UnitId
+                        , tmpmanager.PersonalId
+                        , tmpmanager.PositionId
+                   FROM tmpListDate, tmpmanager 
+                      )
                        
    --% выплат должностей
  , tmpList1 AS (SELECT DISTINCT tmpListPersonal.OperDate
@@ -194,36 +223,8 @@ BEGIN
                           LEFT JOIN tmplist4 ON tmplist4.OperDate = tmpListPersonal.OperDate
                                             AND tmplist4.UnitId   = tmpListPersonal.UnitId 
                                             AND tmplist4.PositionId   = tmpListPersonal.PositionId  
-                                                 
                    )
                    
- , tmpMovementCheck AS (SELECT date_trunc('day', Movement_Check.OperDate) ::TDateTime       AS OperDate
-                             , SUM(-MIContainer.Amount*MIFloat_Price.ValueData)::TFloat     AS SummaSale
-                             , MovementLinkObject_Unit.ObjectId                             AS UnitId  
-                        FROM Movement AS Movement_Check
-                           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                         ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                        --AND MovementLinkObject_Unit.ObjectId = inUnitId+
-                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-                           
-                           INNER JOIN MovementItem AS MI_Check
-                                    ON MI_Check.MovementId = Movement_Check.Id
-                                   AND MI_Check.DescId = zc_MI_Master()
-                                   AND MI_Check.isErased = FALSE
-                           LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                             ON MIFloat_Price.MovementItemId = MI_Check.Id
-                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                           LEFT OUTER JOIN MovementItemContainer AS MIContainer
-                                                  ON MIContainer.MovementItemId = MI_Check.Id
-                                                 AND MIContainer.DescId = zc_MIContainer_Count() 
-     
-                        WHERE Movement_Check.DescId = zc_Movement_Check()
-                          AND date_trunc('day', Movement_Check.OperDate) between inDateStart AND inDateEnd
-                          AND Movement_Check.StatusId = zc_Enum_Status_Complete()
-                        GROUP BY date_trunc('day', Movement_Check.OperDate) , MovementLinkObject_Unit.ObjectId  
-                        HAVING SUM(MI_Check.Amount) <> 0 
-                       )
 
            SELECT tmpMovementCheck.Operdate
                 , Object_Unit.ValueData         AS UnitName
@@ -231,7 +232,9 @@ BEGIN
                 , Object_Position.ValueData     AS PositionName
 
                 , tmpUnit.TaxService :: Tfloat  AS TaxService
-                , tmpListPersonalAll.TaxService :: Tfloat AS TaxServicePersonal
+                , tmpListPersonalAll.TaxService :: Tfloat AS TaxServicePosition
+                , (tmpListPersonalAll.TaxService/tmpListPersonalAll.PersonalCount) :: Tfloat AS TaxServicePersonal
+                
                 , tmpMovementCheck.SummaSale :: Tfloat  AS SummaSale
                 , ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService / 100)/tmpListPersonalAll.PersonalCount)   :: Tfloat AS SummaWage
            FROM tmpUnit
