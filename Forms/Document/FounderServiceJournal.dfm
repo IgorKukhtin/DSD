@@ -2,6 +2,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
   ClientHeight = 537
   ClientWidth = 841
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 857
   ExplicitHeight = 575
   PixelsPerInch = 96
@@ -146,7 +147,8 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 119
+    Top = 138
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TFounderServiceForm'
       FormNameParam.Name = 'TFounderServiceForm'
@@ -226,6 +228,34 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -263,8 +293,8 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
         DataType = ftBoolean
         ParamType = ptUnknown
       end>
-    Left = 136
-    Top = 163
+    Left = 104
+    Top = 203
   end
   inherited BarManager: TdxBarManager
     Left = 224

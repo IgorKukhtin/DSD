@@ -49,6 +49,7 @@ type
     ProcreditBankLoad: TClientBankLoadAction;
     ProcreditBank: TMultiAction;
     bbProkreditBank: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

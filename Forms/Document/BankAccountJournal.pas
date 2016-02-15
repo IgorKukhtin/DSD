@@ -64,6 +64,7 @@ type
     mactIsCopy: TMultiAction;
     colUnitCode: TcxGridDBColumn;
     OKPO_BankAccount: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

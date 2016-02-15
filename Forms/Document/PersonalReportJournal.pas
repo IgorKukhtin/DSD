@@ -38,6 +38,7 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     MoneyPlaceCode: TcxGridDBColumn;
     ContractInvNumber: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public
