@@ -14,6 +14,12 @@ DO $$
             ALTER TABLE SoldTable ADD COLUMN Actions_Sh TFloat;
         END IF;
 
+        IF NOT (EXISTS(Select Column_Name From INFORMATION_SCHEMA.COLUMNS Where Table_Name = lower('SoldTable') AND Column_Name = lower('AccountId'))) THEN
+            ALTER TABLE SoldTable ADD COLUMN AccountId Integer;
+        END IF;
+        IF NOT (EXISTS(Select Column_Name From INFORMATION_SCHEMA.COLUMNS Where Table_Name = lower('SoldTable') AND Column_Name = lower('BusinessId'))) THEN
+            ALTER TABLE SoldTable ADD COLUMN BusinessId Integer;
+        END IF;
         IF NOT (EXISTS(Select Column_Name From INFORMATION_SCHEMA.COLUMNS Where Table_Name = lower('SoldTable') AND Column_Name = lower('GoodsPlatformId'))) THEN
             ALTER TABLE SoldTable ADD COLUMN GoodsPlatformId Integer;
         END IF;

@@ -164,6 +164,8 @@ BEGIN
    UNION SELECT 47, 'dimension'::TVarChar, 'Улица'::TVarChar, 'StreetName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectStreet'::TVarChar, 'StreetId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
 
+   UNION SELECT 50, 'dimension'::TVarChar, 'Бизнес' :: TVarChar, 'BusinessName'::TVarChar, ''::TVarChar, 
+                 'Object'::TVarChar, 'ObjectBusiness' :: TVarChar, 'BusinessId' :: TVarChar, 'ValueData'::TVarChar,''::TVarChar
    UNION SELECT 50, 'dimension'::TVarChar, 'Производственная площадка' :: TVarChar, 'GoodsPlatformName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectGoodsPlatform'::TVarChar, 'GoodsPlatformId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
    UNION SELECT 51, 'dimension'::TVarChar, 'Торговая марка' :: TVarChar, 'TradeMarkName'::TVarChar, ''::TVarChar, 

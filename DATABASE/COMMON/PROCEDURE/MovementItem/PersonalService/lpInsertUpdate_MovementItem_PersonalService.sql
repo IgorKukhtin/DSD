@@ -9,9 +9,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
     IN inisMain              Boolean   , -- Основное место работы
-   OUT outAmount             TFloat    , -- Сумма (затраты)
-   OUT outAmountToPay        TFloat    , -- Сумма к выплате (итог)
-   OUT outAmountCash         TFloat    , -- Сумма к выплате из кассы
+   OUT outAmount             TFloat    , -- ***Сумма (затраты)
+   OUT outAmountToPay        TFloat    , -- ***Сумма к выплате (итог)
+   OUT outAmountCash         TFloat    , -- ***Сумма к выплате из кассы
+   OUT outSummTransportAdd   TFloat    , -- ***Сумма командировочные (доплата)
+   OUT outSummTransport      TFloat    , -- ***Сумма ГСМ (удержание)
+   OUT outSummPhone          TFloat    , -- ***Сумма Моб.связь (удержание)
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
     IN inSummMinus           TFloat    , -- Сумма удержания
@@ -33,6 +36,8 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbAccessKeyId Integer;
+
+   DECLARE vbServiceDateId Integer;
 BEGIN
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -76,10 +81,49 @@ BEGIN
      -- !!!ВАЖНО!!!
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = inMovementId;
 
+     -- Поиск
+     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
+     -- Поиск <Сумма ГСМ (удержание)> + <Сумма Моб.связь (удержание)> + <Сумма командировочные (доплата)>
+     SELECT 0 AS SummTransportAdd
+          , SUM (MIContainer.Amount) AS SummTransport
+          , 0 AS SummPhone
+            INTO outSummTransportAdd, outSummTransport, outSummPhone
+     FROM ContainerLinkObject AS CLO_ServiceDate
+          INNER JOIN ContainerLinkObject AS CLO_Personal
+                                         ON CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
+                                        AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                        AND CLO_Personal.ObjectId = inPersonalId
+          INNER JOIN ContainerLinkObject AS CLO_Position
+                                         ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                                        AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
+                                        AND CLO_Position.ObjectId = inPositionId
+          INNER JOIN ContainerLinkObject AS CLO_Unit
+                                         ON CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
+                                        AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                        AND CLO_Unit.ObjectId = inUnitId
+          INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                         ON CLO_InfoMoney.ContainerId = CLO_ServiceDate.ContainerId
+                                        AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                        AND CLO_InfoMoney.ObjectId = inInfoMoneyId
+          INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                         ON CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
+                                        AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+          INNER JOIN MovementLinkObject AS MLO
+                                        ON MLO.MovementId = inMovementId
+                                       AND MLO.ObjectId = CLO_PersonalServiceList.ObjectId
+                                       AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()
+          INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = CLO_Personal.ContainerId
+                                                         AND MIContainer.MovementDescId = zc_Movement_Income()
+     WHERE CLO_ServiceDate.ObjectId = vbServiceDateId
+       AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate();
+
+
      -- рассчитываем сумму (затраты)
      outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0); -- - COALESCE (inSummSocialIn, 0);
      -- рассчитываем сумму к выплате
-     outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummSocialAdd, 0);
+     outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummSocialAdd, 0)
+                    + COALESCE (outSummTransportAdd, 0) - COALESCE (outSummTransport, 0) + COALESCE (outSummPhone, 0)
+                     ;
      -- рассчитываем сумму к выплате из кассы
      outAmountCash:= outAmountToPay - COALESCE (inSummChild, 0); -- - COALESCE (inSummCard, 0) 
 
@@ -105,9 +149,15 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialAdd(), ioId, inSummSocialAdd);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Main(), ioId, inisMain);
-
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChild(), ioId, inSummChild);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAdd(), ioId, COALESCE (outSummTransportAdd, 0));
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport(), ioId, COALESCE (outSummTransport, 0));
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone(), ioId, COALESCE (outSummPhone, 0));
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);

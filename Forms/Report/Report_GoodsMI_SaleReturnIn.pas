@@ -63,7 +63,6 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     RetailName: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
     actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
     clJuridicalGroupName: TcxGridDBColumn;
@@ -81,9 +80,6 @@ type
     CityKindName: TcxGridDBColumn;
     RegionName: TcxGridDBColumn;
     ProvinceName: TcxGridDBColumn;
-    ProvinceCityName: TcxGridDBColumn;
-    StreetName: TcxGridDBColumn;
-    StreetKindName: TcxGridDBColumn;
     PartnerId: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
     Sale_SummCost: TcxGridDBColumn;
@@ -125,6 +121,12 @@ type
     cbContract: TcxCheckBox;
     bbContract: TdxBarControlContainerItem;
     Sale_Summ_10250: TcxGridDBColumn;
+    actRefreshReal: TdsdDataSetRefresh;
+    bbRefreshReal: TdxBarButton;
+    Promo_Summ: TcxGridDBColumn;
+    Promo_SummCost: TcxGridDBColumn;
+    Promo_AmountPartner_Weight: TcxGridDBColumn;
+    Promo_AmountPartner_Sh: TcxGridDBColumn;
   private
     { Private declarations }
   public

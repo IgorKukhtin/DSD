@@ -5,7 +5,7 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -574
+  ExplicitLeft = -576
   ExplicitWidth = 1382
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -139,6 +139,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ_10250
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Promo_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Promo_SummCost
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Promo_AmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Promo_AmountPartner_Sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -254,6 +274,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ_10250
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Promo_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Promo_SummCost
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Promo_AmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Promo_AmountPartner_Sh
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -287,6 +327,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 80
           end
           object clJuridicalGroupName: TcxGridDBColumn
@@ -305,15 +346,6 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
-          end
-          object clOKPO: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'OKPO'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
           end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -373,6 +405,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 80
           end
           object ProvinceName: TcxGridDBColumn
@@ -382,6 +415,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 80
           end
           object CityKindName: TcxGridDBColumn
@@ -400,32 +434,14 @@
             Options.Editing = False
             Width = 80
           end
-          object ProvinceCityName: TcxGridDBColumn
-            Caption = #1052#1080#1082#1088#1086#1088#1072#1081#1086#1085
-            DataBinding.FieldName = 'ProvinceCityName'
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'PartnerCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
-          end
-          object StreetKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1091#1083'./'#1087#1088'.'
-            DataBinding.FieldName = 'StreetKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 25
-          end
-          object StreetName: TcxGridDBColumn
-            Caption = #1059#1083#1080#1094#1072
-            DataBinding.FieldName = 'StreetName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
+            Width = 55
           end
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -680,6 +696,7 @@
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Sale_Summ_10300: TcxGridDBColumn
@@ -728,6 +745,52 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object Promo_AmountPartner_Weight: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080', '#1074#1077#1089' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Promo_AmountPartner_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Promo_AmountPartner_Sh: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080', '#1096#1090' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Promo_AmountPartner_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Promo_SummCost: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080'  '#1089'/'#1089', '#1075#1088#1085
+            DataBinding.FieldName = 'Promo_SummCost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Promo_Summ: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'Promo_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clReturn_Amount_Weight: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088', '#1074#1077#1089' ('#1089#1082#1083#1072#1076')'
@@ -899,21 +962,9 @@
               end>
             Properties.ReadOnly = True
             Visible = False
-            Width = 45
-          end
-          object colAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090
-            DataBinding.FieldName = 'AccountName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object PartnerCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072
-            DataBinding.FieldName = 'PartnerCode'
-            Visible = False
+            Width = 45
           end
         end
       end
@@ -1217,6 +1268,19 @@
   end
   inherited ActionList: TActionList
     Left = 87
+    inherited actRefresh: TdsdDataSetRefresh
+      MoveParams = <
+        item
+          FromParam.Name = 'isOLAP'
+          FromParam.Value = True
+          FromParam.DataType = ftBoolean
+          ToParam.Name = 'isOLAP'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isOLAP'
+          ToParam.DataType = ftBoolean
+        end>
+    end
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1521,6 +1585,28 @@
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actRefreshReal: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'isOLAP'
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isOLAP'
+          ToParam.DataType = ftBoolean
+        end>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' ('#1086#1085'-'#1083#1072#1081#1085', '#1076#1086#1083#1075#1086')'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' ('#1086#1085'-'#1083#1072#1081#1085', '#1076#1086#1083#1075#1086')'
+      ImageIndex = 41
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -1645,6 +1731,14 @@
         Component = cbContract
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsOLAP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isOLAP'
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     AutoWidth = True
     Left = 176
@@ -1738,6 +1832,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbRefreshReal'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1798,6 +1900,10 @@
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbRefreshReal: TdxBarButton
+      Action = actRefreshReal
       Category = 0
     end
   end
@@ -1873,7 +1979,12 @@
     Top = 8
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'isOLAP'
+        Value = Null
+        DataType = ftBoolean
+      end>
     Left = 328
     Top = 170
   end
@@ -1959,7 +2070,6 @@
         ParamType = ptInput
       end>
     Left = 840
-    Top = 32
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'

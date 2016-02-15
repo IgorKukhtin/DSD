@@ -72,6 +72,10 @@ type
     pvPaidKindName: TcxDBPivotGridField;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    pvAmountActiveStart: TcxDBPivotGridField;
+    pvAmountPassiveStart: TcxDBPivotGridField;
+    pvAmountActiveEnd: TcxDBPivotGridField;
+    pvAmountPassiveEnd: TcxDBPivotGridField;
   private
   public
   end;

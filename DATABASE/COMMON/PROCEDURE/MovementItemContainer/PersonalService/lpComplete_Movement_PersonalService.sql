@@ -150,7 +150,8 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
-             , CASE WHEN -1 * MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
+             -- , CASE WHEN -1 * MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
+             , TRUE AS IsActive -- всегда такая
              , TRUE AS IsMaster
         FROM Movement
              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
@@ -395,43 +396,35 @@ BEGIN
                                 , inDescId     := zc_Movement_PersonalService()
                                 , inUserId     := inUserId
                                  );
-/*
-     -- 6. ФИНИШ - распределение !!!если это НЕ БН!!! и находим !!!ведомости БН!!!
-     PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := tmpMovement.MovementId
-                                                       , inUserId     := inUserId)
-     FROM (SELECT Movement.Id AS MovementId
-           FROM
-          (SELECT MovementDate_ServiceDate.ValueData AS ServiceDate
-           FROM Movement
-                LEFT JOIN MovementDate AS MovementDate_ServiceDate
-                                       ON MovementDate_ServiceDate.MovementId = Movement.Id
-                                      AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                              ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
-                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                             AND MovementLinkObject_PersonalServiceList.ObjectId NOT IN (293716 -- Ведомость карточки БН Фидо
-                                                                                                       , 413454 -- Ведомость карточки БН Пиреус
-                                                                                                        )
-           WHERE Movement.Id = inMovementId
-             AND Movement.DescId = zc_Movement_PersonalService()
-             AND Movement.StatusId = zc_Enum_Status_Complete()
+     -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm
+                                                                                                 + COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
+                                                                                                 + tmpMovement.SummTransportAdd
+                                                                                                 - tmpMovement.SummTransport
+                                                                                                 - tmpMovement.SummPhone
+                                              )
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAdd(), tmpMovement.MovementItemId, tmpMovement.SummTransportAdd)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport(), tmpMovement.MovementItemId, tmpMovement.SummTransport)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone(), tmpMovement.MovementItemId, tmpMovement.SummPhone)
+     FROM (SELECT _tmpItem.MovementItemId
+                , _tmpItem.OperSumm
+                , 0 AS SummTransportAdd
+                , SUM (MIContainer.Amount) AS SummTransport
+                , 0 AS SummPhone
+           FROM _tmpItem
+                INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpItem.ContainerId
+                                                               AND MIContainer.MovementDescId = zc_Movement_Income()
+           WHERE _tmpItem.IsMaster = TRUE
+           GROUP BY _tmpItem.MovementItemId
+                , _tmpItem.OperSumm
           ) AS tmpMovement
-          INNER JOIN MovementDate AS MovementDate_ServiceDate
-                                  ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
-                                 AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-          INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                        ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
-                                       AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                       AND MovementLinkObject_PersonalServiceList.ObjectId IN (293716 -- Ведомость карточки БН Фидо
-                                                                                             , 413454 -- Ведомость карточки БН Пиреус
-                                                                                              )
-          INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
-                             AND Movement.DescId = zc_Movement_PersonalService()
-                             AND Movement.StatusId = zc_Enum_Status_Complete()
-          LIMIT 1
-          ) AS tmpMovement
+          LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
+                                      ON MIFloat_SummSocialAdd.MovementItemId = tmpMovement.MovementItemId
+                                     AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
     ;
-*/
+     -- 6.2. ФИНИШ - пересчитали Итоговые суммы
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

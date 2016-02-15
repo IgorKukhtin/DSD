@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
              , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummMinus TFloat, SummAdd TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
-             , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat, Amount_income TFloat
+             , SummTransportAdd TFloat, SummTransport TFloat, SummPhone TFloat
+             , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
              , SummRemains TFloat
              , Comment TVarChar
              , isErased Boolean
@@ -81,6 +82,9 @@ BEGIN
                                    , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS SummSocialIn
                                    , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS SummSocialAdd
                                    , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))        AS SummChild
+                                   , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0)) AS SummTransportAdd
+                                   , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))    AS SummTransport
+                                   , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))        AS SummPhone
                                    , MovementItem.ObjectId                                  AS PersonalId
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
@@ -129,6 +133,17 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummChild
                                                                ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
+                                                               ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
+                                                               ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
+                                                               ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
+
                                    -- ограничение, если нужна только 1 запись
                                    LEFT JOIN (SELECT tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId
                                               FROM tmpMI
@@ -183,7 +198,7 @@ BEGIN
          , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalAvance()  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS Amount_service
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Amount_income
+                                   -- , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Amount_income
                                    , tmpContainer.PersonalId
                                    , tmpContainer.UnitId
                                    , tmpContainer.PositionId
@@ -192,7 +207,7 @@ BEGIN
                                    INNER JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                    AND MIContainer.DescId = zc_MIContainer_Summ()
-                                                                   AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_Income())
+                                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
                               GROUP BY tmpContainer.PersonalId
                                      , tmpContainer.UnitId
                                      , tmpContainer.PositionId
@@ -212,10 +227,12 @@ BEGIN
                                    , tmpParent.SummSocialIn
                                    , tmpParent.SummSocialAdd
                                    , tmpParent.SummChild
+                                   , tmpParent.SummTransportAdd
+                                   , tmpParent.SummTransport
+                                   , tmpParent.SummPhone
                                    , tmpMIContainer.Amount_current
                                    , tmpMIContainer.Amount_avance
                                    , tmpMIContainer.Amount_service
-                                   , tmpMIContainer.Amount_income
                               FROM tmpParent
                                    LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId  = tmpParent.PersonalId
                                                            AND tmpMIContainer.UnitId      = tmpParent.UnitId
@@ -233,10 +250,12 @@ BEGIN
                                    , tmpService.SummSocialIn
                                    , tmpService.SummSocialAdd
                                    , tmpService.SummChild
+                                   , tmpService.SummTransportAdd
+                                   , tmpService.SummTransport
+                                   , tmpService.SummPhone
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
                                    , tmpService.Amount_service
-                                   , tmpService.Amount_income
                                    , COALESCE (tmpMI.PersonalId, tmpService.PersonalId)   AS PersonalId
                                    , COALESCE (tmpMI.UnitId, tmpService.UnitId)           AS UnitId
                                    , COALESCE (tmpMI.PositionId, tmpService.PositionId)   AS PositionId
@@ -267,21 +286,23 @@ BEGIN
             , View_InfoMoney.InfoMoneyName
             , View_InfoMoney.InfoMoneyName_all
 
-            , tmpData.Amount         :: TFloat AS Amount
-            , tmpData.SummService    :: TFloat AS SummService
-            , tmpData.SummToPay_cash :: TFloat AS SummToPay_cash
-            , tmpData.SummToPay      :: TFloat AS SummToPay
-            , tmpData.SummCard       :: TFloat AS SummCard
-            , tmpData.SummMinus      :: TFloat AS SummMinus
-            , tmpData.SummAdd        :: TFloat AS SummAdd
-            , tmpData.SummSocialIn   :: TFloat AS SummSocialIn
-            , tmpData.SummSocialAdd  :: TFloat AS SummSocialAdd
-            , tmpData.SummChild      :: TFloat AS SummChild
+            , tmpData.Amount           :: TFloat AS Amount
+            , tmpData.SummService      :: TFloat AS SummService
+            , tmpData.SummToPay_cash   :: TFloat AS SummToPay_cash
+            , tmpData.SummToPay        :: TFloat AS SummToPay
+            , tmpData.SummCard         :: TFloat AS SummCard
+            , tmpData.SummMinus        :: TFloat AS SummMinus
+            , tmpData.SummAdd          :: TFloat AS SummAdd
+            , tmpData.SummSocialIn     :: TFloat AS SummSocialIn
+            , tmpData.SummSocialAdd    :: TFloat AS SummSocialAdd
+            , tmpData.SummChild        :: TFloat AS SummChild
+            , tmpData.SummTransportAdd :: TFloat AS SummTransportAdd
+            , tmpData.SummTransport    :: TFloat AS SummTransport
+            , tmpData.SummPhone        :: TFloat AS SummPhone
 
             , tmpData.Amount_current :: TFloat AS Amount_current
             , tmpData.Amount_avance  :: TFloat AS Amount_avance
             , tmpData.Amount_service :: TFloat AS Amount_service
-            , tmpData.Amount_income  :: TFloat AS Amount_income
             , (COALESCE (tmpData.SummToPay_cash, 0) - COALESCE (tmpData.Amount, 0) - COALESCE (tmpData.Amount_avance, 0) - COALESCE (tmpData.Amount_service, 0)) :: TFloat AS SummRemains
 
             , MIString_Comment.ValueData       AS Comment

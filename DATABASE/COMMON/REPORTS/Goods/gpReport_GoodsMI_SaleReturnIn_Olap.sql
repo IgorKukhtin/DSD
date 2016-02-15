@@ -1,7 +1,6 @@
 -- Function: gpReport_Goods_Movement ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inStartDate    TDateTime ,
@@ -19,8 +18,10 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inIsGoods      Boolean   , --
     IN inIsGoodsKind  Boolean   , --
     IN inIsContract   Boolean   , --
-    IN inIsJuridical  Boolean   , -- ***
-    IN inIsCost       Boolean   , -- ***
+    IN inIsJuridical_where Boolean   , -- ***
+    IN inIsPartner_where   Boolean   , -- ***
+    IN inIsGoods_where     Boolean   , -- ***
+    IN inIsCost            Boolean   , -- ***
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -29,18 +30,19 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsPlatformName TVarChar
              , JuridicalGroupName TVarChar
              , BranchCode Integer, BranchName TVarChar
-             , JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
+             , JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
-             , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
+             , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , AccountName TVarChar
-             , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
-             , Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
+
+             , Promo_Summ TFloat, Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
+             , Promo_SummCost TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
+             , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat, Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
              , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
@@ -62,12 +64,20 @@ BEGIN
     ANALYZE _tmpPartner;
     ANALYZE _tmpJuridical;
     ANALYZE _tmpJuridicalBranch;
+    -- ANALYZE SoldTable;
+
+    -- для оптимизации
+    inJuridicalId:= COALESCE (inJuridicalId, 0);
+    inInfoMoneyId:= COALESCE (inInfoMoneyId, 0);
+    inPaidKindId := COALESCE (inPaidKindId, 0);
+    inBranchId   := COALESCE (inBranchId, 0);
 
 
     -- Результат
     RETURN QUERY
     -- собираем все данные
-    WITH  tmpOperationGroup AS
+    WITH tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()) -- !!!Доходы!!!)
+       , tmpOperationGroup AS
                         (SELECT SoldTable.BranchId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalGroupId   ELSE 0 END AS JuridicalGroupId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalId        ELSE 0 END AS JuridicalId
@@ -105,8 +115,9 @@ BEGIN
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetKindId   END AS StreetKindId
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END AS StreetId
 
-                              , SUM (SoldTable.Sale_Summ) AS Sale_Summ
-                              , SUM (SoldTable.Return_Summ) AS Return_Summ
+                              , SUM (SoldTable.Actions_Summ) AS Promo_Summ
+                              , SUM (SoldTable.Sale_Summ)    AS Sale_Summ
+                              , SUM (SoldTable.Return_Summ)  AS Return_Summ
 
                               , SUM (SoldTable.Sale_Summ_10200)   AS Sale_Summ_10200
                               , SUM (SoldTable.Sale_Summ_10250)   AS Sale_Summ_10250
@@ -118,6 +129,8 @@ BEGIN
                               , SUM (SoldTable.Return_Amount_Weight) AS Return_Amount_Weight
                               , SUM (SoldTable.Return_Amount_Sh)     AS Return_Amount_Sh
 
+                              , SUM (SoldTable.Actions_Weight)              AS Promo_AmountPartner_Weight
+                              , SUM (SoldTable.Actions_Sh)                  AS Promo_AmountPartner_Sh
                               , SUM (SoldTable.Sale_AmountPartner_Weight)   AS Sale_AmountPartner_Weight
                               , SUM (SoldTable.Sale_AmountPartner_Sh)       AS Sale_AmountPartner_Sh
                               , SUM (SoldTable.Return_AmountPartner_Weight) AS Return_AmountPartner_Weight
@@ -127,6 +140,7 @@ BEGIN
                               , SUM (SoldTable.Sale_Amount_40200_Weight)    AS Sale_Amount_40200_Weight
                               , SUM (SoldTable.Return_Amount_40200_Weight)  AS Return_Amount_40200_Weight
 
+                              , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Actions_SummCost    ELSE 0 END) AS Promo_SummCost
                               , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost       ELSE 0 END) AS Sale_SummCost
                               , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost_10500 ELSE 0 END) AS Sale_SummCost_10500
                               , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost_40200 ELSE 0 END) AS Sale_SummCost_40200
@@ -140,13 +154,13 @@ BEGIN
                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = SoldTable.GoodsId
 
                          WHERE SoldTable.OperDate BETWEEN inStartDate AND inEndDate
-                           AND (SoldTable.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
-                           AND (SoldTable.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
-                           AND (SoldTable.PaidKindId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
-                           AND (SoldTable.BranchId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
-                           AND (_tmpJuridical.JuridicalId > 0 OR inIsJuridical = FALSE)
-                           AND (_tmpPartner.PartnerId > 0 OR inIsPartner = FALSE)
-                           AND (_tmpGoods.GoodsId > 0 OR inIsGoods = FALSE)
+                           AND (SoldTable.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+                           AND (SoldTable.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
+                           AND (SoldTable.PaidKindId  = inPaidKindId  OR inPaidKindId  = 0)
+                           AND (SoldTable.BranchId = inBranchId OR inBranchId = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
+                           AND (_tmpJuridical.JuridicalId > 0 OR inIsJuridical_where = FALSE)
+                           AND (_tmpPartner.PartnerId     > 0 OR inIsPartner_where   = FALSE)
+                           AND (_tmpGoods.GoodsId         > 0 OR inIsGoods_where     = FALSE)
                          GROUP BY SoldTable.BranchId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalGroupId   ELSE 0 END
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalId        ELSE 0 END
@@ -183,6 +197,38 @@ BEGIN
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.ProvinceCityId END
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetKindId   END
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END
+                         HAVING SUM (SoldTable.Actions_Summ) <> 0
+                             OR SUM (SoldTable.Sale_Summ)    <> 0
+                             OR SUM (SoldTable.Return_Summ)  <> 0
+
+                             OR SUM (SoldTable.Sale_Summ_10200)   <> 0
+                             OR SUM (SoldTable.Sale_Summ_10250)   <> 0
+                             OR SUM (SoldTable.Sale_Summ_10300)   <> 0
+                             OR SUM (SoldTable.Return_Summ_10300) <> 0
+
+                             OR SUM (SoldTable.Sale_Amount_Weight)   <> 0
+                             OR SUM (SoldTable.Sale_Amount_Sh)       <> 0
+                             OR SUM (SoldTable.Return_Amount_Weight) <> 0
+                             OR SUM (SoldTable.Return_Amount_Sh)     <> 0
+
+                             OR SUM (SoldTable.Actions_Weight)              <> 0
+                             OR SUM (SoldTable.Actions_Sh)                  <> 0
+                             OR SUM (SoldTable.Sale_AmountPartner_Weight)   <> 0
+                             OR SUM (SoldTable.Sale_AmountPartner_Sh)       <> 0
+                             OR SUM (SoldTable.Return_AmountPartner_Weight) <> 0
+                             OR SUM (SoldTable.Return_AmountPartner_Sh)     <> 0
+
+                             OR SUM (SoldTable.Sale_Amount_10500_Weight)    <> 0
+                             OR SUM (SoldTable.Sale_Amount_40200_Weight)    <> 0
+                             OR SUM (SoldTable.Return_Amount_40200_Weight)  <> 0
+
+                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Actions_SummCost    ELSE 0 END) <> 0
+                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost       ELSE 0 END) <> 0
+                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost_10500 ELSE 0 END) <> 0
+                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost_40200 ELSE 0 END) <> 0
+
+                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost       ELSE 0 END) <> 0
+                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost_40200 ELSE 0 END) <> 0
                         )
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -201,7 +247,6 @@ BEGIN
           , Object_Branch.ValueData     AS BranchName
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
-          , '' :: TVarChar                   AS OKPO
 
           , Object_Retail.ValueData       AS RetailName
           , Object_RetailReport.ValueData AS RetailReportName
@@ -213,9 +258,6 @@ BEGIN
           , Object_Province.ValueData      AS ProvinceName
           , Object_CityKind.ValueData      AS CityKindName
           , Object_City.ValueData          AS CityName
-          , Object_ProvinceCity.ValueData  AS ProvinceCityName
-          , Object_StreetKind.ValueData    AS StreetKindName
-          , Object_Street.ValueData        AS StreetName
 
           , Object_Partner.Id         AS PartnerId
           , Object_Partner.ObjectCode AS PartnerCode
@@ -239,12 +281,13 @@ BEGIN
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
-          , '' :: TVarChar AS AccountName
-
+         , tmpOperationGroup.Promo_Summ         :: TFloat  AS Promo_Summ
          , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
          , tmpOperationGroup.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
          , tmpOperationGroup.Sale_Summ_10250    :: TFloat  AS Sale_Summ_10250
          , tmpOperationGroup.Sale_Summ_10300    :: TFloat  AS Sale_Summ_10300
+
+         , tmpOperationGroup.Promo_SummCost     :: TFloat  AS Promo_SummCost
          , tmpOperationGroup.Sale_SummCost      :: TFloat  AS Sale_SummCost
          , tmpOperationGroup.Sale_SummCost_10500:: TFloat  AS Sale_SummCost_10500
          , tmpOperationGroup.Sale_SummCost_40200:: TFloat  AS Sale_SummCost_40200
@@ -252,6 +295,8 @@ BEGIN
          , tmpOperationGroup.Sale_Amount_Weight :: TFloat  AS Sale_Amount_Weight
          , tmpOperationGroup.Sale_Amount_Sh     :: TFloat  AS Sale_Amount_Sh
 
+         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Promo_AmountPartner_Weight
+         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Promo_AmountPartner_Sh
          , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
          , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
 
@@ -304,9 +349,9 @@ BEGIN
           LEFT JOIN Object AS Object_Province     ON Object_Province.Id     = tmpOperationGroup.ProvinceId
           LEFT JOIN Object AS Object_CityKind     ON Object_CityKind.Id     = tmpOperationGroup.CityKindId
           LEFT JOIN Object AS Object_City         ON Object_City.Id         = tmpOperationGroup.CityId
-          LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = tmpOperationGroup.ProvinceCityId
+          /*LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = tmpOperationGroup.ProvinceCityId
           LEFT JOIN Object AS Object_StreetKind   ON Object_StreetKind.Id   = tmpOperationGroup.StreetKindId
-          LEFT JOIN Object AS Object_Street       ON Object_Street.Id       = tmpOperationGroup.StreetId
+          LEFT JOIN Object AS Object_Street       ON Object_Street.Id       = tmpOperationGroup.StreetId*/
 
           LEFT JOIN Object AS Object_Retail         ON Object_Retail.Id         = tmpOperationGroup.RetailId
           LEFT JOIN Object AS Object_RetailReport   ON Object_RetailReport.Id   = tmpOperationGroup.RetailReportId
@@ -316,7 +361,7 @@ BEGIN
           LEFT JOIN Object AS Object_ContractTag      ON Object_ContractTag.Id      = tmpOperationGroup.ContractTagId
           LEFT JOIN Object AS Object_ContractTagGroup ON Object_ContractTagGroup.Id = tmpOperationGroup.ContractTagGroupId
 
-          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
+          LEFT JOIN tmpInfoMoney AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
 
           LEFT JOIN Object AS Object_Personal          ON Object_Personal.Id          = tmpOperationGroup.PersonalId
           LEFT JOIN Object AS Object_UnitPersonal      ON Object_UnitPersonal.Id      = tmpOperationGroup.UnitId_Personal
@@ -341,6 +386,5 @@ $BODY$
     CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpJuridicalBranch (JuridicalId Integer) ON COMMIT DROP;
 -- тест
-SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical:= FALSE, inIsCost:= TRUE, inSession:= zfCalc_UserAdmin());
+SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical_where:= FALSE, inIsPartner_where:= FALSE, inIsGoods_where:= FALSE, inIsCost:= TRUE, inSession:= zfCalc_UserAdmin());
 */
-

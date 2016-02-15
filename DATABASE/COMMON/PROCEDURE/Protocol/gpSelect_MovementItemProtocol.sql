@@ -18,7 +18,6 @@ BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
-
   -- проверка
   IF COALESCE (inMovementItemId, 0) = 0 THEN
      RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
@@ -29,39 +28,35 @@ BEGIN
   THEN
 
   RETURN QUERY 
+  -- real-1
   SELECT 
      MovementItemProtocol.OperDate,
      MovementItemProtocol.ProtocolData::Text,
      Object_User.ValueData AS UserName,
      MovementItemProtocol.MovementItemId
-  FROM MovementItem
-       JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+  FROM MovementItemProtocol
        JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
- WHERE MovementItem.Id = inMovementItemId;
+  WHERE MovementItemProtocol.MovementItemId = inMovementItemId
+
+ UNION ALL
+  -- arc-1
+  SELECT 
+     MovementItemProtocol.OperDate,
+     MovementItemProtocol.ProtocolData::Text,
+     Object_User.ValueData AS UserName,
+     MovementItemProtocol.MovementItemId
+  FROM MovementItemProtocol_arc AS MovementItemProtocol
+       JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+  WHERE MovementItemProtocol.MovementItemId = inMovementItemId;
 
   ELSE
-
-  RETURN QUERY 
-  SELECT 
-     MovementItemProtocol.OperDate,
-     MovementItemProtocol.ProtocolData::Text,
-     Object_User.ValueData AS UserName,
-     MovementItemProtocol.MovementItemId
-  FROM MovementItem
-       JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-       JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
-                                 AND (Object_User.Id = inUserId or inUserId = 0)
- WHERE MovementItem.Id = inMovementItemId;
-
+     RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
   END IF;
 
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_MovementItemProtocol (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -71,5 +66,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
---SELECT * FROM gpSelect_MovementItemProtocol (inStartDate:= '01.10.2014', inEndDate:= '01.10.2014', inMovementId:= null, inSession:= '2'); 
-                                                                
+-- SELECT * FROM gpSelect_MovementItemProtocol (inStartDate:= NULL, inEndDate:= NULL, inUserId:= NULL, inMovementItemId:= 1, inSession:= '5');

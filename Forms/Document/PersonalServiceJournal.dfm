@@ -1,25 +1,27 @@
 inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 534
+  ClientHeight = 438
   ClientWidth = 1070
+  ExplicitLeft = -297
+  ExplicitTop = -16
   ExplicitWidth = 1086
-  ExplicitHeight = 569
+  ExplicitHeight = 473
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1070
-    Height = 477
+    Height = 381
     TabOrder = 3
     ExplicitWidth = 1070
     ExplicitHeight = 477
-    ClientRectBottom = 477
+    ClientRectBottom = 381
     ClientRectRight = 1070
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1070
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
         Width = 1070
-        Height = 477
+        Height = 381
         ExplicitWidth = 1070
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -82,6 +84,21 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummToPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummTransport
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPhone
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummTransportAdd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -138,6 +155,21 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummToPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummTransport
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPhone
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummTransportAdd
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -269,6 +301,33 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object TotalSummTransport: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
+            DataBinding.FieldName = 'TotalSummTransport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummPhone: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
+            DataBinding.FieldName = 'TotalSummPhone'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummTransportAdd: TcxGridDBColumn
+            Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072')'
+            DataBinding.FieldName = 'TotalSummTransportAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object colTotalSummSocialIn: TcxGridDBColumn
             Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'

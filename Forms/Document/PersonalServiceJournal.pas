@@ -54,6 +54,9 @@ type
     colJuridicalName: TcxGridDBColumn;
     cbIsServiceDate: TcxCheckBox;
     actIsServiceDate: TdsdDataSetRefresh;
+    TotalSummTransportAdd: TcxGridDBColumn;
+    TotalSummTransport: TcxGridDBColumn;
+    TotalSummPhone: TcxGridDBColumn;
   private
     { Private declarations }
   public
