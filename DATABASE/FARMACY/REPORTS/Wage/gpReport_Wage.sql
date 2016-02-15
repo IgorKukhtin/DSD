@@ -79,7 +79,7 @@ BEGIN
                                           AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
                       LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
  
-                  WHERE Object_Position.ValueData Like '%Менеджер%'
+                  WHERE Object_Position.ValueData Like '%Менеджер%' OR Object_Position.ValueData Like '%менеджер%' 
                   ) 
  , tmpMovementCheck AS (SELECT date_trunc('day', Movement_Check.OperDate) ::TDateTime       AS OperDate
                              , SUM(-MIContainer.Amount*MIFloat_Price.ValueData)::TFloat     AS SummaSale
@@ -134,7 +134,7 @@ BEGIN
                                                                                
                    WHERE Movement.DescId = zc_Movement_SheetWorkTime()
                      AND date_trunc('day',Movement.OperDate) between inDateStart AND inDateEnd
-                     AND COALESCE(MI_SheetWorkTime.Amount,0)>0
+                   --  AND COALESCE(MI_SheetWorkTime.Amount,0)>0
                    GROUP BY date_trunc('day',Movement.OperDate)
                         , MI_SheetWorkTime.ObjectId 
                         , MIObject_Position.ObjectId 
@@ -160,8 +160,8 @@ BEGIN
 --% выплат для всех у кого % выплат = 0
  , tmpList2 AS (SELECT tmpListPersonal.OperDate
                      , tmpUnit.UnitId
-                     , tmpPosition.PositionId
-                     , (tmpUnit.TaxService - (tmp.TaxService)) AS TaxService
+                    -- , tmpPosition.PositionId
+                     , (tmpUnit.TaxService - COALESCE(tmp.TaxService,0))::TFloat AS TaxService
                 FROM tmpUnit
                    LEFT JOIN tmpListPersonal ON tmpListPersonal.UnitId = tmpUnit.UnitId
                    LEFT JOIN tmpPosition ON tmpPosition.PositionId = tmpListPersonal.PositionId
@@ -173,9 +173,9 @@ BEGIN
                 Where tmpPosition.TaxService = 0
                 GROUP BY tmpListPersonal.OperDate
                        , tmpUnit.UnitId
-                       , tmpPosition.PositionId
+                   --    , tmpPosition.PositionId
                        , tmpUnit.TaxService
-                       , tmp.TaxService
+                       ,  COALESCE(tmp.TaxService,0)
                )
 -- теперь все должности подразделения с % выплат
  , tmplist3 AS (SELECT tmpList1.OperDate
@@ -184,16 +184,26 @@ BEGIN
                  , tmpList1.TaxService
                 FROM tmpList1
              UNION 
-                SELECT tmpList2.OperDate
+               /* SELECT tmpList2.OperDate
                  , tmpList2.UnitId
                  , tmpList2.PositionId
                  , tmpList2.TaxService
                 FROM tmpList2
+*/
+                SELECT DISTINCT tmpListPersonal.OperDate
+                     , tmpListPersonal.UnitId
+                     , tmpListPersonal.PositionId
+                     , tmpList2.TaxService
+                FROM tmpListPersonal
+                   LEFT JOIN tmpList2 ON tmpList2.UnitId   = tmpListPersonal.UnitId 
+                                     AND tmpList2.OperDate = tmpListPersonal.OperDate
+                   LEFT JOIN tmpPosition ON tmpPosition.PositionId = tmpListPersonal.PositionId
+                WHERE tmpPosition.TaxService = 0
               )
 -- считаем сколько сотр. с одинаковыми должнотсями и % выплат
  , tmpList4 AS (SELECT tmp.OperDate
                    , tmp.UnitId
-                   , tmp.PositionId
+                   --, tmp.PositionId
                    , tmp.TaxService
                    , COUNT (*) AS PersonalCount
                 FROM ( SELECT tmpListPersonal.OperDate
@@ -204,10 +214,11 @@ BEGIN
                        FROM tmpListPersonal
                           LEFT JOIN tmplist3 ON tmplist3.OperDate = tmpListPersonal.OperDate
                                             AND tmplist3.UnitId   = tmpListPersonal.UnitId
+                                            AND tmplist3.PositionId = tmpListPersonal.PositionId
                       ) AS tmp
                 GROUP BY tmp.OperDate
                        , tmp.UnitId
-                       , tmp.PositionId
+                      -- , tmp.PositionId
                        , tmp.TaxService
               )
               
@@ -220,9 +231,11 @@ BEGIN
                       FROM tmpListPersonal
                           LEFT JOIN tmplist3 ON tmplist3.OperDate = tmpListPersonal.OperDate
                                             AND tmplist3.UnitId   = tmpListPersonal.UnitId
+                                            AND tmplist3.PositionId = tmpListPersonal.PositionId
                           LEFT JOIN tmplist4 ON tmplist4.OperDate = tmpListPersonal.OperDate
                                             AND tmplist4.UnitId   = tmpListPersonal.UnitId 
-                                            AND tmplist4.PositionId   = tmpListPersonal.PositionId  
+                                            AND tmplist4.TaxService   = tmplist3.TaxService  
+                    --                        AND tmplist4.PositionId   = tmpListPersonal.PositionId  
                    )
                    
 

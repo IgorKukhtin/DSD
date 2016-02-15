@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Object_Position()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position(Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position(Integer, Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position(Integer, Integer,  TVarChar, TFloat,TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Position(
