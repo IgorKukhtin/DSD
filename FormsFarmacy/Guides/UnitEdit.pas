@@ -34,6 +34,8 @@ type
     cxLabel2: TcxLabel;
     edMarginCategory: TcxButtonEdit;
     MarginCategoryGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    ceTaxService: TcxCurrencyEdit;
   private
     { Private declarations }
   public

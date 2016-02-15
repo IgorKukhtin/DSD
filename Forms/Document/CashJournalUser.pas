@@ -37,6 +37,7 @@ type
     OKPO: TcxGridDBColumn;
     isLoad: TcxGridDBColumn;
     clPartionMovementName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -3,6 +3,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
   ClientHeight = 579
   ClientWidth = 1053
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1069
   ExplicitHeight = 617
   PixelsPerInch = 96
@@ -14,7 +15,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
     TabOrder = 3
     ExplicitTop = 48
     ExplicitWidth = 1053
-    ExplicitHeight = 552
+    ExplicitHeight = 531
     ClientRectBottom = 531
     ClientRectRight = 1053
     ClientRectTop = 24
@@ -23,12 +24,12 @@ inherited Report_LiquidForm: TReport_LiquidForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1053
-      ExplicitHeight = 528
+      ExplicitHeight = 507
       inherited cxGrid: TcxGrid
         Width = 1053
         Height = 323
         ExplicitWidth = 1053
-        ExplicitHeight = 312
+        ExplicitHeight = 323
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -288,7 +289,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitTop = 312
       end
       object grChart: TcxGrid
         Left = 0
@@ -297,7 +297,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Height = 176
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 496
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -352,7 +351,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitHeight = 528
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -363,7 +361,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitHeight = 528
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -552,6 +549,49 @@ inherited Report_LiquidForm: TReport_LiquidForm
       ImageIndexTrue = 35
       ImageIndexFalse = 40
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_LiquidDialogForm'
+      FormNameParam.Value = 'TReport_LiquidDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42371d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 128
@@ -607,6 +647,14 @@ inherited Report_LiquidForm: TReport_LiquidForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -631,7 +679,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bb122'
         end
         item
           Visible = True
@@ -684,7 +732,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
       Action = actQuasiSchedule
       Category = 0
     end
-    object bb: TdxBarControlContainerItem
+    object bb122: TdxBarControlContainerItem
       Caption = #1050#1086#1085' '#1076#1072#1090#1072
       Category = 0
       Hint = #1050#1086#1085' '#1076#1072#1090#1072
@@ -697,6 +745,10 @@ inherited Report_LiquidForm: TReport_LiquidForm
       Hint = #1050#1086#1085'.'#1076#1072#1090#1072
       Visible = ivAlways
       Control = deEnd
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -2,9 +2,10 @@ inherited CashJournalForm: TCashJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 551
   ClientWidth = 959
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 975
-  ExplicitHeight = 586
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -431,6 +432,8 @@ inherited CashJournalForm: TCashJournalForm
     end
   end
   inherited ActionList: TActionList
+    Left = 135
+    Top = 90
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TCashOperationForm'
       GuiParams = <
@@ -524,6 +527,34 @@ inherited CashJournalForm: TCashJournalForm
         end>
       isShowModal = False
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -568,7 +599,7 @@ inherited CashJournalForm: TCashJournalForm
     Top = 96
   end
   inherited BarManager: TdxBarManager
-    Left = 160
+    Left = 192
     Top = 128
     DockControlHeights = (
       0
@@ -660,6 +691,10 @@ inherited CashJournalForm: TCashJournalForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 472
     Top = 248
+  end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 192
+    Top = 176
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

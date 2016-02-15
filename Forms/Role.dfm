@@ -160,6 +160,12 @@ object RoleForm: TRoleForm
           Options.Editing = False
           Width = 64
         end
+        object colisErased: TcxGridDBColumn
+          Caption = #1059#1076#1072#1083#1077#1085
+          DataBinding.FieldName = 'isErased'
+          Visible = False
+          Width = 20
+        end
       end
       object UserLevel: TcxGridLevel
         GridView = UserView

@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Position(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Position(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , TaxService TFloat
+             , isErased boolean) AS
 $BODY$
 BEGIN
 
@@ -14,11 +16,16 @@ BEGIN
 
    RETURN QUERY 
      SELECT 
-           Object_Position.Id             AS Id
-         , Object_Position.ObjectCode     AS Code
-         , Object_Position.ValueData      AS Name
-         , Object_Position.isErased       AS isErased
+           Object_Position.Id                 AS Id
+         , Object_Position.ObjectCode         AS Code
+         , Object_Position.ValueData          AS Name
+         , ObjectFloat_TaxService.ValueData   AS TaxService
+         , Object_Position.isErased           AS isErased
      FROM OBJECT AS Object_Position
+        LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
+                              ON ObjectFloat_TaxService.ObjectId = Object_Position.Id
+                             AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Position_TaxService()
+
      WHERE Object_Position.DescId = zc_Object_Position();
   
 END;

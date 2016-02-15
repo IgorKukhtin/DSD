@@ -30,6 +30,7 @@ type
     bbReCompleteAll: TdxBarButton;
     clOperDatePartner: TcxGridDBColumn;
     clInvNumberPartner: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

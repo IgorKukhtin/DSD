@@ -39,6 +39,7 @@ type
     JuridicalCode_Child: TcxGridDBColumn;
     JuridicalName_Child: TcxGridDBColumn;
     OKPO_Child: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -21,6 +21,7 @@ type
     N13: TMenuItem;
     clParValue: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

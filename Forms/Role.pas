@@ -99,6 +99,7 @@ type
     ProcessAccessUpdateDataSet: TdsdUpdateDataSet;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
+    colisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

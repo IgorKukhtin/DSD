@@ -83,6 +83,7 @@ type
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

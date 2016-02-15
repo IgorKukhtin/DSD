@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_RoleUser(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, RoleId Integer, UserRoleId Integer
              , BranchCode Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
-             , PositionName TVarChar) AS
+             , PositionName TVarChar
+             , isErased Boolean) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -35,6 +36,8 @@ $BODY$BEGIN
        , Object_Unit.ObjectCode    AS UnitCode
        , Object_Unit.ValueData     AS UnitName
        , Object_Position.ValueData AS PositionName
+    
+       , ObjectUser.isErased       AS isErased
 
    FROM ObjectLink AS ObjectLink_UserRole_Role
         JOIN ObjectLink AS ObjectLink_UserRole_User 

@@ -58,6 +58,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    colTaxService: TcxGridDBColumn;
   private
     { Private declarations }
   public

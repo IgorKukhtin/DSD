@@ -97,6 +97,7 @@ type
     mactIsCopy: TMultiAction;
     actIsCopyTrue: TdsdExecStoredProc;
     mactInsertProfitLossService: TMultiAction;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

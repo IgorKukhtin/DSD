@@ -54,8 +54,10 @@ type
     bbQuasiSchedule: TdxBarButton;
     clSummaSale: TcxGridDBColumn;
     cxLabel4: TcxLabel;
-    bb: TdxBarControlContainerItem;
+    bb122: TdxBarControlContainerItem;
     bbEnd: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

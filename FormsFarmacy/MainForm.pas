@@ -218,6 +218,9 @@ type
     N84: TMenuItem;
     actReportMovementIncomeForm: TdsdOpenForm;
     N85: TMenuItem;
+    actReport_Wage: TdsdOpenForm;
+    N86: TMenuItem;
+    N87: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
