@@ -384,7 +384,8 @@ uses
   GoodsGroupEdit in '..\..\FormsFarmacy\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
   GoodsGroup_Object in '..\..\FormsFarmacy\Guides\GoodsGroup_Object.pas' {GoodsGroup_ObjectForm: TParentForm},
   Report_LiquidDialog in '..\..\FormsFarmacy\Report\Report_LiquidDialog.pas' {Report_LiquidDialogForm: TParentForm},
-  Report_Wage in '..\..\FormsFarmacy\Report\Report_Wage.pas' {Report_WageForm: TParentForm};
+  Report_Wage in '..\..\FormsFarmacy\Report\Report_Wage.pas' {Report_WageForm: TParentForm},
+  Report_WageDialog in '..\..\FormsFarmacy\Report\Report_WageDialog.pas' {Report_WageDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

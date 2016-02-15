@@ -14,7 +14,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReport_WageForm = class(TAncestorReportForm)
@@ -40,6 +40,11 @@ type
     colOperDate: TcxGridDBColumn;
     colTaxServicePersonal: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
+    cbinIsDay: TcxCheckBox;
+    bbcbinIsDay: TdxBarControlContainerItem;
+    colDayOfWeekName: TcxGridDBColumn;
   private
     { Private declarations }
   public

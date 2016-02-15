@@ -93,7 +93,7 @@
   end
   object cxLabel2: TcxLabel
     Left = 15
-    Top = 98
+    Top = 102
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1076#1083#1103' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080
   end
   object edMarginCategory: TcxButtonEdit
@@ -109,13 +109,14 @@
   end
   object cxLabel4: TcxLabel
     Left = 255
-    Top = 98
+    Top = 102
     Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
   end
   object ceTaxService: TcxCurrencyEdit
     Left = 255
     Top = 121
-    Properties.DisplayFormat = ',0.##'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 13
     Width = 209
   end

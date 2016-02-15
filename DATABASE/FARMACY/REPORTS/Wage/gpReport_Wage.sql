@@ -1,15 +1,18 @@
 -- Function:  gpReport_Wage()
 
 DROP FUNCTION IF EXISTS gpReport_Wage (Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Wage (Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Wage(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inDateStart        TDateTime,  -- Дата начала
     IN inDateEnd          TDateTime,  -- Дата окончания
+    IN inIsDay            Boolean  ,  -- группировать по дням
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
   Operdate            TDateTime, 
+  DayOfWeekName       TVarChar, 
   UnitName            TVarChar, 
   PersonalName        TVarChar, 
   PositionName        TVarChar,
@@ -18,7 +21,8 @@ RETURNS TABLE (
   TaxServicePosition  TFloat,
   TaxServicePersonal  TFloat,
   SummaSale           TFloat,
-  SummaWage           TFloat
+  SummaWage           TFloat,
+  SummaPersonal       TFloat
  
 )
 AS
@@ -239,7 +243,8 @@ BEGIN
                    )
                    
 
-           SELECT tmpMovementCheck.Operdate
+           SELECT CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate ELSE Null END ::TDateTime AS Operdate
+                , CASE WHEN inIsDay = TRUE THEN tmpWeekDay.DayOfWeekName_Full ELSE '' END ::TVarChar AS DayOfWeekName  
                 , Object_Unit.ValueData         AS UnitName
                 , Object_Personal.ValueData     AS PersonalName
                 , Object_Position.ValueData     AS PositionName
@@ -248,8 +253,9 @@ BEGIN
                 , tmpListPersonalAll.TaxService :: Tfloat AS TaxServicePosition
                 , (tmpListPersonalAll.TaxService/tmpListPersonalAll.PersonalCount) :: Tfloat AS TaxServicePersonal
                 
-                , tmpMovementCheck.SummaSale :: Tfloat  AS SummaSale
-                , ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService / 100)/tmpListPersonalAll.PersonalCount)   :: Tfloat AS SummaWage
+                , SUM( tmpMovementCheck.SummaSale ) :: Tfloat  AS SummaSale
+                , SUM( ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService / 100)/tmpListPersonalAll.PersonalCount) )   :: Tfloat AS SummaWage
+                , SUM( CASE WHEN tmpUnit.TaxService<>0 THEN ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService /tmpUnit.TaxService)/tmpListPersonalAll.PersonalCount) ELSE 0 END )  :: Tfloat AS SummaPersonal
            FROM tmpUnit
              LEFT JOIN tmpMovementCheck ON tmpMovementCheck.UnitId = tmpUnit.UnitId
              LEFT JOIN tmpListPersonalAll ON tmpListPersonalAll.OperDate = tmpMovementCheck.OperDate
@@ -258,9 +264,21 @@ BEGIN
              LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpListPersonalAll.PersonalId
              LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpListPersonalAll.PositionId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovementCheck.UnitId
+
+             LEFT JOIN zfCalc_DayOfWeekName (tmpMovementCheck.Operdate) AS tmpWeekDay ON 1=1
+             
            WHERE tmpMovementCheck.SummaSale<>0
-           ORDER BY Object_Unit.ValueData , tmpMovementCheck.Operdate
-             ;
+           GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate ELSE Null END 
+                , CASE WHEN inIsDay = TRUE THEN tmpWeekDay.DayOfWeekName_Full ELSE '' END
+                , Object_Unit.ValueData    
+                , Object_Personal.ValueData  
+                , Object_Position.ValueData    
+                , tmpUnit.TaxService
+                , tmpListPersonalAll.TaxService
+                , (tmpListPersonalAll.TaxService/tmpListPersonalAll.PersonalCount) 
+           ORDER BY 1, Object_Unit.ValueData 
+           
+  ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
