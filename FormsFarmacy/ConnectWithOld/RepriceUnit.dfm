@@ -126,6 +126,13 @@ object RepriceUnitForm: TRepriceUnitForm
         Options.Editing = False
         Width = 96
       end
+      object colIsOneJuridical: TcxGridDBColumn
+        Caption = #1054#1076#1080#1085' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'isOneJuridical'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Options.Editing = False
+        Width = 40
+      end
       object colJuridicalName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'JuridicalName'
@@ -505,6 +512,10 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'MinExpirationDate'
         DataType = ftDate
+      end
+      item
+        Name = 'isOneJuridical'
+        DataType = ftBoolean
       end>
     IndexDefs = <>
     Params = <>
@@ -513,7 +524,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      8C0200009619E0BD0100000018000000140000000000030000008C0202496404
+      A30200009619E0BD010000001800000015000000000003000000A30202496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -533,7 +544,8 @@ object RepriceUnitForm: TRepriceUnitForm
       0200490006004D6F6E6579000C50726F64756365724E616D6501004900000001
       000557494454480200020064000A53756D526570726963650800040000000100
       07535542545950450200490006004D6F6E657900114D696E4578706972617469
-      6F6E4461746504000600000000000000}
+      6F6E4461746504000600000000000E69734F6E654A757269646963616C020003
+      00000000000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -603,6 +615,9 @@ object RepriceUnitForm: TRepriceUnitForm
     end
     object cdsResultMinMarginPercent: TCurrencyField
       FieldName = 'MinMarginPercent'
+    end
+    object cdsResultisOneJuridical: TBooleanField
+      FieldName = 'isOneJuridical'
     end
   end
   object UnitsCDS: TClientDataSet

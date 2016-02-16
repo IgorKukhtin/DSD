@@ -90,6 +90,8 @@ type
     colUnitId: TcxGridDBColumn;
     colGoodsId: TcxGridDBColumn;
     cxPropertiesStore: TcxPropertiesStore;
+    cdsResultisOneJuridical: TBooleanField;
+    colIsOneJuridical: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
