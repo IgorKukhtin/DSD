@@ -421,6 +421,7 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 175
         Align = alClient
         TabOrder = 2
+        ExplicitTop = 107
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -446,6 +447,10 @@ object IncomeFuelForm: TIncomeFuelForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSumm
+            end
+            item
+              Kind = skSum
+              Column = colPrice
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1722,6 +1727,7 @@ object IncomeFuelForm: TIncomeFuelForm
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
       end>
@@ -1741,8 +1747,8 @@ object IncomeFuelForm: TIncomeFuelForm
         Param.DataType = ftString
         DataSummaryItemIndex = 2
       end>
-    Left = 480
-    Top = 279
+    Left = 488
+    Top = 287
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 684

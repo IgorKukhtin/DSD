@@ -129,6 +129,24 @@ type
     bbProtocol: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    spCompete: TdsdExecStoredProc;
+    actSimpleCompleteList: TMultiAction;
+    actCompleteList: TMultiAction;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    spUncomplete: TdsdExecStoredProc;
+    actSimpleUncompleteList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    N5: TMenuItem;
+    spErased: TdsdExecStoredProc;
+    actSimpleErased: TMultiAction;
+    actSetErasedList: TMultiAction;
+    N6: TMenuItem;
+    spMovementReComplete: TdsdStoredProc;
+    spReCompete: TdsdExecStoredProc;
+    actSimpleReCompleteList: TMultiAction;
+    actReCompleteList: TMultiAction;
+    N7: TMenuItem;
   private
   public
   end;

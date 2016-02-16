@@ -1448,7 +1448,7 @@ object IncomeJournalForm: TIncomeJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 761
-    Top = 178
+    Left = 233
+    Top = 346
   end
 end
