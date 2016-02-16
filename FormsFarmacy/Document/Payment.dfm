@@ -1,20 +1,21 @@
 inherited PaymentForm: TPaymentForm
   Caption = #1054#1087#1083#1072#1090#1099' '#1087#1088#1080#1093#1086#1076#1086#1074
-  ClientHeight = 614
+  ClientHeight = 513
   ClientWidth = 1005
   AddOnFormData.AddOnFormRefresh.ParentList = 'Payment'
+  ExplicitTop = -74
   ExplicitWidth = 1021
-  ExplicitHeight = 652
+  ExplicitHeight = 548
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 67
     Width = 1005
-    Height = 547
+    Height = 446
     ExplicitTop = 67
     ExplicitWidth = 1005
     ExplicitHeight = 547
-    ClientRectBottom = 547
+    ClientRectBottom = 446
     ClientRectRight = 1005
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1005
@@ -22,7 +23,7 @@ inherited PaymentForm: TPaymentForm
       inherited cxGrid: TcxGrid
         Top = 61
         Width = 1005
-        Height = 462
+        Height = 361
         ExplicitTop = 61
         ExplicitWidth = 1005
         ExplicitHeight = 462
@@ -581,8 +582,8 @@ inherited PaymentForm: TPaymentForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1042#1099#1073#1086#1088' '#1056'/'#1057
-      FormName = 'TBankAccount_ObjectForm'
-      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormName = 'TBankAccountForm'
+      FormNameParam.Value = 'TBankAccountForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item

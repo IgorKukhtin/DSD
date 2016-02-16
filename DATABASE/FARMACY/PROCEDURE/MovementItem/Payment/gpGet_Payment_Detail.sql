@@ -16,13 +16,11 @@ BEGIN
     vbUserId := inSession;
     --проверили расчетный счет
     RETURN QUERY
-        SELECT
-            Object_BankAccount.Id
-           ,Object_BankAccount.CurrencyId
-        FROM
-            Object_BankAccount_View AS Object_BankAccount
-        WHERE
-            JuridicalId = inJuridicalId
+        SELECT Object_BankAccount.Id
+              ,Object_BankAccount.CurrencyId
+        FROM Object_BankAccount_View AS Object_BankAccount
+        WHERE JuridicalId = inJuridicalId
+          AND isErased = FALSE
         LIMIT 1;
 END;
 $BODY$

@@ -45,7 +45,11 @@ BEGIN
            ,(SUM(-MIContainer.Amount*MIFloat_Price.ValueData)
              / SUM(-MIContainer.Amount))::TFloat                                AS PriceSale
            ,SUM(-MIContainer.Amount*MIFloat_Income_Price.ValueData)::TFloat     AS Summa
-           ,SUM(-MIContainer.Amount*MIFloat_Price.ValueData)::TFloat            AS SummaSale
+
+            ,SUM (-1 * MIContainer.Amount * MIFloat_Price.ValueData) :: TFloat   AS SummaSale
+           -- ,SUM (-1 * CAST (MIContainer.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))) :: TFloat   AS SummaSale
+           -- ,SUM (1 * CAST (MI_Check.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))) :: TFloat   AS SummaSale
+
            ,(SUM(-MIContainer.Amount*MIFloat_Price.ValueData)
              - SUM(-MIContainer.Amount*MIFloat_Income_Price.ValueData))::TFloat AS SummaMargin
         FROM

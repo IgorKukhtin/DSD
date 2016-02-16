@@ -1,23 +1,23 @@
 DROP FUNCTION IF EXISTS gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_SoldDay(
-    IN inMonth         TDateTime , -- РњРµСЃСЏС† РїР»Р°РЅР°
-    IN inUnitId        Integer   , -- РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
-    IN inQuasiSchedule Boolean   , -- РљРІР°Р·РёСЂР°РіСЂР°С„РёРє
-    IN inSession       TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inMonth         TDateTime , -- Месяц плана
+    IN inUnitId        Integer   , -- Подразделение
+    IN inQuasiSchedule Boolean   , -- Квазираграфик
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
 
-    PlanDate          TDateTime,  --РњРµСЃСЏС† РїР»Р°РЅР°
-    UnitName          TVarChar,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
-    PlanAmount        TFloat,     --РџР»Р°РЅ
-    PlanAmountAccum   TFloat,     --РџР»Р°РЅ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј
-    FactAmount        TFloat,     --Р¤Р°РєС‚
-    FactAmountAccum   TFloat,     --Р¤Р°РєС‚ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј
-    DiffAmount        TFloat,     --Р Р°Р·РЅРёС†Р° (Р¤Р°РєС‚ - РџР»Р°РЅ) 
-    DiffAmountAccum   TFloat,     --Р Р°Р·РЅРёС†Р° РІ РЅР°РєРѕРїР»РµРЅРёРё (Р¤Р°РєС‚ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј - РџР»Р°РЅ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј)
-    PercentMake       TFloat,     --% РІС‹РїРѕР»РЅРµРЅРёРµ РїР»Р°РЅР°
-    PercentMakeAccum  TFloat      --% РІС‹РїРѕРЅРµРЅРёСЏ РїРѕ РЅР°РєРѕРїР»РµРЅРёСЋ
+    PlanDate          TDateTime,  --Месяц плана
+    UnitName          TVarChar,   --подразделение
+    PlanAmount        TFloat,     --План
+    PlanAmountAccum   TFloat,     --План с накоплением
+    FactAmount        TFloat,     --Факт
+    FactAmountAccum   TFloat,     --Факт с накоплением
+    DiffAmount        TFloat,     --Разница (Факт - План) 
+    DiffAmountAccum   TFloat,     --Разница в накоплении (Факт с накоплением - План с накоплением)
+    PercentMake       TFloat,     --% выполнение плана
+    PercentMakeAccum  TFloat      --% выпонения по накоплению
 )
 
 AS
@@ -34,34 +34,34 @@ BEGIN
     
     
     CREATE TEMP TABLE _TIME(
-        PlanDate          TDateTime,  --РњРµСЃСЏС† РїР»Р°РЅР°
-        DayOfWeek         Integer,    --Р”РµРЅСЊ РІ РЅРµРґРµР»Рµ
-        CountDay          NUMERIC(20,10)    --РєРѕР»-РІРѕ РґРЅРµР№(РїРѕРЅРµРґРµР»СЊРЅРёРєРѕРІ / РІС‚РѕСЂРЅРёРєРѕРІ) РІ РјРµСЃСЏС†Рµ 
+        PlanDate          TDateTime,  --Месяц плана
+        DayOfWeek         Integer,    --День в неделе
+        CountDay          NUMERIC(20,10)    --кол-во дней(понедельников / вторников) в месяце 
         ) ON COMMIT DROP;
     CREATE TEMP TABLE _PartDay(
-        PlanDate          TDateTime,  --РњРµСЃСЏС† РїР»Р°РЅР°
-        DayOfWeek         Integer,    --Р”РµРЅСЊ РІ РЅРµРґРµР»Рµ
+        PlanDate          TDateTime,  --Месяц плана
+        DayOfWeek         Integer,    --День в неделе
         UnitId            Integer,
         Part              NUMERIC(20,10)
         ) ON COMMIT DROP;
         
     CREATE TEMP TABLE _TMP(
-        PlanDate          TDateTime,  --РњРµСЃСЏС† РїР»Р°РЅР°
-        DayOfWeek         Integer,    --Р”РµРЅСЊ РІ РЅРµРґРµР»Рµ
-        UnitId            Integer,    --РР” РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ
-        UnitName          TVarChar,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
-        PlanMonthAmount   NUMERIC(20,10),     --РџР»Р°РЅ РІ РњРµСЃСЏС†
-        PlanAmount        NUMERIC(20,10),     --РџР»Р°РЅ РІ РґРµРЅСЊ
-        PlanAmountAccum   NUMERIC(20,10),     --РџР»Р°РЅ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј
-        FactAmount        NUMERIC(20,10),     --Р¤Р°РєС‚ РІ РґРµРЅСЊ
-        FactAmountAccum   NUMERIC(20,10),     --Р¤Р°РєС‚ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј
-        DiffAmount        NUMERIC(20,10),     --Р Р°Р·РЅРёС†Р° (Р¤Р°РєС‚ - РџР»Р°РЅ) 
-        DiffAmountAccum   NUMERIC(20,10),     --Р Р°Р·РЅРёС†Р° РІ РЅР°РєРѕРїР»РµРЅРёРё (Р¤Р°РєС‚ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј - РџР»Р°РЅ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј)
-        PercentMake       NUMERIC(20,10),     --% РІС‹РїРѕР»РЅРµРЅРёРµ РїР»Р°РЅР°
-        PercentMakeAccum  NUMERIC(20,10)      --% РІС‹РїРѕРЅРµРЅРёСЏ РїРѕ РЅР°РєРѕРїР»РµРЅРёСЋ
+        PlanDate          TDateTime,  --Месяц плана
+        DayOfWeek         Integer,    --День в неделе
+        UnitId            Integer,    --ИД подразделения
+        UnitName          TVarChar,   --подразделение
+        PlanMonthAmount   NUMERIC(20,10),     --План в Месяц
+        PlanAmount        NUMERIC(20,10),     --План в день
+        PlanAmountAccum   NUMERIC(20,10),     --План с накоплением
+        FactAmount        NUMERIC(20,10),     --Факт в день
+        FactAmountAccum   NUMERIC(20,10),     --Факт с накоплением
+        DiffAmount        NUMERIC(20,10),     --Разница (Факт - План) 
+        DiffAmountAccum   NUMERIC(20,10),     --Разница в накоплении (Факт с накоплением - План с накоплением)
+        PercentMake       NUMERIC(20,10),     --% выполнение плана
+        PercentMakeAccum  NUMERIC(20,10)      --% выпонения по накоплению
     ) ON COMMIT DROP;
     
-    --Р—Р°РїРѕР»РЅСЏРµРј РґРЅСЏРјРё РїСѓСЃРѕРіСЂР°С„РєСѓ
+    --Заполняем днями пусографку
     vbTmpDate := vbStartDate;
     WHILE vbTmpDate < vbEndDate
     LOOP
@@ -117,7 +117,7 @@ BEGIN
         MovementCheck.UnitID;
     
     
-    --Р•СЃР»Рё РєРІР°Р·РёРіСЂР°С„РёРє - РѕРїСЂРµРґРµР»СЏРµРј РґРѕР»Рё РґРЅРµР№ РІ РЅРµРґРµР»Рµ Р·Р° РїРѕСЃР»РµРґРЅРёРµ 2 РјРµСЃСЏС†Р°
+    --Если квазиграфик - определяем доли дней в неделе за последние 2 месяца
     IF inQuasiSchedule = True THEN
         INSERT INTO _PartDay(PlanDate,DayOfWeek,UnitId,Part)
         SELECT
@@ -161,7 +161,7 @@ BEGIN
                              AND UNIT.UnitId = SOLD.UnitId;
                               
             
-    ELSE --Р”РµР»РёРј Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРё
+    ELSE --Делим арифметически
         INSERT INTO _PartDay(PlanDate,DayOfWeek,UnitId,Part)
         SELECT
             _TIME.PlanDate,
@@ -243,8 +243,45 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar) O
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.  Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  28.09.15                                                                        *
 */
---Select * from gpSelect_Report_SoldDay ('20150901'::TDateTime, 0, True, '3')
+/*
+-- !!!
+-- !!!ПЕРЕПРОВЕДЕНИЕ!!!, что б отчеты сходились :)
+-- !!!
+select Movement.InvNumber, Movement.OperDate, MIFloat_Price.ValueData, tmp.*, Object.*
+   -- , gpReComplete_Movement_Check (Movement.Id, '3')
+from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.Amount, coalesce (-1 * SUM (MIContainer.Amount), 0) as calcAmount , Movement_Check.Id as MovementId
+      FROM
+          Movement AS Movement_Check
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                        ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                       -- AND MovementLinkObject_Unit.ObjectId = 183292 -- Аптека_1 пр_Правды_6
+            INNER JOIN MovementItem AS MI_Check
+                                    ON MI_Check.MovementId = Movement_Check.Id
+                                   AND MI_Check.DescId = zc_MI_Master()
+                                   AND MI_Check.isErased = FALSE
+            LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                  ON MIContainer.MovementItemId = MI_Check.Id
+                                                 AND MIContainer.DescId = zc_MIContainer_Count() 
+
+      where Movement_Check.OperDate >= '01.01.2016' and Movement_Check.OperDate < '01.02.2016'
+--    where Movement_Check.OperDate >= '01.02.2016' and Movement_Check.OperDate < '01.03.2016'
+        and Movement_Check.DescId = zc_Movement_Check()
+        AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+      group by Movement_Check.InvNumber, MI_Check.Id, MI_Check.Amount , Movement_Check.Id, MI_Check.ObjectId
+      having MI_Check.Amount <> coalesce (-1 * SUM (MIContainer.Amount), 0)
+      ) as tmp 
+             LEFT JOIN Object on Object.Id = tmp.ObjectId
+             LEFT JOIN Movement on  Movement.Id = tmp.MovementId
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId =  tmp.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+select *  FROM MovementItem where Id = 26009762
+select *  FROM MovementItemContainer where MovementItemId = 26009762
+*/
+
+-- Select * from gpSelect_Report_SoldDay ('20150901'::TDateTime, 0, True, '3')

@@ -1,21 +1,21 @@
 DROP FUNCTION IF EXISTS gpSelect_Report_Sold (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Sold(
-    IN inStartDate     TDateTime , -- РґР°С‚Р° РЅР°С‡Р°Р»Р°
-    IN inEndDate       TDateTime , -- РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ
-    IN inSession       TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inStartDate     TDateTime , -- дата начала
+    IN inEndDate       TDateTime , -- дата окончания
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-    PlanDate          TDateTime,  --РњРµСЃСЏС† РїР»Р°РЅР°
-    UnitName          TVarChar,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
-    PlanAmount        TFloat,     --РџР»Р°РЅ
-    PlanAmountAccum   TFloat,     --РџР»Р°РЅ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј
-    FactAmount        TFloat,     --Р¤Р°РєС‚
-    FactAmountAccum   TFloat,     --Р¤Р°РєС‚ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј
-    DiffAmount        TFloat,     --Р Р°Р·РЅРёС†Р° (Р¤Р°РєС‚ - РџР»Р°РЅ) 
-    DiffAmountAccum   TFloat,     --Р Р°Р·РЅРёС†Р° РІ РЅР°РєРѕРїР»РµРЅРёРё (Р¤Р°РєС‚ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј - РџР»Р°РЅ СЃ РЅР°РєРѕРїР»РµРЅРёРµРј)
-    PercentMake       TFloat,     --% РІС‹РїРѕР»РЅРµРЅРёРµ РїР»Р°РЅР°
-    PercentMakeAccum  TFloat      --% РІС‹РїРѕРЅРµРЅРёСЏ РїРѕ РЅР°РєРѕРїР»РµРЅРёСЋ
+    PlanDate          TDateTime,  --Месяц плана
+    UnitName          TVarChar,   --подразделение
+    PlanAmount        TFloat,     --План
+    PlanAmountAccum   TFloat,     --План с накоплением
+    FactAmount        TFloat,     --Факт
+    FactAmountAccum   TFloat,     --Факт с накоплением
+    DiffAmount        TFloat,     --Разница (Факт - План) 
+    DiffAmountAccum   TFloat,     --Разница в накоплении (Факт с накоплением - План с накоплением)
+    PercentMake       TFloat,     --% выполнение плана
+    PercentMakeAccum  TFloat      --% выпонения по накоплению
 )
 
 AS
@@ -102,7 +102,7 @@ ALTER FUNCTION gpSelect_Report_Sold (TDateTime, TDateTime, TVarChar) OWNER TO po
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.  Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  28.09.15                                                                        *
 */

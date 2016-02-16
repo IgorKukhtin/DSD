@@ -22,8 +22,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Не заполнено юрлицо.';
     END IF;
     --Проверили наличие расчетного счета у юрлица
-    IF NOT EXISTS(SELECT 1 FROM Object_BankAccount_View
-                  WHERE JuridicalId = inJuridicalId)
+    IF NOT EXISTS (SELECT 1 FROM Object_BankAccount_View WHERE JuridicalId = inJuridicalId AND isErased = FALSE)
     THEN
         RAISE EXCEPTION 'Ошибка. Для выбранного юрлица не создано ни одного расчетного счета.';
     END IF;

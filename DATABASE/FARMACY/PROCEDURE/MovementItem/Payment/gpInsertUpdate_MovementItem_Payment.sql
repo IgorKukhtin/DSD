@@ -31,26 +31,22 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Payment());
     vbUserId := inSession;
     --проверили расчетный счет
-    SELECT
-        Object_BankAccount.Id
-       ,Object_BankAccount.Name
-       ,Object_BankAccount.BankName
-       ,Object_BankAccount.CurrencyId
-    INTO
-       ioBankAccountId
-      ,outBankAccountName
-      ,outBankName
-      ,vbCurrencyId
-    FROM
-        Object_BankAccount_View AS Object_BankAccount
-    WHERE
-        (
-            Object_BankAccount.Id = COALESCE(ioBankAccountId,0)
-            or
-            COALESCE(ioBankAccountId,0) = 0
-        )
-        AND
-        JuridicalId = (Select Movement_Payment_View.JuridicalId from Movement_Payment_View Where Movement_Payment_View.Id = inMovementId);
+    SELECT Object_BankAccount.Id
+          ,Object_BankAccount.Name
+          ,Object_BankAccount.BankName
+          ,Object_BankAccount.CurrencyId
+           INTO ioBankAccountId
+               ,outBankAccountName
+               ,outBankName
+               ,vbCurrencyId
+    FROM Object_BankAccount_View AS Object_BankAccount
+    WHERE (Object_BankAccount.Id = COALESCE (ioBankAccountId, 0)
+        OR COALESCE(ioBankAccountId,0) = 0
+          )
+        AND JuridicalId = (Select Movement_Payment_View.JuridicalId from Movement_Payment_View Where Movement_Payment_View.Id = inMovementId)
+        AND isErased = FALSE
+     ;
+
 
     IF COALESCE(ioBankAccountId) = 0
     THEN
