@@ -4,6 +4,7 @@ inherited LossDebtForm: TLossDebtForm
   ClientWidth = 1049
   PopupMenu = PopupMenu
   ExplicitWidth = 1065
+  ExplicitHeight = 440
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -35,7 +36,7 @@ inherited LossDebtForm: TLossDebtForm
             DataBinding.FieldName = 'JuridicalCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 30
+            Width = 45
           end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -60,8 +61,9 @@ inherited LossDebtForm: TLossDebtForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 70
           end
           object clIsCalculated: TcxGridDBColumn
             Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
@@ -75,7 +77,7 @@ inherited LossDebtForm: TLossDebtForm
             DataBinding.FieldName = 'SummDebet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 168
@@ -85,7 +87,7 @@ inherited LossDebtForm: TLossDebtForm
             DataBinding.FieldName = 'SummKredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 185
@@ -96,7 +98,7 @@ inherited LossDebtForm: TLossDebtForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;'
             Properties.UseDisplayFormatWhenEditing = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -108,7 +110,7 @@ inherited LossDebtForm: TLossDebtForm
             DataBinding.FieldName = 'AmountKredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

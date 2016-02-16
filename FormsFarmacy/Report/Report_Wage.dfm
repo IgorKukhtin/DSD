@@ -5,7 +5,7 @@ inherited Report_WageForm: TReport_WageForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 910
-  ExplicitHeight = 343
+  ExplicitHeight = 340
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,18 +14,18 @@ inherited Report_WageForm: TReport_WageForm
     Height = 247
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 736
-    ExplicitHeight = 250
+    ExplicitWidth = 894
+    ExplicitHeight = 247
     ClientRectBottom = 247
     ClientRectRight = 894
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 736
-      ExplicitHeight = 250
+      ExplicitWidth = 894
+      ExplicitHeight = 247
       inherited cxGrid: TcxGrid
         Width = 894
         Height = 247
-        ExplicitWidth = 736
-        ExplicitHeight = 250
+        ExplicitWidth = 894
+        ExplicitHeight = 247
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -36,32 +36,18 @@ inherited Report_WageForm: TReport_WageForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = colSummaWage
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWage
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colSummaSale
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-              Kind = skCount
-              Column = colPositionName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = colSummaPersonal
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWage
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -81,32 +67,67 @@ inherited Report_WageForm: TReport_WageForm
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 70
           end
           object colDayOfWeekName: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
             DataBinding.FieldName = 'DayOfWeekName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
           end
-          object colSummaSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'SummaSale'
+          object clPersonalName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 114
+          end
+          object colPositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 117
+          end
+          object colSummaWage: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1047#1055
+            DataBinding.FieldName = 'SummaWage'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 72
+            Width = 80
           end
           object colSummaPersonal: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1076#1086#1083#1103' '#1087#1088#1086#1076#1072#1078')'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1072')'
             DataBinding.FieldName = 'SummaPersonal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 85
+            Width = 100
+          end
+          object colTaxServicePersonal: TcxGridDBColumn
+            Caption = '% '#1074#1099#1087#1083#1072#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+            DataBinding.FieldName = 'TaxServicePersonal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
+          object colTaxServicePosition: TcxGridDBColumn
+            Caption = '% '#1074#1099#1087#1083#1072#1090#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'TaxServicePosition'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
           end
           object colTaxService: TcxGridDBColumn
             Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
@@ -117,41 +138,14 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colTaxServicePosition: TcxGridDBColumn
-            Caption = '% '#1074#1099#1087#1083#1072#1090#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
-            DataBinding.FieldName = 'TaxServicePosition'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Width = 79
-          end
-          object colTaxServicePersonal: TcxGridDBColumn
-            Caption = '% '#1074#1099#1087#1083#1072#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-            DataBinding.FieldName = 'TaxServicePersonal'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Width = 79
-          end
-          object colPositionName: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'PositionName'
-            HeaderAlignmentVert = vaCenter
-            Width = 117
-          end
-          object clPersonalName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'PersonalName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 114
-          end
-          object colSummaWage: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1047#1055
-            DataBinding.FieldName = 'SummaWage'
+          object colSummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+            DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 110
           end
         end
       end
@@ -161,7 +155,7 @@ inherited Report_WageForm: TReport_WageForm
     Width = 894
     Height = 32
     Visible = False
-    ExplicitWidth = 736
+    ExplicitWidth = 894
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
@@ -184,12 +178,12 @@ inherited Report_WageForm: TReport_WageForm
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 249
+      Left = 326
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 341
+      Left = 416
       Top = 5
       Properties.Buttons = <
         item
@@ -205,13 +199,13 @@ inherited Report_WageForm: TReport_WageForm
     end
   end
   object cbinIsDay: TcxCheckBox [2]
-    Left = 619
+    Left = 240
     Top = 5
     Hint = #1086#1090#1075#1088#1091#1078#1077#1085#1085#1099#1077' '#1079#1072#1103#1074#1082#1080
     Caption = #1087#1086' '#1044#1085#1103#1084
     Properties.ReadOnly = False
     TabOrder = 6
-    Width = 71
+    Width = 74
   end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
@@ -366,11 +360,7 @@ inherited Report_WageForm: TReport_WageForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbcbinIsDay'
         end
         item
           Visible = True
@@ -402,7 +392,15 @@ inherited Report_WageForm: TReport_WageForm
         end
         item
           Visible = True
-          ItemName = 'bbcbinIsDay'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarButton1: TdxBarButton

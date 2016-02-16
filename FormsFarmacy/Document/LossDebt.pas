@@ -11,7 +11,8 @@ uses
   System.Classes, Vcl.ActnList, cxPropertiesStore, cxButtonEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, Vcl.Controls, cxCurrencyEdit;
+  cxGrid, cxPC, Vcl.Controls, cxCurrencyEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TLossDebtForm = class(TAncestorDocumentForm)
