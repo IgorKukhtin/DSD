@@ -229,6 +229,7 @@ begin
           cdsResult.FieldByName('ProducerName').AsString := AllGoodsPriceCDS.FieldByName('ProducerName').AsString;
           cdsResult.FieldByName('SumReprice').AsCurrency := AllGoodsPriceCDS.FieldByName('SumReprice').AsCurrency;
           cdsResult.FieldByName('MinExpirationDate').AsString := AllGoodsPriceCDS.FieldByName('MinExpirationDate').AsString;
+          cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

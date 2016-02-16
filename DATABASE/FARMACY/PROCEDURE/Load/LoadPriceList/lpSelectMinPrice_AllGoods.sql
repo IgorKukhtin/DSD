@@ -1,9 +1,9 @@
 DROP FUNCTION IF EXISTS lpSelectMinPrice_AllGoods (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelectMinPrice_AllGoods(
-    IN inUnitId      Integer      , -- РєР»СЋС‡ Р”РѕРєСѓРјРµРЅС‚Р°
+    IN inUnitId      Integer      , -- ключ Документа
     IN inObjectId    Integer      , 
-    IN inUserId      Integer        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inUserId      Integer        -- сессия пользователя
 )
 
 RETURNS TABLE (
@@ -18,9 +18,10 @@ RETURNS TABLE (
     MakerName          TVarChar,
     JuridicalId        Integer,
     JuridicalName      TVarChar,
-    Price              TFloat,
+    Price              TFloat, 
     SuperFinalPrice    TFloat,
-    isTop              Boolean
+    isTop              Boolean,
+    isOneJuridical    Boolean
 )
 
 AS
@@ -86,14 +87,14 @@ BEGIN
             Remains.MinExpirationDate
         FROM 
             Remains
-            JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = Remains.objectid -- РЎРІСЏР·СЊ С‚РѕРІР°СЂР° СЃРµС‚Рё СЃ РѕР±С‰РёРј
-            LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- СЃРІСЏР·СЊ С‚РѕРІР°СЂР° РІ РїСЂР°Р№СЃРµ СЃ РіР»Р°РІРЅС‹Рј С‚РѕРІР°СЂРѕРј
+            JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = Remains.objectid -- Связь товара сети с общим
+            LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
                                             ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
     ),
     FinalList AS
     (
     SELECT 
-        ddd.GoodsId                  --РљРѕРґ С‚РѕРІР°СЂР°
+        ddd.GoodsId                  --Код товара
       , ddd.GoodsCode
       , ddd.GoodsName  
       , ddd.Remains
@@ -139,13 +140,13 @@ BEGIN
         
         FROM GoodsList 
                   
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods -- С‚РѕРІР°СЂС‹ РІ РїСЂР°Р№СЃ-Р»РёСЃС‚Рµ
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
                                              ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                             AND MILinkObject_Goods.ObjectId = GoodsList.GoodsId 
 
-            JOIN  MovementItem AS PriceList  -- РџСЂР°Р№СЃ-Р»РёСЃС‚
+            JOIN  MovementItem AS PriceList  -- Прайс-лист
                                ON PriceList.Id = MILinkObject_Goods.MovementItemId
-            JOIN LastPriceList_View  -- РџСЂР°Р№СЃ-Р»РёСЃС‚
+            JOIN LastPriceList_View  -- Прайс-лист
                                    ON LastPriceList_View.MovementId  = PriceList.MovementId
 
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
@@ -167,7 +168,7 @@ BEGIN
                                   ON ObjectFloat_Deferment.ObjectId = LastPriceList_View.ContractId
                                  AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
        
-            LEFT JOIN Object_Goods_View AS Goods  -- Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р° Р·Р°СЏРІРєР°
+            LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
                                         ON Goods.Id = GoodsList.ObjectId
              
         WHERE  
@@ -176,6 +177,11 @@ BEGIN
        
        LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice
     ),
+
+    tmpCountJuridical AS ( SELECT FinalList.GoodsId, Count(DISTINCT FinalList.JuridicalId) AS CountJuridical
+                           FROM FinalList
+                           GROUP BY FinalList.GoodsId
+                            ),
     MinPriceList AS
     (
         Select *
@@ -199,8 +205,12 @@ BEGIN
         MinPriceList.JuridicalName,
         MinPriceList.Price,
         MinPriceList.SuperFinalPrice,
-        MinPriceList.isTop
-    from MinPriceList;
+        MinPriceList.isTop,
+        CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END ::Boolean AS isOneJuridical
+    from MinPriceList
+        INNER JOIN tmpCountJuridical ON tmpCountJuridical.GoodsId = MinPriceList.GoodsId
+      
+    ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -208,8 +218,9 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.   Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 16.02.16         * add isOneJuridical
  03.12.15                                                                          * 
 */
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183293, 4, 3)
