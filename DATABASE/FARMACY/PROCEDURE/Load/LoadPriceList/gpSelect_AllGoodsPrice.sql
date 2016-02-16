@@ -26,7 +26,8 @@ RETURNS TABLE (
     Juridical_GoodsName TVarChar,   --Наименование у поставщика
     ProducerName        TVarChar,   --производитель
     SumReprice          TFloat,     --сумма переоценки
-    MinExpirationDate   TDateTime   --Минимальный срок годности препарата на точке
+    MinExpirationDate   TDateTime,  --Минимальный срок годности препарата на точке
+    isOneJuridical     Boolean     -- один поставщик (да/нет)
     )
 
 AS
@@ -244,7 +245,8 @@ BEGIN
             SelectMinPrice_AllGoods.Partner_GoodsName        AS Partner_GoodsName,
             SelectMinPrice_AllGoods.MakerName                AS ProducerName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
-            Object_Goods.NDSKindId
+            Object_Goods.NDSKindId,
+            SelectMinPrice_AllGoods.isOneJuridical
         FROM
             lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
                                      inObjectId := vbObjectId, 
@@ -285,8 +287,9 @@ BEGIN
         ResultSet.Partner_GoodsName      AS Juridical_GoodsName,
         ResultSet.ProducerName           AS ProducerName,
         ROUND(((ResultSet.NewPrice - ResultSet.LastPrice)*ResultSet.RemainsCount),2)::TFloat AS SumReprice,
-        ResultSet.MinExpirationDate
-    FROM
+        ResultSet.MinExpirationDate,
+        ResultSet.isOneJuridical
+    FROM 
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId
                                        AND ResultSet.LastPrice >= MarginCondition.MinPrice 
@@ -332,6 +335,7 @@ ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  TFloat, Boolean, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 16.02.16         * add isOneJuridical
  19.11.15                                                                      *
  01.07.15                                                                      *
  30.06.15                        *
