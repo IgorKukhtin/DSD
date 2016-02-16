@@ -50,7 +50,7 @@ inherited Report_WageForm: TReport_WageForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -197,7 +197,7 @@ inherited Report_WageForm: TReport_WageForm
     end
   end
   object chinisDay: TcxCheckBox [2]
-    Left = 244
+    Left = 243
     Top = 5
     Action = actinisDay
     TabOrder = 6
@@ -213,6 +213,7 @@ inherited Report_WageForm: TReport_WageForm
           StoredProc = spSelect
         end>
       Caption = #1087#1086' '#1044#1085#1103#1084
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -472,8 +473,7 @@ inherited Report_WageForm: TReport_WageForm
       item
         Component = UnitGuides
       end>
-    Left = 296
-    Top = 24
+    Left = 392
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -498,8 +498,8 @@ inherited Report_WageForm: TReport_WageForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 336
-    Top = 24
+    Left = 440
+    Top = 56
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
