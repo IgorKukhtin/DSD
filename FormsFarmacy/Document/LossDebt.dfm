@@ -68,6 +68,7 @@ inherited LossDebtForm: TLossDebtForm
           object clIsCalculated: TcxGridDBColumn
             Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
             DataBinding.FieldName = 'isCalculated'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 111

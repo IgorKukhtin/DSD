@@ -356,12 +356,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-exit;
-
+//exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));

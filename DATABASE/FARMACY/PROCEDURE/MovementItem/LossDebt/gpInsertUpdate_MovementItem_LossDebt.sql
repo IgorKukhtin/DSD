@@ -45,20 +45,23 @@ BEGIN
         vbSumm := -1 * ioSummKredit;
      END IF;
 
+     -- захардкодил, бо Люба достала :)
+     ioIsCalculated:= TRUE;
      -- расчет
-     ioIsCalculated:= (vbSumm <> 0 OR vbAmount = 0);
+     -- ioIsCalculated:= (vbSumm <> 0 OR vbAmount = 0);
+
      -- 
      IF vbSumm <> 0 THEN ioAmountDebet := 0; ioAmountKredit := 0; END IF;
 
      -- сохранили <Элемент документа>
-     PERFORM lpInsertUpdate_MovementItem_LossDebt (ioId                 := ioId
-                                                 , inMovementId         := inMovementId
-                                                 , inJuridicalId        := inJuridicalId
-                                                 , inAmount             := vbAmount
-                                                 , inSumm               := vbSumm
-                                                 , inIsCalculated       := ioIsCalculated
-                                                 , inUserId             := vbUserId
-                                                  );
+     ioId:= lpInsertUpdate_MovementItem_LossDebt (ioId                 := ioId
+                                                , inMovementId         := inMovementId
+                                                , inJuridicalId        := inJuridicalId
+                                                , inAmount             := vbAmount
+                                                , inSumm               := vbSumm
+                                                , inIsCalculated       := ioIsCalculated
+                                                , inUserId             := vbUserId
+                                                 );
 
 END;
 $BODY$

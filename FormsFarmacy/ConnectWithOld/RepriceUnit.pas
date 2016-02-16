@@ -14,7 +14,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ActnList, dsdAction, dsdGuides,
   Datasnap.Provider, cxImageComboBox, Vcl.ExtCtrls, cxSplitter, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, Vcl.ComCtrls, cxCheckBox, cxCalc,
-  Vcl.Buttons;
+  Vcl.Buttons, cxPropertiesStore;
 
 type
   TRepriceUnitForm = class(TForm)
@@ -89,6 +89,7 @@ type
     cdsResultMinMarginPercent: TCurrencyField;
     colUnitId: TcxGridDBColumn;
     colGoodsId: TcxGridDBColumn;
+    cxPropertiesStore: TcxPropertiesStore;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -164,6 +165,7 @@ begin
       btnSelectNewPrice.Enabled := True;
       btnReprice.Caption := 'Переоценить  >>>';
       cdsResult.EnableControls;
+      MessageDlg('ПЕРЕОЦЕНКА ЗАВЕРШЕНА.',mtInformation,[mbOk],0,mbOk);
     end;
   End
   else
