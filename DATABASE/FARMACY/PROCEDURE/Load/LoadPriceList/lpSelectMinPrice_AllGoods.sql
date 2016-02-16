@@ -125,7 +125,7 @@ BEGIN
           , PriceList.Id                       AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
           , CASE
-                WHEN Goods.isTOP = TRUE OR COALESCE(JuridicalSettings.PriceLimit, 0) >= PriceList.Amount
+                WHEN Goods.isTOP = TRUE OR COALESCE(JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
             ELSE (PriceList.Amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat 
             END AS FinalPrice

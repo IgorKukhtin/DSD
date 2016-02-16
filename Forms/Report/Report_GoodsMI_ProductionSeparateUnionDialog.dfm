@@ -65,7 +65,7 @@ object Report_GoodsMI_ProductionSeparateUnionDialogForm: TReport_GoodsMI_Product
   object cbGroupMovement: TcxCheckBox
     Left = 241
     Top = 4
-    Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     Properties.ReadOnly = False
     TabOrder = 6
     Width = 184
@@ -73,9 +73,9 @@ object Report_GoodsMI_ProductionSeparateUnionDialogForm: TReport_GoodsMI_Product
   object cbGroupPartion: TcxCheckBox
     Left = 241
     Top = 27
-    Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1087#1072#1088#1090#1080#1080' '#1080#1083#1080' '#1074#1080#1076' '#1090#1086#1074'.'
     TabOrder = 7
-    Width = 156
+    Width = 200
   end
   object cxLabel5: TcxLabel
     Left = 11
@@ -180,7 +180,7 @@ object Report_GoodsMI_ProductionSeparateUnionDialogForm: TReport_GoodsMI_Product
   object cbGroupInfoMoney: TcxCheckBox
     Left = 241
     Top = 53
-    Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1089#1090#1072#1090#1100#1103#1084
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1059#1055' '#1089#1090#1072#1090#1100#1080
     TabOrder = 20
     Width = 156
   end

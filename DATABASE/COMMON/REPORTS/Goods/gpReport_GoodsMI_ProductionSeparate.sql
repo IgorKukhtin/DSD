@@ -10,8 +10,8 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTim
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
     IN inStartDate          TDateTime ,  
     IN inEndDate            TDateTime ,
-    IN inGroupMovement      Boolean   ,
-    IN inGroupPartion       Boolean   ,
+    IN inIsMovement         Boolean   ,
+    IN inIsPartion          Boolean   ,
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
@@ -31,6 +31,9 @@ AS
 $BODY$
     DECLARE vbDescId Integer;
 BEGIN
+    -- !!!Ôðåìåííî!!
+    inIsMovement:= NOT inIsMovement;
+    inIsPartion:= NOT inIsPartion;
 
     -- Îãðàíè÷åíèÿ ïî òîâàðó
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
@@ -201,8 +204,8 @@ BEGIN
                   FROM tmpMI_Count AS tmpMI_out
                        JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
                   Where tmpMI_out.isActive = FALSE
-                    AND inGroupMovement = FALSE
-                    AND inGroupPartion  = FALSE
+                    AND inIsMovement = FALSE
+                    AND inIsPartion  = FALSE
               UNION ALL
                   SELECT  tmpMI_out_Sum.GoodsId       
                         , tmpMI_out_Sum.Summ
@@ -211,8 +214,8 @@ BEGIN
                   FROM tmpMI_sum AS tmpMI_out_Sum
                        JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
                   Where tmpMI_out_Sum.isActive = FALSE
-                    AND inGroupMovement = FALSE
-                    AND inGroupPartion  = FALSE
+                    AND inIsMovement = FALSE
+                    AND inIsPartion  = FALSE
             ) AS tmpMI 
             GROUP BY tmpMI.GoodsId
             )
@@ -245,9 +248,9 @@ BEGIN
            , CASE WHEN COALESCE (tmpMI_total.Amount, tmpOperationGroup.Amount) <> 0 THEN COALESCE((tmpOperationGroup.ChildAmount * 100 / COALESCE (tmpMI_total.Amount, tmpOperationGroup.Amount)) ,0) ELSE 0 END   ::TFloat   AS Percent  
 
       FROM (
-            SELECT CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END AS InvNumber
-                 , CASE when inGroupMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END AS OperDate
-                 , CASE when inGroupPartion = True THEN tmpMI.PartionGoods ELSE '' END AS PartionGoods
+            SELECT CASE when inIsMovement = True THEN tmpMI.InvNumber ELSE '' END AS InvNumber
+                 , CASE when inIsMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END AS OperDate
+                 , CASE when inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END AS PartionGoods
                  , tmpMI.GoodsId       
                  , ABS (SUM(tmpMI.Summ)) as Summ
                  , ABS (SUM(tmpMI.Amount)) as Amount
@@ -293,9 +296,9 @@ BEGIN
                   Where tmpMI_out_Sum.isActive = FALSE
                          
             ) AS tmpMI 
-	    GROUP BY CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END
-                   , CASE when inGroupMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END
-                   , CASE when inGroupPartion = True THEN tmpMI.PartionGoods ELSE '' END 
+	    GROUP BY CASE when inIsMovement = True THEN tmpMI.InvNumber ELSE '' END
+                   , CASE when inIsMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END
+                   , CASE when inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END 
                    , tmpMI.GoodsId       
                    , tmpMI.ChildGoodsId   
             ) AS tmpOperationGroup
@@ -329,8 +332,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -338,8 +339,7 @@ $BODY$
  27.11.14         *
  19.11.14         *
  21.08.14         * 
-    
 */
 
 -- òåñò
--- select * from gpReport_GoodsMI_ProductionSeparate(inStartDate := ('03.06.2014')::TDateTime , inEndDate := ('03.06.2014')::TDateTime , inGroupMovement := 'True' , inGroupPartion := 'False' , inGoodsGroupId := 0 , inGoodsId := 0 , inChildGoodsGroupId := 0 , inChildGoodsId := 2360 , inFromId := 0 , inToId := 0 ,  inSession := '5');
+-- SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '03.06.2016', inEndDate:= '03.06.2016', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());

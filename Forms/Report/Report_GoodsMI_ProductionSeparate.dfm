@@ -1,116 +1,55 @@
 inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSeparateForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')>'
+  Caption = #1054#1090#1095#1077#1090' <'#1056#1072#1089#1093#1086#1076'/'#1055#1088#1080#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')>'
   ClientHeight = 427
-  ClientWidth = 1098
+  ClientWidth = 1343
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1114
-  ExplicitHeight = 465
+  ExplicitLeft = -676
+  ExplicitWidth = 1359
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 1098
+    Width = 1343
     Height = 328
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1098
+    ExplicitWidth = 1343
     ExplicitHeight = 328
     ClientRectBottom = 328
-    ClientRectRight = 1098
+    ClientRectRight = 1343
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1098
+      ExplicitWidth = 1343
       ExplicitHeight = 328
       inherited cxGrid: TcxGrid
-        Width = 1098
+        Width = 1343
         Height = 328
-        ExplicitWidth = 1098
+        ExplicitWidth = 1343
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clHeadCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = clChildSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = clChildAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clHeadCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = clChildSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = clChildAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -138,13 +77,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             HeaderAlignmentVert = vaCenter
             Width = 49
           end
-          object clPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 48
-          end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsGroupName'
@@ -166,12 +98,20 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
+          object clPartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 68
@@ -263,20 +203,20 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     end
   end
   inherited Panel: TPanel
-    Width = 1098
+    Width = 1343
     Height = 73
-    ExplicitWidth = 1098
+    ExplicitWidth = 1343
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 108
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 108
     end
     inherited deEnd: TcxDateEdit
       Left = 108
       Top = 29
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 108
       ExplicitTop = 29
@@ -356,16 +296,16 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     object cbGroupMovement: TcxCheckBox
       Left = 959
       Top = 5
-      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       TabOrder = 11
       Width = 172
     end
     object cbGroupPartion: TcxCheckBox
       Left = 959
       Top = 29
-      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1087#1072#1088#1090#1080#1080
       TabOrder = 12
-      Width = 156
+      Width = 145
     end
     object cxLabel6: TcxLabel
       Left = 501
@@ -722,6 +662,10 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

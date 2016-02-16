@@ -1,116 +1,54 @@
 inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077')>'
   ClientHeight = 427
-  ClientWidth = 1098
+  ClientWidth = 1298
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1114
-  ExplicitHeight = 465
+  ExplicitWidth = 1314
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 1098
+    Width = 1298
     Height = 328
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1098
+    ExplicitWidth = 1298
     ExplicitHeight = 328
     ClientRectBottom = 328
-    ClientRectRight = 1098
+    ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1098
+      ExplicitWidth = 1298
       ExplicitHeight = 328
       inherited cxGrid: TcxGrid
-        Width = 1098
+        Width = 1298
         Height = 328
-        ExplicitWidth = 1098
+        ExplicitWidth = 1298
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clHeadCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = clChildSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = clChildAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clHeadCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = clChildSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = clChildAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -138,14 +76,6 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Width = 49
           end
-          object clPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1087#1088#1080#1093#1086#1076')'
-            DataBinding.FieldName = 'PartionGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 54
-          end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsGroupName'
@@ -154,11 +84,11 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             Width = 103
           end
           object clGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
+            Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 79
+            Width = 70
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
@@ -167,20 +97,29 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Width = 132
           end
-          object GoodsKindName: TcxGridDBColumn
+          object clGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 57
+            Width = 70
+          end
+          object clPartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'PartionGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
           end
           object clHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
+            Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 68
@@ -195,6 +134,16 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
+          object clMainPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'MainPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072'  ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Summ'
@@ -205,14 +154,6 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Width = 66
           end
-          object clChildPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'ChildPartionGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 64
-          end
           object clChildGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildGoodsGroupName'
@@ -221,11 +162,11 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             Width = 83
           end
           object clChildGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
+            Caption = #1050#1086#1076' '#1090#1086#1074'/ ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildGoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 68
+            Width = 60
           end
           object clChildGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
@@ -234,13 +175,21 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object ChildGoodsKindName: TcxGridDBColumn
+          object clChildGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildGoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 64
+          end
+          object clChildPartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'ChildPartionGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object clChildAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
@@ -252,6 +201,13 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object clChildPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'ChildPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 57
+          end
           object clChildSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072'  ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildSumm'
@@ -262,32 +218,25 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clChildPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'ChildPrice'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 57
-          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1098
+    Width = 1298
     Height = 73
-    ExplicitWidth = 1098
+    ExplicitWidth = 1298
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 108
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 108
     end
     inherited deEnd: TcxDateEdit
       Left = 108
       Top = 29
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 108
       ExplicitTop = 29
@@ -364,19 +313,19 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
       TabOrder = 10
       Width = 169
     end
-    object cbGroupMovement: TcxCheckBox
+    object cbIsMovement: TcxCheckBox
       Left = 959
       Top = 5
-      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       TabOrder = 11
       Width = 172
     end
-    object cbGroupPartion: TcxCheckBox
+    object cbIsPartion: TcxCheckBox
       Left = 959
       Top = 29
-      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1087#1072#1088#1090#1080#1080' '#1080#1083#1080' '#1074#1080#1076' '#1090#1086#1074'.'
       TabOrder = 12
-      Width = 156
+      Width = 194
     end
     object cxLabel6: TcxLabel
       Left = 501
@@ -608,14 +557,14 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
         item
           Name = 'isGroupMovement'
           Value = 'False'
-          Component = cbGroupMovement
+          Component = cbIsMovement
           DataType = ftBoolean
           ParamType = ptInputOutput
         end
         item
           Name = 'isGroupPartion'
           Value = 'False'
-          Component = cbGroupPartion
+          Component = cbIsPartion
           DataType = ftBoolean
           ParamType = ptInputOutput
         end>
@@ -650,16 +599,16 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
         ParamType = ptInput
       end
       item
-        Name = 'inGroupMovement'
+        Name = 'inIsMovement'
         Value = Null
-        Component = cbGroupMovement
+        Component = cbIsMovement
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
-        Name = 'inGroupPartion'
+        Name = 'inIsPartion'
         Value = Null
-        Component = cbGroupPartion
+        Component = cbIsPartion
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -796,10 +745,10 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
         Component = ChildGoodsGroupGuides
       end
       item
-        Component = cbGroupPartion
+        Component = cbIsPartion
       end
       item
-        Component = cbGroupMovement
+        Component = cbIsMovement
       end>
     Left = 232
     Top = 208

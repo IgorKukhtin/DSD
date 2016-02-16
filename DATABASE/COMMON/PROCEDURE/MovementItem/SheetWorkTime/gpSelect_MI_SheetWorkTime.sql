@@ -183,3 +183,17 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean,
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_SheetWorkTime(now(), 0, FALSE, '');
+
+/*
+update  MovementItem set ObjectId = a.PersonalId
+from (
+select  MI_SheetWorkTime.Id, Object_Personal_View .PersonalId
+from Movement 
+     JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
+     left JOIN Object ON Object.Id = MI_SheetWorkTime.ObjectId
+     left JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+     left JOIN Object_Personal_View  on Object_Personal_View .MemberId = MI_SheetWorkTime.ObjectId
+where Movement.DescId = zc_Movement_SheetWorkTime()
+) as a
+where a.Id = MovementItem.Id
+*/

@@ -47,8 +47,8 @@ type
     GoodsGuides: TdsdGuides;
     edToGroup: TcxButtonEdit;
     ToGroupGuides: TdsdGuides;
-    cbGroupMovement: TcxCheckBox;
-    cbGroupPartion: TcxCheckBox;
+    cbIsMovement: TcxCheckBox;
+    cbIsPartion: TcxCheckBox;
     cxLabel6: TcxLabel;
     cxLabel8: TcxLabel;
     edChildGoods: TcxButtonEdit;
@@ -58,8 +58,9 @@ type
     clChildPartionGoods: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    GoodsKindName: TcxGridDBColumn;
-    ChildGoodsKindName: TcxGridDBColumn;
+    clGoodsKindName: TcxGridDBColumn;
+    clChildGoodsKindName: TcxGridDBColumn;
+    clMainPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public
