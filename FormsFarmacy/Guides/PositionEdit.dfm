@@ -69,7 +69,8 @@
   object ceTaxService: TcxCurrencyEdit
     Left = 168
     Top = 42
-    Properties.DisplayFormat = ',0.##'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 7
     Width = 137
   end

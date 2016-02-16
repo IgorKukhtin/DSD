@@ -136,6 +136,8 @@ object UnitTreeForm: TUnitTreeForm
       object colTaxService: TcxGridDBColumn
         Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
         DataBinding.FieldName = 'TaxService'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

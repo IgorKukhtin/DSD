@@ -12,7 +12,7 @@ uses
   cxCheckBox, dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar,
   cxPropertiesStore, Datasnap.DBClient, cxGrid, cxSplitter, cxInplaceContainer,
   cxDBTL, cxTLData, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCurrencyEdit;
 
 type
   TUnitTreeForm = class(TParentForm)

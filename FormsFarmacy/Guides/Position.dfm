@@ -64,6 +64,8 @@ object PositionForm: TPositionForm
       object colTaxService: TcxGridDBColumn
         Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
         DataBinding.FieldName = 'TaxService'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter
         Width = 57
       end
