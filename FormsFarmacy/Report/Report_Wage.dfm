@@ -2,10 +2,9 @@ inherited Report_WageForm: TReport_WageForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1047#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1077
   ClientHeight = 305
   ClientWidth = 894
-  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 910
-  ExplicitHeight = 340
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -154,7 +153,6 @@ inherited Report_WageForm: TReport_WageForm
   inherited Panel: TPanel
     Width = 894
     Height = 32
-    Visible = False
     ExplicitWidth = 894
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
@@ -198,16 +196,26 @@ inherited Report_WageForm: TReport_WageForm
       Width = 252
     end
   end
-  object cbinIsDay: TcxCheckBox [2]
-    Left = 240
+  object chinisDay: TcxCheckBox [2]
+    Left = 244
     Top = 5
-    Hint = #1086#1090#1075#1088#1091#1078#1077#1085#1085#1099#1077' '#1079#1072#1103#1074#1082#1080
-    Caption = #1087#1086' '#1044#1085#1103#1084
-    Properties.ReadOnly = False
+    Action = actinisDay
     TabOrder = 6
-    Width = 74
+    Width = 66
   end
   inherited ActionList: TActionList
+    object actinisDay: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1044#1085#1103#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -277,7 +285,7 @@ inherited Report_WageForm: TReport_WageForm
         item
           Name = 'inIsDay'
           Value = Null
-          Component = cbinIsDay
+          Component = chinisDay
           DataType = ftBoolean
           ParamType = ptInput
         end>
@@ -321,7 +329,7 @@ inherited Report_WageForm: TReport_WageForm
       item
         Name = 'inIsDay'
         Value = Null
-        Component = cbinIsDay
+        Component = chinisDay
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -353,42 +361,6 @@ inherited Report_WageForm: TReport_WageForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbcbinIsDay'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem5'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem6'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -461,7 +433,6 @@ inherited Report_WageForm: TReport_WageForm
       Category = 0
       Hint = #1087#1086' '#1076#1085#1103#1084
       Visible = ivAlways
-      Control = cbinIsDay
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -484,7 +455,12 @@ inherited Report_WageForm: TReport_WageForm
         Component = ceUnit
       end
       item
-        Component = cbinIsDay
+        Component = deStart
+      end
+      item
+        Component = deEnd
+      end
+      item
       end>
     Left = 576
     Top = 112

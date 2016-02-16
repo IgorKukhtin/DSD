@@ -42,9 +42,10 @@ type
     colUnitName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    cbinIsDay: TcxCheckBox;
     bbcbinIsDay: TdxBarControlContainerItem;
     colDayOfWeekName: TcxGridDBColumn;
+    chinisDay: TcxCheckBox;
+    actinisDay: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
