@@ -423,11 +423,11 @@ begin
     end
     else begin //обнуление
                isOrderExternal:=true;
-               ParamsMovement_local.ParamByName('OrderExternalId').AsInteger:=0;
+               {ParamsMovement_local.ParamByName('OrderExternalId').AsInteger:=0;
                ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger:=0;
                ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString :='';
                ParamsMovement_local.ParamByName('OrderExternal_InvNumber').asString :='';
-               ParamsMovement_local.ParamByName('OrderExternalName_master').asString :='';
+               ParamsMovement_local.ParamByName('OrderExternalName_master').asString :='';}
                //
                try Number:=StrToInt(trim(EditBarCode.Text)) except Number:=0;end;
                // если это код операции
@@ -630,6 +630,12 @@ begin
 
     if GuidePartnerForm.Execute(ParamsMovement_local)
     then begin
+              ParamsMovement_local.ParamByName('OrderExternalId').AsInteger:=0;
+              ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger:=0;
+              ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString :='';
+              ParamsMovement_local.ParamByName('OrderExternal_InvNumber').asString :='';
+              ParamsMovement_local.ParamByName('OrderExternalName_master').asString :='';
+
               ParamsMovement_local.ParamByName('isGetPartner').AsBoolean:= true;
               EditPartnerCode.Text:=IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
               PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').AsString;
