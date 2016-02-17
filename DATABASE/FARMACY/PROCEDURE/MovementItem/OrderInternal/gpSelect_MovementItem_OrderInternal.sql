@@ -105,7 +105,7 @@ BEGIN
            , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
            , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
            , tmpCheck.Amount  ::tfloat                                                 AS CheckAmount
-           
+           , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE)  ::Boolean AS isOneJuridical
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
@@ -256,7 +256,10 @@ BEGIN
                       ) AS Income ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Income.Income_GoodsId
                       
              LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
-
+             LEFT JOIN lpSelectMinPrice_AllGoods(inUnitId := vbUnitId,
+                                     inObjectId := vbObjectId, 
+                                     inUserId := vbUserId
+                       ) as SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.GoodsId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId) 
 
 ;
         RETURN NEXT Cursor1;

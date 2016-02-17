@@ -253,43 +253,48 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 65
           end
-          object coJuridicalName: TcxGridDBColumn [19]
+          object colisOneJuridical: TcxGridDBColumn [19]
+            Caption = #1054#1076#1080#1085' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'isOneJuridical'
+            Width = 35
+          end
+          object coJuridicalName: TcxGridDBColumn [20]
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'JuridicalName'
             Options.Editing = False
             Width = 77
           end
-          object coContractName: TcxGridDBColumn [20]
+          object coContractName: TcxGridDBColumn [21]
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             Options.Editing = False
             Width = 60
           end
-          object clPartionGoodsDate: TcxGridDBColumn [21]
+          object clPartionGoodsDate: TcxGridDBColumn [22]
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PartionGoodsDate'
             Options.Editing = False
             Width = 75
           end
-          object colNDSKindName: TcxGridDBColumn [22]
+          object colNDSKindName: TcxGridDBColumn [23]
             Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             Options.Editing = False
             Width = 71
           end
-          object colGoodsGroupName: TcxGridDBColumn [23]
+          object colGoodsGroupName: TcxGridDBColumn [24]
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
             DataBinding.FieldName = 'GoodsGroupName'
             Options.Editing = False
             Width = 104
           end
-          object clPartionGoodsDateColor: TcxGridDBColumn [24]
+          object clPartionGoodsDateColor: TcxGridDBColumn [25]
             DataBinding.FieldName = 'PartionGoodsDateColor'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object colisTopColor: TcxGridDBColumn [25]
+          object colisTopColor: TcxGridDBColumn [26]
             DataBinding.FieldName = 'isTopColor'
             Visible = False
             Options.Editing = False
