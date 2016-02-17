@@ -17,7 +17,13 @@ $BODY$
 BEGIN
 
     -- создаются временные таблицы - для формирование данных для проводок
-    PERFORM lpComplete_Movement_Finance_CreateTemp();
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpmicontainer_insert')
+     THEN
+         DELETE FROM _tmpMIContainer_insert;
+         DELETE FROM _tmpMIReport_insert;
+     ELSE
+         PERFORM lpComplete_Movement_Finance_CreateTemp();
+     END IF;
 
     -- !!!обязательно!!! очистили таблицу проводок
     DELETE FROM _tmpMIContainer_insert;
