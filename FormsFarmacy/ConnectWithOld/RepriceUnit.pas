@@ -92,10 +92,13 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     cdsResultisOneJuridical: TBooleanField;
     colIsOneJuridical: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
     procedure cdsResultCalcFields(DataSet: TDataSet);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
   private
     FStartReprice: Boolean;
     { Private declarations }
@@ -250,6 +253,11 @@ begin
     cdsResultRealSummReprice.AsCurrency := 0;
 end;
 
+procedure TRepriceUnitForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  dsdUserSettingsStorageAddOn.SaveUserSettings;
+end;
+
 procedure TRepriceUnitForm.FormCreate(Sender: TObject);
 begin
   FStartReprice := False;
@@ -260,6 +268,11 @@ begin
     CheckListBox.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
     UnitsCDS.Next;
   end;
+end;
+
+procedure TRepriceUnitForm.FormShow(Sender: TObject);
+begin
+  dsdUserSettingsStorageAddOn.LoadUserSettings
 end;
 
 end.

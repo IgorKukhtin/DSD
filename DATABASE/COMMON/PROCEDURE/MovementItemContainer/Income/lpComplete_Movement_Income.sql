@@ -802,6 +802,32 @@ BEGIN
         -- GROUP BY _tmpSumm.BusinessId, _tmpSumm.GoodsId
        ;
 
+     -- !!!обязательно до ... _tmpItem_SummPersonal и после ...!!! - формируются <норма авто> - если есть лимит в ГРН (это ПРИОРИТЕТНЫЙ вариант)
+     -- PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountFuel(), inMovementId, CASE WHEN tmp.Price <> 0 THEN MovementFloat_Limit.ValueData / tmp.Price ELSE 0 END)
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_LimitDistance(), inMovementId, CASE WHEN tmp.Price <> 0 AND MovementFloat_AmountFuel.ValueData <> 0
+                                                                                                     THEN (100 * MovementFloat_Limit.ValueData / tmp.Price) / MovementFloat_AmountFuel.ValueData
+                                                                                                ELSE 0
+                                                                                           END
+                                                                                         )
+           -- , lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountFuel(), inMovementId, CASE WHEN tmp.Price <> 0 THEN 100 * (MovementFloat_Limit.ValueData / tmp.Price) / MovementFloat_Distance.ValueData ELSE 0 END)
+     FROM MovementFloat AS MovementFloat_Limit
+          INNER JOIN MovementFloat AS MovementFloat_Distance
+                                   ON MovementFloat_Distance.MovementId =  inMovementId
+                                  AND MovementFloat_Distance.DescId = zc_MovementFloat_Distance()
+                                  AND MovementFloat_Distance.ValueData <> 0
+          LEFT JOIN MovementFloat AS MovementFloat_AmountFuel
+                                  ON MovementFloat_AmountFuel.MovementId =  inMovementId
+                                 AND MovementFloat_AmountFuel.DescId = zc_MovementFloat_AmountFuel()
+          LEFT JOIN (SELECT SUM (_tmpItem.OperSumm_Partner) / SUM (_tmpItem.OperCount_Partner) AS Price
+                          , SUM (_tmpItem.OperCount_Partner) AS OperCount_Partner
+                     FROM _tmpItem
+                     WHERE _tmpItem.OperCount_Partner <> 0
+                    ) AS tmp ON tmp.Price <> 0
+     WHERE MovementFloat_Limit.MovementId = inMovementId
+       AND MovementFloat_Limit.DescId = zc_MovementFloat_Limit()
+       AND inMovementId in (3166576, 3158828)
+       AND MovementFloat_Limit.ValueData <> 0;
+
      -- заполняем таблицу - элементы по Сотруднику (ЗП) + затраты "Заправка" + "Учредитель" + "Перевыставление", со всеми свойствами для формирования Аналитик в проводках, здесь по !!!MovementItemId!!!
      INSERT INTO _tmpItem_SummPersonal (MovementItemId, ContainerId_Goods, ContainerId, AccountId, InfoMoneyDestinationId, InfoMoneyId, PersonalId, BranchId, UnitId, PositionId, ServiceDateId, PersonalServiceListId, GoodsId, OperCount, OperSumm_Partner
                                       , OperSumm_20401, OperSumm_21425
@@ -886,7 +912,18 @@ BEGIN
                                     WHEN tmp.FuelRealCalc <> 0
                                          THEN _tmpItem.OperSumm_Partner
                                     ELSE 0
-                               END + tmp.SummLimit AS OperSumm_20401
+                               END
+                             + CASE WHEN tmp.SummLimit < _tmpItem.OperSumm_Partner - CASE WHEN _tmpItem.OperCount <> tmp.FuelRealCalc AND tmp.FuelRealCalc <> 0
+                                                                                               THEN CAST (tmp.FuelRealCalc * _tmpItem.OperSumm_Partner / _tmpItem.OperCount AS NUMERIC (16, 2))
+                                                                                          WHEN tmp.FuelRealCalc <> 0
+                                                                                               THEN _tmpItem.OperSumm_Partner
+                                                                                          ELSE 0
+                                                                                     END
+                                         THEN tmp.SummLimit
+                                    WHEN tmp.FuelRealCalc = 0
+                                         THEN _tmpItem.OperSumm_Partner
+                                    ELSE 0
+                               END AS OperSumm_20401
                                -- *Сумма грн (амортизация) = есть лим. км. = 0 ТОГДА = пробег ф.км. * цена аморт. ИНАЧЕ = МИН (пробег ф.км. ИЛИ лимит км.)  * цена аморт.
                              , CAST (tmp.SummReparation AS NUMERIC (16, 2)) AS SummReparation
                         FROM gpGet_Movement_IncomeFuel (inMovementId := inMovementId

@@ -38,6 +38,16 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
               Format = ',0.####'
               Kind = skSum
               Column = clChildAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -365,6 +375,65 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
     Left = 747
     Top = 30
     Caption = #1058#1086#1074#1072#1088' '#1088#1072#1089#1093':'
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = cbIsMovement
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbIsPartion
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = ChildGoodsGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = ChildGoodsGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = FromGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GoodsGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GoodsGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = ToGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     object actPrint: TdsdPrintAction

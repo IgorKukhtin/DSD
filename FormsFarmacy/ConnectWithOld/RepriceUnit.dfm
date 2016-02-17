@@ -11,7 +11,9 @@ object RepriceUnitForm: TRepriceUnitForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object AllGoodsPriceGrid: TcxGrid
@@ -336,8 +338,8 @@ object RepriceUnitForm: TRepriceUnitForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 600
-    Top = 464
+    Left = 576
+    Top = 384
   end
   object spSelect_AllGoodsPrice: TdsdStoredProc
     StoredProcName = 'gpSelect_AllGoodsPrice'
@@ -677,135 +679,6 @@ object RepriceUnitForm: TRepriceUnitForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AllGoodsPriceGrid
-        Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'BevelEdges'
-          'BevelInner'
-          'BevelKind'
-          'BevelOuter'
-          'BevelWidth'
-          'BorderStyle'
-          'BorderWidth'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'DragOpening'
-          'DragOpeningWaitTime'
-          'Enabled'
-          'Font'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'Images'
-          'Left'
-          'LevelTabs'
-          'LockedStateImageOptions'
-          'LookAndFeel'
-          'Margins'
-          'Name'
-          'ParentCustomHint'
-          'ParentFont'
-          'PopupMenu'
-          'RootLevelOptions'
-          'RootLevelStyles'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = AllGoodsPriceGridLevel
-        Properties.Strings = (
-          'Caption'
-          'FakeComponentLink1'
-          'FakeComponentLink2'
-          'FakeComponentLink3'
-          'GridView'
-          'ImageIndex'
-          'MaxDetailHeight'
-          'Name'
-          'Options'
-          'Styles'
-          'Tag'
-          'Visible')
-      end
-      item
-        Component = AllGoodsPriceGridTableView
-        Properties.Strings = (
-          'BackgroundBitmaps'
-          'DataController'
-          'DateTimeHandling'
-          'DragMode'
-          'FakeComponentLink1'
-          'FakeComponentLink2'
-          'FakeComponentLink3'
-          'FilterBox'
-          'Filtering'
-          'FilterRow'
-          'Images'
-          'Name'
-          'Navigator'
-          'NavigatorButtons'
-          'NewItemRow'
-          'OptionsBehavior'
-          'OptionsCustomize'
-          'OptionsData'
-          'OptionsSelection'
-          'OptionsView'
-          'PopupMenu'
-          'Preview'
-          'Styles'
-          'Synchronization'
-          'Tag')
-      end
-      item
-        Component = colExpirationDate
-        Properties.Strings = (
-          'AlternateCaption'
-          'BestFitMaxWidth'
-          'Caption'
-          'DataBinding'
-          'DateTimeGrouping'
-          'FakeComponentLink1'
-          'FakeComponentLink2'
-          'FakeComponentLink3'
-          'FooterAlignmentHorz'
-          'GroupIndex'
-          'GroupSummaryAlignment'
-          'HeaderAlignmentHorz'
-          'HeaderAlignmentVert'
-          'HeaderGlyph'
-          'HeaderGlyphAlignmentHorz'
-          'HeaderGlyphAlignmentVert'
-          'HeaderHint'
-          'HeaderImageIndex'
-          'MinWidth'
-          'Name'
-          'Options'
-          'Properties'
-          'PropertiesClassName'
-          'RepositoryItem'
-          'SortIndex'
-          'SortOrder'
-          'Styles'
-          'Summary'
-          'Tag'
-          'Visible'
-          'VisibleForCustomization'
-          'Width')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -814,8 +687,12 @@ object RepriceUnitForm: TRepriceUnitForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    StorageType = stStream
+    StorageType = stRegistry
     Left = 360
     Top = 328
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 352
+    Top = 384
   end
 end

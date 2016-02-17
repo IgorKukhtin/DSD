@@ -409,11 +409,11 @@ BEGIN
      FROM (SELECT _tmpItem.MovementItemId
                 , _tmpItem.OperSumm
                 , 0 AS SummTransportAdd
-                , SUM (MIContainer.Amount) AS SummTransport
+                , COALESCE (SUM (MIContainer.Amount), 0) AS SummTransport
                 , 0 AS SummPhone
            FROM _tmpItem
-                INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpItem.ContainerId
-                                                               AND MIContainer.MovementDescId = zc_Movement_Income()
+                LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpItem.ContainerId
+                                                              AND MIContainer.MovementDescId = zc_Movement_Income()
            WHERE _tmpItem.IsMaster = TRUE
            GROUP BY _tmpItem.MovementItemId
                 , _tmpItem.OperSumm

@@ -986,13 +986,23 @@ BEGIN
                   , _tmpItemSumm.ContainerId_To
                   , _tmpItemSumm.ContainerId_Transit
                   , CASE WHEN tmpAccount_60000.AccountId > 0
-                         AND  (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401()  -- прибыль текущего периода
+                          AND (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401()  -- прибыль текущего периода
                             OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401()) -- прибыль текущего периода
+                          AND _tmpItem.OperCount_Partner <> 0
                               THEN zc_Enum_AnalyzerId_SummIn_80401() -- Сумма, не совсем забалансовый счет, расход приб. буд. периодов
-                         WHEN _tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
-                           OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+
+                         WHEN (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                            OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401()) -- прибыль текущего периода
+                          AND _tmpItem.OperCount_Partner <> 0
                               THEN zc_Enum_AnalyzerId_SummOut_80401() -- Сумма, не совсем забалансовый счет, приход приб. буд. периодов
+
+                         WHEN (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                            OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401()) -- прибыль текущего периода
+                          AND _tmpItem.OperCount_Partner = 0
+                              THEN 0 -- !!!может быть временно, т.е. эту сумму надо будет делить на потери!!!
+
                          ELSE zc_Enum_AnalyzerId_SendSumm_in() -- Сумма с/с, перемещение по цене, перемещение, пришло
+
                     END AS AnalyzerId
                   , CASE WHEN _tmpItemSumm.isLossMaterials = TRUE OR _tmpItemSumm.isRestoreAccount_60000 = TRUE THEN 0 ELSE _tmpItemSumm.MIContainerId_To END AS ParentId -- хотя он здесь и так =0
                   , CASE WHEN _tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
@@ -1003,6 +1013,7 @@ BEGIN
                   , FALSE                                   AS isActive
              FROM _tmpItemSumm
                   LEFT JOIN tmpAccount_60000 ON tmpAccount_60000.AccountId = _tmpItemSumm.AccountId_From
+                  LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
              WHERE CASE WHEN _tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                           OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                              THEN _tmpItemSumm.OperSumm
