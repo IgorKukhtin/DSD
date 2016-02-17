@@ -94,6 +94,7 @@ type
     colIncome_Amount: TcxGridDBColumn;
     colisCalculated: TcxGridDBColumn;
     clCheckAmount: TcxGridDBColumn;
+    colisOneJuridical: TcxGridDBColumn;
   private
     { Private declarations }
   public
