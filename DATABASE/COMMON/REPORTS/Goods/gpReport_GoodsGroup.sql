@@ -340,7 +340,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner) ELSE SUM (tmp.SummIn_Partner_zavod) END AS Summ
+                            --***, CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner) ELSE SUM (tmp.SummIn_Partner_zavod) END AS Summ
+                            , SUM (tmp.Summ_pl)               AS Summ
                             , SUM (tmp.SummOut_Partner)       AS Summ_branch
 
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
@@ -376,7 +377,8 @@ BEGIN
                             , SUM (tmp.OperCount_Partner)     AS AmountIn
                             , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner) ELSE SUM (tmp.SummIn_Partner_zavod) END AS SummIn
                             , SUM (tmp.SummOut_Partner)       AS SummIn_branch
-                            , SUM (tmp.SummIn_Partner_zavod)  AS SummPartnerIn
+                            --***, SUM (tmp.SummIn_Partner_zavod)  AS SummPartnerIn
+                            , SUM (tmp.Summ_pl)               AS SummPartnerIn
 
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
@@ -384,7 +386,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , SUM (tmp.SummIn_Partner_zavod)  AS Summ
+                            --***, SUM (tmp.SummIn_Partner_zavod)  AS Summ
+                            , SUM (tmp.Summ_pl)               AS Summ
                             , SUM (tmp.SummOut_Partner)       AS Summ_branch
 
                             , SUM (tmp.OperCount_Change)      AS Amount_Change

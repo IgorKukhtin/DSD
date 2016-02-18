@@ -74,25 +74,25 @@ BEGIN
                                                 );
 
      -- сохранили свойство <>
-     -- PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_StartOdometre(), ioId, inStartOdometre);
+     -- PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartOdometre(), ioId, inStartOdometre);
      -- сохранили свойство <>
-     -- PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_EndOdometre(), ioId, inEndOdometre);
+     -- PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_EndOdometre(), ioId, inEndOdometre);
   
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_AmountFuel(), ioId, inAmountFuel);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_Reparation(), ioId, inReparation);
+     -- сохранили свойство <норма авто>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountFuel(), ioId, inAmountFuel);
+     -- сохранили свойство <амортизация за 1 км., грн.>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Reparation(), ioId, inReparation);
 
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_LimitChange(), ioId, inLimitChange);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_LimitChange(), ioId, inLimitChange);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_LimitDistanceChange(), ioId, inLimitDistanceChange);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_LimitDistanceChange(), ioId, inLimitDistanceChange);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_Limit(), ioId, inLimit);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Limit(), ioId, inLimit);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_LimitDistance(), ioId, inLimitDistance);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_LimitDistance(), ioId, inLimitDistance);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
