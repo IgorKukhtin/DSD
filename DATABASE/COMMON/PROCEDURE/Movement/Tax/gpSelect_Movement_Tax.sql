@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar, INN_To TVarChar
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
@@ -78,6 +78,7 @@ BEGIN
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
            , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_To
+           , ObjectHistory_JuridicalDetails_View.INN    AS INN_To
 
            , Object_From_Master.ObjectCode              AS UnitCode
            , Object_From_Master.ValueData               AS UnitName
@@ -289,3 +290,6 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.02.2015', inEndDate:= '01.02.2015', inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+
+
+

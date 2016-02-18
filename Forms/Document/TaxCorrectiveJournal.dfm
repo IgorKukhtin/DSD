@@ -188,6 +188,13 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
+          object colINN_From: TcxGridDBColumn
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'INN_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
@@ -1683,7 +1690,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = edLoadData
       end>
     PackSize = 1
-    Left = 744
-    Top = 96
+    Left = 736
+    Top = 152
   end
 end
