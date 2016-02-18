@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
-               isPriceClose Boolean, Bonus TFloat, PriceLimit TFloat, ÑonditionalPercent TFloat,
+               isPriceClose Boolean, Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar, isErased boolean,
                StartDate TDateTime, EndDate TDateTime) AS
@@ -29,7 +29,7 @@ BEGIN
            , COALESCE(JuridicalSettings.isPriceClose, FALSE)
            , JuridicalSettings.Bonus
            , JuridicalSettings.PriceLimit :: TFloat AS PriceLimit
-           , COALESCE(ObjectFloat_ÑonditionalPercent.ValueData, 0) :: TFloat AS ÑonditionalPercent
+           , COALESCE(ObjectFloat_ConditionalPercent.ValueData, 0) :: TFloat AS ConditionalPercent
            , LastPriceList_View.ContractId AS ContractId
            , Contract.ValueData AS ContractName
            , ObjectLink_JuridicalRetail.ObjectId AS MainJuridicalId
@@ -100,9 +100,9 @@ BEGIN
 
                 LEFT JOIN Object AS Object_JuridicalSettings ON Object_JuridicalSettings.Id = JuridicalSettings.JuridicalSettingsId
 
-                LEFT JOIN ObjectFloat AS ObjectFloat_ÑonditionalPercent 
-                                      ON ObjectFloat_ÑonditionalPercent.ObjectId = LastPriceList_View.JuridicalId
-                                     AND ObjectFloat_ÑonditionalPercent.DescId = zc_ObjectFloat_Juridical_ÑonditionalPercent()
+                LEFT JOIN ObjectFloat AS ObjectFloat_ConditionalPercent 
+                                      ON ObjectFloat_ConditionalPercent.ObjectId = LastPriceList_View.JuridicalId
+                                     AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent()
 
 ;  
 END;

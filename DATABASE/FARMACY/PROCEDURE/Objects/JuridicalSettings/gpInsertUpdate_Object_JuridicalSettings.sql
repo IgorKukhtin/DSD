@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
     IN inisPriceClose            Boolean   ,    -- Закрыт прайс
     IN inBonus                   TFloat    ,    -- % бонусирования
     IN inPriceLimit              TFloat    ,    -- Цена до
-    IN inСonditionalPercent      TFloat    ,    -- Доп.условия по прайсу, %
+    IN inConditionalPercent      TFloat    ,    -- Доп.условия по прайсу, %
     IN inStartDate               TDateTime ,    -- 
     IN inEndDate                 TDateTime ,    -- 
     IN inSession                 TVarChar       -- сессия пользователя
@@ -54,7 +54,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalSettings_PriceLimit(), ioId, inPriceLimit);
 
    -- Доп.условия по прайсу, %
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_СonditionalPercent(), inJuridicalId, inСonditionalPercent);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_ConditionalPercent(), inJuridicalId, inConditionalPercent);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);

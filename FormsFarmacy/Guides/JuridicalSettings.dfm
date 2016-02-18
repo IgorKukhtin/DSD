@@ -1,24 +1,26 @@
 ﻿inherited JuridicalSettingsForm: TJuridicalSettingsForm
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1102#1088' '#1083#1080#1094
   ClientHeight = 311
-  ClientWidth = 892
-  ExplicitWidth = 908
+  ClientWidth = 985
+  ExplicitWidth = 1001
   ExplicitHeight = 349
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 892
+    Width = 985
     Height = 285
-    ExplicitWidth = 793
+    ExplicitWidth = 985
+    ExplicitHeight = 285
     ClientRectBottom = 285
-    ClientRectRight = 892
+    ClientRectRight = 985
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 793
-      ExplicitHeight = 282
+      ExplicitWidth = 985
+      ExplicitHeight = 285
       inherited cxGrid: TcxGrid
-        Width = 892
+        Width = 985
         Height = 285
-        ExplicitWidth = 793
+        ExplicitWidth = 985
+        ExplicitHeight = 285
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -95,7 +97,7 @@
           end
           object colСonditionalPercent: TcxGridDBColumn
             Caption = #1044#1086#1087'. % '#1087#1086' '#1087#1088#1072#1081#1089#1091
-            DataBinding.FieldName = #1057'onditionalPercent'
+            DataBinding.FieldName = 'ConditionalPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -209,10 +211,10 @@
         ParamType = ptInput
       end
       item
-        Name = 'in'#1057'onditionalPercent'
+        Name = 'inConditionalPercent'
         Value = Null
         Component = MasterCDS
-        ComponentItem = #1057'onditionalPercent'
+        ComponentItem = 'ConditionalPercent'
         DataType = ftFloat
         ParamType = ptInput
       end
