@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Reprice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Reprice(
     IN inMinExpirationDate   TDateTime , -- Срок годности остатка
     IN inAmount              TFloat    , -- Количество
     IN inPriceOld            TFloat    , -- Цена
-    IN inPriceNew            TFloat    , -- сумма
+    IN inPriceNew            TFloat    , -- НОВАЯ цена
+    IN inJuridical_Price     TFloat    , -- Цена поставщика
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -32,6 +34,9 @@ BEGIN
 
     -- сохранили <цену новую>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inPriceNew);
+
+    -- сохранили <цену поставщика>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(), ioId, inJuridical_Price);
 
     -- сохранили <Срок годности>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), ioId, inExpirationDate);

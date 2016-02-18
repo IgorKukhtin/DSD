@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Reprice(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, PriceOld TFloat, PriceNew TFloat, SummReprice TFloat
+             , Amount TFloat, PriceOld TFloat, PriceNew TFloat, Juridical_Price TFloat, SummReprice TFloat
              , ExpirationDate TDateTime, MinExpirationDate TDateTime
              , NDS TFloat, PriceDiff TFloat
              , JuridicalId Integer, JuridicalName TVarChar
@@ -64,6 +64,7 @@ BEGIN
              , COALESCE(MovementItem.Amount,0)::TFloat           AS Amount
              , MIFloat_Price.ValueData                           AS PriceOld
              , MIFloat_PriceSale.ValueData                       AS PriceNew
+             , MIFloat_JuridicalPrice.ValueData                  AS Juridical_Price
              , (MovementItem.Amount*
                  (COALESCE(MIFloat_PriceSale.ValueData, 0)
                   -COALESCE(MIFloat_Price.ValueData, 0)))   ::TFloat            AS SummReprice
@@ -87,6 +88,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                     ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                    AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+            LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                    ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
+                                   AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()                                   
             LEFT JOIN Object AS Object_Goods 
                           ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN MovementItemDate AS MIDate_ExpirationDate

@@ -68,6 +68,7 @@ BEGIN
                                                , inAmount             := inAmount
                                                , inPriceOld           := inPriceOld
                                                , inPriceNew           := inPriceNew
+                                               , inJuridical_Price    := inJuridical_Price
                                                , inUserId             := vbUserId);
 
 
