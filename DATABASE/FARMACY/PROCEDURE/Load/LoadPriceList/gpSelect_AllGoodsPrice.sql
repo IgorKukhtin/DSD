@@ -20,6 +20,7 @@ RETURNS TABLE (
     MinMarginPercent    TFloat,     --минимальный % отклонения
     PriceDiff           TFloat,     --% отклонения
     ExpirationDate      TDateTime,  --Срок годности
+    JuridicalId         Integer,    --Поставщик Id
     JuridicalName       TVarChar,   --Поставщик
     Juridical_Price     TFloat,     --Цена у поставщика
     MarginPercent       TFloat,     --% наценки по точке
@@ -241,6 +242,7 @@ BEGIN
                               0 /*ObjectFloat_Percent.valuedata*/,
                               Object_Goods.Price)::TFloat AS NewPrice,
             SelectMinPrice_AllGoods.PartionGoodsDate         AS ExpirationDate,
+            SelectMinPrice_AllGoods.JuridicalId              AS JuridicalId,
             SelectMinPrice_AllGoods.JuridicalName            AS JuridicalName,
             SelectMinPrice_AllGoods.Partner_GoodsName        AS Partner_GoodsName,
             SelectMinPrice_AllGoods.MakerName                AS ProducerName,
@@ -281,6 +283,7 @@ BEGIN
             ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
         END::TFloat AS PriceDiff,
         ResultSet.ExpirationDate         AS ExpirationDate,
+        ResultSet.JuridicalId            AS JuridicalId,
         ResultSet.JuridicalName          AS JuridicalName,
         ResultSet.Juridical_Price        AS Juridical_Price,
         ResultSet.MarginPercent          AS MarginPercent,
