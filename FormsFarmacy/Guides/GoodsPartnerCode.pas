@@ -63,6 +63,13 @@ type
     colUpdateDate: TcxGridDBColumn;
     spUpdate_Goods_IsSpecCondition: TdsdStoredProc;
     ñolisSpecCondition: TcxGridDBColumn;
+    actDoLoadIsSpecCondition: TExecuteImportSettingsAction;
+    actDelete_ObjectFloat_Goods_IsSpecCondition: TdsdExecStoredProc;
+    actGetImportSetting_Goods_IsSpecCondition: TdsdExecStoredProc;
+    actStartLoadIsSpecCondition: TMultiAction;
+    bbSpecCondition: TdxBarButton;
+    spGetImportSetting_Goods_IsSpecCondition: TdsdStoredProc;
+    spDelete_ObjectBoolean_Goods_IsSpecCondition: TdsdStoredProc;
   private
     { Private declarations }
   public
