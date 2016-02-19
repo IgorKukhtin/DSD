@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceList(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat
+             , Amount TFloat, Price TFloat
              , PartionGoodsDate TDateTime, Remains TFloat, GoodsJuridicalName TVarChar
              , isErased Boolean
               )
@@ -31,6 +31,7 @@ BEGIN
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
+           , CAST (NULL AS TFloat)      AS Price
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , 0.00::TFloat               AS Remains
            , ''::TVarChar               AS GoodsJuridicalName
@@ -54,15 +55,16 @@ BEGIN
 
       UNION ALL
        SELECT
-             MovementItem.Id                    AS Id
-           , Object_Goods.Id                    AS GoodsId
-           , Object_Goods.ObjectCode            AS GoodsCode
-           , Object_Goods.ValueData             AS GoodsName
-           , MovementItem.Amount                AS Amount
-           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
-           , MIFloat_Remains.ValueData          AS Remains
-           , Object_JuridicalGoods.ValueData    AS GoodsJuridicalName
-           , MovementItem.isErased              AS isErased
+             MovementItem.Id                      AS Id
+           , Object_Goods.Id                      AS GoodsId
+           , Object_Goods.ObjectCode              AS GoodsCode
+           , Object_Goods.ValueData               AS GoodsName
+           , MovementItem.Amount                  AS Amount
+           , COALESCE(MIFloat_Price.ValueData,0)::TFloat  AS Price
+           , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
+           , MIFloat_Remains.ValueData            AS Remains
+           , Object_JuridicalGoods.ValueData      AS GoodsJuridicalName
+           , MovementItem.isErased                AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -77,6 +79,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                         ON MIFloat_Remains.MovementItemId =  MovementItem.Id
                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId =  MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
@@ -90,15 +96,16 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             MovementItem.Id                    AS Id
-           , Object_Goods.Id                    AS GoodsId
-           , Object_Goods.ObjectCode            AS GoodsCode
-           , Object_Goods.ValueData             AS GoodsName
-           , MovementItem.Amount                AS Amount
-           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
-           , MIFloat_Remains.ValueData          AS Remains
-           , Object_JuridicalGoods.ValueData    AS GoodsJuridicalName
-           , MovementItem.isErased              AS isErased
+             MovementItem.Id                      AS Id
+           , Object_Goods.Id                      AS GoodsId
+           , Object_Goods.ObjectCode              AS GoodsCode
+           , Object_Goods.ValueData               AS GoodsName
+           , MovementItem.Amount                  AS Amount
+           , COALESCE(MIFloat_Price.ValueData,0)::TFloat  AS Price
+           , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
+           , MIFloat_Remains.ValueData            AS Remains
+           , Object_JuridicalGoods.ValueData      AS GoodsJuridicalName
+           , MovementItem.isErased                AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
@@ -118,6 +125,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                         ON MIFloat_Remains.MovementItemId =  MovementItem.Id
                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId =  MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
             LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
 
@@ -134,6 +145,7 @@ ALTER FUNCTION gpSelect_MovementItem_PriceList (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.02.16         *
  01.07.14                                                       *
 
 */

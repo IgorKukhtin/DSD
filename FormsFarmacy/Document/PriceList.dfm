@@ -2,8 +2,8 @@ inherited PriceListForm: TPriceListForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
   ClientWidth = 753
-  ExplicitWidth = 761
-  ExplicitHeight = 695
+  ExplicitWidth = 769
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,17 @@ inherited PriceListForm: TPriceListForm
     Width = 753
     Height = 585
     ExplicitTop = 83
-    ExplicitWidth = 810
+    ExplicitWidth = 753
     ExplicitHeight = 585
     ClientRectBottom = 585
     ClientRectRight = 753
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 810
+      ExplicitWidth = 753
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
         Width = 753
         Height = 561
-        ExplicitWidth = 810
+        ExplicitWidth = 753
         ExplicitHeight = 561
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -111,6 +111,17 @@ inherited PriceListForm: TPriceListForm
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1086#1088#1080#1075#1080#1085#1072#1083'.'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1086#1088#1080#1075#1080#1085#1072#1083#1100#1085#1072#1103
+            Options.Editing = False
+            Width = 77
+          end
           object colPartionGoodsDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'PartionGoodsDate'
@@ -135,7 +146,7 @@ inherited PriceListForm: TPriceListForm
     Width = 753
     Height = 57
     TabOrder = 3
-    ExplicitWidth = 810
+    ExplicitWidth = 753
     ExplicitHeight = 57
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -285,6 +296,7 @@ inherited PriceListForm: TPriceListForm
     object actGoodsKindChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -568,7 +580,7 @@ inherited PriceListForm: TPriceListForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -763,7 +775,7 @@ inherited PriceListForm: TPriceListForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -824,6 +836,7 @@ inherited PriceListForm: TPriceListForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
