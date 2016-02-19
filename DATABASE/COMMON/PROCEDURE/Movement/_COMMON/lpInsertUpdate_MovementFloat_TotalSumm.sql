@@ -126,9 +126,7 @@ BEGIN
      -- !!!надо определить - есть ли скидка в цене!!!
      IF vbMovementDescId = zc_Movement_Sale()
      THEN
-     vbIsChangePrice:= vbPaidKindId <> zc_Enum_PaidKind_SecondForm();
-     ELSE
-     vbIsChangePrice:= vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+     vbIsChangePrice:= vbPaidKindId <> zc_Enum_PaidKind_SecondForm()
                     OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)
                         AND EXISTS (SELECT 1
                                     FROM MovementItem
@@ -140,6 +138,8 @@ BEGIN
                                       AND MovementItem.isErased = FALSE
                                       AND COALESCE (MIFloat_ChangePercent.ValueData, 0) = 0
                                    ));
+     ELSE
+     vbIsChangePrice:= vbPaidKindId = zc_Enum_PaidKind_FirstForm();
      END IF;
 
      -- Перевод Итоговых сумм в валюту (если надо)

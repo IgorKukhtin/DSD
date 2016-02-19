@@ -6,7 +6,7 @@ uses
   SysUtils, Classes, ImgList, Controls, frxClass, cxClasses, cxStyles,
   cxGridBandedTableView, cxGridTableView, cxTL, Data.DB, Datasnap.DBClient,
   dsdAddOn, cxPropertiesStore, cxLookAndFeels, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, frxExportPDF;
 
 type
 
@@ -29,6 +29,7 @@ type
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLookAndFeelController: TcxLookAndFeelController;
     cxRemainsContentStyle: TcxStyle;
+    frxPDFExport1: TfrxPDFExport;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   end;

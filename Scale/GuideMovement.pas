@@ -105,6 +105,7 @@ type
     RouteName: TcxGridDBColumn;
     PersonalDriverName: TcxGridDBColumn;
     StartRunPlan: TcxGridDBColumn;
+    bbPrint_diff: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -131,6 +132,7 @@ type
     procedure bbEDI_DesadvClick(Sender: TObject);
     procedure bbSale_Order_allClick(Sender: TObject);
     procedure bbSale_Order_diffClick(Sender: TObject);
+    procedure bbPrint_diffClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -567,6 +569,13 @@ begin
                        , CDS.FieldByName('MovementId_parent').AsInteger
                        , 1    // myPrintCount
                        , TRUE // isPreview
+                        );
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbPrint_diffClick(Sender: TObject);
+begin
+     Print_MovementDiff (CDS.FieldByName('MovementDescId').AsInteger
+                       , CDS.FieldByName('Id').AsInteger               // MovementId
                         );
 end;
 {------------------------------------------------------------------------------}

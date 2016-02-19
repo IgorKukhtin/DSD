@@ -89,10 +89,12 @@ type
     spSelectSale_EDI: TdsdStoredProc;
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
+    actPrint_SendOnPrice_diff: TdsdPrintAction;
   private
   end;
 
   function Print_Movement (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
+  function Print_MovementDiff (MovementDescId,MovementId:Integer):Boolean;
   function Print_Tax      (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Account  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Spec     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
@@ -246,6 +248,12 @@ begin
   UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
   UtilPrintForm.FormParams.ParamByName('inIsDiff').Value := isDiff;
   UtilPrintForm.actPrintSaleOrder.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_MovementDiff (MovementDescId,MovementId:Integer):Boolean;
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_SendOnPrice_diff.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 function Print_Movement (MovementDescId, MovementId, MovementId_by: Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
