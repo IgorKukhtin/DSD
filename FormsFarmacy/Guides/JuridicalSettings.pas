@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxCheckBox, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit;
 
 type
   TJuridicalSettingsForm = class(TAncestorEnumForm)
@@ -26,6 +26,7 @@ type
     colEndDate: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colPriceLimit: TcxGridDBColumn;
+    col—onditionalPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

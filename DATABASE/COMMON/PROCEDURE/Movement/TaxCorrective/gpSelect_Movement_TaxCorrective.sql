@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
-             , FromId Integer, FromName TVarChar, OKPO_From TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, OKPO_From TVarChar, INN_From TVarChar, ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
@@ -79,6 +79,7 @@ BEGIN
            , Object_From.Id                    		    AS FromId
            , Object_From.ValueData             		    AS FromName
            , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
+           , ObjectHistory_JuridicalDetails_View.INN    AS INN_From 
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
            , Object_Partner.ObjectCode                  AS PartnerCode

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
     IN inisPriceClose            Boolean   ,    -- Закрыт прайс
     IN inBonus                   TFloat    ,    -- % бонусирования
     IN inPriceLimit              TFloat    ,    -- Цена до
+    IN inConditionalPercent      TFloat    ,    -- Доп.условия по прайсу, %
     IN inStartDate               TDateTime ,    -- 
     IN inEndDate                 TDateTime ,    -- 
     IN inSession                 TVarChar       -- сессия пользователя
@@ -51,6 +53,8 @@ BEGIN
    -- Цена до
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalSettings_PriceLimit(), ioId, inPriceLimit);
 
+   -- Доп.условия по прайсу, %
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_ConditionalPercent(), inJuridicalId, inConditionalPercent);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);
@@ -69,6 +73,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.02.16         *
  11.02.16
  26.01.16         *                
  17.02.15                          *

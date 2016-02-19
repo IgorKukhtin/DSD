@@ -167,6 +167,13 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object colINN_To: TcxGridDBColumn
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'INN_To'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object colUnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
             DataBinding.FieldName = 'UnitCode'

@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer
              , GoodsMainId Integer, GoodsMainCode Integer, GoodsMainName TVarChar
              , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar
              , MakerName TVarChar, MinimumLot TFloat
-             , IsUpload Boolean, IsPromo Boolean
+             , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean
              , UpdateName TVarChar
              , UpdateDate TDateTime
 
@@ -35,6 +35,7 @@ BEGIN
          , ObjectFloat_Goods_MinimumLot.ValueData  AS MinimumLot
          , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload
          , COALESCE(ObjectBoolean_Goods_IsPromo.ValueData,FALSE)  AS IsPromo
+         , COALESCE(ObjectBoolean_Goods_SpecCondition.ValueData,FALSE)  AS IsSpecCondition
 
          , COALESCE(Object_Update.ValueData, '')                ::TVarChar  AS UpdateName
          , COALESCE(ObjectDate_Protocol_Update.ValueData, Null) ::TDateTime AS UpdateDate
@@ -60,6 +61,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
                                   ON ObjectBoolean_Goods_IsPromo.ObjectId = ObjectLink_Goods_Object.ObjectId
                                  AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
+                                  ON ObjectBoolean_Goods_SpecCondition.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                 AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
 
           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                                ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()

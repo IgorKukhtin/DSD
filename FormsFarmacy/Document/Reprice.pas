@@ -13,7 +13,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit;
 
 type
   TRepriceForm = class(TAncestorDocumentForm)
@@ -28,6 +28,14 @@ type
     colPriceOld: TcxGridDBColumn;
     colPriceNew: TcxGridDBColumn;
     colSummReprice: TcxGridDBColumn;
+    colMinExpirationDate: TcxGridDBColumn;
+    colNDS: TcxGridDBColumn;
+    colPriceDiff: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
+    colJuridical_GoodsName: TcxGridDBColumn;
+    colMakerName: TcxGridDBColumn;
+    colMarginPercent: TcxGridDBColumn;
+    colJuridical_Price: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -35,7 +43,7 @@ type
   end;
 
 implementation
-
+   
 {$R *.dfm}
 
 initialization

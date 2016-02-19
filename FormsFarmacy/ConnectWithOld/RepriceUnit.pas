@@ -92,6 +92,8 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     cdsResultisOneJuridical: TBooleanField;
     colIsOneJuridical: TcxGridDBColumn;
+    cdsResultJuridicalId: TIntegerField;
+    colJuridicalId: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
@@ -148,15 +150,25 @@ begin
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colGoodsId.Index];
           spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colUnitId.Index];
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridicalId').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridicalId.Index];
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inMinExpirationDate').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colMinExpirationDate.Index];
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inExpirationDate').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colExpirationDate.Index];
           spInsertUpdate_MovementItem_Reprice.ParamByName('inAmount').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colRemainsCount.Index];
           if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colOldPrice.Index] = null then
-            spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value := 0
+            spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value := 0;
+          if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridical_Price.Index] = null then
+            spInsertUpdate_MovementItem_Reprice.ParamByName('ininJuridical_PriceOld').Value := 0
           else
             spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value :=
               AllGoodsPriceGridTableView.DataController.Values[RecIndex,colOldPrice.Index];
           spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridical_Price').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridical_Price.Index];
           spInsertUpdate_MovementItem_Reprice.ParamByName('inGUID').Value := GUID_Str;
           spInsertUpdate_MovementItem_Reprice.Execute;
         End;
@@ -235,6 +247,7 @@ begin
           cdsResult.FieldByName('SumReprice').AsCurrency := AllGoodsPriceCDS.FieldByName('SumReprice').AsCurrency;
           cdsResult.FieldByName('MinExpirationDate').AsString := AllGoodsPriceCDS.FieldByName('MinExpirationDate').AsString;
           cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;
+          cdsResult.FieldByName('JuridicalId').AsInteger := AllGoodsPriceCDS.FieldByName('JuridicalId').AsInteger;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

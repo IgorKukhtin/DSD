@@ -1,4 +1,4 @@
-inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
+﻿inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 432
   ClientWidth = 976
@@ -20,8 +20,6 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       inherited cxGrid: TcxGrid
         Width = 976
         Height = 406
-        ExplicitLeft = 40
-        ExplicitTop = -40
         ExplicitWidth = 976
         ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -102,6 +100,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1058#1086#1074#1072#1088' '#1091#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1082#1094#1080#1080
             Width = 48
+          end
+          object сolisSpecCondition: TcxGridDBColumn
+            Caption = #1057#1087#1077#1094'. '#1091#1089#1083#1086#1074#1080#1103
+            DataBinding.FieldName = 'isSpecCondition'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1074#1072#1088' '#1087#1086#1076' '#1089#1087#1077#1094'.'#1091#1089#1083#1086#1074#1080#1103
+            Width = 55
           end
           object colUpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
@@ -303,6 +309,9 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           StoredProc = spUpdate_Goods_Promo
+        end
+        item
+          StoredProc = spUpdate_Goods_IsSpecCondition
         end>
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
@@ -822,8 +831,8 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 672
-    Top = 264
+    Left = 712
+    Top = 224
   end
   object spDelete_ObjectBoolean_Goods_IsUpload: TdsdStoredProc
     StoredProcName = 'gpDelete_ObjectBoolean_Goods_IsUpload'
@@ -838,8 +847,8 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 672
-    Top = 312
+    Left = 712
+    Top = 280
   end
   object spUpdate_Goods_Promo: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_Promo'
@@ -878,5 +887,29 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     PackSize = 1
     Left = 344
     Top = 368
+  end
+  object spUpdate_Goods_IsSpecCondition: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_IsSpecCondition'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsSpecCondition'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsSpecCondition'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 344
   end
 end

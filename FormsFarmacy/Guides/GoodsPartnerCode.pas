@@ -61,6 +61,8 @@ type
     spUpdate_Goods_Promo: TdsdStoredProc;
     colUpdateName: TcxGridDBColumn;
     colUpdateDate: TcxGridDBColumn;
+    spUpdate_Goods_IsSpecCondition: TdsdStoredProc;
+    ñolisSpecCondition: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -193,6 +193,12 @@ object RepriceUnitForm: TRepriceUnitForm
         Visible = False
         VisibleForCustomization = False
       end
+      object colJuridicalId: TcxGridDBColumn
+        DataBinding.FieldName = 'JuridicalId'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 60
+      end
     end
     object AllGoodsPriceGridLevel: TcxGridLevel
       GridView = AllGoodsPriceGridTableView
@@ -518,6 +524,10 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'isOneJuridical'
         DataType = ftBoolean
+      end
+      item
+        Name = 'JuridicalId'
+        DataType = ftInteger
       end>
     IndexDefs = <>
     Params = <>
@@ -526,7 +536,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      A30200009619E0BD010000001800000015000000000003000000A30202496404
+      B70200009619E0BD010000001800000016000000000003000000B70202496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -547,7 +557,7 @@ object RepriceUnitForm: TRepriceUnitForm
       000557494454480200020064000A53756D526570726963650800040000000100
       07535542545950450200490006004D6F6E657900114D696E4578706972617469
       6F6E4461746504000600000000000E69734F6E654A757269646963616C020003
-      00000000000000}
+      00000000000B4A757269646963616C496404000100000000000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -621,6 +631,9 @@ object RepriceUnitForm: TRepriceUnitForm
     object cdsResultisOneJuridical: TBooleanField
       FieldName = 'isOneJuridical'
     end
+    object cdsResultJuridicalId: TIntegerField
+      FieldName = 'JuridicalId'
+    end
   end
   object UnitsCDS: TClientDataSet
     Aggregates = <>
@@ -649,6 +662,23 @@ object RepriceUnitForm: TRepriceUnitForm
         ParamType = ptInput
       end
       item
+        Name = 'inJuridicalId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inExpirationDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMinExpirationDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inAmount'
         Value = Null
         DataType = ftFloat
@@ -662,6 +692,12 @@ object RepriceUnitForm: TRepriceUnitForm
       end
       item
         Name = 'inPriceNew'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridical_Price'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
