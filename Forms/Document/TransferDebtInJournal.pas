@@ -56,6 +56,7 @@ type
     colContractToCode: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actInsertMaskMulti: TMultiAction;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

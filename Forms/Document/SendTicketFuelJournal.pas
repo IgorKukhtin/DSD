@@ -18,6 +18,7 @@ type
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

@@ -134,6 +134,7 @@ type
     N16: TMenuItem;
     colChildGoodsKindCompleteName: TcxGridDBColumn;
     actGoodsKindCompleteChoiceChild: TOpenChoiceForm;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

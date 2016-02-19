@@ -51,6 +51,7 @@ type
     spGetReportNameReturnIn: TdsdStoredProc;
     bbPrintReturnIn: TdxBarButton;
     clBranchName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

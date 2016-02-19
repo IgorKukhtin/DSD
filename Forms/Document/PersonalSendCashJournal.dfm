@@ -14,6 +14,7 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -23,7 +24,6 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 711
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -62,8 +62,6 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 711
-    ExplicitHeight = 388
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -735,6 +733,34 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
           StoredProc = spMovementSetErased
         end>
       Caption = 'spErased'
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41579d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41608d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc

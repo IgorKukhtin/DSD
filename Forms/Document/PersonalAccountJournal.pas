@@ -102,6 +102,7 @@ type
     N9: TMenuItem;
     N10: TMenuItem;
     N11: TMenuItem;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

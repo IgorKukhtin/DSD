@@ -103,6 +103,7 @@ type
     actSimpleReCompleteList: TMultiAction;
     actReCompleteList: TMultiAction;
     N11: TMenuItem;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

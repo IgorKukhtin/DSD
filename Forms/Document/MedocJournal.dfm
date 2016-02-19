@@ -1,18 +1,21 @@
 inherited MedocJournalForm: TMedocJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1052#1045#1044#1054#1050
   ClientWidth = 916
-  ExplicitLeft = -143
-  ExplicitTop = -253
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 932
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 916
     TabOrder = 3
+    ExplicitWidth = 916
     ClientRectRight = 916
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 916
       inherited cxGrid: TcxGrid
         Width = 916
+        ExplicitWidth = 916
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -166,6 +169,37 @@ inherited MedocJournalForm: TMedocJournalForm
   end
   inherited Panel: TPanel
     Width = 916
+    ExplicitWidth = 916
+  end
+  inherited ActionList: TActionList
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Medoc'

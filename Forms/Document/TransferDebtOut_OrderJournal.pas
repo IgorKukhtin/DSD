@@ -83,6 +83,7 @@ type
     bbPrint_TTN: TdxBarButton;
     colContractFromCode: TcxGridDBColumn;
     colContractToCode: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -30,6 +30,7 @@ type
     MovementOperDate: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

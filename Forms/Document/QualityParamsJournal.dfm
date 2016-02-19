@@ -2,8 +2,9 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077' - '#1087#1072#1088#1072#1084#1077#1090#1088#1099'>'
   ClientHeight = 649
   ClientWidth = 1014
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1030
-  ExplicitHeight = 684
+  ExplicitHeight = 687
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -211,6 +212,34 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
           Component = deEnd
           DataType = ftDateTime
         end>
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
