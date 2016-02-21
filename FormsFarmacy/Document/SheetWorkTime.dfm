@@ -2,7 +2,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1072#1073#1077#1083#1100' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080'>'
-  ClientHeight = 462
+  ClientHeight = 504
   ClientWidth = 971
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -61,8 +61,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Left = 0
     Top = 75
     Width = 971
-    Height = 387
-    Align = alClient
+    Height = 201
+    Align = alTop
     TabOrder = 0
     object cxGridDBBandedTableView: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
@@ -154,7 +154,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = MultiAction
+            Action = OpenWorkTimeKindForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -180,6 +180,134 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       GridView = cxGridDBBandedTableView
     end
   end
+  object cxSplitter1: TcxSplitter
+    Left = 0
+    Top = 276
+    Width = 971
+    Height = 8
+    AlignSplitter = salTop
+    Control = cxGrid
+  end
+  object cxGrid1: TcxGrid
+    Left = 0
+    Top = 284
+    Width = 971
+    Height = 220
+    Align = alClient
+    TabOrder = 7
+    ExplicitLeft = -8
+    ExplicitTop = 290
+    object cxGridDBBandedTableView1: TcxGridDBBandedTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ChildDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.GoToNextCellOnEnter = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsCustomize.BandHiding = True
+      OptionsCustomize.BandsQuickCustomization = True
+      OptionsCustomize.ColumnVertSizing = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
+      Styles.BandHeader = dmMain.cxHeaderStyle
+      Bands = <
+        item
+          Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+          FixedKind = fkLeft
+          Options.HoldOwnColumnsOnly = True
+          Options.Moving = False
+        end
+        item
+          Caption = #1055#1077#1088#1080#1086#1076
+          Options.HoldOwnColumnsOnly = True
+          Options.Moving = False
+          Width = 50
+        end>
+      object ColPersonalCode: TcxGridDBBandedColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'PersonalCode'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Options.Moving = False
+        Width = 34
+        Position.BandIndex = 0
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object ColPersonalName: TcxGridDBBandedColumn
+        Caption = #1060#1048#1054
+        DataBinding.FieldName = 'PersonalName'
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 67
+        Options.Editing = False
+        Options.Moving = False
+        Width = 109
+        Position.BandIndex = 0
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object ColPositionName: TcxGridDBBandedColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 64
+        Options.Editing = False
+        Options.Moving = False
+        Width = 87
+        Position.BandIndex = 0
+        Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object ColPersonalGroupName: TcxGridDBBandedColumn
+        Caption = #1041#1088#1080#1075#1072#1076#1072
+        DataBinding.FieldName = 'PersonalGroupName'
+        Visible = False
+        GroupIndex = 0
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 64
+        Options.Editing = False
+        Options.Moving = False
+        Width = 73
+        Position.BandIndex = 0
+        Position.ColIndex = 3
+        Position.RowIndex = 0
+      end
+      object TemplateColumn1: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'Value'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.Kind = ckDateTime
+        Visible = False
+        MinWidth = 40
+        Width = 40
+        Position.BandIndex = 1
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object ColisErased: TcxGridDBBandedColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Options.Editing = False
+        Width = 50
+        Position.BandIndex = 0
+        Position.ColIndex = 4
+        Position.RowIndex = 0
+      end
+    end
+    object cxGridLevel1: TcxGridLevel
+      GridView = cxGridDBBandedTableView1
+    end
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -201,8 +329,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 278
-    Top = 303
+    Left = 158
+    Top = 119
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_SheetWorkTime'
@@ -258,8 +386,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 22
-    Top = 231
+    Left = 14
+    Top = 119
     DockControlHeights = (
       0
       0
@@ -390,13 +518,25 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 81
-    Top = 232
+    Left = 41
+    Top = 192
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 51
-    Top = 231
+    Top = 119
+    object actUpdateChildDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMI_Child
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMI_Child
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = ChildDS
+    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -485,6 +625,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMI_Child
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -658,14 +801,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 342
-    Top = 159
+    Left = 454
+    Top = 95
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 304
-    Top = 191
+    Left = 408
+    Top = 95
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -751,8 +894,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInputOutput
       end>
     PackSize = 1
-    Left = 398
-    Top = 199
+    Left = 542
+    Top = 151
   end
   object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -768,14 +911,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = TemplateColumn
-    Left = 384
-    Top = 272
+    Left = 680
+    Top = 112
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 312
-    Top = 240
+    Left = 552
+    Top = 88
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -810,8 +953,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 160
-    Top = 352
+    Left = 200
+    Top = 160
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMI_SheetWorkTime_SetErased'
@@ -864,5 +1007,129 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     PackSize = 1
     Left = 518
     Top = 207
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 352
+    Top = 295
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 398
+    Top = 295
+  end
+  object spSelectMI_Child: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_SheetWorkTime_Child'
+    DataSet = HeaderCDS_Child
+    DataSets = <
+      item
+        DataSet = HeaderCDS_Child
+      end
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inDate'
+        Value = 42335d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 375
+  end
+  object CrossDBViewAddOn_Child: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS_Child
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = TemplateColumn1
+    Left = 600
+    Top = 352
+  end
+  object HeaderCDS_Child: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 488
+    Top = 304
+  end
+  object spInsertUpdateMI_Child: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_SheetWorkTime_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'PersonalGroupId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = HeaderCDS_Child
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioValue'
+        Value = 'NULL'
+        Component = CrossDBViewAddOn_Child
+        ComponentItem = 'Value'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 254
+    Top = 351
   end
 end
