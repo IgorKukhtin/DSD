@@ -3,7 +3,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   ClientHeight = 524
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 562
+  ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -153,6 +153,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 73
           end
           object colSalePrice: TcxGridDBColumn
