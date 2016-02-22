@@ -16,13 +16,15 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_PriceList());
      vbUserId := inSession;
 
-     PERFORM lpInsertUpdate_MovementItem_PriceList(ioId, inMovementId, inGoodsMainId, 
-                 inGoodsId, inAmount, inPartionGoodsDate, NULL, vbUserId);
+     -- 
+     PERFORM lpInsertUpdate_MovementItem_PriceList (ioId, inMovementId, inGoodsMainId, inGoodsId
+                                                  , COALESCE ((SELECT MIFloat.ValueData FROM MovementItemFloat AS MIFloat WHERE MIFloat.MovementItemId =  ioId AND MIFloat.DescId = zc_MIFloat_Price()), 0)
+                                                  , inAmount, inPartionGoodsDate, NULL, vbUserId
+                                                   );
 
 END;
 $BODY$

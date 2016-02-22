@@ -1,5 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_PriceList()
--- 1543
+
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList(Integer, Integer, Integer, Integer, TFloat, TDateTime, Integer);
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList(Integer, Integer, Integer, Integer, TFloat, TDateTime, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList(Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TFloat, Integer);
