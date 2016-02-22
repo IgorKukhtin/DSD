@@ -111,7 +111,7 @@ BEGIN
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                            ON MovementLinkObject_Juridical.MovementId = Movement_BankAccount_View.IncomeId
                                           AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                                          AND _tmpItem.OperDate < '01.01.2016' -- !!!только для загрузки из Sybase!!!
+                                          AND _tmpItem.OperDate < '16.02.2016' -- !!!только для загрузки из Sybase!!!
         ;
 
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();

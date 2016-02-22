@@ -52,10 +52,17 @@ BEGIN
           vbPriceListId , -- Ключ объекта <Документ>
                 GoodsId , -- Товары
         Object_Goods.Id , -- Товар прайс-листа
-           CASE LoadPriceList.NDSinPrice 
-                 WHEN True THEN Price 
-                 ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
+
+           CASE WHEN LoadPriceList.NDSinPrice = TRUE
+                     THEN Price 
+                ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
            END:: TFloat  , -- Цена
+
+           CASE WHEN LoadPriceList.NDSinPrice = TRUE
+                     THEN PriceOriginal 
+                ELSE PriceOriginal * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100
+           END:: TFloat  , -- !!!Цена оригинальная!!!
+
           ExpirationDate , -- Партия товара
                  Remains , -- остаток
                 vbUserId)
