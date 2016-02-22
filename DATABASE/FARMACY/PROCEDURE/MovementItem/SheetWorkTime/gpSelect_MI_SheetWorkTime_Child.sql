@@ -37,7 +37,7 @@ BEGIN
                                                , COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
                                                , MIObject_WorkTimeKind.ObjectId
                                                , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
-                                               , COALESCE(MIDate_OperDate.ValueData, zc_DateStart()):: TDateTime  AS MITime
+                                               , COALESCE(MIDate_OperDate.ValueData, zc_DateStart()):: Time  AS MITime
                                                , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
                                           FROM tmpOperDate
                                                JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
@@ -80,8 +80,8 @@ BEGIN
      WHILE (vbIndex < vbDayCount) LOOP
        vbIndex := vbIndex + 1;
        vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
-       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value'||vbIndex||'  '||
-                          ', DAY' || vbIndex || '[2]::Integer  AS TypeId'||vbIndex||' ';
+       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value'||vbIndex||'  '/*||
+                          ', DAY' || vbIndex || '[2]::Integer  AS TypeId'||vbIndex||' '*/;
      END LOOP;
 
 

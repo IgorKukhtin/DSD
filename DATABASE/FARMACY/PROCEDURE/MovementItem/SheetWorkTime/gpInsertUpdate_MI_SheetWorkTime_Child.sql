@@ -2,6 +2,7 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SheetWorkTime_Child(Integer, Integer, Integer, Integer, TDateTime, Time, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SheetWorkTime_Child(Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SheetWorkTime_Child(Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SheetWorkTime_Child(
     IN inPersonalId          Integer   , -- Ключ сотрудник
@@ -9,10 +10,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SheetWorkTime_Child(
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
     IN inOperDate            TDateTime , -- дата
- INOUT ioValue               TDateTime , -- время начала работы
+ INOUT ioValue               TVarChar , -- время начала работы
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS TDateTime
+RETURNS TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -29,7 +30,7 @@ BEGIN
 
     vbValue:= ( '' ||inOperDate::Date || ' '||ioValue ::Time):: TDateTime ;
 --RAISE EXCEPTION ' <%>', ioValue;
-    ioValue:= vbValue ::TDateTime ;
+    ioValue:= ioValue ;
     
 
     -- Для начала определим ID Movement, если таковой имеется. Ключом будет OperDate и UnitId
