@@ -116,6 +116,7 @@ type
     bbPrintTo: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

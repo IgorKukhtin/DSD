@@ -41,6 +41,7 @@ type
     spSelectPrintCeh: TdsdStoredProc;
     actPrint_Ceh: TdsdPrintAction;
     bbPrint_Ceh: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

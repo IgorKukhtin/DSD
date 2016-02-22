@@ -273,12 +273,26 @@ begin
 end;
 
 procedure TForm1.btnOptimaSendMailClick(Sender: TObject);
+var
+  addr: Array of String;
+  S, S1: String;
 begin
+  S := edtOptimaEMail.Text;
+  if S[Length(S)]<> ',' then
+    S:=S+',';
+  while S<>'' do
+  begin
+    S1:=copy(S,1,pos(',',S)-1);
+    Delete(S,1, pos(',',S));
+    SetLength(addr,length(Addr)+1);
+    Addr[length(addr)-1] := S1;
+  end;
+
   if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
                qryMailParam.FieldByName('Mail_Port').AsInteger,
                qryMailParam.FieldByName('Mail_Password').AsString,
                qryMailParam.FieldByName('Mail_User').AsString,
-               [edtOptimaEMail.Text],
+               Addr,
                qryMailParam.FieldByName('Mail_From').AsString,
                glSubject,
                '',

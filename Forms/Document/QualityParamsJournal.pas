@@ -22,6 +22,7 @@ type
     ExpertPrior: TcxGridDBColumn;
     N13: TMenuItem;
     RetailName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

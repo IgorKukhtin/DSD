@@ -51,6 +51,7 @@ type
     InvNumber_Quality: TcxGridDBColumn;
     OperDate_Quality: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -179,7 +179,7 @@ BEGIN
                                                     inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
                                                     inObjectId_1        := vbUnitToId,
                                                     inDescId_2          := zc_ContainerLinkObject_PartionMovementItem(), -- DescId для 2-ой Аналитики
-                                                    inObjectId_2        := lpInsertFind_Object_PartionMovementItem(tmpItem.MovementItemId)) as Id
+                                                    inObjectId_2        := lpInsertFind_Object_PartionMovementItem(tmpItem.PartionMovementItemId)) as Id
                            ,tmpItem.MovementItemId  AS MovementItemId 
                            ,tmpItem.ObjectId        AS ObjectId 
                            ,vbSendDate              AS OperDate

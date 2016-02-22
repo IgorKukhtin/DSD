@@ -44,7 +44,7 @@ BEGIN
         )
     INSERT INTO _Result(RowData)
     SELECT
-        '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)||'" Name="'||replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;')||'" Producer="'||replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;')||'" Price="'||CAST(Object_Price.Price AS TVarChar)||'" Quantity="'||CAST(Remains.Amount AS TVarChar)||'" />'
+        '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')||'" Quantity="'||CAST(Remains.Amount AS TVarChar)||'" />'
     FROM
         Remains
         INNER JOIN Object AS Object_Goods
@@ -53,7 +53,7 @@ BEGIN
                                           ON Object_Price.GoodsId = Remains.ObjectId
                                          AND Object_Price.UnitId = inUnitId;
     --подвал
-    INSERT INTO _Result(RowData) Values ('<Offers>');
+    INSERT INTO _Result(RowData) Values ('</Offers>');
         
 
     -- Результат

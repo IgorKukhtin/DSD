@@ -96,6 +96,7 @@ type
     Comment: TcxGridDBColumn;
     actInsertMaskMulti: TMultiAction;
     bbInsertMaskMulti: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

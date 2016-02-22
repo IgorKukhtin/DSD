@@ -24,7 +24,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxGridBandedTableView, cxGridDBBandedTableView, Vcl.Grids, Vcl.DBGrids;
+  cxGridBandedTableView, cxGridDBBandedTableView, Vcl.Grids, Vcl.DBGrids,
+  cxSplitter, cxTimeEdit;
 
 type
   TSheetWorkTimeForm = class(TParentForm)
@@ -62,6 +63,7 @@ type
     BandcolPositionName: TcxGridDBBandedColumn;
     BandcolPersonalGroupName: TcxGridDBBandedColumn;
     TemplateColumn: TcxGridDBBandedColumn;
+    TemplateColumn1: TcxGridDBBandedColumn;
     OpenWorkTimeKindForm: TOpenChoiceForm;
     MultiAction: TMultiAction;
     InsertAction: TdsdInsertUpdateAction;
@@ -79,6 +81,18 @@ type
     isErased: TcxGridDBBandedColumn;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    cxSplitter1: TcxSplitter;
+    cxGrid1: TcxGrid;
+    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
+    ColPersonalCode: TcxGridDBBandedColumn;
+    cxGridLevel1: TcxGridLevel;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    spSelectMI_Child: TdsdStoredProc;
+    CrossDBViewAddOn_Child: TCrossDBViewAddOn;
+    HeaderCDS_Child: TClientDataSet;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    spInsertUpdateMI_Child: TdsdStoredProc;
   private
   public
   end;

@@ -147,6 +147,7 @@ type
     actSimpleReCompleteList: TMultiAction;
     actReCompleteList: TMultiAction;
     N7: TMenuItem;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

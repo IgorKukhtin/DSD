@@ -42,6 +42,7 @@ type
     bbPrint1: TdxBarButton;
     isAuto: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

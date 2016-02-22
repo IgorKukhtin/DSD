@@ -1,26 +1,26 @@
 ﻿inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 432
-  ClientWidth = 976
+  ClientWidth = 1180
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 992
+  ExplicitWidth = 1196
   ExplicitHeight = 470
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 976
+    Width = 1180
     Height = 406
-    ExplicitWidth = 976
+    ExplicitWidth = 1119
     ExplicitHeight = 406
     ClientRectBottom = 406
-    ClientRectRight = 976
+    ClientRectRight = 1180
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 976
+      ExplicitWidth = 1119
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 976
+        Width = 1180
         Height = 406
-        ExplicitWidth = 976
+        ExplicitWidth = 1119
         ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -144,11 +144,69 @@
     end
   end
   inherited ActionList: TActionList
+    object actStartLoadIsSpecCondition: TMultiAction [0]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_IsSpecCondition
+        end
+        item
+          Action = actDelete_ObjectFloat_Goods_IsSpecCondition
+        end
+        item
+          Action = actDoLoadIsSpecCondition
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1087#1088#1080#1079#1085#1072#1082#1072' <'#1058#1086#1074#1072#1088' '#1087#1086#1076' '#1089#1087#1077#1094'.'#1091#1089#1083#1086#1074#1080#1103'>?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1057#1087#1077#1094'. '#1091#1089#1083#1086#1074#1080#1103'>'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1058#1086#1074#1072#1088' '#1087#1086#1076' '#1089#1087#1077#1094'.'#1091#1089#1083#1086#1074#1080#1103'>'
+      ImageIndex = 74
+    end
+    object actGetImportSetting_Goods_IsSpecCondition: TdsdExecStoredProc [2]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_IsSpecCondition
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_IsSpecCondition
+        end>
+      Caption = 'actGetImportSetting_Goods_SpecCondition'
+    end
+    object actDelete_ObjectFloat_Goods_IsSpecCondition: TdsdExecStoredProc [4]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_ObjectBoolean_Goods_IsSpecCondition
+      StoredProcList = <
+        item
+          StoredProc = spDelete_ObjectBoolean_Goods_IsSpecCondition
+        end>
+      Caption = 'actDelete_ObjectFloat_Goods_IsSpecCondition'
+    end
     inherited actInsert: TInsertUpdateChoiceAction
       Enabled = False
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
       DataSource = nil
+    end
+    object actDoLoadIsSpecCondition: TExecuteImportSettingsAction [6]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingIsSpecConditionId'
+      ExternalParams = <
+        item
+          Name = 'inObjectId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
@@ -404,7 +462,7 @@
         item
           StoredProc = spGetImportSetting_Goods_IsUpload
         end>
-      Caption = 'actGetImportSetting_Goods_MinimumLot'
+      Caption = 'actGetImportSetting_Goods_IsUpload'
     end
     object actDelete_ObjectFloat_Goods_IsUpload: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072' isUpload'
@@ -415,7 +473,7 @@
         item
           StoredProc = spDelete_ObjectBoolean_Goods_IsUpload
         end>
-      Caption = 'actDelete_ObjectFloat_Goods_MinimumLot'
+      Caption = 'actDelete_ObjectFloat_Goods_IsUpload'
     end
     object actDoLoadIsUpload: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072' isUpload'
@@ -511,10 +569,24 @@
           ItemName = 'dxBarButton1'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           UserDefine = [udPaintStyle]
           UserPaintStyle = psCaptionGlyph
           Visible = True
           ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'bbSpecCondition'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -546,10 +618,16 @@
     end
     object dxBarButton1: TdxBarButton
       Action = actStartLoad
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1084#1080#1085'-'#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
       Category = 0
     end
     object dxBarButton2: TdxBarButton
       Action = actStartLoadIsUpload
+      Category = 0
+    end
+    object bbSpecCondition: TdxBarButton
+      Action = actStartLoadIsSpecCondition
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088'. <'#1057#1087#1077#1094'. '#1091#1089#1083#1086#1074#1080#1103'>'
       Category = 0
     end
   end
@@ -646,7 +724,7 @@
         DataType = ftString
       end>
     PackSize = 1
-    Left = 344
+    Left = 392
     Top = 160
   end
   object spInserUpdateGoodsLink: TdsdStoredProc
@@ -776,6 +854,10 @@
       end
       item
         Name = 'ImportSettingIsUploadId'
+        Value = Null
+      end
+      item
+        Name = 'ImportSettingIsSpecConditionId'
         Value = Null
       end>
     Left = 472
@@ -909,7 +991,54 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 216
+    Left = 176
     Top = 344
+  end
+  object spGetImportSetting_Goods_IsSpecCondition: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TGoodsPartnerCodeForm;zc_Object_ImportSetting_Goods_IsSpecCondit' +
+          'ion'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingIsSpecConditionId'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 192
+  end
+  object spDelete_ObjectBoolean_Goods_IsSpecCondition: TdsdStoredProc
+    StoredProcName = 'gpDelete_ObjectBoolean_Goods_IsSpecCondition'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 136
   end
 end

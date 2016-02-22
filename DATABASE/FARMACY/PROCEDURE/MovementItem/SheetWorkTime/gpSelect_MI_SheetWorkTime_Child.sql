@@ -1,9 +1,8 @@
--- Function: gpSelect_MovementItem_SheetWorkTime()
+-- Function: gpSelect_MI_SheetWorkTime_Child()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_SheetWorkTime(TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_SheetWorkTime(TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_SheetWorkTime_Child(TDateTime, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SheetWorkTime(
+CREATE OR REPLACE FUNCTION gpSelect_MI_SheetWorkTime_Child(
     IN inDate        TDateTime , --
     IN inUnitId      Integer   , --
     IN inisErased    Boolean   , --
@@ -21,7 +20,7 @@ $BODY$
           vbQueryText Text;
           vbFieldNameText Text;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
+    -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
 
@@ -38,6 +37,7 @@ BEGIN
                                                , COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
                                                , MIObject_WorkTimeKind.ObjectId
                                                , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
+                                               , COALESCE(MIDate_OperDate.ValueData, zc_DateStart()):: TDateTime  AS MITime
                                                , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
                                           FROM tmpOperDate
                                                JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
@@ -61,6 +61,13 @@ BEGIN
                                                LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                                 ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                                                AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+                                               LEFT JOIN MovementItem AS MI_SheetWorkTime_Child
+                                                                       ON MI_SheetWorkTime_Child.ParentId = MI_SheetWorkTime.Id 
+                                                                      AND MI_SheetWorkTime_Child.DescId = zc_MI_Child()
+
+                                               LEFT JOIN MovementItemDate AS MIDate_OperDate 
+                                                                          ON MIDate_OperDate.MovementItemId = MI_SheetWorkTime_Child.Id  
+                                                                         AND MIDate_OperDate.DescId = zc_MIDate_OperDate()      
                                           WHERE MovementLinkObject_Unit.ObjectId = inUnitId;
 
      vbIndex := 0;
@@ -106,8 +113,8 @@ BEGIN
                                                , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
-                                         , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
-                                               , COALESCE (Movement_Data.ObjectId, 0) :: VarChar
+                                         , ARRAY[(Movement_Data.MITime) :: VarChar
+                                              
                                                 ] :: TVarChar
                                     FROM (SELECT * FROM tmpMI WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE) AS Movement_Data
                                         FULL JOIN  
@@ -151,24 +158,18 @@ BEGIN
      OPEN cur2 FOR EXECUTE vbQueryText;  
      RETURN NEXT cur2;
 
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MI_SheetWorkTime_Child (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 20.01.16         * 
- 07.01.14                         * Replace inPersonalId <> inMemberId
- 30.11.13                                        * add isErased = FALSE
- 30.11.13                                        * parse
- 25.11.13                         * Add PositionLevel
- 25.10.13                         *
- 19.10.13                         *
- 05.10.13                         *
+ 19.01.16         * 
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_SheetWorkTime(now(), 0, FALSE, '');
+-- SELECT * FROM gpSelect_MI_SheetWorkTime_Child(now(), 0, FALSE, '');
