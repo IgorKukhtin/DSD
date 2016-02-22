@@ -195,8 +195,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Height = 220
     Align = alClient
     TabOrder = 7
-    ExplicitLeft = -8
-    ExplicitTop = 290
     object cxGridDBBandedTableView1: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -284,8 +282,12 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end
       object TemplateColumn1: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.Kind = ckDateTime
+        PropertiesClassName = 'TcxTimeEditProperties'
+        Properties.AutoCorrectHours = False
+        Properties.AutoSelect = False
+        Properties.SpinButtons.Visible = False
+        Properties.TimeFormat = tfHourMin
+        Properties.UseLeftAlignmentOnEditing = False
         Visible = False
         MinWidth = 40
         Width = 40
@@ -1125,7 +1127,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Value = 'NULL'
         Component = CrossDBViewAddOn_Child
         ComponentItem = 'Value'
-        DataType = ftDateTime
+        DataType = ftString
         ParamType = ptInputOutput
       end>
     PackSize = 1
