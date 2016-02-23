@@ -14,13 +14,12 @@ BEGIN
 
     RETURN QUERY 
      
-        SELECT 
-            Object_Unit_View.Id
-           ,Object_Unit_View.Name
-        FROM 
-            Object_Unit_View
-        WHERE
-            Object_Unit_View.isLeaf = TRUE;
+        SELECT Object_Unit_View.Id
+             , Object_Unit_View.Name
+        FROM Object_Unit_View
+        WHERE Object_Unit_View.isLeaf = TRUE
+        ORDER BY Object_Unit_View.Name
+       ;
 END;
 $BODY$
 
