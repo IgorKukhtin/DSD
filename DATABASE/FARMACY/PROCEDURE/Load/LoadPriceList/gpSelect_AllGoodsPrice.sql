@@ -28,7 +28,8 @@ RETURNS TABLE (
     ProducerName        TVarChar,   --производитель
     SumReprice          TFloat,     --сумма переоценки
     MinExpirationDate   TDateTime,  --Минимальный срок годности препарата на точке
-    isOneJuridical     Boolean     -- один поставщик (да/нет)
+    isOneJuridical      Boolean ,   -- один поставщик (да/нет)
+    isPriceFix          Boolean     -- фиксированная цена
     )
 
 AS
@@ -227,6 +228,7 @@ BEGIN
             SelectMinPrice_AllGoods.GoodsCode AS Code,
             SelectMinPrice_AllGoods.GoodsName AS GoodsName,
             Object_Price.Price                AS LastPrice,
+            Object_Price.Fix                  AS isPriceFix,
             SelectMinPrice_AllGoods.Remains   AS RemainsCount,
             Object_Goods.NDS                  AS NDS,
             CASE 
@@ -291,7 +293,8 @@ BEGIN
         ResultSet.ProducerName           AS ProducerName,
         ROUND(((ResultSet.NewPrice - ResultSet.LastPrice)*ResultSet.RemainsCount),2)::TFloat AS SumReprice,
         ResultSet.MinExpirationDate,
-        ResultSet.isOneJuridical
+        ResultSet.isOneJuridical,
+        ResultSet.isPriceFix
     FROM 
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId

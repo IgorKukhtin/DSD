@@ -95,6 +95,8 @@ type
     cdsResultJuridicalId: TIntegerField;
     colJuridicalId: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cdsResultisPriceFix: TBooleanField;
+    colisPriceFix: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -248,6 +250,7 @@ begin
           cdsResult.FieldByName('MinExpirationDate').AsString := AllGoodsPriceCDS.FieldByName('MinExpirationDate').AsString;
           cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;
           cdsResult.FieldByName('JuridicalId').AsInteger := AllGoodsPriceCDS.FieldByName('JuridicalId').AsInteger;
+          cdsResult.FieldByName('isPriceFix').AsBoolean := AllGoodsPriceCDS.FieldByName('isPriceFix').AsBoolean;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;
