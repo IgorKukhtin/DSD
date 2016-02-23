@@ -19,7 +19,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId_Master Integer;
-   DECLARE vbMovementItemId_Child Integer;
+   DECLARE vbMovementItemId_Child Integer; 
    DECLARE vbIsInsert Boolean;
 
    DECLARE vbValue TDateTime;

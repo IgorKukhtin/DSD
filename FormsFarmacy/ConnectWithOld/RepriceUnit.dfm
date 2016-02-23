@@ -135,6 +135,14 @@ object RepriceUnitForm: TRepriceUnitForm
         Options.Editing = False
         Width = 40
       end
+      object colisPriceFix: TcxGridDBColumn
+        Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'isPriceFix'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
+        Options.Editing = False
+        Width = 40
+      end
       object colJuridicalName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'JuridicalName'
@@ -528,6 +536,10 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'JuridicalId'
         DataType = ftInteger
+      end
+      item
+        Name = 'isPriceFix'
+        DataType = ftBoolean
       end>
     IndexDefs = <>
     Params = <>
@@ -536,7 +548,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      B70200009619E0BD010000001800000016000000000003000000B70202496404
+      CA0200009619E0BD010000001800000017000000000003000000CA0202496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -557,7 +569,8 @@ object RepriceUnitForm: TRepriceUnitForm
       000557494454480200020064000A53756D526570726963650800040000000100
       07535542545950450200490006004D6F6E657900114D696E4578706972617469
       6F6E4461746504000600000000000E69734F6E654A757269646963616C020003
-      00000000000B4A757269646963616C496404000100000000000000}
+      00000000000B4A757269646963616C496404000100000000000A697350726963
+      6546697802000300000000000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -633,6 +646,9 @@ object RepriceUnitForm: TRepriceUnitForm
     end
     object cdsResultJuridicalId: TIntegerField
       FieldName = 'JuridicalId'
+    end
+    object cdsResultisPriceFix: TBooleanField
+      FieldName = 'isPriceFix'
     end
   end
   object UnitsCDS: TClientDataSet

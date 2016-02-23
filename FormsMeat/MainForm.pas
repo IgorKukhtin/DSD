@@ -673,6 +673,8 @@ type
     N96: TMenuItem;
     actBranchJuridical: TdsdOpenForm;
     N97: TMenuItem;
+    actGoodsByGoodsKind_Order: TdsdOpenForm;
+    N98: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

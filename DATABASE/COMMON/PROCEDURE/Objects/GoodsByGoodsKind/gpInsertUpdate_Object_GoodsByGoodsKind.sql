@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer)
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
@@ -8,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inGoodsKindId         Integer  , -- Виды товаров
     IN inWeightPackage       TFloat   , -- вес пакета
     IN inWeightTotal         TFloat   , -- вес в упаковки
-    IN inIsOrder             Boolean  , -- используется в заявках
+   -- IN inIsOrder             Boolean  , -- используется в заявках
     IN inSession             TVarChar 
 )
 RETURNS Integer
@@ -58,7 +59,7 @@ BEGIN
    -- сохранили свойство <вес в упаковки>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightTotal(), ioId, inWeightTotal);
    -- сохранили свойство <используется в заявках>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Order(), ioId, inIsOrder);
+   --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Order(), ioId, inIsOrder);
 
 
    -- сохранили протокол
@@ -72,6 +73,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.02.16         * dell inIsOrder - сохраняется в др. процке, разделение прав
  17.06.15                                        *   -- !!!надо создавать!!!
  19.03.15         *
 */
