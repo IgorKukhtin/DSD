@@ -1,4 +1,4 @@
-inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
+inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 420
   ClientWidth = 1030
@@ -122,6 +122,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object clMeasureName: TcxGridDBColumn
@@ -149,6 +150,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object clWeightTotal: TcxGridDBColumn
@@ -159,6 +161,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clisOrder: TcxGridDBColumn
@@ -166,7 +169,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             DataBinding.FieldName = 'isOrder'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 90
           end
           object clInfoMoneyCode: TcxGridDBColumn
@@ -379,10 +381,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsertRecord'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -424,7 +422,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     Top = 184
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_isOrder'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -436,33 +434,11 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inGoodsId'
-        Value = Null
+        Name = 'inisOrder'
+        Value = 'Felse'
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inWeightPackage'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'WeightPackage'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inWeightTotal'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'WeightTotal'
-        DataType = ftFloat
+        ComponentItem = 'isOrder'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1
