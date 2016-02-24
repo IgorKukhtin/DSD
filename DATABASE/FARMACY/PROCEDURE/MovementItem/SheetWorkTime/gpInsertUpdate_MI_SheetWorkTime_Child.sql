@@ -46,7 +46,10 @@ BEGIN
     -- сохранили <Документ>
     IF COALESCE (vbMovementId, 0) = 0
     THEN
-        vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(vbMovementId, '', inOperDate::DATE, inUnitId);
+--        vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(vbMovementId, '', inOperDate::DATE, inUnitId);
+        vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_SheetWorkTime(), '', inOperDate::DATE, NULL);
+        -- сохранили связь с <Подразделением (в документе)>
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), vbMovementId, inUnitId);
     END IF;
 
     -- Поиск MovementItemId_Master

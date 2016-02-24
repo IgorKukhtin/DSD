@@ -2,25 +2,57 @@ inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090
   ClientHeight = 385
   ClientWidth = 831
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 847
   ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
-  inherited PageControl: TcxPageControl
+  object Panel: TPanel [0]
+    Left = 0
+    Top = 0
     Width = 831
-    Height = 359
+    Height = 32
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = 8
+    ExplicitTop = -1
+    object deOperDate: TcxDateEdit
+      Left = 519
+      Top = 5
+      EditValue = 42430d
+      Properties.Kind = ckDateTime
+      Properties.ShowTime = False
+      TabOrder = 0
+      Width = 154
+    end
+    object cxLabel3: TcxLabel
+      Left = 25
+      Top = 7
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object cxLabel1: TcxLabel
+      Left = 426
+      Top = 6
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1094#1077#1085' '#1085#1072':'
+    end
+  end
+  inherited PageControl: TcxPageControl
+    Top = 58
+    Width = 831
+    Height = 327
+    ExplicitTop = 58
     ExplicitWidth = 831
-    ExplicitHeight = 359
-    ClientRectBottom = 359
+    ExplicitHeight = 327
+    ClientRectBottom = 327
     ClientRectRight = 831
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 831
-      ExplicitHeight = 359
+      ExplicitHeight = 327
       inherited cxGrid: TcxGrid
         Width = 831
-        Height = 359
+        Height = 327
         ExplicitWidth = 831
-        ExplicitHeight = 359
+        ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -89,9 +121,34 @@ inherited PriceForm: TPriceForm
             AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCSValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Width = 53
+          end
+          object clMCSPeriod: TcxGridDBColumn
+            Caption = #1053#1058#1047' '#1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072
+            DataBinding.FieldName = 'MCSPeriod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072' '#1053#1058#1047
+            Width = 60
+          end
+          object clMCSDay: TcxGridDBColumn
+            Caption = #1053#1058#1047' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'MCSDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081' '#1076#1083#1103' '#1053#1058#1047
             Width = 53
           end
           object clMCSDateChange: TcxGridDBColumn
@@ -103,6 +160,28 @@ inherited PriceForm: TPriceForm
             HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
             Options.Editing = False
             Width = 81
+          end
+          object clRemainsNotMCS: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            DataBinding.FieldName = 'RemainsNotMCS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Width = 53
+          end
+          object clSummaNotMCS: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            DataBinding.FieldName = 'SummaNotMCS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Width = 53
           end
           object clisErased: TcxGridDBColumn
             AlternateCaption = #1058#1086#1074#1072#1088' '#1091#1076#1072#1083#1077#1085
@@ -149,6 +228,8 @@ inherited PriceForm: TPriceForm
           object colRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
@@ -182,9 +263,9 @@ inherited PriceForm: TPriceForm
       end
     end
   end
-  object ceUnit: TcxButtonEdit [1]
-    Left = 166
-    Top = 63
+  object ceUnit: TcxButtonEdit [2]
+    Left = 116
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
@@ -195,7 +276,7 @@ inherited PriceForm: TPriceForm
     Properties.UseNullString = True
     TabOrder = 5
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Width = 195
+    Width = 293
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -438,6 +519,47 @@ inherited PriceForm: TPriceForm
         end>
       isShowModal = False
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      FormName = 'TPriceDialogForm'
+      FormNameParam.Value = 'TPriceDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = 42430d
+          Component = deOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitId'
+          Value = 42370d
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+  end
+  inherited MasterDS: TDataSource
+    Top = 144
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 8
+    Top = 144
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Price'
@@ -447,6 +569,13 @@ inherited PriceForm: TPriceForm
         Value = Null
         Component = FormParams
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deOperDate
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
@@ -463,8 +592,12 @@ inherited PriceForm: TPriceForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    Left = 88
+    Top = 144
   end
   inherited BarManager: TdxBarManager
+    Left = 128
+    Top = 144
     DockControlHeights = (
       0
       0
@@ -506,7 +639,15 @@ inherited PriceForm: TPriceForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           UserDefine = [udPaintStyle]
@@ -516,17 +657,21 @@ inherited PriceForm: TPriceForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           UserDefine = [udPaintStyle]
           UserPaintStyle = psCaptionGlyph
           Visible = True
           ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItemUnit'
         end>
     end
     object dxBarControlContainerItemUnit: TdxBarControlContainerItem
@@ -589,8 +734,8 @@ inherited PriceForm: TPriceForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 200
-    Top = 48
+    Left = 152
+    Top = 72
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -641,6 +786,13 @@ inherited PriceForm: TPriceForm
         ParamType = ptInputOutput
       end
       item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = deOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inPrice'
         Value = Null
         Component = MasterCDS
@@ -653,6 +805,22 @@ inherited PriceForm: TPriceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSValue'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMCSPeriod'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSPeriod'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMCSDay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSDay'
         DataType = ftFloat
         ParamType = ptInput
       end

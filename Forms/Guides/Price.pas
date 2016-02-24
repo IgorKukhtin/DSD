@@ -12,7 +12,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, Vcl.ExtCtrls, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
   cxButtonEdit, cxCurrencyEdit, ExternalLoad, cxPCdxBarPopupMenu, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxLabel, cxDropDownEdit, cxCalendar;
 
 type
   TPriceForm = class(TAncestorEnumForm)
@@ -61,6 +62,11 @@ type
     colFixDateChange: TcxGridDBColumn;
     actPriceHistoryOpen: TdsdOpenForm;
     dxBarButton7: TdxBarButton;
+    Panel: TPanel;
+    deOperDate: TcxDateEdit;
+    cxLabel3: TcxLabel;
+    cxLabel1: TcxLabel;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

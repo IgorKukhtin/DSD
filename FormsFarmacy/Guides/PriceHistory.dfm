@@ -1,24 +1,28 @@
 inherited PriceHistoryForm: TPriceHistoryForm
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085' '#1080' '#1053#1058#1047
   ClientHeight = 406
-  ClientWidth = 338
+  ClientWidth = 504
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 354
+  ExplicitWidth = 520
   ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 338
+    Width = 504
     Height = 380
+    ExplicitWidth = 338
+    ExplicitHeight = 380
     ClientRectBottom = 380
-    ClientRectRight = 338
+    ClientRectRight = 504
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
+      ExplicitWidth = 338
+      ExplicitHeight = 380
       inherited cxGrid: TcxGrid
-        Width = 338
+        Width = 504
         Height = 380
+        ExplicitWidth = 338
+        ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -47,6 +51,22 @@ inherited PriceHistoryForm: TPriceHistoryForm
             DataBinding.FieldName = 'MCSValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object colMCSPeriod: TcxGridDBColumn
+            Caption = #1053#1058#1047' '#1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072
+            DataBinding.FieldName = 'MCSPeriod'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072' '#1053#1058#1047
+            Width = 95
+          end
+          object colMCSDay: TcxGridDBColumn
+            Caption = #1053#1058#1047' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'MCSDay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081' '#1076#1083#1103' '#1053#1058#1047
             Width = 95
           end
         end

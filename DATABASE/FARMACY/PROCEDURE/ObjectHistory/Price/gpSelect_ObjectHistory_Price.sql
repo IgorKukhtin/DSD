@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_Price(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, StartDate TDateTime, 
-               Price TFloat, MCSValue TFloat)
+               Price TFloat, MCSValue TFloat,
+               MCSPeriod TFloat, MCSDay TFloat)
 AS
 $BODY$
 BEGIN
@@ -29,6 +30,8 @@ BEGIN
           , COALESCE(ObjectHistory_Price.StartDate, Empty.StartDate) AS StartDate
           , ObjectHistoryFloat_Price_Value.ValueData                 AS Price
           , ObjectHistoryFloat_Price_MCSValue.ValueData              AS MCSValue
+          , ObjectHistoryFloat_Price_MCSPeriod.ValueData             AS MCSPeriod
+          , ObjectHistoryFloat_Price_MCSDay.ValueData                AS MCSDay
         FROM 
             ObjectHistory_Price
             FULL JOIN (
@@ -42,7 +45,14 @@ BEGIN
                                         AND ObjectHistoryFloat_Price_MCSValue.DescId = zc_ObjectHistoryFloat_Price_MCSValue()
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price_Value
                                          ON ObjectHistoryFloat_Price_Value.ObjectHistoryId = ObjectHistory_Price.Id
-                                        AND ObjectHistoryFloat_Price_Value.DescId = zc_ObjectHistoryFloat_Price_Value();
+                                        AND ObjectHistoryFloat_Price_Value.DescId = zc_ObjectHistoryFloat_Price_Value()
+
+            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price_MCSPeriod
+                                         ON ObjectHistoryFloat_Price_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
+                                        AND ObjectHistoryFloat_Price_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
+            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price_MCSDay
+                                         ON ObjectHistoryFloat_Price_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
+                                        AND ObjectHistoryFloat_Price_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay();
 
 
 END;
@@ -55,6 +65,7 @@ ALTER FUNCTION gpSelect_ObjectHistory_Price (Integer, TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 24.02.16         *
  24.12.15                                                                        *
 
 */

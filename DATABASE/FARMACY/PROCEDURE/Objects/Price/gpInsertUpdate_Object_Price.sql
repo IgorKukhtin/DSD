@@ -3,11 +3,18 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
+    IN inOperDate                 TDateTime , 
     IN inPrice                    TFloat    ,    -- цена
     IN inMCSValue                 TFloat    ,    -- Неснижаемый товарный запас
+    IN inMCSPeriod                TFloat    ,    -- Количество дней для анализа НТЗ
+    IN inMCSDay                   TFloat    ,    -- Страховой запас дней НТЗ
     IN inGoodsId                  Integer   ,    -- Товар
     IN inUnitId                   Integer   ,    -- подразделение
     IN inMCSIsClose               Boolean   ,    -- НТЗ закрыт
@@ -32,6 +39,12 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
+
+    -- проверили корректность записи по дате
+    IF inOperDate < CURRENT_TIMESTAMP  - interval '1 minute' 
+    THEN
+        RAISE EXCEPTION 'Ошибка.Дата сохранения данных <%> меньше текущей.', inOperDate;
+    END IF;
 
     -- проверили корректность цены
     IF inPrice = 0
@@ -67,6 +80,8 @@ BEGIN
         vbMCSNotRecalc,
         vbFix
     FROM Object_Price_View
+
+
     WHERE
         GoodsId = inGoodsId
         AND
@@ -112,6 +127,7 @@ BEGIN
     IF ((inPrice is not null) AND (inPrice <> COALESCE(vbPrice,0))) 
        OR
        ((inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0)))
+       
     THEN
         PERFORM
             gpInsertUpdate_ObjectHistory_Price(
@@ -120,6 +136,8 @@ BEGIN
                 inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
                 inPrice    := COALESCE(inPrice,vbPrice)::TFloat,     -- Цена
                 inMCSValue := COALESCE(inMCSValue,vbMCSValue)::TFloat,     -- НТЗ
+                inMCSPeriod:= COALESCE(inMCSPeriod)::TFloat,  -- Количество дней для анализа НТЗ
+                inMCSDay   := COALESCE(inMCSDay)::TFloat,     -- Страховой запас дней НТЗ
                 inSession  := inSession);
     END IF;
     IF (inMCSIsClose is not null) AND (COALESCE(vbMCSIsClose,False) <> inMCSIsClose)
@@ -141,7 +159,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
