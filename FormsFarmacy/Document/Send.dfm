@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 780
   ExplicitWidth = 796
-  ExplicitHeight = 655
+  ExplicitHeight = 652
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -97,6 +97,7 @@ inherited SendForm: TSendForm
               Kind = skSum
               Column = colAmountRemains
             end>
+          OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
@@ -127,6 +128,7 @@ inherited SendForm: TSendForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 249
           end
           object colAmountRemains: TcxGridDBColumn [2]
@@ -446,7 +448,7 @@ inherited SendForm: TSendForm
         end
         item
           Name = 'OperDatePartion'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
@@ -631,6 +633,7 @@ inherited SendForm: TSendForm
         Param.DataType = ftString
         DataSummaryItemIndex = 5
       end>
+    SearchAsFilter = False
     Left = 454
     Top = 385
   end
@@ -711,7 +714,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

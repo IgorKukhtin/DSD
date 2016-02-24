@@ -4,7 +4,7 @@ inherited LossForm: TLossForm
   ClientWidth = 800
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
   ExplicitWidth = 816
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -53,6 +53,7 @@ inherited LossForm: TLossForm
               Kind = skSum
               Column = colSummIn
             end>
+          OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
@@ -435,6 +436,7 @@ inherited LossForm: TLossForm
         Param.DataType = ftString
         DataSummaryItemIndex = 5
       end>
+    SearchAsFilter = False
     Left = 694
     Top = 185
   end
@@ -517,7 +519,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

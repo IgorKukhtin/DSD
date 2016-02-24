@@ -31,18 +31,22 @@ BEGIN
             ORDER BY Movement.OperDate
             LIMIT 100;
          --
-         SELECT ' ' || COALESCE (Object_User.ValueData, '') || ' <' || TO_CHAR (MovementProtocol.OperDate, 'DD.MM HH24:MM') || '> документ <' || MovementDesc.ItemName || '>  № <' || tmp.InvNumber || '> Актуальность отчетов до:'
+         SELECT ' ' || COALESCE (Object_User.ValueData, '') || ' <' || TO_CHAR (COALESCE (MovementProtocol.OperDate, MovementProtocol_arc.OperDate), 'DD.MM HH24:MM') || '> документ <' || MovementDesc.ItemName || '>  № <' || tmp.InvNumber || '> Актуальность отчетов до:'
               , tmp.OperDate
                 INTO vbValueData_new, vbOperDate_new
-         FROM (SELECT _tmpMovement.MovementId, _tmpMovement.DescId, _tmpMovement.InvNumber, _tmpMovement.OperDate, MAX (MovementProtocol.Id) AS Id_find
+         FROM (SELECT _tmpMovement.MovementId, _tmpMovement.DescId, _tmpMovement.InvNumber, _tmpMovement.OperDate, MAX (MovementProtocol_arc.Id) AS Id_find_arc, MAX (MovementProtocol.Id) AS Id_find
                FROM _tmpMovement
-                    INNER JOIN MovementProtocol ON MovementProtocol.MovementId = _tmpMovement.MovementId
+                    LEFT JOIN MovementProtocol_arc ON MovementProtocol_arc.MovementId = _tmpMovement.MovementId
+                                                  AND MovementProtocol_arc.OperDate < CURRENT_TIMESTAMP - INTERVAL '3 MINUTE'
+                    LEFT JOIN MovementProtocol ON MovementProtocol.MovementId = _tmpMovement.MovementId
+                                              AND MovementProtocol.OperDate < CURRENT_TIMESTAMP - INTERVAL '3 MINUTE'
                GROUP BY _tmpMovement.MovementId, _tmpMovement.DescId, _tmpMovement.InvNumber, _tmpMovement.OperDate
               ) AS tmp
-              INNER JOIN MovementProtocol ON MovementProtocol.Id = tmp.Id_find
-                                         AND MovementProtocol.OperDate < CURRENT_TIMESTAMP - INTERVAL '3 MINUTE'
-              LEFT JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+              LEFT JOIN MovementProtocol_arc ON MovementProtocol_arc.Id = tmp.Id_find_arc
+              LEFT JOIN MovementProtocol ON MovementProtocol.Id = tmp.Id_find
+              LEFT JOIN Object AS Object_User ON Object_User.Id = COALESCE (MovementProtocol.UserId, MovementProtocol_arc.UserId)
               LEFT JOIN MovementDesc ON MovementDesc.Id = tmp.DescId
+         WHERE tmp.Id_find_arc > 0 OR tmp.Id_find > 0
          ORDER BY tmp.OperDate
          LIMIT 1;
                         

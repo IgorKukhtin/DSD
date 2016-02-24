@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 733
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 749
-  ExplicitHeight = 517
+  ExplicitHeight = 514
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,7 +23,7 @@ inherited SaleForm: TSaleForm
         Width = 733
         Height = 216
         ExplicitWidth = 733
-        ExplicitHeight = 314
+        ExplicitHeight = 216
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -36,6 +36,7 @@ inherited SaleForm: TSaleForm
               Kind = skSum
               Column = colAmount
             end>
+          OptionsBehavior.IncSearch = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -117,6 +118,7 @@ inherited SaleForm: TSaleForm
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
@@ -210,8 +212,6 @@ inherited SaleForm: TSaleForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 0
-        ExplicitWidth = 208
       end
     end
   end
@@ -377,6 +377,9 @@ inherited SaleForm: TSaleForm
       0
       26
       0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    SearchAsFilter = False
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -899,6 +902,7 @@ inherited SaleForm: TSaleForm
         Param.DataType = ftString
         DataSummaryItemIndex = -1
       end>
+    SearchAsFilter = False
     Left = 318
     Top = 409
   end
