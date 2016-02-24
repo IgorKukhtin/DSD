@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                MarginCategoryId Integer, MarginCategoryName TVarChar,
                isLeaf boolean, 
-               TaxService TFloat) AS
+               TaxService TFloat,
+               isRepriceAuto Boolean
+               ) AS
 $BODY$
 BEGIN
 
@@ -34,7 +36,9 @@ BEGIN
            , CAST (0 as Integer)   AS MarginCategoryId
            , CAST ('' as TVarChar) AS MarginCategoryName
            , false                 AS isLeaf
-           , CAST (0 as TFloat)    AS TaxService;
+           , CAST (0 as TFloat)    AS TaxService
+           , False                 AS isRepriceAuto
+;
    ELSE
        RETURN QUERY 
       
@@ -53,7 +57,8 @@ BEGIN
       , Object_MarginCategory.ValueData                    AS MarginCategoryName
       , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
 
-      , ObjectFloat_TaxService.ValueData                   AS TaxService
+      , ObjectFloat_TaxService.ValueData                     AS TaxService
+      , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -79,6 +84,11 @@ BEGIN
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
+                                ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_RepriceAuto.DescId = zc_ObjectBoolean_Unit_RepriceAuto()
+
+
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -94,6 +104,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.02.16         * 
  27.06.14         *
  11.06.13                        *
 

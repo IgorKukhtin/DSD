@@ -3,7 +3,7 @@ object UnitTreeForm: TUnitTreeForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 403
-  ClientWidth = 768
+  ClientWidth = 843
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -66,10 +66,11 @@ object UnitTreeForm: TUnitTreeForm
   object cxGrid: TcxGrid
     Left = 321
     Top = 26
-    Width = 447
+    Width = 522
     Height = 377
     Align = alClient
     TabOrder = 6
+    ExplicitWidth = 447
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -138,6 +139,8 @@ object UnitTreeForm: TUnitTreeForm
         DataBinding.FieldName = 'TaxService'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -148,6 +151,15 @@ object UnitTreeForm: TUnitTreeForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 94
+      end
+      object colisRepriceAuto: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
+        DataBinding.FieldName = 'isRepriceAuto'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+        Options.Editing = False
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -56,6 +56,7 @@ type
     bbUnitChoiceForm: TdxBarButton;
     dsdOpenUnitForm: TdsdOpenForm;
     colTaxService: TcxGridDBColumn;
+    colisRepriceAuto: TcxGridDBColumn;
   private
     { Private declarations }
   public

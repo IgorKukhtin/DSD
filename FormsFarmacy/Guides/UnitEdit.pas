@@ -36,6 +36,7 @@ type
     MarginCategoryGuides: TdsdGuides;
     cxLabel4: TcxLabel;
     ceTaxService: TcxCurrencyEdit;
+    cbRepriceAuto: TcxCheckBox;
   private
     { Private declarations }
   public
