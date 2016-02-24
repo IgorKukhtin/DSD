@@ -2,10 +2,9 @@
 
 -- Function: gpInsert_MovementItem_Reprice()
 
-DROP FUNCTION IF EXISTS gpInsert_MovementItem_Reprice (Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_MovementItem_Reprice (integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsert_MovementItem_Reprice (integer, Integer, Integer, Integer, TDateTime,TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
  INOUT ioId                  Integer   , -- Ключ записи

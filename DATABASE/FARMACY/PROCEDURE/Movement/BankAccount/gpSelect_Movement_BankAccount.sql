@@ -194,7 +194,18 @@ BEGIN
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement_Income.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm();
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+/*
+where inSession <> '3' or (MovementItem.ObjectId IN (  1693572 -- house-2-ÀÑÍÁ-4 
+                                          , 1694740 -- house-3-ÀÑÍÁ-3 
+                                          , 1702164 -- house-4-ÀÑÍÁ
+                                          , 1705473 -- house-5-ÀÑÍÁ-2
+                                          , 1726712 -- house-6-Íå áîëåé
+                                           )
+and Movement_Income.Id > 0)
+*/
+;
+
             
 END;
 $BODY$

@@ -16,20 +16,20 @@ object UtilPrintForm: TUtilPrintForm
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 828
-    Top = 70
+    Left = 132
+    Top = 22
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 828
-    Top = 126
+    Left = 132
+    Top = 78
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 828
-    Top = 177
+    Left = 132
+    Top = 129
   end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
@@ -173,6 +173,9 @@ object UtilPrintForm: TUtilPrintForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -593,6 +596,10 @@ object UtilPrintForm: TUtilPrintForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
