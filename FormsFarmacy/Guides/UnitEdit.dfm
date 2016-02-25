@@ -118,7 +118,15 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 13
-    Width = 209
+    Width = 77
+  end
+  object cbRepriceAuto: TcxCheckBox
+    Left = 351
+    Top = 121
+    Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+    Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
+    TabOrder = 14
+    Width = 113
   end
   object ActionList: TActionList
     Left = 224
@@ -187,6 +195,13 @@
         Value = Null
         Component = ceTaxService
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisRepriceAuto'
+        Value = Null
+        Component = cbRepriceAuto
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -291,6 +306,12 @@
         Value = Null
         Component = ceTaxService
         DataType = ftFloat
+      end
+      item
+        Name = 'isRepriceAuto'
+        Value = Null
+        Component = cbRepriceAuto
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 192

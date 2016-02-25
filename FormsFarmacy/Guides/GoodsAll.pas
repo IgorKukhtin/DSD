@@ -1,4 +1,4 @@
-unit GoodsPartnerCodeMaster;
+unit GoodsAll;
 
 interface
 
@@ -12,39 +12,54 @@ uses
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, cxContainer, cxTextEdit, cxMaskEdit,
   cxButtonEdit, cxLabel, dsdGuides, cxSplitter, Vcl.DBActns, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, Vcl.ExtCtrls;
 
 type
-  TGoodsPartnerCodeMasterForm = class(TAncestorGuidesForm)
+  TGoodsAllForm = class(TAncestorGuidesForm)
     clCodeInt: TcxGridDBColumn;
     clName: TcxGridDBColumn;
-    edPartnerCode: TcxButtonEdit;
-    cxLabel1: TcxLabel;
     bbLabel: TdxBarControlContainerItem;
     bbJuridical: TdxBarControlContainerItem;
-    PartnerCodeGuides: TdsdGuides;
     clCode: TcxGridDBColumn;
-    cxGridGoodsLink: TcxGrid;
-    cxGridDBTableViewGoodsLink: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn3: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    spGoodsLink: TdsdStoredProc;
+    cxGridGChild1: TcxGrid;
+    cxGridDBTableViewChild1: TcxGridDBTableView;
+    clCode1: TcxGridDBColumn;
+    clName1: TcxGridDBColumn;
+    cxGridLevelChild1: TcxGridLevel;
+    spGoodsRetailChild_1: TdsdStoredProc;
     cxSplitter: TcxSplitter;
-    GoodsLinkCDS: TClientDataSet;
-    GoodsLinkDS: TDataSource;
-    clJuridicalName: TcxGridDBColumn;
-    DBViewAddOnMaster: TdsdDBViewAddOn;
+    ChildCDS_1: TClientDataSet;
+    ChildDS_1: TDataSource;
+    clGoodsGroupName: TcxGridDBColumn;
+    DBViewAddOnChild1: TdsdDBViewAddOn;
     actGoodsLinkRefresh: TdsdDataSetRefresh;
     RefreshDispatcher: TRefreshDispatcher;
     mactDelete: TMultiAction;
     DataSetDelete: TDataSetDelete;
     dsdStoredProc1: TdsdStoredProc;
     dsdExecStoredProc1: TdsdExecStoredProc;
-    clMakerName: TcxGridDBColumn;
     mactListDelete: TMultiAction;
     N8: TMenuItem;
     N9: TMenuItem;
+    cxGrid2: TcxGrid;
+    cxGridDBTableViewChild2: TcxGridDBTableView;
+    cxGoodsId: TcxGridDBColumn;
+    cxCode: TcxGridDBColumn;
+    cxGoodsName: TcxGridDBColumn;
+    cxJuridicalName: TcxGridDBColumn;
+    cxMakerName: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    ChildCDS_2: TClientDataSet;
+    ChildDS_2: TDataSource;
+    dsdDBViewAddOnChild2: TdsdDBViewAddOn;
+    spGoodsJuridicalChild_2: TdsdStoredProc;
+    colId: TcxGridDBColumn;
+    clId: TcxGridDBColumn;
+    clGoodsMainId: TcxGridDBColumn;
+    colNDSKindName: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    cxSplitter1: TcxSplitter;
+    cxGoodsMainId: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -56,6 +71,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsPartnerCodeMasterForm);
+  RegisterClass(TGoodsAllForm);
 
 end.

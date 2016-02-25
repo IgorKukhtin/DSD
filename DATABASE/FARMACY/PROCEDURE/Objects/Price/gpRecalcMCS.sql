@@ -139,8 +139,11 @@ BEGIN
         S1.NumberOfDay;
 
     PERFORM gpInsertUpdate_Object_Price(ioId           := 0,                    -- ключ объекта < Цена >
+                                        inOperDate     := zc_dateEnd(),         -- 
                                         inPrice        := NULL::TFloat,         -- цена
                                         inMCSValue     := MAX(Sold)::TFloat,    -- Неснижаемый товарный запас
+                                        inMCSPeriod    := inPeriod::TFloat,     --
+                                        inMCSDay       := inDay::TFloat,        --
                                         inGoodsId      := tmp_ResultSet.GoodsId,-- Товар
                                         inUnitId       := inUnitId,             -- подразделение
                                         inMCSIsClose   := NULL::Boolean,        -- НТЗ закрыт

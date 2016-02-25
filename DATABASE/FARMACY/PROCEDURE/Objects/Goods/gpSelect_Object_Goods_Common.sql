@@ -1,9 +1,9 @@
-п»ї-- Function: gpSelect_Object_Goods()
+-- Function: gpSelect_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Common(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Common(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                GoodsGroupId Integer, GoodsGroupName TVarChar,
@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                NDSKindId Integer, NDSKindName TVarChar
               ) AS
 $BODY$
-BEGIN
+BEGIN 
 
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
@@ -38,15 +38,15 @@ ALTER FUNCTION gpSelect_Object_Goods_Common(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  19.08.14                         *
  24.06.14         *
  20.06.13                         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
  --SELECT * FROM gpSelect_Object_Goods('2')
 
 

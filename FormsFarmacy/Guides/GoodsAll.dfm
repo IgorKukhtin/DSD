@@ -1,42 +1,54 @@
-inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
-  Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
-  ClientHeight = 423
-  ClientWidth = 844
+inherited GoodsAllForm: TGoodsAllForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1086#1074' ('#1042#1057#1045')'
+  ClientHeight = 476
+  ClientWidth = 927
+  AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 860
-  ExplicitHeight = 461
+  ExplicitWidth = 943
+  ExplicitHeight = 514
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 844
-    Height = 397
+    Width = 927
+    Height = 450
     ExplicitWidth = 844
-    ExplicitHeight = 397
-    ClientRectBottom = 397
-    ClientRectRight = 844
+    ExplicitHeight = 449
+    ClientRectBottom = 450
+    ClientRectRight = 927
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 844
-      ExplicitHeight = 397
+      ExplicitLeft = 3
+      ExplicitWidth = 927
+      ExplicitHeight = 450
       inherited cxGrid: TcxGrid
-        Left = 356
-        Width = 488
-        Height = 397
-        ExplicitLeft = 356
-        ExplicitWidth = 488
-        ExplicitHeight = 397
+        Width = 353
+        Height = 450
+        Align = alLeft
+        LookAndFeel.NativeStyle = True
+        LookAndFeel.SkinName = ''
+        ExplicitLeft = 4
+        ExplicitTop = 1
+        ExplicitWidth = 353
+        ExplicitHeight = 450
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.DataSource = GoodsLinkDS
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colId: TcxGridDBColumn
+            Caption = 'MainId'
+            DataBinding.FieldName = 'Id'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
           object clCodeInt: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
@@ -44,59 +56,54 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           end
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
+            DataBinding.FieldName = 'Code'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 88
+            Width = 68
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsName'
+            DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 183
+            Width = 193
           end
-          object clJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'. '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+          object clGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
-          object clMakerName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'MakerName'
+          object colNDSKindName: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 106
+            Width = 40
           end
         end
       end
-      object edPartnerCode: TcxButtonEdit
-        Left = 359
-        Top = 103
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        TabOrder = 1
-        Width = 187
-      end
-      object cxLabel1: TcxLabel
-        Left = 184
-        Top = 40
-        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
-      end
-      object cxGridGoodsLink: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 353
-        Height = 397
-        Align = alLeft
+      object cxGridGChild1: TcxGrid
+        Left = 363
+        Top = 1
+        Width = 563
+        Height = 222
+        Align = alCustom
+        Anchors = [akLeft, akTop, akRight, akBottom]
         PopupMenu = PopupMenu
-        TabOrder = 3
-        object cxGridDBTableViewGoodsLink: TcxGridDBTableView
+        TabOrder = 1
+        LookAndFeel.NativeStyle = True
+        LookAndFeel.SkinName = ''
+        ExplicitWidth = 480
+        ExplicitHeight = 221
+        object cxGridDBTableViewChild1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = MasterDS
+          DataController.DataSource = ChildDS_1
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
@@ -117,41 +124,165 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object cxGridDBColumn1: TcxGridDBColumn
+          object clCode1: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 42
           end
-          object cxGridDBColumn3: TcxGridDBColumn
+          object clName1: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 254
           end
+          object clId: TcxGridDBColumn
+            Caption = 'GoodsId'
+            DataBinding.FieldName = 'Id'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object clGoodsMainId: TcxGridDBColumn
+            Caption = 'MainId'
+            DataBinding.FieldName = 'GoodsMainId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object colUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
         end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableViewGoodsLink
+        object cxGridLevelChild1: TcxGridLevel
+          GridView = cxGridDBTableViewChild1
         end
       end
       object cxSplitter: TcxSplitter
+        Left = 355
+        Top = 0
+        Width = 8
+        Height = 450
+        Control = cxGrid2
+        ExplicitLeft = 843
+      end
+      object cxGrid2: TcxGrid
+        AlignWithMargins = True
+        Left = 361
+        Top = 229
+        Width = 565
+        Height = 224
+        PopupMenu = PopupMenu
+        TabOrder = 2
+        LookAndFeel.Kind = lfFlat
+        LookAndFeel.NativeStyle = True
+        object cxGridDBTableViewChild2: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS_2
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object cxGoodsMainId: TcxGridDBColumn
+            Caption = 'MainId'
+            DataBinding.FieldName = 'GoodsMainId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 48
+          end
+          object cxGoodsId: TcxGridDBColumn
+            DataBinding.FieldName = 'GoodsId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object cxCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object cxGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 183
+          end
+          object cxJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object cxMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 106
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableViewChild2
+        end
+      end
+      object cxSplitter1: TcxSplitter
         Left = 353
         Top = 0
-        Width = 3
-        Height = 397
+        Width = 2
+        Height = 450
         Control = cxGrid
+        ExplicitLeft = 361
+        ExplicitHeight = 449
       end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 523
+    Top = 8
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Left = 624
+    Top = 16
+  end
   inherited ActionList: TActionList
+    Left = 783
+    Top = 15
     object DataSetDelete: TDataSetDelete [0]
       Category = 'Delete'
       Caption = '&Delete'
       Hint = 'Delete'
-      DataSource = GoodsLinkDS
+      DataSource = ChildDS_1
     end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
@@ -159,7 +290,10 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spGoodsLink
+          StoredProc = spGoodsRetailChild_1
+        end
+        item
+          StoredProc = spGoodsJuridicalChild_2
         end>
     end
     object mactListDelete: TMultiAction [2]
@@ -169,7 +303,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         item
           Action = dsdExecStoredProc1
         end>
-      DataSource = GoodsLinkDS
+      DataSource = ChildDS_1
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1089#1074#1079#1080'? '
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1082#1086#1076#1086#1074
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -228,10 +362,10 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     object actGoodsLinkRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGoodsLink
+      StoredProc = spGoodsRetailChild_1
       StoredProcList = <
         item
-          StoredProc = spGoodsLink
+          StoredProc = spGoodsRetailChild_1
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -267,19 +401,23 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 48
+    Left = 104
+    Top = 64
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
-    Top = 48
+    IndexFieldNames = 'Id'
+    MasterFields = 'Id'
+    Left = 32
+    Top = 80
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Common'
-    Left = 144
-    Top = 88
+    Left = 72
+    Top = 168
   end
   inherited BarManager: TdxBarManager
+    Left = 736
     DockControlHeights = (
       0
       0
@@ -289,10 +427,9 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbErased'
+          ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -302,28 +439,16 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbJuridical'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -343,23 +468,19 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = cxLabel1
     end
     object bbJuridical: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edPartnerCode
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -371,10 +492,12 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         ShortCut = 13
       end>
     SearchAsFilter = False
-    Left = 448
-    Top = 168
+    Left = 200
+    Top = 72
   end
   inherited PopupMenu: TPopupMenu
+    Left = 680
+    Top = 8
     object N9: TMenuItem [5]
       Action = mactListDelete
     end
@@ -388,74 +511,110 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = GoodsLinkCDS
+        Component = ChildCDS_1
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-  end
-  object PartnerCodeGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPartnerCode
-    FormNameParam.Value = 'TPartnerCodeForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPartnerCodeForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PartnerCodeGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PartnerCodeGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 288
-    Top = 108
-  end
-  object spGoodsLink: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PartnerGoods'
-    DataSet = GoodsLinkCDS
-    DataSets = <
-      item
-        DataSet = GoodsLinkCDS
-      end>
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = ''
-        Component = PartnerCodeGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 560
+    Left = 416
     Top = 88
   end
-  object GoodsLinkCDS: TClientDataSet
+  object spGoodsRetailChild_1: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsAll_Retail'
+    DataSet = ChildCDS_1
+    DataSets = <
+      item
+        DataSet = ChildCDS_1
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 680
+    Top = 80
+  end
+  object ChildCDS_1: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'GoodsMainId'
     MasterFields = 'Id'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 424
-    Top = 72
+    Left = 752
+    Top = 80
   end
-  object GoodsLinkDS: TDataSource
-    DataSet = GoodsLinkCDS
-    Left = 464
-    Top = 72
+  object ChildDS_1: TDataSource
+    DataSet = ChildCDS_1
+    Left = 744
+    Top = 136
   end
-  object DBViewAddOnMaster: TdsdDBViewAddOn
+  object DBViewAddOnChild1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableViewGoodsLink
+    View = cxGridDBTableViewChild1
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    SearchAsFilter = False
+    Left = 568
+    Top = 88
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actGoodsLinkRefresh
+    ComponentList = <
+      item
+      end>
+    Left = 576
+    Top = 8
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_LinkGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS_1
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 144
+  end
+  object ChildCDS_2: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'GoodsMainId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 464
+    Top = 400
+  end
+  object ChildDS_2: TDataSource
+    DataSet = ChildCDS_2
+    Left = 464
+    Top = 312
+  end
+  object dsdDBViewAddOnChild2: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewChild2
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -479,33 +638,19 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 304
-    Top = 168
+    Left = 632
+    Top = 336
   end
-  object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = Null
-    RefreshAction = actGoodsLinkRefresh
-    ComponentList = <
+  object spGoodsJuridicalChild_2: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsAll_Juridical'
+    DataSet = ChildCDS_2
+    DataSets = <
       item
-        Component = PartnerCodeGuides
+        DataSet = ChildCDS_2
       end>
-    Left = 200
-    Top = 112
-  end
-  object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpDelete_Object_LinkGoods'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = GoodsLinkCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
+    Params = <>
     PackSize = 1
-    Left = 192
-    Top = 216
+    Left = 400
+    Top = 344
   end
 end
