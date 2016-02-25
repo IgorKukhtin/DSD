@@ -549,12 +549,25 @@ begin
   UserSettingsStorageAddOn.LoadUserSettings;
   try
     Cash:=TCashFactory.GetCash(iniCashType);
+
+    if (Cash <> nil) AND (Cash.FiscalNumber = '') then
+    Begin
+      MessageDlg('Ошибка инициализации кассового аппарата. Дальнейшая работа программы невозможна.' + #13#10 +
+                 'Для кассового апарата типа "DATECS FP-320" ' + #13#10 +
+                 'необходимо внести его серийный номер в файл настроек' + #13#10 +
+                 '(Секция [TSoldWithCompMainForm] параметр "FP320SERIAL")', mtError, [mbOK], 0);
+
+      Application.Terminate;
+      exit;
+    End;
+
   except
     Begin
       ShowMessage('Внимание! Программа не может подключиться к фискальному аппарату.'+#13+
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
   end;
+
   if not InitLocalStorage then
   Begin
     Application.Terminate;

@@ -20,6 +20,7 @@ function iniPortSpeed:String;
 function iniLocalDataBaseHead: String;
 function iniLocalDataBaseBody: String;
 
+function iniCashSerialNumber: String;
 implementation
 
 uses
@@ -143,5 +144,10 @@ begin
     end;
   End;
 end;
+
+function iniCashSerialNumber: String;
+begin
+  Result := GetValue('TSoldWithCompMainForm','FP320SERIAL','');
+End;
 
 end.
