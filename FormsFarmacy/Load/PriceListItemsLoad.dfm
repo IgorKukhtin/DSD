@@ -3,6 +3,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   ClientHeight = 410
   ClientWidth = 908
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -118
   ExplicitWidth = 924
   ExplicitHeight = 445
   PixelsPerInch = 96
@@ -25,7 +26,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ExplicitWidth = 908
         ExplicitHeight = 335
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsView.ColumnAutoWidth = True
+          OptionsView.CellAutoHeight = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil

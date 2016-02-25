@@ -53,7 +53,7 @@ BEGIN
     Remains AS
     (
         Select
-            Container.ObjectId,
+            Container.ObjectId, -- здесь товар "сети"
             SUM(Container.Amount)::TFloat as Amount,
             MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate
         from 
@@ -80,16 +80,16 @@ BEGIN
     GoodsList AS 
     (
         SELECT 
-            Remains.ObjectId,
-            Object_LinkGoods_View.GoodsMainId, 
-            PriceList_GoodsLink.GoodsId,
+            Remains.ObjectId,                  -- здесь товар "сети"
+            Object_LinkGoods_View.GoodsMainId, -- здесь "общий" товар
+            PriceList_GoodsLink.GoodsId,       -- здесь товар "поставщика"
             Remains.Amount,
             Remains.MinExpirationDate
         FROM 
             Remains
-            JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = Remains.objectid -- Связь товара сети с общим
-            LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
-                                            ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+            INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = Remains.objectid -- Связь товара сети с общим
+             LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
+                                             ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
     ),
     FinalList AS
     (
@@ -142,7 +142,7 @@ BEGIN
                   
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
                                              ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                            AND MILinkObject_Goods.ObjectId = GoodsList.GoodsId 
+                                            AND MILinkObject_Goods.ObjectId = GoodsList.GoodsId  -- товар "поставщика"
 
             JOIN  MovementItem AS PriceList  -- Прайс-лист
                                ON PriceList.Id = MILinkObject_Goods.MovementItemId
@@ -156,10 +156,10 @@ BEGIN
             LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId 
                                        AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId 
                                        AND JuridicalSettings.ContractId = LastPriceList_View.ContractId 
-
-                  
-            LEFT JOIN Object_Goods_View AS Object_JuridicalGoods 
-                                        ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
+            -- товар "поставщика", если он есть в прайсах
+            LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
+            -- товар "сети"
+            LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = GoodsList.ObjectId
        
             JOIN OBJECT AS Juridical 
                         ON Juridical.Id = LastPriceList_View.JuridicalId
@@ -168,8 +168,6 @@ BEGIN
                                   ON ObjectFloat_Deferment.ObjectId = LastPriceList_View.ContractId
                                  AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
        
-            LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
-                                        ON Goods.Id = GoodsList.ObjectId
              
         WHERE  
            COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE 

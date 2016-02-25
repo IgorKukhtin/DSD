@@ -62,10 +62,9 @@ BEGIN
                                                                , inOperDate        := inOperDate
                                                                , inMovementId_Sale := inMovementId_Sale
                                                                , inInvNumberMark   := NULL
-                                                               , inCarId           := CASE 
-                                                                                           WHEN COALESCE (tmpBranch.CarId,0) <> 0 THEN tmpBranch.CarId
+                                                               , inCarId           := CASE WHEN COALESCE (tmpBranch.CarId,0) <> 0 THEN tmpBranch.CarId
                                                                                            ELSE 
-                                                                                           CASE -- vbIsOd + Фоззі
+                                                                                      CASE -- vbIsOd + Фоззі
                                                                                            WHEN vbIsOd = TRUE AND (SELECT OL_Retail.ChildObjectId
                                                                                                                    FROM MovementLinkObject AS MLO
                                                                                                                         LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -79,10 +78,11 @@ BEGIN
                                                                                                 THEN 518529 -- BE 59-17 AO   
                                                                                            ELSE NULL
                                                                                       END
+                                                                                      END
                                                                , inCarTrailerId    := NULL
-                                                               , inPersonalDriverId:= CASE 
-                                                                                           WHEN COALESCE (tmpBranch.PersonalDriverId,0) <> 0 THEN tmpBranch.PersonalDriverId
-                                                                                           ELSE CASE
+                                                               , inPersonalDriverId:= CASE WHEN COALESCE (tmpBranch.PersonalDriverId,0) <> 0 THEN tmpBranch.PersonalDriverId
+                                                                                           ELSE
+                                                                                      CASE
                                                                                            -- vbIsOd + Фоззі
                                                                                            WHEN vbIsOd = TRUE AND (SELECT OL_Retail.ChildObjectId
                                                                                                                    FROM MovementLinkObject AS MLO
@@ -97,12 +97,12 @@ BEGIN
                                                                                                -- THEN 149822  -- Бойченко Денис Анатолійович
                                                                                                 THEN 518520  -- Флера Сергей Владимирович
                                                                                            ELSE NULL
-                                                                                         END
+                                                                                      END
                                                                                       END
                                                                , inRouteId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_Route())
                                                                , inMemberId1       := CASE WHEN COALESCE (tmpBranch.Member1Id,0) <> 0 THEN tmpBranch.Member1Id
                                                                                            ELSE 
-                                                                                           CASE 
+                                                                                      CASE 
                                                                                            -- vbIsOd + Фоззі
                                                                                            WHEN vbIsOd = TRUE AND (SELECT OL_Retail.ChildObjectId
                                                                                                                    FROM MovementLinkObject AS MLO
@@ -117,7 +117,8 @@ BEGIN
                                                                                                 --THEN 149822  -- Бойченко Денис Анатолійович
                                                                                                THEN 518520  -- Флера Сергей Владимирович
                                                                                            ELSE NULL
-                                                                                      END END
+                                                                                      END
+                                                                                      END
                                                                , inMemberId2       := CASE WHEN COALESCE (tmpBranch.Member2Id,0) <> 0 THEN tmpBranch.Member2Id
                                                                                            ELSE 
                                                                                            CASE WHEN vbIsOd = TRUE
@@ -129,29 +130,31 @@ BEGIN
                                                                                       END END
                                                                , inMemberId3       := CASE WHEN COALESCE (tmpBranch.Member3Id,0) <> 0 THEN tmpBranch.Member3Id
                                                                                            ELSE 
-                                                                                           CASE WHEN vbIsOd = TRUE
+                                                                                      CASE WHEN vbIsOd = TRUE
                                                                                                 THEN 418699 -- Бирдіна Оксана Євгенівна
                                                                                            WHEN vbIsNik = TRUE
                                                                                                 THEN 453450 -- Тимків Тетяна Василівна
                                                                                                 --THEN 419066 -- Глушкова Нина Николаевна
                                                                                            ELSE NULL
-                                                                                      END END
+                                                                                      END
+                                                                                      END
                                                                , inMemberId4       := CASE WHEN COALESCE (tmpBranch.Member4Id,0) <> 0 THEN tmpBranch.Member4Id
                                                                                            ELSE 
-                                                                                           CASE WHEN vbIsKh = TRUE
+                                                                                      CASE WHEN vbIsKh = TRUE
                                                                                                 THEN 301480 -- Самохін Володимир Іванович кладовщик
                                                                                            WHEN vbIsNik = TRUE
                                                                                                 THEN 453450 -- Тимків Тетяна Василівна
                                                                                                 --THEN 419066 -- Глушкова Нина Николаевна
                                                                                            ELSE NULL
-                                                                                      END END
+                                                                                      END
+                                                                                      END
                                                                , inMemberId5       := NULL
                                                                , inMemberId6       := NULL
                                                                , inMemberId7       := NULL
                                                                , inUserId          := vbUserId
                                                                 )
-                          FROM gpSelect_Object_Branch (zfCalc_UserAdmin()) AS tmpBranch
-                          WHERE tmpBranch.id = vbBranchId  ;
+                          FROM (SELECT vbBranchId AS BranchId) AS tmp
+                               LEFT JOIN gpSelect_Object_Branch (zfCalc_UserAdmin()) AS tmpBranch ON tmpBranch.id = tmp.BranchId;
      END IF;
 
 

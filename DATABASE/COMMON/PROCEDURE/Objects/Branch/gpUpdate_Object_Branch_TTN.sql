@@ -32,8 +32,6 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Branch_Member4(), inId, inMember4Id);
    -- сохранили св-во 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Branch_Car(), inId, inCarId);
-
-
         
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
