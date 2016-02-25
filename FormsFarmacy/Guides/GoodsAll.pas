@@ -46,7 +46,7 @@ type
     cxGoodsId: TcxGridDBColumn;
     cxCode: TcxGridDBColumn;
     cxGoodsName: TcxGridDBColumn;
-    cxJuridicalName: TcxGridDBColumn;
+    cxObjectName: TcxGridDBColumn;
     cxMakerName: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     ChildCDS_2: TClientDataSet;
@@ -57,9 +57,22 @@ type
     clId: TcxGridDBColumn;
     clGoodsMainId: TcxGridDBColumn;
     colNDSKindName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    clObjectName: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
     cxGoodsMainId: TcxGridDBColumn;
+    colMeasureName: TcxGridDBColumn;
+    colisErased: TcxGridDBColumn;
+    clObjectDescName: TcxGridDBColumn;
+    colGoodsGroupName: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
+    clNDSKindName: TcxGridDBColumn;
+    clMinimumLot: TcxGridDBColumn;
+    clisClose: TcxGridDBColumn;
+    clisTOP: TcxGridDBColumn;
+    clPercentMarkup: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
+    colMakerName: TcxGridDBColumn;
+    cxObjectDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public
