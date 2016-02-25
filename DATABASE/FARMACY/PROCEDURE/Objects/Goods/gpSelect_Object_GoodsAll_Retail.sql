@@ -1,12 +1,12 @@
 -- Function: gpSelect_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsAll_Retail(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
+CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsAll_Retail(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
+               GoodsMainId Integer,
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
@@ -29,6 +29,7 @@ BEGIN
 --           , ObjectString.ValueData                           AS GoodsCode
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
+           , LinkGoods_Main.GoodsMainId 
            , Object_Goods_View.GoodsGroupId
            , Object_Goods_View.GoodsGroupName
            , Object_Goods_View.MeasureId
@@ -40,30 +41,28 @@ BEGIN
            , Object_Goods_View.isClose
            , Object_Goods_View.isTOP          
            , Object_Goods_View.PercentMarkup  
-		   , Object_Goods_View.Price
+           , Object_Goods_View.Price
 
     FROM Object_Goods_View 
+       LEFT JOIN  Object_LinkGoods_View AS LinkGoods_Main ON LinkGoods_Main.GoodsId = Object_Goods_View.Id
    WHERE Object_Goods_View.ObjectId = vbObjectId;
 
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 16.02.15                         * 
- 13.11.14                         * Add MinimumLot
- 24.06.14         *
- 20.06.13                         *
+ 25.02.16         *
+
 
 */
 
 -- тест
- --SELECT * FROM gpSelect_Object_Goods('2')
+ --SELECT * FROM gpSelect_Object_GoodsAll_Retail('2')
 
 

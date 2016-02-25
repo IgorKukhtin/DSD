@@ -273,6 +273,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAllForm');
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;

@@ -386,7 +386,8 @@ uses
   Report_LiquidDialog in '..\..\FormsFarmacy\Report\Report_LiquidDialog.pas' {Report_LiquidDialogForm: TParentForm},
   Report_Wage in '..\..\FormsFarmacy\Report\Report_Wage.pas' {Report_WageForm: TParentForm},
   Report_WageDialog in '..\..\FormsFarmacy\Report\Report_WageDialog.pas' {Report_WageDialogForm: TParentForm},
-  PriceDialog in '..\..\FormsFarmacy\Guides\PriceDialog.pas' {PriceDialogForm: TParentForm};
+  PriceDialog in '..\..\FormsFarmacy\Guides\PriceDialog.pas' {PriceDialogForm: TParentForm},
+  GoodsAll in '..\..\FormsFarmacy\Guides\GoodsAll.pas' {GoodsAllForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

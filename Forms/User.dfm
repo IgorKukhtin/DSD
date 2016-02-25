@@ -143,6 +143,8 @@ object UserForm: TUserForm
       TabOrder = 1
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = 4
+      ExplicitTop = -2
       object RoleGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RoleDS
@@ -188,6 +190,8 @@ object UserForm: TUserForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = 4
+      ExplicitTop = 183
       object PeriodCloseGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = PeriodCloseDS

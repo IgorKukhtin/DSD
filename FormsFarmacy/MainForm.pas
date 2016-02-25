@@ -221,6 +221,8 @@ type
     actReport_Wage: TdsdOpenForm;
     N86: TMenuItem;
     N87: TMenuItem;
+    actGoodsAll: TdsdOpenForm;
+    N88: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
