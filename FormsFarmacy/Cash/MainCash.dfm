@@ -9,8 +9,8 @@ inherited MainCashForm: TMainCashForm
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 788
-  ExplicitHeight = 453
+  ExplicitWidth = 780
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1034,7 +1034,7 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'inDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
       end>

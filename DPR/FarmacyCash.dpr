@@ -68,7 +68,9 @@ uses
   AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
-  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
+  Cash_FP320 in '..\FormsFarmacy\Cash\Cash_FP320.pas',
+  OposFiscalPrinter_1_11_Lib_TLB in '..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas';
 
 {$R *.res}
 
