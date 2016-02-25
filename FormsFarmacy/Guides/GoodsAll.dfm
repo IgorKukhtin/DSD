@@ -2,6 +2,7 @@ inherited GoodsAllForm: TGoodsAllForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1086#1074' ('#1042#1057#1045')'
   ClientHeight = 476
   ClientWidth = 927
+  AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 943
   ExplicitHeight = 514
@@ -40,6 +41,7 @@ inherited GoodsAllForm: TGoodsAllForm
             DataBinding.FieldName = 'Id'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 52
           end
           object clCodeInt: TcxGridDBColumn
@@ -73,6 +75,7 @@ inherited GoodsAllForm: TGoodsAllForm
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
           object colNDSKindName: TcxGridDBColumn
@@ -80,6 +83,7 @@ inherited GoodsAllForm: TGoodsAllForm
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
         end
@@ -125,7 +129,6 @@ inherited GoodsAllForm: TGoodsAllForm
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 42
           end
           object clName1: TcxGridDBColumn
@@ -133,7 +136,6 @@ inherited GoodsAllForm: TGoodsAllForm
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 254
           end
           object clId: TcxGridDBColumn
@@ -172,8 +174,8 @@ inherited GoodsAllForm: TGoodsAllForm
       end
       object cxGrid2: TcxGrid
         AlignWithMargins = True
-        Left = 367
-        Top = 235
+        Left = 361
+        Top = 229
         Width = 565
         Height = 224
         PopupMenu = PopupMenu
@@ -207,6 +209,7 @@ inherited GoodsAllForm: TGoodsAllForm
             DataBinding.FieldName = 'GoodsMainId'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 48
           end
           object cxGoodsId: TcxGridDBColumn
@@ -237,6 +240,7 @@ inherited GoodsAllForm: TGoodsAllForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
           object cxMakerName: TcxGridDBColumn
@@ -511,8 +515,8 @@ inherited GoodsAllForm: TGoodsAllForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 392
-    Top = 96
+    Left = 416
+    Top = 88
   end
   object spGoodsRetailChild_1: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsAll_Retail'
