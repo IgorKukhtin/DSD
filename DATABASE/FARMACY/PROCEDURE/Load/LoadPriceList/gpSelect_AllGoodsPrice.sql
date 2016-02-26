@@ -49,6 +49,7 @@ BEGIN
         Object_Unit_View
     WHERE
         Object_Unit_View.Id = inUnitId;
+
   RETURN QUERY
     WITH DD 
     AS 
@@ -264,10 +265,15 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                   ON ObjectFloat_Percent.ObjectId = SelectMinPrice_AllGoods.JuridicalId
                                  AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
-            LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink
-                                                     ON (Object_MarginCategoryLink.UnitId = inUnitId)    
-                                                    AND Object_MarginCategoryLink.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
-            LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = Object_MarginCategoryLink.MarginCategoryId
+            LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_unit
+                                                     ON Object_MarginCategoryLink_unit.UnitId = inUnitId
+                                                    AND Object_MarginCategoryLink_unit.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
+            LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_all
+                                                     ON COALESCE (Object_MarginCategoryLink_all.UnitId, 0) = 0
+                                                    AND Object_MarginCategoryLink_all.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
+                                                    AND Object_MarginCategoryLink_unit.JuridicalId IS NULL
+
+            LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink_unit.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
                                       AND (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
     )
 

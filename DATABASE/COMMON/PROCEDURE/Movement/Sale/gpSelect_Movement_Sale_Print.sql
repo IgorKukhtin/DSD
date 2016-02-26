@@ -956,10 +956,10 @@ BEGIN
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем!!!
                               THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         /*WHEN vbDiscountPercent <> 0 AND (vbPaidKindId <> zc_Enum_PaidKind_SecondForm() OR vbIsDiscountPrice = TRUE)    -- !!!для НАЛ не учитываем!!!
+                         WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         WHEN vbExtraChargesPercent <> 0 AND (vbPaidKindId <> zc_Enum_PaidKind_SecondForm() OR vbIsDiscountPrice = TRUE) -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))*/
+                         WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
+                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
                   , MIFloat_CountForPrice.ValueData AS CountForPrice

@@ -24,7 +24,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides, frxClass, frxDBSet, EDI;
+  cxButtonEdit, dsdGuides, frxClass, frxDBSet, EDI, dsdInternetAction;
 
 type
   TSale_OrderJournalForm = class(TAncestorJournalForm)
@@ -190,6 +190,22 @@ type
     mactPrint_Transport: TMultiAction;
     bbPrint_Transport: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    ExportXmlCDS: TClientDataSet;
+    ExportXmlDS: TDataSource;
+    spSelect_ExportXml: TdsdStoredProc;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    spGet_ExportXml_FileName: TdsdStoredProc;
+    actGet_ExportXml_FileName: TdsdExecStoredProc;
+    actSelect_ExportXml: TdsdExecStoredProc;
+    actExportXml_Grid: TExportGrid;
+    actExportXML: TMultiAction;
+    dxBarButton1: TdxBarButton;
+    spGet_ExportXML_Email: TdsdStoredProc;
+    actGet_ExportXML_Email: TdsdExecStoredProc;
+    actSMTPFile: TdsdSMTPFileAction;
   private
     { Private declarations }
   public

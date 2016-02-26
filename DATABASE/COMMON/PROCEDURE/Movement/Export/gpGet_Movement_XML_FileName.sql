@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_XML_MidaName()
+-- Function: gpGet_Movement_XML_FileName()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_XML_MidaName (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_XML_FileName (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_XML_MidaName(
+CREATE OR REPLACE FUNCTION gpGet_Movement_XML_FileName(
    OUT outFileName            TVarChar  ,
     IN inMovementId           Integer   ,
     IN inSession              TVarChar    -- сессия пользователя
@@ -20,7 +20,7 @@ BEGIN
      -- Результат
      outFileName:=
     (SELECT 'Alan'
-          || '_' || COALESCE (ObjectString_GLNCode.ValueData)
+          || '_' || COALESCE (ObjectString_GLNCode.ValueData, '')
           || '_' || REPLACE (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '')
           || '_' || Movement.InvNumber
      FROM Movement
@@ -47,4 +47,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_XML_MidaName (inMovementId:= 3229861, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_XML_FileName (inMovementId:= 3229861, inSession:= zfCalc_UserAdmin())

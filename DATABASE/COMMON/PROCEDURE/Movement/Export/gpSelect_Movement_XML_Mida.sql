@@ -52,7 +52,7 @@ BEGIN
                   || ' ДатаОперации="' || zfConvert_DateToString (MovementDate_OperDatePartner.ValueData) ||'"'
                   ||' НомерОперации="' || Movement.InvNumber ||'"'
                   ||  ' НомерЗаказа="' || COALESCE (MovementString_InvNumberOrder.ValueData, '') ||'"'
-                  ||  ' ВидОперации="1">'
+                  ||  ' ВидОперации="2">'
         FROM Movement
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId =  Movement.Id
