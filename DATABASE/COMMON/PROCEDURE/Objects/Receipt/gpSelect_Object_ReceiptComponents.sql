@@ -19,25 +19,8 @@ RETURNS TABLE (
                ReceiptCostId Integer, ReceiptCostCode Integer, ReceiptCostName TVarChar,
                ReceiptKindId Integer, ReceiptKindCode Integer, ReceiptKindName TVarChar,
                MeasureName TVarChar,
-               /* 
-             , Code_Parent Integer, Name_Parent TVarChar, ReceiptCode_Parent TVarChar, isMain_Parent Boolean
-             , GoodsCode_Parent Integer, GoodsName_Parent TVarChar, MeasureName_Parent TVarChar
-             , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar
-               */
                GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar,
-               /* 
-             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
-             , InsertName TVarChar, UpdateName TVarChar
-             , InsertDate TDateTime, UpdateDate TDateTime
-             , isCheck_Parent Boolean
-             , Check_Weight TFloat, Check_PartionValue TFloat, Check_TaxExit TFloat
-               */
                isErased Boolean,
-
-
-
-
-
 
                ReceiptChildId Integer, Value_Child TFloat, ValueWeight_Child TFloat, ValueWeight_calc_Child TFloat, isWeightMain_Child Boolean, isTaxExit_Child Boolean, isWeightTotal_Child Boolean,
                StartDate_Child TDateTime, EndDate_Child TDateTime, Comment TVarChar,
@@ -494,16 +477,6 @@ BEGIN
          , tmpReceipt.ReceiptKindCode
          , tmpReceipt.ReceiptKindName
          , tmpReceipt.MeasureName
- /*        , tmpReceipt.Code_Parent
-         , tmpReceipt.Name_Parent
-         , tmpReceipt.ReceiptCode_Parent
-         , tmpReceipt.isMain_Parent
-         , tmpReceipt.GoodsCode_Parent
-         , tmpReceipt.GoodsName_Parent
-         , tmpReceipt.MeasureName_Parent
-         , tmpReceipt.GoodsKindName_Parent
-         , tmpReceipt.GoodsKindCompleteName_Parent
-*/
          , tmpReceipt.GoodsGroupNameFull
          , tmpReceipt.GoodsGroupAnalystName
          , tmpReceipt.GoodsTagName
@@ -521,11 +494,9 @@ BEGIN
          , tmpReceiptChild.StartDate                        AS StartDate_Child
          , tmpReceiptChild.EndDate                          AS EndDate_Child
          , tmpReceiptChild.Comment
- 
          , tmpReceiptChild.GoodsId                          AS GoodsId_Child
          , tmpReceiptChild.GoodsCode                        AS GoodsCode_Child
          , tmpReceiptChild.GoodsName                        AS GoodsName_Child
-
          , tmpReceiptChild.GoodsKindId                      AS GoodsKindId_Child
          , tmpReceiptChild.GoodsKindCode                    AS GoodsKindCode_Child
          , tmpReceiptChild.GoodsKindName                    AS GoodsKindName_Child
