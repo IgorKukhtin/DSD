@@ -223,6 +223,11 @@ type
     N87: TMenuItem;
     actGoodsAll: TdsdOpenForm;
     N88: TMenuItem;
+    N89: TMenuItem;
+    actGoodsAllRetail: TdsdOpenForm;
+    actGoodsAllJuridical: TdsdOpenForm;
+    N90: TMenuItem;
+    N91: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
