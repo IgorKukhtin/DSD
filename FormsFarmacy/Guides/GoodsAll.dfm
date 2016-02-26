@@ -1,34 +1,31 @@
 inherited GoodsAllForm: TGoodsAllForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1086#1074' ('#1042#1057#1045')'
-  ClientHeight = 476
-  ClientWidth = 927
+  ClientHeight = 492
+  ClientWidth = 1079
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 943
-  ExplicitHeight = 514
+  ExplicitWidth = 1095
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 927
-    Height = 450
-    ExplicitWidth = 844
-    ExplicitHeight = 449
-    ClientRectBottom = 450
-    ClientRectRight = 927
+    Width = 1079
+    Height = 466
+    ExplicitWidth = 927
+    ExplicitHeight = 466
+    ClientRectBottom = 466
+    ClientRectRight = 1079
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 3
       ExplicitWidth = 927
-      ExplicitHeight = 450
+      ExplicitHeight = 466
       inherited cxGrid: TcxGrid
-        Width = 353
-        Height = 450
-        Align = alLeft
+        Width = 1079
+        Height = 153
+        Align = alTop
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = ''
-        ExplicitLeft = 4
-        ExplicitTop = 1
-        ExplicitWidth = 353
-        ExplicitHeight = 450
+        ExplicitWidth = 927
+        ExplicitHeight = 153
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -86,21 +83,35 @@ inherited GoodsAllForm: TGoodsAllForm
             Options.Editing = False
             Width = 40
           end
+          object colMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object colisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
       object cxGridGChild1: TcxGrid
-        Left = 363
-        Top = 1
-        Width = 563
-        Height = 222
-        Align = alCustom
-        Anchors = [akLeft, akTop, akRight, akBottom]
+        Left = 0
+        Top = 161
+        Width = 1079
+        Height = 162
+        Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = ''
-        ExplicitWidth = 480
-        ExplicitHeight = 221
+        ExplicitWidth = 927
         object cxGridDBTableViewChild1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_1
@@ -124,40 +135,124 @@ inherited GoodsAllForm: TGoodsAllForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clCode1: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
+          object clGoodsMainId: TcxGridDBColumn
+            Caption = 'MainId'
+            DataBinding.FieldName = 'GoodsMainId'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 42
-          end
-          object clName1: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'Name'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 254
+            Options.Editing = False
+            Width = 40
           end
           object clId: TcxGridDBColumn
             Caption = 'GoodsId'
             DataBinding.FieldName = 'Id'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
-          object clGoodsMainId: TcxGridDBColumn
-            Caption = 'MainId'
-            DataBinding.FieldName = 'GoodsMainId'
+          object clCode1: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
-          object colUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
+          object clName1: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Options.Editing = False
+            Width = 140
+          end
+          object clMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 32
+          end
+          object colGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
+          object clObjectDescName: TcxGridDBColumn
+            DataBinding.FieldName = 'ObjectDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object clObjectName: TcxGridDBColumn
+            DataBinding.FieldName = 'ObjectName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object colMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
+          end
+          object clNDSKindName: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object clMinimumLot: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'MinimumLot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object clisClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 21
+          end
+          object clisTOP: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'isTOP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 29
+          end
+          object clPercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'PercentMarkup'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
+          object clPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 44
           end
         end
         object cxGridLevelChild1: TcxGridLevel
@@ -165,23 +260,28 @@ inherited GoodsAllForm: TGoodsAllForm
         end
       end
       object cxSplitter: TcxSplitter
-        Left = 355
-        Top = 0
-        Width = 8
-        Height = 450
-        Control = cxGrid2
-        ExplicitLeft = 843
+        Left = 0
+        Top = 153
+        Width = 1079
+        Height = 8
+        AlignSplitter = salTop
+        Control = cxGrid
+        ExplicitWidth = 927
       end
       object cxGrid2: TcxGrid
-        AlignWithMargins = True
-        Left = 361
-        Top = 229
-        Width = 565
-        Height = 224
+        Left = 0
+        Top = 331
+        Width = 1079
+        Height = 135
+        Align = alBottom
+        Anchors = [akLeft, akTop, akRight, akBottom]
         PopupMenu = PopupMenu
         TabOrder = 2
         LookAndFeel.Kind = lfFlat
         LookAndFeel.NativeStyle = True
+        ExplicitLeft = -64
+        ExplicitTop = 337
+        ExplicitWidth = 1059
         object cxGridDBTableViewChild2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_2
@@ -210,22 +310,24 @@ inherited GoodsAllForm: TGoodsAllForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 48
+            Width = 40
           end
           object cxGoodsId: TcxGridDBColumn
+            AlternateCaption = '40'
             DataBinding.FieldName = 'GoodsId'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 40
           end
           object cxCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 88
+            Width = 40
           end
           object cxGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -233,15 +335,35 @@ inherited GoodsAllForm: TGoodsAllForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 183
+            Width = 221
           end
-          object cxJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'. '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+          object cxMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 87
+            Width = 32
+          end
+          object cxGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
+          object cxObjectDescName: TcxGridDBColumn
+            DataBinding.FieldName = 'ObjectDescName'
+            Options.Editing = False
+            Width = 70
+          end
+          object cxObjectName: TcxGridDBColumn
+            DataBinding.FieldName = 'ObjectName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
           end
           object cxMakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
@@ -249,7 +371,55 @@ inherited GoodsAllForm: TGoodsAllForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 106
+            Width = 112
+          end
+          object cxNDSKindName: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object cxMinimumLot: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'MinimumLot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object cxisClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 27
+          end
+          object cxisTOP: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'isTOP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
+          end
+          object cxPercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'PercentMarkup'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object cxPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -257,19 +427,19 @@ inherited GoodsAllForm: TGoodsAllForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 353
-        Top = 0
-        Width = 2
-        Height = 450
-        Control = cxGrid
-        ExplicitLeft = 361
-        ExplicitHeight = 449
+        Left = 0
+        Top = 323
+        Width = 1079
+        Height = 8
+        AlignSplitter = salBottom
+        Control = cxGrid2
+        ExplicitWidth = 927
       end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 523
-    Top = 8
+    Left = 467
+    Top = 65528
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 624
@@ -413,8 +583,8 @@ inherited GoodsAllForm: TGoodsAllForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Common'
-    Left = 72
-    Top = 168
+    Left = 384
+    Top = 64
   end
   inherited BarManager: TdxBarManager
     Left = 736
@@ -515,8 +685,8 @@ inherited GoodsAllForm: TGoodsAllForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 416
-    Top = 88
+    Left = 776
+    Top = 96
   end
   object spGoodsRetailChild_1: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsAll_Retail'
@@ -527,8 +697,8 @@ inherited GoodsAllForm: TGoodsAllForm
       end>
     Params = <>
     PackSize = 1
-    Left = 680
-    Top = 80
+    Left = 320
+    Top = 248
   end
   object ChildCDS_1: TClientDataSet
     Aggregates = <>
@@ -537,8 +707,8 @@ inherited GoodsAllForm: TGoodsAllForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 752
-    Top = 80
+    Left = 432
+    Top = 264
   end
   object ChildDS_1: TDataSource
     DataSet = ChildCDS_1
@@ -569,8 +739,8 @@ inherited GoodsAllForm: TGoodsAllForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 568
-    Top = 88
+    Left = 208
+    Top = 256
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -594,8 +764,8 @@ inherited GoodsAllForm: TGoodsAllForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 320
-    Top = 144
+    Left = 856
+    Top = 64
   end
   object ChildCDS_2: TClientDataSet
     Aggregates = <>
@@ -604,13 +774,13 @@ inherited GoodsAllForm: TGoodsAllForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 464
-    Top = 400
+    Left = 440
+    Top = 408
   end
   object ChildDS_2: TDataSource
     DataSet = ChildCDS_2
-    Left = 464
-    Top = 312
+    Left = 368
+    Top = 384
   end
   object dsdDBViewAddOnChild2: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -638,8 +808,8 @@ inherited GoodsAllForm: TGoodsAllForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 632
-    Top = 336
+    Left = 544
+    Top = 384
   end
   object spGoodsJuridicalChild_2: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsAll_Juridical'
@@ -650,7 +820,7 @@ inherited GoodsAllForm: TGoodsAllForm
       end>
     Params = <>
     PackSize = 1
-    Left = 400
-    Top = 344
+    Left = 256
+    Top = 384
   end
 end

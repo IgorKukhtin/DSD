@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
                NDS TFloat, MinimumLot TFloat, isClose boolean, 
-               isTOP boolean, PercentMarkup TFloat, Price TFloat
+               isTOP boolean, PercentMarkup TFloat, Price TFloat,
+               ObjectDescName TVarChar, ObjectName TVarChar,
+               MakerName TVarChar
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -25,9 +27,9 @@ BEGIN
    RETURN QUERY 
    SELECT 
              Object_Goods_View.Id
-           , Object_Goods_View.GoodsCodeInt
---           , ObjectString.ValueData                           AS GoodsCode
-           , Object_Goods_View.GoodsName
+           , Object_Goods_View.GoodsCodeInt     AS Code
+          -- , ObjectString.ValueData             AS GoodsCode
+           , Object_Goods_View.GoodsName        AS Name
            , Object_Goods_View.isErased
            , LinkGoods_Main.GoodsMainId 
            , Object_Goods_View.GoodsGroupId
@@ -42,9 +44,15 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-
+           , ObjectDesc_GoodsObject.itemname   AS  ObjectDescName
+           , Object_GoodsObject.ValueData       AS  ObjectName
+           , Object_Goods_View.MakerName
     FROM Object_Goods_View 
        LEFT JOIN  Object_LinkGoods_View AS LinkGoods_Main ON LinkGoods_Main.GoodsId = Object_Goods_View.Id
+
+       LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = Object_Goods_View.ObjectId
+       LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
+          
    WHERE Object_Goods_View.ObjectId = vbObjectId;
 
   

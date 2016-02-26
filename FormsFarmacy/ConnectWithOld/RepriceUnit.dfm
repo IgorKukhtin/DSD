@@ -143,6 +143,13 @@ object RepriceUnitForm: TRepriceUnitForm
         Options.Editing = False
         Width = 40
       end
+      object colisIncome: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076' '#1089#1077#1075#1086#1076#1085#1103' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isIncome'
+        HeaderHint = #1055#1088#1080#1093#1086#1076' '#1089#1077#1075#1086#1076#1085#1103' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 60
+      end
       object colJuridicalName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'JuridicalName'
@@ -540,6 +547,10 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'isPriceFix'
         DataType = ftBoolean
+      end
+      item
+        Name = 'isIncome'
+        DataType = ftBoolean
       end>
     IndexDefs = <>
     Params = <>
@@ -548,7 +559,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      CA0200009619E0BD010000001800000017000000000003000000CA0202496404
+      DB0200009619E0BD010000001800000018000000000003000000DB0202496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -570,7 +581,7 @@ object RepriceUnitForm: TRepriceUnitForm
       07535542545950450200490006004D6F6E657900114D696E4578706972617469
       6F6E4461746504000600000000000E69734F6E654A757269646963616C020003
       00000000000B4A757269646963616C496404000100000000000A697350726963
-      6546697802000300000000000000}
+      654669780200030000000000086973496E636F6D6502000300000000000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -649,6 +660,9 @@ object RepriceUnitForm: TRepriceUnitForm
     end
     object cdsResultisPriceFix: TBooleanField
       FieldName = 'isPriceFix'
+    end
+    object cdsResultisIncome: TBooleanField
+      FieldName = 'isIncome'
     end
   end
   object UnitsCDS: TClientDataSet

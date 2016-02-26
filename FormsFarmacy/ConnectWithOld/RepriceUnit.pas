@@ -97,6 +97,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cdsResultisPriceFix: TBooleanField;
     colisPriceFix: TcxGridDBColumn;
+    cdsResultisIncome: TBooleanField;
+    colisIncome: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -251,6 +253,7 @@ begin
           cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;
           cdsResult.FieldByName('JuridicalId').AsInteger := AllGoodsPriceCDS.FieldByName('JuridicalId').AsInteger;
           cdsResult.FieldByName('isPriceFix').AsBoolean := AllGoodsPriceCDS.FieldByName('isPriceFix').AsBoolean;
+          cdsResult.FieldByName('isIncome').AsBoolean := AllGoodsPriceCDS.FieldByName('isIncome').AsBoolean;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

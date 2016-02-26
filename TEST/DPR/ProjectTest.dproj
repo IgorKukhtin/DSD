@@ -2529,6 +2529,10 @@
 				<Form>GoodsByGoodsKind_OrderForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ReceiptComponents.pas">
+				<Form>ReceiptComponentsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
