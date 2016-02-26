@@ -182,6 +182,11 @@ begin
       end;
       spInsertUpdate_MovementItem_Reprice.Execute(True);
     finally
+      //
+      for i := 0 to CheckListBox.Items.Count - 1 do
+        if CheckListBox.Checked[i] then CheckListBox.Checked[i]:= false;
+      cdsResult.EmptyDataSet;
+      //
       FStartReprice := False;
       btnSelectNewPrice.Enabled := True;
       btnReprice.Caption := 'Переоценить  >>>';
@@ -275,6 +280,7 @@ end;
 procedure TRepriceUnitForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   dsdUserSettingsStorageAddOn.SaveUserSettings;
+  Action:=caFree;
 end;
 
 procedure TRepriceUnitForm.FormCreate(Sender: TObject);
