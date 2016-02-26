@@ -144,9 +144,9 @@ object RepriceUnitForm: TRepriceUnitForm
         Width = 40
       end
       object colisIncome: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076' '#1089#1077#1075#1086#1076#1085#1103' ('#1076#1072'/'#1085#1077#1090')'
+        Caption = #1055#1088#1080#1093#1086#1076' '#1089#1077#1075#1086#1076#1085#1103
         DataBinding.FieldName = 'isIncome'
-        HeaderHint = #1055#1088#1080#1093#1086#1076' '#1089#1077#1075#1086#1076#1085#1103' ('#1076#1072'/'#1085#1077#1090')'
+        HeaderHint = #1055#1088#1080#1093#1086#1076' '#1089#1077#1075#1086#1076#1085#1103
         Options.Editing = False
         Width = 60
       end

@@ -260,9 +260,9 @@ procedure TMainForm.miRepriceClick(Sender: TObject);
 begin
   with TRepriceUnitForm.Create(nil) do
   try
-     ShowModal;
+     Show;
   finally
-     Free;
+     //Free;
   end;
 end;
 

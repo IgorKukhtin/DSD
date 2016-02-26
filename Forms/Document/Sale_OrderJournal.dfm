@@ -4,24 +4,25 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   ClientWidth = 1177
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -404
   ExplicitWidth = 1193
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1177
-    Height = 478
+    Height = 393
     TabOrder = 3
     ExplicitWidth = 1177
     ExplicitHeight = 478
-    ClientRectBottom = 478
+    ClientRectBottom = 393
     ClientRectRight = 1177
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1177
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1177
-        Height = 478
+        Height = 393
         ExplicitWidth = 1177
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -770,6 +771,41 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Width = 200
     end
   end
+  object ExportXmlGrid: TcxGrid [2]
+    Left = 0
+    Top = 450
+    Width = 1177
+    Height = 85
+    Align = alBottom
+    TabOrder = 6
+    Visible = False
+    ExplicitTop = 451
+    object ExportXmlGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ExportXmlDS
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.IncSearch = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.Header = False
+      object RowData: TcxGridDBColumn
+        DataBinding.FieldName = 'RowData'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+    end
+    object ExportXmlGridLevel: TcxGridLevel
+      GridView = ExportXmlGridDBTableView
+    end
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
@@ -799,7 +835,43 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   inherited ActionList: TActionList
     Left = 31
     Top = 186
-    object actPrint_ExpInvoice: TdsdPrintAction [0]
+    object actExportXML: TMultiAction [0]
+      Category = 'XML'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_ExportXML_Email
+        end
+        item
+          Action = actGet_ExportXml_FileName
+        end
+        item
+          Action = actSelect_ExportXml
+        end
+        item
+          Action = actExportXml_Grid
+        end
+        item
+          Action = actSMTPFile
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1048#1044#1040' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1048#1044#1040' '#1087#1086' '#1087#1086#1095#1090#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1048#1044#1040
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1048#1044#1040
+      ImageIndex = 53
+    end
+    object actGet_ExportXML_Email: TdsdExecStoredProc [1]
+      Category = 'XML'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ExportXML_Email
+      StoredProcList = <
+        item
+          StoredProc = spGet_ExportXML_Email
+        end>
+      Caption = 'actGet_ExportXML_Email'
+    end
+    object actPrint_ExpInvoice: TdsdPrintAction [2]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -844,7 +916,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Tax_ReportName: TdsdExecStoredProc [1]
+    object actPrint_Tax_ReportName: TdsdExecStoredProc [3]
       Category = 'Print_Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -855,7 +927,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       Caption = 'actPrint_Tax_ReportName'
     end
-    object actPrint_ExpSpec: TdsdPrintAction [2]
+    object actPrint_ExpSpec: TdsdPrintAction [4]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -901,7 +973,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintSaleOrder: TdsdPrintAction [3]
+    object actPrintSaleOrder: TdsdPrintAction [5]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -945,7 +1017,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Tax_Us: TMultiAction [4]
+    object mactPrint_Tax_Us: TMultiAction [6]
       Category = 'Print_Tax'
       MoveParams = <
         item
@@ -969,7 +1041,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object mactPrint_Account: TMultiAction [5]
+    object mactPrint_Account: TMultiAction [7]
       Category = 'Print_Account'
       MoveParams = <
         item
@@ -993,7 +1065,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actInvoice: TEDIAction [6]
+    object actInvoice: TEDIAction [8]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -1003,7 +1075,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object actPrintTax_Us: TdsdPrintAction [7]
+    object actPrintTax_Us: TdsdPrintAction [9]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -1041,7 +1113,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [9]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [11]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1080,7 +1152,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ParamType = ptInputOutput
         end>
     end
-    object actChecked: TdsdExecStoredProc [13]
+    object actChecked: TdsdExecStoredProc [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1093,7 +1165,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actElectron: TdsdExecStoredProc [14]
+    object actElectron: TdsdExecStoredProc [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1137,7 +1209,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ParamType = ptInput
         end>
     end
-    object actMovementCheck: TdsdOpenForm [23]
+    object actMovementCheck: TdsdOpenForm [25]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -2114,6 +2186,67 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actGet_ExportXml_FileName: TdsdExecStoredProc
+      Category = 'XML'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ExportXml_FileName
+      StoredProcList = <
+        item
+          StoredProc = spGet_ExportXml_FileName
+        end>
+      Caption = 'actGet_ExportXml_FileName'
+    end
+    object actSelect_ExportXml: TdsdExecStoredProc
+      Category = 'XML'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_ExportXml
+      StoredProcList = <
+        item
+          StoredProc = spSelect_ExportXml
+        end>
+      Caption = 'actSelect_ExportXml'
+    end
+    object actExportXml_Grid: TExportGrid
+      Category = 'XML'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Grid = ExportXmlGrid
+      Caption = 'actExportXml_Grid'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XML'
+      EncodingANSI = True
+    end
+    object actSMTPFile: TdsdSMTPFileAction
+      Category = 'XML'
+      MoveParams = <>
+      Host.Value = '0'
+      Host.Component = FormParams
+      Host.ComponentItem = 'Host'
+      Port.Value = '0'
+      Port.Component = FormParams
+      Port.ComponentItem = 'Port'
+      UserName.Value = '0'
+      UserName.Component = FormParams
+      UserName.ComponentItem = 'UserName'
+      Password.Value = '0'
+      Password.Component = FormParams
+      Password.ComponentItem = 'Password'
+      Body.Value = '0'
+      Body.Component = FormParams
+      Body.ComponentItem = 'Body'
+      Subject.Value = '0'
+      Subject.Component = FormParams
+      Subject.ComponentItem = 'Subject'
+      FromAddress.Value = '0'
+      FromAddress.Component = FormParams
+      FromAddress.ComponentItem = 'AddressFrom'
+      ToAddress.Value = '0'
+      ToAddress.Component = FormParams
+      ToAddress.ComponentItem = 'AddressTo'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2350,6 +2483,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInvoice'
         end
         item
@@ -2466,6 +2607,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Action = mactPrint_Transport
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actExportXML
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -2518,8 +2663,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 80
-    Top = 346
+    Left = 40
+    Top = 314
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Sale'
@@ -2538,8 +2683,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
       end>
-    Left = 80
-    Top = 410
+    Left = 72
+    Top = 354
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Sale'
@@ -2551,8 +2696,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 208
-    Top = 402
+    Left = 152
+    Top = 378
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -2622,8 +2767,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 168
-    Top = 368
+    Left = 128
+    Top = 320
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -2900,8 +3045,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         ParamType = ptInputOutput
       end>
     PackSize = 1
-    Left = 320
-    Top = 435
+    Left = 416
+    Top = 371
   end
   object spSelectPrint_ExpInvoice: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpInvoice_Print'
@@ -3314,8 +3459,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 840
-    Top = 408
+    Left = 832
+    Top = 376
   end
   object spElectron: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Electron'
@@ -3361,7 +3506,139 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 912
-    Top = 424
+    Left = 888
+    Top = 384
+  end
+  object ExportXmlCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 48
+    Top = 480
+  end
+  object ExportXmlDS: TDataSource
+    DataSet = ExportXmlCDS
+    Left = 80
+    Top = 480
+  end
+  object spSelect_ExportXml: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_XML_Mida'
+    DataSet = ExportXmlCDS
+    DataSets = <
+      item
+        DataSet = ExportXmlCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 128
+    Top = 480
+  end
+  object spGet_ExportXml_FileName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_XML_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExportXml_Grid
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile
+        ComponentItem = 'FileName'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 200
+    Top = 464
+  end
+  object spGet_ExportXML_Email: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_XML_Email'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'Subject'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Subject'
+        DataType = ftString
+      end
+      item
+        Name = 'Body'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Body'
+        DataType = ftString
+      end
+      item
+        Name = 'AddressFrom'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AddressFrom'
+        DataType = ftString
+      end
+      item
+        Name = 'AddressTo'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AddressTo'
+        DataType = ftString
+      end
+      item
+        Name = 'Host'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Host'
+        DataType = ftString
+      end
+      item
+        Name = 'Port'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Port'
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 272
+    Top = 480
   end
 end
