@@ -29,7 +29,8 @@ RETURNS TABLE (
     SumReprice          TFloat,     --сумма переоценки
     MinExpirationDate   TDateTime,  --ћинимальный срок годности препарата на точке
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
-    isPriceFix          Boolean     -- фиксированна€ цена
+    isPriceFix          Boolean ,   -- фиксированна€ цена
+    isIncome            Boolean     -- приход сегодн€
     )
 
 AS
@@ -250,11 +251,13 @@ BEGIN
             SelectMinPrice_AllGoods.MakerName                AS ProducerName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
             Object_Goods.NDSKindId,
-            SelectMinPrice_AllGoods.isOneJuridical
+            SelectMinPrice_AllGoods.isOneJuridical,
+            CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome
         FROM
             lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
                                      inObjectId := vbObjectId, 
                                      inUserId := vbUserId) as SelectMinPrice_AllGoods
+
             LEFT OUTER JOIN Object_Price_View AS Object_Price
                                               ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId
                                              AND Object_Price.UnitId = inUnitId
@@ -269,6 +272,10 @@ BEGIN
                                                     AND Object_MarginCategoryLink.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
             LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = Object_MarginCategoryLink.MarginCategoryId
                                       AND (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+
+            LEFT JOIN lpSelect_Income_AllGoods(inUnitId := inUnitId,
+                                               inUserId := vbUserId) AS Select_Income_AllGoods 
+                                                                     ON Select_Income_AllGoods.GoodsId = SelectMinPrice_AllGoods.GoodsId
     )
 
     SELECT
@@ -294,12 +301,14 @@ BEGIN
         ROUND(((ResultSet.NewPrice - ResultSet.LastPrice)*ResultSet.RemainsCount),2)::TFloat AS SumReprice,
         ResultSet.MinExpirationDate,
         ResultSet.isOneJuridical,
-        ResultSet.isPriceFix
+        ResultSet.isPriceFix,
+        ResultSet.isIncome
     FROM 
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId
                                        AND ResultSet.LastPrice >= MarginCondition.MinPrice 
                                        AND ResultSet.LastPrice < MarginCondition.MaxPrice
+
     WHERE
         COALESCE(ResultSet.NewPrice,0) > 0
         AND
