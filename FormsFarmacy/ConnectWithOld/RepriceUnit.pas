@@ -99,12 +99,16 @@ type
     colisPriceFix: TcxGridDBColumn;
     cdsResultisIncome: TBooleanField;
     colisIncome: TcxGridDBColumn;
+    Button1: TButton;
+    Button2: TButton;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
     procedure cdsResultCalcFields(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     FStartReprice: Boolean;
     { Private declarations }
@@ -150,37 +154,76 @@ begin
         RecIndex := AllGoodsPriceGridTableView.DataController.FilteredRecordIndex[I];
         if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index] = True then
         Begin
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inGoodsId').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colGoodsId.Index];
+          except ShowMessage('1');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colUnitId.Index];
+          except ShowMessage('2');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridicalId').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridicalId.Index];
+          except ShowMessage('3');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inMinExpirationDate').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colMinExpirationDate.Index];
+          except ShowMessage('4');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inExpirationDate').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colExpirationDate.Index];
+          except ShowMessage('5');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inAmount').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colRemainsCount.Index];
+          except ShowMessage('6');exit;end;
+
+          try
           if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colOldPrice.Index] = null then
             spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value := 0;
+          except ShowMessage('7');exit;end;
+
+          try
           if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridical_Price.Index] = null then
-            spInsertUpdate_MovementItem_Reprice.ParamByName('ininJuridical_PriceOld').Value := 0
+            spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridical_PriceOld').Value := 0
           else
             spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value :=
               AllGoodsPriceGridTableView.DataController.Values[RecIndex,colOldPrice.Index];
+          except ShowMessage('8');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
+          except ShowMessage('9');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridical_Price').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridical_Price.Index];
+          except ShowMessage('10');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inGUID').Value := GUID_Str;
+          except ShowMessage('11');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.Execute;
+          except ShowMessage('12');exit;end;
+
         End;
         Application.ProcessMessages;
         if Not FStartReprice then
           exit;
       end;
+
+      try
       spInsertUpdate_MovementItem_Reprice.Execute(True);
+      except ShowMessage('13');exit;end;
     finally
       //
       for i := 0 to CheckListBox.Items.Count - 1 do
@@ -198,6 +241,38 @@ begin
   Begin
     FStartReprice := False;
   End;
+end;
+
+procedure TRepriceUnitForm.Button1Click(Sender: TObject);
+var i, RecIndex: integer;
+begin
+      if MessageDlg('Действительно отметить для Переоценки выбранные товары?',mtConfirmation,mbYesNo,0) <> mrYes then exit;
+
+      for I := 0 to AllGoodsPriceGridTableView.DataController.FilteredRecordCount - 1 do
+      Begin
+        RecIndex := AllGoodsPriceGridTableView.DataController.FilteredRecordIndex[I];
+        if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index] = false
+        then
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index]:= true;
+      End;
+
+      MessageDlg('Отметка установлена.',mtInformation,[mbOk],0,mbOk);
+end;
+
+procedure TRepriceUnitForm.Button2Click(Sender: TObject);
+var i, RecIndex: integer;
+begin
+      if MessageDlg('Действительно убрать отметку для Переоценки у выбранных товары?',mtConfirmation,mbYesNo,0) <> mrYes then exit;
+
+      for I := 0 to AllGoodsPriceGridTableView.DataController.FilteredRecordCount - 1 do
+      Begin
+        RecIndex := AllGoodsPriceGridTableView.DataController.FilteredRecordIndex[I];
+        if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index] = true
+        then
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index]:= false;
+      End;
+
+      MessageDlg('Отметка убрана.',mtInformation,[mbOk],0,mbOk);
 end;
 
 procedure TRepriceUnitForm.btnSelectNewPriceClick(Sender: TObject);
@@ -236,7 +311,7 @@ begin
           cdsResult.FieldByName('Id').AsInteger := AllGoodsPriceCDS.FieldByName('Id').AsInteger;
           cdsResult.FieldByName('Code').AsInteger := AllGoodsPriceCDS.FieldByName('Code').AsInteger;
           cdsResult.FieldByName('GoodsName').AsString := AllGoodsPriceCDS.FieldByName('GoodsName').AsString;
-          if AllGoodsPriceCDS.FieldByName('LastPrice').AsCurrency <> 0 then
+          //!!!if AllGoodsPriceCDS.FieldByName('LastPrice').AsCurrency <> 0 then
             cdsResult.FieldByName('LastPrice').AsCurrency := AllGoodsPriceCDS.FieldByName('LastPrice').AsCurrency;
           cdsResult.FieldByName('RemainsCount').AsCurrency := AllGoodsPriceCDS.FieldByName('RemainsCount').AsCurrency;
           cdsResult.FieldByName('NDS').AsCurrency := AllGoodsPriceCDS.FieldByName('NDS').AsCurrency;
@@ -268,6 +343,7 @@ begin
     cdsResult.EnableControls;
   end;
 end;
+
 
 procedure TRepriceUnitForm.cdsResultCalcFields(DataSet: TDataSet);
 begin
