@@ -5,23 +5,23 @@ inherited PriceHistoryForm: TPriceHistoryForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 520
-  ExplicitHeight = 444
+  ExplicitHeight = 441
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 504
     Height = 380
-    ExplicitWidth = 338
+    ExplicitWidth = 504
     ExplicitHeight = 380
     ClientRectBottom = 380
     ClientRectRight = 504
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 338
+      ExplicitWidth = 504
       ExplicitHeight = 380
       inherited cxGrid: TcxGrid
         Width = 504
         Height = 380
-        ExplicitWidth = 338
+        ExplicitWidth = 504
         ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
@@ -54,7 +54,7 @@ inherited PriceHistoryForm: TPriceHistoryForm
             Width = 95
           end
           object colMCSPeriod: TcxGridDBColumn
-            Caption = #1053#1058#1047' '#1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072
+            Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'***'
             DataBinding.FieldName = 'MCSPeriod'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -62,7 +62,7 @@ inherited PriceHistoryForm: TPriceHistoryForm
             Width = 95
           end
           object colMCSDay: TcxGridDBColumn
-            Caption = #1053#1058#1047' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081
+            Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'***'
             DataBinding.FieldName = 'MCSDay'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -98,6 +98,37 @@ inherited PriceHistoryForm: TPriceHistoryForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 176

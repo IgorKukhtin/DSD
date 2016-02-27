@@ -40,8 +40,9 @@ object PriceDialogForm: TPriceDialogForm
     Left = 106
     Top = 19
     EditValue = 42430d
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.Kind = ckDateTime
-    Properties.ShowTime = False
     TabOrder = 2
     Width = 143
   end

@@ -3,16 +3,15 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, TDateTime, Boolean,Boolean,TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
     IN inUnitId      Integer,       -- подразделение
-    IN inOperDate    TDateTime ,    -- Дата действия
+    IN inStartDate   TDateTime ,    -- Дата действия
     IN inisShowAll   Boolean,        --True - показать все товары, False - показать только с ценами
     IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Price TFloat, MCSValue Tfloat
-             , MCSPeriod TFloat, MCSDay Tfloat
+RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
+             , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
              , DateChange TDateTime, MCSDateChange TDateTime
@@ -20,7 +19,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue Tfloat
              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
              , Fix Boolean, FixDateChange TDateTime
              , MinExpirationDate TDateTime
-             , Remains TFloat
+             , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , isErased boolean
              ) AS
@@ -49,6 +48,7 @@ BEGIN
                ,NULL::TFloat                     AS MCSValue
                ,NULL::TFloat                     AS MCSPeriod
                ,NULL::TFloat                     AS MCSDay              
+               ,NULL::TDateTime                  AS StartDate
                ,NULL::Integer                    AS GoodsId
                ,NULL::Integer                    AS GoodsCode
                ,NULL::TVarChar                   AS GoodsName
@@ -64,6 +64,7 @@ BEGIN
                ,NULL::TDateTime                  AS FixDateChange
                ,NULL::TDateTime                  AS MinExpirationDate
                ,NULL::TFloat                     AS Remains
+               ,NULL::TFloat                     AS SummaRemains
                ,NULL::TFloat                     AS RemainsNotMCS
                ,NULL::TFloat                     AS SummaNotMCS
                ,NULL::Boolean                    AS isErased
@@ -79,7 +80,7 @@ BEGIN
                               FROM container
                                     LEFT JOIN MovementItemContainer AS MIContainer 
                                                                     ON MIContainer.ContainerId = container.Id
-                                                                   AND MIContainer.OperDate >= inOperDate
+                                                                   AND MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                               WHERE container.descid = zc_container_count() 
                                 AND Container.WhereObjectId = inUnitId
                               GROUP BY container.objectid,COALESCE(container.Amount,0), container.Id
@@ -89,12 +90,11 @@ BEGIN
         
             SELECT
                 Object_Price_View.Id                            AS Id
-               --,Object_Price_View.Price                         AS Price 
-               --,Object_Price_View.MCSValue                      AS MCSValue
-               , ObjectHistoryFloat_Price.ValueData              AS Price
-               , ObjectHistoryFloat_MCSValue.ValueData           AS MCSValue
-               , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData,0)::TFloat AS MCSPeriod
-               , COALESCE (ObjectHistoryFloat_MCSDay.ValueData,0)::TFloat    AS MCSDay
+               , COALESCE (ObjectHistoryFloat_Price.ValueData, Object_Price_View.Price)       :: TFloat AS Price
+               , COALESCE (ObjectHistoryFloat_MCSValue.ValueData, Object_Price_View.MCSValue) :: TFloat AS MCSValue
+               , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData, 0)     :: TFloat    AS MCSPeriod
+               , COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0)        :: TFloat    AS MCSDay
+               , COALESCE (ObjectHistory_Price.StartDate, NULL /*zc_DateStart()*/) :: TDateTime AS StartDate
                               
                , Object_Goods_View.id                            AS GoodsId
                , Object_Goods_View.GoodsCodeInt                  AS GoodsCode
@@ -110,10 +110,12 @@ BEGIN
                , COALESCE(Object_Price_View.Fix,False)           AS Fix
                , Object_Price_View.FixDateChange                 AS FixDateChange
                , SelectMinPrice_AllGoods.MinExpirationDate       AS MinExpirationDate
+
                , Object_Remains.Remains                          AS Remains
+               , (Object_Remains.Remains * COALESCE (ObjectHistoryFloat_Price.ValueData, Object_Price_View.Price)) ::TFloat AS SummaRemains
                
-               , COALESCE(Object_Remains.Remains,0) - COALESCE(ObjectHistoryFloat_MCSValue.ValueData,0) :: TFloat  AS RemainsNotMCS
-               , ((COALESCE(Object_Remains.Remains,0) - COALESCE(ObjectHistoryFloat_MCSValue.ValueData,0)) * ObjectHistoryFloat_Price.ValueData  ) :: TFloat  AS SummaNotMCS
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, Object_Price_View.Price) ELSE 0 END :: TFloat AS SummaNotMCS
                
                , Object_Goods_View.isErased                      AS isErased 
                
@@ -134,7 +136,7 @@ BEGIN
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = Object_Price_View.Id 
                                        AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                       AND inOperDate >= ObjectHistory_Price.StartDate AND inOperDate < ObjectHistory_Price.EndDate
+                                       AND inStartDate >= ObjectHistory_Price.StartDate AND inStartDate < ObjectHistory_Price.EndDate
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                              ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
@@ -160,7 +162,7 @@ BEGIN
                 GoodsGroupName, GoodsName;
     ELSE
         RETURN QUERY
-        With 
+        WITH 
         tmpRemeins AS ( SELECT tmp.objectid,
                                SUM(tmp.Remains) ::TFloat AS Remains
                         FROM (SELECT container.objectid,
@@ -168,7 +170,7 @@ BEGIN
                               FROM container
                                     LEFT JOIN MovementItemContainer AS MIContainer 
                                                                     ON MIContainer.ContainerId = container.Id
-                                                                   AND MIContainer.OperDate >= inOperDate
+                                                                   AND MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                               WHERE container.descid = zc_container_count() 
                                 AND Container.WhereObjectId = inUnitId
                               GROUP BY container.objectid,COALESCE(container.Amount,0), container.Id
@@ -178,13 +180,11 @@ BEGIN
         
             SELECT
                  Object_Price_View.Id                      AS Id
-               --,Object_Price_View.Price                   AS Price 
-               --,Object_Price_View.MCSValue                AS MCSValue
-               , ObjectHistoryFloat_Price.ValueData        AS Price
-               , ObjectHistoryFloat_MCSValue.ValueData     AS MCSValue
-
-               , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData,0)::TFloat AS MCSPeriod
-               , COALESCE (ObjectHistoryFloat_MCSDay.ValueData,0)::TFloat    AS MCSDay
+               , COALESCE (ObjectHistoryFloat_Price.ValueData, Object_Price_View.Price)       :: TFloat AS Price
+               , COALESCE (ObjectHistoryFloat_MCSValue.ValueData, Object_Price_View.MCSValue) :: TFloat AS MCSValue
+               , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData, 0)     :: TFloat    AS MCSPeriod
+               , COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0)        :: TFloat    AS MCSDay
+               , COALESCE (ObjectHistory_Price.StartDate, NULL /*zc_DateStart()*/) :: TDateTime AS StartDate
                                         
                , Object_Goods_View.id                      AS GoodsId
                , Object_Goods_View.GoodsCodeInt            AS GoodsCode
@@ -201,9 +201,10 @@ BEGIN
                , Object_Price_View.FixDateChange           AS FixDateChange
                , SelectMinPrice_AllGoods.MinExpirationDate AS MinExpirationDate
                , Object_Remains.Remains                    AS Remains
+               , (Object_Remains.Remains * COALESCE (ObjectHistoryFloat_Price.ValueData, Object_Price_View.Price)) ::TFloat AS SummaRemains
 
-               , (COALESCE(Object_Remains.Remains,0) - COALESCE(ObjectHistoryFloat_MCSValue.ValueData,0)) :: TFloat  AS RemainsNotMCS
-               , ((COALESCE(Object_Remains.Remains,0) - COALESCE(ObjectHistoryFloat_MCSValue.ValueData,0)) * ObjectHistoryFloat_Price.ValueData  ) :: TFloat  AS SummaNotMCS
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, Object_Price_View.Price) ELSE 0 END :: TFloat AS SummaNotMCS
                               
                , Object_Goods_View.isErased                AS isErased 
                
@@ -220,7 +221,7 @@ BEGIN
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = Object_Price_View.Id 
                                        AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                       AND inOperDate >= ObjectHistory_Price.StartDate AND inOperDate < ObjectHistory_Price.EndDate
+                                       AND inStartDate >= ObjectHistory_Price.StartDate AND inStartDate < ObjectHistory_Price.EndDate
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                              ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
@@ -258,4 +259,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_Object_Price(inUnitId := 183292 , inOperDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+--select * from gpSelect_Object_Price(inUnitId := 183292 , inStartDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

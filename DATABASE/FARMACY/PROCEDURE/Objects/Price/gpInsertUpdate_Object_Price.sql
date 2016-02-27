@@ -6,11 +6,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
-
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
-    IN inOperDate                 TDateTime , 
+ INOUT ioStartDate                TDateTime , 
     IN inPrice                    TFloat    ,    -- цена
     IN inMCSValue                 TFloat    ,    -- Неснижаемый товарный запас
     IN inMCSPeriod                TFloat    ,    -- Количество дней для анализа НТЗ
@@ -40,12 +38,6 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
-    -- проверили корректность записи по дате
-    IF inOperDate < CURRENT_TIMESTAMP  - interval '1 minute' 
-    THEN
-        RAISE EXCEPTION 'Ошибка.Дата сохранения данных <%> меньше текущей.', inOperDate;
-    END IF;
-
     -- проверили корректность цены
     IF inPrice = 0
     THEN
@@ -60,32 +52,57 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Неснижаемый товарный запас <%> Не может быть меньше 0.', inMCSValue;
     END IF;
+
     -- Если такая запись есть - достаем её ключу подр.-товар
-    SELECT 
-        Id, 
-        Price, 
-        MCSValue, 
-        DateChange, 
-        MCSDateChange, 
-        MCSIsClose, 
-        MCSNotRecalc,
-        Fix
-    INTO 
-        ioId, 
-        vbPrice, 
-        vbMCSValue, 
-        outDateChange, 
-        outMCSDateChange,
-        vbMCSIsClose, 
-        vbMCSNotRecalc,
-        vbFix
+    SELECT Id, 
+           Price, 
+           MCSValue, 
+           DateChange, 
+           MCSDateChange, 
+           MCSIsClose, 
+           MCSNotRecalc,
+           Fix
+      INTO ioId, 
+           vbPrice, 
+           vbMCSValue, 
+           outDateChange, 
+           outMCSDateChange,
+           vbMCSIsClose, 
+           vbMCSNotRecalc,
+           vbFix
     FROM Object_Price_View
+    WHERE GoodsId = inGoodsId
+      AND UnitId = inUnitID;
+
+    -- поиск и замена если надо
+    IF COALESCE (inMCSPeriod, 0) = 0 OR COALESCE (inMCSDay, 0) = 0
+    THEN
+        SELECT ObjectHistoryFloat_MCSPeriod.ValueData
+             , ObjectHistoryFloat_MCSDay.ValueData
+               INTO inMCSPeriod, inMCSDay
+        FROM ObjectHistory
+             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSPeriod
+                                          ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory.Id
+                                         AND ObjectHistoryFloat_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
+             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
+                                          ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory.Id
+                                         AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
+        WHERE ObjectHistory.ObjectId = @ioId
+          AND ObjectHistory.EndDate  = zc_DateEnd() -- !!!криво, но берем последнюю!!!
+          AND ObjectHistory.DescId   = zc_ObjectHistory_Price()
+       ;
+    END IF;
+
+    -- проверили корректность записи по дате
+    IF ioStartDate > zc_DateStart()
+    THEN
+        IF EXISTS (SELECT 1 FROM ObjectHistory WHERE ObjectHistory.ObjectId = @ioId AND ObjectHistory.StartDate > ioStartDate)
+        THEN
+            RAISE EXCEPTION 'Ошибка.Попытка изменить данные до <%>.Измените дату просмотра на более позднюю.', DATE ((SELECT MAX (ObjectHistory.StartDate) FROM ObjectHistory WHERE ObjectHistory.ObjectId = @ioId AND ObjectHistory.StartDate > ioStartDate));
+        END IF;
+    END IF;
 
 
-    WHERE
-        GoodsId = inGoodsId
-        AND
-        UnitId = inUnitID;
     IF COALESCE(ioId,0)=0
     THEN
         -- сохранили/получили <Объект> по ИД
@@ -123,22 +140,24 @@ BEGIN
         outMCSDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
     END IF;
-    --сохранили историю
+    -- сохранили историю
     IF ((inPrice is not null) AND (inPrice <> COALESCE(vbPrice,0))) 
        OR
        ((inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0)))
        
     THEN
-        PERFORM
-            gpInsertUpdate_ObjectHistory_Price(
-                ioId       := 0::Integer,    -- ключ объекта <Элемент истории прайса>
+        PERFORM gpInsertUpdate_ObjectHistory_Price(
+                ioId       := 0 :: Integer,    -- ключ объекта <Элемент истории прайса>
                 inPriceId  := ioId,    -- Прайс
-                inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
-                inPrice    := COALESCE(inPrice,vbPrice)::TFloat,     -- Цена
-                inMCSValue := COALESCE(inMCSValue,vbMCSValue)::TFloat,     -- НТЗ
-                inMCSPeriod:= COALESCE(inMCSPeriod)::TFloat,  -- Количество дней для анализа НТЗ
-                inMCSDay   := COALESCE(inMCSDay)::TFloat,     -- Страховой запас дней НТЗ
+                inOperDate := CURRENT_TIMESTAMP                 :: TDateTime, -- Дата действия прайса
+                inPrice    := COALESCE (inPrice, vbPrice)       :: TFloat,    -- Цена
+                inMCSValue := COALESCE (inMCSValue, vbMCSValue) :: TFloat,    -- НТЗ
+                inMCSPeriod:= COALESCE (inMCSPeriod, 0)         :: TFloat,    -- Количество дней для анализа НТЗ
+                inMCSDay   := COALESCE (inMCSDay, 0)            :: TFloat,    -- Страховой запас дней НТЗ
                 inSession  := inSession);
+       -- сохранили историю
+       ioStartDate:= (SELECT MAX (StartDate) FROM ObjectHistory WHERE ObjectHistory.ObjectId = ioId AND DescId = zc_ObjectHistory_Price());
+
     END IF;
     IF (inMCSIsClose is not null) AND (COALESCE(vbMCSIsClose,False) <> inMCSIsClose)
     THEN

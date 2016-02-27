@@ -67,6 +67,8 @@ type
     cxLabel3: TcxLabel;
     cxLabel1: TcxLabel;
     ExecuteDialog: TExecuteDialog;
+    StartDate: TcxGridDBColumn;
+    SummaRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

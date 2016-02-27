@@ -84,11 +84,27 @@ BEGIN
                 inPriceId  := vbId,    -- Прайс
                 inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
                 inPrice    := vbPrice::TFloat,     -- Цена
-                inMCSValue := inMCSValue::TFloat,     -- НТЗ
-                inSession  := inSession);
+                inMCSValue := inMCSValue::TFloat,  -- НТЗ
+                inMCSPeriod:= COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData, 0) :: TFloat,  -- Количество дней для анализа НТЗ
+                inMCSDay   := COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0)    :: TFloat,  -- Страховой запас дней НТЗ
+                inSession  := inSession)
+         FROM (SELECT vbId AS Id) AS tmp
+             LEFT JOIN ObjectHistory ON ObjectHistory.ObjectId = tmp.Id
+                                    AND ObjectHistory.EndDate  = zc_DateEnd() -- !!!криво, но берем последнюю!!!
+                                    AND ObjectHistory.DescId   = zc_ObjectHistory_Price()
+             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSPeriod
+                                          ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory.Id
+                                         AND ObjectHistoryFloat_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
+             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
+                                          ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory.Id
+                                         AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
+         ;
+
     END IF;
+
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -102,4 +118,4 @@ ALTER FUNCTION gpInsertUpdate_Object_MCS_From_Excel (Integer, Integer, TFloat, T
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Price()
+-- SELECT * FROM gpInsertUpdate_Object_MCS_From_Excel()

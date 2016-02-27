@@ -1,3 +1,5 @@
+-- Function: gpSelect_AllGoodsPrice()
+
 DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, TFloat, Boolean, TVarChar);

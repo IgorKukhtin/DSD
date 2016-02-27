@@ -71,4 +71,4 @@ ALTER FUNCTION gpSelect_ObjectHistory_Price (Integer, TVarChar) OWNER TO postgre
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_Price (0, 0, 0, '')
+-- SELECT * FROM gpSelect_ObjectHistory_Price (0, '')

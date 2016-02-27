@@ -1,5 +1,3 @@
---select * from gpInsertUpdate_MovementItem_Reprice(ioID := 0 , inGoodsId := 7720 , inUnitId := 183292 , inAmount := 4 , inPriceOld := 242.3 , inPriceNew := 112.7 , inGUID := '{B473589E-37CE-4285-8FBA-76A588750F63}' ,  inSession := '3');
-
 -- Function: gpInsert_MovementItem_Reprice()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);

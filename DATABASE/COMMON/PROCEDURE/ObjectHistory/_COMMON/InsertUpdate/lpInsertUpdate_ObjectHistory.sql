@@ -20,6 +20,9 @@ DECLARE
   tmpId      Integer;
 BEGIN
 
+   -- !!!Округляем дату!!!
+   inOperDate:= DATE_TRUNC ('SECOND', inOperDate);
+
    IF COALESCE (inObjectId, 0) = 0 
    THEN
        RAISE EXCEPTION 'Error. inObjectId = %', inObjectId;

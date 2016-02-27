@@ -1,4 +1,6 @@
-DROP FUNCTION IF EXISTS gpRecalcMCS(Integer, Integer, Integer, TVarChar);
+-- Function: gpRecalcMCS (Integer, Integer, Integer, TVarChar)
+
+DROP FUNCTION IF EXISTS gpRecalcMCS (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpRecalcMCS(
     IN inUnitId              Integer   , -- Подразделение
@@ -139,7 +141,7 @@ BEGIN
         S1.NumberOfDay;
 
     PERFORM gpInsertUpdate_Object_Price(ioId           := 0,                    -- ключ объекта < Цена >
-                                        inOperDate     := zc_dateEnd(),         -- 
+                                        ioStartDate    := zc_dateEnd(),         -- 
                                         inPrice        := NULL::TFloat,         -- цена
                                         inMCSValue     := MAX(Sold)::TFloat,    -- Неснижаемый товарный запас
                                         inMCSPeriod    := inPeriod::TFloat,     --

@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_ObjectHistory_Price ()
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_Price (Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_Price (Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_Price(
  INOUT ioId           Integer,    -- ключ объекта <Элемент истории прайса>
@@ -32,11 +32,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_Value(), ioId, inPrice);
    -- НТЗ
    PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_MCSValue(), ioId, inMCSValue);
-
    
-   -- 
+   -- Количество дней для анализа НТЗ
    PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_MCSPeriod(), ioId, inMCSPeriod);
-   -- 
+   -- Страховой запас дней НТЗ
    PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_MCSDay(), ioId, inMCSDay);
 
 END;
