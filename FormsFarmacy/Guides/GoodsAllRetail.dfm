@@ -1,5 +1,5 @@
-inherited GoodsAllForm: TGoodsAllForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1086#1074' ('#1086#1073#1097#1080#1081')'
+inherited GoodsAllRetailForm: TGoodsAllRetailForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1086#1074' ('#1090#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100')'
   ClientHeight = 492
   ClientWidth = 1079
   AddOnFormData.isAlwaysRefresh = True
@@ -35,11 +35,16 @@ inherited GoodsAllForm: TGoodsAllForm
           Styles.Header = nil
           object colId: TcxGridDBColumn
             Caption = 'MainId'
-            DataBinding.FieldName = 'Id'
+            DataBinding.FieldName = 'GoodsMainId'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 52
+          end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            Caption = 'GoodsId'
+            DataBinding.FieldName = 'Id'
+            Options.Editing = False
           end
           object clCodeInt: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -207,15 +212,14 @@ inherited GoodsAllForm: TGoodsAllForm
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object clGoodsMainId: TcxGridDBColumn
             Caption = 'MainId'
-            DataBinding.FieldName = 'GoodsMainId'
+            DataBinding.FieldName = 'Id'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
           end
           object clId: TcxGridDBColumn
-            Caption = 'GoodsId'
-            DataBinding.FieldName = 'Id'
+            DataBinding.FieldName = 'GoodsId'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -525,7 +529,7 @@ inherited GoodsAllForm: TGoodsAllForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spGoodsRetailChild_1
+          StoredProc = spGoodsRetail
         end
         item
           StoredProc = spGoodsJuridicalChild_2
@@ -597,10 +601,10 @@ inherited GoodsAllForm: TGoodsAllForm
     object actGoodsLinkRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGoodsRetailChild_1
+      StoredProc = spGoodsRetail
       StoredProcList = <
         item
-          StoredProc = spGoodsRetailChild_1
+          StoredProc = spGoodsRetail
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -648,8 +652,13 @@ inherited GoodsAllForm: TGoodsAllForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Common'
-    Left = 384
-    Top = 64
+    DataSet = ChildCDS_1
+    DataSets = <
+      item
+        DataSet = ChildCDS_1
+      end>
+    Left = 336
+    Top = 248
   end
   inherited BarManager: TdxBarManager
     Left = 736
@@ -753,22 +762,22 @@ inherited GoodsAllForm: TGoodsAllForm
     Left = 776
     Top = 96
   end
-  object spGoodsRetailChild_1: TdsdStoredProc
+  object spGoodsRetail: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsAll_Retail'
-    DataSet = ChildCDS_1
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ChildCDS_1
+        DataSet = MasterCDS
       end>
     Params = <>
     PackSize = 1
-    Left = 320
-    Top = 248
+    Left = 344
+    Top = 80
   end
   object ChildCDS_1: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'GoodsMainId'
-    MasterFields = 'Id'
+    IndexFieldNames = 'Id'
+    MasterFields = 'GoodsMainId'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
@@ -834,7 +843,7 @@ inherited GoodsAllForm: TGoodsAllForm
   object ChildCDS_2: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'GoodsMainId'
-    MasterFields = 'Id'
+    MasterFields = 'GoodsMainId'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
