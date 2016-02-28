@@ -237,7 +237,7 @@ inherited PriceForm: TPriceForm
             Width = 80
           end
           object clRemainsNotMCS: TcxGridDBColumn
-            Caption = #1054#1089#1090'. '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'RemainsNotMCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
@@ -249,7 +249,7 @@ inherited PriceForm: TPriceForm
             Width = 70
           end
           object clSummaNotMCS: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090'. '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'SummaNotMCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
