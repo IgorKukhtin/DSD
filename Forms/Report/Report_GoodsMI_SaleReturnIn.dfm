@@ -25,6 +25,7 @@
       inherited cxGrid: TcxGrid
         Width = 1366
         Height = 307
+        ExplicitTop = -3
         ExplicitWidth = 1366
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1283,20 +1284,16 @@
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       Hint = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       ImageIndex = 21
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'partnername'
+          IndexFieldNames = 'juridicalname;partnername;GoodsGroupName;GoodsName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
