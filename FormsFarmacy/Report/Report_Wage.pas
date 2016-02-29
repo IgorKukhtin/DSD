@@ -37,7 +37,7 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     clPersonalName: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
+    colOperDate1: TcxGridDBColumn;
     colTaxServicePersonal: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;

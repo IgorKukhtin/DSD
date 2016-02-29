@@ -36,6 +36,10 @@ inherited Report_WageForm: TReport_WageForm
               Format = ',0.00'
               Kind = skSum
               Column = colSummaWage
+            end
+            item
+              Format = ',0.00'
+              Column = colSummaSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -63,19 +67,26 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object colOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object colDayOfWeekName: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
             DataBinding.FieldName = 'DayOfWeekName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
+          end
+          object colOperDate1: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1088#1072#1073'. '#1076#1085#1103
+            DataBinding.FieldName = 'OperDate1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colOperDate2: TcxGridDBColumn
+            Caption = #1082#1086#1085'. '#1088#1072#1073'. '#1076#1085#1103
+            DataBinding.FieldName = 'OperDate2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clPersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -520,7 +531,7 @@ inherited Report_WageForm: TReport_WageForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 376
-    Top = 104
+    Left = 368
+    Top = 128
   end
 end
