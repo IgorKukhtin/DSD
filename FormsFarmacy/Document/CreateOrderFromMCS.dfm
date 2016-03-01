@@ -1,6 +1,8 @@
 inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
   Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1089#1085#1086#1074#1077' '#1053#1058#1047
   AddOnFormData.Params = FormParams
+  ExplicitWidth = 591
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -139,7 +141,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         item
           Action = actExecInsertUpdate_MovementItem_OrderInternalMCS
         end>
-      DataSource = MasterDS
+      View = cxGridDBTableView
       Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082
       Hint = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082
     end

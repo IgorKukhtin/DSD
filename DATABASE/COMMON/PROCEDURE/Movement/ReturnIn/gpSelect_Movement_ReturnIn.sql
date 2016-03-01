@@ -46,14 +46,6 @@ BEGIN
      -- !!!Хлеб!!!
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = vbUserId);
 
-
-     -- !!!т.к. нельзя когда много данных в гриде!!!
-     IF inStartDate + (INTERVAL '100 DAY') <= inEndDate
-     THEN
-         inStartDate:= inEndDate + (INTERVAL '1 DAY');
-     END IF;
-
-
      -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId

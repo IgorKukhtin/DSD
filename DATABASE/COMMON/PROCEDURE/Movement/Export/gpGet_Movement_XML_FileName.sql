@@ -19,8 +19,8 @@ BEGIN
 
      -- Результат
      outFileName:=
-    (SELECT 'Alan'
-          || '_' || COALESCE (ObjectString_GLNCode.ValueData, '')
+    (SELECT -- 'Alan' || '_' || 
+                    COALESCE (ObjectString_GLNCode.ValueData, '')
           || '_' || REPLACE (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '')
           || '_' || Movement.InvNumber
      FROM Movement

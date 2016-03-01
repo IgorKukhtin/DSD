@@ -40,7 +40,7 @@ BEGIN
 
      OPEN Cursor1 FOR
      WITH  tmpCheck AS (SELECT MI_Check.ObjectId                  AS GoodsId
-                             , SUM(-MIContainer.Amount) ::TFloat  AS Amount
+                             , -1 * SUM (MIContainer.Amount) ::TFloat  AS Amount
                         FROM Movement AS Movement_Check
                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                              ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
@@ -54,13 +54,13 @@ BEGIN
                                                                      ON MIContainer.MovementItemId = MI_Check.Id
                                                                     AND MIContainer.DescId = zc_MIContainer_Count() 
                          WHERE Movement_Check.DescId = zc_Movement_Check()
-                         AND date_trunc('day', Movement_Check.OperDate) = vbOperDate -- CURRENT_DATE
+                         -- AND DATE_TRUNC ('DAY', Movement_Check.OperDate) = vbOperDate -- CURRENT_DATE
+                          AND Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDate + INTERVAL '1 DAY'
                           AND Movement_Check.StatusId = zc_Enum_Status_Complete()
-                        GROUP BY  MI_Check.ObjectId 
-                        HAVING SUM(MI_Check.Amount) <> 0 
+                        GROUP BY MI_Check.ObjectId 
+                        HAVING SUM (MI_Check.Amount) <> 0 
                         )
-                   
-     
+       -- Результат 1
        SELECT
              tmpMI.Id                   AS Id
            , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)              AS GoodsId
@@ -105,7 +105,7 @@ BEGIN
            , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
            , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
            , tmpCheck.Amount  ::tfloat                                                 AS CheckAmount
-           , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE)  ::Boolean AS isOneJuridical
+           , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
@@ -161,47 +161,49 @@ BEGIN
                        
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
                                                         ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-                                                       AND MILinkObject_Juridical.MovementItemId = MovementItem.id  
+                                                       AND MILinkObject_Juridical.MovementItemId = MovementItem.Id  
                                                        
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
                                                         ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                       AND MILinkObject_Contract.MovementItemId = MovementItem.id  
+                                                       AND MILinkObject_Contract.MovementItemId = MovementItem.Id  
 
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
                                                         ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                                       AND MILinkObject_Goods.MovementItemId = MovementItem.id  
+                                                       AND MILinkObject_Goods.MovementItemId = MovementItem.Id  
 
                        LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated 
                                                      ON MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
-                                                    AND MIBoolean_Calculated.MovementItemId = MovementItem.id  
+                                                    AND MIBoolean_Calculated.MovementItemId = MovementItem.Id  
 
                        LEFT JOIN MovementItemString AS MIString_Comment 
                                                     ON MIString_Comment.DescId = zc_MIString_Comment()
-                                                   AND MIString_Comment.MovementItemId = MovementItem.id  
+                                                   AND MIString_Comment.MovementItemId = MovementItem.Id  
 
-                       LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
+                       LEFT JOIN _tmpMI AS PriceList ON COALESCE (PriceList.ContractId, 0) = COALESCE (MILinkObject_Contract.ObjectId, 0)
                                                     AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
                                                     AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
-                                                    AND PriceList.MovementItemId = MovementItem.id 
+                                                    AND PriceList.MovementItemId = MovementItem.Id 
 
-                       LEFT JOIN (SELECT * FROM 
-                                      (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
-                                           (SELECT *
-                                                , MIN(SuperFinalPrice) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
-                                            FROM _tmpMI) AS DDD
-                                       WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice) AS DDD
-                                  WHERE Id = MinId) AS MinPrice
-                              ON MinPrice.MovementItemId = MovementItem.Id
+                       LEFT JOIN (SELECT *
+                                  FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
+                                        FROM (SELECT *
+                                                   , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                              FROM _tmpMI
+                                             ) AS DDD
+                                        WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
+                                       ) AS DDD
+                                  WHERE Id = MinId
+                                 ) AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
                             
                        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
-                                              ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE(PriceList.GoodsId, MinPrice.GoodsId) 
+                                              ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE (PriceList.GoodsId, MinPrice.GoodsId) 
                                              AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
                                              
-                       JOIN Object_Goods_View AS Object_Goods 
-                                              ON Object_Goods.Id = MovementItem.ObjectId 
-                  LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                              ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                             AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                       INNER JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
+
+                       LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                   ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()  
@@ -211,28 +213,20 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
             LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
                                        AND Object_Price_View.UnitId = vbUnitId
-            LEFT JOIN (
-                        SELECT 
-                            Container.ObjectId
-                           ,SUM(Container.Amount) as Amount
-                        FROM
-                            Container
-                            Inner Join ContainerLinkObject as ContainerLinkObject_Unit
+            LEFT JOIN (SELECT Container.ObjectId
+                            , SUM (Container.Amount) AS Amount
+                       FROM Container
+                            INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                            ON ContainerLinkObject_Unit.ContainerId = Container.Id
                                                           AND ContainerLinkObject_Unit.ObjectId = vbUnitId
-                        WHERE 
-                          Container.DescId = zc_Container_Count()
-                          AND
-                          Container.Amount<>0
-                        GROUP BY Container.ObjectId
-                      ) AS Remains
-                        ON  COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Remains.ObjectId
-            LEFT JOIN (
-                        SELECT
-                            MovementItem_Income.ObjectId            AS Income_GoodsId,
-                            SUM(MovementItem_Income.Amount)::TFloat AS Income_Amount
-                        FROM
-                            Movement AS Movement_Income
+                       WHERE Container.DescId = zc_Container_Count()
+                         AND Container.Amount<>0
+                       GROUP BY Container.ObjectId
+                      ) AS Remains ON Remains.ObjectId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
+
+            LEFT JOIN (SELECT MovementItem_Income.ObjectId               AS Income_GoodsId
+                            , SUM (MovementItem_Income.Amount) :: TFloat AS Income_Amount
+                       FROM Movement AS Movement_Income
                             INNER JOIN MovementItem AS MovementItem_Income
                                                     ON Movement_Income.Id = MovementItem_Income.MovementId
                                                    AND MovementItem_Income.DescId = zc_MI_Master()
@@ -245,42 +239,38 @@ BEGIN
                             INNER JOIN MovementDate AS MovementDate_Branch
                                                     ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                    AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
-                        WHERE
-                            Movement_Income.DescId = zc_Movement_Income()
-                            AND
-                            MovementDate_Branch.ValueData >= CURRENT_DATE
-                            AND
-                            Movement_Income.StatusId = zc_Enum_Status_UnComplete()
-                        GROUP BY
-                            MovementItem_Income.ObjectId
-                      ) AS Income ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Income.Income_GoodsId
+                        WHERE Movement_Income.DescId = zc_Movement_Income()
+                          AND MovementDate_Branch.ValueData >= CURRENT_DATE
+                          AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
+                        GROUP BY MovementItem_Income.ObjectId
+                      ) AS Income ON Income.Income_GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
                       
-             LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
-             LEFT JOIN lpSelectMinPrice_AllGoods(inUnitId := vbUnitId,
-                                     inObjectId := vbObjectId, 
-                                     inUserId := vbUserId
-                       ) as SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.GoodsId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId) 
+             LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
+             LEFT JOIN (SELECT _tmpMI.MovementItemId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
+                        FROM _tmpMI
+                        GROUP BY _tmpMI.MovementItemId
+                       ) AS SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
 
-;
-        RETURN NEXT Cursor1;
-     
+           ;
+     RETURN NEXT Cursor1;
 
+     -- Результат 2
      OPEN Cursor2 FOR
-      SELECT *, CASE WHEN PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
+        SELECT *, CASE WHEN PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
                      ELSE 0
                 END AS PartionGoodsDateColor      
               , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
               , MIFloat_Remains.ValueData          AS Remains
 
         FROM _tmpMI
-         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
-                               ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId 
-                              AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-            LEFT JOIN MovementItemFloat AS MIFloat_Remains
-                                        ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
-                                       AND MIFloat_Remains.DescId = zc_MIFloat_Remains();
-
+             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
+                                   ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId 
+                                  AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+             LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                         ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
+                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains();
    RETURN NEXT Cursor2;
+
 
 END;
 $BODY$

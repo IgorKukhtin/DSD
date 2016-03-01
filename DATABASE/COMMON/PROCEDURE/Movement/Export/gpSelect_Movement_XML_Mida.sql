@@ -42,12 +42,13 @@ BEGIN
 
 
      -- первые строчки XML
-     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
+     -- INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
+     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
      INSERT INTO _Result(RowData) VALUES ('<root>');
 
      -- Шапка
      INSERT INTO _Result(RowData)
-        SELECT '<head КодПоставщика="2523"'
+        SELECT '<head КодПоставщика="226"'
                   ||    ' Direction="' || COALESCE (ObjectString_RoomNumber.ValueData, '') ||'"'
                   || ' ДатаОперации="' || zfConvert_DateToString (MovementDate_OperDatePartner.ValueData) ||'"'
                   ||' НомерОперации="' || Movement.InvNumber ||'"'
@@ -65,7 +66,7 @@ BEGIN
                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
              LEFT JOIN ObjectString AS ObjectString_RoomNumber
                                     ON ObjectString_RoomNumber.ObjectId = MovementLinkObject_To.ObjectId
-                                   AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_HouseNumber() -- zc_ObjectString_Partner_RoomNumber()
+                                   AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
         WHERE Movement.Id = inMovementId
        ;
 
@@ -121,7 +122,7 @@ BEGIN
         SELECT '<tov КодРегистра="' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))) || '"'
                || ' Наименование="' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END || '"'
                || ' Количество="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar || '"'
-               || ' Цена="' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 8)) :: TVarChar ELSE MIFloat_Price.ValueData :: TVarChar END || '"'
+               || ' Цена="' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) :: TVarChar ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) :: TVarChar END || '"'
                || '/>'
         FROM MovementItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind

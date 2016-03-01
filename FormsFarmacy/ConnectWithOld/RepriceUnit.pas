@@ -99,16 +99,17 @@ type
     colisPriceFix: TcxGridDBColumn;
     cdsResultisIncome: TBooleanField;
     colisIncome: TcxGridDBColumn;
-    Button1: TButton;
-    Button2: TButton;
+    btnRepriceSelYes: TButton;
+    btnRepriceSelNo: TButton;
+    colId: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
     procedure cdsResultCalcFields(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    procedure btnRepriceSelYesClick(Sender: TObject);
+    procedure btnRepriceSelNoClick(Sender: TObject);
   private
     FStartReprice: Boolean;
     { Private declarations }
@@ -243,35 +244,59 @@ begin
   End;
 end;
 
-procedure TRepriceUnitForm.Button1Click(Sender: TObject);
+procedure TRepriceUnitForm.btnRepriceSelYesClick(Sender: TObject);
 var i, RecIndex: integer;
+    oldId:String;
 begin
       if MessageDlg('Действительно отметить для Переоценки выбранные товары?',mtConfirmation,mbYesNo,0) <> mrYes then exit;
+
+      oldId:=AllGoodsPriceGridTableView.DataController.DataSource.DataSet.FieldByName('Id').AsString;
+      AllGoodsPriceGridTableView.DataController.DataSource.DataSet.DisableControls;
 
       for I := 0 to AllGoodsPriceGridTableView.DataController.FilteredRecordCount - 1 do
       Begin
         RecIndex := AllGoodsPriceGridTableView.DataController.FilteredRecordIndex[I];
         if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index] = false
-        then
-            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index]:= true;
+        then begin
+            //AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index]:= true;
+            AllGoodsPriceGridTableView.DataController.DataSource.DataSet.Locate('Id',AllGoodsPriceGridTableView.DataController.Values[RecIndex,colId.Index],[]);
+            AllGoodsPriceGridTableView.DataController.DataSource.DataSet.Edit;
+            AllGoodsPriceGridTableView.DataController.DataSource.DataSet.FieldByName('Reprice').AsBoolean:= true;
+            AllGoodsPriceGridTableView.DataController.DataSource.DataSet.Post;
+            Application.ProcessMessages;
+            end;
       End;
 
+      AllGoodsPriceGridTableView.DataController.DataSource.DataSet.Locate('Id',oldId,[]);
+      AllGoodsPriceGridTableView.DataController.DataSource.DataSet.EnableControls;
       MessageDlg('Отметка установлена.',mtInformation,[mbOk],0,mbOk);
 end;
 
-procedure TRepriceUnitForm.Button2Click(Sender: TObject);
+procedure TRepriceUnitForm.btnRepriceSelNoClick(Sender: TObject);
 var i, RecIndex: integer;
+    oldId:String;
 begin
       if MessageDlg('Действительно убрать отметку для Переоценки у выбранных товары?',mtConfirmation,mbYesNo,0) <> mrYes then exit;
+
+      oldId:=AllGoodsPriceGridTableView.DataController.DataSource.DataSet.FieldByName('Id').AsString;
+      AllGoodsPriceGridTableView.DataController.DataSource.DataSet.DisableControls;
 
       for I := 0 to AllGoodsPriceGridTableView.DataController.FilteredRecordCount - 1 do
       Begin
         RecIndex := AllGoodsPriceGridTableView.DataController.FilteredRecordIndex[I];
         if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index] = true
-        then
-            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index]:= false;
+        then begin
+            //AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index]:= false;
+            AllGoodsPriceGridTableView.DataController.DataSource.DataSet.Locate('Id',AllGoodsPriceGridTableView.DataController.Values[RecIndex,colId.Index],[]);
+            AllGoodsPriceGridTableView.DataController.DataSource.DataSet.Edit;
+            AllGoodsPriceGridTableView.DataController.DataSource.DataSet.FieldByName('Reprice').AsBoolean:= false;
+            AllGoodsPriceGridTableView.DataController.DataSource.DataSet.Post;
+            end;
+            Application.ProcessMessages;
       End;
 
+      AllGoodsPriceGridTableView.DataController.DataSource.DataSet.Locate('Id',oldId,[]);
+      AllGoodsPriceGridTableView.DataController.DataSource.DataSet.EnableControls;
       MessageDlg('Отметка убрана.',mtInformation,[mbOk],0,mbOk);
 end;
 

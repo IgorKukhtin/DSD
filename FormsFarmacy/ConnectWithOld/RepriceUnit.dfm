@@ -215,6 +215,12 @@ object RepriceUnitForm: TRepriceUnitForm
         VisibleForCustomization = False
         Width = 60
       end
+      object colId: TcxGridDBColumn
+        DataBinding.FieldName = 'Id'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
     end
     object AllGoodsPriceGridLevel: TcxGridLevel
       GridView = AllGoodsPriceGridTableView
@@ -327,7 +333,7 @@ object RepriceUnitForm: TRepriceUnitForm
           TabOrder = 6
           Width = 82
         end
-        object Button1: TButton
+        object btnRepriceSelYes: TButton
           Left = 520
           Top = 0
           Width = 25
@@ -335,9 +341,9 @@ object RepriceUnitForm: TRepriceUnitForm
           Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1055#1077#1088#1077#1086#1094#1077#1085#1082#1080
           Caption = '+'
           TabOrder = 7
-          OnClick = Button1Click
+          OnClick = btnRepriceSelYesClick
         end
-        object Button2: TButton
+        object btnRepriceSelNo: TButton
           Left = 551
           Top = 0
           Width = 25
@@ -345,7 +351,7 @@ object RepriceUnitForm: TRepriceUnitForm
           Hint = #1059#1073#1088#1072#1090#1100' '#1086#1090#1084#1077#1090#1082#1091' '#1090#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1055#1077#1088#1077#1086#1094#1077#1085#1082#1080
           Caption = '-'
           TabOrder = 8
-          OnClick = Button2Click
+          OnClick = btnRepriceSelNoClick
         end
       end
     end

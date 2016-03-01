@@ -10,7 +10,9 @@ uses
   cxDBData, cxCheckBox, cxButtonEdit, dsdAction, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar,
   cxClasses, dsdDB, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore,
-  cxGridLevel, cxGridCustomView, cxGrid, cxPC;
+  cxGridLevel, cxGridCustomView, cxGrid, cxPC, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
+  dxSkinsdxBarPainter;
 
 type
   TCreateOrderFromMCSForm = class(TAncestorEnumForm)

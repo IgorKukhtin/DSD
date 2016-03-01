@@ -4,7 +4,7 @@ interface
 
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
-     VCL.Graphics, cxGraphics, cxStyles, Forms, Controls,
+     VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages;
 
@@ -157,8 +157,9 @@ type
   // 3. Обработка признака isErased
   TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
-    FBackGroundStyle: TcxStyle;
+    FDateEdit: TcxDateEdit;
     FView: TcxGridTableView;
+    FBackGroundStyle: TcxStyle;
     FonExit: TNotifyEvent;
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
@@ -185,6 +186,7 @@ type
     procedure OnKeyPress(Sender: TObject; var Key: Char);
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); override;
     procedure SetView(const Value: TcxGridTableView); virtual;
+    procedure SetDateEdit(const Value: TcxDateEdit); virtual;
     procedure edFilterExit(Sender: TObject);
     procedure edFilterKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     // процедура устанавливает контрол для внесения значения фильтра и позиционируется на заголовке колонки
@@ -218,6 +220,8 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    // Ссылка на контрол с датой, если надо при создании показать текущую дату/время
+    property DateEdit: TcxDateEdit read FDateEdit write SetDateEdit;
     // Ссылка ссылка на элемент отображающий список
     property View: TcxGridTableView read FView write SetView;
     // список событий на DblClick
@@ -519,7 +523,7 @@ implementation
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
-     cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
+     cxGeometry, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
      cxCustomPivotGrid, Dialogs, dsdException;
@@ -1096,6 +1100,14 @@ begin
      FView.OptionsBehavior.IncSearch := not FSearchAsFilter;
 end;
 
+procedure TdsdDBViewAddOn.SetDateEdit(const Value: TcxDateEdit);
+begin
+  FDateEdit := Value;
+  if csDesigning  in ComponentState then Exit;
+  if Assigned(FDateEdit) then begin
+    FDateEdit.Date:=Now;
+  end;
+end;
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridTableView);
 begin
   FView := Value;

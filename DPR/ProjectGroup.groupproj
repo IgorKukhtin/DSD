@@ -39,6 +39,9 @@
 			<Projects Include="ScaleCeh.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="GetEmail.dproj">
+				<Dependencies/>
+			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -155,14 +158,23 @@
 		<Target Name="ScaleCeh:Make">
 			<MSBuild Projects="ScaleCeh.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="GetEmail">
+			<MSBuild Projects="GetEmail.dproj"/>
+		</Target>
+		<Target Name="GetEmail:Clean">
+			<MSBuild Projects="GetEmail.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="GetEmail:Make">
+			<MSBuild Projects="GetEmail.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;FarmacyCash;ProjectCom;Scale;ScaleCeh"/>
+			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;FarmacyCash;ProjectCom;Scale;ScaleCeh;GetEmail"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean"/>
+			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make"/>
+			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

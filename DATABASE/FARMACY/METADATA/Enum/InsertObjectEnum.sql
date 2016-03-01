@@ -163,11 +163,12 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_RouteKind_External(), inDescId:= zc_Object_RouteKind(), inCode:= 2, inName:= 'Межгород', inEnumName:= 'zc_Enum_RouteKind_External');
 
      -- !!! Типы рабочего времени
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Work(),      inDescId:= zc_Object_WorkTimeKind(), inCode:= 1, inName:= 'рабочий день'  , inEnumName:= 'zc_Enum_WorkTimeKind_Work');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Holiday(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 2, inName:= 'отпуск'        , inEnumName:= 'zc_Enum_WorkTimeKind_Holiday');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Hospital(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 3, inName:= 'больничный'    , inEnumName:= 'zc_Enum_WorkTimeKind_Hospital');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_SkipOut(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 4, inName:= '-замена'       , inEnumName:= 'zc_Enum_WorkTimeKind_SkipOut');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_SkipIn(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 5, inName:= '+замена'       , inEnumName:= 'zc_Enum_WorkTimeKind_SkipIn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Work(),      inDescId:= zc_Object_WorkTimeKind(), inCode:= 1, inName:= 'рабочий день'              , inEnumName:= 'zc_Enum_WorkTimeKind_Work');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_WorkTime(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 2, inName:= 'рабочий день (по времени)' , inEnumName:= 'zc_Enum_WorkTimeKind_WorkTime');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Holiday(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 3, inName:= 'отпуск'                    , inEnumName:= 'zc_Enum_WorkTimeKind_Holiday');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Hospital(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 4, inName:= 'больничный'                , inEnumName:= 'zc_Enum_WorkTimeKind_Hospital');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_SkipOut(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 5, inName:= '-замена'                   , inEnumName:= 'zc_Enum_WorkTimeKind_SkipOut');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_SkipIn(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 6, inName:= '+замена'                   , inEnumName:= 'zc_Enum_WorkTimeKind_SkipIn');
 
      -- !!! Типы формирования налогового документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Tax(),      		 inDescId:= zc_Object_DocumentTaxKind(), inCode:= 1, inName:= 'Налоговая', inEnumName:= 'zc_Enum_DocumentTaxKind_Tax');
@@ -1112,4 +1113,4 @@ END $$;
  15.08.15                                                                       *Загрузчик минимального округления
  28.07.15                                                                       *Загрузчики НТЗ / Цен / переучета
  23.07.14                         * Скопировано для аптек
-\*/
+*/
