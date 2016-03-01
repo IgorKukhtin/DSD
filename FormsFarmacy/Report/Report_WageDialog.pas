@@ -31,7 +31,8 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    cbinIsDay: TcxCheckBox;
+    sbisVipCheck: TcxCheckBox;
+    sbnisDay: TcxCheckBox;
   private
     { Private declarations }
   public

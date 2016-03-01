@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, UnitId Integer, UnitName TVarChar
+RETURNS TABLE (OperDate TDateTime, UnitId Integer, UnitName TVarChar, isComplete Boolean
               )
 AS
 $BODY$
@@ -66,12 +66,14 @@ BEGIN
              Period.OperDate::TDateTime
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ValueData    AS UnitName
+           , ObjectLink_StaffList_Unit.isComplete
        FROM (SELECT generate_series(vbStartDate, vbEndDate, '1 MONTH'::interval) OperDate) AS Period
           , (/*SELECT DISTINCT ChildObjectId AS UnitId FROM ObjectLink WHERE DescId = zc_ObjectLink_StaffList_Unit() AND ChildObjectId > 0 AND vbMemberId = 0
             UNION
-             */SELECT tmpList.UnitId FROM tmpList
+             */SELECT tmpList.UnitId, False AS isComplete  FROM tmpList
             UNION
              SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId
+                  , CASE WHEN COALESCE (Movement.Id,0) <> 0 THEN TRUE ELSE False END AS isComplete
              FROM Movement
                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -93,6 +95,7 @@ ALTER FUNCTION gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar) OW
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.03.16         * add isComplete
  28.12.13                                        * add zc_ObjectLink_StaffList_Unit
  01.10.13         *
 */

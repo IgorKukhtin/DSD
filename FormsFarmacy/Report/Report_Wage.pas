@@ -44,8 +44,12 @@ type
     bbExecuteDialog: TdxBarButton;
     bbcbinIsDay: TdxBarControlContainerItem;
     colDayOfWeekName: TcxGridDBColumn;
-    chinisDay: TcxCheckBox;
     actinisDay: TdsdDataSetRefresh;
+    clisVip: TcxGridDBColumn;
+    sbisDay: TcxCheckBox;
+    sbisVipCheck: TcxCheckBox;
+    colPersonalCount: TcxGridDBColumn;
+    actisVipCheck: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

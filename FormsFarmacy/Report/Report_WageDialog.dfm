@@ -3,7 +3,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1047#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1077'>'
-  ClientHeight = 167
+  ClientHeight = 219
   ClientWidth = 334
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 50
-    Top = 135
+    Top = 175
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 135
+    Top = 175
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object edUnit: TcxButtonEdit
     Left = 11
-    Top = 77
+    Top = 117
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 57
+    Top = 97
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -79,24 +79,31 @@ object Report_WageDialogForm: TReport_WageDialogForm
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
-  object cbinIsDay: TcxCheckBox
-    Left = 245
-    Top = 27
-    Hint = #1086#1090#1075#1088#1091#1078#1077#1085#1085#1099#1077' '#1079#1072#1103#1074#1082#1080
-    Caption = #1087#1086' '#1044#1085#1103#1084
-    Properties.ReadOnly = False
+  object sbisVipCheck: TcxCheckBox
+    Left = 123
+    Top = 67
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1074#1099#1076#1077#1083#1080#1090#1100' '#1042#1048#1055
     TabOrder = 8
-    Width = 71
+    Width = 110
+  end
+  object sbnisDay: TcxCheckBox
+    Left = 11
+    Top = 67
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1087#1086' '#1076#1085#1103#1084
+    TabOrder = 9
+    Width = 70
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 176
-    Top = 120
+    Top = 160
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 215
-    Top = 46
+    Top = 86
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -109,7 +116,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 256
-    Top = 92
+    Top = 132
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -145,16 +152,24 @@ object Report_WageDialogForm: TReport_WageDialogForm
       item
         Name = 'inIsDay'
         Value = Null
-        Component = cbinIsDay
+        Component = sbnisDay
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisVipCheck'
+        Value = Null
+        Component = sbisVipCheck
         DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 23
-    Top = 102
+    Top = 142
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
+    Key = '0'
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnitTreeForm'
@@ -177,11 +192,11 @@ object Report_WageDialogForm: TReport_WageDialogForm
         ParamType = ptInput
       end>
     Left = 87
-    Top = 70
+    Top = 110
   end
   object ActionList: TActionList
     Left = 156
-    Top = 79
+    Top = 119
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -226,7 +241,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
     Params = <
       item
         Name = 'UnitId'
-        Value = ''
+        Value = '0'
         Component = UnitGuides
         ComponentItem = 'Key'
       end
@@ -239,6 +254,6 @@ object Report_WageDialogForm: TReport_WageDialogForm
       end>
     PackSize = 1
     Left = 112
-    Top = 112
+    Top = 152
   end
 end
