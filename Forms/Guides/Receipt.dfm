@@ -45,7 +45,7 @@ object ReceiptForm: TReceiptForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
+        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090' ('#1087#1086#1083#1100#1079'.)'
         DataBinding.FieldName = 'Code'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -376,7 +376,7 @@ object ReceiptForm: TReceiptForm
         Width = 138
       end
       object Code_Parent: TcxGridDBColumn
-        Caption = #1050#1086#1076' ('#1087#1086#1080#1089#1082')'
+        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1086#1080#1089#1082', '#1087#1086#1083#1100#1079'.)'
         DataBinding.FieldName = 'Code_Parent'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -1333,14 +1333,14 @@ object ReceiptForm: TReceiptForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object Goods_ObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
