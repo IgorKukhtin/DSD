@@ -333,24 +333,21 @@ BEGIN
                        
 
 , tmpListManager AS (SELECT tmpALL.Operdate1, tmpALL.OperDate2
-                          , tmpALL.DayOfWeekName
-                          , tmpALL.UnitName
-                          , tmpALL.PersonalName
-                          , tmpALL.PositionName
+                          , tmpALL.UnitId
+                          , tmpALL.PersonalId
+                          , tmpALL.PositionId
                           , tmpALL.TaxService
-                          , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE (tmpALL.SummaWage*100/tmpALL.SummaSale)*tmpAll.PersonalCount  END ::Tfloat  AS TaxServicePosition
-                          , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePersonal ELSE tmpALL.SummaWage*100/tmpALL.SummaSale  END ::Tfloat  AS TaxServicePersonal
-                          , tmpALL.SummaSale
-                          , tmpALL.SummaWage
-                          , tmpALL.SummaPersonal
-                       --   , tmpAll.PersonalCount ::TFloat
-                     FROM (
-                            SELECT CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE Null END ::TDateTime AS Operdate1
-                                 , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE Null END ::TDateTime AS OperDate2
-                                 , CASE WHEN inIsDay = TRUE THEN tmpWeekDay.DayOfWeekName_Full ELSE '' END ::TVarChar AS DayOfWeekName  
-                                 , Object_Unit.ValueData         AS UnitName
-                                 , Object_Personal.ValueData     AS PersonalName
-                                 , Object_Position.ValueData     AS PositionName
+                          , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE 0 END ::Tfloat  AS TaxServicePosition
+                          , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePersonal ELSE 0 END ::Tfloat  AS TaxServicePersonal
+                          , SUM(tmpALL.SummaSale):: Tfloat   AS SummaSale
+                          , SUM(tmpALL.SummaWage) :: Tfloat  AS SummaWage
+                          , SUM(tmpALL.SummaPersonal):: Tfloat   AS SummaPersonal
+                       
+                     FROM ( SELECT CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE inDateStart END ::TDateTime AS Operdate1
+                                 , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateStart END ::TDateTime AS OperDate2
+                                 , tmpMovementCheck.UnitId
+                                 , tmpListPersonalAll.PersonalId
+                                 , tmpListPersonalAll.PositionId
                                  , tmpUnit.TaxService :: Tfloat  AS TaxService
                                  , SUM(CASE WHEN inIsDay = TRUE THEN tmpListPersonalAll.TaxService ELSE 0 END) :: Tfloat AS TaxServicePosition
                                  , SUM(CASE WHEN inIsDay = TRUE THEN (tmpListPersonalAll.TaxService/tmpListPersonalAll.PersonalCount) ELSE 0 END) :: Tfloat AS TaxServicePersonal
@@ -363,45 +360,41 @@ BEGIN
                               LEFT JOIN tmpListPersonalAll ON tmpListPersonalAll.OperDate1 = tmpMovementCheck.OperDate1
                                          AND tmpListPersonalAll.OperDate2 = tmpMovementCheck.OperDate2
                                          AND tmpListPersonalAll.UnitId = tmpMovementCheck.UnitId
-                                          
-                              LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpListPersonalAll.PersonalId
-                              LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpListPersonalAll.PositionId
-                              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovementCheck.UnitId
-
-                              LEFT JOIN zfCalc_DayOfWeekName (tmpMovementCheck.Operdate1) AS tmpWeekDay ON 1=1
-             
                             WHERE tmpMovementCheck.SummaSale<>0
-                            GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1  ELSE Null END 
-                                   , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE Null END
-                                   , CASE WHEN inIsDay = TRUE THEN tmpWeekDay.DayOfWeekName_Full ELSE '' END
-                                   , Object_Unit.ValueData    
-                                   , Object_Personal.ValueData  
-                                   , Object_Position.ValueData    
+                            GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1  ELSE inDateStart END 
+                                   , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateStart END
+                                   , tmpMovementCheck.UnitId
+                                   , tmpListPersonalAll.PersonalId
+                                   , tmpListPersonalAll.PositionId  
                                    , tmpUnit.TaxService
                                    , tmpListPersonalAll.PersonalCount
-                            ORDER BY 1, Object_Unit.ValueData ) AS tmpALL
+                            ) AS tmpALL
+                        GROUP BY tmpALL.Operdate1, tmpALL.OperDate2
+                               , tmpALL.UnitId
+                               , tmpALL.PersonalId
+                               , tmpALL.PositionId
+                               , tmpALL.TaxService
+                               , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE 0 END 
+                               , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePersonal ELSE 0 END 
+                          
                        )
 
-
-
-
+ , tmpUnion AS (
           SELECT tmpALL.Operdate1, tmpALL.OperDate2
-               , tmpALL.DayOfWeekName
-               , tmpALL.UnitName
-               , tmpALL.PersonalName
-               , tmpALL.PositionName
+               , tmpALL.UnitId
+               , tmpALL.PersonalId
+               , tmpALL.PositionId
                , tmpALL.TaxService
-               , tmpAll.TaxServicePosition
-               , tmpAll.TaxServicePersonal
+               , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE 0 END AS TaxServicePosition
+               , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePersonal ELSE 0 END AS TaxServicePersonal
                , SUM(tmpALL.SummaSale)::TFloat AS SummaSale
                , SUM(tmpALL.SummaWage)::TFloat AS SummaWage
                , SUM(tmpAll.SummaPersonal)::TFloat  AS SummaPersonal
                , tmpALL.isVip 
           FROM (SELECT tmpManager.Operdate1, tmpManager.OperDate2
-                     , tmpManager.DayOfWeekName
-                     , tmpManager.UnitName
-                     , tmpManager.PersonalName
-                     , tmpManager.PositionName
+                     , tmpManager.UnitId
+                     , tmpManager.PersonalId
+                     , tmpManager.PositionId
                      , tmpManager.TaxService
                      , tmpManager.TaxServicePosition
                      , tmpManager.TaxServicePersonal
@@ -412,10 +405,9 @@ BEGIN
                FROM tmpListManager AS tmpManager
               UNION ALL
                 SELECT tmpVip.Operdate1, tmpVip.OperDate2
-                     , tmpVip.DayOfWeekName
-                     , tmpVip.UnitName
-                     , tmpVip.PersonalName
-                     , tmpVip.PositionName
+                     , tmpVip.UnitId
+                     , tmpVip.PersonalId
+                     , tmpVip.PositionId
                      , tmpVip.TaxService
                      , tmpVip.TaxServicePosition
                      , tmpVip.TaxServicePersonal
@@ -427,18 +419,69 @@ BEGIN
                 
                ) AS tmpALL
           GROUP BY tmpALL.Operdate1, tmpALL.OperDate2
-                 , tmpALL.DayOfWeekName
-                 , tmpALL.UnitName
-                 , tmpALL.PersonalName
-                 , tmpALL.PositionName
+                 , tmpALL.UnitId
+                 , tmpALL.PersonalId
+                 , tmpALL.PositionId
                  , tmpALL.TaxService
-                 , tmpAll.TaxServicePosition
-                 , tmpAll.TaxServicePersonal
-                 , tmpALL.isVip 
-       
-          ORDER BY tmpALL.UnitName
-                 , tmpALL.PersonalName     
+                 , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE 0 END 
+                 , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePersonal ELSE 0 END 
+                 , tmpALL.isVip
+          )
+          
+, tmpItogi AS (SELECT tmpUnion.Operdate1, tmpUnion.OperDate2
+                    , SUM (tmpUnion.SummaWage)     AS SummaWage
+                    , SUM (tmpUnion.SummaPersonal) AS SummaPersonal
+                    , SUM (tmpUnion.SummaSale)     AS SummaSale
+               FROM tmpUnion
+               GROUP BY tmpUnion.Operdate1
+                      , tmpUnion.OperDate2
+               ) 
 
+                    
+, tmpResult AS (SELECT tmpALL.Operdate1, tmpALL.OperDate2
+                     , tmpALL.PersonalId
+                     , tmpALL.PositionId 
+                     , tmpALL.UnitId
+                     , tmpALL.TaxService
+                     , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE 0 END AS TaxServicePosition
+                     , CASE WHEN inIsDay = TRUE THEN tmpAll.TaxServicePersonal ELSE (tmpALL.TaxService * tmpALL.SummaWage)/tmpItogi.SummaWage END ::Tfloat AS TaxServicePersonal
+                     , tmpALL.SummaSale
+                     , tmpALL.SummaWage
+                     , tmpALL.SummaPersonal
+                     , tmpALL.isVip
+                FROM tmpUnion  AS tmpALL
+                    LEFT JOIN tmpItogi ON tmpItogi.Operdate1 = tmpALL.Operdate1
+               )
+
+
+, tmpResult_position AS (SELECT tmpResult.Operdate1, tmpResult.OperDate2
+                              , tmpResult.PositionId
+                              , SUM(tmpResult.TaxServicePersonal)  AS  SumTaxService
+                         FROM tmpResult
+                         GROUP BY tmpResult.Operdate1, tmpResult.OperDate2, tmpResult.PositionId
+                        )
+
+    SELECT tmpResult.Operdate1, tmpResult.OperDate2
+         , CASE WHEN inIsDay = TRUE THEN tmpWeekDay.DayOfWeekName_Full ELSE '' END ::TVarChar AS DayOfWeekName  
+         , Object_Unit.ValueData         AS UnitName
+         , Object_Personal.ValueData     AS PersonalName
+         , Object_Position.ValueData     AS PositionName
+         , tmpResult.TaxService
+         , CASE WHEN inIsDay = TRUE THEN tmpResult.TaxServicePosition ELSE tmpResult_position.SumTaxService END    ::tfloat AS TaxServicePosition
+         , tmpResult.TaxServicePersonal ::Tfloat AS TaxServicePersonal
+         , tmpResult.SummaSale  ::Tfloat 
+         , tmpResult.SummaWage  ::Tfloat 
+         , tmpResult.SummaPersonal ::Tfloat 
+         , tmpResult.isVip
+    FROM tmpResult 
+      LEFT JOIN tmpResult_position ON tmpResult_position.Operdate1 = tmpResult.Operdate1
+                                  AND tmpResult_position.PositionId = tmpResult.PositionId
+
+      LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpResult.PersonalId
+      LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpResult.PositionId 
+      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpResult.UnitId
+      LEFT JOIN zfCalc_DayOfWeekName (tmpResult.Operdate1) AS tmpWeekDay ON 1=1 
+       
          
   ;
 END;
@@ -451,15 +494,9 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  23.02.16         *
  14.02.16         * 
-                                                                *
-
+ 
 */
 
 -- тест
---select * from gpReport_Wage(inUnitId := 375627 , inDateStart := ('01.09.2015')::TDateTime , inDateFinal := ('30.09.2015')::TDateTime ,  inSession := '3');
-
---select * from gpReport_Wage(inUnitId := 377605 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('05.01.2016')::TDateTime , inIsDay := 'false' , inisVipCheck:= 'false', inisGroupPersonal:= 'false', inSession := '3')
 --select * from gpReport_Wage(inUnitId := 377605 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('07.01.2016')::TDateTime , inIsDay := 'False' , inisVipCheck := 'false' ,  inSession := '3');
 --order by PersonalName
---where 4=6
---where PersonalName like '%Блино%';
