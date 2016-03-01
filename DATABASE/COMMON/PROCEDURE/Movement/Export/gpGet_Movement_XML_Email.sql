@@ -34,22 +34,41 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Данная функция предусмотрена только для торговой сети <%>.', lfGet_Object_ValueData (518060);
      END IF;
 
-
      -- Результат
      RETURN QUERY
      SELECT tmp.outFileName          :: TVarChar AS Subject
           , ''                       :: TBlob    AS Body
-          -- , 'mail_out_in@alan.dp.ua' :: TVarChar AS AddressFrom
-          , 'klimentiev@alan.dp.ua'  :: TVarChar AS AddressFrom
-          , 'mail_out_in@alan.dp.ua' :: TVarChar AS AddressTo
+          , '24447183@ukr.net'       :: TVarChar AS AddressFrom
+          , 'ashtu777@ua.fm'            :: TVarChar AS AddressTo
+          , 'smtp.ukr.net'           :: TVarChar AS Host
+          , 465                      :: Integer  AS Port
+          , '24447183@ukr.net'       :: TVarChar AS UserName
+          , 'vas6ok'                 :: TVarChar AS Password -- '24447183'
+
+     FROM gpGet_Movement_XML_FileName (inMovementId, inSession) AS tmp;
+/*
+     SELECT tmp.outFileName          :: TVarChar AS Subject
+          , ''                       :: TBlob    AS Body
+          , 'mail_out_in@alan.dp.ua' :: TVarChar AS AddressFrom
+          , 'ashtu@ua.fm' :: TVarChar AS AddressTo
           , 'smtp.alan.dp.ua'        :: TVarChar AS Host
           , 25                       :: Integer  AS Port
-          -- , 465                      :: Integer  AS Port
-          -- , 'mail_out_in'            :: TVarChar AS UserName
-          -- , 'vas6ok'                 :: TVarChar AS Password
-          , 'klimentiev'            :: TVarChar AS UserName
-          , 'qsxqsxw1'              :: TVarChar AS Password
+          , 'mail_out_in'            :: TVarChar AS UserName
+          , 'vas6ok'                 :: TVarChar AS Password
      FROM gpGet_Movement_XML_FileName (inMovementId, inSession) AS tmp;
+*/
+/*
+     RETURN QUERY
+     SELECT tmp.outFileName          :: TVarChar AS Subject
+          , ''                       :: TBlob    AS Body
+          , 'ashtu777@gmail.com'     :: TVarChar AS AddressFrom
+          , 'ashtu@ua.fm'            :: TVarChar AS AddressTo
+          , 'smtp.gmail.com'         :: TVarChar AS Host
+          , 465                      :: Integer  AS Port
+          , 'ashtu777@gmail.com'     :: TVarChar AS UserName
+          , 'Fktrc123'               :: TVarChar AS Password
+     FROM gpGet_Movement_XML_FileName (inMovementId, inSession) AS tmp;
+*/
 
 END;
 $BODY$

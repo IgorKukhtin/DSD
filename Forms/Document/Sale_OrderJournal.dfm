@@ -4,7 +4,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   ClientWidth = 1177
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -404
+  ExplicitLeft = -393
   ExplicitWidth = 1193
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -14,17 +14,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Height = 393
     TabOrder = 3
     ExplicitWidth = 1177
-    ExplicitHeight = 478
+    ExplicitHeight = 393
     ClientRectBottom = 393
     ClientRectRight = 1177
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1177
-      ExplicitHeight = 478
+      ExplicitHeight = 393
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 393
         ExplicitWidth = 1177
-        ExplicitHeight = 478
+        ExplicitHeight = 393
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -779,7 +779,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitTop = 451
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportXmlDS
@@ -2217,7 +2216,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       OpenAfterCreate = False
       DefaultFileName = 'Report_'
       DefaultFileExt = 'XML'
-      EncodingANSI = True
     end
     object actSMTPFile: TdsdSMTPFileAction
       Category = 'XML'

@@ -160,7 +160,26 @@ BEGIN
       IF COALESCE (inStreetKindId, 0) = 0 THEN RAISE EXCEPTION 'Ошибка.Не определено значение <Вид(улица,проспект)>.' ; END IF;
       -- проверка
       IF COALESCE (vbCityId, 0) = 0 THEN RAISE EXCEPTION 'Ошибка.Не определено значение <Населенный пункт>.'; END IF;   -- по идее такого не может быть
+      -- проверка
+      IF 1 < (SELECT COUNT (*)
+                    FROM Object AS Object_Street
+                       JOIN ObjectLink AS ObjectLink_Street_StreetKind ON ObjectLink_Street_StreetKind.ObjectId = Object_Street.Id
+                                                                      AND ObjectLink_Street_StreetKind.DescId = zc_ObjectLink_Street_StreetKind()
+                                                                      AND ObjectLink_Street_StreetKind.ChildObjectId = inStreetKindId
+                       INNER JOIN ObjectLink AS ObjectLink_Street_City ON ObjectLink_Street_City.ObjectId = Object_Street.Id
+                                                                      AND ObjectLink_Street_City.DescId = zc_ObjectLink_Street_City()
+                                                                      AND ObjectLink_Street_City.ChildObjectId  = vbCityId
+                       LEFT JOIN ObjectLink AS ObjectLink_Street_ProvinceCity ON ObjectLink_Street_ProvinceCity.ObjectId = Object_Street.Id
+                                                                             AND ObjectLink_Street_ProvinceCity.DescId = zc_ObjectLink_Street_ProvinceCity()
+                  WHERE Object_Street.DescId = zc_Object_Street() AND Object_Street.ValueData = inStreetName
+                    AND COALESCE (ObjectLink_Street_ProvinceCity.ChildObjectId, 0) = COALESCE (vbProvinceCityId, 0)
+                  )
+      THEN
+          RAISE EXCEPTION 'Ошибка.В справочник <Улица/проспект> значение <%><%> не уникально для города <%>.', lfGet_Object_ValueData (inStreetKindId), inStreetName, lfGet_Object_ValueData (vbCityId);
+      END IF;
 
+        
+      -- нашли
       vbStreetId:= (SELECT Object_Street.Id
                     FROM Object AS Object_Street
                        JOIN ObjectLink AS ObjectLink_Street_StreetKind ON ObjectLink_Street_StreetKind.ObjectId = Object_Street.Id

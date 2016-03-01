@@ -3,7 +3,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
   ClientHeight = 532
   ClientWidth = 1071
   ExplicitWidth = 1087
-  ExplicitHeight = 570
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -539,10 +539,6 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -583,15 +579,11 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbPrint: TdxBarButton
