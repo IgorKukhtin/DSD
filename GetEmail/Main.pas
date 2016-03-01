@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, IdMessage,
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-  IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3;
+  IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment;
 
 type
   TMainForm = class(TForm)
@@ -30,9 +30,10 @@ implementation
 procedure TMainForm.BitBtn1Click(Sender: TObject);
 var
   msgs: integer;
-  i: integer;
+  i,j: integer;
   flag: boolean;
   msgcnt: integer;
+  mailFolder: String;
 begin
      with IdPOP3 do begin
         Host:= 'pop.ua.fm';
@@ -43,7 +44,11 @@ begin
 
   IdPOP3.Connect;
 
-  try
+    // current directory to store the email files
+    mailFolder := GetCurrentDir() + '\inbox';
+    ForceDirectories(mailFolder);
+
+      try
     msgcnt:= IdPOP3.CheckMessages;
     // ShowMessage (IntToStr(msgcnt));
     for I:= msgcnt downto 1 do
@@ -53,7 +58,14 @@ begin
 
       if (IdPOP3.Retrieve(i, IdMessage)) then
       begin
-        ShowMessage(IdMessage.From.Address + ' : ' + IdMessage.Subject + ' : ' + IdMessage.MessageParts[1].FileName);
+          for j := 0 to IdMessage.MessageParts.Count - 1
+          do
+            if IdMessage.MessageParts[j] is TIdAttachment
+            then begin
+                (IdMessage.MessageParts[j] as TIdAttachment).SaveToFile(mailFolder +'\' + IdMessage.MessageParts[J].FileName);
+                 ShowMessage(IdMessage.From.Address + ' : ' + IdMessage.Subject + ' : ' + IntToStr(j) + ' : ' + IdMessage.MessageParts[j].FileName + '   '  +FormatDateTime('dd mmm yyyy hh:mm:ss', IdMessage.Date) );
+//                 IdMessage.From.GetNamePath
+            end;
         flag:= true;
       end
       else ShowMessage('not read :' + IntToStr(i));
