@@ -488,6 +488,9 @@ BEGIN
                   ELSE 'м.ƒнiпропетровськ' 
                   END  :: TVarChar   AS PlaceOf 
            , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName,2) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.‘илиалы 
+           
+           , MovementSale_Comment.ValueData        AS SaleComment 
+           , MovementOrder_Comment.ValueData       AS OrderComment
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
@@ -503,6 +506,15 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+            LEFT JOIN MovementString AS MovementSale_Comment 
+                                     ON MovementSale_Comment.MovementId = Movement.Id
+                                    AND MovementSale_Comment.DescId = zc_MovementString_Comment()
+            LEFT JOIN MovementString AS MovementOrder_Comment 
+                                     ON MovementOrder_Comment.MovementId = Movement_order.Id
+                                    AND MovementOrder_Comment.DescId = zc_MovementString_Comment()
+
+
             LEFT JOIN MovementDate AS MovementDate_Payment
                                    ON MovementDate_Payment.MovementId =  Movement.Id
                                   AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
@@ -741,6 +753,8 @@ BEGIN
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+
+            
 
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()

@@ -172,6 +172,11 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 306
       end
+      object colisComplete: TcxGridDBColumn
+        Caption = #1047#1072#1087#1080#1089#1072#1085
+        DataBinding.FieldName = 'isComplete'
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -330,7 +335,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       GuiParams = <
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime

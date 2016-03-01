@@ -1,27 +1,28 @@
 inherited Report_WageForm: TReport_WageForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1047#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1077
   ClientHeight = 305
-  ClientWidth = 894
+  ClientWidth = 982
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 910
+  ExplicitWidth = 998
   ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 894
+    Width = 982
     Height = 247
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 894
     ExplicitHeight = 247
     ClientRectBottom = 247
-    ClientRectRight = 894
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 894
       ExplicitHeight = 247
       inherited cxGrid: TcxGrid
-        Width = 894
+        Width = 982
         Height = 247
         ExplicitWidth = 894
         ExplicitHeight = 247
@@ -54,6 +55,7 @@ inherited Report_WageForm: TReport_WageForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -157,14 +159,33 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
+          object clisVip: TcxGridDBColumn
+            Caption = 'Vip'
+            DataBinding.FieldName = 'isVip'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object colPersonalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+            DataBinding.FieldName = 'PersonalCount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 894
+    Width = 982
     Height = 32
-    ExplicitWidth = 894
+    ExplicitLeft = 24
+    ExplicitTop = 8
+    ExplicitWidth = 952
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
@@ -187,13 +208,13 @@ inherited Report_WageForm: TReport_WageForm
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 326
-      Top = 6
+      Left = 428
+      Top = 7
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 416
-      Top = 5
+      Left = 518
+      Top = 6
       Properties.Buttons = <
         item
           Default = True
@@ -206,16 +227,36 @@ inherited Report_WageForm: TReport_WageForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 252
     end
-  end
-  object chinisDay: TcxCheckBox [2]
-    Left = 243
-    Top = 5
-    Action = actinisDay
-    TabOrder = 6
-    Width = 66
+    object sbisDay: TcxCheckBox
+      Left = 243
+      Top = 5
+      Action = actinisDay
+      TabOrder = 6
+      Width = 66
+    end
+    object sbisVipCheck: TcxCheckBox
+      Left = 318
+      Top = 5
+      Action = actisVipCheck
+      TabOrder = 7
+      Width = 110
+    end
   end
   inherited ActionList: TActionList
-    object actinisDay: TdsdDataSetRefresh [0]
+    object actisVipCheck: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1074#1099#1076#1077#1083#1080#1090#1100' '#1042#1048#1055
+      Hint = #1074#1099#1076#1077#1083#1080#1090#1100' '#1042#1048#1055
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actinisDay: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -297,7 +338,14 @@ inherited Report_WageForm: TReport_WageForm
         item
           Name = 'inIsDay'
           Value = Null
-          Component = chinisDay
+          Component = sbisDay
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'inisVipCheck'
+          Value = Null
+          Component = sbisVipCheck
           DataType = ftBoolean
           ParamType = ptInput
         end>
@@ -340,10 +388,22 @@ inherited Report_WageForm: TReport_WageForm
       end
       item
         Name = 'inIsDay'
-        Value = Null
-        Component = chinisDay
+        Value = 'False'
+        Component = sbisDay
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inisVipCheck'
+        Value = Null
+        Component = sbisVipCheck
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptUnknown
       end>
     Left = 80
     Top = 160
@@ -484,7 +544,8 @@ inherited Report_WageForm: TReport_WageForm
       item
         Component = UnitGuides
       end>
-    Left = 392
+    Left = 552
+    Top = 32
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

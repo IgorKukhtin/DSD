@@ -59,6 +59,7 @@ type
     UpdateAction: TdsdInsertUpdateAction;
     bbStatic: TdxBarStatic;
     bbEdit: TdxBarButton;
+    colisComplete: TcxGridDBColumn;
   private
   public
   end;
