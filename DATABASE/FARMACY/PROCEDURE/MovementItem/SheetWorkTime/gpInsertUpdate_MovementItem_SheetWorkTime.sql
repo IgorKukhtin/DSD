@@ -56,7 +56,7 @@ BEGIN
         THEN
 */
            ioTypeId := CASE WHEN COALESCE (ioTypeId, 0) = 0 OR POSITION ('0' IN zfGet_ViewWorkHour ('0', ioTypeId)) = 0
-                                 THEN zc_Enum_WorkTimeKind_Work()
+                                 THEN zc_Enum_WorkTimeKind_WorkTime()
                             ELSE ioTypeId
                        END;
         vbValue := zfConvert_ViewWorkHourToHour (ioValue);

@@ -105,16 +105,17 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 
+     -- !!!отключил это на долго, но временно!!!
      -- !!!распредел€ютс€ затраты!!!
      -- IF vbIsInsert = TRUE OR NOT EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = ioId AND DescId = zc_MI_Child() AND isErased = FALSE)
-     IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     /*IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
         OR EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = ioId AND DescId = zc_MI_Child() AND isErased = FALSE)
      THEN
          PERFORM lpInsertUpdate_MI_ProfitLossService_AmountPartner (inMovementId:= ioId
                                                                   , inAmount    := -1 * vbAmount
                                                                   , inUserId    := inUserId
                                                                    );
-     END IF;
+     END IF;*/
 
      -- 5.3. проводим ƒокумент
      PERFORM lpComplete_Movement_Service (inMovementId := ioId
