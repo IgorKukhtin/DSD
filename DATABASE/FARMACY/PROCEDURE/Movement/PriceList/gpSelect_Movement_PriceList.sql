@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PriceList(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
               )
 
 AS
@@ -42,6 +43,9 @@ BEGIN
            , Object_Contract.Id                                 AS ContractId
            , Object_Contract.ValueData                          AS ContractName
 
+           , Object_Insert.ValueData                            AS InsertName
+           , ObjectDate_Protocol_Insert.ValueData               AS InsertDate
+
        FROM Movement 
             JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId 
 
@@ -57,6 +61,14 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
+            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                                 ON ObjectDate_Protocol_Insert.ObjectId = Movement.Id
+                                AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+            LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                 ON ObjectLink_Insert.ObjectId = Movement.Id
+                                AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
+
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PriceList();
 
 END;
@@ -68,6 +80,7 @@ ALTER FUNCTION gpSelect_Movement_PriceList (TDateTime, TDateTime, Boolean, TVarC
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.03.16         *
  01.07.14                                                        *
 
 */

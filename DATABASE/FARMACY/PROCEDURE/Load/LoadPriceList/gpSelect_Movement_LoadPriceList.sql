@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceList(
 RETURNS TABLE (Id Integer, OperDate TDateTime
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
              , isAllGoodsConcat Boolean, NDSinPrice Boolean, isMoved Boolean)
 
 AS
@@ -27,12 +28,19 @@ BEGIN
            , Object_Juridical.ValueData  AS JuridicalName
            , Object_Contract.Id          AS ContractId
            , Object_Contract.ValueData   AS ContractName
+           
+           , Object_User_Insert.ValueData   AS InsertName
+           , LoadPriceList.Date_Insert      AS InsertDate
+          
            , LoadPriceList.isAllGoodsConcat           
            , LoadPriceList.NDSinPrice           
            , LoadPriceList.isMoved
        FROM LoadPriceList
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId;
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
+
+            LEFT JOIN Object AS Object_User_Insert ON Object_User_Insert.Id = LoadPriceList.UserId_Insert;
+;
 
 END;
 $BODY$
