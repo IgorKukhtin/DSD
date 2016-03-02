@@ -99,10 +99,10 @@ BEGIN
                   WHERE Object_Position.ValueData Like '%Менеджер%' OR Object_Position.ValueData Like '%менеджер%' 
                   ) 
 -- данные из табеля учета рабочего времени
-  , tmp1 AS    (   SELECT MIDate_OperDate.Valuedata AS OperDate1
+  , tmp1 AS    (   SELECT COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) AS OperDate1
                         , CASE WHEN MI_SheetWorkTime.amount<>0
-                               THEN MIDate_OperDate.Valuedata + (((trunc(MI_SheetWorkTime.amount)*60+(MI_SheetWorkTime.amount-trunc(MI_SheetWorkTime.amount))*100):: TVarChar || ' minute') :: INTERVAL)
-                               ELSE MIDate_OperDate.Valuedata::Date+ interval '24 hour' 
+                               THEN COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) + (((trunc(MI_SheetWorkTime.amount)*60+(MI_SheetWorkTime.amount-trunc(MI_SheetWorkTime.amount))*100):: TVarChar || ' minute') :: INTERVAL)
+                               ELSE COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate)  ::Date+ interval '24 hour' 
                           END AS OperDate2
                         , MovementLinkObject_Unit.ObjectId    AS UnitId
                         , MI_SheetWorkTime.ObjectId           AS PersonalId
@@ -125,9 +125,10 @@ BEGIN
                                                        AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
                                                        AND (MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Work() OR MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_WorkTime())
                                                                                         
-                      INNER JOIN MovementItem AS MI_SheetWorkTime_Child 
+                      LEFT JOIN MovementItem AS MI_SheetWorkTime_Child 
                                               ON MI_SheetWorkTime_Child.ParentId = MI_SheetWorkTime.Id
                                              AND MI_SheetWorkTime_Child.DescId = zc_MI_Child()
+                                             AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_WorkTime()
                       LEFT JOIN MovementItemDate AS MIDate_OperDate 
                                                  ON MIDate_OperDate.MovementItemId = MI_SheetWorkTime_Child.Id  
                                                 AND MIDate_OperDate.DescId = zc_MIDate_OperDate() 
@@ -344,7 +345,7 @@ BEGIN
                           , SUM(tmpALL.SummaPersonal):: Tfloat   AS SummaPersonal
                        
                      FROM ( SELECT CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE inDateStart END ::TDateTime AS Operdate1
-                                 , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateStart END ::TDateTime AS OperDate2
+                                 , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateEnd + interval '23 hour 59 minute' END ::TDateTime AS OperDate2
                                  , tmpMovementCheck.UnitId
                                  , tmpListPersonalAll.PersonalId
                                  , tmpListPersonalAll.PositionId
@@ -361,8 +362,8 @@ BEGIN
                                          AND tmpListPersonalAll.OperDate2 = tmpMovementCheck.OperDate2
                                          AND tmpListPersonalAll.UnitId = tmpMovementCheck.UnitId
                             WHERE tmpMovementCheck.SummaSale<>0
-                            GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1  ELSE inDateStart END 
-                                   , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateStart END
+                            GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE inDateStart END 
+                                   , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateEnd+ interval '23 hour 59 minute' END
                                    , tmpMovementCheck.UnitId
                                    , tmpListPersonalAll.PersonalId
                                    , tmpListPersonalAll.PositionId  
