@@ -1,32 +1,32 @@
 ﻿inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   ClientHeight = 387
-  ClientWidth = 1366
+  ClientWidth = 1362
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1382
-  ExplicitHeight = 425
+  ExplicitLeft = -572
+  ExplicitWidth = 1378
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1366
+    Width = 1362
     Height = 307
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 307
     ClientRectBottom = 307
-    ClientRectRight = 1366
+    ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1366
+      ExplicitWidth = 1362
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1366
+        Width = 1362
         Height = 307
-        ExplicitTop = -3
-        ExplicitWidth = 1366
+        ExplicitWidth = 1362
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -971,9 +971,9 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1366
+    Width = 1362
     Height = 54
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 60
@@ -1288,7 +1288,6 @@
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       Hint = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       ImageIndex = 21
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -1319,7 +1318,6 @@
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1080#1090#1086#1075#1080')'
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       ImageIndex = 19
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -1381,7 +1379,6 @@
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1073#1091#1093#1075'. '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1073#1091#1093#1075'. '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
       ImageIndex = 20
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'

@@ -43,8 +43,6 @@ type
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clStartDate: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
     clIsMain: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clName: TcxGridDBColumn;
@@ -52,7 +50,6 @@ type
     clGoodsName: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
     clGoodsKindCompleteName: TcxGridDBColumn;
-    clReceiptCostName: TcxGridDBColumn;
     clReceiptKindName: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
     spInsertUpdateReceiptChild: TdsdStoredProc;
@@ -63,7 +60,6 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     clReceiptCode: TcxGridDBColumn;
     Goods_ObjectChoiceForm: TOpenChoiceForm;
-    clValueCost: TcxGridDBColumn;
     clTaxExit: TcxGridDBColumn;
     bbStartDate: TdxBarControlContainerItem;
     bbEnd: TdxBarControlContainerItem;

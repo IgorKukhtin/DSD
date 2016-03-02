@@ -2,8 +2,6 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 460
   ClientWidth = 1000
-  ExplicitLeft = -227
-  ExplicitTop = -38
   ExplicitWidth = 1016
   ExplicitHeight = 495
   PixelsPerInch = 96
@@ -12,17 +10,17 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     Width = 1000
     Height = 434
     ExplicitWidth = 1000
-    ExplicitHeight = 470
+    ExplicitHeight = 434
     ClientRectBottom = 434
     ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1000
-      ExplicitHeight = 470
+      ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 1000
         Height = 434
         ExplicitWidth = 1000
-        ExplicitHeight = 470
+        ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -653,14 +651,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
