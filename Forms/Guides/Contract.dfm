@@ -809,7 +809,6 @@ object ContractForm: TContractForm
       object colInsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'
-        Visible = False
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 120
@@ -824,7 +823,6 @@ object ContractForm: TContractForm
       object colInsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
-        Visible = False
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
