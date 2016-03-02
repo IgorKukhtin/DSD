@@ -367,6 +367,14 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
+      object colContractSendName: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+        DataBinding.FieldName = 'ContractSendName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object clPersonalName: TcxGridDBColumn
         Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
         DataBinding.FieldName = 'PersonalName'
@@ -731,17 +739,20 @@ object ContractConditionValueForm: TContractConditionValueForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -814,17 +825,20 @@ object ContractConditionValueForm: TContractConditionValueForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InvNumber'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -836,6 +850,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProcList = <>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -843,6 +858,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'InfoMoneyChoiceForm'
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
@@ -850,27 +866,32 @@ object ContractConditionValueForm: TContractConditionValueForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyCode'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyCode'
         end
         item
           Name = 'InfoMoneyGroupId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupId'
         end
         item
           Name = 'InfoMoneyGroupName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
@@ -880,6 +901,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object JuridicalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'JuridicalChoiceForm'
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = ''
@@ -887,34 +909,40 @@ object ContractConditionValueForm: TContractConditionValueForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'OKPO'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OKPO'
           DataType = ftString
         end
         item
           Name = 'JuridicalCode'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalCode'
         end>
@@ -923,6 +951,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object ContractKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContractKindChoiceForm'
       FormName = 'TContractKindForm'
       FormNameParam.Value = ''
@@ -930,11 +959,13 @@ object ContractConditionValueForm: TContractConditionValueForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractKindName'
           DataType = ftString
@@ -944,6 +975,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object ContractConditionKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContractConditionKindChoiceForm'
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
@@ -967,6 +999,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PaidKindChoiceForm'
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
@@ -974,11 +1007,13 @@ object ContractConditionValueForm: TContractConditionValueForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1025,6 +1060,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
         end>
@@ -1034,6 +1070,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object actContractUnRead: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spContractUnRead
       StoredProcList = <
         item
@@ -1046,6 +1083,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object actContractInPartner: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spContractPartner
       StoredProcList = <
         item
@@ -1058,6 +1096,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object actContractRead: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spContractRead
       StoredProcList = <
         item
@@ -1070,6 +1109,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     object actContractClose: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spContractClose
       StoredProcList = <
         item
@@ -1088,6 +1128,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 256
     Top = 304
   end
@@ -1102,10 +1143,12 @@ object ContractConditionValueForm: TContractConditionValueForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 160
     Top = 160
   end
@@ -1144,18 +1187,21 @@ object ContractConditionValueForm: TContractConditionValueForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inInvNumber'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'InvNumber'
         DataType = ftString
@@ -1163,6 +1209,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inInvNumberArchive'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'InvNumberArchive'
         DataType = ftString
@@ -1170,6 +1217,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Comment'
         DataType = ftString
@@ -1177,12 +1225,14 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inBankAccount'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'BankAccount'
         DataType = ftString
       end
       item
         Name = 'inSigningDate'
+        Value = 'NULL'
         Component = ClientDataSet
         ComponentItem = 'SigningDate'
         DataType = ftDateTime
@@ -1190,6 +1240,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inStartDate'
+        Value = 'NULL'
         Component = ClientDataSet
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1197,6 +1248,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inEndDate'
+        Value = 'NULL'
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -1204,64 +1256,75 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalBasisId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'JuridicalBasisId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
       end
       item
         Name = 'inContractKindId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractKindId'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PaidKindId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item
         Name = 'inAreaId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'AreaId'
         ParamType = ptInput
       end
       item
         Name = 'inContractArticleId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractArticleId'
         ParamType = ptInput
       end
       item
         Name = 'inContractStateKindId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindId'
         ParamType = ptInput
       end
       item
         Name = 'inBankId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'BankId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 432
     Top = 176
   end
@@ -1272,6 +1335,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     Params = <
       item
         Name = 'inContractId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1283,6 +1347,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'outContractStateKindCode'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindCode'
       end
@@ -1291,6 +1356,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Value = Null
         DataType = ftString
       end>
+    PackSize = 1
     Left = 480
     Top = 104
   end
@@ -1301,6 +1367,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     Params = <
       item
         Name = 'inContractId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1312,6 +1379,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'outContractStateKindCode'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindCode'
       end
@@ -1320,6 +1388,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Value = Null
         DataType = ftString
       end>
+    PackSize = 1
     Left = 592
     Top = 128
   end
@@ -1330,6 +1399,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     Params = <
       item
         Name = 'inContractId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1341,6 +1411,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'outContractStateKindCode'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindCode'
       end
@@ -1349,6 +1420,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Value = Null
         DataType = ftString
       end>
+    PackSize = 1
     Left = 480
     Top = 248
   end
@@ -1359,6 +1431,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     Params = <
       item
         Name = 'inContractId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1370,6 +1443,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'outContractStateKindCode'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindCode'
       end
@@ -1378,6 +1452,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Value = Null
         DataType = ftString
       end>
+    PackSize = 1
     Left = 560
     Top = 216
   end

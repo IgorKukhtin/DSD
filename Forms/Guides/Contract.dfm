@@ -792,6 +792,20 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Width = 141
       end
+      object colContractSendName: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+        DataBinding.FieldName = 'ContractSendName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContractSendChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+        Width = 80
+      end
       object colInsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'
@@ -1969,6 +1983,30 @@ object ContractForm: TContractForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object ContractSendChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'ContractSendId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'ContractSendName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
     object ContractConditionKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2405,6 +2443,13 @@ object ContractForm: TContractForm
         Component = CDSContractCondition
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inContractSendId'
+        Value = Null
+        Component = CDSContractCondition
+        ComponentItem = 'ContractSendId'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 312
@@ -2419,8 +2464,8 @@ object ContractForm: TContractForm
       end>
     Params = <>
     PackSize = 1
-    Left = 570
-    Top = 381
+    Left = 498
+    Top = 413
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Contract'

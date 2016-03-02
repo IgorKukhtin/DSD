@@ -163,6 +163,8 @@ type
     cxLabel31: TcxLabel;
     edPersonalSigning: TcxButtonEdit;
     PersonalSigningGuides: TdsdGuides;
+    colContractSendName: TcxGridDBColumn;
+    actContractSendChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

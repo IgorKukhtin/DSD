@@ -76,7 +76,6 @@ BEGIN
  , tmpPosition AS (SELECT ObjectFloat_TaxService.ObjectId    AS PositionId
                        , ObjectFloat_TaxService.ValueData   AS TaxService
                   FROM ObjectFloat AS ObjectFloat_TaxService
-                  
                   WHERE ObjectFloat_TaxService.DescId = zc_ObjectFloat_Position_TaxService()
                  )
     
@@ -262,7 +261,7 @@ BEGIN
 -- считаем сколько сотр. с одинаковыми должнотсями и % выплат
  , tmpList4 AS (SELECT tmp.OperDate1, tmp.OperDate2
                    , tmp.UnitId
-                   --, tmp.PositionId
+                   , tmp.PositionId
                    , tmp.TaxService
                    , COUNT (*) AS PersonalCount
                 FROM ( SELECT tmpListPersonal.OperDate1,tmpListPersonal.OperDate2
@@ -279,6 +278,7 @@ BEGIN
                 GROUP BY tmp.OperDate1, tmp.OperDate2
                        , tmp.UnitId
                        , tmp.TaxService
+                       , tmp.positionid
               )
               
  , tmpListPersonalAll AS (SELECT tmpListPersonal.OperDate1, tmpListPersonal.OperDate2
@@ -295,7 +295,8 @@ BEGIN
                           LEFT JOIN tmplist4 ON tmplist4.OperDate1 = tmpListPersonal.OperDate1
                                             AND tmplist4.OperDate2 = tmpListPersonal.OperDate2
                                             AND tmplist4.UnitId   = tmpListPersonal.UnitId 
-                                            AND tmplist4.TaxService   = tmplist3.TaxService  
+                                            AND tmplist4.TaxService = tmplist3.TaxService  
+                                            AND tmplist4.PositionId = tmpListPersonal.PositionId
                     
                    )
                   

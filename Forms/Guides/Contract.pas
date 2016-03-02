@@ -200,6 +200,8 @@ type
     clTerm: TcxGridDBColumn;
     clEndDate_Term: TcxGridDBColumn;
     Panel1: TPanel;
+    colContractSendName: TcxGridDBColumn;
+    ContractSendChoiceForm: TOpenChoiceForm;
 
   private
     { Private declarations }

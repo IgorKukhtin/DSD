@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_ContractCondition(Integer, TFloat, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+                        
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
  INOUT ioId                        Integer   , -- ключ объекта <Условия договора>
@@ -10,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
     IN inContractConditionKindId   Integer   , -- Типы условий договоров 
     IN inBonusKindId               Integer   , -- Виды бонусов
     IN inInfoMoneyId               Integer   , -- Статьи назначения
+    IN inContractSendId            Integer   , -- Договор маркетинга
     IN inSession                   TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -44,6 +47,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_BonusKind(), ioId, inBonusKindId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_InfoMoney(), ioId, inInfoMoneyId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_ContractSend(), ioId, inContractSendId);   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
@@ -51,7 +56,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------

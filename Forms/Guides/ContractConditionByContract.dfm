@@ -68,6 +68,15 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         Options.Editing = False
         Width = 113
       end
+      object colContractSendName: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+        DataBinding.FieldName = 'ContractSendName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+        Options.Editing = False
+        Width = 80
+      end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'

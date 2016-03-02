@@ -119,6 +119,7 @@ type
     clIsStandart: TcxGridDBColumn;
     clIsUnique: TcxGridDBColumn;
     clIsPersonal: TcxGridDBColumn;
+    colContractSendName: TcxGridDBColumn;
   private
     { Private declarations }
   public
