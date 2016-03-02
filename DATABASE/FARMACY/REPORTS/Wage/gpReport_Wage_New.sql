@@ -444,13 +444,16 @@ BEGIN
                      , tmpALL.UnitId
                      , tmpALL.TaxService
                      , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE 0 END AS TaxServicePosition
-                     , CASE WHEN inIsDay = TRUE THEN tmpAll.TaxServicePersonal ELSE (tmpALL.TaxService * tmpALL.SummaWage)/tmpItogi.SummaWage END ::Tfloat AS TaxServicePersonal
+                     , CASE WHEN inIsDay = TRUE THEN tmpAll.TaxServicePersonal ELSE 
+                                                                                   ( CASE WHEN tmpItogi.SummaWage <> 0 THEN (tmpALL.TaxService * tmpALL.SummaWage)/tmpItogi.SummaWage ELSE 0 END) 
+                       END ::Tfloat AS TaxServicePersonal
                      , tmpALL.SummaSale
                      , tmpALL.SummaWage
                      , tmpALL.SummaPersonal
                      , tmpALL.isVip
                 FROM tmpUnion  AS tmpALL
                     LEFT JOIN tmpItogi ON tmpItogi.Operdate1 = tmpALL.Operdate1
+                                    --  AND tmpItogi.SummaWage <> 0
                )
 
 
@@ -500,3 +503,4 @@ $BODY$
 -- тест
 --select * from gpReport_Wage(inUnitId := 377605 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('07.01.2016')::TDateTime , inIsDay := 'False' , inisVipCheck := 'false' ,  inSession := '3');
 --order by PersonalName
+--select * from gpReport_Wage(inUnitId := 183292 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('29.02.2016')::TDateTime , inIsDay := 'False' , inisVipCheck := 'true' ,  inSession := '3');
