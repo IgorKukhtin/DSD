@@ -26,7 +26,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     object deStart: TcxDateEdit
       Left = 106
       Top = 10
-      EditValue = 42309d
+      EditValue = 42370d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
       Properties.InputKind = ikMask
@@ -39,7 +39,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     object deEnd: TcxDateEdit
       Left = 338
       Top = 10
-      EditValue = 42309d
+      EditValue = 42370d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
       Properties.InputKind = ikStandard
@@ -173,8 +173,10 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         Width = 306
       end
       object colisComplete: TcxGridDBColumn
-        Caption = #1047#1072#1087#1080#1089#1072#1085
+        Caption = #1057#1086#1093#1088#1072#1085#1077#1085
         DataBinding.FieldName = 'isComplete'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
@@ -258,6 +260,10 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -270,7 +276,15 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0

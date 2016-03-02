@@ -67,7 +67,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Width = 150
       end
       object clRetailName: TcxGridDBColumn
-        Caption = #1058#1086#1075#1088#1086#1074#1072#1103' '#1089#1077#1090#1100
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
         DataBinding.FieldName = 'RetailName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
