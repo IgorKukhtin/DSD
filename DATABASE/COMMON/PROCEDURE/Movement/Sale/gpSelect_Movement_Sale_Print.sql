@@ -490,7 +490,7 @@ BEGIN
            , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName,2) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.Филиалы 
            
            , MovementSale_Comment.ValueData        AS SaleComment 
-           , MovementOrder_Comment.ValueData       AS OrderComment
+           , CASE WHEN TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id

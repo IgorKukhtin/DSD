@@ -8,10 +8,12 @@ CREATE OR REPLACE FUNCTION  gpReport_Wage(
     IN inDateStart        TDateTime,  -- Дата начала
     IN inDateEnd          TDateTime,  -- Дата окончания
     IN inIsDay            Boolean  ,  -- группировать по дням
+    IN inisVipCheck       Boolean  ,  -- выделить продажи по вип
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-  Operdate            TDateTime, 
+  Operdate1           TDateTime, 
+  OperDate2           TDateTime, 
   DayOfWeekName       TVarChar, 
   UnitName            TVarChar, 
   PersonalName        TVarChar, 
@@ -22,7 +24,8 @@ RETURNS TABLE (
   TaxServicePersonal  TFloat,
   SummaSale           TFloat,
   SummaWage           TFloat,
-  SummaPersonal       TFloat
+  SummaPersonal       TFloat,
+  isVip               Boolean
  
 )
 AS
@@ -242,7 +245,8 @@ BEGIN
                     --                        AND tmplist4.PositionId   = tmpListPersonal.PositionId  
                    )
                    
-    SELECT tmpALL.Operdate
+    SELECT tmpALL.Operdate AS Operdate1
+         , tmpALL.Operdate AS Operdate2
          , tmpALL.DayOfWeekName
          , tmpALL.UnitName
          , tmpALL.PersonalName
@@ -253,6 +257,7 @@ BEGIN
          , tmpALL.SummaSale
          , tmpALL.SummaWage
          , tmpALL.SummaPersonal
+         , FALSE AS isVip
      
     FROM (
            SELECT CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate ELSE Null END ::TDateTime AS Operdate
@@ -300,7 +305,6 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
@@ -309,8 +313,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Wage(inUnitId := 375627 , inDateStart := ('01.09.2015')::TDateTime , inDateFinal := ('30.09.2015')::TDateTime ,  inSession := '3');
-
-
---select * from gpReport_Wage(inUnitId := 377605 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('31.01.2016')::TDateTime , inIsDay := 'False' ,  inSession := '3')
---where PersonalName like '%Блино%';
+-- select * from gpReport_Wage (inUnitId:= 377605, inDateStart:= ('01.01.2016') :: TDateTime, inDateEnd:= ('31.01.2016') :: TDateTime, inIsDay:= 'False', inisVipCheck:= 'false', inSession := '3') -- where PersonalName like '%Блино%';
