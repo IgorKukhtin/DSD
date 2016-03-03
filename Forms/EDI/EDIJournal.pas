@@ -180,6 +180,7 @@ type
     DateRegistered: TcxGridDBColumn;
     InvNumberRegistered: TcxGridDBColumn;
     clPersonalSigningName: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -6,7 +6,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ImportSettings_Email(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Host TVarChar, Port TVarChar, Mail TVarChar
-             , UserName TVarChar, PasswordValue TVarChar, Directory TVarChar
+             , UserName TVarChar, PasswordValue TVarChar, DirectoryMail TVarChar
+             , Id               Integer
+             , Code             Integer
+             , Name             TVarChar
+             , JuridicalId      Integer
+             , JuridicalCode    Integer
+             , JuridicalName    TVarChar
+             , ContractId       Integer
+             , ContractName     TVarChar
+             , DirectoryImport  TVarChar
               )
 AS
 $BODY$
@@ -24,7 +33,20 @@ BEGIN
           , ''                :: TVarChar AS Mail
           , 'Ashtu777@ua.fm'  :: TVarChar AS UserName
           , 'qsxqsxw1'        :: TVarChar AS PasswordValue
-          , '\inbox'          :: TVarChar AS Directory
+          , '\inbox'          :: TVarChar AS DirectoryMail
+
+          , gpSelect.Id
+          , gpSelect.Code
+          , gpSelect.Name
+          , gpSelect.JuridicalId
+          , Object_Juridical.ObjectCode AS JuridicalCode
+          , gpSelect.JuridicalName
+          , gpSelect.ContractId
+          , gpSelect.ContractName
+          , gpSelect.Directory AS DirectoryImport
+     FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
+     WHERE gpSelect.isErased = FALSE
     ;
   
 END;

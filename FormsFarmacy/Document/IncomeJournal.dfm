@@ -3,7 +3,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientHeight = 480
   ClientWidth = 831
   ExplicitWidth = 847
-  ExplicitHeight = 518
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -316,6 +316,12 @@ inherited IncomeJournalForm: TIncomeJournalForm
   inherited Panel: TPanel
     Width = 831
     ExplicitWidth = 831
+    inherited deStart: TcxDateEdit
+      EditValue = 42370d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42370d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -375,6 +381,25 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TIncomeForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actisDocument: TdsdExecStoredProc [23]
       Category = 'DSDLib'

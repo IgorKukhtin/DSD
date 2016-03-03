@@ -189,6 +189,7 @@ BEGIN
                                                   AND tmpMI_OrderPrice.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId =  zc_MI_Master()
+                     AND MovementItem.isErased =  FALSE
                    GROUP BY MovementItem.ObjectId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           , COALESCE (MIString_GLNCode.ValueData, '')

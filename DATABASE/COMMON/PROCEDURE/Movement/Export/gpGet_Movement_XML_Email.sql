@@ -39,7 +39,7 @@ BEGIN
      SELECT tmp.outFileName                      :: TVarChar AS Subject
           , ''                                   :: TBlob    AS Body
           , 'nikolaev.filial.alan@gmail.com'     :: TVarChar AS AddressFrom
-          , 'ashtu777@ua.fm'                     :: TVarChar AS AddressTo
+          , 'MIDA@KIVIT.COM.UA'                  :: TVarChar AS AddressTo
           , 'smtp.gmail.com'                     :: TVarChar AS Host
           , 465                                  :: Integer  AS Port
           , 'nikolaev.filial.alan@gmail.com'     :: TVarChar AS UserName
