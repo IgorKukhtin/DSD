@@ -2,8 +2,8 @@ inherited PriceListLoadForm: TPriceListLoadForm
   Caption = #1060#1086#1088#1084#1072' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
   ClientHeight = 399
   ClientWidth = 714
-  ExplicitWidth = 722
-  ExplicitHeight = 426
+  ExplicitWidth = 730
+  ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -59,8 +59,26 @@ inherited PriceListLoadForm: TPriceListLoadForm
           object colIsMoved: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1085#1077#1089#1077#1085#1086
             DataBinding.FieldName = 'IsMoved'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
+          end
+          object clInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object clInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
         end
       end

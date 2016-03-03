@@ -2,7 +2,6 @@ inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 668
   ClientWidth = 911
-  ExplicitTop = -10
   ExplicitWidth = 917
   ExplicitHeight = 696
   PixelsPerInch = 96
@@ -314,7 +313,7 @@ inherited ContractEditForm: TContractEditForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 80
+          Width = 97
         end
         object cContractConditionKindName: TcxGridDBColumn
           Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -329,14 +328,14 @@ inherited ContractEditForm: TContractEditForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 100
+          Width = 117
         end
         object clValue: TcxGridDBColumn
           Caption = #1047#1085#1072#1095#1077#1085#1080#1077
           DataBinding.FieldName = 'Value'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 44
+          Width = 64
         end
         object clccInfoMoneyName: TcxGridDBColumn
           Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -351,14 +350,29 @@ inherited ContractEditForm: TContractEditForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 87
+          Width = 103
+        end
+        object colContractSendName: TcxGridDBColumn
+          Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+          DataBinding.FieldName = 'ContractSendName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actContractSendChoiceForm
+              Default = True
+              Kind = bkEllipsis
+            end>
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+          Width = 70
         end
         object colComment: TcxGridDBColumn
           Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
           DataBinding.FieldName = 'Comment'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 59
+          Width = 92
         end
         object colisErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
@@ -683,7 +697,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 66
+    TabOrder = 65
     Width = 327
   end
   object edTerm: TcxCurrencyEdit [65]
@@ -693,7 +707,7 @@ inherited ContractEditForm: TContractEditForm
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 68
+    TabOrder = 67
     Width = 104
   end
   object cxLabel29: TcxLabel [66]
@@ -715,7 +729,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 72
+    TabOrder = 71
     Width = 217
   end
   object cxLabel31: TcxLabel [69]
@@ -1035,6 +1049,30 @@ inherited ContractEditForm: TContractEditForm
         end>
       Caption = 'actGetStateKindClose'
       ImageIndex = 13
+    end
+    object actContractSendChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ContractConditionCDS
+          ComponentItem = 'ContractSendId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ContractConditionCDS
+          ComponentItem = 'ContractSendName'
+          DataType = ftString
+        end>
+      isShowModal = False
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1945,6 +1983,13 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inContractSendId'
+        Value = Null
+        Component = ContractConditionCDS
+        ComponentItem = 'ContractSendId'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 736
@@ -1966,8 +2011,8 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 442
-    Top = 63
+    Left = 402
+    Top = 95
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -2247,7 +2292,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 512
+    Left = 504
     Top = 80
   end
   object DBViewAddOnCondition: TdsdDBViewAddOn

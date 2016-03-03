@@ -48,6 +48,7 @@ type
     clComment: TcxGridDBColumn;
     colisErased: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
+    colContractSendName: TcxGridDBColumn;
   private
     { Private declarations }
   public

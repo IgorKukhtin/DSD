@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar    
              , InfoMoneyId Integer, InfoMoneyName TVarChar 
+             , ContractSendId Integer, ContractSendName TVarChar 
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -23,30 +24,32 @@ BEGIN
 
    RETURN QUERY 
      SELECT 
-           Object_ContractCondition.Id        AS Id
-           
-         , ObjectFloat_Value.ValueData     AS Value  
-                                                        
-         , Object_Contract.Id          AS ContractId
-         , Object_Contract.ValueData   AS ContractName
+           Object_ContractCondition.Id          AS Id
+         , ObjectFloat_Value.ValueData          AS Value  
+
+         , Object_Contract.Id                   AS ContractId
+         , Object_Contract.ValueData            AS ContractName
 
          , Object_ContractConditionKind.Id          AS ContractConditionKindId
          , Object_ContractConditionKind.ValueData   AS ContractConditionKindName
 
-         , Object_BonusKind.Id          AS BonusKindId
-         , Object_BonusKind.ValueData   AS BonusKindName
+         , Object_BonusKind.Id                  AS BonusKindId
+         , Object_BonusKind.ValueData           AS BonusKindName
 
-         , Object_InfoMoney.Id          AS InfoMoneyId
-         , Object_InfoMoney.ValueData   AS InfoMoneyName
+         , Object_InfoMoney.Id                  AS InfoMoneyId
+         , Object_InfoMoney.ValueData           AS InfoMoneyName
          
-         , Object_ContractCondition.ValueData AS Comment
+         , Object_ContractSend.Id               AS ContractSendId
+         , Object_ContractSend.ValueData        AS ContractSendName
+
+         , Object_ContractCondition.ValueData   AS Comment
          
-         , Object_Insert.ValueData   AS InsertName
-         , Object_Update.ValueData   AS UpdateName
+         , Object_Insert.ValueData              AS InsertName
+         , Object_Update.ValueData              AS UpdateName
          , ObjectDate_Protocol_Insert.ValueData AS InsertDate
          , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
-         , Object_ContractCondition.isErased  AS isErased
+         , Object_ContractCondition.isErased    AS isErased
          
      FROM Object AS Object_ContractCondition
      
@@ -70,6 +73,11 @@ BEGIN
                               AND ObjectLink_ContractCondition_InfoMoney.DescId = zc_ObjectLink_ContractCondition_InfoMoney()
           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_ContractCondition_InfoMoney.ChildObjectId
            
+          LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractSend
+                               ON ObjectLink_ContractCondition_ContractSend.ObjectId = Object_ContractCondition.Id
+                              AND ObjectLink_ContractCondition_ContractSend.DescId = zc_ObjectLink_ContractCondition_ContractSend()
+          LEFT JOIN Object AS Object_ContractSend ON Object_ContractSend.Id = ObjectLink_ContractCondition_ContractSend.ChildObjectId
+
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()

@@ -1,18 +1,25 @@
 inherited RepriceJournalForm: TRepriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1087#1077#1088#1077#1086#1094#1077#1085#1086#1082
-  ExplicitWidth = 591
+  ClientWidth = 709
+  ExplicitWidth = 725
   ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
+    Width = 709
     Height = 251
+    ExplicitTop = 57
+    ExplicitHeight = 251
     ClientRectBottom = 251
+    ClientRectRight = 709
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 575
-      ExplicitHeight = 282
+      ExplicitHeight = 251
       inherited cxGrid: TcxGrid
+        Width = 709
         Height = 251
+        ExplicitHeight = 251
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -36,22 +43,46 @@ inherited RepriceJournalForm: TRepriceJournalForm
           object colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 89
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 94
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
-            Width = 252
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 221
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 93
+          end
+          object clInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object clInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
         end
       end
@@ -60,11 +91,11 @@ inherited RepriceJournalForm: TRepriceJournalForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 575
+    Width = 709
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -22
+    ExplicitWidth = 575
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -144,14 +175,14 @@ inherited RepriceJournalForm: TRepriceJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

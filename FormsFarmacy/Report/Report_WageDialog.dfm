@@ -83,9 +83,9 @@ object Report_WageDialogForm: TReport_WageDialogForm
     Left = 123
     Top = 67
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1074#1099#1076#1077#1083#1080#1090#1100' '#1042#1048#1055
+    Caption = #1087#1086' '#1042#1048#1055
     TabOrder = 8
-    Width = 110
+    Width = 62
   end
   object sbnisDay: TcxCheckBox
     Left = 11

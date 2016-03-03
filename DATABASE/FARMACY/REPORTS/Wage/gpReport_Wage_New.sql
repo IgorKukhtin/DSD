@@ -34,6 +34,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbTmpDate TDateTime;
+   DECLARE vbVipPositionId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -42,6 +43,9 @@ BEGIN
   
     -- % от выручки подразделения
     --vbTaxService:= (SELECT COALESCE(ObjectFloat.ValueData,0)::TFloat AS TaxService FROM ObjectFloat WHERE ObjectFloat.ObjectId = inUnitId  AND ObjectFloat.DescId = zc_ObjectFloat_Unit_TaxService());
+
+    -- ID должности вип
+    vbVipPositionId := (SELECT Object.Id From Object WHERE Object.DescId = zc_Object_Position() and (Object.ValueData Like '%ВИП%' OR Object.ValueData Like '%Вип%'));  
 
     CREATE TEMP TABLE tmpDate(OperDate  TDateTime, OperDate2  TDateTime) ON COMMIT DROP;
 
@@ -99,10 +103,10 @@ BEGIN
                   WHERE Object_Position.ValueData Like '%Менеджер%' OR Object_Position.ValueData Like '%менеджер%' 
                   ) 
 -- данные из табеля учета рабочего времени
-  , tmp1 AS    (   SELECT MIDate_OperDate.Valuedata AS OperDate1
+  , tmp1 AS    (   SELECT COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) AS OperDate1
                         , CASE WHEN MI_SheetWorkTime.amount<>0
-                               THEN MIDate_OperDate.Valuedata + (((trunc(MI_SheetWorkTime.amount)*60+(MI_SheetWorkTime.amount-trunc(MI_SheetWorkTime.amount))*100):: TVarChar || ' minute') :: INTERVAL)
-                               ELSE MIDate_OperDate.Valuedata::Date+ interval '24 hour' 
+                               THEN COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) + (((trunc(MI_SheetWorkTime.amount)*60+(MI_SheetWorkTime.amount-trunc(MI_SheetWorkTime.amount))*100):: TVarChar || ' minute') :: INTERVAL)
+                               ELSE COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate)  ::Date+ interval '24 hour' 
                           END AS OperDate2
                         , MovementLinkObject_Unit.ObjectId    AS UnitId
                         , MI_SheetWorkTime.ObjectId           AS PersonalId
@@ -125,9 +129,10 @@ BEGIN
                                                        AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
                                                        AND (MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Work() OR MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_WorkTime())
                                                                                         
-                      INNER JOIN MovementItem AS MI_SheetWorkTime_Child 
+                      LEFT JOIN MovementItem AS MI_SheetWorkTime_Child 
                                               ON MI_SheetWorkTime_Child.ParentId = MI_SheetWorkTime.Id
                                              AND MI_SheetWorkTime_Child.DescId = zc_MI_Child()
+                                             AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_WorkTime()
                       LEFT JOIN MovementItemDate AS MIDate_OperDate 
                                                  ON MIDate_OperDate.MovementItemId = MI_SheetWorkTime_Child.Id  
                                                 AND MIDate_OperDate.DescId = zc_MIDate_OperDate() 
@@ -259,7 +264,7 @@ BEGIN
 -- считаем сколько сотр. с одинаковыми должнотсями и % выплат
  , tmpList4 AS (SELECT tmp.OperDate1, tmp.OperDate2
                    , tmp.UnitId
-                   --, tmp.PositionId
+                   , tmp.PositionId
                    , tmp.TaxService
                    , COUNT (*) AS PersonalCount
                 FROM ( SELECT tmpListPersonal.OperDate1,tmpListPersonal.OperDate2
@@ -275,7 +280,7 @@ BEGIN
                       ) AS tmp
                 GROUP BY tmp.OperDate1, tmp.OperDate2
                        , tmp.UnitId
-                      -- , tmp.PositionId
+                       , tmp.PositionId
                        , tmp.TaxService
               )
               
@@ -294,7 +299,7 @@ BEGIN
                                             AND tmplist4.OperDate2 = tmpListPersonal.OperDate2
                                             AND tmplist4.UnitId   = tmpListPersonal.UnitId 
                                             AND tmplist4.TaxService   = tmplist3.TaxService  
-                    --                        AND tmplist4.PositionId   = tmpListPersonal.PositionId  
+                                            AND tmplist4.PositionId   = tmpListPersonal.PositionId  
                    )
                   
  , tmpMovementCheck AS (SELECT tmpListDate.OperDate1                                        AS OperDate1
@@ -344,7 +349,7 @@ BEGIN
                           , SUM(tmpALL.SummaPersonal):: Tfloat   AS SummaPersonal
                        
                      FROM ( SELECT CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE inDateStart END ::TDateTime AS Operdate1
-                                 , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateStart END ::TDateTime AS OperDate2
+                                 , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateEnd + interval '23 hour 59 minute' END ::TDateTime AS OperDate2
                                  , tmpMovementCheck.UnitId
                                  , tmpListPersonalAll.PersonalId
                                  , tmpListPersonalAll.PositionId
@@ -361,8 +366,8 @@ BEGIN
                                          AND tmpListPersonalAll.OperDate2 = tmpMovementCheck.OperDate2
                                          AND tmpListPersonalAll.UnitId = tmpMovementCheck.UnitId
                             WHERE tmpMovementCheck.SummaSale<>0
-                            GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1  ELSE inDateStart END 
-                                   , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateStart END
+                            GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE inDateStart END 
+                                   , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateEnd+ interval '23 hour 59 minute' END
                                    , tmpMovementCheck.UnitId
                                    , tmpListPersonalAll.PersonalId
                                    , tmpListPersonalAll.PositionId  
@@ -433,19 +438,36 @@ BEGIN
                     , SUM (tmpUnion.SummaPersonal) AS SummaPersonal
                     , SUM (tmpUnion.SummaSale)     AS SummaSale
                FROM tmpUnion
+               WHERE tmpUnion.isVip = False OR inisVipCheck = False
                GROUP BY tmpUnion.Operdate1
                       , tmpUnion.OperDate2
                ) 
-
-                    
+, tmpItogiVIP AS (SELECT tmpUnion.Operdate1, tmpUnion.OperDate2
+                    , SUM (tmpUnion.SummaWage)     AS SummaWage
+                    , SUM (tmpUnion.SummaPersonal) AS SummaPersonal
+                    , SUM (tmpUnion.SummaSale)     AS SummaSale
+               FROM tmpUnion
+               WHERE tmpUnion.isVip = TRUE
+               GROUP BY tmpUnion.Operdate1
+                      , tmpUnion.OperDate2
+               ) 
+                                  
 , tmpResult AS (SELECT tmpALL.Operdate1, tmpALL.OperDate2
                      , tmpALL.PersonalId
                      , tmpALL.PositionId 
                      , tmpALL.UnitId
                      , tmpALL.TaxService
                      , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE 0 END AS TaxServicePosition
-                     , CASE WHEN inIsDay = TRUE THEN tmpAll.TaxServicePersonal ELSE 
-                                                                                   ( CASE WHEN tmpItogi.SummaWage <> 0 THEN (tmpALL.TaxService * tmpALL.SummaWage)/tmpItogi.SummaWage ELSE 0 END) 
+                     , CASE WHEN inIsDay = TRUE 
+                            THEN tmpAll.TaxServicePersonal 
+                            ELSE 
+                                 CASE WHEN (inisVipCheck = False OR tmpAll.isVip = False) 
+                                      THEN ( CASE WHEN tmpItogi.SummaWage <> 0 THEN (tmpALL.TaxService * tmpALL.SummaWage)/tmpItogi.SummaWage ELSE 0 END) 
+                                      ELSE CASE WHEN (inisVipCheck = TRUE AND tmpAll.isVip = True)
+                                                THEN ( CASE WHEN COALESCE(tmpItogiVIP.SummaWage,0) <> 0 THEN (tmpALL.TaxService * tmpALL.SummaWage)/tmpItogiVIP.SummaWage ELSE 0 END) 
+                                                ELSE 0
+                                           END
+                                 END
                        END ::Tfloat AS TaxServicePersonal
                      , tmpALL.SummaSale
                      , tmpALL.SummaWage
@@ -453,15 +475,17 @@ BEGIN
                      , tmpALL.isVip
                 FROM tmpUnion  AS tmpALL
                     LEFT JOIN tmpItogi ON tmpItogi.Operdate1 = tmpALL.Operdate1
-                                    --  AND tmpItogi.SummaWage <> 0
+                    LEFT JOIN tmpItogiVIP ON tmpItogiVIP.Operdate1 = tmpALL.Operdate1
+                                         
+                                   
                )
 
 
 , tmpResult_position AS (SELECT tmpResult.Operdate1, tmpResult.OperDate2
-                              , tmpResult.PositionId
+                              , tmpResult.PositionId, tmpResult.isVip
                               , SUM(tmpResult.TaxServicePersonal)  AS  SumTaxService
                          FROM tmpResult
-                         GROUP BY tmpResult.Operdate1, tmpResult.OperDate2, tmpResult.PositionId
+                         GROUP BY tmpResult.Operdate1, tmpResult.OperDate2, tmpResult.PositionId, tmpResult.isVip
                         )
 
     SELECT tmpResult.Operdate1, tmpResult.OperDate2
@@ -479,6 +503,7 @@ BEGIN
     FROM tmpResult 
       LEFT JOIN tmpResult_position ON tmpResult_position.Operdate1 = tmpResult.Operdate1
                                   AND tmpResult_position.PositionId = tmpResult.PositionId
+                                  AND tmpResult_position.isVip = tmpResult.isVip
 
       LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpResult.PersonalId
       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpResult.PositionId 
@@ -503,4 +528,4 @@ $BODY$
 -- тест
 --select * from gpReport_Wage(inUnitId := 377605 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('07.01.2016')::TDateTime , inIsDay := 'False' , inisVipCheck := 'false' ,  inSession := '3');
 --order by PersonalName
---select * from gpReport_Wage(inUnitId := 183292 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('29.02.2016')::TDateTime , inIsDay := 'False' , inisVipCheck := 'true' ,  inSession := '3');
+--select * from gpReport_Wage(inUnitId := 377605 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('07.01.2016')::TDateTime , inIsDay := 'False' , inisVipCheck := 'true' ,  inSession := '3');

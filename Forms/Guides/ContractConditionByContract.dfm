@@ -3,7 +3,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
   ClientHeight = 380
-  ClientWidth = 644
+  ClientWidth = 663
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object ContractConditionByContractForm: TContractConditionByContractForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 644
+    Width = 663
     Height = 354
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 644
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -50,7 +51,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 152
+        Width = 148
       end
       object clContractConditionKindName: TcxGridDBColumn
         Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -58,7 +59,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 175
+        Width = 152
       end
       object clInfoMoneyName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -66,21 +67,30 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 113
+        Width = 116
+      end
+      object colContractSendName: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+        DataBinding.FieldName = 'ContractSendName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+        Options.Editing = False
+        Width = 82
       end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Width = 72
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 77
+        Width = 79
       end
       object colisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

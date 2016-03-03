@@ -30,6 +30,15 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
+   -- !!!протокол через свойства конкретного объекта!!!
+   IF vbIsInsert=True 
+   THEN
+       -- сохранили свойство <Дата создания>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
+       -- сохранили свойство <Пользователь (создание)>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, inUserId);
+   END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -37,5 +46,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 02.03.16         * add Protocol_Insert
  27.11.15                                                                        *
 */

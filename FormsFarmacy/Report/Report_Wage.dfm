@@ -14,17 +14,17 @@ inherited Report_WageForm: TReport_WageForm
     Height = 247
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 894
+    ExplicitWidth = 982
     ExplicitHeight = 247
     ClientRectBottom = 247
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 894
+      ExplicitWidth = 982
       ExplicitHeight = 247
       inherited cxGrid: TcxGrid
         Width = 982
         Height = 247
-        ExplicitWidth = 894
+        ExplicitWidth = 982
         ExplicitHeight = 247
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -74,18 +74,25 @@ inherited Report_WageForm: TReport_WageForm
             DataBinding.FieldName = 'DayOfWeekName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 63
           end
           object colOperDate1: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1088#1072#1073'. '#1076#1085#1103
+            Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072
             DataBinding.FieldName = 'OperDate1'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy HH:MM'
+            Properties.EditFormat = 'dd.mm.yy HH:MM'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colOperDate2: TcxGridDBColumn
-            Caption = #1082#1086#1085'. '#1088#1072#1073'. '#1076#1085#1103
+            Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
             DataBinding.FieldName = 'OperDate2'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy HH:MM'
+            Properties.EditFormat = 'dd.mm.yyyy HH:MM'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -183,9 +190,7 @@ inherited Report_WageForm: TReport_WageForm
   inherited Panel: TPanel
     Width = 982
     Height = 32
-    ExplicitLeft = 24
-    ExplicitTop = 8
-    ExplicitWidth = 952
+    ExplicitWidth = 982
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
@@ -208,12 +213,12 @@ inherited Report_WageForm: TReport_WageForm
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 428
+      Left = 400
       Top = 7
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 518
+      Left = 490
       Top = 6
       Properties.Buttons = <
         item
@@ -239,7 +244,7 @@ inherited Report_WageForm: TReport_WageForm
       Top = 5
       Action = actisVipCheck
       TabOrder = 7
-      Width = 110
+      Width = 59
     end
   end
   inherited ActionList: TActionList
@@ -251,7 +256,7 @@ inherited Report_WageForm: TReport_WageForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1074#1099#1076#1077#1083#1080#1090#1100' '#1042#1048#1055
+      Caption = #1087#1086' '#1042#1048#1055
       Hint = #1074#1099#1076#1077#1083#1080#1090#1100' '#1042#1048#1055
       ShortCut = 116
       RefreshOnTabSetChanges = False

@@ -76,15 +76,14 @@ BEGIN
  , tmpPosition AS (SELECT ObjectFloat_TaxService.ObjectId    AS PositionId
                        , ObjectFloat_TaxService.ValueData   AS TaxService
                   FROM ObjectFloat AS ObjectFloat_TaxService
-                  
                   WHERE ObjectFloat_TaxService.DescId = zc_ObjectFloat_Position_TaxService()
                  )
     
 -- данные из табеля учета рабочего времени
-  , tmp1 AS    (   SELECT MIDate_OperDate.Valuedata AS OperDate1
+  , tmp1 AS    (   SELECT COALESCE (MIDate_OperDate.Valuedata, Movement.OperDate) AS OperDate1
                         , CASE WHEN MI_SheetWorkTime.amount<>0
-                               THEN MIDate_OperDate.Valuedata + (((trunc(MI_SheetWorkTime.amount)*60+(MI_SheetWorkTime.amount-trunc(MI_SheetWorkTime.amount))*100):: TVarChar || ' minute') :: INTERVAL)
-                               ELSE MIDate_OperDate.Valuedata::Date+ interval '24 hour' 
+                               THEN COALESCE (MIDate_OperDate.Valuedata, Movement.OperDate) + (((trunc(MI_SheetWorkTime.amount)*60+(MI_SheetWorkTime.amount-trunc(MI_SheetWorkTime.amount))*100):: TVarChar || ' minute') :: INTERVAL)
+                               ELSE COALESCE (MIDate_OperDate.Valuedata, Movement.OperDate) ::Date+ interval '24 hour' 
                           END AS OperDate2
                         , MovementLinkObject_Unit.ObjectId    AS UnitId
                         , MI_SheetWorkTime.ObjectId           AS PersonalId
@@ -107,9 +106,10 @@ BEGIN
                                                        AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
                                                        AND (MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Work() OR MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_WorkTime())
                                                                                         
-                      INNER JOIN MovementItem AS MI_SheetWorkTime_Child 
-                                              ON MI_SheetWorkTime_Child.ParentId = MI_SheetWorkTime.Id
-                                             AND MI_SheetWorkTime_Child.DescId = zc_MI_Child()
+                      LEFT JOIN MovementItem AS MI_SheetWorkTime_Child 
+                                             ON MI_SheetWorkTime_Child.ParentId = MI_SheetWorkTime.Id
+                                            AND MI_SheetWorkTime_Child.DescId = zc_MI_Child()
+                                            AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_WorkTime()
                       LEFT JOIN MovementItemDate AS MIDate_OperDate 
                                                  ON MIDate_OperDate.MovementItemId = MI_SheetWorkTime_Child.Id  
                                                 AND MIDate_OperDate.DescId = zc_MIDate_OperDate() 
@@ -261,7 +261,7 @@ BEGIN
 -- считаем сколько сотр. с одинаковыми должнотсями и % выплат
  , tmpList4 AS (SELECT tmp.OperDate1, tmp.OperDate2
                    , tmp.UnitId
-                   --, tmp.PositionId
+                   , tmp.PositionId
                    , tmp.TaxService
                    , COUNT (*) AS PersonalCount
                 FROM ( SELECT tmpListPersonal.OperDate1,tmpListPersonal.OperDate2
@@ -278,6 +278,7 @@ BEGIN
                 GROUP BY tmp.OperDate1, tmp.OperDate2
                        , tmp.UnitId
                        , tmp.TaxService
+                       , tmp.positionid
               )
               
  , tmpListPersonalAll AS (SELECT tmpListPersonal.OperDate1, tmpListPersonal.OperDate2
@@ -294,7 +295,8 @@ BEGIN
                           LEFT JOIN tmplist4 ON tmplist4.OperDate1 = tmpListPersonal.OperDate1
                                             AND tmplist4.OperDate2 = tmpListPersonal.OperDate2
                                             AND tmplist4.UnitId   = tmpListPersonal.UnitId 
-                                            AND tmplist4.TaxService   = tmplist3.TaxService  
+                                            AND tmplist4.TaxService = tmplist3.TaxService  
+                                            AND tmplist4.PositionId = tmpListPersonal.PositionId
                     
                    )
                   
@@ -343,7 +345,7 @@ BEGIN
                    , SUM(tmpALL.SummaWage) :: Tfloat AS SummaWage
                    , SUM(tmpALL.SummaPersonal) :: Tfloat AS SummaPersonal
               FROM  (SELECT CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE inDateStart END ::TDateTime AS Operdate1
-                          , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateStart   END ::TDateTime AS OperDate2
+                          , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateEnd+ interval '23 hour 59 minute'   END ::TDateTime AS OperDate2
                           , tmpMovementCheck.UnitId
                           , tmpListPersonalAll.PersonalId
                           , tmpListPersonalAll.PositionId
@@ -360,7 +362,7 @@ BEGIN
                                          AND tmpListPersonalAll.UnitId = tmpMovementCheck.UnitId
                      WHERE tmpMovementCheck.SummaSale<>0
                      GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE inDateStart END 
-                            , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateStart END
+                            , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateEnd+ interval '23 hour 59 minute' END
                             , tmpMovementCheck.UnitId   
                             , tmpListPersonalAll.PersonalId
                             , tmpListPersonalAll.PositionId 
@@ -375,8 +377,7 @@ BEGIN
                      , CASE WHEN inIsDay = TRUE THEN tmpAll.TaxServicePersonal ELSE 0 END
                      , CASE WHEN inIsDay = TRUE THEN tmpAll.TaxServicePosition ELSE 0 END
               )
-
-    
+     
                 SELECT tmpALL.Operdate1, tmpALL.OperDate2
                      , tmpALL.UnitId
                      , Object_Unit.ValueData         AS UnitName
@@ -414,3 +415,4 @@ $BODY$
 
 
 --select * from lpReport_WageVip(inUnitId := 377605 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('05.01.2016')::TDateTime , inIsDay := 'false' ,  inSession := '3')
+--where PersonalName like '%Блино%';

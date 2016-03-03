@@ -13,6 +13,8 @@ RETURNS TABLE (Id Integer
              , TotalSumm TFloat
              , UnitId Integer
              , UnitName TVarChar
+             , GUID TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
               )
 
 AS
@@ -20,18 +22,42 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
     RETURN QUERY
-        SELECT
-            Movement_Reprice.Id
-          , Movement_Reprice.InvNumber
-          , Movement_Reprice.OperDate
-          , Movement_Reprice.TotalSumm
-          , Movement_Reprice.UnitId
-          , Movement_Reprice.UnitName
-        FROM
-            Movement_Reprice_View AS Movement_Reprice
-        WHERE
-            DATE_TRUNC ('DAY', Movement_Reprice.OperDate) BETWEEN inStartDate AND inEndDate
-        ORDER BY InvNumber;
+
+    SELECT       
+        Movement.Id
+      , Movement.InvNumber
+      , Movement.OperDate
+      , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
+      , MovementLinkObject_Unit.ObjectId                      AS UnitId
+      , Object_Unit.ValueData                                 AS UnitName
+      , MovementString_GUID.ValueData                         AS GUID
+
+      , Object_Insert.ValueData              AS InsertName
+      , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+    FROM Movement 
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+        LEFT JOIN Object AS Object_Unit 
+                         ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+        LEFT OUTER JOIN MovementString AS MovementString_GUID
+                                       ON MovementString_GUID.MovementId = Movement.Id
+                                      AND MovementString_GUID.DescId = zc_MovementString_Comment()
+
+        LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                             ON ObjectDate_Protocol_Insert.ObjectId = Movement.Id
+                            AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+        LEFT JOIN ObjectLink AS ObjectLink_Insert
+                             ON ObjectLink_Insert.ObjectId = Movement.Id
+                            AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId  
+
+    WHERE Movement.DescId = zc_Movement_Reprice()
+      AND DATE_TRUNC ('DAY', Movement.OperDate) BETWEEN inStartDate AND inEndDate
+    ORDER BY Movement.InvNumber;
 
 END;
 $BODY$
@@ -42,5 +68,8 @@ ALTER FUNCTION gpSelect_Movement_Reprice (TDateTime, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 02.03.16         * без вьюхи + св-ва протокола
  27.11.15                                                                        *
 */
+
+--select * from gpSelect_Movement_Reprice(inStartDate := ('27.02.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime ,  inSession := '3');

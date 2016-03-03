@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , AreaId Integer, AreaName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
@@ -32,6 +33,9 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyGroupCode_ch Integer, InfoMoneyGroupName_ch TVarChar
              , InfoMoneyDestinationCode_ch Integer, InfoMoneyDestinationName_ch TVarChar
              , InfoMoneyId_ch Integer, InfoMoneyCode_ch Integer, InfoMoneyName_ch TVarChar
+
+             , ContractSendId Integer, ContractSendName TVarChar 
+
              , isDefault Boolean, isStandart Boolean
              , isPersonal Boolean, isUnique Boolean
              , isErased Boolean 
@@ -111,6 +115,9 @@ BEGIN
        , View_InfoMoney_ContractCondition.InfoMoneyId   AS InfoMoneyId_ch
        , View_InfoMoney_ContractCondition.InfoMoneyCode AS InfoMoneyCode_ch
        , View_InfoMoney_ContractCondition.InfoMoneyName AS InfoMoneyName_ch
+
+       , Object_ContractSend.Id               AS ContractSendId
+       , Object_ContractSend.ValueData        AS ContractSendName
 
        , COALESCE (ObjectBoolean_Default.ValueData, False)   AS isDefault
        , COALESCE (ObjectBoolean_Standart.ValueData, False)  AS isStandart
@@ -206,6 +213,12 @@ BEGIN
                             AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
         LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractSend
+                             ON ObjectLink_ContractCondition_ContractSend.ObjectId = tmpContractCondition.ContractConditionId
+                            AND ObjectLink_ContractCondition_ContractSend.DescId = zc_ObjectLink_ContractCondition_ContractSend()
+        LEFT JOIN Object AS Object_ContractSend ON Object_ContractSend.Id = ObjectLink_ContractCondition_ContractSend.ChildObjectId
+
+
         LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                               ON ObjectFloat_Value.ObjectId = tmpContractCondition.ContractConditionId
                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
@@ -226,6 +239,7 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.03.16         *
  23.05.14         * add zc_ObjectBoolean_Contract_Personal
                         zc_ObjectBoolean_Contract_Unique
  20.05.14                                        * !!!ContractKindName - ‚ÒÂ„‰‡!!!
