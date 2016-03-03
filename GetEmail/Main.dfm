@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'MainForm'
-  ClientHeight = 205
-  ClientWidth = 447
+  ClientHeight = 337
+  ClientWidth = 666
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +11,7 @@ object MainForm: TMainForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object BitBtn1: TBitBtn
@@ -41,5 +42,22 @@ object MainForm: TMainForm
     ConvertPreamble = True
     Left = 120
     Top = 40
+  end
+  object spSelect: TdsdStoredProc
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 40
+    Top = 8
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 40
+    Top = 56
   end
 end

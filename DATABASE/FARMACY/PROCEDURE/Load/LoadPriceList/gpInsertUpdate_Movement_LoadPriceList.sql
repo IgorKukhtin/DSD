@@ -35,10 +35,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
 )
 RETURNS VOID AS
 $BODY$
+   DECLARE vbUserId Integer;
+
    DECLARE vbLoadPriceListId Integer;
    DECLARE vbLoadPriceListItemsId Integer;
    DECLARE vbGoodsId Integer;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+   vbUserId:= lpGetUserBySession (inSession);
 	
   IF COALESCE(inPrice, 0) = 0 THEN 
      RETURN;
@@ -73,8 +78,10 @@ BEGIN
    WHERE JuridicalId = inJuridicalId AND OperDate = Current_Date AND COALESCE(ContractId, 0) = inContractId;
 
   IF COALESCE(vbLoadPriceListId, 0) = 0 THEN
-     INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice)
-             VALUES(inJuridicalId, inContractId, Current_Date, inNDSinPrice);
+     INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice, UserId_Insert, Date_Insert)
+             VALUES(inJuridicalId, inContractId, Current_Date, inNDSinPrice, vbUserId, CURRENT_TIMESTAMP);
+  ELSE
+     UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;
   END IF;
 
   SELECT Id INTO vbLoadPriceListItemsId 

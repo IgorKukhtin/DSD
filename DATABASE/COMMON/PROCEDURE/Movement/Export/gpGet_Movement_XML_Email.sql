@@ -36,16 +36,26 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     SELECT tmp.outFileName          :: TVarChar AS Subject
+     SELECT tmp.outFileName                      :: TVarChar AS Subject
+          , ''                                   :: TBlob    AS Body
+          , 'nikolaev.filial.alan@gmail.com'     :: TVarChar AS AddressFrom
+          , 'ashtu777@ua.fm'                     :: TVarChar AS AddressTo
+          , 'smtp.gmail.com'                     :: TVarChar AS Host
+          , 465                                  :: Integer  AS Port
+          , 'nikolaev.filial.alan@gmail.com'     :: TVarChar AS UserName
+          , 'nikolaevfilialalan'                 :: TVarChar AS Password -- '24447183'
+
+     FROM gpGet_Movement_XML_FileName (inMovementId, inSession) AS tmp;
+/*     SELECT tmp.outFileName          :: TVarChar AS Subject
           , ''                       :: TBlob    AS Body
           , '24447183@ukr.net'       :: TVarChar AS AddressFrom
-          , 'ashtu777@ua.fm'            :: TVarChar AS AddressTo
+          , 'ashtu777@ua.fm'         :: TVarChar AS AddressTo
           , 'smtp.ukr.net'           :: TVarChar AS Host
           , 465                      :: Integer  AS Port
           , '24447183@ukr.net'       :: TVarChar AS UserName
           , 'vas6ok'                 :: TVarChar AS Password -- '24447183'
 
-     FROM gpGet_Movement_XML_FileName (inMovementId, inSession) AS tmp;
+     FROM gpGet_Movement_XML_FileName (inMovementId, inSession) AS tmp;*/
 /*
      SELECT tmp.outFileName          :: TVarChar AS Subject
           , ''                       :: TBlob    AS Body

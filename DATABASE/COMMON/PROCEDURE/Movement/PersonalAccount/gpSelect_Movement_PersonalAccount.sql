@@ -66,7 +66,6 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Movement_PersonalAccount (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
@@ -75,4 +74,4 @@ ALTER FUNCTION gpSelect_Movement_PersonalAccount (TDateTime, TDateTime, Boolean,
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalAccount (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_PersonalAccount (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

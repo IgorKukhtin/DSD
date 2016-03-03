@@ -14,8 +14,6 @@ uses
 
 type
   TQualityForm = class(TAncestorGuidesForm)
-    ProtocolOpenForm: TdsdOpenForm;
-    bbProtocolOpenForm: TdxBarButton;
     clTradeMarkName: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
     clNumberPrint: TcxGridDBColumn;

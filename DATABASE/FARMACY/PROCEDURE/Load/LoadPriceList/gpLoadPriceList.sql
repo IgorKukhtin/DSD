@@ -25,7 +25,7 @@ BEGIN
          , COALESCE(LoadPriceList.ContractId, 0) INTO vbOperDate, vbJuridicalId, vbContractId
       FROM LoadPriceList WHERE LoadPriceList.Id = inId;
 
-     UPDATE LoadPriceList SET isMoved = true WHERE Id = inId;
+     UPDATE LoadPriceList SET isMoved = true, UserId_Update = vbUserId, Date_Update = CURRENT_TIMESTAMP WHERE Id = inId;
 
      -- Если прайс за этот день, юрлицу и договору не найден, то добавляем. А если найден, то сохраняем ИД
      SELECT

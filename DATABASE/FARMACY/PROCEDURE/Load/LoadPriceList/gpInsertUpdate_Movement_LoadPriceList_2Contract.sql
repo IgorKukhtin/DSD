@@ -27,6 +27,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList_2Contract(
 )
 RETURNS VOID AS
 $BODY$
+    DECLARE vbUserId Integer;
+
     DECLARE vbLoadPriceListId1 Integer;
     DECLARE vbLoadPriceListItemsId1 Integer;
     DECLARE vbLoadPriceListId2 Integer;
@@ -35,6 +37,10 @@ $BODY$
     DECLARE vbPriceOriginal TFloat;
     DECLARE vbIsSpecCondition Boolean;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+   vbUserId:= lpGetUserBySession (inSession);
+
 	
     IF COALESCE(inPrice1, 0) = 0 AND COALESCE(inPrice2, 0) = 0 THEN 
         RETURN;
@@ -91,8 +97,10 @@ BEGIN
           AND COALESCE(ContractId, 0) = inContractId1;
 
         IF COALESCE(vbLoadPriceListId1, 0) = 0 THEN
-            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice)
-            VALUES(inJuridicalId, inContractId1, Current_Date, inNDSinPrice);
+            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice, UserId_Insert, Date_Insert)
+            VALUES(inJuridicalId, inContractId1, Current_Date, inNDSinPrice, vbUserId, CURRENT_TIMESTAMP);
+        ELSE
+           UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId1;
         END IF;
 
         SELECT Id INTO vbLoadPriceListItemsId1
@@ -109,8 +117,10 @@ BEGIN
           AND COALESCE(ContractId, 0) = inContractId2;
           
         IF COALESCE(vbLoadPriceListId2, 0) = 0 THEN
-            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice)
-            VALUES(inJuridicalId, inContractId2, Current_Date, inNDSinPrice);
+            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice, UserId_Insert, Date_Insert)
+            VALUES(inJuridicalId, inContractId2, Current_Date, inNDSinPrice, vbUserId, CURRENT_TIMESTAMP);
+        ELSE
+            UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId2;
         END IF;
         SELECT Id INTO vbLoadPriceListItemsId2 
         FROM LoadPriceListItem 
