@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, TVarChar, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, Boolean, TVarChar, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TBlob, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer,Integer, Integer, Boolean, TVarChar, TBlob, TVarChar, TVarChar, Tfloat, TVarchar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
@@ -12,17 +14,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
     IN inContractId              Integer   ,    -- ссылка на 
     IN inFileTypeId              Integer   ,    -- ссылка на 
     IN inImportTypeId            Integer   ,    -- ссылка на  
+    IN inContactPersonId         Integer   ,    -- ссылка на контактное лицо
     IN inStartRow                Integer   ,    -- 
     IN inHDR                     Boolean   ,    -- 
     IN inDirectory               TVarChar  ,    --  
     IN inQuery                   TBlob     , 
+    IN inStartTime               TVarChar ,
+    IN inEndTime                 TVarChar ,
+    IN inTime                    TFloat    ,
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
-
+   DECLARE vbStartTime TDateTime;  
+   DECLARE vbEndTime TDateTime;  
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportSettings());
@@ -48,12 +55,32 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_FileType(), ioId, inFileTypeId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ImportType(), ioId, inImportTypeId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ContactPerson(), ioId, inContactPersonId);
+
+
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ImportSettings_HDR(), ioId, inHDR);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ImportSettings_StartRow(), ioId, inStartRow);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ImportSettings_Time(), ioId, inTime);
+
+   IF COALESCE(inStartTime,'') <> '' 
+   THEN 
+       vbStartTime:= ( '' ||CURRENT_DATE::Date || ' '||inStartTime ::Time):: TDateTime;
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_ImportSettings_StartTime(), ioId, vbStartTime);
+   END IF;
+   IF COALESCE(inEndTime,'') <> '' 
+   THEN 
+       vbEndTime  := ( '' ||CURRENT_DATE::Date || ' '||inEndTime ::Time):: TDateTime;
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_ImportSettings_EndTime(), ioId, vbEndTime);
+   END IF;
+   
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ImportSettings_Directory(), ioId, inDirectory);
@@ -65,13 +92,14 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TBlob, TVarchar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TBlob, TVarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.03.16         *
  16.09.14                         * 
  09.09.14                         * 
  02.07.14         * 

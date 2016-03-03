@@ -12,6 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ImportTypeId Integer, ImportTypeName TVarChar,
                StartRow Integer, HDR Boolean, 
                Directory TVarChar, Query TBlob,
+               StartTime TVarChar, EndTime TVarChar, CheckTime TFloat,
+               ContactPersonId Integer, ContactPersonName TVarChar,
+               ContactPersonMail TVarChar,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -41,10 +44,35 @@ BEGIN
            , Object_ImportSettings_View.HDR
            , Object_ImportSettings_View.Directory
            , Object_ImportSettings_View.Query 
-           
+
+           , (CASE WHEN COALESCE(ObjectDate_StartTime.ValueData, zc_DateStart()) <> zc_DateStart() THEN (ObjectDate_StartTime.ValueData:: Time) END)   ::TVarChar  AS StartTime
+           , (CASE WHEN COALESCE(ObjectDate_EndTime.ValueData, zc_DateStart()) <> zc_DateStart() THEN (ObjectDate_EndTime.ValueData:: Time) END)   ::TVarChar  AS EndTime
+           , ObjectFloat_Time.ValueData         AS CheckTime
+           , Object_ContactPerson.Id            AS ContactPersonId
+           , Object_ContactPerson.ValueData     AS ContactPersonName
+           , COALESCE(ObjectString_Mail.ValueData,'')::TVarChar  AS ContactPersonMail
+
            , Object_ImportSettings_View.isErased
            
-       FROM Object_ImportSettings_View;
+       FROM Object_ImportSettings_View
+           LEFT JOIN ObjectDate AS ObjectDate_StartTime 
+                                ON ObjectDate_StartTime.ObjectId = Object_ImportSettings_View.Id
+                               AND ObjectDate_StartTime.DescId = zc_ObjectDate_ImportSettings_StartTime()
+           LEFT JOIN ObjectDate AS ObjectDate_EndTime 
+                                ON ObjectDate_EndTime.ObjectId = Object_ImportSettings_View.Id
+                               AND ObjectDate_EndTime.DescId = zc_ObjectDate_ImportSettings_EndTime()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Time
+                                 ON ObjectFloat_Time.ObjectId = Object_ImportSettings_View.Id
+                                AND ObjectFloat_Time.DescId = zc_ObjectFloat_ImportSettings_Time()
+           
+           LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_ContactPerson
+                                ON ObjectLink_ImportSettings_ContactPerson.ObjectId = Object_ImportSettings_View.Id
+                               AND ObjectLink_ImportSettings_ContactPerson.DescId = zc_ObjectLink_ImportSettings_ContactPerson()
+           LEFT JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = ObjectLink_ImportSettings_ContactPerson.ChildObjectId   
+           LEFT JOIN ObjectString AS ObjectString_Mail
+                                  ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
+                                 AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
+;
   
 END;
 $BODY$
@@ -56,9 +84,10 @@ ALTER FUNCTION gpSelect_Object_ImportSettings(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.03.16         *
  02.07.14         *
 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_ImportSettings ('2')
+--SELECT * FROM gpSelect_Object_ImportSettings ('2')

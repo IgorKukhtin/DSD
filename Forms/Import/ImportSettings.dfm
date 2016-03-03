@@ -4,8 +4,8 @@ inherited ImportSettingsForm: TImportSettingsForm
   ClientWidth = 1184
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1192
-  ExplicitHeight = 366
+  ExplicitWidth = 1200
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -35,11 +35,13 @@ inherited ImportSettingsForm: TImportSettingsForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
+            HeaderAlignmentVert = vaCenter
             Width = 34
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
+            HeaderAlignmentVert = vaCenter
             Width = 97
           end
           object clDirectory: TcxGridDBColumn
@@ -52,6 +54,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            HeaderAlignmentVert = vaCenter
             Width = 84
           end
           object clJuridicalName: TcxGridDBColumn
@@ -65,6 +68,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 67
           end
           object clContractName: TcxGridDBColumn
@@ -78,6 +82,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 61
           end
           object clFileTypeName: TcxGridDBColumn
@@ -90,6 +95,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object clImportTypeName: TcxGridDBColumn
@@ -103,11 +109,13 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = False
+            HeaderAlignmentVert = vaCenter
             Width = 56
           end
           object clStartRow: TcxGridDBColumn
             Caption = #8470' '#1089#1090#1088#1086#1082#1080' '#1076#1083#1103' Excel'
             DataBinding.FieldName = 'StartRow'
+            HeaderAlignmentVert = vaCenter
             Width = 71
           end
           object clQuery: TcxGridDBColumn
@@ -115,16 +123,66 @@ inherited ImportSettingsForm: TImportSettingsForm
             DataBinding.FieldName = 'Query'
             PropertiesClassName = 'TcxBlobEditProperties'
             Properties.BlobPaintStyle = bpsText
+            HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object clHDR: TcxGridDBColumn
             DataBinding.FieldName = 'HDR'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 46
+          end
+          object clStartTime: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1085#1072#1095'.  '#1087#1088#1086#1074#1077#1088#1082#1080
+            DataBinding.FieldName = 'StartTime'
+            PropertiesClassName = 'TcxTimeEditProperties'
+            Properties.TimeFormat = tfHourMin
+            Properties.UseLeftAlignmentOnEditing = False
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1090#1080#1074#1085#1086#1081' '#1087#1088#1086#1074#1077#1088#1082#1080
+            Width = 77
+          end
+          object clEndTime: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1086#1082#1086#1085'. '#1087#1088#1086#1074#1077#1088#1082#1080
+            DataBinding.FieldName = 'EndTime'
+            PropertiesClassName = 'TcxTimeEditProperties'
+            Properties.TimeFormat = tfHourMin
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1090#1080#1074#1085#1086#1081' '#1087#1088#1086#1074#1077#1088#1082#1080
+            Width = 83
+          end
+          object clCheckTime: TcxGridDBColumn
+            Caption = #1055#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1100' ('#1084#1080#1085'.)'
+            DataBinding.FieldName = 'CheckTime'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057' '#1082#1072#1082#1086#1081' '#1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100#1102' '#1087#1088#1086#1074#1077#1088#1103#1090#1100' '#1087#1086#1095#1090#1091' '#1074' '#1072#1082#1090#1080#1074#1085#1086#1084' '#1087#1077#1088#1080#1086#1076#1077', '#1084#1080#1085
+            Width = 99
+          end
+          object clContactPersonName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'ContactPersonName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContactPersonChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clContactPersonMail: TcxGridDBColumn
+            Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
+            DataBinding.FieldName = 'ContactPersonMail'
+            Options.Editing = False
+            Width = 70
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
+            HeaderAlignmentVert = vaCenter
             Width = 53
           end
         end
@@ -374,6 +432,37 @@ inherited ImportSettingsForm: TImportSettingsForm
         end>
       isShowModal = True
     end
+    object ContactPersonChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContactPersonChoiceForm'
+      FormName = 'TContactPersonForm'
+      FormNameParam.Value = 'TContactPersonForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContactPersonId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContactPersonName'
+          DataType = ftString
+        end
+        item
+          Name = 'Mail'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContactPersonMail'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -469,7 +558,6 @@ inherited ImportSettingsForm: TImportSettingsForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
-      AfterScrollTimerInterval = 500
       DataSet = MasterCDS
     end
   end
@@ -625,6 +713,13 @@ inherited ImportSettingsForm: TImportSettingsForm
         ParamType = ptInput
       end
       item
+        Name = 'inContactPersonId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContactPersonId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inStartRow'
         Value = Null
         Component = MasterCDS
@@ -654,6 +749,29 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'Query'
         DataType = ftWideString
         ParamType = ptInput
+      end
+      item
+        Name = 'inStartTime'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StartTime'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndTime'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EndTime'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inTime'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CheckTime'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 232
@@ -661,7 +779,7 @@ inherited ImportSettingsForm: TImportSettingsForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 624
+    Left = 632
     Top = 64
   end
   object ChildCDS: TClientDataSet
