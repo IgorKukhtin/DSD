@@ -3,9 +3,9 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -181
+  ExplicitLeft = -511
   ExplicitWidth = 1300
-  ExplicitHeight = 491
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -443,6 +443,21 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095
+            DataBinding.FieldName = 'Id'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
         end
       end
