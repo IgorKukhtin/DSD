@@ -80,6 +80,22 @@ inherited PriceListLoadForm: TPriceListLoadForm
             Options.Editing = False
             Width = 78
           end
+          object clUpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object clUpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
         end
       end
     end

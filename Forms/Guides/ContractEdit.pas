@@ -13,7 +13,7 @@ uses
   cxTextEdit, dsdDB, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore,
   dsdAddOn, Vcl.StdCtrls, cxButtons, cxInplaceContainer, cxVGrid, cxDBVGrid,
   Document, dxBarExtItems, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox, cxImageComboBox;
 
 type
   TContractEditForm = class(TAncestorEditDialogForm)

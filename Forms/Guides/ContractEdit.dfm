@@ -362,10 +362,85 @@ inherited ContractEditForm: TContractEditForm
               Default = True
               Kind = bkEllipsis
             end>
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
           Width = 70
+        end
+        object colContractStateKindCode_Send: TcxGridDBColumn
+          Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
+          DataBinding.FieldName = 'ContractStateKindCode_Send'
+          PropertiesClassName = 'TcxImageComboBoxProperties'
+          Properties.Alignment.Horz = taLeftJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.Images = dmMain.ImageList
+          Properties.Items = <
+            item
+              Description = #1055#1086#1076#1087#1080#1089#1072#1085
+              ImageIndex = 12
+              Value = 1
+            end
+            item
+              Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+              ImageIndex = 11
+              Value = 2
+            end
+            item
+              Description = #1047#1072#1074#1077#1088#1096#1077#1085
+              ImageIndex = 13
+              Value = 3
+            end
+            item
+              Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+              ImageIndex = 66
+              Value = 4
+            end>
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 67
+        end
+        object colContractTagName_Send: TcxGridDBColumn
+          Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
+          DataBinding.FieldName = 'ContractTagName_Send'
+          Visible = False
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 120
+        end
+        object colInfoMoneyCode_Send: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1059#1055
+          DataBinding.FieldName = 'InfoMoneyCode_Send'
+          Visible = False
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 120
+        end
+        object colInfoMoneyName_Send: TcxGridDBColumn
+          Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+          DataBinding.FieldName = 'InfoMoneyName_Send'
+          Visible = False
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 120
+        end
+        object colJuridicalCode_Send: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
+          DataBinding.FieldName = 'JuridicalCode_Send'
+          Visible = False
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 120
+        end
+        object colJuridicalName_Send: TcxGridDBColumn
+          Caption = #1070#1088'. '#1083#1080#1094#1086
+          DataBinding.FieldName = 'JuridicalName_Send'
+          Visible = False
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 120
         end
         object colComment: TcxGridDBColumn
           Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -697,7 +772,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 65
+    TabOrder = 64
     Width = 327
   end
   object edTerm: TcxCurrencyEdit [65]
@@ -729,7 +804,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 71
+    TabOrder = 69
     Width = 217
   end
   object cxLabel31: TcxLabel [69]
@@ -1070,6 +1145,20 @@ inherited ContractEditForm: TContractEditForm
           Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractSendName'
+          DataType = ftString
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
           DataType = ftString
         end>
       isShowModal = False
