@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, OperDate TDateTime
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
              , isAllGoodsConcat Boolean, NDSinPrice Boolean, isMoved Boolean)
 
 AS
@@ -31,6 +32,9 @@ BEGIN
            
            , Object_User_Insert.ValueData   AS InsertName
            , LoadPriceList.Date_Insert      AS InsertDate
+
+           , Object_User_Update.ValueData   AS UpdateName
+           , LoadPriceList.Date_Update      AS UpdateDate
           
            , LoadPriceList.isAllGoodsConcat           
            , LoadPriceList.NDSinPrice           
@@ -39,8 +43,8 @@ BEGIN
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
 
-            LEFT JOIN Object AS Object_User_Insert ON Object_User_Insert.Id = LoadPriceList.UserId_Insert;
-;
+            LEFT JOIN Object AS Object_User_Insert ON Object_User_Insert.Id = LoadPriceList.UserId_Insert
+            LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update;
 
 END;
 $BODY$

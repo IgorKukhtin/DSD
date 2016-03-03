@@ -321,6 +321,11 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Founder(), 'zc_ObjectFloat_Founder_Limit', 'Лимит, грн' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Founder_Limit');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ImportSettings_Time() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ImportSettings_Time'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ImportSettings(), 'zc_ObjectFloat_ImportSettings_Time', 'Периодичность проверки почты в активном периоде, мин' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ImportSettings_Time');
+
+
 
 --!!! АПТЕКА
 
@@ -419,6 +424,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 03.03.16         * zc_ObjectFloat_ImportSettings_Time
  27.09.15                                                                       *zc_ObjectFloat_ReportSoldParams_PlanAmount
  17.09.15         * add zc_ObjectFloat_GoodsPropertyValue_BoxCount
  16.07.15         * add zc_ObjectFloat_Juridical_DayTaxSummary

@@ -2,7 +2,7 @@ object ContractForm: TContractForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientHeight = 518
+  ClientHeight = 536
   ClientWidth = 1209
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -720,12 +720,14 @@ object ContractForm: TContractForm
     Left = 0
     Top = 364
     Width = 611
-    Height = 154
+    Height = 172
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -2
+    ExplicitTop = 365
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -802,9 +804,78 @@ object ContractForm: TContractForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
         Width = 80
+      end
+      object colContractStateKindCode_Send: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
+        DataBinding.FieldName = 'ContractStateKindCode_Send'
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.Images = dmMain.ImageList
+        Properties.Items = <
+          item
+            Description = #1055#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 12
+            Value = 1
+          end
+          item
+            Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 11
+            Value = 2
+          end
+          item
+            Description = #1047#1072#1074#1077#1088#1096#1077#1085
+            ImageIndex = 13
+            Value = 3
+          end
+          item
+            Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            ImageIndex = 66
+            Value = 4
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
+      end
+      object colContractTagName_Send: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
+        DataBinding.FieldName = 'ContractTagName_Send'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object colInfoMoneyCode_Send: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode_Send'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object colInfoMoneyName_Send: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName_Send'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object colJuridicalCode_Send: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
+        DataBinding.FieldName = 'JuridicalCode_Send'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object colJuridicalName_Send: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName_Send'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
       object colInsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -855,20 +926,22 @@ object ContractForm: TContractForm
     Left = 615
     Top = 364
     Width = 594
-    Height = 154
+    Height = 172
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitHeight = 154
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
       Width = 241
-      Height = 154
+      Height = 172
       Align = alLeft
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 154
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -944,12 +1017,13 @@ object ContractForm: TContractForm
       Left = 246
       Top = 0
       Width = 348
-      Height = 154
+      Height = 172
       Align = alClient
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 154
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -1036,8 +1110,9 @@ object ContractForm: TContractForm
       Left = 241
       Top = 0
       Width = 5
-      Height = 154
+      Height = 172
       Control = cxGridPartner
+      ExplicitHeight = 154
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -1052,14 +1127,15 @@ object ContractForm: TContractForm
     Left = 611
     Top = 364
     Width = 4
-    Height = 154
+    Height = 172
     AlignSplitter = salRight
     Control = Panel
+    ExplicitHeight = 154
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 96
+    Left = 40
+    Top = 160
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -2002,6 +2078,20 @@ object ContractForm: TContractForm
           Component = CDSContractCondition
           ComponentItem = 'ContractSendName'
           DataType = ftString
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -2450,8 +2540,8 @@ object ContractForm: TContractForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 312
-    Top = 392
+    Left = 296
+    Top = 416
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractCondition'

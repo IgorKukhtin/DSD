@@ -3,8 +3,8 @@ inherited ContactPersonForm: TContactPersonForm
   ClientHeight = 335
   ClientWidth = 936
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 944
-  ExplicitHeight = 362
+  ExplicitWidth = 952
+  ExplicitHeight = 373
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,11 +23,6 @@ inherited ContactPersonForm: TContactPersonForm
         ExplicitWidth = 936
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
-          OnDblClick = nil
-          OnKeyDown = nil
-          OnKeyPress = nil
-          OnCustomDrawCell = nil
-          DataController.Filter.OnChanged = nil
           OptionsView.Footer = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
@@ -35,8 +30,6 @@ inherited ContactPersonForm: TContactPersonForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          OnColumnHeaderClick = nil
-          OnCustomDrawColumnHeader = nil
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
@@ -121,9 +114,27 @@ inherited ContactPersonForm: TContactPersonForm
       FormName = 'TContactPersonEditForm'
       FormNameParam.Value = 'TContactPersonEditForm'
     end
-  end
-  inherited MasterCDS: TClientDataSet
-    AfterInsert = nil
+    inherited dsdChoiceGuides: TdsdChoiceGuides
+      Params = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'Mail'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Mail'
+          DataType = ftString
+        end>
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContactPerson'
