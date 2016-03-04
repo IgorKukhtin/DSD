@@ -435,6 +435,7 @@ begin
   //показали что началась печать
   ShapeState.Brush.Color := clYellow;
   ShapeState.Repaint;
+  application.ProcessMessages;
   //послали на печать
   try
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
