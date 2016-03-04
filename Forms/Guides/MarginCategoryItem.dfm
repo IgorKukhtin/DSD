@@ -1,20 +1,24 @@
 inherited MarginCategoryItemForm: TMarginCategoryItemForm
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
-  ClientWidth = 453
-  ExplicitWidth = 461
-  ExplicitHeight = 335
+  ClientHeight = 341
+  ClientWidth = 800
+  ExplicitWidth = 816
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 453
-    ExplicitWidth = 360
-    ClientRectRight = 453
+    Width = 800
+    Height = 315
+    ExplicitWidth = 453
+    ClientRectBottom = 315
+    ClientRectRight = 800
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 360
+      ExplicitWidth = 453
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 453
-        ExplicitWidth = 360
+        Width = 800
+        Height = 315
+        ExplicitWidth = 453
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -38,6 +42,38 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             Properties.DisplayFormat = ',0.##'
             HeaderAlignmentVert = vaCenter
             Width = 265
+          end
+          object clInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
+          object clUpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
+          object clInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clUpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpSELECT_report_liquid(tdatetime, integer, boolean, tvar
 CREATE OR REPLACE FUNCTION gpSELECT_report_liquid(
     --IN inmonth tdatetime,
     IN inStartDate     tdatetime,
-    IN inEndDate     tdatetime,
+    IN inEndDate       tdatetime,
     IN inunitid        integer,
     IN inquasischedule boolean,
     IN insession tvarchar)
@@ -89,7 +89,21 @@ BEGIN
          , tmpPrice as( SELECT Object_Price.UnitId
                              , Object_Price.GoodsId
                              , Object_Price.Price
+                             , COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) :: Tfloat AS MCSValue
                         FROM Object_Price_View AS Object_Price
+                           -- получаем значения цены и НТЗ из истории значений на дату                                                           
+                           LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                                                   ON ObjectHistory_Price.ObjectId = Object_Price.Id 
+                                                  AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                  AND inStartDate >= ObjectHistory_Price.StartDate AND inStartDate < ObjectHistory_Price.EndDate
+                           /*LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
+                                                        ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                                       AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                           */
+                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValue
+                                                        ON ObjectHistoryFloat_MCSValue.ObjectHistoryId = ObjectHistory_Price.Id
+                                                       AND ObjectHistoryFloat_MCSValue.DescId = zc_ObjectHistoryFloat_Price_MCSValue() 
+
                         WHERE Object_Price.UnitId = inUnitId OR inUnitId = 0
                        )
 
@@ -97,6 +111,7 @@ BEGIN
                           , tmp.UnitId
                           , Sum (tmp.Amount) AS AmountSum 
                           , Sum (tmp.Amount * tmpPrice.Price) :: Tfloat AS SumRem 
+                          , Sum ((tmp.Amount-tmpPrice.MCSValue) * tmpPrice.Price) :: Tfloat AS SumRemMCS 
                      FROM(
                            SELECT _TIME.PlanDate AS OperDate
                                 , containerGroup.GoodsID
@@ -252,7 +267,7 @@ BEGIN
                          , tmpMovementSend.SummaSendOut     ::TFloat AS SummaSendOut
                          , tmpMovementSale.SummaOrderExternal   ::TFloat AS SummaOrderExternal
                          , tmpMovementSale.SummaOrderInternal   ::TFloat AS SummaOrderInternal
-                         , 0 ::TFloat    AS  SummaReturnIn 
+                         , tmpRem.SumRemMCS                     ::TFloat AS  SummaReturnIn 
                     FROM _TIME
                         LEFT JOIN Object AS Object_Unit ON 1=1
                                         AND Object_Unit.DescId = zc_Object_Unit()

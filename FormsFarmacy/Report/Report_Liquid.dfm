@@ -271,7 +271,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
             Width = 82
           end
           object clSummaReturnIn: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090
+            Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'SummaReturnIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
