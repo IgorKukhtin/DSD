@@ -20,6 +20,7 @@ type
     FisAlreadyOpen: boolean;
     FAddOnFormData: TAddOnFormData;
     FNeedRefreshOnExecute: boolean;
+    FNoHelpFile: Boolean;
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -104,6 +105,7 @@ begin
   OnCloseQuery := FormCloseQuery;
   KeyPreview := true;
   FisAlreadyOpen := false;
+  FNoHelpFile := False;
 end;
 
 destructor TParentForm.Destroy;
@@ -185,7 +187,7 @@ var
   pm: TPopupMenu;
 begin
   //если хелпфайл заполнен, считаем что все уже отработано ранее
-  if Self.HelpFile <> '' then exit;
+  if (Self.HelpFile <> '') or FNoHelpFile then exit;
   //Вытащили путь к файлу помощи
   sp := TdsdStoredProc.Create(nil);
   try
@@ -253,7 +255,9 @@ begin
             (C as TcxGrid).PopupMenu := pm;
 //      End;
     End;
-  End;
+  End
+  else
+    FNoHelpFile := True;
 
 end;
 
