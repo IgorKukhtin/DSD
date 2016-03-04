@@ -9,10 +9,9 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = nil
-  AddOnFormData.isSingle = False
   AddOnFormData.Params = nil
   ExplicitWidth = 661
-  ExplicitHeight = 178
+  ExplicitHeight = 175
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -24,6 +23,7 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
   inherited bbCancel: TcxButton
     Left = 338
     Top = 104
+    ModalResult = 2
     ExplicitLeft = 338
     ExplicitTop = 104
   end

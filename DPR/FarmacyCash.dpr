@@ -89,6 +89,7 @@ begin
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TMainCashForm, MainCashForm);
+
   end;
   Application.Run;
 end.

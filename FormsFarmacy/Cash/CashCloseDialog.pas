@@ -30,8 +30,8 @@ type
     { Public declarations }
   end;
 
-//var
-//  CashCloseDialogForm: TCashCloseDialogForm;
+var
+  CashCloseDialogForm: TCashCloseDialogForm;
 function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash: Currency; var APaidType: TPaidType):Boolean;
 
 implementation
@@ -42,7 +42,9 @@ uses DataModul;
 
 function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash: Currency; var APaidType: TPaidType):Boolean;
 Begin
-  With TCashCloseDialogForm.Create(nil) do
+  if NOT assigned(CashCloseDialogForm) then
+    CashCloseDialogForm := TCashCloseDialogForm.Create(Application);
+  With CashCloseDialogForm do
   Begin
     try
       FSummaTotal := ASummaTotal;
@@ -57,8 +59,8 @@ Begin
         ASalerCash := edSalerCash.Value;
         APaidType := TPaidType(rgPaidType.ItemIndex);
       End;
-    finally
-      free;
+    Except ON E: Exception DO
+      MessageDlg(E.Message,mtError,[mbOk],0);
     end;
   End;
 End;
