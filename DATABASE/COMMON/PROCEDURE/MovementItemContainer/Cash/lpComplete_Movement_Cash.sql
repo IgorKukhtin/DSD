@@ -10,9 +10,44 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbServiceDate TDateTime;
+   DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbPositionId Integer;
 BEGIN
      -- определили <Месяц начислений:
      vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId) AND MovementDate.DescId = zc_MovementDate_ServiceDate());
+
+
+         -- пока определяется "из справочника", доработать - вывести на форму
+         SELECT ObjectLink_Personal_PersonalServiceList.ChildObjectId
+              , ObjectLink_Personal_Position.ChildObjectId
+                INTO vbPersonalServiceListId, vbPositionId
+         FROM ObjectLink AS ObjectLink_Personal_PersonalServiceList
+              LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                   ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_PersonalServiceList.ObjectId
+                                  AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+         WHERE ObjectLink_Personal_PersonalServiceList.ObjectId = (SELECT MovementItemLinkObject.ObjectId
+                                                                                              FROM MovementItem
+                                                                                                   LEFT JOIN MovementItemLinkObject
+                                                                                                          ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                                                                         AND MovementItemLinkObject.DescId = zc_MILinkObject_MoneyPlace()
+                                                                                              WHERE MovementItem.MovementId = inMovementId
+                                                                                                AND MovementItem.DescId = zc_MI_Master()
+                                                                                             )
+                                      AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+        ;
+         -- !!!ВРЕМЕННО!!! - сохранили связь с <Ведомости начисления> + <Должность>
+         IF vbPersonalServiceListId <> 0
+         THEN
+             --
+             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), inMovementId, vbPersonalServiceListId);
+             --
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), MovementItem.Id, vbPositionId)
+             FROM MovementItem
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId = zc_MI_Master();
+        END IF;
+
+
 
      -- !!!формируются свойство <Месяц начислений> в элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), MovementItem.Id, vbServiceDate)

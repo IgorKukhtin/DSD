@@ -32,7 +32,7 @@ BEGIN
                                     , isPartionCount Boolean, isPartionSumm Boolean
                                     , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые Child(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSummChild (MovementItemId_Parent Integer, ContainerId_From Integer, MovementItemId Integer, MIContainerId_To Integer, ContainerId_To Integer, AccountId_To Integer, InfoMoneyId_Detail_To Integer, OperSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSummChild (MovementItemId_Parent Integer, ContainerId_From Integer, MovementItemId Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, InfoMoneyId_Detail_To Integer, OperSumm TFloat) ON COMMIT DROP;
      -- таблица - группируем суммовые Child(приход)-элементы документа
      CREATE TEMP TABLE _tmpItemSummChildTotal (MovementItemId_Parent Integer, ContainerId_From Integer, OperSumm TFloat) ON COMMIT DROP;
 

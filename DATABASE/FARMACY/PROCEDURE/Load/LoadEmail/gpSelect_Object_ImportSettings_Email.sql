@@ -13,9 +13,15 @@ RETURNS TABLE (Host TVarChar, Port TVarChar, Mail TVarChar
              , JuridicalId      Integer
              , JuridicalCode    Integer
              , JuridicalName    TVarChar
+             , JuridicalMail    TVarChar
              , ContractId       Integer
              , ContractName     TVarChar
              , DirectoryImport  TVarChar
+
+             , StartTime        TDateTime -- Время начала активной проверки
+             , EndTime          TDateTime -- Время окончания активной проверки
+             , onTime           Integer   -- с какой периодичностью проверять почту в активном периоде, мин
+
               )
 AS
 $BODY$
@@ -34,16 +40,22 @@ BEGIN
           , 'Ashtu777@ua.fm'  :: TVarChar AS UserName
           , 'qsxqsxw1'        :: TVarChar AS PasswordValue
           , '\inbox'          :: TVarChar AS DirectoryMail
-
+-- artoajour, anabel 
           , gpSelect.Id
           , gpSelect.Code
           , gpSelect.Name
           , gpSelect.JuridicalId
           , Object_Juridical.ObjectCode AS JuridicalCode
           , gpSelect.JuridicalName
+          , '24447183@ukr.net' :: TVarChar AS JuridicalMail
           , gpSelect.ContractId
           , gpSelect.ContractName
           , gpSelect.Directory AS DirectoryImport
+
+          , '01.01.2000 18:00' :: TDateTime AS StartTime -- Время начала активной проверки
+          , '01.01.2000 18:10' :: TDateTime AS EndTime   -- Время окончания активной проверки
+          , 15                 :: Integer   AS onTime    -- с какой периодичностью проверять почту в активном периоде, мин
+
      FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
      WHERE gpSelect.isErased = FALSE

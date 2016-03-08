@@ -12,7 +12,7 @@ BEGIN
 
      -- таблица - количественные Master(приход)-элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , MIContainerId_To Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , MIContainerId_To BigInt, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , OperCount TFloat
                                , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_To Integer
@@ -20,7 +20,7 @@ BEGIN
                                , isPartionCount Boolean, isPartionSumm Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые Master(приход)-элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, AccountGroupId_From Integer, AccountDirectionId_From Integer, AccountId_From Integer, ContainerId_From Integer, MIContainerId_To Integer, ContainerId_To Integer, AccountId_To Integer, InfoMoneyId_Detail_To Integer, OperSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, AccountGroupId_From Integer, AccountDirectionId_From Integer, AccountId_From Integer, ContainerId_From Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, InfoMoneyId_Detail_To Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- таблица - количественные Child(расход)-элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      CREATE TEMP TABLE _tmpItemChild (MovementItemId_Parent Integer, MovementItemId Integer

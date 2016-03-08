@@ -7,14 +7,14 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE MovementItemContainer(
-   Id             SERIAL NOT NULL PRIMARY KEY, 
+   Id             BIGSERIAL NOT NULL PRIMARY KEY, 
    DescId         INTEGER,
    MovementId     INTEGER,
    ContainerId    INTEGER,
    Amount         TFloat, 
    OperDate       TDateTime,
    MovementItemId Integer,
-   ParentId       Integer,
+   ParentId       BigInt,
    isActive       Boolean,  
 
    MovementDescId integer,

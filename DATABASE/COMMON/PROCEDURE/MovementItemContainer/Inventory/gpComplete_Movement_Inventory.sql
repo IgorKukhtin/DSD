@@ -445,24 +445,25 @@ BEGIN
                                   WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                                     AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
                                  )
+               , tmpContainer AS (SELECT tmpContainerList.Id       AS ContainerId_Goods
+                                       , tmpContainerList.ObjectId AS GoodsId
+                                       , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
+                                  FROM tmpContainerList
+                                       LEFT JOIN MovementItemContainer AS MIContainer
+                                                                       ON MIContainer.ContainerId = tmpContainerList.Id
+                                                                      AND MIContainer.OperDate > vbOperDate
+                                  GROUP BY tmpContainerList.Id
+                                         , tmpContainerList.ObjectId
+                                         , tmpContainerList.Amount
+                                  HAVING (tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
+                                 )
         SELECT COALESCE (tmpMI_find.MovementItemId, 0) AS MovementItemId
              , tmpContainer.ContainerId_Goods
              , tmpContainer.GoodsId
              , COALESCE (ObjectLink_InfoMoneyGroup.ChildObjectId, 0)
              , COALESCE (ObjectLink_InfoMoneyDestination.ChildObjectId, 0)
              , tmpContainer.OperCount
-        FROM (SELECT tmpContainerList.Id AS ContainerId_Goods
-                   , tmpContainerList.ObjectId AS GoodsId
-                   , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
-              FROM tmpContainerList
-                   LEFT JOIN MovementItemContainer AS MIContainer
-                                                   ON MIContainer.ContainerId = tmpContainerList.Id
-                                                  AND MIContainer.OperDate > vbOperDate
-              GROUP BY tmpContainerList.Id
-                     , tmpContainerList.ObjectId
-                     , tmpContainerList.Amount
-              HAVING (tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-             ) AS tmpContainer
+        FROM tmpContainer
              LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
                        ) AS tmpMI_find ON tmpMI_find.ContainerId_Goods = tmpContainer.ContainerId_Goods
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = tmpContainer.GoodsId AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -492,6 +493,20 @@ BEGIN
                                        LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = CLO_Goods.ObjectId
                                   WHERE (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
                                  )
+               , tmpContainer AS (SELECT tmpContainerList.Id        AS ContainerId
+                                       , tmpContainerList.ObjectId  AS AccountId
+                                       , tmpContainerList.ParentId  AS ContainerId_Goods
+                                       , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm
+                                  FROM tmpContainerList
+                                       LEFT JOIN MovementItemContainer AS MIContainer
+                                                                       ON MIContainer.ContainerId = tmpContainerList.Id
+                                                                      AND MIContainer.OperDate > vbOperDate
+                                  GROUP BY tmpContainerList.Id
+                                         , tmpContainerList.ObjectId
+                                         , tmpContainerList.ParentId
+                                         , tmpContainerList.Amount
+                                  HAVING (tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
+                                 )
         SELECT tmpContainer.ContainerId_Goods
              , tmpContainer.ContainerId
              , tmpContainer.AccountId
@@ -499,20 +514,7 @@ BEGIN
              , COALESCE (ObjectLink_InfoMoneyGroup.ChildObjectId, 0)
              , COALESCE (ObjectLink_InfoMoneyDestination.ChildObjectId, 0)
              , tmpContainer.OperSumm
-        FROM (SELECT tmpContainerList.Id AS ContainerId
-                   , tmpContainerList.ObjectId  AS AccountId
-                   , tmpContainerList.ParentId  AS ContainerId_Goods
-                   , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm
-              FROM tmpContainerList
-                   LEFT JOIN MovementItemContainer AS MIContainer
-                                                   ON MIContainer.ContainerId = tmpContainerList.Id
-                                                  AND MIContainer.OperDate > vbOperDate
-              GROUP BY tmpContainerList.Id
-                     , tmpContainerList.ObjectId
-                     , tmpContainerList.ParentId
-                     , tmpContainerList.Amount
-              HAVING (tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-             ) AS tmpContainer
+        FROM tmpContainer
              LEFT JOIN Container AS Container_Count ON Container_Count.Id = tmpContainer.ContainerId_Goods
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Container_Count.ObjectId AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyGroup ON ObjectLink_InfoMoneyGroup.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()

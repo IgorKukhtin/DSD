@@ -38,6 +38,8 @@ type
     isLoad: TcxGridDBColumn;
     clPartionMovementName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    PersonalServiceListCode: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

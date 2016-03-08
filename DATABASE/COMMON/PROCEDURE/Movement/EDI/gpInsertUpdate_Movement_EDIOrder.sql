@@ -22,7 +22,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
      vbUserId := inSession;
-
+/*
+if inSession <> '5'
+then
+    RAISE EXCEPTION 'Error';
+end if;
+*/
      vbMovementId := NULL;
 
 

@@ -3,8 +3,8 @@ inherited CashForm: TCashForm
   ClientHeight = 374
   ClientWidth = 773
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 781
-  ExplicitHeight = 408
+  ExplicitWidth = 789
+  ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,11 +23,6 @@ inherited CashForm: TCashForm
         ExplicitWidth = 773
         ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
-          OnDblClick = nil
-          OnKeyDown = nil
-          OnKeyPress = nil
-          OnCustomDrawCell = nil
-          DataController.Filter.OnChanged = nil
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -37,8 +32,6 @@ inherited CashForm: TCashForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          OnColumnHeaderClick = nil
-          OnCustomDrawColumnHeader = nil
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
@@ -96,39 +89,9 @@ inherited CashForm: TCashForm
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TCashEditForm'
     end
-    object ProtocolOpenForm: TdsdOpenForm [4]
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      ImageIndex = 34
-      FormName = 'TProtocolForm'
-      FormNameParam.Value = 'TProtocolForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Name'
-          DataType = ftString
-          ParamType = ptInput
-        end>
-      isShowModal = False
-    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TCashEditForm'
     end
-  end
-  inherited MasterCDS: TClientDataSet
-    AfterInsert = nil
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Cash'
@@ -195,10 +158,6 @@ inherited CashForm: TCashForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
-      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -705,7 +705,8 @@ BEGIN
      IF inBranchId > 0
      THEN
          -- Удаляем предыдущую с/с - !!!для 1-ого Филиала!!!
-         DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
+         DELETE FROM HistoryCost WHERE ((StartDate BETWEEN inStartDate AND inEndDate) OR (EndDate BETWEEN inStartDate AND inEndDate))
+                                    -- ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
                                    AND HistoryCost.ContainerId IN (SELECT _tmpContainer_branch.ContainerId FROM _tmpContainer_branch);
                                                                   /*(SELECT ContainerLinkObject.ContainerId
                                                                    FROM _tmpUnit_branch
@@ -750,7 +751,8 @@ BEGIN
                                             );*/
      ELSE
          -- Удаляем предыдущую с/с - !!!кроме всех Филиалов!!!
-         DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
+         DELETE FROM HistoryCost WHERE ((StartDate BETWEEN inStartDate AND inEndDate) OR (EndDate BETWEEN inStartDate AND inEndDate))
+                                    -- ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
                                    AND HistoryCost.ContainerId NOT IN (SELECT _tmpContainer_branch.ContainerId FROM _tmpContainer_branch);
                                                                       /*(SELECT ContainerLinkObject.ContainerId
                                                                        FROM _tmpUnit_branch
