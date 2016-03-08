@@ -1,24 +1,28 @@
-inherited MarginCategoryItemForm: TMarginCategoryItemForm
-  Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
-  ClientHeight = 341
-  ClientWidth = 800
-  ExplicitWidth = 816
-  ExplicitHeight = 379
+inherited EmailSettingsForm: TEmailSettingsForm
+  Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1087#1086#1095#1090#1099
+  ClientHeight = 316
+  ClientWidth = 753
+  ExplicitWidth = 769
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 800
-    Height = 315
-    ExplicitWidth = 453
-    ClientRectBottom = 315
-    ClientRectRight = 800
+    Top = 58
+    Width = 753
+    Height = 258
+    ExplicitTop = 58
+    ExplicitWidth = 753
+    ExplicitHeight = 258
+    ClientRectBottom = 258
+    ClientRectRight = 753
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 453
-      ExplicitHeight = 282
+      ExplicitWidth = 753
+      ExplicitHeight = 258
       inherited cxGrid: TcxGrid
-        Width = 800
-        Height = 315
-        ExplicitWidth = 453
+        Width = 753
+        Height = 258
+        ExplicitWidth = 753
+        ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -27,78 +31,76 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colMinPice: TcxGridDBColumn
-            Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
-            DataBinding.FieldName = 'MinPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentVert = vaCenter
-            Width = 145
-          end
-          object colMarginPercent: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'MarginPercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##'
-            HeaderAlignmentVert = vaCenter
-            Width = 265
-          end
-          object clInsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertName'
+          object colCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 67
           end
-          object clUpdateName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
-            DataBinding.FieldName = 'UpdateName'
+          object colEmailKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087
+            DataBinding.FieldName = 'EmailKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1080#1087#1099' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099
             Options.Editing = False
-            Width = 95
+            Width = 140
           end
-          object clInsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertDate'
+          object colEmailToolsName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1072#1084#1077#1090#1088' '#1076#1083#1103' '#1087#1086#1095#1090#1099
+            DataBinding.FieldName = 'EmailToolsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099
             Options.Editing = False
-            Width = 70
+            Width = 140
           end
-          object clUpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
-            DataBinding.FieldName = 'UpdateDate'
+          object colValue: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'Value'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            Width = 140
           end
         end
       end
-      object cxLabel1: TcxLabel
-        Left = 104
-        Top = 24
-        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
-      end
-      object ceMarginCategory: TcxButtonEdit
-        Left = 176
-        Top = 64
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        TabOrder = 2
-        Width = 209
-      end
+    end
+  end
+  object Panel: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 753
+    Height = 32
+    Align = alTop
+    TabOrder = 5
+    object cxLabel4: TcxLabel
+      Left = 8
+      Top = 7
+      Caption = #1058#1080#1087#1099' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099
+    end
+    object ceEmailKind: TcxButtonEdit
+      Left = 161
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1058#1080#1087' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099'>'
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 1
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1058#1080#1087' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099'>'
+      Width = 252
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = MarginCategoryGuides
+        Component = EmailKindGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -121,6 +123,9 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actInsertUpdate'
       DataSource = MasterDS
@@ -133,12 +138,12 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
     Top = 80
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MarginCategoryItem'
+    StoredProcName = 'gpSelect_Object_EmailSettings'
     Params = <
       item
-        Name = 'inMarginCategoryId'
-        Value = Null
-        Component = MarginCategoryGuides
+        Name = 'inEmailKindId'
+        Value = '0'
+        Component = EmailKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -154,6 +159,10 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbChoice'
@@ -173,14 +182,6 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGuides'
         end>
     end
     object bbLabel: TdxBarControlContainerItem
@@ -188,93 +189,92 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       Category = 0
       Hint = 'bbLabel'
       Visible = ivAlways
-      Control = cxLabel1
     end
     object bbGuides: TdxBarControlContainerItem
       Caption = 'bbGuides'
       Category = 0
       Hint = 'bbGuides'
       Visible = ivAlways
-      Control = ceMarginCategory
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_MarginCategoryItem'
+    StoredProcName = 'gpInsertUpdate_Object_EmailSettings'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'ioId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inMinPrice'
+        Name = 'inCode'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MinPrice'
-        DataType = ftFloat
+        ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
-        Name = 'inMarginPercent'
+        Name = 'inValue'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MarginPercent'
-        DataType = ftFloat
+        ComponentItem = 'Value'
+        DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inMarginCategoryId'
-        Value = Null
-        Component = MarginCategoryGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'Id'
+        Name = 'inEmailKindId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'EmailKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEmailToolsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EmailToolsId'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 296
     Top = 88
   end
-  object MarginCategoryGuides: TdsdGuides
+  object EmailKindGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceMarginCategory
-    FormNameParam.Value = 'TMarginCategoryForm'
+    LookupControl = ceEmailKind
+    Key = '0'
+    FormNameParam.Value = 'TEmailKindForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMarginCategoryForm'
+    FormName = 'TEmailKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = Null
-        Component = MarginCategoryGuides
+        Component = EmailKindGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = Null
-        Component = MarginCategoryGuides
+        Component = EmailKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 200
-    Top = 48
+    Left = 464
+    Top = 16
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = MarginCategoryGuides
+        Component = EmailKindGuides
       end>
-    Left = 200
-    Top = 128
+    Left = 120
+    Top = 144
   end
 end

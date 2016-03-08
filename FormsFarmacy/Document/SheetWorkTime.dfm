@@ -62,8 +62,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Top = 75
     Width = 971
     Height = 201
-    Align = alTop
+    Align = alClient
     TabOrder = 0
+    ExplicitHeight = 94
     object cxGridDBBandedTableView: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -185,16 +186,19 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Top = 276
     Width = 971
     Height = 8
-    AlignSplitter = salTop
-    Control = cxGrid
+    HotZoneClassName = 'TcxMediaPlayer8Style'
+    AlignSplitter = salBottom
+    Control = cxGrid1
+    ExplicitTop = 504
   end
   object cxGrid1: TcxGrid
     Left = 0
     Top = 284
     Width = 971
     Height = 220
-    Align = alClient
+    Align = alBottom
     TabOrder = 7
+    ExplicitTop = 270
     object cxGridDBBandedTableView1: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -760,6 +764,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
@@ -775,6 +780,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS

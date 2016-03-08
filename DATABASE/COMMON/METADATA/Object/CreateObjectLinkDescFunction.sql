@@ -1355,10 +1355,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsExternal_GoodsKind() RETURNS Integ
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsExternal_GoodsKind', 'Виды Товара', zc_Object_GoodsExternal(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsExternal_GoodsKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_EmailSettings_EmailKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_EmailSettings_EmailKind', 'Типы установок для почты', zc_Object_EmailSettings(), zc_Object_EmailKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_EmailSettings_EmailTools() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailTools'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_EmailSettings_EmailTools', 'Параметры установок для почты', zc_Object_EmailSettings(), zc_Object_EmailTools() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailTools');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 03.03.16         * add zc_ObjectLink_EmailSettings_EmailKind,
+                        zc_ObjectLink_EmailSettings_EmailTools
  29.12.15         * add zc_ObjectLink_GoodsExternal_Goods
                       , zc_ObjectLink_GoodsExternal_GoodsKind
  07.12.15         * add zc_ObjectLink_BankAccountContract_Unit

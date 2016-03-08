@@ -21,6 +21,9 @@ function iniLocalDataBaseHead: String;
 function iniLocalDataBaseBody: String;
 
 function iniCashSerialNumber: String;
+//возвращает номер налоговой группы для FP320
+function iniTaxGroup7:Integer;
+
 implementation
 
 uses
@@ -148,6 +151,16 @@ end;
 function iniCashSerialNumber: String;
 begin
   Result := GetValue('TSoldWithCompMainForm','FP320SERIAL','');
+End;
+
+//возвращает номер налоговой группы для FP320 7%
+function iniTaxGroup7:Integer;
+var
+  s: String;
+begin
+  S := GetValue('TSoldWithCompMainForm','FP320_TAX7','1');
+  if not tryStrToInt(S,Result) then
+    Result := 1;
 End;
 
 end.

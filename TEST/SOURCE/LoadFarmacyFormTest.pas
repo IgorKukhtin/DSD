@@ -38,6 +38,7 @@ type
     procedure LoadCreateOrderFromMCSFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadEnumFormTest;
+    procedure LoadEmailSettingsFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadImportSettingsFormTest;
@@ -504,7 +505,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderKindEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailToolsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailToolsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailKindForm');
+
 end;
+
+procedure TLoadFormTest.LoadEmailSettingsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailSettingsForm');
+end;
+
+
 procedure TLoadFormTest.LoadProfitLossGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupForm'));

@@ -162,7 +162,7 @@ begin
     end;
     Instance.FConnection := ConnectionString;
     Instance.IdHTTP := TIdHTTP.Create(nil);
-    Instance.IdHTTP.ConnectTimeout := 2000;
+    Instance.IdHTTP.ConnectTimeout := 5000;
     Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'
     with Instance.IdHTTP.Request do
     begin

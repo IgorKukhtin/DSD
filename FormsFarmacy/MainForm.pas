@@ -228,6 +228,13 @@ type
     actGoodsAllJuridical: TdsdOpenForm;
     N90: TMenuItem;
     N91: TMenuItem;
+    actEmailSettings: TdsdOpenForm;
+    N92: TMenuItem;
+    N93: TMenuItem;
+    actEmailTools: TdsdOpenForm;
+    actEmailKind: TdsdOpenForm;
+    N94: TMenuItem;
+    N95: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

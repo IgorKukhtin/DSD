@@ -11,16 +11,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginCategoryItem(
 )
 RETURNS TABLE(Id INTEGER) AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbIsUpdate Boolean;   
 BEGIN
  
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_MarginCategory());
-   UserId := inSession;
+   vbUserId := inSession;
 
    IF COALESCE(inMarginCategoryId, 0) = 0 THEN
       RAISE EXCEPTION 'Необходимо определить категорию наценки';
    END IF;
+
+   -- определили <Признак новый или корректировка>
+   vbIsUpdate:= COALESCE (inId, 0) > 0;
 
    IF COALESCE(inId, 0) = 0 THEN
       -- сохранили <Объект>
@@ -37,7 +41,9 @@ BEGIN
 
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inId, UserId);
+   --PERFORM lpInsert_ObjectProtocol (inId, UserId);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= inId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
+
 
    RETURN 
       QUERY SELECT inId AS Id;

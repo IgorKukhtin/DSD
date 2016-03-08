@@ -435,6 +435,7 @@ begin
   //показали что началась печать
   ShapeState.Brush.Color := clYellow;
   ShapeState.Repaint;
+  application.ProcessMessages;
   //послали на печать
   try
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
@@ -1359,9 +1360,9 @@ begin
   finally
     spUserProtocol.free;
   end;
-  ShowMessage('Во время проведения чека возникла ошибка:'+#13+
-              ThreadErrorMessage+#13#13+
-              'Проверьте состояние чека и, при необходимости, проведите чек вручную.');
+//  ShowMessage('Во время проведения чека возникла ошибка:'+#13+
+//              ThreadErrorMessage+#13#13+
+//              'Проверьте состояние чека и, при необходимости, проведите чек вручную.');
 end;
 
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);

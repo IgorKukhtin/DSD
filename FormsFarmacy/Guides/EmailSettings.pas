@@ -1,4 +1,4 @@
-unit MarginCategoryItem;
+unit EmailSettings;
 
 interface
 
@@ -12,20 +12,23 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxLabel, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ExtCtrls;
 
 type
-  TMarginCategoryItemForm = class(TAncestorEnumForm)
-    colMinPice: TcxGridDBColumn;
-    colMarginPercent: TcxGridDBColumn;
+  TEmailSettingsForm = class(TAncestorEnumForm)
+    colCode: TcxGridDBColumn;
+    colValue: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
-    MarginCategoryGuides: TdsdGuides;
-    cxLabel1: TcxLabel;
+    EmailKindGuides: TdsdGuides;
     bbLabel: TdxBarControlContainerItem;
-    ceMarginCategory: TcxButtonEdit;
     bbGuides: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
+    Panel: TPanel;
+    cxLabel4: TcxLabel;
+    ceEmailKind: TcxButtonEdit;
+    colEmailKindName: TcxGridDBColumn;
+    colEmailToolsName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -37,7 +40,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMarginCategoryItemForm)
+  RegisterClass(TEmailSettingsForm)
 
 
 end.

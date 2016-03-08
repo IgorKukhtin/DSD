@@ -389,7 +389,10 @@ uses
   PriceDialog in '..\..\FormsFarmacy\Guides\PriceDialog.pas' {PriceDialogForm: TParentForm},
   GoodsAll in '..\..\FormsFarmacy\Guides\GoodsAll.pas' {GoodsAllForm: TParentForm},
   GoodsAllJuridical in '..\..\FormsFarmacy\Guides\GoodsAllJuridical.pas' {GoodsAllJuridicalForm: TParentForm},
-  GoodsAllRetail in '..\..\FormsFarmacy\Guides\GoodsAllRetail.pas' {GoodsAllRetailForm: TParentForm};
+  GoodsAllRetail in '..\..\FormsFarmacy\Guides\GoodsAllRetail.pas' {GoodsAllRetailForm: TParentForm},
+  EmailKind in '..\..\FormsFarmacy\Kind\EmailKind.pas' {EmailKindForm: TParentForm},
+  EmailTools in '..\..\FormsFarmacy\Kind\EmailTools.pas' {EmailToolsForm: TParentForm},
+  EmailSettings in '..\..\FormsFarmacy\Guides\EmailSettings.pas' {EmailSettingsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1178,7 +1178,8 @@ procedure TdsdUserSettingsStorageAddOn.OnDestroy(Sender: TObject);
 begin
   if csDesigning in ComponentState then
      exit;
-  SaveUserSettings;
+  if Active then
+    SaveUserSettings;
   if Assigned(FOnDestroy) then
      FOnDestroy(Sender);
 end;

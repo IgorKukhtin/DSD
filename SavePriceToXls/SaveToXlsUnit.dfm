@@ -19,7 +19,7 @@ object Form1: TForm1
     Top = 0
     Width = 636
     Height = 435
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -233,20 +233,34 @@ object Form1: TForm1
   object qryPrice: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      'Select * from gpSelect_Object_Price(:UnitId,False,False,'#39'3'#39');')
+      
+        'Select * from gpSelect_Object_Price(:UnitId, :StartDate, False,F' +
+        'alse,'#39'3'#39');')
     Params = <
       item
-        DataType = ftUnknown
+        DataType = ftInteger
         Name = 'UnitId'
-        ParamType = ptUnknown
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftDate
+        Name = 'StartDate'
+        ParamType = ptInput
       end>
     Left = 216
     Top = 104
     ParamData = <
       item
-        DataType = ftUnknown
+        DataType = ftInteger
         Name = 'UnitId'
-        ParamType = ptUnknown
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftDate
+        Name = 'StartDate'
+        ParamType = ptInput
       end>
   end
   object Timer1: TTimer

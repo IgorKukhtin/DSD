@@ -266,7 +266,7 @@ begin
 	if NDS = 20 Then
     NDSType := 0
 	Else
-    NDSType := 3;
+    NDSType := iniTaxGroup7;
 
 	If FPrinter.PrinterState = 9 then
 		FPrinter.PrintNormal(2,GoodsName)

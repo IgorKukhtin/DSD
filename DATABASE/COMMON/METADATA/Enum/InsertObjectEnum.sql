@@ -766,11 +766,33 @@ BEGIN
 
 END $$;
 
+DO $$
+BEGIN
+
+     -- !!! Параметры установок для почты
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Host(),     inDescId:= zc_Object_EmailTools(), inCode:= 1, inName:= 'Host'                          , inEnumName:= 'zc_Enum_EmailTools_Host');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Port(),     inDescId:= zc_Object_EmailTools(), inCode:= 2, inName:= 'Port'                          , inEnumName:= 'zc_Enum_EmailTools_Port');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Mail(),     inDescId:= zc_Object_EmailTools(), inCode:= 3, inName:= 'Адрес'                         , inEnumName:= 'zc_Enum_EmailTools_Mail');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_User(),     inDescId:= zc_Object_EmailTools(), inCode:= 4, inName:= 'User'                          , inEnumName:= 'zc_Enum_EmailTools_User');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Password(), inDescId:= zc_Object_EmailTools(), inCode:= 5, inName:= 'Password'                      , inEnumName:= 'zc_Enum_EmailTools_Password');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Directory(),inDescId:= zc_Object_EmailTools(), inCode:= 6, inName:= 'Директория формирования файлов', inEnumName:= 'zc_Enum_EmailTools_Directory');
+    
+      -- !!! Типы установок для почты
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_OutOrder(),inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая для заказов поставщикам'  , inEnumName:= 'zc_Enum_EmailKind_OutOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_InPrice(), inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Входящая для прайс-листа поставщика', inEnumName:= 'zc_Enum_EmailKind_InPrice');
+
+
+END $$;
+
+
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 03.03.16          *  Параметры установок для почты
+                      Типы установок для почты
  23.11.15                                                                       *zc_Enum_ImportExportLinkType_UploadCompliance
  31.10.15                                                                       *zc_Enum_PromoKind_Custom, zc_Enum_PromoKind_Compensation, zc_Enum_ConditionPromo_Discount, zc_Enum_ConditionPromo_Compensation
  13.11.14                                        * add zc_Enum_Currency_Basis
