@@ -79,7 +79,8 @@ BEGIN
                   WHERE ObjectFloat_TaxService.DescId = zc_ObjectFloat_Position_TaxService()
                  )
 --выбираем физ.лица, должности сотрудников которых ВИП
- , tmpListMember AS (SELECT ObjectLink_Personal_Member.ObjectId                        AS PersonalId
+ , tmpListMember AS (SELECT DISTINCT
+                            ObjectLink_Personal_Member.ObjectId                        AS PersonalId
                           , ObjectLink_Personal_Member.ChildObjectId  AS MemberId
                           , ObjectLink_Personal_Position.ChildObjectId AS PositionId
                      FROM ObjectLink AS ObjectLink_Personal_Member
@@ -150,11 +151,12 @@ BEGIN
                    WHERE Coalesce (tmp.OperDate2,tmp.OperDate1)<>tmp.OperDate1
                    ORDER BY 1
                    )
-
+-- ВИП сотрудники (физ.лица) из чеков (+ документ)
 , tmpVip AS (SELECT DISTINCT tmpListDate.OperDate1, tmpListDate.OperDate2
                   , MovementLinkObject_Unit.ObjectId         AS UnitId
                   , MovementLinkObject_CheckMember.ObjectId  AS PersonalId
                   , tmpListMember.PositionId    AS PositionId   -- id Vip должности  vbVipPositionId
+                
              FROM tmpListDate
                   LEFT JOIN Movement AS Movement_Check
                                      ON Movement_Check.DescId = zc_Movement_Check()
@@ -172,7 +174,7 @@ BEGIN
                   INNER JOIN tmpListMember ON tmpListMember.MemberId = MovementLinkObject_CheckMember.ObjectId 
               ORDER BY 1
             )                   
-            
+--объединяем сотрудников из табеля с випами            
  , tmpListPersonal_1 AS (SELECT DISTINCT
                                 tmp3.OperDate1, tmp3.OperDate2
                               , COALESCE (tmp1.UnitId,tmpAdmin.UnitId)          AS UnitId  
@@ -299,24 +301,25 @@ BEGIN
                                , tmpListPersonal.PositionId
                                , tmpListPersonal.PersonalId
                                , tmplist3.TaxService
-                               , tmplist4.PersonalCount
-                      FROM tmpListPersonal
-                          LEFT JOIN tmplist3 ON tmplist3.OperDate1 = tmpListPersonal.OperDate1
-                                            AND tmplist3.OperDate2 = tmpListPersonal.OperDate2
-                                            AND tmplist3.UnitId   = tmpListPersonal.UnitId
-                                            AND tmplist3.PositionId = tmpListPersonal.PositionId
-                          LEFT JOIN tmplist4 ON tmplist4.OperDate1 = tmpListPersonal.OperDate1
-                                            AND tmplist4.OperDate2 = tmpListPersonal.OperDate2
-                                            AND tmplist4.UnitId   = tmpListPersonal.UnitId 
-                                            AND tmplist4.TaxService = tmplist3.TaxService  
-                                            AND tmplist4.PositionId = tmpListPersonal.PositionId
-                    
-                   )
+                               , CASE WHEN tmpListPersonal.PositionId = vbVipPositionId THEN 1 ELSE tmplist4.PersonalCount END  AS PersonalCount
+                          FROM tmpListPersonal
+                             LEFT JOIN tmplist3 ON tmplist3.OperDate1 = tmpListPersonal.OperDate1
+                                               AND tmplist3.OperDate2 = tmpListPersonal.OperDate2
+                                               AND tmplist3.UnitId   = tmpListPersonal.UnitId
+                                               AND tmplist3.PositionId = tmpListPersonal.PositionId
+                             LEFT JOIN tmplist4 ON tmplist4.OperDate1 = tmpListPersonal.OperDate1
+                                               AND tmplist4.OperDate2 = tmpListPersonal.OperDate2
+                                               AND tmplist4.UnitId   = tmpListPersonal.UnitId 
+                                               AND tmplist4.TaxService = tmplist3.TaxService  
+                                               AND tmplist4.PositionId = tmpListPersonal.PositionId
+                         )
+ 
                   
  , tmpMovementCheck AS (SELECT tmpListDate.OperDate1                                        AS OperDate1
                              , tmpListDate.OperDate2                                        AS OperDate2
                              , SUM(-MIContainer.Amount*MIFloat_Price.ValueData)::TFloat     AS SummaSale
                              , MovementLinkObject_Unit.ObjectId                             AS UnitId  
+                             , tmpListMember.MemberId                                       AS MemberId
                         FROM tmpListDate
                            LEFT JOIN Movement AS Movement_Check
                                               ON Movement_Check.DescId = zc_Movement_Check()
@@ -344,6 +347,7 @@ BEGIN
                                                  AND MIContainer.DescId = zc_MIContainer_Count() 
                         
                         GROUP BY tmpListDate.OperDate1, tmpListDate.OperDate2 , MovementLinkObject_Unit.ObjectId  
+                               , tmpListMember.MemberId
                         HAVING SUM(MI_Check.Amount) <> 0 
                        )
  
@@ -374,6 +378,7 @@ BEGIN
                        LEFT JOIN tmpListPersonalAll ON tmpListPersonalAll.OperDate1 = tmpMovementCheck.OperDate1
                                          AND tmpListPersonalAll.OperDate2 = tmpMovementCheck.OperDate2
                                          AND tmpListPersonalAll.UnitId = tmpMovementCheck.UnitId
+                                         AND CASE WHEN tmpListPersonalAll.PositionId = vbVipPositionId THEN tmpListPersonalAll.PersonalId = tmpMovementCheck.MemberId ELSE 1=1 END
                      WHERE tmpMovementCheck.SummaSale<>0
                      GROUP BY CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.Operdate1 ELSE inDateStart END 
                             , CASE WHEN inIsDay = TRUE THEN tmpMovementCheck.OperDate2 ELSE inDateEnd+ interval '23 hour 59 minute' END
