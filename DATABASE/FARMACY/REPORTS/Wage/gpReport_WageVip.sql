@@ -54,7 +54,7 @@ BEGIN
         vbTmpDate := vbTmpDate + INTERVAL '1 DAY';
     END LOOP;  
 
-    vbVipPositionId := (SELECT Object.Id From Object WHERE Object.DescId = zc_Object_Position() and (Object.ValueData Like '%ВИП%' OR Object.ValueData Like '%Вип%'));
+    vbVipPositionId := (SELECT Object.Id From Object WHERE Object.DescId = zc_Object_Position() and (Object.ValueData Like '%ВИП%' OR Object.ValueData Like '%Вип%')); --1841910
               
     -- Результат
     RETURN QUERY
@@ -78,7 +78,18 @@ BEGIN
                   FROM ObjectFloat AS ObjectFloat_TaxService
                   WHERE ObjectFloat_TaxService.DescId = zc_ObjectFloat_Position_TaxService()
                  )
-    
+--выбираем физ.лица, должности сотрудников которых ВИП
+ , tmpListMember AS (SELECT ObjectLink_Personal_Member.ObjectId                        AS PersonalId
+                          , ObjectLink_Personal_Member.ChildObjectId  AS MemberId
+                          , ObjectLink_Personal_Position.ChildObjectId AS PositionId
+                     FROM ObjectLink AS ObjectLink_Personal_Member
+                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                            ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId 
+                           AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                     WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                       AND ObjectLink_Personal_Position.ChildObjectId = vbVipPositionId--1841910
+                    )
+                    
 -- данные из табеля учета рабочего времени
   , tmp1 AS    (   SELECT COALESCE (MIDate_OperDate.Valuedata, Movement.OperDate) AS OperDate1
                         , CASE WHEN MI_SheetWorkTime.amount<>0
@@ -143,7 +154,7 @@ BEGIN
 , tmpVip AS (SELECT DISTINCT tmpListDate.OperDate1, tmpListDate.OperDate2
                   , MovementLinkObject_Unit.ObjectId         AS UnitId
                   , MovementLinkObject_CheckMember.ObjectId  AS PersonalId
-                  , vbVipPositionId                          AS PositionId   -- id Vip должности
+                  , tmpListMember.PositionId    AS PositionId   -- id Vip должности  vbVipPositionId
              FROM tmpListDate
                   LEFT JOIN Movement AS Movement_Check
                                      ON Movement_Check.DescId = zc_Movement_Check()
@@ -157,6 +168,8 @@ BEGIN
                   INNER JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                                 ON MovementLinkObject_CheckMember.MovementId = Movement_Check.Id
                                                AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+
+                  INNER JOIN tmpListMember ON tmpListMember.MemberId = MovementLinkObject_CheckMember.ObjectId 
               ORDER BY 1
             )                   
             
@@ -317,7 +330,8 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                                          ON MovementLinkObject_CheckMember.MovementId = Movement_Check.Id
                                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
-                                                                   
+                           INNER JOIN tmpListMember ON tmpListMember.MemberId = MovementLinkObject_CheckMember.ObjectId 
+                           
                            INNER JOIN MovementItem AS MI_Check
                                     ON MI_Check.MovementId = Movement_Check.Id
                                    AND MI_Check.DescId = zc_MI_Master()
