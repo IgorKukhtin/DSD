@@ -101,7 +101,20 @@ BEGIN
                       LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
  
                   WHERE Object_Position.ValueData Like '%Менеджер%' OR Object_Position.ValueData Like '%менеджер%' 
-                  ) 
+                  )
+--выбираем физ.лица, должности сотрудников которых ВИП
+ , tmpListMemberVIP AS (SELECT DISTINCT 
+                               ObjectLink_Personal_Member.ObjectId        AS PersonalId
+                             , ObjectLink_Personal_Member.ChildObjectId   AS MemberId
+                             , ObjectLink_Personal_Position.ChildObjectId AS PositionId
+                        FROM ObjectLink AS ObjectLink_Personal_Member
+                            LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                 ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId 
+                                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                        WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                          AND ObjectLink_Personal_Position.ChildObjectId = vbVipPositionId    --1841910
+                    )
+ 
 -- данные из табеля учета рабочего времени
   , tmp1 AS    (   SELECT COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) AS OperDate1
                         , CASE WHEN MI_SheetWorkTime.amount<>0
@@ -309,7 +322,6 @@ BEGIN
                         FROM tmpListDate
                            LEFT JOIN Movement AS Movement_Check
                                               ON Movement_Check.DescId = zc_Movement_Check()
-                                             --AND Movement_Check.OperDate between tmpListDate.OperDate1 AND tmpListDate.OperDate2
                                              AND Movement_Check.OperDate >= tmpListDate.OperDate1 AND Movement_Check.OperDate  < tmpListDate.OperDate2 + interval '1 minute'
                                              AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -331,7 +343,11 @@ BEGIN
                            LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                   ON MIContainer.MovementItemId = MI_Check.Id
                                                  AND MIContainer.DescId = zc_MIContainer_Count() 
-                        WHERE COALESCE (MovementLinkObject_CheckMember.ObjectId,0) = 0 
+                           LEFT JOIN tmpListMemberVIP ON tmpListMemberVIP.MemberId = MovementLinkObject_CheckMember.ObjectId
+                           
+                        WHERE  tmpListMemberVIP.MemberId is null
+                           /* COALESCE (MovementLinkObject_CheckMember.ObjectId,0) = 0 
+                           OR COALESCE (MovementLinkObject_CheckMember.ObjectId,0) NOT IN (SELECT tmpListMemberVip.MemberId FROM tmpListMemberVip)*/
                         GROUP BY tmpListDate.OperDate1, tmpListDate.OperDate2 , MovementLinkObject_Unit.ObjectId  
                         HAVING SUM(MI_Check.Amount) <> 0 
                        )
