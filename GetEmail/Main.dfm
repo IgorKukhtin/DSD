@@ -57,7 +57,7 @@ object MainForm: TMainForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 56
+    Left = 88
+    Top = 152
   end
 end

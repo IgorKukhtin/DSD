@@ -23,7 +23,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
      vbUserId := inSession;
 /*
-if inSession <> '5'
+if inSession <> '5' and 1=0
 then
     RAISE EXCEPTION 'Error';
 end if;

@@ -12,10 +12,10 @@ RETURNS TABLE (BranchName TVarChar
              , SummStart TFloat, WeightStart TFloat, SummEnd TFloat, WeightEnd TFloat
              , SendOnPriceInSumm TFloat, SendOnPriceInWeight TFloat
              , ReturnInSumm TFloat, ReturnInWeight TFloat
-             , ReturnInRealSumm TFloat, ReturnIn_10200_Summ TFloat, ReturnIn_10300_Summ TFloat
+             , ReturnInRealSumm TFloat, ReturnInRealSumm_A TFloat, ReturnInRealSumm_P TFloat, ReturnIn_10200_Summ TFloat, ReturnIn_10300_Summ TFloat
              , PeresortInSumm TFloat, PeresortInWeight TFloat
              , PeresortOutSumm TFloat, PeresortOutWeight TFloat
-             , SaleSumm TFloat, SaleWeight TFloat, SaleRealSumm TFloat
+             , SaleSumm TFloat, SaleWeight TFloat, SaleRealSumm TFloat, SaleRealSumm_A TFloat, SaleRealSumm_P TFloat
              , SendOnPriceOutSumm TFloat, SendOnPriceOutWeight TFloat
              , Sale_40208_Summ TFloat, Sale_40208_Weight TFloat
              , Sale_10500_Summ TFloat, Sale_10500_Weight TFloat
@@ -125,9 +125,13 @@ BEGIN
                           , 0 AS SummSale_10250
                           , 0 AS SummSale_10300
                           , 0 AS SummSaleReal  
+                          , 0 AS SummSaleReal_A
+                          , 0 AS SummSaleReal_P  
                           , 0 AS SummReturnIn_10200
                           , 0 AS SummReturnIn_10300
-                          , 0 AS SummReturnInReal                                                                                     
+                          , 0 AS SummReturnInReal
+                          , 0 AS SummReturnInReal_A
+                          , 0 AS SummReturnInReal_P
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
                                        AND tmpContainerListSum.isUnit_Vz = FALSE
@@ -254,7 +258,9 @@ BEGIN
                                        AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()  -- Сумма, реализация, Скидка дополнительная
                                       THEN -1 * MIContainer.Amount                                        
                                       ELSE 0 END) AS SummSale_10300
-                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SummSaleReal
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN 1 * MIContainer.Amount ELSE 0 END) AS SummSaleReal
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND MIContainer.isActive = TRUE  THEN  1 * MIContainer.Amount ELSE 0 END) AS SummSaleReal_A
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS SummSaleReal_P
 
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
                                        AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами
@@ -264,7 +270,10 @@ BEGIN
                                        AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300()  -- Сумма, реализация, Скидка дополнительная
                                       THEN MIContainer.Amount                                        
                                       ELSE 0 END) AS SummReturnIn_10300
+
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN -1 * MIContainer.Amount ELSE 0 END) AS SummReturnInReal
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND MIContainer.isActive = TRUE  THEN -1 * MIContainer.Amount ELSE 0 END) AS SummReturnInReal_A
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS SummReturnInReal_P
                                                     
                           , 0 AS SummReturnIn
                           , 0 AS SummSendOnPriceIn
@@ -485,7 +494,11 @@ BEGIN
         , CAST (SUM (tmpAll.SummReturnIn)                 AS TFloat) AS ReturnInSumm
         , CAST (SUM (tmpAll.CountReturnIn)                AS TFloat) AS ReturnInWeight
 
-        , CAST (SUM (tmpAll.SummReturnInReal)             AS TFloat) AS ReturnInRealSumm
+        -- , CAST (SUM (tmpAll.SummReturnInReal)             AS TFloat) AS ReturnInRealSumm
+        , CAST (SUM (tmpAll.SummReturnInReal + tmpAll.SummReturnInReal_A - tmpAll.SummReturnInReal_P) AS TFloat) AS ReturnInRealSumm
+        , CAST (SUM (tmpAll.SummReturnInReal_A) AS TFloat) AS ReturnInRealSumm_A
+        , CAST (SUM (tmpAll.SummReturnInReal_P) AS TFloat) AS ReturnInRealSumm_P
+
         , CAST (SUM (tmpAll.SummReturnIn_10200)           AS TFloat) AS ReturnIn_10200_Summ
         , CAST (SUM (tmpAll.SummReturnIn_10300)           AS TFloat) AS ReturnIn_10300_Summ
         
@@ -497,7 +510,10 @@ BEGIN
         , CAST (SUM (tmpAll.SummSale)                     AS TFloat) AS SaleSumm
         , CAST (SUM (tmpAll.CountSale)                    AS TFloat) AS SaleWeight
         
-        , CAST (SUM (tmpAll.SummSaleReal)                 AS TFloat) AS SaleRealSumm
+        -- , CAST (SUM (tmpAll.SummSaleReal) AS TFloat) AS SaleRealSumm
+        , CAST (SUM (tmpAll.SummSaleReal + tmpAll.SummSaleReal_A - tmpAll.SummSaleReal_P) AS TFloat) AS SaleRealSumm
+        , CAST (SUM (tmpAll.SummSaleReal_A) AS TFloat) AS SaleRealSumm_A
+        , CAST (SUM (tmpAll.SummSaleReal_P) AS TFloat) AS SaleRealSumm_P
         
         , CAST (SUM (tmpAll.SummSendOnPriceOut)           AS TFloat) AS SendOnPriceOutSumm
         , CAST (SUM (tmpAll.CountSendOnPriceOut)          AS TFloat) AS SendWeight
@@ -547,12 +563,16 @@ BEGIN
                         , CAST (SUM (tmpGoodsSumm.SummIn) AS NUMERIC (16, 2))      AS SummIn
                         , CAST (SUM (tmpGoodsSumm.SummOut) AS NUMERIC (16, 2))     AS SummOut
                         , CAST (SUM (tmpGoodsSumm.SummSale) AS NUMERIC (16, 2))           AS SummSale
-                        , CAST (SUM (tmpGoodsSumm.SummSaleReal) AS NUMERIC (16, 2))       AS SummSaleReal
+                        , CAST (SUM (tmpGoodsSumm.SummSaleReal)   AS NUMERIC (16, 2))     AS SummSaleReal
+                        , CAST (SUM (tmpGoodsSumm.SummSaleReal_A) AS NUMERIC (16, 2))     AS SummSaleReal_A
+                        , CAST (SUM (tmpGoodsSumm.SummSaleReal_P) AS NUMERIC (16, 2))     AS SummSaleReal_P
                         , CAST (SUM (tmpGoodsSumm.SummReturnIn) AS NUMERIC (16, 2))       AS SummReturnIn
                         
                         , CAST (SUM (tmpGoodsSumm.SummReturnIn_10200) AS NUMERIC (16, 2)) AS SummReturnIn_10200
                         , CAST (SUM (tmpGoodsSumm.SummReturnIn_10300) AS NUMERIC (16, 2)) AS SummReturnIn_10300
-                        , CAST (SUM (tmpGoodsSumm.SummReturnInReal) AS NUMERIC (16, 2))   AS SummReturnInReal
+                        , CAST (SUM (tmpGoodsSumm.SummReturnInReal)   AS NUMERIC (16, 2)) AS SummReturnInReal
+                        , CAST (SUM (tmpGoodsSumm.SummReturnInReal_A) AS NUMERIC (16, 2)) AS SummReturnInReal_A
+                        , CAST (SUM (tmpGoodsSumm.SummReturnInReal_P) AS NUMERIC (16, 2)) AS SummReturnInReal_P
                                                 
                         , CAST (SUM (tmpGoodsSumm.SummSendOnPriceIn) AS NUMERIC (16, 2))  AS SummSendOnPriceIn
                         , CAST (SUM (tmpGoodsSumm.SummLoss) AS NUMERIC (16, 2))           AS SummLoss    
@@ -612,10 +632,16 @@ BEGIN
                         , 0 AS SummOut
                         , 0 AS SummSale
                         , 0 AS SummSaleReal
+                        , 0 AS SummSaleReal_A
+                        , 0 AS SummSaleReal_P
+
                         , 0 AS SummReturnIn
                         , 0 AS SummReturnIn_10200
                         , 0 AS SummReturnIn_10300
-                        , 0 AS SummReturnInReal                        
+                        , 0 AS SummReturnInReal
+                        , 0 AS SummReturnInReal_A
+                        , 0 AS SummReturnInReal_P
+
                         , 0 AS SummSendOnPriceIn
                         , 0 AS SummLoss    
                         , 0 AS SummSendOnPriceOut  
@@ -686,5 +712,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Branch_App1 (inStartDate:= '01.11.2015'::TDateTime, inEndDate:= '03.11.2015'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin())  --8374
---select * from gpReport_Branch_App1(inStartDate := ('30.07.2015')::TDateTime , inEndDate := ('03.08.2015')::TDateTime , inBranchId := 0 ,  inSession := '5');
+-- SELECT * FROM gpReport_Branch_App1 (inStartDate:= '01.02.2016'::TDateTime, inEndDate:= '29.02.2016'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin()) -- филиал Одесса

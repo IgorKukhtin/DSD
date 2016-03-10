@@ -544,13 +544,13 @@ update MovementItemContainer set AccountId = case when Container.DescId = zc_Con
                         , AnalyzerId  = zc_Enum_AnalyzerId_ProfitLoss()
                         , ObjectId_Analyzer = MovementItem.ObjectId
                         , WhereObjectId_Analyzer = MovementLinkObject_Car.ObjectId
-                        , ContainerId_Analyzer = case when MovementItemReport.ActiveAccountId = zc_Enum_Account_100301 () then MovementItemReport.ActiveContainerId else MovementItemReport.PassiveContainerId end
+                        , ContainerId_Analyzer = case when MovementItem Report.ActiveAccountId = zc_Enum_Account_100301 () then MovementItem Report.ActiveContainerId else MovementItem Report.PassiveContainerId end
                         , ObjectIntId_Analyzer = MI_Unit.ObjectId
                         , ObjectExtId_Analyzer = MI_Branch.ObjectId
 from MovementItemContainer as MIContainer
 join MovementItem on MovementItem.Id = MIContainer.MovementItemId
 join Container on Container.Id = MIContainer.ContainerId
-left join MovementItemReport on MovementItemReport.MovementItemId = MIContainer.MovementItemId
+left join MovementItem Report on MovementItem Report.MovementItemId = MIContainer.MovementItemId
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                              ON MovementLinkObject_Car.MovementId = MIContainer.MovementId
                                             AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
@@ -573,17 +573,17 @@ update MovementItemContainer set AccountId = zc_Enum_Account_100301()
                         , ObjectIntId_Analyzer = MI_Unit.ObjectId
                         , ObjectExtId_Analyzer = MI_Branch.ObjectId
 from MovementItemContainer as MIContainer
-left join MovementItemReport on MovementItemReport.MovementId = MIContainer.MovementId
-                            and MovementItemReport.Amount = abs (MIContainer.Amount)
-join MovementItem on MovementItem.Id = MovementItemReport.MovementItemId
+left join MovementItem Report on MovementItem Report.MovementId = MIContainer.MovementId
+                            and MovementItem Report.Amount = abs (MIContainer.Amount)
+join MovementItem on MovementItem.Id = MovementItem Report.MovementItemId
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                              ON MovementLinkObject_Car.MovementId = MIContainer.MovementId
                                             AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
                 LEFT JOIN MovementItemLinkObject AS MI_Unit
-                                             ON MI_Unit.MovementItemId = MovementItemReport.MovementItemId
+                                             ON MI_Unit.MovementItemId = MovementItem Report.MovementItemId
                                             AND MI_Unit.DescId = zc_MILinkObject_Unit()
                 LEFT JOIN MovementItemLinkObject AS MI_Branch
-                                             ON MI_Branch.MovementItemId = MovementItemReport.MovementItemId
+                                             ON MI_Branch.MovementItemId = MovementItem Report.MovementItemId
                                             AND MI_Branch.DescId = zc_MILinkObject_Branch()
 where MovementItemContainer.MovementDescId = zc_Movement_Transport()
   and MovementItemContainer.OperDate between '01.08.2015' and '31.08.2015'

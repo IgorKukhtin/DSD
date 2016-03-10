@@ -5,7 +5,7 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -576
+  ExplicitLeft = -499
   ExplicitWidth = 1382
   ExplicitHeight = 422
   PixelsPerInch = 96
