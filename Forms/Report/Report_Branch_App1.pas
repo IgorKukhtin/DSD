@@ -60,6 +60,10 @@ type
     SendOnPriceOutWeight_Vz: TcxGridDBColumn;
     PeresortInWeight_Vz: TcxGridDBColumn;
     ReturnInWeight_Vz: TcxGridDBColumn;
+    ReturnInRealSumm_A: TcxGridDBColumn;
+    ReturnInRealSumm_P: TcxGridDBColumn;
+    SaleRealSumm_A: TcxGridDBColumn;
+    SaleRealSumm_P: TcxGridDBColumn;
   private
     { Private declarations }
   public

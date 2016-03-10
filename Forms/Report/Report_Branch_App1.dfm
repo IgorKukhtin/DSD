@@ -1,29 +1,30 @@
 inherited Report_Branch_App1Form: TReport_Branch_App1Form
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1 '#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1043#1055'>'
-  ClientHeight = 485
+  ClientHeight = 404
   ClientWidth = 1073
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -283
   ExplicitWidth = 1089
-  ExplicitHeight = 523
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1073
-    Height = 428
+    Height = 347
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1073
     ExplicitHeight = 428
-    ClientRectBottom = 428
+    ClientRectBottom = 347
     ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1073
       ExplicitHeight = 428
       inherited cxGrid: TcxGrid
         Width = 1073
-        Height = 428
+        Height = 347
         ExplicitWidth = 1073
         ExplicitHeight = 428
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -299,6 +300,26 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = ReturnIn_10200_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInRealSumm_A
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInRealSumm_P
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleRealSumm_A
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleRealSumm_P
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -572,6 +593,26 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = ReturnIn_10200_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInRealSumm_A
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInRealSumm_P
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleRealSumm_A
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleRealSumm_P
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1117,6 +1158,46 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object ReturnInRealSumm_A: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1075#1088#1085', '#1090#1088'.+)'
+            DataBinding.FieldName = 'ReturnInRealSumm_A'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ReturnInRealSumm_P: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1075#1088#1085', '#1090#1088'.-)'
+            DataBinding.FieldName = 'ReturnInRealSumm_P'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SaleRealSumm_A: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1075#1088#1085', '#1090#1088'.+)'
+            DataBinding.FieldName = 'SaleRealSumm_A'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SaleRealSumm_P: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1075#1088#1085', '#1090#1088'.-)'
+            DataBinding.FieldName = 'SaleRealSumm_P'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end

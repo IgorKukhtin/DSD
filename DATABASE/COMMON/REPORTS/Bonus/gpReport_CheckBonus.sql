@@ -506,4 +506,4 @@ $BODY$
     where Sum_Bonus <> 0 -- and Sum_Bonus =30
 */
 -- тест
--- select * from gpReport_CheckBonus (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inSession:= zfCalc_UserAdmin());

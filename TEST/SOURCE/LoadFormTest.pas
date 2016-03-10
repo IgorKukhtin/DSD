@@ -1151,7 +1151,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-// exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
+ exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
@@ -1422,6 +1424,7 @@ end;
 
 procedure TLoadFormTest.LoadReportBranchFormTest;
 begin
+//exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7DialogForm'));

@@ -42,7 +42,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
 
              , Promo_Summ TFloat, Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
              , Promo_SummCost TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
-             , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat, Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
+             , Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat
+             , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
              , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
@@ -295,10 +296,10 @@ BEGIN
          , tmpOperationGroup.Sale_Amount_Weight :: TFloat  AS Sale_Amount_Weight
          , tmpOperationGroup.Sale_Amount_Sh     :: TFloat  AS Sale_Amount_Sh
 
-         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Promo_AmountPartner_Weight
-         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Promo_AmountPartner_Sh
-         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
-         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
+         , tmpOperationGroup.Promo_AmountPartner_Weight :: TFloat AS Promo_AmountPartner_Weight
+         , tmpOperationGroup.Promo_AmountPartner_Sh     :: TFloat AS Promo_AmountPartner_Sh
+         , tmpOperationGroup.Sale_AmountPartner_Weight  :: TFloat AS Sale_AmountPartner_Weight
+         , tmpOperationGroup.Sale_AmountPartner_Sh      :: TFloat AS Sale_AmountPartner_Sh
 
          , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
          , tmpOperationGroup.Return_Summ_10300    :: TFloat AS Return_Summ_10300

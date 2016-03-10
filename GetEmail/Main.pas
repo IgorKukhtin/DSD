@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, IdMessage,
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
-  Data.DB, Datasnap.DBClient;
+  Data.DB, Datasnap.DBClient, ZipForge;
 
 type
   // элемент "почтовый ящик"
@@ -46,6 +46,7 @@ type
     BitBtn1: TBitBtn;
     spSelect: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
+    ZipForge1: TZipForge;
     procedure BitBtn1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -197,7 +198,7 @@ var
   ii, i,j: integer;
   flag: boolean;
   msgcnt: integer;
-  mailFolder,mailFolder1,mailFolder2,mailFolder3,mailFolder4,Session: ansistring;
+  Session,mailFolder,StrCopyFolder: ansistring;
   JurPos: integer;
 begin
      //сессия - в эту папку будем сохранять файлики - она определяется временем запуска обработки
@@ -230,7 +231,7 @@ begin
                    //если вытянулось из почты письмо
                    if (IdPOP3.Retrieve(i, IdMessage)) then
                    begin
-                        //находим поставщика, который отправил на этот Host + есть в нашем списке
+                        //находим поставщика, который отправил на этот Host + есть в нашем списке + время
                         JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].Host, IdMessage.From.Address);
                         //если нашли поставщика, тогда это письмо надо загружать
                         if JurPos >= 0 then
@@ -251,7 +252,13 @@ begin
                                    // если надо - разархивировали
                                    if not (System.Pos(AnsiUppercase('.xls'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
                                     and not(System.Pos(AnsiUppercase('.xlsx'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
-                                   then ;
+                                   then begin
+                                             ZipForge1.FileName:=mailFolder + '\' + IdMessage.MessageParts[J].FileName;
+                                             ZipForge1.OpenArchive(fmOpenRead);
+                                             ZipForge1.BaseDir := mailFolder + '\';
+                                             ZipForge1.ExtractFiles('*.*');
+                                             ZipForge1.CloseArchive();
+                                        end;
                                    //ShowMessage(IdMessage.From.Address + ' : ' + IdMessage.Subject + ' : ' + IntToStr(j) + ' : ' + IdMessage.MessageParts[j].FileName + '   '  +FormatDateTime('dd mmm yyyy hh:mm:ss', IdMessage.Date) );
                                end;
                             //завершилась обработка всех частей одного письма
@@ -260,15 +267,14 @@ begin
                             ForceDirectories(vbArrayImportSettings[JurPos].Directory);
 
                             // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                            mailFolder1:=mailFolder+'\*.xls';
-                            CopyFile(PChar(mailFolder1),PChar(vbArrayImportSettings[JurPos].Directory),TRUE);
+                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
                             // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                            mailFolder2:=mailFolder+'\*.xlsx';
-                            CopyFile(PChar(mailFolder2),PChar(vbArrayImportSettings[JurPos].Directory),TRUE);
+                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
                             // !!!TEST!!!
-                            mailFolder3:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.*' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                            WinExec(PAnsiChar(mailFolder3), SW_HIDE);
-
+                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xml' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
                             // потом надо удалить письмо в почте
                             flag:= true;
                         end;

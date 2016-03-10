@@ -988,18 +988,18 @@ BEGIN
                   , CASE WHEN tmpAccount_60000.AccountId > 0
                           AND (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401()  -- прибыль текущего периода
                             OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401()) -- прибыль текущего периода
-                          AND _tmpItem.OperCount_Partner <> 0
+                          -- AND _tmpItem.OperCount_Partner <> 0 !!!временно!!!
                               THEN zc_Enum_AnalyzerId_SummIn_80401() -- Сумма, не совсем забалансовый счет, расход приб. буд. периодов
 
                          WHEN (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                             OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401()) -- прибыль текущего периода
-                          AND _tmpItem.OperCount_Partner <> 0
+                          -- AND _tmpItem.OperCount_Partner <> 0 !!!временно!!!
                               THEN zc_Enum_AnalyzerId_SummOut_80401() -- Сумма, не совсем забалансовый счет, приход приб. буд. периодов
 
-                         WHEN (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                         /*WHEN (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                             OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401()) -- прибыль текущего периода
                           AND _tmpItem.OperCount_Partner = 0
-                              THEN 0 -- !!!может быть временно, т.е. эту сумму надо будет делить на потери!!!
+                              THEN 0 -- !!!может быть временно, т.е. эту сумму надо будет делить на потери!!!*/
 
                          ELSE zc_Enum_AnalyzerId_SendSumm_in() -- Сумма с/с, перемещение по цене, перемещение, пришло
 
