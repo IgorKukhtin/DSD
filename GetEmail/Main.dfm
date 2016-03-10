@@ -57,24 +57,7 @@ object MainForm: TMainForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 56
-  end
-  object ZipForge1: TZipForge
-    ExtractCorruptedFiles = False
-    CompressionLevel = clFastest
-    CompressionMode = 1
-    CurrentVersion = '6.70 '
-    SpanningMode = smNone
-    SpanningOptions.AdvancedNaming = False
-    SpanningOptions.VolumeSize = vsAutoDetect
-    Options.FlushBuffers = True
-    Options.OEMFileNames = True
-    InMemory = False
-    Zip64Mode = zmDisabled
-    UnicodeFilenames = False
-    EncryptionMethod = caPkzipClassic
-    Left = 424
-    Top = 120
+    Left = 88
+    Top = 152
   end
 end

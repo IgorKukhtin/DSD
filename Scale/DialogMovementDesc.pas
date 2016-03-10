@@ -321,6 +321,10 @@ begin
                           ParamByName('ToName').asString:= CDS.FieldByName('ToName').asString;
                     end;
 
+                    ParamByName('PriceListId').AsInteger      := CDS.FieldByName('PriceListId').asInteger;
+                    ParamByName('PriceListCode').AsInteger    := CDS.FieldByName('PriceListCode').asInteger;
+                    ParamByName('PriceListName').asString     := CDS.FieldByName('PriceListName').asString;
+
                     ParamByName('PaidKindId').AsInteger       := 0;
                     ParamByName('PaidKindName').asString      := '';
                     ParamByName('InfoMoneyId').AsInteger      := 0;
@@ -582,7 +586,7 @@ begin
      end;
      if   (ParamsMovement_local.ParamByName('PriceListId').AsInteger=0)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
-       and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
+       //and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
      then begin
                ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ShowMessage('Ошибка.У контрагента не определено значение <Прайс-лист>.');

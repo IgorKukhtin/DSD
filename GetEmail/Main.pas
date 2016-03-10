@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, IdMessage,
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
-  Data.DB, Datasnap.DBClient, ZipForge;
+  Data.DB, Datasnap.DBClient;
 
 type
   // элемент "почтовый ящик"
@@ -46,7 +46,6 @@ type
     BitBtn1: TBitBtn;
     spSelect: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
-    ZipForge1: TZipForge;
     procedure BitBtn1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -253,11 +252,11 @@ begin
                                    if not (System.Pos(AnsiUppercase('.xls'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
                                     and not(System.Pos(AnsiUppercase('.xlsx'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
                                    then begin
-                                             ZipForge1.FileName:=mailFolder + '\' + IdMessage.MessageParts[J].FileName;
+                                             {ZipForge1.FileName:=mailFolder + '\' + IdMessage.MessageParts[J].FileName;
                                              ZipForge1.OpenArchive(fmOpenRead);
                                              ZipForge1.BaseDir := mailFolder + '\';
                                              ZipForge1.ExtractFiles('*.*');
-                                             ZipForge1.CloseArchive();
+                                             ZipForge1.CloseArchive();}
                                         end;
                                    //ShowMessage(IdMessage.From.Address + ' : ' + IdMessage.Subject + ' : ' + IntToStr(j) + ' : ' + IdMessage.MessageParts[j].FileName + '   '  +FormatDateTime('dd mmm yyyy hh:mm:ss', IdMessage.Date) );
                                end;
