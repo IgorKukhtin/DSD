@@ -46,7 +46,7 @@ BEGIN
          -- формируется список договоров, у которых есть условие по "Бонусам"
        , tmpContractConditionKind AS (SELECT ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindID
                                            , View_Contract.JuridicalId
-                                           , View_Contract.InvNumber   AS InvNumber_master
+                                           , View_Contract.InvNumber             AS InvNumber_master
                                            , View_Contract.ContractTagId         AS ContractTagId_master
                                            , View_Contract.ContractTagName       AS ContractTagName_master
                                            , View_Contract.ContractStateKindCode AS ContractStateKindCode_master
@@ -64,9 +64,11 @@ BEGIN
                                              END AS InfoMoneyId_child
                                            , COALESCE (ObjectLink_ContractCondition_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_Condition
                                            , View_Contract.PaidKindId
-                                           , ObjectLink_ContractCondition_BonusKind.ChildObjectId AS BonusKindId
-                                           , COALESCE (ObjecTFloat_Value.ValueData, 0)    AS Value
-                                           , COALESCE (Object_Comment.ValueData, '') AS Comment
+                                           , ObjectLink_ContractCondition_BonusKind.ChildObjectId    AS BonusKindId
+                                           , COALESCE (ObjectFloat_Value.ValueData, 0)               AS Value
+                                           , COALESCE (Object_Comment.ValueData, '')                 AS Comment
+                                           , ObjectLink_ContractCondition_ContractSend.ChildObjectId AS ContractId_send
+
                                       FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                            INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
                                                                                         AND Object_ContractCondition.isErased = FALSE
@@ -77,8 +79,13 @@ BEGIN
                                                                                   --  AND (View_Contract.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                                            INNER JOIN ObjectFloat AS ObjectFloat_Value 
                                                                   ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
-                                                                 AND ObjectFloat_Value.DescId = zc_ObjecTFloat_ContractCondition_Value()
+                                                                 AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
                                                                  AND ObjectFloat_Value.ValueData <> 0  
+
+                                           LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractSend
+                                                                ON ObjectLink_ContractCondition_ContractSend.ObjectId = Object_ContractCondition.Id
+                                                               AND ObjectLink_ContractCondition_ContractSend.DescId = zc_ObjectLink_ContractCondition_ContractSend()
+
                                            LEFT JOIN Object AS Object_Comment ON Object_Comment.Id = Object_ContractCondition.Id
                                            LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
                                                                 ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
@@ -97,33 +104,43 @@ BEGIN
                                 , tmpContract_find.ContractId_find
                                 , View_Contract_InvNumber_find.InfoMoneyId AS InfoMoneyId_find
                                 , View_Contract_InvNumber_find.InvNumber   AS InvNumber_find
-                           FROM (SELECT tmpContractConditionKind.ContractId_master
+                           FROM (SELECT DISTINCT
+                                        tmpContractConditionKind.ContractId_master
+                                      , tmpContractConditionKind.ContractId_send AS ContractId_find
+                                 FROM tmpContractConditionKind
+                                 WHERE tmpContractConditionKind.ContractId_send > 0
+                                UNION
+                                 SELECT tmpContractConditionKind.ContractId_master
                                       , MAX (COALESCE (View_Contract_find_tag.ContractId, View_Contract_find.ContractId)) AS ContractId_find
                                  FROM tmpContractConditionKind
                                       INNER JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
                                                             ON ObjectLink_ContractCondition_BonusKind.ChildObjectId = tmpContractConditionKind.BonusKindId
                                                            AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
-                                      INNER JOIN ObjecTFloat AS ObjecTFloat_Value 
-                                                             ON ObjecTFloat_Value.ObjectId = ObjectLink_ContractCondition_BonusKind.ObjectId
-                                                            AND ObjecTFloat_Value.DescId = zc_ObjecTFloat_ContractCondition_Value()
-                                                            AND ObjecTFloat_Value.ValueData = tmpContractConditionKind.Value
+                                      INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                             ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_BonusKind.ObjectId
+                                                            AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                                            AND ObjectFloat_Value.ValueData = tmpContractConditionKind.Value
                                       INNER JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                                             ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_BonusKind.ObjectId
                                                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+
                                       LEFT JOIN tmpContract_all AS View_Contract_find_tag
                                                                 ON View_Contract_find_tag.JuridicalId = tmpContractConditionKind.JuridicalId
                                                                AND View_Contract_find_tag.InfoMoneyId = tmpContractConditionKind.InfoMoneyId_Condition
                                                                AND View_Contract_find_tag.ContractTagId = tmpContractConditionKind.ContractTagId_master
+                                                               AND tmpContractConditionKind.ContractId_send IS NULL
                                       LEFT JOIN tmpContract_all AS View_Contract_find
                                                                 ON View_Contract_find.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
                                                                AND View_Contract_find.JuridicalId = tmpContractConditionKind.JuridicalId
                                                                AND View_Contract_find.InfoMoneyId = tmpContractConditionKind.InfoMoneyId_Condition
                                                                AND View_Contract_find_tag.ContractId IS NULL
+                                                               AND tmpContractConditionKind.ContractId_send IS NULL
                                       LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                                            ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                           AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                  WHERE tmpContractConditionKind.InfoMoneyId_Condition <> 0
                                    AND COALESCE (ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId, 0) = 0
+                                   AND tmpContractConditionKind.ContractId_send IS NULL
                                  GROUP BY tmpContractConditionKind.ContractId_master
                                 ) AS tmpContract_find
                                 LEFT JOIN tmpContract_all AS View_Contract_InvNumber_find ON View_Contract_InvNumber_find.ContractId = tmpContract_find.ContractId_find

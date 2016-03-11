@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, IdMessage,
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
-  Data.DB, Datasnap.DBClient;
+  Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls;
 
 type
   // элемент "почтовый ящик"
@@ -43,10 +43,16 @@ type
   TMainForm = class(TForm)
     IdPOP3: TIdPOP3;
     IdMessage: TIdMessage;
-    BitBtn1: TBitBtn;
+    BtnStart: TBitBtn;
     spSelect: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
-    procedure BitBtn1Click(Sender: TObject);
+    PanelHost: TPanel;
+    GaugeHost: TGauge;
+    PanelMailFrom: TPanel;
+    GaugeMailFrom: TGauge;
+    PanelParts: TPanel;
+    GaugeParts: TGauge;
+    procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     vbArrayMail :TArrayMail; // массив почтовых ящиков
@@ -62,7 +68,7 @@ var
   MainForm: TMainForm;
 
 implementation
-uses Authentication, Storage, CommonData, UtilConst;
+uses Authentication, Storage, CommonData, UtilConst, sevenzip;
 {$R *.dfm}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -177,7 +183,7 @@ begin
                 vbArrayMail[i].Directory:=ExpandFileName(DataSet.FieldByName('DirectoryMail').asString);
                 // с какой периодичностью проверять почту в активном периоде, мин
                 vbArrayMail[i].onTime:=DataSet.FieldByName('onTime').asInteger;
-                // Время последней проверки
+                // Время последней проверки - инициализируем значением "много дней назад"
                 vbArrayMail[i].BeginTime:=NOW-1000;
                 //
                 i:=i+1;
@@ -197,12 +203,19 @@ var
   ii, i,j: integer;
   flag: boolean;
   msgcnt: integer;
-  Session,mailFolder,StrCopyFolder: ansistring;
+  Session,mailFolderMain,mailFolder,StrCopyFolder: ansistring;
   JurPos: integer;
+  arch:i7zInArchive;
 begin
      //сессия - в эту папку будем сохранять файлики - она определяется временем запуска обработки
-     Session:=FormatDateTime('yyy-mm-dd hh-mm-ss',NOW);
+     Session:=FormatDateTime('yyyy-mm-dd hh-mm-ss',NOW);
+     //
+     arch:=CreateInArchive(CLSID_CFormatZip);
 
+     //
+     GaugeHost.Progress:=0;
+     GaugeHost.MaxValue:=Length(vbArrayMail);
+     Application.ProcessMessages;
      //цикл по почтовым ящикам
      for ii := 0 to Length(vbArrayMail)-1 do
        // если после предыдущей обработки прошло > onTime МИНУТ
@@ -210,6 +223,14 @@ begin
        then
            with IdPOP3 do
            begin
+              //
+              PanelHost.Caption:= 'Start Host : '+vbArrayMail[ii].Host+' for '+FormatDateTime('yyyy-mm-dd hh-mm-ss',NOW);
+              Application.ProcessMessages;
+              //current directory to store the email
+              mailFolderMain:= vbArrayMail[ii].Directory + '\' + vbArrayMail[ii].Host + '_' + Session;
+              //создали папку для писем если таковой нет + это протокол что по данному ящику была обработка
+              ForceDirectories(mailFolderMain);
+
               //параметры подключения к ящику
               Host    := vbArrayMail[ii].Host;
               UserName:= vbArrayMail[ii].UserName;
@@ -221,6 +242,10 @@ begin
                  IdPOP3.Connect;
                  //количество писем
                  msgcnt:= IdPOP3.CheckMessages;
+                 //
+                 GaugeMailFrom.Progress:=0;
+                 GaugeMailFrom.MaxValue:=msgcnt;
+                 Application.ProcessMessages;
                  //цикл по входящим письмам
                  for I:= msgcnt downto 1 do
                  begin
@@ -232,17 +257,29 @@ begin
                    begin
                         //находим поставщика, который отправил на этот Host + есть в нашем списке + время
                         JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].Host, IdMessage.From.Address);
+                        //
+                        if JurPos >=0
+                        then PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('yyyy-mm-dd hh:mm:ss',IdMessage.Date) + ' (' +  IntToStr(vbArrayImportSettings[JurPos].Id) + ') ' + vbArrayImportSettings[JurPos].JuridicalName
+                        else PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('yyyy-mm-dd hh:mm:ss',IdMessage.Date) + ' ' + IdMessage.From.Address + ' - ???';
+                        Application.ProcessMessages;
                         //если нашли поставщика, тогда это письмо надо загружать
                         if JurPos >= 0 then
                         begin
                              //current directory to store the email files
-                             mailFolder:= vbArrayMail[ii].Directory + '\' + vbArrayMail[ii].Host + '_' + Session + '_' + IntToStr(vbArrayImportSettings[JurPos].Id) + '_' + vbArrayImportSettings[JurPos].JuridicalName;
+                             mailFolder:= mailFolderMain + '\' + FormatDateTime('yyyy-mm-dd hh-mm-ss',IdMessage.Date) + '_' +  IntToStr(vbArrayImportSettings[JurPos].Id) + '_' + vbArrayImportSettings[JurPos].JuridicalName;
                              //создали папку для писем если таковой нет
                              ForceDirectories(mailFolder);
 
+                             //
+                             GaugeParts.Progress:=0;
+                             GaugeParts.MaxValue:=IdMessage.MessageParts.Count;
+                             Application.ProcessMessages;
                              //пройдемся по всем частям письма
-                             for j := 0 to IdMessage.MessageParts.Count - 1
-                             do
+                             for j := 0 to IdMessage.MessageParts.Count - 1 do
+                             begin
+                               //
+                               PanelParts.Caption:= 'Parts : '+IdMessage.From.Address;
+                               Application.ProcessMessages;
                                //если это вложенный файлик
                                if IdMessage.MessageParts[j] is TIdAttachment then
                                begin
@@ -251,16 +288,15 @@ begin
                                    // если надо - разархивировали
                                    if not (System.Pos(AnsiUppercase('.xls'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
                                     and not(System.Pos(AnsiUppercase('.xlsx'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
+                                    and not(System.Pos(AnsiUppercase('.xml'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
                                    then begin
-                                             {ZipForge1.FileName:=mailFolder + '\' + IdMessage.MessageParts[J].FileName;
-                                             ZipForge1.OpenArchive(fmOpenRead);
-                                             ZipForge1.BaseDir := mailFolder + '\';
-                                             ZipForge1.ExtractFiles('*.*');
-                                             ZipForge1.CloseArchive();}
+                                             arch.OpenFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                                             arch.ExtractTo(mailFolder + '\');
                                         end;
-                                   //ShowMessage(IdMessage.From.Address + ' : ' + IdMessage.Subject + ' : ' + IntToStr(j) + ' : ' + IdMessage.MessageParts[j].FileName + '   '  +FormatDateTime('dd mmm yyyy hh:mm:ss', IdMessage.Date) );
                                end;
-                            //завершилась обработка всех частей одного письма
+                               GaugeParts.Progress:=GaugeParts.Progress+1;
+                               Application.ProcessMessages;
+                             end;//завершилась обработка всех частей одного письма
 
                             //создали папку для загрузки, если таковой нет
                             ForceDirectories(vbArrayImportSettings[JurPos].Directory);
@@ -271,9 +307,6 @@ begin
                             // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
                             StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
                             WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-                            // !!!TEST!!!
-                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xml' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
                             // потом надо удалить письмо в почте
                             flag:= true;
                         end;
@@ -283,15 +316,26 @@ begin
                    //удаление письма
                    //if flag then IdPOP3.Delete(i);
 
+                   //
+                   GaugeMailFrom.Progress:=GaugeMailFrom.Progress+1;
+                   Application.ProcessMessages;
+
                  end;//финиш - цикл по входящим письмам
+                 //осталось сохранить время последней обработки почтового ящика
+                 vbArrayMail[ii].BeginTime:=NOW;
+                 //
+                 PanelHost.Caption:= 'End Host '+vbArrayMail[ii].Host+' for '+FormatDateTime('yyyy-mm-dd hh-mm-ss',NOW)+' to '+FormatDateTime('yyyy-mm-dd hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('yyyy-mm-dd hh:mm:ss',NOW + vbArrayMail[ii].onTime / 24 / 60);
+                 GaugeHost.Progress:=GaugeHost.Progress + 1;
+                 Application.ProcessMessages;
               finally
                  IdPOP3.Disconnect;
               end;
 
            end;//финиш - цикл по почтовым ящикам
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.BitBtn1Click(Sender: TObject);
+procedure TMainForm.BtnStartClick(Sender: TObject);
 begin
      //инициализируем данные по всем поставщика
      fInitArray;

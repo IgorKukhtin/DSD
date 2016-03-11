@@ -65,6 +65,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_UnitSearchPath>..\GetEmail\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -145,6 +146,7 @@
 			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
+			<DCCReference Include="..\GetEmail\sevenzip.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
