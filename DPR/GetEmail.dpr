@@ -53,7 +53,8 @@ uses
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  sevenzip in '..\GetEmail\sevenzip.pas';
+  sevenzip in '..\GetEmail\sevenzip.pas',
+  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas';
 
 {$R *.res}
 

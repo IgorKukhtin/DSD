@@ -21,7 +21,6 @@ RETURNS TABLE (Host TVarChar, Port TVarChar, Mail TVarChar
              , StartTime        TDateTime -- ¬рем€ начала активной проверки
              , EndTime          TDateTime -- ¬рем€ окончани€ активной проверки
              , onTime           Integer   -- с какой периодичностью провер€ть почту в активном периоде, мин
-
               )
 AS
 $BODY$
@@ -34,31 +33,42 @@ BEGIN
 
    -- –езультат
    RETURN QUERY 
-     SELECT 'pop.ua.fm'       :: TVarChar AS Host
-          , '110'             :: TVarChar AS Port
-          , ''                :: TVarChar AS Mail
-          , 'Ashtu777@ua.fm'  :: TVarChar AS UserName
-          , 'qsxqsxw1'        :: TVarChar AS PasswordValue
-          , '\inbox'          :: TVarChar AS DirectoryMail
--- artoajour, anabel 
+     SELECT 'pop.mail.ru'            :: TVarChar AS Host
+          , '110'                    :: TVarChar AS Port
+          , ''                       :: TVarChar AS Mail
+          , 'price-neboley@mail.ru'  :: TVarChar AS UserName
+          , 'admin2014'              :: TVarChar AS PasswordValue
+          , '..\ѕрайсы\inbox'               :: TVarChar AS DirectoryMail
+
           , gpSelect.Id
           , gpSelect.Code
           , gpSelect.Name
           , gpSelect.JuridicalId
           , Object_Juridical.ObjectCode AS JuridicalCode
           , gpSelect.JuridicalName
-          , '24447183@ukr.net' :: TVarChar AS JuridicalMail
+          , gpSelect.ContactPersonMail AS JuridicalMail
           , gpSelect.ContractId
           , gpSelect.ContractName
           , gpSelect.Directory AS DirectoryImport
 
-          , '01.01.2000 18:00' :: TDateTime AS StartTime -- ¬рем€ начала активной проверки
-          , '01.01.2000 18:10' :: TDateTime AS EndTime   -- ¬рем€ окончани€ активной проверки
-          , 15                 :: Integer   AS onTime    -- с какой периодичностью провер€ть почту в активном периоде, мин
+          , ObjectDate_StartTime.ValueData        AS StartTime -- ¬рем€ начала активной проверки
+          , ObjectDate_EndTime.ValueData          AS EndTime   -- ¬рем€ окончани€ активной проверки
+          , CASE WHEN ObjectFloat_Time.ValueData >= 1 THEN ObjectFloat_Time.ValueData ELSE 5 END :: Integer AS onTime    -- с какой периодичностью провер€ть почту в активном периоде, мин
 
      FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
+          LEFT JOIN ObjectDate AS ObjectDate_StartTime 
+                               ON ObjectDate_StartTime.ObjectId = gpSelect.Id
+                              AND ObjectDate_StartTime.DescId = zc_ObjectDate_ImportSettings_StartTime()
+          LEFT JOIN ObjectDate AS ObjectDate_EndTime 
+                               ON ObjectDate_EndTime.ObjectId = gpSelect.Id
+                              AND ObjectDate_EndTime.DescId = zc_ObjectDate_ImportSettings_EndTime()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Time
+                                ON ObjectFloat_Time.ObjectId = gpSelect.Id
+                               AND ObjectFloat_Time.DescId = zc_ObjectFloat_ImportSettings_Time()
      WHERE gpSelect.isErased = FALSE
+       -- AND gpSelect.ContactPersonMail <> ''
+       AND gpSelect.Directory <> ''
     ;
   
 END;
