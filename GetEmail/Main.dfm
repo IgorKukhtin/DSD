@@ -91,7 +91,6 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Load XLS : '
     TabOrder = 4
-    ExplicitTop = 164
     object GaugeLoadXLS: TGauge
       Left = 1
       Top = 58
@@ -112,7 +111,6 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Move : '
     TabOrder = 5
-    ExplicitTop = 242
     object GaugeMove: TGauge
       Left = 1
       Top = 58
@@ -134,8 +132,19 @@ object MainForm: TMainForm
     TabOrder = 6
     OnClick = cbTimerClick
   end
+  object cbBeginMove: TCheckBox
+    Left = 24
+    Top = 400
+    Width = 217
+    Height = 17
+    Caption = 'Move '#1087#1088#1072#1081#1089' '#1074' '#1072#1082#1090#1091#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099
+    TabOrder = 7
+  end
   object IdPOP3: TIdPOP3
+    IOHandler = IdSSLIOHandlerSocketOpenSSL
     AutoLogin = True
+    UseTLS = utUseImplicitTLS
+    Port = 995
     SASLMechanisms = <>
     Left = 224
     Top = 48
@@ -256,5 +265,39 @@ object MainForm: TMainForm
     OnTimer = TimerTimer
     Left = 480
     Top = 320
+  end
+  object IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL
+    Destination = ':995'
+    MaxLineAction = maException
+    Port = 995
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 416
+    Top = 32
+  end
+  object spGet_LoadPriceList: TdsdStoredProc
+    StoredProcName = 'gpGet_LoadPriceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outId'
+        Value = Null
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 232
   end
 end

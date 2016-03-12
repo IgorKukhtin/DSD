@@ -8,7 +8,8 @@ uses
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
   Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls, Vcl.ActnList,
-  dsdAction, ExternalLoad;
+  dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
+  IdSSL, IdSSLOpenSSL;
 
 type
   // элемент "почтовый ящик"
@@ -66,18 +67,23 @@ type
     actMovePriceList: TdsdExecStoredProc;
     Timer: TTimer;
     cbTimer: TCheckBox;
+    IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+    cbBeginMove: TCheckBox;
+    spGet_LoadPriceList: TdsdStoredProc;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
     procedure cbTimerClick(Sender: TObject);
   private
-    fBegin :Boolean;// запущена обработка
+    vbIsBegin :Boolean;// запущена обработка
 
     vbArrayMail :TArrayMail; // массив почтовых ящиков
     vbArrayImportSettings :TArrayImportSettings; // массив поставщиков и параметров загрузки информации
 
     function GetArrayList_Index_byHost(ArrayList:TArrayMail;Host:String):Integer;//находит Индекс в массиве по значению Host
     function GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;Host,JuridicalMail:String):Integer;//находит Индекс в массиве по значению Host + MailJuridical
+
+    function fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
 
     function fBeginAll  : Boolean; // обработка все
     function fInitArray : Boolean; // получает данные с сервера и на основании этих данных заполняет массивы
@@ -99,10 +105,14 @@ begin
   //создает сессию и коннект
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Авто-загрузка прайс-поставщик', gc_AdminPassword, gc_User);
   // запущена обработка
-  fBegin:= false;
+  vbIsBegin:= false;
+  // переносить прайс в актуальные цены (а загрузка выполняется всегда)
+  cbBeginMove.Checked:=false;
   // включаем таймер
   cbTimer.Checked:=true;
+  Timer.Enabled:=cbTimer.Checked;
   //
+  GaugeHost.Progress:=0;
   GaugeMailFrom.Progress:=0;
   GaugeParts.Progress:=0;
   GaugeLoadXLS.Progress:=0;
@@ -160,9 +170,9 @@ function TMainForm.fInitArray : Boolean;
 var i:Integer;
     HostStringList:TStringList;
 begin
-     if fBegin = true then exit;
+     if vbIsBegin = true then exit;
      // запущена обработка
-     fBegin:= true;
+     vbIsBegin:= true;
 
      HostStringList:=TStringList.Create;
      HostStringList.Sorted:=true;
@@ -226,6 +236,8 @@ begin
                 vbArrayMail[i].onTime:=DataSet.FieldByName('onTime').asInteger;
                 // Время последней проверки - инициализируем значением "много дней назад"
                 vbArrayMail[i].BeginTime:=NOW-1000;
+                // переносить прайс в актуальные цены (а загрузка выполняется всегда)
+                cbBeginMove.Checked:=DataSet.FieldByName('isBeginMove').asBoolean;
                 //
                 //в таймер сохраняем - периодичность проверки почты
                 if (Timer.Interval > vbArrayMail[i].onTime * 60 * 1000) or (Timer.Interval <= 1000) then
@@ -243,7 +255,7 @@ begin
      //
      HostStringList.Free;
      // завершена обработка
-     fBegin:= false;
+     vbIsBegin:= false;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всей почты
@@ -258,9 +270,9 @@ var
   arch:i7zInArchive;
   StartTime:TDateTime;
 begin
-     if fBegin = true then exit;
+     if vbIsBegin = true then exit;
      // запущена обработка
-     fBegin:= true;
+     vbIsBegin:= true;
 
 
      //сессия - в эту папку будем сохранять файлики - она определяется временем запуска обработки
@@ -358,12 +370,16 @@ begin
                             //создали папку для загрузки, если таковой нет
                             ForceDirectories(vbArrayImportSettings[JurPos].Directory);
 
-                            // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-                            // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                            // ТОЛЬКО если "сегодня" не было загрузки JurPos
+                            if fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId ) = 0 then
+                            begin
+                                  // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
+                                  StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                  WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                                  // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
+                                  StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                  WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                            end;
                             // потом надо удалить письмо в почте
                             flag:= true;
                         end
@@ -393,16 +409,16 @@ begin
            end;//финиш - цикл по почтовым ящикам
 
      // завершена обработка
-     fBegin:= false;
+     vbIsBegin:= false;
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всех XLS
 function TMainForm.fBeginXLS : Boolean;
 begin
-     if fBegin = true then exit;
+     if vbIsBegin = true then exit;
      // запущена обработка
-     fBegin:= true;
+     vbIsBegin:= true;
 
      with ClientDataSet do begin
         GaugeLoadXLS.Progress:=0;
@@ -413,8 +429,10 @@ begin
         while not EOF do begin
            PanelLoadXLS.Caption:= 'Load XLS : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString;
            Application.ProcessMessages;
-           //
-           actExecuteImportSettings.Execute;
+           //Загружаем если есть откуда
+           if FieldByName('DirectoryImport').asString <> ''
+           then actExecuteImportSettings.Execute;
+
            Next;
            //
            GaugeLoadXLS.Progress:=GaugeLoadXLS.Progress + 1;
@@ -423,7 +441,7 @@ begin
      end;
 
      // завершена обработка
-     fBegin:= false;
+     vbIsBegin:= false;
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -431,9 +449,9 @@ end;
 function TMainForm.fBeginMove : Boolean;
 var StartTime:TDateTime;
 begin
-     if fBegin = true then exit;
+     if vbIsBegin = true then exit;
      // запущена обработка
-     fBegin:= true;
+     vbIsBegin:= true;
 
      with spSelectMove do
      begin
@@ -464,7 +482,7 @@ begin
      end;
 
      // завершена обработка
-     fBegin:= false;
+     vbIsBegin:= false;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка все
@@ -477,7 +495,7 @@ begin
      // обработка всех XLS
      fBeginXLS;
      // перенос цен
-     fBeginMove;
+     if cbBeginMove.Checked = TRUE then fBeginMove;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.BtnStartClick(Sender: TObject);
@@ -492,6 +510,17 @@ procedure TMainForm.TimerTimer(Sender: TObject);
 begin
      // обработка все
      fBeginAll;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
+begin
+     with spGet_LoadPriceList do
+     begin
+       ParamByName('inJuridicalId').Value:=inJuridicalId;
+       ParamByName('inContractId').Value:=inContractId;
+       Execute;
+       Result:=ParamByName('outId').Value;
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 end.
