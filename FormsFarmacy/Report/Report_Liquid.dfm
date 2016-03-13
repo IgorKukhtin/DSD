@@ -1,34 +1,34 @@
 inherited Report_LiquidForm: TReport_LiquidForm
   Caption = #1054#1090#1095#1077#1090' '#1051#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080' '#1090#1086#1095#1082#1080
   ClientHeight = 579
-  ClientWidth = 1053
+  ClientWidth = 1275
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1069
+  ExplicitWidth = 1291
   ExplicitHeight = 617
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 48
-    Width = 1053
+    Width = 1275
     Height = 531
     TabOrder = 3
     ExplicitTop = 48
-    ExplicitWidth = 1053
+    ExplicitWidth = 1275
     ExplicitHeight = 531
     ClientRectBottom = 531
-    ClientRectRight = 1053
+    ClientRectRight = 1275
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 1053
+      ExplicitWidth = 1275
       ExplicitHeight = 507
       inherited cxGrid: TcxGrid
-        Width = 1053
+        Width = 1275
         Height = 323
-        ExplicitWidth = 1053
+        ExplicitWidth = 1275
         ExplicitHeight = 323
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -250,6 +250,24 @@ inherited Report_LiquidForm: TReport_LiquidForm
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
+          object clSummaDocSendIn: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1090#1086#1095#1082#1091' '#1074' '#1094#1077#1085#1072#1093' '#1079#1072#1082#1091#1087#1082#1080
+            DataBinding.FieldName = 'SummaDocSendIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object clSummaDocSendOut: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1090#1086#1095#1082#1080' '#1074' '#1094#1077#1085#1072#1093' '#1079#1072#1082#1091#1087#1082#1080
+            DataBinding.FieldName = 'SummaDocSendOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
           object clSummaOrderExternal: TcxGridDBColumn
             Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1077#1096#1085#1080#1077' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaOrderExternal'
@@ -262,6 +280,24 @@ inherited Report_LiquidForm: TReport_LiquidForm
           object clSummaOrderInternal: TcxGridDBColumn
             Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaOrderInternal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object clSummaDocOrderExternal: TcxGridDBColumn
+            Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1077#1096#1085#1080#1077' '#1074' '#1094#1077#1085#1072#1093' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'SummaDocOrderExternal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object clSummaDocOrderInternal: TcxGridDBColumn
+            Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' '#1074' '#1094#1077#1085#1072#1093' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'SummaDocOrderInternal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -282,7 +318,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 323
-        Width = 1053
+        Width = 1275
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -291,7 +327,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
       object grChart: TcxGrid
         Left = 0
         Top = 331
-        Width = 1053
+        Width = 1275
         Height = 176
         Align = alBottom
         TabOrder = 2
@@ -349,6 +385,9 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -431,10 +470,10 @@ inherited Report_LiquidForm: TReport_LiquidForm
     end
   end
   inherited Panel: TPanel
-    Width = 1053
+    Width = 1275
     Height = 22
     Visible = False
-    ExplicitWidth = 1053
+    ExplicitWidth = 1275
     ExplicitHeight = 22
     inherited deStart: TcxDateEdit
       Left = 127
