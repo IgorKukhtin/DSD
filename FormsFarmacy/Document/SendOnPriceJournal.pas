@@ -36,6 +36,7 @@ type
     actPrintOut: TdsdPrintAction;
     bbPrintOut: TdxBarButton;
     spSelectPrintOut: TdsdStoredProc;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

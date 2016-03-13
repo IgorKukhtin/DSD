@@ -40,11 +40,10 @@ object PriceDialogForm: TPriceDialogForm
     Left = 106
     Top = 19
     EditValue = 42430d
-    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
-    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
-    Properties.Kind = ckDateTime
+    Properties.DisplayFormat = 'dd.mm.yyyy'
+    Properties.EditFormat = 'dd.mm.yyyy'
     TabOrder = 2
-    Width = 143
+    Width = 87
   end
   object cxLabel6: TcxLabel
     Left = 8
@@ -90,8 +89,8 @@ object PriceDialogForm: TPriceDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 200
-    Top = 4
+    Left = 312
+    Top = 20
   end
   object FormParams: TdsdFormParams
     Params = <

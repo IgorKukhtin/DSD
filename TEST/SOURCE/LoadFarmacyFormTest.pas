@@ -712,6 +712,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceHistoryForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceOnDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceOnDateForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceDialogForm');
 end;
@@ -897,6 +900,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
+
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
 
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));

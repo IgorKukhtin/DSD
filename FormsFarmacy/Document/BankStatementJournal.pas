@@ -46,6 +46,7 @@ type
     BankMarfinLoad: TClientBankLoadAction;
     BankMarfin: TMultiAction;
     bbMarfinLoad: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

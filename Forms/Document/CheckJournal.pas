@@ -36,6 +36,7 @@ type
     colCashMember: TcxGridDBColumn;
     colFiscalCheckNumber: TcxGridDBColumn;
     colNotMCS: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

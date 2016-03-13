@@ -22,6 +22,7 @@ type
     colTotalCount: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
     colId: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

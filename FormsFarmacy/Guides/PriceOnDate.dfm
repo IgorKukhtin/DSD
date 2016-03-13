@@ -1,29 +1,29 @@
-inherited PriceForm: TPriceForm
-  Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
-  ClientHeight = 385
-  ClientWidth = 826
-  ExplicitWidth = 842
-  ExplicitHeight = 423
+inherited PriceOnDateForm: TPriceOnDateForm
+  Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1085#1072' '#1076#1072#1090#1091
+  ClientHeight = 420
+  ClientWidth = 1354
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 1370
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
     Left = 0
     Top = 0
-    Width = 826
+    Width = 1354
     Height = 32
     Align = alTop
     TabOrder = 6
+    ExplicitWidth = 1064
     object deOperDate: TcxDateEdit
       Left = 519
       Top = 5
       EditValue = 42460d
       Properties.DateOnError = deToday
-      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
-      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
-      Properties.Kind = ckDateTime
+      Properties.DisplayFormat = 'dd.mm.yyyy'
+      Properties.EditFormat = 'dd.mm.yyyy'
       TabOrder = 0
-      Visible = False
-      Width = 154
+      Width = 90
     end
     object cxLabel3: TcxLabel
       Left = 25
@@ -31,29 +31,29 @@ inherited PriceForm: TPriceForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object cxLabel1: TcxLabel
-      Left = 426
+      Left = 454
       Top = 6
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1094#1077#1085' '#1085#1072':'
-      Visible = False
+      Caption = #1044#1072#1085#1085#1099#1077' '#1085#1072':'
     end
   end
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 826
-    Height = 327
+    Width = 1354
+    Height = 362
     ExplicitTop = 58
-    ExplicitWidth = 826
-    ExplicitHeight = 327
-    ClientRectBottom = 327
-    ClientRectRight = 826
+    ExplicitWidth = 1064
+    ExplicitHeight = 362
+    ClientRectBottom = 362
+    ClientRectRight = 1354
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 826
-      ExplicitHeight = 327
+      ExplicitWidth = 1064
+      ExplicitHeight = 362
       inherited cxGrid: TcxGrid
-        Width = 826
-        Height = 327
-        ExplicitWidth = 826
-        ExplicitHeight = 327
+        Width = 1354
+        Height = 362
+        ExplicitLeft = 3
+        ExplicitWidth = 1354
+        ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -75,6 +75,30 @@ inherited PriceForm: TPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Column = SummaRemainsEnd
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = SummaRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRemainsNotMCSEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummaNotMCSEnd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -101,6 +125,26 @@ inherited PriceForm: TPriceForm
               Format = ',0.####'
               Kind = skSum
               Column = colRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRemainsNotMCSEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummaNotMCSEnd
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -143,7 +187,7 @@ inherited PriceForm: TPriceForm
             Width = 60
           end
           object StartDate: TcxGridDBColumn
-            Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089
+            Caption = #1048#1089#1090#1086#1088#1080#1103' '#1085#1072#1095'. '#1076#1072#1085#1085#1099#1093' '#1089
             DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -159,7 +203,7 @@ inherited PriceForm: TPriceForm
             Width = 71
           end
           object clPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -171,7 +215,7 @@ inherited PriceForm: TPriceForm
           end
           object clMCSDateChange: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
-            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1053#1058#1047
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1053#1058#1047' ('#1085#1072#1095'.)'
             DataBinding.FieldName = 'MCSDateChange'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -179,24 +223,13 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 81
           end
-          object clMCSValue: TcxGridDBColumn
-            AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
-            Caption = #1053#1058#1047
-            DataBinding.FieldName = 'MCSValue'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
-            Width = 53
-          end
           object clMCSPeriod: TcxGridDBColumn
-            Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'***'
+            Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'*** ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'MCSPeriod'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072' '#1053#1058#1047
@@ -204,11 +237,12 @@ inherited PriceForm: TPriceForm
             Width = 70
           end
           object clMCSDay: TcxGridDBColumn
-            Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'***'
+            Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'***  ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'MCSDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081' '#1076#1083#1103' '#1053#1058#1047
@@ -216,7 +250,7 @@ inherited PriceForm: TPriceForm
             Width = 53
           end
           object colRemains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
+            Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -226,7 +260,7 @@ inherited PriceForm: TPriceForm
             Width = 55
           end
           object SummaRemains: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1086#1082' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'SummaRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -237,11 +271,12 @@ inherited PriceForm: TPriceForm
             Width = 80
           end
           object clRemainsNotMCS: TcxGridDBColumn
-            Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090
+            Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'RemainsNotMCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
@@ -249,11 +284,134 @@ inherited PriceForm: TPriceForm
             Width = 70
           end
           object clSummaNotMCS: TcxGridDBColumn
-            Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
+            Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'SummaNotMCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Options.Editing = False
+            Width = 80
+          end
+          object clMCSValue: TcxGridDBColumn
+            AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Caption = #1053#1058#1047' ('#1085#1072#1095'.)'
+            DataBinding.FieldName = 'MCSValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Width = 53
+          end
+          object StartDateEnd: TcxGridDBColumn
+            Caption = #1048#1089#1090#1086#1088#1080#1103' '#1082#1086#1085'. '#1076#1072#1085#1085#1099#1093' '#1089
+            DataBinding.FieldName = 'StartDateEnd'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object clPriceEnd: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
+            DataBinding.FieldName = 'PriceEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00'
+            Properties.MinValue = 0.010000000000000000
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object clMCSPeriodEnd: TcxGridDBColumn
+            Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'***  ('#1085#1072' '#1082#1086#1085'. '#1076#1085#1103')'
+            DataBinding.FieldName = 'MCSPeriodEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072' '#1053#1058#1047
+            Options.Editing = False
+            Width = 70
+          end
+          object clMCSDayEnd: TcxGridDBColumn
+            Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'*** ('#1085#1072' '#1082#1086#1085'. '#1076#1085#1103')'
+            DataBinding.FieldName = 'MCSDayEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081' '#1076#1083#1103' '#1053#1058#1047
+            Options.Editing = False
+            Width = 53
+          end
+          object colRemainsEnd: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
+            DataBinding.FieldName = 'RemainsEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object SummaRemainsEnd: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1086#1082' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
+            DataBinding.FieldName = 'SummaRemainsEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clMCSValueEnd: TcxGridDBColumn
+            AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Caption = #1053#1058#1047' ('#1082#1086#1085'.)'
+            DataBinding.FieldName = 'MCSValueEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Options.Editing = False
+            Width = 53
+          end
+          object clRemainsNotMCSEnd: TcxGridDBColumn
+            Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
+            DataBinding.FieldName = 'RemainsNotMCSEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Options.Editing = False
+            Width = 70
+          end
+          object clSummaNotMCSEnd: TcxGridDBColumn
+            Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
+            DataBinding.FieldName = 'SummaNotMCSEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
@@ -638,7 +796,7 @@ inherited PriceForm: TPriceForm
     Top = 144
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Price'
+    StoredProcName = 'gpSelect_Object_PriceHistory'
     Params = <
       item
         Name = 'inUnitId'
@@ -652,7 +810,7 @@ inherited PriceForm: TPriceForm
         Value = 'NULL'
         Component = deOperDate
         DataType = ftDateTime
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Name = 'inisShowAll'
@@ -1088,8 +1246,8 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 408
-    Top = 136
+    Left = 400
+    Top = 176
   end
   object spDelete_Object_MCS: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_MCS'
@@ -1104,7 +1262,7 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 504
-    Top = 136
+    Left = 480
+    Top = 168
   end
 end

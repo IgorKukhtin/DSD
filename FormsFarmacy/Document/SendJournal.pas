@@ -39,6 +39,7 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
     colTotalSumm: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

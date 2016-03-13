@@ -235,6 +235,8 @@ type
     actEmailKind: TdsdOpenForm;
     N94: TMenuItem;
     N95: TMenuItem;
+    actPriceOnDate: TdsdOpenForm;
+    N96: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

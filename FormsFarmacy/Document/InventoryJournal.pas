@@ -42,6 +42,7 @@ type
     colFullInvent: TcxGridDBColumn;
     colDiff: TcxGridDBColumn;
     colDiffSumm: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

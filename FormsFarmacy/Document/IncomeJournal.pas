@@ -63,6 +63,7 @@ type
     spisDocument: TdsdStoredProc;
     actisDocument: TdsdExecStoredProc;
     bbisDocument: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

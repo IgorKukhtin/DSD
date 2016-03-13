@@ -14,7 +14,7 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TOrderInternalJournalForm = class(TAncestorJournalForm)
@@ -34,6 +34,7 @@ type
     spCalculate: TdsdStoredProc;
     colOrderKind: TcxGridDBColumn;
     mactCalculateExternalZakaz: TMultiAction;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

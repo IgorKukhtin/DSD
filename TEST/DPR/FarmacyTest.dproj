@@ -1132,10 +1132,6 @@
 				<Form>SheetWorkTimeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Liquid.pas">
-				<Form>Report_LiquidForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncome.pas">
 				<Form>Report_MovementIncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1194,6 +1190,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\EmailSettings.pas">
 				<Form>EmailSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Movement_PeriodDialog.pas">
+				<Form>Movement_PeriodDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Liquid.pas">
+				<Form>Report_LiquidForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceOnDate.pas">
+				<Form>PriceOnDateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

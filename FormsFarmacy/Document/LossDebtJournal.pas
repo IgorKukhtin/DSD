@@ -12,12 +12,14 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.Controls, Vcl.ExtCtrls, cxPCdxBarPopupMenu,
-  cxPC;
+  cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TLossDebtJournalForm = class(TAncestorJournalForm)
      colJuridicalBasisName: TcxGridDBColumn;
      colTotalSumm: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

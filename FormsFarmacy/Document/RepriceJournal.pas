@@ -30,6 +30,7 @@ type
     colUnitName: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     dxBarButton1: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -2,6 +2,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1086#1087#1083#1072#1090
   ClientHeight = 374
   ClientWidth = 663
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Payment'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
@@ -120,6 +121,34 @@ inherited PaymentJournalForm: TPaymentJournalForm
       FormName = 'TPaymentForm'
       FormNameParam.Value = 'TPaymentForm'
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Payment'
@@ -202,7 +231,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
       end
       item
         Name = 'OperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
       end
       item
@@ -235,12 +264,12 @@ inherited PaymentJournalForm: TPaymentJournalForm
       end
       item
         Name = 'DateStart'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
       end
       item
         Name = 'DateEnd'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
       end>
     PackSize = 1

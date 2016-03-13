@@ -377,7 +377,6 @@ uses
   MemberEdit in '..\..\FormsFarmacy\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   SheetWorkTimeJournal in '..\..\FormsFarmacy\Document\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm: TParentForm},
   SheetWorkTime in '..\..\FormsFarmacy\Document\SheetWorkTime.pas' {SheetWorkTimeForm: TParentForm},
-  Report_Liquid in '..\..\FormsFarmacy\Report\Report_Liquid.pas' {Report_LiquidForm: TParentForm},
   Report_MovementIncome in '..\..\FormsFarmacy\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm},
   SheetWorkTimeAddRecord in '..\..\FormsFarmacy\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
   GoodsGroup in '..\..\FormsFarmacy\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
@@ -392,7 +391,10 @@ uses
   GoodsAllRetail in '..\..\FormsFarmacy\Guides\GoodsAllRetail.pas' {GoodsAllRetailForm: TParentForm},
   EmailKind in '..\..\FormsFarmacy\Kind\EmailKind.pas' {EmailKindForm: TParentForm},
   EmailTools in '..\..\FormsFarmacy\Kind\EmailTools.pas' {EmailToolsForm: TParentForm},
-  EmailSettings in '..\..\FormsFarmacy\Guides\EmailSettings.pas' {EmailSettingsForm: TParentForm};
+  EmailSettings in '..\..\FormsFarmacy\Guides\EmailSettings.pas' {EmailSettingsForm: TParentForm},
+  Movement_PeriodDialog in '..\..\FormsFarmacy\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
+  Report_Liquid in '..\..\FormsFarmacy\Report\Report_Liquid.pas' {Report_LiquidForm: TParentForm},
+  PriceOnDate in '..\..\FormsFarmacy\Guides\PriceOnDate.pas' {PriceOnDateForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

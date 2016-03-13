@@ -56,6 +56,7 @@ type
     spUpdateReturnOut_PartnerData: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     DataSetPost1: TDataSetPost;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public
