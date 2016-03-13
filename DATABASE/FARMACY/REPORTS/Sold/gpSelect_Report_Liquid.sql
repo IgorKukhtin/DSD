@@ -47,7 +47,7 @@ BEGIN
                              , Price_Goods.ChildObjectId                                                      AS GoodsId
                              , Object_Price.Id                                                                AS PriceId 
                              , COALESCE (ROUND(Price_Value.ValueData,2), 0)  AS Price
-                             , COALESCE (MCS_Value.ValueData, 0)             AS MCSValue
+                            -- , COALESCE (MCS_Value.ValueData, 0)             AS MCSValue
                         FROM Object AS Object_Price 
                            INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                                 ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
@@ -61,9 +61,10 @@ BEGIN
                            LEFT JOIN ObjectFloat AS Price_Value
                                                  ON Price_Value.ObjectId = Object_Price.Id
                                                 AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                           LEFT JOIN ObjectFloat AS MCS_Value
+                       /*    LEFT JOIN ObjectFloat AS MCS_Value
                                                  ON MCS_Value.ObjectId = Object_Price.Id
                                                 AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()   
+                        */
                        WHERE  Object_Price.DescId = zc_Object_Price() --and Price_Goods.ChildObjectId = 16000 
                       )
 
@@ -114,16 +115,19 @@ BEGIN
         
   , tmpGoodsMotion AS (SELECT _TIME.PlanDate AS OperDate
                             , tmpGoods.UnitId, tmpGoods.GoodsID
-                            , COALESCE (ObjectHistoryFloat_Price.ValueData, tmpGoods.Price)  AS Price
-                            , COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) AS MCSValue
+                            , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)  AS Price
+                         --   , COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0) AS MCSValue
+                            , COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0)  AS PriceEnd
+                            , COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) AS MCSValueEnd
+
                             --, coalesce (tmpGoods.Price, 0) as Price
                             --, coalesce (tmpGoods.MCSValue, 0) as MCSValue
                             , tmpGoods.Amount
                        FROM 
                       (SELECT tmpGoods.UnitId, tmpGoods.GoodsID, tmpPrice.PriceId
                              , SUM (tmpGoods.Amount) AS Amount
-                             , tmpPrice.Price
-                             , tmpPrice.MCSValue
+                             --, tmpPrice.Price
+                             --, tmpPrice.MCSValue
                        FROM (SELECT DISTINCT
                                     MIContainer.UnitId
                                   , MIContainer.GoodsID
@@ -139,11 +143,11 @@ BEGIN
                                                AND tmpPrice.UnitId = tmpGoods.UnitId 
                                                -- AND tmpPrice.MCSValue > 0   
                        GROUP BY tmpGoods.UnitId, tmpGoods.GoodsID, tmpPrice.PriceId
-                              , tmpPrice.Price
-                              , tmpPrice.MCSValue
+                           --   , tmpPrice.Price
+                            --  , tmpPrice.MCSValue
                       ) AS tmpGoods 
                       INNER JOIN _TIME ON 1=1
-                           -- получаем значения цены и НТЗ из истории значений на дату                                                           
+                           -- получаем значения цены и НТЗ из истории значений на дату на начало                                                          
                            LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                                    ON ObjectHistory_Price.ObjectId = tmpGoods.PriceId
                                                   AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
@@ -151,22 +155,36 @@ BEGIN
                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                                         ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                                         AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
-                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValue
+                      /*     LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValue
                                                         ON ObjectHistoryFloat_MCSValue.ObjectHistoryId = ObjectHistory_Price.Id
                                                        AND ObjectHistoryFloat_MCSValue.DescId = zc_ObjectHistoryFloat_Price_MCSValue()                         
+*/
+                           -- получаем значения цены и НТЗ из истории значений на дату на конец дня                                                          
+                           LEFT JOIN ObjectHistory AS ObjectHistory_PriceEnd
+                                                   ON ObjectHistory_PriceEnd.ObjectId = tmpGoods.PriceId
+                                                  AND ObjectHistory_PriceEnd.DescId = zc_ObjectHistory_Price()
+                                                  AND _TIME.PlanDate+interval '1 day' >= ObjectHistory_PriceEnd.StartDate AND _TIME.PlanDate + interval '1 day' < ObjectHistory_PriceEnd.EndDate
+                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceEnd
+                                                        ON ObjectHistoryFloat_PriceEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
+                                                        AND ObjectHistoryFloat_PriceEnd.DescId = zc_ObjectHistoryFloat_Price_Value()
+                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValueEnd
+                                                        ON ObjectHistoryFloat_MCSValueEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
+                                                       AND ObjectHistoryFloat_MCSValueEnd.DescId = zc_ObjectHistoryFloat_Price_MCSValue()                         
+                                                       
                       )
       
   -- расчет возврата (НТЗ)
      , tmpNTZ AS (SELECT  tmp.OperDate
                         , tmp.UnitId
                         , SUM ((tmp.Remains) * tmp.Price)  AS AmountRem
-                        , SUM ((tmp.RemainsEnd) * tmp.Price)  AS AmountRemEnd
-                        , SUM (CASE WHEN (tmp.RemainsEnd > tmp.MCSValue) THEN ((tmp.RemainsEnd - tmp.MCSValue) * tmp.Price) ELSE 0 END) AS AmountNotMCS
+                        , SUM ((tmp.RemainsEnd) * tmp.PriceEnd)  AS AmountRemEnd
+                        , SUM (CASE WHEN (tmp.RemainsEnd > tmp.MCSValueEnd) THEN ((tmp.RemainsEnd - tmp.MCSValueEnd) * tmp.PriceEnd) ELSE 0 END) AS AmountNotMCS
                   FROM  (SELECT tmpGoodsMotion.OperDate
                              , tmpGoodsMotion.UnitId
                              , tmpGoodsMotion.GoodsID
                              , tmpGoodsMotion.Price
-                             , tmpGoodsMotion.MCSValue
+                             , tmpGoodsMotion.PriceEnd
+                             , tmpGoodsMotion.MCSValueEnd
                              , tmpGoodsMotion.Amount  - COALESCE (sum (COALESCE (MIContainer.Amount_Total, 0)))  AS Remains
                              , tmpGoodsMotion.Amount  - SUM (CASE WHEN MIContainer.OperDate > tmpGoodsMotion.OperDate THEN COALESCE (MIContainer.Amount_Total, 0) ELSE 0 END) AS RemainsEnd
                         FROM tmpGoodsMotion
@@ -177,7 +195,8 @@ BEGIN
                              , tmpGoodsMotion.UnitId
                              , tmpGoodsMotion.GoodsID
                              , tmpGoodsMotion.Price
-                             , tmpGoodsMotion.MCSValue
+                             , tmpGoodsMotion.PriceEnd
+                             , tmpGoodsMotion.MCSValueEnd
                              , tmpGoodsMotion.Amount
                         ) AS tmp
                          GROUP BY tmp.OperDate
@@ -276,6 +295,7 @@ BEGIN
                                      
                                      LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
                                                        AND tmpPrice.UnitId = MovementLinkObject_Unit.ObjectId
+                                                      -- AND tmpPrice.OperDate = date_trunc('day', Movement.OperDate)
                                                            
                                  GROUP BY date_trunc('day', Movement.OperDate)
                                         , MovementLinkObject_Unit.ObjectId 

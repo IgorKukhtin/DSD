@@ -89,6 +89,16 @@ inherited PriceOnDateForm: TPriceOnDateForm
               Kind = skSum
               Position = spFooter
               Column = SummaRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRemainsNotMCSEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummaNotMCSEnd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -125,6 +135,16 @@ inherited PriceOnDateForm: TPriceOnDateForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRemainsNotMCSEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummaNotMCSEnd
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
