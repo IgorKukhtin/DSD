@@ -9,7 +9,7 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
   Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls, Vcl.ActnList,
   dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
-  IdSSL, IdSSLOpenSSL;
+  IdSSL, IdSSLOpenSSL, IdIMAP4;
 
 type
   // элемент "почтовый ящик"
@@ -20,8 +20,8 @@ type
     UserName      : string;
     PasswordValue : string;
     Directory     : string;    // путь, по которому сохраняются вложенные файлики из писем, и если необходимо - там же разархивируются
-    onTime        : Integer;   // с какой периодичностью проверять почту в активном периоде, мин
     BeginTime     : TDateTime; // Время последней проверки
+    onTime        : Integer;   // с какой периодичностью проверять почту в активном периоде, мин
   end;
   TArrayMail = array of TMailItem;
   // элемент "поставщик и параметры загрузки информации"
@@ -43,7 +43,7 @@ type
   TArrayImportSettings = array of TImportSettingsItem;
 
   TMainForm = class(TForm)
-    IdPOP3: TIdPOP3;
+    IdPOP33: TIdPOP3;
     IdMessage: TIdMessage;
     BtnStart: TBitBtn;
     spSelect: TdsdStoredProc;
@@ -70,6 +70,7 @@ type
     IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
     cbBeginMove: TCheckBox;
     spGet_LoadPriceList: TdsdStoredProc;
+    IdPOP3: TIdIMAP4;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
@@ -111,6 +112,8 @@ begin
   // включаем таймер
   cbTimer.Checked:=true;
   Timer.Enabled:=cbTimer.Checked;
+  Timer.Interval:=100;
+  cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec';
   //
   GaugeHost.Progress:=0;
   GaugeMailFrom.Progress:=0;
@@ -167,10 +170,13 @@ end;
 {------------------------------------------------------------------------}
 // получает данные с сервера и на основании этих данных заполняет массивы
 function TMainForm.fInitArray : Boolean;
-var i:Integer;
+var i,nn:Integer;
     HostStringList:TStringList;
 begin
      if vbIsBegin = true then exit;
+     // !!!отключили таймер!!!
+     Timer.Enabled:=false;
+     Timer.Interval:=1000;
      // запущена обработка
      vbIsBegin:= true;
 
@@ -216,13 +222,16 @@ begin
           i:=i+1;
        end;
        //
+       //обнуляем Host
+       for i:=0 to Length(vbArrayMail) - 1 do vbArrayMail[i].Host:='';
        //второй цикл
        DataSet.First;
        i:=0;
        SetLength(vbArrayMail,HostStringList.Count);//длина масива соответствует кол-ву Host-ов
        while not DataSet.EOF do
        begin
-          if GetArrayList_Index_byHost(vbArrayMail, DataSet.FieldByName('Host').asString) = -1 then
+          nn:= GetArrayList_Index_byHost(vbArrayMail, DataSet.FieldByName('Host').asString);
+          if nn = -1 then
           begin
                 //сохранили новый Host
                 vbArrayMail[i].Host:=DataSet.FieldByName('Host').asString;
@@ -239,14 +248,17 @@ begin
                 // переносить прайс в актуальные цены (а загрузка выполняется всегда)
                 cbBeginMove.Checked:=DataSet.FieldByName('isBeginMove').asBoolean;
                 //
-                //в таймер сохраняем - периодичность проверки почты
-                if (Timer.Interval > vbArrayMail[i].onTime * 60 * 1000) or (Timer.Interval <= 1000) then
-                begin
-                     Timer.Interval:= vbArrayMail[i].onTime * 60 * 1000;
-                     cbTimer.Caption:= 'Timer ON ' + IntToStr(vbArrayMail[i].onTime * 60) + ' sec';
-                end;
-                //
                 i:=i+1;
+          end
+          else if vbArrayMail[nn].onTime > DataSet.FieldByName('onTime').asInteger
+               then // обновили новый минимум -  с какой периодичностью проверять почту в активном периоде, мин
+                    vbArrayMail[i].onTime:=DataSet.FieldByName('onTime').asInteger;
+
+          // !!!в таймере!!! обновили новый минимум -  с какой периодичностью проверять почту в активном периоде
+          if (Timer.Interval > DataSet.FieldByName('onTime').asInteger * 60 * 1000) or (Timer.Interval <= 1000) then
+          begin
+               Timer.Interval:= DataSet.FieldByName('onTime').asInteger * 60 * 1000;
+               cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec';
           end;
           //перешли к следующему
           DataSet.Next;
@@ -256,6 +268,8 @@ begin
      HostStringList.Free;
      // завершена обработка
      vbIsBegin:= false;
+     // !!!включили таймер!!!
+     Timer.Enabled:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всей почты
@@ -310,7 +324,8 @@ begin
                  //подключаемся к ящику
                  IdPOP3.Connect;
                  //количество писем
-                 msgcnt:= IdPOP3.CheckMessages;
+                 //***msgcnt:= IdPOP3.CheckMessages;
+                 msgcnt:= IdPOP3.MailBox.TotalMsgs;
                  //
                  GaugeMailFrom.Progress:=0;
                  GaugeMailFrom.MaxValue:=msgcnt;
@@ -389,7 +404,9 @@ begin
                    else ShowMessage('not read :' + IntToStr(i));
 
                    //удаление письма
-                   if flag then IdPOP3.Delete(i);
+                   //***if flag then IdPOP3.Delete(i);
+                   if flag then IdPOP3.DeleteMsgs(i);
+
 
                    //
                    GaugeMailFrom.Progress:=GaugeMailFrom.Progress+1;

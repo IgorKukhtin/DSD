@@ -3,7 +3,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
   ClientHeight = 399
   ClientWidth = 714
   ExplicitWidth = 730
-  ExplicitHeight = 437
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,6 +23,10 @@ inherited PriceListLoadForm: TPriceListLoadForm
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil

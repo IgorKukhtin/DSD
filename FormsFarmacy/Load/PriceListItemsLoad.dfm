@@ -26,6 +26,9 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ExplicitWidth = 908
         ExplicitHeight = 335
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
           Styles.Inactive = nil

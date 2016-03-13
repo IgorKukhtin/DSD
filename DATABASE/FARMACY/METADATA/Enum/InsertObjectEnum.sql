@@ -148,10 +148,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EDIStatus_DECLAR(), inDescId:= zc_Object_EDIStatus(), inCode:= zc_Enum_EDIStatus_DECLAR(), inName:= 'Налоговая', inEnumName:= 'zc_Enum_EDIStatus_DECLAR');
     
      -- !!! Тип контакта
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CreateOrder(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 1, inName:= 'Формирование заказов', inEnumName:= 'zc_Enum_ContactPersonKind_CreateOrder');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CheckDocument(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 2, inName:= 'Проверка документов', inEnumName:= 'zc_Enum_ContactPersonKind_CheckDocument');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_AktSverki(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 3, inName:= 'Акты сверки и выполенных работ', inEnumName:= 'zc_Enum_ContactPersonKind_AktSverki');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_ProcessOrder(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 4, inName:= 'Обработка заказов', inEnumName:= 'zc_Enum_ContactPersonKind_ProcessOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CreateOrder()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 1, inName:= 'Формирование заказов'          , inEnumName:= 'zc_Enum_ContactPersonKind_CreateOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CheckDocument(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 2, inName:= 'Проверка документов'           , inEnumName:= 'zc_Enum_ContactPersonKind_CheckDocument');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_AktSverki()    , inDescId:= zc_Object_ContactPersonKind(), inCode:= 3, inName:= 'Акты сверки и выполенных работ', inEnumName:= 'zc_Enum_ContactPersonKind_AktSverki');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_ProcessOrder() , inDescId:= zc_Object_ContactPersonKind(), inCode:= 4, inName:= 'Обработка заказов'             , inEnumName:= 'zc_Enum_ContactPersonKind_ProcessOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_PriceListIn()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 5, inName:= 'Обработка прайса-поставщика'   , inEnumName:= 'zc_Enum_ContactPersonKind_PriceListIn');
 
      -- !!! Типы счетов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Active(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активный', inEnumName:= 'zc_Enum_AccountKind_Active');
@@ -410,10 +411,14 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
+                                                              inContactPersonId:= NULL,
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
+                                                              inStartTime    := NULL::TVarChar,
+                                                              inEndTime      := NULL::TVarChar,
+                                                              inTime         := 0,
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_MCS');
@@ -527,10 +532,14 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
+                                                              inContactPersonId:= NULL,
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
+                                                              inStartTime    := NULL::TVarChar,
+                                                              inEndTime      := NULL::TVarChar,
+                                                              inTime         := 0,
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Price');
@@ -644,10 +653,14 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
+                                                              inContactPersonId:= NULL,
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
+                                                              inStartTime    := NULL::TVarChar,
+                                                              inEndTime      := NULL::TVarChar,
+                                                              inTime         := 0,
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Inventory');
@@ -780,10 +793,14 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
+                                                              inContactPersonId:= NULL,
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
+                                                              inStartTime    := NULL::TVarChar,
+                                                              inEndTime      := NULL::TVarChar,
+                                                              inTime         := 0,
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Goods_MinimumLot');
@@ -898,10 +915,14 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
+                                                              inContactPersonId:= NULL,
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
+                                                              inStartTime    := NULL::TVarChar,
+                                                              inEndTime      := NULL::TVarChar,
+                                                              inTime         := 0,
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Goods_IsUpload');
@@ -1020,10 +1041,14 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
+                                                              inContactPersonId:= NULL,
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
+                                                              inStartTime    := NULL::TVarChar,
+                                                              inEndTime      := NULL::TVarChar,
+                                                              inTime         := 0,
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Goods_IsSpecCondition');

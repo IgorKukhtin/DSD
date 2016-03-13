@@ -32,4 +32,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_LoadPriceList (183293, 30, '3')
+-- SELECT * FROM gpGet_LoadPriceList (59610, 183275, '3')
