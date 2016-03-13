@@ -38,7 +38,7 @@ BEGIN
           
            , LoadPriceList.isAllGoodsConcat           
            , LoadPriceList.NDSinPrice           
-           , LoadPriceList.isMoved
+           , COALESCE (LoadPriceList.isMoved, FALSE) :: Boolean AS isMoved
        FROM LoadPriceList
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId

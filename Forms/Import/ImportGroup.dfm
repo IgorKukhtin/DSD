@@ -4,19 +4,19 @@ inherited ImportGroupForm: TImportGroupForm
   ClientWidth = 578
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 586
-  ExplicitHeight = 366
+  ExplicitWidth = 594
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 578
     Height = 313
-    ExplicitWidth = 1184
+    ExplicitWidth = 578
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 578
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1184
+      ExplicitWidth = 578
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 273
@@ -26,6 +26,7 @@ inherited ImportGroupForm: TImportGroupForm
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Inserting = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -54,8 +55,6 @@ inherited ImportGroupForm: TImportGroupForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 700
-        ExplicitWidth = 484
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -111,8 +110,6 @@ inherited ImportGroupForm: TImportGroupForm
         Height = 313
         AutoPosition = False
         Control = cxGrid
-        ExplicitLeft = 297
-        ExplicitTop = 16
       end
     end
   end
@@ -146,6 +143,7 @@ inherited ImportGroupForm: TImportGroupForm
     object dsdUpdateMaster: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateImportGroup
       StoredProcList = <
         item
@@ -157,6 +155,7 @@ inherited ImportGroupForm: TImportGroupForm
     object dsdUpdateChild: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateImportGroupItems
       StoredProcList = <
         item
@@ -229,22 +228,26 @@ inherited ImportGroupForm: TImportGroupForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'ImportSettingsItemsId'
+          Value = Null
           Component = ChildCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'ImportSettingsItemsName'
+          Value = Null
           Component = ChildCDS
           ComponentItem = 'Name'
         end>
@@ -255,17 +258,20 @@ inherited ImportGroupForm: TImportGroupForm
     object ImportSettingsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TImportSettingsForm'
       FormNameParam.Value = 'TImportSettingsForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = ChildCDS
           ComponentItem = 'ImportSettingsId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ChildCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -275,8 +281,10 @@ inherited ImportGroupForm: TImportGroupForm
     object ExecuteImportSettingsAction: TExecuteImportSettingsAction
       Category = 'Load'
       MoveParams = <>
+      ImportSettingsId.Value = Null
       ImportSettingsId.Component = ChildCDS
       ImportSettingsId.ComponentItem = 'ImportSettingsId'
+      ExternalParams = <>
     end
     object mactLoadPrice: TMultiAction
       Category = 'Load'
@@ -391,17 +399,20 @@ inherited ImportGroupForm: TImportGroupForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 232
     Top = 123
   end
@@ -428,6 +439,7 @@ inherited ImportGroupForm: TImportGroupForm
         DataSet = ChildCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 424
     Top = 80
   end
@@ -438,22 +450,26 @@ inherited ImportGroupForm: TImportGroupForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inImportSettingsId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ImportSettingsId'
         ParamType = ptInput
       end
       item
         Name = 'inImportGroupId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 424
     Top = 115
   end
@@ -478,10 +494,12 @@ inherited ImportGroupForm: TImportGroupForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 352
     Top = 216
   end
@@ -492,10 +510,12 @@ inherited ImportGroupForm: TImportGroupForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 192
     Top = 192
   end

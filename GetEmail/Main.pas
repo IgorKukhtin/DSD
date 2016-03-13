@@ -7,7 +7,9 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, IdMessage,
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
-  Data.DB, Datasnap.DBClient;
+  Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls, Vcl.ActnList,
+  dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
+  IdSSL, IdSSLOpenSSL;
 
 type
   // элемент "почтовый ящик"
@@ -43,18 +45,51 @@ type
   TMainForm = class(TForm)
     IdPOP3: TIdPOP3;
     IdMessage: TIdMessage;
-    BitBtn1: TBitBtn;
+    BtnStart: TBitBtn;
     spSelect: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
-    procedure BitBtn1Click(Sender: TObject);
+    PanelHost: TPanel;
+    GaugeHost: TGauge;
+    PanelMailFrom: TPanel;
+    PanelParts: TPanel;
+    GaugeMailFrom: TGauge;
+    GaugeParts: TGauge;
+    GaugeLoadXLS: TGauge;
+    GaugeMove: TGauge;
+    ActionList: TActionList;
+    actExecuteImportSettings: TExecuteImportSettingsAction;
+    PanelLoadXLS: TPanel;
+    MasterCDS: TClientDataSet;
+    spSelectMove: TdsdStoredProc;
+    PanelMove: TPanel;
+    spUpdateGoods: TdsdStoredProc;
+    spLoadPriceList: TdsdStoredProc;
+    actMovePriceList: TdsdExecStoredProc;
+    Timer: TTimer;
+    cbTimer: TCheckBox;
+    IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+    cbBeginMove: TCheckBox;
+    spGet_LoadPriceList: TdsdStoredProc;
+    procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure TimerTimer(Sender: TObject);
+    procedure cbTimerClick(Sender: TObject);
   private
+    vbIsBegin :Boolean;// запущена обработка
+
     vbArrayMail :TArrayMail; // массив почтовых ящиков
     vbArrayImportSettings :TArrayImportSettings; // массив поставщиков и параметров загрузки информации
+
     function GetArrayList_Index_byHost(ArrayList:TArrayMail;Host:String):Integer;//находит Индекс в массиве по значению Host
     function GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;Host,JuridicalMail:String):Integer;//находит Индекс в массиве по значению Host + MailJuridical
+
+    function fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
+
+    function fBeginAll  : Boolean; // обработка все
     function fInitArray : Boolean; // получает данные с сервера и на основании этих данных заполняет массивы
     function fBeginMail : Boolean; // обработка всей почты
+    function fBeginXLS  : Boolean; // обработка всех XLS
+    function fBeginMove : Boolean; // перенос цен
   public
   end;
 
@@ -62,13 +97,31 @@ var
   MainForm: TMainForm;
 
 implementation
-uses Authentication, Storage, CommonData, UtilConst;
+uses Authentication, Storage, CommonData, UtilConst, sevenzip;
 {$R *.dfm}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   //создает сессию и коннект
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Авто-загрузка прайс-поставщик', gc_AdminPassword, gc_User);
+  // запущена обработка
+  vbIsBegin:= false;
+  // переносить прайс в актуальные цены (а загрузка выполняется всегда)
+  cbBeginMove.Checked:=false;
+  // включаем таймер
+  cbTimer.Checked:=true;
+  Timer.Enabled:=cbTimer.Checked;
+  //
+  GaugeHost.Progress:=0;
+  GaugeMailFrom.Progress:=0;
+  GaugeParts.Progress:=0;
+  GaugeLoadXLS.Progress:=0;
+  GaugeMove.Progress:=0;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbTimerClick(Sender: TObject);
+begin
+     Timer.Enabled:=cbTimer.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //находит Индекс в массиве по значению Host
@@ -117,6 +170,10 @@ function TMainForm.fInitArray : Boolean;
 var i:Integer;
     HostStringList:TStringList;
 begin
+     if vbIsBegin = true then exit;
+     // запущена обработка
+     vbIsBegin:= true;
+
      HostStringList:=TStringList.Create;
      HostStringList.Sorted:=true;
      //
@@ -177,8 +234,17 @@ begin
                 vbArrayMail[i].Directory:=ExpandFileName(DataSet.FieldByName('DirectoryMail').asString);
                 // с какой периодичностью проверять почту в активном периоде, мин
                 vbArrayMail[i].onTime:=DataSet.FieldByName('onTime').asInteger;
-                // Время последней проверки
+                // Время последней проверки - инициализируем значением "много дней назад"
                 vbArrayMail[i].BeginTime:=NOW-1000;
+                // переносить прайс в актуальные цены (а загрузка выполняется всегда)
+                cbBeginMove.Checked:=DataSet.FieldByName('isBeginMove').asBoolean;
+                //
+                //в таймер сохраняем - периодичность проверки почты
+                if (Timer.Interval > vbArrayMail[i].onTime * 60 * 1000) or (Timer.Interval <= 1000) then
+                begin
+                     Timer.Interval:= vbArrayMail[i].onTime * 60 * 1000;
+                     cbTimer.Caption:= 'Timer ON ' + IntToStr(vbArrayMail[i].onTime * 60) + ' sec';
+                end;
                 //
                 i:=i+1;
           end;
@@ -188,6 +254,8 @@ begin
      end;
      //
      HostStringList.Free;
+     // завершена обработка
+     vbIsBegin:= false;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всей почты
@@ -197,12 +265,26 @@ var
   ii, i,j: integer;
   flag: boolean;
   msgcnt: integer;
-  Session,mailFolder,StrCopyFolder: ansistring;
+  Session,mailFolderMain,mailFolder,StrCopyFolder: ansistring;
   JurPos: integer;
+  arch:i7zInArchive;
+  StartTime:TDateTime;
 begin
-     //сессия - в эту папку будем сохранять файлики - она определяется временем запуска обработки
-     Session:=FormatDateTime('yyy-mm-dd hh-mm-ss',NOW);
+     if vbIsBegin = true then exit;
+     // запущена обработка
+     vbIsBegin:= true;
 
+
+     //сессия - в эту папку будем сохранять файлики - она определяется временем запуска обработки
+     StartTime:=NOW;
+     Session:=FormatDateTime('yyyy-mm-dd hh-mm-ss',StartTime);
+     //
+     arch:=CreateInArchive(CLSID_CFormatZip);
+
+     //
+     GaugeHost.Progress:=0;
+     GaugeHost.MaxValue:=Length(vbArrayMail);
+     Application.ProcessMessages;
      //цикл по почтовым ящикам
      for ii := 0 to Length(vbArrayMail)-1 do
        // если после предыдущей обработки прошло > onTime МИНУТ
@@ -210,6 +292,14 @@ begin
        then
            with IdPOP3 do
            begin
+              //
+              PanelHost.Caption:= 'Start Host : '+vbArrayMail[ii].Host+' for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+              Application.ProcessMessages;
+              //current directory to store the email
+              mailFolderMain:= vbArrayMail[ii].Directory + '\' + vbArrayMail[ii].Host + '_' + Session;
+              //создали папку для писем если таковой нет + это протокол что по данному ящику была обработка
+              ForceDirectories(mailFolderMain);
+
               //параметры подключения к ящику
               Host    := vbArrayMail[ii].Host;
               UserName:= vbArrayMail[ii].UserName;
@@ -221,6 +311,10 @@ begin
                  IdPOP3.Connect;
                  //количество писем
                  msgcnt:= IdPOP3.CheckMessages;
+                 //
+                 GaugeMailFrom.Progress:=0;
+                 GaugeMailFrom.MaxValue:=msgcnt;
+                 Application.ProcessMessages;
                  //цикл по входящим письмам
                  for I:= msgcnt downto 1 do
                  begin
@@ -232,17 +326,29 @@ begin
                    begin
                         //находим поставщика, который отправил на этот Host + есть в нашем списке + время
                         JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].Host, IdMessage.From.Address);
+                        //
+                        if JurPos >=0
+                        then PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' (' +  IntToStr(vbArrayImportSettings[JurPos].Id) + ') ' + vbArrayImportSettings[JurPos].Name
+                        else PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + IdMessage.From.Address + ' - ???';
+                        Application.ProcessMessages;
                         //если нашли поставщика, тогда это письмо надо загружать
                         if JurPos >= 0 then
                         begin
                              //current directory to store the email files
-                             mailFolder:= vbArrayMail[ii].Directory + '\' + vbArrayMail[ii].Host + '_' + Session + '_' + IntToStr(vbArrayImportSettings[JurPos].Id) + '_' + vbArrayImportSettings[JurPos].JuridicalName;
+                             mailFolder:= mailFolderMain + '\' + FormatDateTime('yyyy-mm-dd hh-mm-ss',IdMessage.Date) + '_' +  IntToStr(vbArrayImportSettings[JurPos].Id) + '_' + vbArrayImportSettings[JurPos].Name;
                              //создали папку для писем если таковой нет
                              ForceDirectories(mailFolder);
 
+                             //
+                             GaugeParts.Progress:=0;
+                             GaugeParts.MaxValue:=IdMessage.MessageParts.Count;
+                             Application.ProcessMessages;
                              //пройдемся по всем частям письма
-                             for j := 0 to IdMessage.MessageParts.Count - 1
-                             do
+                             for j := 0 to IdMessage.MessageParts.Count - 1 do
+                             begin
+                               //
+                               PanelParts.Caption:= 'Parts : '+IdMessage.From.Address;
+                               Application.ProcessMessages;
                                //если это вложенный файлик
                                if IdMessage.MessageParts[j] is TIdAttachment then
                                begin
@@ -251,55 +357,170 @@ begin
                                    // если надо - разархивировали
                                    if not (System.Pos(AnsiUppercase('.xls'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
                                     and not(System.Pos(AnsiUppercase('.xlsx'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
+                                    and not(System.Pos(AnsiUppercase('.xml'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
                                    then begin
-                                             {ZipForge1.FileName:=mailFolder + '\' + IdMessage.MessageParts[J].FileName;
-                                             ZipForge1.OpenArchive(fmOpenRead);
-                                             ZipForge1.BaseDir := mailFolder + '\';
-                                             ZipForge1.ExtractFiles('*.*');
-                                             ZipForge1.CloseArchive();}
+                                             arch.OpenFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                                             arch.ExtractTo(mailFolder + '\');
                                         end;
-                                   //ShowMessage(IdMessage.From.Address + ' : ' + IdMessage.Subject + ' : ' + IntToStr(j) + ' : ' + IdMessage.MessageParts[j].FileName + '   '  +FormatDateTime('dd mmm yyyy hh:mm:ss', IdMessage.Date) );
                                end;
-                            //завершилась обработка всех частей одного письма
+                               GaugeParts.Progress:=GaugeParts.Progress+1;
+                               Application.ProcessMessages;
+                             end;//завершилась обработка всех частей одного письма
 
                             //создали папку для загрузки, если таковой нет
                             ForceDirectories(vbArrayImportSettings[JurPos].Directory);
 
-                            // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-                            // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-                            // !!!TEST!!!
-                            StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xml' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                            WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                            // ТОЛЬКО если "сегодня" не было загрузки JurPos
+                            if fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId ) = 0 then
+                            begin
+                                  // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
+                                  StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                  WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                                  // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
+                                  StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                  WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                            end;
                             // потом надо удалить письмо в почте
                             flag:= true;
-                        end;
+                        end
+                        // если не нашли - все равно удалить письмо в почте
+                        else flag:= true;
                    end
                    else ShowMessage('not read :' + IntToStr(i));
 
                    //удаление письма
-                   //if flag then IdPOP3.Delete(i);
+                   if flag then IdPOP3.Delete(i);
+
+                   //
+                   GaugeMailFrom.Progress:=GaugeMailFrom.Progress+1;
+                   Application.ProcessMessages;
 
                  end;//финиш - цикл по входящим письмам
+                 //осталось сохранить время последней обработки почтового ящика
+                 vbArrayMail[ii].BeginTime:=NOW;
+                 //
+                 PanelHost.Caption:= 'End Host '+vbArrayMail[ii].Host+' for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+                 GaugeHost.Progress:=GaugeHost.Progress + 1;
+                 Application.ProcessMessages;
               finally
                  IdPOP3.Disconnect;
               end;
 
            end;//финиш - цикл по почтовым ящикам
+
+     // завершена обработка
+     vbIsBegin:= false;
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.BitBtn1Click(Sender: TObject);
+// обработка всех XLS
+function TMainForm.fBeginXLS : Boolean;
 begin
-     //инициализируем данные по всем поставщика
+     if vbIsBegin = true then exit;
+     // запущена обработка
+     vbIsBegin:= true;
+
+     with ClientDataSet do begin
+        GaugeLoadXLS.Progress:=0;
+        GaugeLoadXLS.MaxValue:=RecordCount;
+        Application.ProcessMessages;
+        //
+        First;
+        while not EOF do begin
+           PanelLoadXLS.Caption:= 'Load XLS : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString;
+           Application.ProcessMessages;
+           //Загружаем если есть откуда
+           if FieldByName('DirectoryImport').asString <> ''
+           then actExecuteImportSettings.Execute;
+
+           Next;
+           //
+           GaugeLoadXLS.Progress:=GaugeLoadXLS.Progress + 1;
+           Application.ProcessMessages;
+        end;
+     end;
+
+     // завершена обработка
+     vbIsBegin:= false;
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+// перенос цен
+function TMainForm.fBeginMove : Boolean;
+var StartTime:TDateTime;
+begin
+     if vbIsBegin = true then exit;
+     // запущена обработка
+     vbIsBegin:= true;
+
+     with spSelectMove do
+     begin
+        StoredProcName:='gpSelect_Movement_LoadPriceList';
+        OutputType:=otDataSet;
+        Params.Clear;
+        Execute;// получили все Прайсы
+        //
+        GaugeMove.Progress:=0;
+        GaugeMove.MaxValue:=DataSet.RecordCount;
+        Application.ProcessMessages;
+        //
+        DataSet.First;
+        while not Dataset.EOF do begin
+           StartTime:=NOW;
+           PanelMove.Caption:= 'Move : ('+FormatDateTime('dd.mm.yyyy',DataSet.FieldByName('OperDate').AsDateTime) + ') ' + DataSet.FieldByName('JuridicalName').AsString + ' : ' + DataSet.FieldByName('ContractName').AsString + ' for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+           Application.ProcessMessages;
+           //
+           if DataSet.FieldByName('isMoved').AsBoolean = FALSE
+           then actMovePriceList.Execute;
+           //
+           DataSet.Next;
+           //
+           PanelMove.Caption:= 'Move : ('+FormatDateTime('dd.mm.yyyy',DataSet.FieldByName('OperDate').AsDateTime) + ') ' + DataSet.FieldByName('JuridicalName').AsString + ' : ' + DataSet.FieldByName('ContractName').AsString + ' for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW);
+           GaugeMove.Progress:=GaugeMove.Progress + 1;
+           Application.ProcessMessages;
+        end;
+     end;
+
+     // завершена обработка
+     vbIsBegin:= false;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+// обработка все
+function TMainForm.fBeginAll : Boolean;
+begin
+     //инициализируем данные по всем поставщикам
      fInitArray;
      // обработка всей почты
      fBeginMail;
+     // обработка всех XLS
+     fBeginXLS;
+     // перенос цен
+     if cbBeginMove.Checked = TRUE then fBeginMove;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.BtnStartClick(Sender: TObject);
+begin
+     // обработка все
+     fBeginAll;
      //
      ShowMessage('Finish');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-
+procedure TMainForm.TimerTimer(Sender: TObject);
+begin
+     // обработка все
+     fBeginAll;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
+begin
+     with spGet_LoadPriceList do
+     begin
+       ParamByName('inJuridicalId').Value:=inJuridicalId;
+       ParamByName('inContractId').Value:=inContractId;
+       Execute;
+       Result:=ParamByName('outId').Value;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 end.
