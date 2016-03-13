@@ -1045,6 +1045,7 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContactPersonChoiceForm');
+  //это ж !!!Enum!!!
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindEditForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
 end;

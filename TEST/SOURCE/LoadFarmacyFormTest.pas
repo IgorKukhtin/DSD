@@ -217,6 +217,9 @@ begin
   //  Вид контакта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindForm');
+  //это ж !!!Enum!!!
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindEditForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;
@@ -250,6 +253,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+//exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
@@ -332,6 +336,7 @@ end;
 
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
+//exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));

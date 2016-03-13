@@ -202,9 +202,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EDIStatus_DECLAR(), inDescId:= zc_Object_EDIStatus(), inCode:= zc_Enum_EDIStatus_DECLAR(), inName:= 'Налоговая', inEnumName:= 'zc_Enum_EDIStatus_DECLAR');
     
      -- !!! Тип контакта
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CreateOrder(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 1, inName:= 'Формирование заказов', inEnumName:= 'zc_Enum_ContactPersonKind_CreateOrder');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CheckDocument(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 2, inName:= 'Проверка документов', inEnumName:= 'zc_Enum_ContactPersonKind_CheckDocument');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_AktSverki(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 3, inName:= 'Акты сверки и выполенных работ', inEnumName:= 'zc_Enum_ContactPersonKind_AktSverki');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CreateOrder()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 1, inName:= 'Формирование заказов'          , inEnumName:= 'zc_Enum_ContactPersonKind_CreateOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CheckDocument(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 2, inName:= 'Проверка документов'           , inEnumName:= 'zc_Enum_ContactPersonKind_CheckDocument');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_AktSverki()    , inDescId:= zc_Object_ContactPersonKind(), inCode:= 3, inName:= 'Акты сверки и выполенных работ', inEnumName:= 'zc_Enum_ContactPersonKind_AktSverki');
 
      -- !!! Типы печати документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Movement(), inDescId:= zc_Object_PrintKind(), inCode:= 1, inName:= 'Накладная', inEnumName:= 'zc_Enum_PrintKind_Movement');

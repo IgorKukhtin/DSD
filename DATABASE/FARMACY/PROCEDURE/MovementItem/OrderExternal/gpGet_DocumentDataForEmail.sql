@@ -27,61 +27,67 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
    vbUserId := lpGetUserBySession (inSession);
 
-   SELECT mail, JuridicalName INTO vbMail, vbJuridicalName FROM 
-          MovementLinkObject 
-  
-     LEFT JOIN Object_ContactPerson_View ON Object_ContactPerson_View.JuridicalId = ObjectId 
+   -- еще
+   SELECT mail, JuridicalName INTO vbMail, vbJuridicalName
+   FROM MovementLinkObject
+        LEFT JOIN Object_ContactPerson_View ON Object_ContactPerson_View.JuridicalId = MovementLinkObject.ObjectId
+                                           AND Object_ContactPerson_View.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+   WHERE MovementLinkObject.DescId = zc_MovementLinkObject_From()
+     AND MovementLinkObject.MovementId = inId;
 
-    WHERE DescId = zc_MovementLinkObject_From()
-      AND MovementId = inId;
-
+   -- еще
    SELECT object_unit_view.juridicalname||' от '||object_unit_view.name, SomeText, MovementLinkObject.ObjectId INTO vbZakazName, vbUnitSign, vbUnitId 
-      FROM 
-          MovementLinkObject 
-                LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = ObjectId 
-                                                      AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitEmailSign()
-                LEFT JOIN object_unit_view ON object_unit_view.id = MovementLinkObject.ObjectId                                 
+   FROM MovementLinkObject 
+        LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = ObjectId 
+                                              AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitEmailSign()
+        LEFT JOIN object_unit_view ON object_unit_view.id = MovementLinkObject.ObjectId                                 
  
-    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_To()
-      AND MovementId = inId;
+   WHERE MovementLinkObject.DescId = zc_MovementLinkObject_To()
+     AND MovementId = inId;
 
+   -- еще
    SELECT Object_ImportExportLink_View.StringKey INTO vbSubject
-      FROM 
-          MovementLinkObject 
-                LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
-                                                      AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
-                                                      AND Object_ImportExportLink_View.ValueId = ObjectId  
- 
-    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
-      AND MovementId = inId;
+   FROM MovementLinkObject 
+        LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
+                                              AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                              AND Object_ImportExportLink_View.ValueId = ObjectId  
+   WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
+     AND MovementId = inId;
 
 
+    -- проверка
     IF COALESCE(vbMail, '') = '' THEN
        RAISE EXCEPTION 'У юридического лица нет контактактных лиц с e-mail';
     END IF;
 
+    -- еще
     SELECT ObjectString.valuedata, ObjectBlob_EMailSign.ValueData INTO vbUserMail, vbUserMailSign
-      FROM ObjectLink AS User_Link_Member 
-               LEFT JOIN ObjectString ON ObjectString.descid = zc_ObjectString_Member_EMail()
-                     AND ObjectString.ObjectId = User_Link_Member.ChildObjectId
-             LEFT JOIN ObjectBlob AS ObjectBlob_EMailSign 
-                                  ON ObjectBlob_EMailSign.ObjectId = User_Link_Member.ChildObjectId
-                                 AND ObjectBlob_EMailSign.DescId =  zc_ObjectBlob_Member_EMailSign()
-     WHERE User_Link_Member.ObjectId = vbUserId AND User_Link_Member.DescId = zc_objectlink_user_member();
+    FROM ObjectLink AS User_Link_Member 
+         LEFT JOIN ObjectString ON ObjectString.descid = zc_ObjectString_Member_EMail()
+                               AND ObjectString.ObjectId = User_Link_Member.ChildObjectId
+         LEFT JOIN ObjectBlob AS ObjectBlob_EMailSign 
+                              ON ObjectBlob_EMailSign.ObjectId = User_Link_Member.ChildObjectId
+                             AND ObjectBlob_EMailSign.DescId =  zc_ObjectBlob_Member_EMailSign()
+    WHERE User_Link_Member.ObjectId = vbUserId AND User_Link_Member.DescId = zc_objectlink_user_member();
  
+
+    -- еще
     IF COALESCE(vbUserMail, '') = '' THEN 
        vbUserMail := '';
     ELSE
        vbUserMail := ', '||vbUserMail;
     END IF;
     
+    -- еще
     IF COALESCE(vbSubject, '') = '' THEN 
        vbSubject := ('Заказ '||vbJuridicalName||' от - '||COALESCE(vbZakazName, ''))::TVarChar;
     END IF;
     
 
+    -- еще
     vbMail := (vbMail||vbUserMail)::TVarChar;
 
+       -- Результат
        RETURN QUERY
        SELECT
          vbSubject, 
@@ -95,20 +101,16 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_DocumentDataForEmail(integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.03.16                                        *  
  14.01.15                         *  
  24.12.14                         *  
  18.11.14                         *  
-
 */
 
 -- тест
---             
-select * FROM  gpGet_DocumentDataForEmail(inId := 12183,  inSession := '377790');
+-- select * FROM  gpGet_DocumentDataForEmail(inId := 12183,  inSession := '377790');

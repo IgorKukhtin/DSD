@@ -4,7 +4,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
   ClientWidth = 844
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 860
-  ExplicitHeight = 461
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -110,7 +110,6 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
           OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -142,7 +141,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         Top = 0
         Width = 3
         Height = 397
-        Control = cxGrid
+        Control = cxGridGoodsLink
       end
     end
   end

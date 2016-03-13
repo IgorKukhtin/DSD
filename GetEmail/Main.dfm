@@ -140,11 +140,9 @@ object MainForm: TMainForm
     Caption = 'Move '#1087#1088#1072#1081#1089' '#1074' '#1072#1082#1090#1091#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099
     TabOrder = 7
   end
-  object IdPOP3: TIdPOP3
-    IOHandler = IdSSLIOHandlerSocketOpenSSL
+  object IdPOP33: TIdPOP3
     AutoLogin = True
-    UseTLS = utUseImplicitTLS
-    Port = 995
+    Port = 143
     SASLMechanisms = <>
     Left = 224
     Top = 48
@@ -267,9 +265,9 @@ object MainForm: TMainForm
     Top = 320
   end
   object IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL
-    Destination = ':995'
+    Destination = ':143'
     MaxLineAction = maException
-    Port = 995
+    Port = 143
     DefaultPort = 0
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
@@ -299,5 +297,13 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 216
     Top = 232
+  end
+  object IdPOP3: TIdIMAP4
+    IOHandler = IdSSLIOHandlerSocketOpenSSL
+    UseTLS = utUseRequireTLS
+    SASLMechanisms = <>
+    MilliSecsToWaitToClearBuffer = 10
+    Left = 288
+    Top = 8
   end
 end
