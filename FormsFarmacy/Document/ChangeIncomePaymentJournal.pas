@@ -28,6 +28,7 @@ type
     clReturnOutOperDatePartner: TcxGridDBColumn;
     clIncomeOperDate: TcxGridDBColumn;
     clIncomeInvNumber: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

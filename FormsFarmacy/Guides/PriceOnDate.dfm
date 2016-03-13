@@ -1,7 +1,8 @@
-inherited PriceForm: TPriceForm
-  Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
+inherited PriceOnDateForm: TPriceOnDateForm
+  Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1085#1072' '#1076#1072#1090#1091
   ClientHeight = 385
   ClientWidth = 826
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 842
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -22,7 +23,6 @@ inherited PriceForm: TPriceForm
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       TabOrder = 0
-      Visible = False
       Width = 154
     end
     object cxLabel3: TcxLabel
@@ -34,7 +34,6 @@ inherited PriceForm: TPriceForm
       Left = 426
       Top = 6
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1094#1077#1085' '#1085#1072':'
-      Visible = False
     end
   end
   inherited PageControl: TcxPageControl
@@ -638,7 +637,7 @@ inherited PriceForm: TPriceForm
     Top = 144
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Price'
+    StoredProcName = 'gpSelect_Object_PriceHistory'
     Params = <
       item
         Name = 'inUnitId'
@@ -652,7 +651,7 @@ inherited PriceForm: TPriceForm
         Value = 'NULL'
         Component = deOperDate
         DataType = ftDateTime
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Name = 'inisShowAll'

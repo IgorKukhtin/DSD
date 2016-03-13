@@ -14,7 +14,8 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
-  dxSkinsDefaultPainters, dxBarBuiltInMenu, cxNavigator;
+  dxSkinsDefaultPainters, dxBarBuiltInMenu, cxNavigator, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TOrderExternalJournalForm = class(TAncestorJournalForm)
@@ -34,6 +35,7 @@ type
     colTotalSumm: TcxGridDBColumn;
     colContract: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

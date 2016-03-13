@@ -29,6 +29,7 @@ type
     ArticleLossName: TcxGridDBColumn;
     spGet: TdsdStoredProc;
     colTotalSumm: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

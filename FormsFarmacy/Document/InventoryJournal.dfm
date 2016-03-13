@@ -2,6 +2,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 535
   ClientWidth = 819
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 835
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -10,17 +11,17 @@ inherited InventoryJournalForm: TInventoryJournalForm
     Width = 819
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 786
+    ExplicitWidth = 819
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 819
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 786
+      ExplicitWidth = 819
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 819
         Height = 478
-        ExplicitWidth = 786
+        ExplicitWidth = 819
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -143,7 +144,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
   end
   inherited Panel: TPanel
     Width = 819
-    ExplicitWidth = 786
+    ExplicitWidth = 819
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -231,6 +232,34 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       PreviewWindowMaximized = False
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource

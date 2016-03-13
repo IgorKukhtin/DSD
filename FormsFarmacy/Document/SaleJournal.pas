@@ -26,6 +26,7 @@ type
     colTotalSummPrimeCost: TcxGridDBColumn;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

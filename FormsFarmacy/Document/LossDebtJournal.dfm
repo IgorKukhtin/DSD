@@ -4,8 +4,9 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
     ')>'
   ClientHeight = 427
   ClientWidth = 460
-  ExplicitWidth = 468
-  ExplicitHeight = 454
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 476
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,18 +26,11 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
         ExplicitWidth = 460
         ExplicitHeight = 370
         inherited cxGridDBTableView: TcxGridDBTableView
-          OnDblClick = nil
-          OnKeyDown = nil
-          OnKeyPress = nil
-          OnCustomDrawCell = nil
-          DataController.Filter.OnChanged = nil
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          OnColumnHeaderClick = nil
-          OnCustomDrawColumnHeader = nil
           inherited colStatus: TcxGridDBColumn
             Options.Editing = False
           end
@@ -87,9 +81,34 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
       FormName = 'TLossDebtForm'
       FormNameParam.Value = 'TLossDebtForm'
     end
-  end
-  inherited MasterCDS: TClientDataSet
-    AfterInsert = nil
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_LossDebt'

@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_EmailSettings()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_EmailSettings(TVarChar, Integer);
+DROP FUNCTION IF EXISTS gpSelect_Object_EmailSettings(Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_EmailSettings(
