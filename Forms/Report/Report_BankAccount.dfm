@@ -736,6 +736,8 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         Properties.Strings = (
           'Date')
       end>
+    Left = 56
+    Top = 272
   end
   inherited ActionList: TActionList
     Left = 127
@@ -780,13 +782,13 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       Params = <
         item
           Name = 'StartDate'
-          Value = Null
+          Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = Null
+          Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -812,7 +814,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end
@@ -821,7 +823,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end>
@@ -876,7 +878,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end
@@ -885,7 +887,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end>
@@ -1352,7 +1354,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
       end>

@@ -1,12 +1,18 @@
 -- Function: gpSelect_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate                TDateTime , --
+    IN inEndDate                  TDateTime , --
+    IN inIsErased                 Boolean ,
+    IN inIsPartnerDate            Boolean ,
+    IN inBankAccountId            Integer ,
+    IN inMoneyPlaceId             Integer ,
+    IN inJuridicalCorporateId     Integer ,
+    IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -99,13 +105,36 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData             AS Income_SummWithOutVAT
            , (MovementFloat_TotalSumm.ValueData - MovementFloat_TotalSummMVAT.ValueData)::TFloat AS Income_SummVAT
              
-       FROM tmpStatus
+       FROM /*tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND Movement.StatusId = tmpStatus.StatusId
+*/
+            (SELECT Movement.Id
+                  , Movement.StatusId
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  
+                               AND Movement.DescId = zc_Movement_BankAccount() 
+                               AND Movement.StatusId = tmpStatus.StatusId
+             WHERE inIsPartnerDate = FALSE
+            UNION ALL
+             SELECT Movement.Id
+                  , Movement.StatusId
+             FROM MovementLinkMovement AS MovementLinkMovement_Child
+                INNER JOIN Movement AS Movement_Income 
+                                    ON Movement_Income.Id = MovementLinkMovement_Child.MovementChildId
+                                   AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate 
+                                   AND Movement_Income.DescId = zc_Movement_Income()
+                JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementId 
+                             AND Movement.DescId = zc_Movement_BankAccount()
+                JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+
+             WHERE inIsPartnerDate = TRUE
+            ) AS tmpMovement
+            LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Movement AS Movement_BankStatementItem ON Movement_BankStatementItem.Id = Movement.ParentId
             LEFT JOIN Movement AS Movement_BankStatement ON Movement_BankStatement.Id = Movement_BankStatementItem.ParentId
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpStatus.StatusId
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId = Movement.Id
@@ -131,14 +160,16 @@ BEGIN
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
+            INNER JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
+                                              AND (Object_BankAccount_View.Id = inBankAccountId OR inBankAccountId = 0)
  
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
             
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+            INNER JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                         AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                        AND (MILinkObject_MoneyPlace.ObjectId = inMoneyPlaceId OR inMoneyPlaceId = 0)
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_MoneyPlace.Id
@@ -179,9 +210,10 @@ BEGIN
 
             LEFT JOIN Movement AS Movement_Income 
                                ON Movement_Income.Id = MovementLinkMovement_Child.MovementChildId
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                         ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
-                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                          ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
+                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                         AND (MovementLinkObject_Juridical.ObjectId = inJuridicalCorporateId OR inJuridicalCorporateId = 0)
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
  
             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
@@ -210,11 +242,12 @@ and Movement_Income.Id > 0)
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. Воробкало А.А.
+ 14.03.16         * add вх.параметры
  11.01.15                                                                    *Income_...
  14.11.14                                        * add Currency...
  27.09.14                                        * add ContractTagName
