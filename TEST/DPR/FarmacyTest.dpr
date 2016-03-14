@@ -394,7 +394,8 @@ uses
   EmailSettings in '..\..\FormsFarmacy\Guides\EmailSettings.pas' {EmailSettingsForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsFarmacy\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   Report_Liquid in '..\..\FormsFarmacy\Report\Report_Liquid.pas' {Report_LiquidForm: TParentForm},
-  PriceOnDate in '..\..\FormsFarmacy\Guides\PriceOnDate.pas' {PriceOnDateForm: TParentForm};
+  PriceOnDate in '..\..\FormsFarmacy\Guides\PriceOnDate.pas' {PriceOnDateForm: TParentForm},
+  BankAccountJournalFarmacyDialog in '..\..\FormsFarmacy\Document\BankAccountJournalFarmacyDialog.pas' {BankAccountJournalFarmacyDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

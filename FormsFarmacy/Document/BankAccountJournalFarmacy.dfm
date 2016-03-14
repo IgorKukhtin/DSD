@@ -7,14 +7,22 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 91
     Width = 1149
-    Height = 406
-    ClientRectBottom = 406
+    Height = 372
+    ExplicitTop = 91
+    ExplicitWidth = 1149
+    ExplicitHeight = 372
+    ClientRectBottom = 372
     ClientRectRight = 1149
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 1149
+      ExplicitHeight = 372
       inherited cxGrid: TcxGrid
         Width = 1149
-        Height = 406
+        Height = 372
+        ExplicitWidth = 1149
+        ExplicitHeight = 372
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -118,6 +126,91 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
   end
   inherited Panel: TPanel
     Width = 1149
+    Height = 65
+    ExplicitWidth = 1149
+    ExplicitHeight = 65
+    inherited deStart: TcxDateEdit
+      Left = 121
+      ExplicitLeft = 121
+    end
+    inherited deEnd: TcxDateEdit
+      Left = 121
+      Top = 29
+      ExplicitLeft = 121
+      ExplicitTop = 29
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 29
+      ExplicitLeft = 29
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 10
+      Top = 30
+      ExplicitLeft = 10
+      ExplicitTop = 30
+    end
+  end
+  object cxLabel4: TcxLabel [2]
+    Left = 215
+    Top = 6
+    Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+  end
+  object ceBankAccount: TcxButtonEdit [3]
+    Left = 301
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 260
+  end
+  object cxLabel6: TcxLabel [4]
+    Left = 223
+    Top = 30
+    Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+  end
+  object sbIsPartnerDate: TcxCheckBox [5]
+    Left = 577
+    Top = 29
+    Action = actIsPartnerDate
+    TabOrder = 9
+    Width = 174
+  end
+  object ceObject: TcxButtonEdit [6]
+    Left = 301
+    Top = 29
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 260
+  end
+  object cxLabel3: TcxLabel [7]
+    Left = 577
+    Top = 6
+    Caption = #1053#1072#1096#1077' '#1070#1088'.'#1083#1080#1094#1086
+  end
+  object ceJuridicalCorporate: TcxButtonEdit [8]
+    Left = 657
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 260
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 99
+    Top = 235
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -138,7 +231,30 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = BankAccountGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = ObjectGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = JuridicalCorporateGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = sbIsPartnerDate
       end>
+    Left = 88
+    Top = 355
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -188,15 +304,148 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           ToParam.Value = Null
         end>
     end
+    inherited ExecuteDialog: TExecuteDialog
+      FormName = 'TBankAccountJournalFarmacyDialogForm'
+      FormNameParam.Value = 'TBankAccountJournalFarmacyDialogForm'
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'IsPartnerDate'
+          Value = Null
+          Component = sbIsPartnerDate
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'BankAccountId'
+          Value = Null
+          Component = BankAccountGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BankAccountName'
+          Value = Null
+          Component = BankAccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = ObjectGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = ObjectGuides
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalCorporateId'
+          Value = Null
+          Component = JuridicalCorporateGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalCorporateName'
+          Value = Null
+          Component = JuridicalCorporateGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+    end
+    object actIsPartnerDate: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1044#1072#1090#1072' '#1055#1053' '#1087#1086#1089#1090'-'#1082#1072
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
-    Top = 139
+    Top = 171
   end
   inherited MasterCDS: TClientDataSet
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    Top = 139
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsPartnerDate'
+        Value = Null
+        Component = sbIsPartnerDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBankAccountId'
+        Value = Null
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMoneyPlaceId'
+        Value = Null
+        Component = ObjectGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalCorporateId'
+        Value = Null
+        Component = JuridicalCorporateGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Top = 171
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -217,7 +466,106 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
       Visible = ivNever
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 248
+    Top = 192
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = BankAccountGuides
+      end
+      item
+        Component = ObjectGuides
+      end
+      item
+        Component = JuridicalCorporateGuides
+      end>
+  end
   inherited FormParams: TdsdFormParams
     Top = 224
+  end
+  object BankAccountGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBankAccount
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBankAccount_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42005d
+        Component = deEnd
+        DataType = ftDateTime
+      end>
+    Left = 396
+    Top = 65533
+  end
+  object ObjectGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceObject
+    FormNameParam.Value = 'TMoneyPlace_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TMoneyPlace_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ObjectGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ObjectGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 478
+    Top = 12
+  end
+  object JuridicalCorporateGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridicalCorporate
+    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridicalCorporateForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalCorporateGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalCorporateGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 798
+    Top = 4
   end
 end

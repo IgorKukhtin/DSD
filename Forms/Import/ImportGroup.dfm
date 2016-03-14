@@ -5,7 +5,7 @@ inherited ImportGroupForm: TImportGroupForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 594
-  ExplicitHeight = 374
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -281,6 +281,7 @@ inherited ImportGroupForm: TImportGroupForm
     object ExecuteImportSettingsAction: TExecuteImportSettingsAction
       Category = 'Load'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = ChildCDS
       ImportSettingsId.ComponentItem = 'ImportSettingsId'
@@ -297,6 +298,30 @@ inherited ImportGroupForm: TImportGroupForm
       QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1080'? '
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1089#1077#1093
+    end
+    object actProtocol: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Protocol_LoadPriceList
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Protocol_LoadPriceList
+        end>
+      Caption = 'actProtocol'
+    end
+    object macExecuteImportSettings_Protocol: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteImportSettingsAction
+        end
+        item
+          Action = actProtocol
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072
     end
   end
   inherited MasterDS: TDataSource
@@ -379,8 +404,7 @@ inherited ImportGroupForm: TImportGroupForm
       Category = 0
     end
     object bbExecuteImportSettings: TdxBarButton
-      Action = ExecuteImportSettingsAction
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072
+      Action = macExecuteImportSettings_Protocol
       Category = 0
     end
     object bbLoadAllPrice: TdxBarButton
@@ -424,9 +448,6 @@ inherited ImportGroupForm: TImportGroupForm
   object ChildCDS: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ImportGroupId'
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
     Params = <>
     Left = 504
     Top = 64
@@ -470,8 +491,8 @@ inherited ImportGroupForm: TImportGroupForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 424
-    Top = 115
+    Left = 432
+    Top = 131
   end
   object dsdDBViewAddOnItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -518,5 +539,24 @@ inherited ImportGroupForm: TImportGroupForm
     PackSize = 1
     Left = 192
     Top = 192
+  end
+  object spUpdate_Protocol_LoadPriceList: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Protocol_LoadPriceList'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inImportSettingsId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'ImportSettingsId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 64
   end
 end

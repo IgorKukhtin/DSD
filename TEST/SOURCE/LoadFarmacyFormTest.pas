@@ -162,6 +162,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalFarmacyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementFarmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementFarmacyForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalFarmacyDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalFarmacyDialogForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;

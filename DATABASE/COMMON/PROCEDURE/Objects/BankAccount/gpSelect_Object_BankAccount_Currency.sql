@@ -2,9 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Boolean, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount_Currency(
     IN inOperDate    TDateTime ,    -- 
+    IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar, isErased Boolean
@@ -95,6 +99,7 @@ BEGIN
                                   AND ObjectBoolean_isCorporate.ValueData = TRUE
           LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_BankAccount_View.CurrencyId
      WHERE Object_BankAccount_View.isErased = FALSE
+        OR (Object_BankAccount_View.isErased = TRUE AND inIsShowAll = TRUE)
 
     ;
 END;

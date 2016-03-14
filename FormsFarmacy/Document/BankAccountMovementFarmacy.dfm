@@ -214,8 +214,8 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
     Top = 280
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 50
-    Top = 299
+    Left = 98
+    Top = 323
   end
   inherited ActionList: TActionList
     Left = 143
@@ -231,6 +231,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
       Caption = #1053#1072#1081#1090#1080' '#1087#1088#1080#1093#1086#1076#1099
       Hint = #1053#1072#1081#1090#1080' '#1087#1088#1080#1093#1086#1076#1099
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object UpdateRecord1: TUpdateRecord
