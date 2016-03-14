@@ -1,9 +1,9 @@
-inherited ReportMovementCheckForm: TReportMovementCheckForm
+﻿inherited ReportMovementCheckForm: TReportMovementCheckForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
   ClientWidth = 736
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 752
-  ExplicitHeight = 346
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,19 +12,42 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
     Height = 250
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 702
+    ExplicitWidth = 736
     ExplicitHeight = 250
     ClientRectBottom = 250
     ClientRectRight = 736
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 702
+      ExplicitWidth = 736
       ExplicitHeight = 250
       inherited cxGrid: TcxGrid
         Width = 736
         Height = 250
-        ExplicitWidth = 702
+        ExplicitLeft = -640
+        ExplicitTop = -20
+        ExplicitWidth = 736
         ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSumma
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaSale
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaMargin
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
@@ -45,18 +68,39 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colGoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object JuridicalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'JuridicalCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
@@ -65,18 +109,21 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Caption = #1048#1044' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsId'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 27
           end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
@@ -90,54 +137,108 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 49
+            Width = 50
+          end
+          object Price_original: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089
+            DataBinding.FieldName = 'Price_original'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1086' '#1089'/'#1089
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 62
+            Width = 70
           end
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 58
           end
           object colSumma: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1089'/'#1089
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 70
           end
           object colSummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 72
+            Width = 70
           end
           object colSummaMargin: TcxGridDBColumn
-            Caption = #1053#1072#1094#1077#1085#1082#1072
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'SummaMargin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 78
+            Width = 70
+          end
+          object PartionDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartionInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#8470
+            DataBinding.FieldName = 'PartionInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PartionOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PartionPriceDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionPriceDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartionPriceInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#8470
+            DataBinding.FieldName = 'PartionPriceInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PartionPriceOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionPriceOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -146,15 +247,16 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
   inherited Panel: TPanel
     Width = 736
     Height = 32
-    Visible = False
-    ExplicitWidth = 702
+    ExplicitWidth = 736
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
+      EditValue = 42370d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 142
+      EditValue = 42370d
       ExplicitLeft = 142
     end
     inherited cxLabel1: TcxLabel
@@ -187,6 +289,13 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 188
     end
+    object сbPartion: TcxCheckBox
+      Left = 547
+      Top = 5
+      Action = actRefreshIsPartion
+      TabOrder = 6
+      Width = 94
+    end
   end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
@@ -214,6 +323,18 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshIsPartion: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
       RefreshOnTabSetChanges = False
     end
   end
@@ -248,6 +369,13 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsPartion'
+        Value = Null
+        Component = сbPartion
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 80
     Top = 160
@@ -260,101 +388,12 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       0
       26
       0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem5'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem6'
-        end>
-    end
     object dxBarButton1: TdxBarButton
       Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
       Category = 0
       Hint = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
       Visible = ivAlways
       ImageIndex = 38
-    end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = cxLabel1
-    end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = deStart
-    end
-    object dxBarControlContainerItem3: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = cxLabel2
-    end
-    object dxBarControlContainerItem4: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = deEnd
-    end
-    object dxBarControlContainerItem5: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = cxLabel3
-    end
-    object dxBarControlContainerItem6: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = ceUnit
     end
   end
   inherited PeriodChoice: TPeriodChoice

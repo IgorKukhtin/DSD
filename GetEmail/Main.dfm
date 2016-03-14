@@ -15,7 +15,7 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object BtnStart: TBitBtn
-    Left = 280
+    Left = 258
     Top = 395
     Width = 75
     Height = 25
@@ -124,9 +124,9 @@ object MainForm: TMainForm
     end
   end
   object cbTimer: TCheckBox
-    Left = 440
+    Left = 352
     Top = 399
-    Width = 177
+    Width = 306
     Height = 17
     Caption = 'Timer ON '
     TabOrder = 6
@@ -298,9 +298,7 @@ object MainForm: TMainForm
     Left = 216
     Top = 232
   end
-  object IdPOP3: TIdIMAP4
-    IOHandler = IdSSLIOHandlerSocketOpenSSL
-    UseTLS = utUseRequireTLS
+  object IdPOP333: TIdIMAP4
     SASLMechanisms = <>
     MilliSecsToWaitToClearBuffer = 10
     Left = 288

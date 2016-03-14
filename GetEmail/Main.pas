@@ -26,7 +26,7 @@ type
   TArrayMail = array of TMailItem;
   // элемент "поставщик и параметры загрузки информации"
   TImportSettingsItem = record
-    Host          : string;
+    UserName      : string;
     Id            : Integer;
     Code          : Integer;
     Name          : string;
@@ -70,19 +70,20 @@ type
     IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
     cbBeginMove: TCheckBox;
     spGet_LoadPriceList: TdsdStoredProc;
-    IdPOP3: TIdIMAP4;
+    IdPOP333: TIdIMAP4;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
     procedure cbTimerClick(Sender: TObject);
   private
     vbIsBegin :Boolean;// запущена обработка
+    vbOnTimer :TDateTime;// время когда сработал таймер
 
     vbArrayMail :TArrayMail; // массив почтовых ящиков
     vbArrayImportSettings :TArrayImportSettings; // массив поставщиков и параметров загрузки информации
 
-    function GetArrayList_Index_byHost(ArrayList:TArrayMail;Host:String):Integer;//находит Индекс в массиве по значению Host
-    function GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;Host,JuridicalMail:String):Integer;//находит Индекс в массиве по значению Host + MailJuridical
+    function GetArrayList_Index_byUserName(ArrayList:TArrayMail;UserName:String):Integer;//находит Индекс в массиве по значению Host
+    function GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;UserName,JuridicalMail:String):Integer;//находит Индекс в массиве по значению Host + MailJuridical
 
     function fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
 
@@ -98,7 +99,7 @@ var
   MainForm: TMainForm;
 
 implementation
-uses Authentication, Storage, CommonData, UtilConst, sevenzip;
+uses Authentication, Storage, CommonData, UtilConst, sevenzip, StrUtils;
 {$R *.dfm}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -127,28 +128,28 @@ begin
      Timer.Enabled:=cbTimer.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-//находит Индекс в массиве по значению Host
-function TMainForm.GetArrayList_Index_byHost(ArrayList:TArrayMail;Host:String):Integer;
+//находит Индекс в массиве по значению UserName
+function TMainForm.GetArrayList_Index_byUserName(ArrayList:TArrayMail;UserName:String):Integer;
 var i: Integer;
 begin
      //находит Индекс в массиве по значению Host
     Result:=-1;
     for i := 0 to Length(ArrayList)-1 do
-      if (ArrayList[i].Host = Host) then begin Result:=i;break;end;
+      if (ArrayList[i].UserName = UserName) then begin Result:=i;break;end;
 end;
 {------------------------------------------------------------------------}
-//находит Индекс в массиве по значению Host + MailJuridical + время
-function TMainForm.GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;Host,JuridicalMail:String):Integer;
+//находит Индекс в массиве по значению UserName + MailJuridical + время
+function TMainForm.GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;UserName,JuridicalMail:String):Integer;
 var i: Integer;
     Year, Month, Day: Word;
     Second, MSec: word;
     Hour_calc, Minute_calc: word;
     StartTime_calc,EndTime_calc:TDateTime;
 begin
-     //находит Индекс в массиве по значению Host
+     //находит Индекс в массиве по значению UserName
     Result:=-1;
     for i := 0 to Length(ArrayList)-1 do
-      if (ArrayList[i].Host = Host) and (AnsiUpperCase(ArrayList[i].JuridicalMail) = AnsiUpperCase(JuridicalMail))
+      if (ArrayList[i].UserName = UserName) and (AnsiUpperCase(ArrayList[i].JuridicalMail) = AnsiUpperCase(JuridicalMail))
       then begin Result:=i;break;end;
     //
     // проверка - текущее время
@@ -171,7 +172,7 @@ end;
 // получает данные с сервера и на основании этих данных заполняет массивы
 function TMainForm.fInitArray : Boolean;
 var i,nn:Integer;
-    HostStringList:TStringList;
+    UserNameStringList:TStringList;
 begin
      if vbIsBegin = true then exit;
      // !!!отключили таймер!!!
@@ -180,8 +181,8 @@ begin
      // запущена обработка
      vbIsBegin:= true;
 
-     HostStringList:=TStringList.Create;
-     HostStringList.Sorted:=true;
+     UserNameStringList:=TStringList.Create;
+     UserNameStringList.Sorted:=true;
      //
      with spSelect do
      begin
@@ -196,7 +197,7 @@ begin
        SetLength(vbArrayImportSettings,DataSet.RecordCount);//длина масива соответствует кол-ву поставщиков
        while not DataSet.EOF do begin
           //заполнили каждого поставщика
-          vbArrayImportSettings[i].Host         :=DataSet.FieldByName('Host').asString;
+          vbArrayImportSettings[i].UserName     :=DataSet.FieldByName('UserName').asString;
           vbArrayImportSettings[i].Id           :=DataSet.FieldByName('Id').asInteger;
           vbArrayImportSettings[i].Code         :=DataSet.FieldByName('Code').asInteger;
           vbArrayImportSettings[i].Name         :=DataSet.FieldByName('Name').asString;
@@ -213,27 +214,27 @@ begin
           // Время окончания активной проверки
           vbArrayImportSettings[i].EndTime      :=DataSet.FieldByName('EndTime').AsDateTime;
 
-          //временно сохранили список Host
-          if not (HostStringList.IndexOf(DataSet.FieldByName('Host').asString) >= 0)
-          then begin HostStringList.Add(DataSet.FieldByName('Host').asString);HostStringList.Sort;end;
+          //временно сохранили список UserName
+          if not (UserNameStringList.IndexOf(DataSet.FieldByName('UserName').asString) >= 0)
+          then begin UserNameStringList.Add(DataSet.FieldByName('UserName').asString);UserNameStringList.Sort;end;
 
           //перешли к следующему
           DataSet.Next;
           i:=i+1;
        end;
        //
-       //обнуляем Host
-       for i:=0 to Length(vbArrayMail) - 1 do vbArrayMail[i].Host:='';
+       //обнуляем UserName
+       for i:=0 to Length(vbArrayMail) - 1 do vbArrayMail[i].UserName:='';
        //второй цикл
        DataSet.First;
        i:=0;
-       SetLength(vbArrayMail,HostStringList.Count);//длина масива соответствует кол-ву Host-ов
+       SetLength(vbArrayMail,UserNameStringList.Count);//длина масива соответствует кол-ву UserName-ов
        while not DataSet.EOF do
        begin
-          nn:= GetArrayList_Index_byHost(vbArrayMail, DataSet.FieldByName('Host').asString);
+          nn:= GetArrayList_Index_byUserName(vbArrayMail, DataSet.FieldByName('UserName').asString);
           if nn = -1 then
           begin
-                //сохранили новый Host
+                //сохранили новый Host + UserName
                 vbArrayMail[i].Host:=DataSet.FieldByName('Host').asString;
                 vbArrayMail[i].Port:=DataSet.FieldByName('Port').asInteger;
                 vbArrayMail[i].Mail:=DataSet.FieldByName('Mail').asString;
@@ -252,20 +253,20 @@ begin
           end
           else if vbArrayMail[nn].onTime > DataSet.FieldByName('onTime').asInteger
                then // обновили новый минимум -  с какой периодичностью проверять почту в активном периоде, мин
-                    vbArrayMail[i].onTime:=DataSet.FieldByName('onTime').asInteger;
+                    vbArrayMail[nn].onTime:=DataSet.FieldByName('onTime').asInteger;
 
           // !!!в таймере!!! обновили новый минимум -  с какой периодичностью проверять почту в активном периоде
           if (Timer.Interval > DataSet.FieldByName('onTime').asInteger * 60 * 1000) or (Timer.Interval <= 1000) then
           begin
                Timer.Interval:= DataSet.FieldByName('onTime').asInteger * 60 * 1000;
-               cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec';
+               cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec ' + '('+FormatDateTime('dd.mm.yyyy hh:mm:ss',vbOnTimer)+')';
           end;
           //перешли к следующему
           DataSet.Next;
        end;
      end;
      //
-     HostStringList.Free;
+     UserNameStringList.Free;
      // завершена обработка
      vbIsBegin:= false;
      // !!!включили таймер!!!
@@ -283,6 +284,7 @@ var
   JurPos: integer;
   arch:i7zInArchive;
   StartTime:TDateTime;
+  IdPOP3:TIdIMAP4;
 begin
      if vbIsBegin = true then exit;
      // запущена обработка
@@ -303,14 +305,20 @@ begin
      for ii := 0 to Length(vbArrayMail)-1 do
        // если после предыдущей обработки прошло > onTime МИНУТ
        if (NOW - vbArrayMail[ii].BeginTime) * 24 * 60 > vbArrayMail[ii].onTime
-       then
+       then begin
+           IdPOP3:=TIdIMAP4.Create(Self);
+           IdPOP3.IOHandler:=IdSSLIOHandlerSocketOpenSSL;
+           IdPOP3.UseTLS:=utUseRequireTLS;
+           IdPOP3.AuthType:=iatUserPass;
+           IdPOP3.MilliSecsToWaitToClearBuffer:=100;
+
            with IdPOP3 do
            begin
               //
-              PanelHost.Caption:= 'Start Host : '+vbArrayMail[ii].Host+' for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+              PanelHost.Caption:= 'Start Mail : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
               Application.ProcessMessages;
               //current directory to store the email
-              mailFolderMain:= vbArrayMail[ii].Directory + '\' + vbArrayMail[ii].Host + '_' + Session;
+              mailFolderMain:= vbArrayMail[ii].Directory + '\' + ReplaceStr(vbArrayMail[ii].UserName, '@', '_') + '_' + Session;
               //создали папку для писем если таковой нет + это протокол что по данному ящику была обработка
               ForceDirectories(mailFolderMain);
 
@@ -322,7 +330,9 @@ begin
 
               try
                  //подключаемся к ящику
-                 IdPOP3.Connect;
+                 //***IdPOP3.Connect;
+                 IdPOP3.Connect(TRUE);
+                 IdPOP3.SelectMailBox('INBOX');
                  //количество писем
                  //***msgcnt:= IdPOP3.CheckMessages;
                  msgcnt:= IdPOP3.MailBox.TotalMsgs;
@@ -339,8 +349,8 @@ begin
                    //если вытянулось из почты письмо
                    if (IdPOP3.Retrieve(i, IdMessage)) then
                    begin
-                        //находим поставщика, который отправил на этот Host + есть в нашем списке + время
-                        JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].Host, IdMessage.From.Address);
+                        //находим поставщика, который отправил на этот UserName + есть в нашем списке + время
+                        JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].UserName, IdMessage.From.Address);
                         //
                         if JurPos >=0
                         then PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' (' +  IntToStr(vbArrayImportSettings[JurPos].Id) + ') ' + vbArrayImportSettings[JurPos].Name
@@ -370,9 +380,10 @@ begin
                                    // сохранили файлик из письма
                                    (IdMessage.MessageParts[j] as TIdAttachment).SaveToFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
                                    // если надо - разархивировали
-                                   if not (System.Pos(AnsiUppercase('.xls'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
-                                    and not(System.Pos(AnsiUppercase('.xlsx'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
-                                    and not(System.Pos(AnsiUppercase('.xml'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
+                                   //if not (System.Pos(AnsiUppercase('.xls'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
+                                   // and not(System.Pos(AnsiUppercase('.xlsx'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
+                                   // and not(System.Pos(AnsiUppercase('.xml'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
+                                   if (System.Pos(AnsiUppercase('.zip'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
                                    then begin
                                              arch.OpenFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
                                              arch.ExtractTo(mailFolder + '\');
@@ -414,16 +425,18 @@ begin
 
                  end;//финиш - цикл по входящим письмам
                  //осталось сохранить время последней обработки почтового ящика
-                 vbArrayMail[ii].BeginTime:=NOW;
+                 vbArrayMail[ii].BeginTime:=vbOnTimer;
                  //
-                 PanelHost.Caption:= 'End Host '+vbArrayMail[ii].Host+' for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+                 PanelHost.Caption:= 'End Mail : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
                  GaugeHost.Progress:=GaugeHost.Progress + 1;
                  Application.ProcessMessages;
               finally
-                 IdPOP3.Disconnect;
+                 IdPOP3.Disconnect();
+                 IdPOP3.Free;
               end;
 
            end;//финиш - цикл по почтовым ящикам
+       end;
 
      // завершена обработка
      vbIsBegin:= false;
@@ -517,6 +530,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.BtnStartClick(Sender: TObject);
 begin
+     // типа, время когда сработал таймера
+     vbOnTimer:= NOW;
      // обработка все
      fBeginAll;
      //
@@ -525,6 +540,10 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
+     // время когда сработал таймера
+     vbOnTimer:= NOW;
+     cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' seccc ' + '('+FormatDateTime('dd.mm.yyyy hh:mm:ss',vbOnTimer)+')';
+     Sleep(1000);
      // обработка все
      fBeginAll;
 end;

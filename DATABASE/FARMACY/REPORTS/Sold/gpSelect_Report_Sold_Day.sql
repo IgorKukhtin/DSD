@@ -251,7 +251,7 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar) O
 -- !!!
 -- !!!ÏÅÐÅÏÐÎÂÅÄÅÍÈÅ!!!, ÷òî á îò÷åòû ñõîäèëèñü :)
 -- !!!
-select Movement.InvNumber, Movement.OperDate, MIFloat_Price.ValueData, tmp.*, Object.*
+select Movement.InvNumber, Movement.OperDate, Object_From.ValueData, MIFloat_Price.ValueData, tmp.*, Object.*
    -- , gpReComplete_Movement_Check (Movement.Id, '3')
 from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.Amount, coalesce (-1 * SUM (MIContainer.Amount), 0) as calcAmount , Movement_Check.Id as MovementId
       FROM
@@ -268,8 +268,9 @@ from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.
                                                   ON MIContainer.MovementItemId = MI_Check.Id
                                                  AND MIContainer.DescId = zc_MIContainer_Count() 
 
-      where Movement_Check.OperDate >= '01.01.2016' and Movement_Check.OperDate < '01.02.2016'
+--    where Movement_Check.OperDate >= '01.01.2016' and Movement_Check.OperDate < '01.02.2016'
 --    where Movement_Check.OperDate >= '01.02.2016' and Movement_Check.OperDate < '01.03.2016'
+    where Movement_Check.OperDate >= '01.03.2016' and Movement_Check.OperDate < '01.04.2016'
         and Movement_Check.DescId = zc_Movement_Check()
         AND Movement_Check.StatusId = zc_Enum_Status_Complete()
       group by Movement_Check.InvNumber, MI_Check.Id, MI_Check.Amount , Movement_Check.Id, MI_Check.ObjectId
@@ -277,6 +278,10 @@ from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.
       ) as tmp 
              LEFT JOIN Object on Object.Id = tmp.ObjectId
              LEFT JOIN Movement on  Movement.Id = tmp.MovementId
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Unit()
+             LEFT JOIN Object AS Object_From on Object_From.Id = MovementLinkObject_From.ObjectId
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId =  tmp.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()

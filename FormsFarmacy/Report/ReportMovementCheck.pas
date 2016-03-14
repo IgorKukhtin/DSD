@@ -14,7 +14,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReportMovementCheckForm = class(TAncestorReportForm)
@@ -32,17 +32,22 @@ type
     colSumma: TcxGridDBColumn;
     colSummaSale: TcxGridDBColumn;
     colSummaMargin: TcxGridDBColumn;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
-    dxBarControlContainerItem3: TdxBarControlContainerItem;
-    dxBarControlContainerItem4: TdxBarControlContainerItem;
-    dxBarControlContainerItem5: TdxBarControlContainerItem;
-    dxBarControlContainerItem6: TdxBarControlContainerItem;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     clGoodsGroupName: TcxGridDBColumn;
     clNDSKindName: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    Price_original: TcxGridDBColumn;
+    ñbPartion: TcxCheckBox;
+    actRefreshIsPartion: TdsdDataSetRefresh;
+    PartionDescName: TcxGridDBColumn;
+    PartionInvNumber: TcxGridDBColumn;
+    PartionOperDate: TcxGridDBColumn;
+    PartionPriceDescName: TcxGridDBColumn;
+    PartionPriceInvNumber: TcxGridDBColumn;
+    PartionPriceOperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
