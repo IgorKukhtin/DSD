@@ -5,7 +5,7 @@ inherited ImportSettingsForm: TImportSettingsForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1200
-  ExplicitHeight = 377
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -560,6 +560,33 @@ inherited ImportSettingsForm: TImportSettingsForm
       RefreshOnTabSetChanges = False
       DataSet = MasterCDS
     end
+    object actProtocolMaster: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1053#1072#1079#1074#1072#1085#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1053#1072#1079#1074#1072#1085#1080#1103'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -583,6 +610,10 @@ inherited ImportSettingsForm: TImportSettingsForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbSetErased'
@@ -625,7 +656,19 @@ inherited ImportSettingsForm: TImportSettingsForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolMaster'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbSetErased: TdxBarButton
@@ -650,6 +693,10 @@ inherited ImportSettingsForm: TImportSettingsForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbProtocolMaster: TdxBarButton
+      Action = actProtocolMaster
       Category = 0
     end
   end

@@ -17,7 +17,7 @@ BEGIN
  outId:= COALESCE ((SELECT Id
                     FROM LoadPriceList
                     WHERE JuridicalId = inJuridicalId AND OperDate = CURRENT_DATE AND (COALESCE (ContractId, 0) = inContractId OR inContractId = 0)
-                      AND Date_Insert > CURRENT_DATE
+                      -- AND Date_Insert > CURRENT_DATE
                     LIMIT 1
                    ), 0);
 

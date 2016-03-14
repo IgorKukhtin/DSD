@@ -205,6 +205,29 @@ object MainForm: TMainForm
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
       ImageIndex = 27
     end
+    object actProtocol: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Protocol_LoadPriceList
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Protocol_LoadPriceList
+        end>
+      Caption = 'actProtocol'
+    end
+    object mactExecuteImportSettings: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteImportSettings
+        end
+        item
+          Action = actProtocol
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072
+    end
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -303,5 +326,21 @@ object MainForm: TMainForm
     MilliSecsToWaitToClearBuffer = 10
     Left = 288
     Top = 8
+  end
+  object spUpdate_Protocol_LoadPriceList: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Protocol_LoadPriceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inImportSettingsId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 288
   end
 end

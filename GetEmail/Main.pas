@@ -71,6 +71,9 @@ type
     cbBeginMove: TCheckBox;
     spGet_LoadPriceList: TdsdStoredProc;
     IdPOP333: TIdIMAP4;
+    spUpdate_Protocol_LoadPriceList: TdsdStoredProc;
+    actProtocol: TdsdExecStoredProc;
+    mactExecuteImportSettings: TMultiAction;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
@@ -461,7 +464,7 @@ begin
            Application.ProcessMessages;
            //Загружаем если есть откуда
            if FieldByName('DirectoryImport').asString <> ''
-           then actExecuteImportSettings.Execute;
+           then mactExecuteImportSettings.Execute;
 
            Next;
            //

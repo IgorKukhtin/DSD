@@ -70,6 +70,8 @@ type
     clContactPersonName: TcxGridDBColumn;
     ContactPersonChoiceForm: TOpenChoiceForm;
     clContactPersonMail: TcxGridDBColumn;
+    actProtocolMaster: TdsdOpenForm;
+    bbProtocolMaster: TdxBarButton;
   private
     { Private declarations }
   public

@@ -97,11 +97,11 @@ BEGIN
 
         -- если нет "шапки1" - создадим
         IF COALESCE (vbLoadPriceListId1, 0) = 0 THEN
-            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice, UserId_Insert, Date_Insert)
-                               VALUES (inJuridicalId, inContractId1, CURRENT_DATE, inNDSinPrice, vbUserId, CURRENT_TIMESTAMP);
-        ELSE
+            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
+                               VALUES (inJuridicalId, inContractId1, CURRENT_DATE, inNDSinPrice/*, vbUserId*/, CURRENT_TIMESTAMP);
+        /*ELSE
             -- иначе в протокол запишем что типа Insert
-            UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId1;
+            UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId1;*/
         END IF;
 
         -- Поиск "элемента1"
@@ -118,11 +118,11 @@ BEGIN
           
         -- если нет "шапки2" - создадим
         IF COALESCE (vbLoadPriceListId2, 0) = 0 THEN
-            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice, UserId_Insert, Date_Insert)
-                               VALUES (inJuridicalId, inContractId2, CURRENT_DATE, inNDSinPrice, vbUserId, CURRENT_TIMESTAMP);
-        ELSE
+            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
+                               VALUES (inJuridicalId, inContractId2, CURRENT_DATE, inNDSinPrice/*, vbUserId*/, CURRENT_TIMESTAMP);
+        /*ELSE
             -- иначе в протокол запишем что типа Insert
-            UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId2;
+            UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId2;*/
         END IF;
 
         -- Поиск "элемента1"

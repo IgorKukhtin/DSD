@@ -23,18 +23,21 @@ BEGIN
 
         UPDATE LoadPriceList SET UserId_Insert = vbUserId
                                , Date_Insert = CURRENT_TIMESTAMP
-        WHERE Id in (SELECT LoadPriceList.Id
+        WHERE UserId_Insert IS NULL
+          AND Id IN (SELECT LoadPriceList.Id
                      FROM Object_ImportSettings_View
-                        INNER JOIN LoadPriceList ON OperDate = CURRENT_DATE
+                        INNER JOIN LoadPriceList ON LoadPriceList.OperDate = CURRENT_DATE
                                                 AND LoadPriceList.JuridicalId = Object_ImportSettings_View.JuridicalId
-                                                AND LoadPriceList.ContractId  = Object_ImportSettings_View.ContractId
-                     WHERE Object_ImportSettings_View.id = inImportSettingsId) ;
+                                                AND (LoadPriceList.ContractId  = Object_ImportSettings_View.ContractId
+                                                  OR COALESCE (Object_ImportSettings_View.ContractId, 0) = 0
+                                                    )
+                     WHERE Object_ImportSettings_View.id = inImportSettingsId)
+       ;
   END IF;
-
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -42,5 +45,4 @@ LANGUAGE PLPGSQL VOLATILE;
  14.03.15         *
 */
 
-
---select * from gpUpdate_Protocol_LoadPriceList(inImportSettingsId := 400994 ,  inSession := '3');
+-- select * from gpUpdate_Protocol_LoadPriceList (inImportSettingsId := 400994 ,  inSession := '3');

@@ -5,7 +5,7 @@ inherited ImportGroupForm: TImportGroupForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 594
-  ExplicitHeight = 377
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -293,10 +293,13 @@ inherited ImportGroupForm: TImportGroupForm
       ActionList = <
         item
           Action = ExecuteImportSettingsAction
+        end
+        item
+          Action = actProtocol
         end>
       View = cxGridDBTableView1
-      QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1080'? '
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1042#1057#1045' '#1079#1072#1075#1088#1091#1079#1082#1080'? '
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1087#1086' '#1042#1057#1045#1052' '#1101#1083#1077#1084#1077#1085#1090#1072#1084
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1089#1077#1093
     end
     object actProtocol: TdsdExecStoredProc
@@ -320,7 +323,8 @@ inherited ImportGroupForm: TImportGroupForm
         item
           Action = actProtocol
         end>
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1086#1076#1085#1086#1084#1091' '#1101#1083#1077#1084#1077#1085#1090#1091'? '
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1087#1086' '#1086#1076#1085#1086#1084#1091' '#1101#1083#1077#1084#1077#1085#1090#1091
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072
     end
   end
@@ -542,11 +546,8 @@ inherited ImportGroupForm: TImportGroupForm
   end
   object spUpdate_Protocol_LoadPriceList: TdsdStoredProc
     StoredProcName = 'gpUpdate_Protocol_LoadPriceList'
-    DataSet = ChildCDS
-    DataSets = <
-      item
-        DataSet = ChildCDS
-      end>
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inImportSettingsId'
