@@ -49,6 +49,9 @@ type
     bbLoadAllPrice: TdxBarButton;
     colName: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
+    actProtocol: TdsdExecStoredProc;
+    spUpdate_Protocol_LoadPriceList: TdsdStoredProc;
+    macExecuteImportSettings_Protocol: TMultiAction;
   private
     { Private declarations }
   public
