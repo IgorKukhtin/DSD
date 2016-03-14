@@ -47,6 +47,8 @@ type
     ParValue: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     colJuridicalName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbactShowAll: TdxBarButton;
   private
     { Private declarations }
   public
