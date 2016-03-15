@@ -39,6 +39,7 @@ type
     colPrice: TcxGridDBColumn;
     clisFirst: TcxGridDBColumn;
     spUpdate_Goods_isFirst: TdsdStoredProc;
+    clColor_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

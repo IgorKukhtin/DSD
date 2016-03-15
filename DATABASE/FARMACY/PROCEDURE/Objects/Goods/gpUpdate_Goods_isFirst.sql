@@ -5,9 +5,10 @@ DROP FUNCTION IF EXISTS gpUpdate_Goods_isFirst(Integer, Boolean, TVarChar);
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_isFirst(
     IN inId                  Integer   ,    -- ключ объекта <Товар>
     IN inisFirst             Boolean   ,    -- 1-выбор
+   OUT outColor              Integer   ,
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS VOID AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -18,6 +19,14 @@ BEGIN
 
    vbUserId := lpGetUserBySession (inSession);
   
+   IF inisFirst = TRUE 
+   THEN
+      outColor = zc_Color_GreenL();
+   ELSE 
+      outColor = zc_Color_White();
+   END IF;
+
+
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_First(), inId, inisFirst);
 
    
