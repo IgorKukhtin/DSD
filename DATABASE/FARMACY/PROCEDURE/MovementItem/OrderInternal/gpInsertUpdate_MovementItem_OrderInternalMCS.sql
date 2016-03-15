@@ -114,7 +114,8 @@ BEGIN
                                     T1.Ord = 1
                             )AS MovementItemSaved
                              ON MovementItemSaved.ObjectId = Object_Price.GoodsId
-            LEFT OUTER JOIN Object_Goods_View ON Object_Price.GoodsId = Object_Goods_View.Id                            
+            INNER JOIN Object_Goods_View ON Object_Price.GoodsId = Object_Goods_View.Id    
+                                        AND Object_Goods_View.IsClose = FALSE                          
             LEFT OUTER JOIN (
                                 SELECT
                                     MovementItem_Income.ObjectId    as GoodsId 
@@ -144,14 +145,10 @@ BEGIN
                                     SUM(MovementItem_Income.Amount) > 0
                              ) AS Income
                                ON Object_Price.GoodsId = Income.GoodsId
-        WHERE
-            Object_Price.MCSValue > 0
-            AND
-            Object_Price.MCSIsClose = False 
-            AND
-            Object_Price.UnitId = inUnitId
-            AND
-            Object_Price.isErased = FALSE
+        WHERE Object_Price.MCSValue > 0
+          AND Object_Price.MCSIsClose = False 
+          AND Object_Price.UnitId = inUnitId
+          AND Object_Price.isErased = FALSE
         GROUP BY
             Object_Price.UnitId,
             Object_Price.GoodsId,
@@ -213,6 +210,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 15.03.16         * add Object_Goods_View.IsClose = FALSE  
  02.02.16                                        * add MovementItem_Income.isErased = FALSE
  29.08.15                                                                        * ObjectPrice.MCSIsClose = False
  31.07.15                                                                        *
