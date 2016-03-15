@@ -20,6 +20,7 @@ inherited GoodsForm: TGoodsForm
       inherited cxGrid: TcxGrid
         Width = 962
         Height = 397
+        ExplicitLeft = -3
         ExplicitWidth = 962
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -89,6 +90,12 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'IsTop'
             HeaderAlignmentVert = vaCenter
             Width = 37
+          end
+          object clisFirst: TcxGridDBColumn
+            Caption = '1-'#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isFirst'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object cbPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
@@ -249,7 +256,11 @@ inherited GoodsForm: TGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProcList = <>
+      StoredProc = spUpdate_Goods_isFirst
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_isFirst
+        end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
     end
@@ -268,6 +279,8 @@ inherited GoodsForm: TGoodsForm
     Top = 88
   end
   inherited BarManager: TdxBarManager
+    Left = 112
+    Top = 48
     DockControlHeights = (
       0
       0
@@ -485,5 +498,29 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 344
     Top = 288
+  end
+  object spUpdate_Goods_isFirst: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isFirst'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisFirst'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isFirst'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 176
   end
 end

@@ -37,6 +37,8 @@ type
     cbIsTop: TcxGridDBColumn;
     cbPercentMarkup: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
+    clisFirst: TcxGridDBColumn;
+    spUpdate_Goods_isFirst: TdsdStoredProc;
   private
     { Private declarations }
   public
