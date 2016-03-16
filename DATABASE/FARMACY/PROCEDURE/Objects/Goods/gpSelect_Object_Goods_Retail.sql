@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
                NDS TFloat, MinimumLot TFloat, isClose boolean, 
-               isTOP boolean, PercentMarkup TFloat, Price TFloat
+               isTOP boolean, isFirst boolean,
+               PercentMarkup TFloat, Price TFloat,
+               Color_calc Integer
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -39,9 +41,10 @@ BEGIN
            , Object_Goods_View.MinimumLot
            , Object_Goods_View.isClose
            , Object_Goods_View.isTOP          
+           , Object_Goods_View.isFirst
            , Object_Goods_View.PercentMarkup  
-		   , Object_Goods_View.Price
-
+           , Object_Goods_View.Price
+           , CASE WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
     FROM Object_Goods_View 
    WHERE Object_Goods_View.ObjectId = vbObjectId;
 
@@ -64,6 +67,4 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 */
 
 -- тест
- --SELECT * FROM gpSelect_Object_Goods('2')
-
-
+ --SELECT * FROM gpSelect_Object_Goods_Retail('2')

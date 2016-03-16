@@ -147,6 +147,7 @@ inherited InventoryForm: TInventoryForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 49
           end
@@ -154,6 +155,7 @@ inherited InventoryForm: TInventoryForm
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 259
           end
@@ -164,6 +166,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             Options.Editing = False
             Width = 56
@@ -177,6 +180,7 @@ inherited InventoryForm: TInventoryForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
             Width = 43
           end
@@ -187,6 +191,7 @@ inherited InventoryForm: TInventoryForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
           end
@@ -197,8 +202,12 @@ inherited InventoryForm: TInventoryForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; '
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentVert = vaCenter
           end
           object colDeficit: TcxGridDBColumn
             Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
@@ -206,6 +215,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
           end
@@ -215,6 +225,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 58
           end
@@ -224,6 +235,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
           end
@@ -233,6 +245,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 61
           end
@@ -242,6 +255,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '+ ,0.####;- ,0.####; ;'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
@@ -251,14 +265,228 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '+ ,0.00;- ,0.00; ;'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
           end
           object colMIComment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'MIComment'
+            HeaderAlignmentVert = vaCenter
             Width = 150
           end
+        end
+      end
+    end
+    object cxTabSheetReport: TcxTabSheet
+      Caption = #1055#1072#1088#1090#1080#1080
+      ImageIndex = 3
+      object cxGridPartion: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 898
+        Height = 557
+        Align = alClient
+        TabOrder = 0
+        object cxGridPartionDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = PartionDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummAmount
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummAmount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object clCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+          end
+          object clName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 259
+          end
+          object clJuridicalPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'JuridicalPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object clAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1080#1079#1083#1080#1096#1077#1082
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 80
+          end
+          object clAmountDeficit: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1085#1077#1076#1086#1089#1090'.'
+            DataBinding.FieldName = 'AmountDeficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 80
+          end
+          object clSummAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'SummAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 80
+          end
+          object PartionDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PartionInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#8470
+            DataBinding.FieldName = 'PartionInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PartionOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionPriceDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionPriceDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PartionPriceInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#8470
+            DataBinding.FieldName = 'PartionPriceInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PartionPriceOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionPriceOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+        end
+        object cxGridPartionLevel: TcxGridLevel
+          GridView = cxGridPartionDBTableView
         end
       end
     end
@@ -340,6 +568,19 @@ inherited InventoryForm: TInventoryForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectMiPartion
+        end>
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
@@ -822,13 +1063,13 @@ inherited InventoryForm: TInventoryForm
     Top = 144
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
+    Left = 72
+    Top = 24
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Inventory'
-    Left = 128
-    Top = 56
+    Left = 144
+    Top = 24
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Inventory'
@@ -847,7 +1088,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1383,8 +1624,8 @@ inherited InventoryForm: TInventoryForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 144
-    Top = 480
+    Left = 152
+    Top = 448
   end
   object spInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Inventory_Set_Zero'
@@ -1401,5 +1642,49 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 322
     Top = 432
+  end
+  object PartionCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 752
+    Top = 309
+  end
+  object PartionDS: TDataSource
+    DataSet = PartionCDS
+    Left = 797
+    Top = 309
+  end
+  object spSelectMiPartion: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_InventoryPartion'
+    DataSet = PartionCDS
+    DataSets = <
+      item
+        DataSet = PartionCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 842
+    Top = 309
+  end
+  object PartionViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridPartionDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 744
+    Top = 424
   end
 end

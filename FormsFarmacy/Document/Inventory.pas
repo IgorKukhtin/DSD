@@ -24,7 +24,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox,
+  cxImageComboBox;
 
 type
   TInventoryForm = class(TAncestorDocumentForm)
@@ -68,6 +69,14 @@ type
     colMIComment: TcxGridDBColumn;
     chbFullInvent: TcxCheckBox;
     actSelect: TdsdExecStoredProc;
+    PartionCDS: TClientDataSet;
+    PartionDS: TDataSource;
+    spSelectMiPartion: TdsdStoredProc;
+    PartionViewAddOn: TdsdDBViewAddOn;
+    clJuridicalPrice: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
+    clAmountDeficit: TcxGridDBColumn;
+    clSummAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

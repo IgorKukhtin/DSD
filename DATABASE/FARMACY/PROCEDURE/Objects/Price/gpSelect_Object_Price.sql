@@ -132,7 +132,8 @@ BEGIN
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = Object_Price_View.Id 
                                        AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                       AND vbStartDate >= ObjectHistory_Price.StartDate AND vbStartDate < ObjectHistory_Price.EndDate
+                                     --  AND vbStartDate >= ObjectHistory_Price.StartDate AND vbStartDate < ObjectHistory_Price.EndDate
+                                       AND ObjectHistory_Price.EndDate = zc_DateEnd()
                 -- получаем значения Количество дней для анализа НТЗ из истории значений на дату    
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSPeriod
                                              ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
@@ -142,12 +143,8 @@ BEGIN
                                              ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
                                             
-            WHERE (inisShowDel = True
-                    OR
-                    Object_Goods_View.isErased = False
-                  )
-            ORDER BY
-                GoodsGroupName, GoodsName;
+            WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
+            ORDER BY GoodsGroupName, GoodsName;
     ELSE
         RETURN QUERY
         WITH 
@@ -203,7 +200,8 @@ BEGIN
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = Object_Price_View.Id 
                                        AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                       AND vbStartDate >= ObjectHistory_Price.StartDate AND vbStartDate < ObjectHistory_Price.EndDate
+--                                       AND vbStartDate >= ObjectHistory_Price.StartDate AND vbStartDate < ObjectHistory_Price.EndDate
+                                       AND ObjectHistory_Price.EndDate = zc_DateEnd()
                 -- получаем значения Количество дней для анализа НТЗ из истории значений на дату                    
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSPeriod
                                              ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
