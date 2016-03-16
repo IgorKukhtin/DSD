@@ -9,8 +9,8 @@ inherited MainCashForm: TMainCashForm
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 780
-  ExplicitHeight = 442
+  ExplicitWidth = 788
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -177,6 +177,8 @@ inherited MainCashForm: TMainCashForm
       Height = 166
       Align = alClient
       TabOrder = 0
+      ExplicitLeft = -4
+      ExplicitTop = 2
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -238,6 +240,13 @@ inherited MainCashForm: TMainCashForm
           DataBinding.FieldName = 'MCSValue'
           OnGetDisplayText = MainColReservedGetDisplayText
           Width = 45
+        end
+        object mainColor_calc: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_calc'
+          Visible = False
+          Options.Editing = False
+          VisibleForCustomization = False
+          Width = 40
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -721,13 +730,38 @@ inherited MainCashForm: TMainCashForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = MainColCode
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColMCSValue
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColName
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColPrice
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColReserved
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 728
-    Top = 104
+    Left = 672
+    Top = 72
   end
   object spSelectRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_ver2'
@@ -759,8 +793,8 @@ inherited MainCashForm: TMainCashForm
   end
   object RemainsDS: TDataSource
     DataSet = RemainsCDS
-    Left = 216
-    Top = 24
+    Left = 248
+    Top = 32
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
@@ -772,8 +806,8 @@ inherited MainCashForm: TMainCashForm
     Params = <>
     StoreDefs = True
     AfterScroll = RemainsCDSAfterScroll
-    Left = 184
-    Top = 24
+    Left = 208
+    Top = 32
   end
   object PopupMenu: TPopupMenu
     Left = 104
