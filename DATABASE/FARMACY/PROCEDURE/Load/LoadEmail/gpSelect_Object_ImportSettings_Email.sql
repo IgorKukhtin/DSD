@@ -70,7 +70,7 @@ BEGIN
           , ObjectDate_EndTime.ValueData          AS EndTime   -- Время окончания активной проверки
           , CASE WHEN ObjectFloat_Time.ValueData >= 1 THEN /*5*/ ObjectFloat_Time.ValueData ELSE 5 END :: Integer AS onTime    -- с какой периодичностью проверять почту в активном периоде, мин
 
-          , FALSE AS isBeginMove -- !!!захардкодил!!! переносить прайс в актуальные цены (а загрузка выполняется всегда)
+          , TRUE AS isBeginMove -- !!!захардкодил!!! переносить прайс в актуальные цены (а загрузка выполняется всегда)
 
      FROM tmpEmail AS gpGet_Host
           LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
