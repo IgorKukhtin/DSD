@@ -677,6 +677,8 @@ type
     N98: TMenuItem;
     actReceiptComponents: TdsdOpenForm;
     N99: TMenuItem;
+    actQualityNumber: TdsdOpenForm;
+    N100: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

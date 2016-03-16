@@ -102,6 +102,7 @@ type
     procedure LoadQualityFormTest;
     procedure LoadQualityParamsFormTest;
     procedure LoadQualityDocFormTest;
+    procedure LoadQualityNumberFormTest;
     procedure LoadReportFormTest;
     procedure LoadReportBranchFormTest;
     procedure LoadReportSystemFormTest;
@@ -498,6 +499,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TQualityDocForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityDocJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TQualityDocJournalForm');
+end;
+
+procedure TLoadFormTest.LoadQualityNumberFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityNumberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TQualityNumberForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityNumberJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TQualityNumberJournalForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsTagFormTest;
