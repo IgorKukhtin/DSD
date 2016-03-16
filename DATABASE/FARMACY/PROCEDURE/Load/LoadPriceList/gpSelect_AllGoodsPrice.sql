@@ -32,7 +32,10 @@ RETURNS TABLE (
     MinExpirationDate   TDateTime,  --Минимальный срок годности препарата на точке
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
     isPriceFix          Boolean ,   -- фиксированная цена
-    isIncome            Boolean     -- приход сегодня
+    isIncome            Boolean ,   -- приход сегодня
+    IsTop               Boolean ,   -- Топ
+    IsPromo             Boolean ,   -- Акция
+    Reprice             Boolean     -- 
     )
 
 AS
@@ -255,7 +258,9 @@ BEGIN
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
-            CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome
+            CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
+            Object_Goods.IsTop,
+            Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo
         FROM
             lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
                                      inObjectId := vbObjectId, 
@@ -284,6 +289,10 @@ BEGIN
             LEFT JOIN lpSelect_Income_AllGoods(inUnitId := inUnitId,
                                                inUserId := vbUserId) AS Select_Income_AllGoods 
                                                                      ON Select_Income_AllGoods.GoodsId = SelectMinPrice_AllGoods.GoodsId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
+                                    ON ObjectBoolean_Goods_IsPromo.ObjectId = SelectMinPrice_AllGoods.Partner_GoodsId
+                                   AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()                                                                     
     )
 
     SELECT
@@ -310,7 +319,10 @@ BEGIN
         ResultSet.MinExpirationDate,
         ResultSet.isOneJuridical,
         ResultSet.isPriceFix,
-        ResultSet.isIncome
+        ResultSet.isIncome,
+        ResultSet.IsTop,
+        ResultSet.IsPromo,
+        CASE WHEN (ResultSet.isIncome = True OR ResultSet.IsTop = True OR ResultSet.isPriceFix = True) THEN False ELSE True END  AS Reprice
     FROM 
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId

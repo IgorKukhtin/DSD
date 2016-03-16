@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
                NDS TFloat, MinimumLot TFloat, isClose boolean, 
-               isTOP boolean, PercentMarkup TFloat, Price TFloat,
+               isTOP boolean, isPromo boolean,
+               PercentMarkup TFloat, Price TFloat,
                ObjectDescName TVarChar, ObjectName TVarChar,
                MakerName TVarChar
               ) AS
@@ -41,7 +42,8 @@ BEGIN
            , Object_Goods_View.NDS
            , Object_Goods_View.MinimumLot
            , Object_Goods_View.isClose
-           , Object_Goods_View.isTOP          
+           , Object_Goods_View.isTOP    
+           , COALESCE(ObjectBoolean_Goods_IsPromo.ValueData,FALSE)  AS IsPromo      
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
            , ObjectDesc_GoodsObject.itemname   AS  ObjectDescName
@@ -52,7 +54,11 @@ BEGIN
 
        LEFT JOIN Object AS Object_GoodsObject ON Object_GoodsObject.Id = Object_Goods_View.ObjectId
        LEFT JOIN ObjectDesc AS ObjectDesc_GoodsObject ON ObjectDesc_GoodsObject.Id = Object_GoodsObject.DescId
-          
+
+       LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
+                               ON ObjectBoolean_Goods_IsPromo.ObjectId = Object_Goods_View.Id
+                              AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()
+
    WHERE Object_Goods_View.ObjectId = vbObjectId;
 
   

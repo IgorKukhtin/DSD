@@ -152,6 +152,14 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 29
           end
+          object isPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 29
+          end
           object PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
@@ -304,6 +312,16 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 29
           end
+          object clisPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'isPromo'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 29
+          end
           object clPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
@@ -376,7 +394,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
           end
           object cxGoodsId: TcxGridDBColumn
             AlternateCaption = '40'
-            DataBinding.FieldName = 'GoodsId'
+            DataBinding.FieldName = 'Id'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -465,6 +483,16 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 37
+          end
+          object cxisPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'isPromo'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 29
           end
           object cxPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080

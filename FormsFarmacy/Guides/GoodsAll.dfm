@@ -28,6 +28,7 @@ inherited GoodsAllForm: TGoodsAllForm
         ExplicitHeight = 153
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -150,6 +151,16 @@ inherited GoodsAllForm: TGoodsAllForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 29
+          end
+          object isPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '
+            DataBinding.FieldName = 'isPromo'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
             Width = 29
           end
           object PercentMarkup: TcxGridDBColumn
@@ -308,6 +319,16 @@ inherited GoodsAllForm: TGoodsAllForm
             Options.Editing = False
             Width = 29
           end
+          object clisPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '
+            DataBinding.FieldName = 'isPromo'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 29
+          end
           object clPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
@@ -364,6 +385,7 @@ inherited GoodsAllForm: TGoodsAllForm
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
           OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -470,6 +492,14 @@ inherited GoodsAllForm: TGoodsAllForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 37
+          end
+          object cxisPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 29
           end
           object cxPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080

@@ -27,8 +27,10 @@ BEGIN
            , Object_Goods_View.MeasureName
            , Object_Goods_View.NDSKindId
            , Object_Goods_View.NDSKindName
-
-    FROM Object_Goods_Main_View AS Object_Goods_View;
+       
+    FROM Object_Goods_Main_View AS Object_Goods_View
+      
+;
   
 END;
 $BODY$
