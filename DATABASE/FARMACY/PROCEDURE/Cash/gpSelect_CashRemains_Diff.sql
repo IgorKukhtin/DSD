@@ -15,7 +15,9 @@ RETURNS TABLE (
     Remains TFloat,
     MCSValue TFloat,
     Reserved TFloat,
-    NewRow Boolean)
+    NewRow Boolean,
+    Color_calc Integer
+)
 
 AS
 $BODY$
@@ -45,7 +47,8 @@ BEGIN
                            , Remains   TFloat
                            , MCSValue  TFloat
                            , Reserved  TFloat
-                           , NewRow    Boolean) ON COMMIT DROP;    
+                           , NewRow    Boolean
+                           , Color_calc Integer) ON COMMIT DROP;    
     WITH GoodsRemains
     AS
     (
@@ -91,7 +94,7 @@ BEGIN
             CashSessionSnapShot.CashSessionId = inCashSessionId
     )
     --заливаем разницу
-    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow)
+    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow, Color_calc)
     SELECT
         COALESCE(GoodsRemains.ObjectId,SESSIONDATA.ObjectId)         AS ObjectId
        ,Object_Goods.ObjectCode::Integer                             AS GoodsCode
@@ -105,6 +108,7 @@ BEGIN
             THEN TRUE 
         ELSE FALSE 
         END                                              AS NewRow
+       , CASE WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc 
     FROM
         GoodsRemains
         FULL OUTER JOIN SESSIONDATA ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
@@ -113,6 +117,10 @@ BEGIN
         LEFT OUTER JOIN Object_Price_View ON Object_Goods.Id = Object_Price_View.GoodsId
                                          AND Object_Price_View.UnitId = vbUnitId
         LEFT OUTER JOIN RESERVE ON Object_Goods.Id = RESERVE.GoodsId
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_First
+                                ON ObjectBoolean_First.ObjectId = Object_Goods.Id
+                               AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
     WHERE
         ROUND(COALESCE(Object_Price_View.Price,0),2) <> COALESCE(SESSIONDATA.Price,0)
         OR
@@ -121,6 +129,7 @@ BEGIN
         COALESCE(Object_Price_View.MCSValue,0) <> COALESCE(SESSIONDATA.MCSValue,0)
         OR
         COALESCE(Reserve.Amount,0) <> COALESCE(SESSIONDATA.Reserved,0);
+
     --Обновляем данные в сессии
     UPDATE CashSessionSnapShot SET
         Price = _DIFF.Price,
@@ -157,7 +166,8 @@ BEGIN
             _DIFF.Remains,
             _DIFF.MCSValue,
             _DIFF.Reserved,
-            _DIFF.NewRow
+            _DIFF.NewRow,
+            _DIFF.Color_calc
         FROM
             _DIFF;
 END;
@@ -169,5 +179,6 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 16.03.16         * 
  12.09.15                                                                       *CashSessionSnapShot
 */

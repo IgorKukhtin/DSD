@@ -23,7 +23,6 @@ object RepriceUnitForm: TRepriceUnitForm
     Height = 291
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 864
     object AllGoodsPriceGridTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsResult
@@ -152,6 +151,18 @@ object RepriceUnitForm: TRepriceUnitForm
         Options.Editing = False
         Width = 60
       end
+      object colisTop: TcxGridDBColumn
+        Caption = #1058#1086#1087
+        DataBinding.FieldName = 'isTop'
+        Options.Editing = False
+        Width = 28
+      end
+      object colisPromo: TcxGridDBColumn
+        Caption = #1040#1082#1094#1080#1103
+        DataBinding.FieldName = 'isPromo'
+        Options.Editing = False
+        Width = 43
+      end
       object colJuridicalName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'JuridicalName'
@@ -234,7 +245,6 @@ object RepriceUnitForm: TRepriceUnitForm
     Height = 241
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 864
     object Panel4: TPanel
       Left = 1
       Top = 1
@@ -243,7 +253,6 @@ object RepriceUnitForm: TRepriceUnitForm
       Align = alClient
       Caption = 'Panel4'
       TabOrder = 0
-      ExplicitWidth = 862
       object CheckListBox: TCheckListBox
         Left = 1
         Top = 1
@@ -252,7 +261,6 @@ object RepriceUnitForm: TRepriceUnitForm
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
-        ExplicitWidth = 860
       end
       object Panel5: TPanel
         Left = 1
@@ -261,7 +269,6 @@ object RepriceUnitForm: TRepriceUnitForm
         Height = 26
         Align = alBottom
         TabOrder = 1
-        ExplicitWidth = 860
         object lblProggres1: TLabel
           Left = 348
           Top = 0
@@ -368,7 +375,6 @@ object RepriceUnitForm: TRepriceUnitForm
     Height = 8
     AlignSplitter = salTop
     Control = Panel1
-    ExplicitWidth = 864
   end
   object GetUnitsList: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForReprice'
@@ -584,6 +590,14 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'isIncome'
         DataType = ftBoolean
+      end
+      item
+        Name = 'isTop'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'isPromo'
+        DataType = ftBoolean
       end>
     IndexDefs = <>
     Params = <>
@@ -592,7 +606,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      DB0200009619E0BD010000001800000018000000000003000000DB0202496404
+      F90200009619E0BD01000000180000001A000000000003000000F90202496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -614,7 +628,8 @@ object RepriceUnitForm: TRepriceUnitForm
       07535542545950450200490006004D6F6E657900114D696E4578706972617469
       6F6E4461746504000600000000000E69734F6E654A757269646963616C020003
       00000000000B4A757269646963616C496404000100000000000A697350726963
-      654669780200030000000000086973496E636F6D6502000300000000000000}
+      654669780200030000000000086973496E636F6D650200030000000000056973
+      546F70020003000000000007697350726F6D6F02000300000000000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -696,6 +711,12 @@ object RepriceUnitForm: TRepriceUnitForm
     end
     object cdsResultisIncome: TBooleanField
       FieldName = 'isIncome'
+    end
+    object cdsResultisTop: TBooleanField
+      FieldName = 'isTop'
+    end
+    object cdsResultisPromo: TBooleanField
+      FieldName = 'isPromo'
     end
   end
   object UnitsCDS: TClientDataSet

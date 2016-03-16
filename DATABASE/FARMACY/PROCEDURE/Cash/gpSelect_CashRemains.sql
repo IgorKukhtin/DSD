@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
 )
 RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
                Remains TFloat, Price TFloat, Reserved TFloat, MCSValue TFloat,
-               AlternativeGroupId Integer, NDS TFloat)
+               AlternativeGroupId Integer, NDS TFloat,
+               isFirst boolean, Color_calc Integer
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -90,7 +92,9 @@ BEGIN
             CashSessionSnapShot.Reserved,
             CashSessionSnapShot.MCSValue,
             Link_Goods_AlternativeGroup.ChildObjectId as AlternativeGroupId,
-            ObjectFloat_NDSKind_NDS.ValueData AS NDS
+            ObjectFloat_NDSKind_NDS.ValueData AS NDS,
+            COALESCE(ObjectBoolean_First.ValueData, False)         AS isFirst,
+            CASE WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
         FROM
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -102,6 +106,11 @@ BEGIN
                                       AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
             LEFT OUTER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                         ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_First
+                                    ON ObjectBoolean_First.ObjectId = Goods.Id
+                                   AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
+            
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY

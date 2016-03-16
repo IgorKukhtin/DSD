@@ -797,7 +797,9 @@ uses
   Movement_DateDialog in '..\..\Forms\Document\Movement_DateDialog.pas' {Movement_DateDialogForm: TParentForm},
   Movement_PeriodDialog in '..\..\Forms\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   GoodsByGoodsKind_Order in '..\..\Forms\Guides\GoodsByGoodsKind_Order.pas' {GoodsByGoodsKind_OrderForm: TParentForm},
-  ReceiptComponents in '..\..\Forms\Guides\ReceiptComponents.pas' {ReceiptComponentsForm: TParentForm};
+  ReceiptComponents in '..\..\Forms\Guides\ReceiptComponents.pas' {ReceiptComponentsForm: TParentForm},
+  QualityNumberJournal in '..\..\Forms\Document\QualityNumberJournal.pas' {QualityNumberJournalForm: TParentForm},
+  QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

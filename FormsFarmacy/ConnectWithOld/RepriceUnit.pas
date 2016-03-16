@@ -102,6 +102,10 @@ type
     btnRepriceSelYes: TButton;
     btnRepriceSelNo: TButton;
     colId: TcxGridDBColumn;
+    cdsResultisTop: TBooleanField;
+    cdsResultisPromo: TBooleanField;
+    colisTop: TcxGridDBColumn;
+    colisPromo: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -346,7 +350,7 @@ begin
           cdsResult.FieldByName('MarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MarginPercent').AsCurrency;
           cdsResult.FieldByName('MinMarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MinMarginPercent').AsCurrency;
           cdsResult.FieldByName('PriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceDiff').AsCurrency;
-          cdsResult.FieldByName('Reprice').AsBoolean := True;
+          cdsResult.FieldByName('Reprice').AsBoolean := AllGoodsPriceCDS.FieldByName('Reprice').AsBoolean;
           cdsResult.FieldByName('UnitId').AsInteger := UnitId;
           cdsResult.FieldByName('UnitName').AsString := CheckListBox.Items[i];
           cdsResult.FieldByName('JuridicalName').AsString := AllGoodsPriceCDS.FieldByName('JuridicalName').AsString;
@@ -359,6 +363,8 @@ begin
           cdsResult.FieldByName('JuridicalId').AsInteger := AllGoodsPriceCDS.FieldByName('JuridicalId').AsInteger;
           cdsResult.FieldByName('isPriceFix').AsBoolean := AllGoodsPriceCDS.FieldByName('isPriceFix').AsBoolean;
           cdsResult.FieldByName('isIncome').AsBoolean := AllGoodsPriceCDS.FieldByName('isIncome').AsBoolean;
+          cdsResult.FieldByName('isTop').AsBoolean := AllGoodsPriceCDS.FieldByName('isTop').AsBoolean;
+          cdsResult.FieldByName('isPromo').AsBoolean := AllGoodsPriceCDS.FieldByName('isPromo').AsBoolean;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

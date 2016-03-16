@@ -13,6 +13,7 @@ RETURNS TABLE (
     Remains            TFloat,
     MinExpirationDate  TDateTime,
     PartionGoodsDate   TDateTime,
+    Partner_GoodsId    Integer,
     Partner_GoodsCode  TVarChar,
     Partner_GoodsName  TVarChar,
     MakerName          TVarChar,
@@ -101,6 +102,7 @@ BEGIN
       , ddd.MinExpirationDate
       , ddd.Price
       , ddd.PartionGoodsDate
+      , ddd.Partner_GoodsId
       , ddd.Partner_GoodsCode
       , ddd.Partner_GoodsName
       , ddd.MakerName
@@ -130,6 +132,7 @@ BEGIN
                     THEN PriceList.Amount
             ELSE (PriceList.Amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat 
             END AS FinalPrice
+          , MILinkObject_Goods.ObjectId        AS Partner_GoodsId
           , Object_JuridicalGoods.GoodsCode    AS Partner_GoodsCode
           , Object_JuridicalGoods.GoodsName    AS Partner_GoodsName
           , Object_JuridicalGoods.MakerName    AS MakerName
@@ -189,6 +192,7 @@ BEGIN
         ) as T0
         Where T0.Ord = 1
     )
+
     Select
         MinPriceList.GoodsId,
         MinPriceList.GoodsCode,
@@ -196,6 +200,7 @@ BEGIN
         MinPriceList.Remains,
         MinPriceList.MinExpirationDate,
         MinPriceList.PartionGoodsDate,
+        MinPriceList.Partner_GoodsId,
         MinPriceList.Partner_GoodsCode,
         MinPriceList.Partner_GoodsName,
         MinPriceList.MakerName,
