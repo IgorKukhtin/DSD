@@ -4,8 +4,6 @@
 DROP FUNCTION IF EXISTS gpReport_Wage (Integer, TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Wage (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
-
-
 CREATE OR REPLACE FUNCTION  gpReport_Wage(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inDateStart        TDateTime,  -- Дата начала

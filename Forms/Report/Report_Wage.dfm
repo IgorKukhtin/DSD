@@ -1,31 +1,38 @@
 inherited Report_WageForm: TReport_WageForm
-  Caption = #1086#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1091' '#1079#1072#1088#1086#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
-  ClientHeight = 581
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1091' '#1079#1072#1088#1086#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
+  ClientHeight = 401
   ClientWidth = 991
   AddOnFormData.RefreshAction = nil
+  ExplicitLeft = -201
   ExplicitWidth = 1007
-  ExplicitHeight = 619
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
     Width = 991
-    Height = 466
+    Height = 286
     TabOrder = 3
     ExplicitTop = 115
     ExplicitWidth = 991
     ExplicitHeight = 466
-    ClientRectBottom = 466
+    ClientRectBottom = 286
     ClientRectRight = 991
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 991
       ExplicitHeight = 466
       inherited cxGrid: TcxGrid
         Width = 991
-        Height = 466
+        Height = 286
         ExplicitWidth = 991
         ExplicitHeight = 466
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colGrossOnOneMember
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
@@ -33,13 +40,14 @@ inherited Report_WageForm: TReport_WageForm
               Column = colAmountOnOneMember
             end
             item
-              Format = ',0.000'
+              Format = ',0.00##'
               Kind = skSum
               Column = colGrossOnOneMember
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -48,97 +56,159 @@ inherited Report_WageForm: TReport_WageForm
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 130
           end
           object colPositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 106
           end
           object colPositionLevelName: TcxGridDBColumn
             Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PositionLevelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 98
           end
           object colPersonalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082
             DataBinding.FieldName = 'PersonalCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object colMemberName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
             DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 102
           end
           object colSheetWorkTime_Amount: TcxGridDBColumn
             Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074
             DataBinding.FieldName = 'SheetWorkTime_Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object colServiceModelName: TcxGridDBColumn
             Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' / '#1058#1080#1087' '#1089#1091#1084#1084#1099
             DataBinding.FieldName = 'ServiceModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 131
           end
           object colPrice: TcxGridDBColumn
             Caption = #1075#1088#1085'. '#1079#1072' '#1082#1075' / '#1089#1090#1072#1074#1082#1072
             DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 81
           end
           object colFromName: TcxGridDBColumn
             Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099': '#1086#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 129
           end
           object colToName: TcxGridDBColumn
             Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099': '#1082#1086#1084#1091
             DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 132
           end
           object colMovementDescName: TcxGridDBColumn
             Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099': '#1090#1080#1087
             DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 118
           end
           object colModelServiceItemChild_FromName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088': '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'ModelServiceItemChild_FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 105
           end
           object colModelServiceItemChild_ToName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088': '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'ModelServiceItemChild_ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 112
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object colCount_MemberInDay: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082
             DataBinding.FieldName = 'Count_MemberInDay'
-            Width = 99
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object Gross: TcxGridDBColumn
             Caption = #1054#1073#1097#1072#1103' '#1084#1072#1089#1089#1072
             DataBinding.FieldName = 'Gross'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 92
           end
           object colGrossOnOneMember: TcxGridDBColumn
             Caption = #1052#1072#1089#1089#1072' '#1085#1072' 1-'#1075#1086' '#1095#1077#1083'.'
             DataBinding.FieldName = 'GrossOnOneMember'
-            Width = 73
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object colAmount: TcxGridDBColumn
             Caption = #1054#1073#1097#1072#1103' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount'
-            Width = 65
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object colAmountOnOneMember: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' 1 '#1095#1077#1083
             DataBinding.FieldName = 'AmountOnOneMember'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object colPersonalServiceListName: TcxGridDBColumn
             Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'PersonalServiceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 164
           end
         end
@@ -153,6 +223,7 @@ inherited Report_WageForm: TReport_WageForm
     inherited deStart: TcxDateEdit
       Left = 10
       Top = 23
+      EditValue = 42370d
       ExplicitLeft = 10
       ExplicitTop = 23
       ExplicitWidth = 91
@@ -161,6 +232,7 @@ inherited Report_WageForm: TReport_WageForm
     inherited deEnd: TcxDateEdit
       Left = 144
       Top = 23
+      EditValue = 42370d
       ExplicitLeft = 144
       ExplicitTop = 23
       ExplicitWidth = 97
@@ -341,13 +413,13 @@ inherited Report_WageForm: TReport_WageForm
       Params = <
         item
           Name = 'DateStart'
-          Value = Null
+          Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'dateEnd'
-          Value = Null
+          Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
         end
@@ -487,8 +559,8 @@ inherited Report_WageForm: TReport_WageForm
     Top = 152
   end
   inherited BarManager: TdxBarManager
-    Left = 920
-    Top = 32
+    Left = 272
+    Top = 232
     DockControlHeights = (
       0
       0
@@ -509,8 +581,10 @@ inherited Report_WageForm: TReport_WageForm
           ItemName = 'dxBarStatic'
         end
         item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -520,13 +594,19 @@ inherited Report_WageForm: TReport_WageForm
           UserDefine = [udPaintStyle]
           UserPaintStyle = psCaptionGlyph
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarButton2'
         end
         item
-          UserDefine = [udPaintStyle]
-          UserPaintStyle = psCaptionGlyph
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarButton1: TdxBarButton

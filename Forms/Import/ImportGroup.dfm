@@ -1,26 +1,26 @@
 inherited ImportGroupForm: TImportGroupForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
-  ClientHeight = 339
-  ClientWidth = 578
+  ClientHeight = 345
+  ClientWidth = 583
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 594
-  ExplicitHeight = 374
+  ExplicitWidth = 599
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 578
-    Height = 313
+    Width = 583
+    Height = 319
     ExplicitWidth = 578
     ExplicitHeight = 313
-    ClientRectBottom = 313
-    ClientRectRight = 578
+    ClientRectBottom = 319
+    ClientRectRight = 583
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 578
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 273
-        Height = 313
+        Height = 319
         Align = alLeft
         ExplicitWidth = 273
         ExplicitHeight = 313
@@ -50,11 +50,13 @@ inherited ImportGroupForm: TImportGroupForm
       object cxGrid1: TcxGrid
         Left = 276
         Top = 0
-        Width = 302
-        Height = 313
+        Width = 307
+        Height = 319
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 302
+        ExplicitHeight = 313
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -107,9 +109,10 @@ inherited ImportGroupForm: TImportGroupForm
         Left = 273
         Top = 0
         Width = 3
-        Height = 313
+        Height = 319
         AutoPosition = False
         Control = cxGrid
+        ExplicitHeight = 313
       end
     end
   end
@@ -452,6 +455,9 @@ inherited ImportGroupForm: TImportGroupForm
   object ChildCDS: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ImportGroupId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
     Params = <>
     Left = 504
     Top = 64

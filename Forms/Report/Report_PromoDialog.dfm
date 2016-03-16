@@ -1,5 +1,5 @@
 inherited Report_PromoDialogForm: TReport_PromoDialogForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
   ClientHeight = 133
   ClientWidth = 446
   ExplicitWidth = 452
@@ -77,14 +77,14 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
     Params = <
       item
         Name = 'StartDate'
-        Value = Null
+        Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'EndDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

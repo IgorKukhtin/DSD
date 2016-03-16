@@ -1,27 +1,27 @@
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage_2(
-    TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    Integer,   --СЃРѕС‚СЂСѓРґРЅРёРє
-    Integer,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
-    TVarChar   --СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Integer,   --подразделение 
+    Integer,   --сотрудник
+    Integer,   --должность
+    TVarChar   --сессия пользователя
 );
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Sum(
-    TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    Integer,   --СЃРѕС‚СЂСѓРґРЅРёРє
-    Integer,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
-    TVarChar   --СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Integer,   --подразделение 
+    Integer,   --сотрудник
+    Integer,   --должность
+    TVarChar   --сессия пользователя
 );
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_Sum(
-    IN inDateStart      TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    IN inDateFinal      TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    IN inUnitId         Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    IN inMemberId       Integer,   --СЃРѕС‚СЂСѓРґРЅРёРє
-    IN inPositionId     Integer,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
-    IN inSession        TVarChar   --СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inDateStart      TDateTime, --дата начала периода
+    IN inDateFinal      TDateTime, --дата окончания периода
+    IN inUnitId         Integer,   --подразделение 
+    IN inMemberId       Integer,   --сотрудник
+    IN inPositionId     Integer,   --должность
+    IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
      StaffList                      Integer
@@ -50,7 +50,7 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 BEGIN
-    -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+    -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := inSession::Integer;
 
@@ -72,7 +72,7 @@ BEGIN
 
     INSERT INTO Setting_Wage_2(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName
        ,PersonalCount,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName)
---РќР°СЃС‚СЂРѕР№РєРё
+--Настройки
     SELECT
         Object_StaffList.Id                                      AS StaffList
        ,ObjectLink_StaffList_Unit.ChildObjectId                  AS UnitId
@@ -90,33 +90,33 @@ BEGIN
        ,Object_StaffListSummKind.ValueData                       AS StaffListSummKindName
     FROM
         Object as Object_StaffList
-        --Unit РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
+        --Unit подразделение
         LEFT OUTER JOIN ObjectLink AS ObjectLink_StaffList_Unit
                                    ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
                                   AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
         LEFT OUTER JOIN Object AS Object_Unit
                                ON Object_Unit.Id = ObjectLink_StaffList_Unit.ChildObjectId
-        --Position  РґРѕР»Р¶РЅРѕСЃС‚СЊ
+        --Position  должность
         LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
                              ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
                             AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
         LEFT JOIN Object AS Object_Position 
                          ON Object_Position.Id = ObjectLink_StaffList_Position.ChildObjectId
-        --PositionLevel СЂР°Р·СЂСЏРґ РґРѕР»Р¶РЅРѕСЃС‚Рё
+        --PositionLevel разряд должности
         LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
                              ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
                             AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
         LEFT JOIN Object AS Object_PositionLevel 
                          ON Object_PositionLevel.Id = ObjectLink_StaffList_PositionLevel.ChildObjectId
-        --PersonalCount  РєРѕР»-РІРѕ СЃРѕС‚СЂСѓРґРЅРёРєРѕРІ РІ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРё/РґРѕР»Р¶РЅРѕСЃС‚Рё/СЂР°Р·СЂСЏРґРµ
+        --PersonalCount  кол-во сотрудников в подразделении/должности/разряде
         LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount 
                               ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
                              AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
-        --HoursPlan  1.РћР±С‰.РїР».С‡.РІ РјРµСЃ. РЅР° С‡РµР»РѕРІРµРєР°
+        --HoursPlan  1.Общ.пл.ч.в мес. на человека
         LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
                               ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
                              AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
-        --HoursDay  2.Р”РЅРµРІРЅРѕР№ РїР».С‡. РЅР° С‡РµР»РѕРІРµРєР°
+        --HoursDay  2.Дневной пл.ч. на человека
         LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay 
                               ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
                              AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
@@ -127,11 +127,11 @@ BEGIN
         INNER JOIN Object AS Object_StaffListSumm
                           ON Object_StaffListSumm.Id = ObjectLink_StaffListSumm_StaffList.ObjectId
                          AND Object_StaffListSumm.isErased = FALSE
-        --РЎСѓРјРјР°
+        --Сумма
         LEFT JOIN ObjectFloat AS ObjectFloat_StaffListSumm_Value
                               ON ObjectFloat_StaffListSumm_Value.ObjectId = Object_StaffListSumm.Id 
                              AND ObjectFloat_StaffListSumm_Value.DescId = zc_ObjectFloat_StaffListSumm_Value()
-        --РўРёРї СЃСѓРјРјС‹
+        --Тип суммы
         LEFT OUTER JOIN ObjectLink AS ObjectLink_StaffListSumm_StaffListSummKind
                                    ON ObjectLink_StaffListSumm_StaffListSummKind.ObjectId = Object_StaffListSumm.Id
                                   AND ObjectLink_StaffListSumm_StaffListSummKind.DescId = zc_ObjectLink_StaffListSumm_StaffListSummKind()
@@ -154,7 +154,7 @@ BEGIN
         );
     
     RETURN QUERY
---С‚Р°Р±РµР»СЊ
+--табель
     WITH Movement_SheetWorkTime AS
     (
         SELECT
@@ -209,7 +209,7 @@ BEGIN
             WHERE 
                 Movement.DescId = zc_Movement_SheetWorkTime()
                 AND
-                date_trunc('day',Movement.OperDate) between inDateStart AND inDateFinal
+                Movement.OperDate between inDateStart AND inDateFinal
                 AND
                 (
                     MovementLinkObject_Unit.ObjectId = inUnitId
@@ -261,24 +261,30 @@ BEGIN
        ,Movement_SheetWorkTime.Count_MemberDay::Integer
        ,Movement_SheetWorkTime.SUM_MemberHours::TFloat
        ,CASE 
+            -- Фонд за месяц
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
                 THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.Count_MemberDay,0) * Movement_SheetWorkTime.Count_Day)
+            -- Доплата за 1 день на всех
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day()
                 THEN Movement_SheetWorkTime.SummaADD
+            -- Доплата за 1 день на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Personal()
                 THEN Movement_SheetWorkTime.SummaADD
+            -- Фонд за общий план часов (постоянный) в месяц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlan()
                 THEN (Setting.StaffListSumm_Value / NULLIF(Setting.HoursPlan,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
+            -- Фонд за план часов (расчетный) в месяц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursDay()
                 THEN (Setting.StaffListSumm_Value / NULLIF(Setting.HoursDay,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
+            -- Фонд постоянный для факт часов в месяц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlanConst()
                 THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.SUM_MemberHours,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
         END::TFloat AS Summ
     FROM Setting_Wage_2 AS Setting
         LEFT OUTER JOIN Movement_SheetWorkTime ON COALESCE(Movement_SheetWorkTime.PositionId,0) = COALESCE(Setting.PositionId,0)
                                               AND COALESCE(Movement_SheetWorkTime.PositionLevelId,0) = COALESCE(Setting.PositionLevelId,0)
---------------------------------------------------------------------------------------------------
     ;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -286,10 +292,10 @@ ALTER FUNCTION gpSelect_Report_Wage_Sum (TDateTime,TDateTime,Integer,Integer,Int
 
 /*
 Select * from gpSelect_Report_Wage_Sum(
-    inDateStart      := '20150701'::TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    inDateFinal      := '20150731'::TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    inUnitId         := 8448::Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    inMemberId     := 0::Integer,   --СЃРѕС‚СЂСѓРґРЅРёРє
-    inPositionId     := 0::Integer,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
+    inDateStart      := '20150701'::TDateTime, --дата начала периода
+    inDateFinal      := '20150731'::TDateTime, --дата окончания периода
+    inUnitId         := 8448::Integer,   --подразделение 
+    inMemberId     := 0::Integer,   --сотрудник
+    inPositionId     := 0::Integer,   --должность
     inSession        := '5');
 */    

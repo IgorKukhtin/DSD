@@ -123,6 +123,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
               , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_PersonalServiceProduction()
                                              , zc_Enum_Process_AccessKey_PersonalServiceAdmin()
                                              , zc_Enum_Process_AccessKey_PersonalServiceSbit()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceSbitM()
                                              , zc_Enum_Process_AccessKey_PersonalServiceMarketing()
                                              , zc_Enum_Process_AccessKey_PersonalServiceSB()
                                              , zc_Enum_Process_AccessKey_PersonalServiceFirstForm()
@@ -179,6 +180,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 --                                                                                                    )
                                                                                                      )
 
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSbitM()
+                                                                        )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSbit()
                                                                      AND UnitCode NOT IN (23010) -- Отдел Маркетинга
                                                                      AND ProfitLossDirectionCode IN (40100 -- Расходы на сбыт + Содержание транспорта

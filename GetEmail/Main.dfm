@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1040#1074#1090#1086'-'#1079#1072#1075#1088#1091#1079#1082#1072' '#1087#1086#1095#1090#1099
-  ClientHeight = 428
-  ClientWidth = 666
+  ClientHeight = 423
+  ClientWidth = 684
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,7 @@ object MainForm: TMainForm
   TextHeight = 13
   object BtnStart: TBitBtn
     Left = 258
-    Top = 395
+    Top = 390
     Width = 75
     Height = 25
     Caption = 'Start !!!'
@@ -25,16 +25,16 @@ object MainForm: TMainForm
   end
   object PanelHost: TPanel
     Left = 0
-    Top = 0
-    Width = 666
-    Height = 78
+    Top = 24
+    Width = 684
+    Height = 70
     Align = alTop
     Caption = 'Host : '
     TabOrder = 1
     object GaugeHost: TGauge
       Left = 1
-      Top = 58
-      Width = 664
+      Top = 50
+      Width = 682
       Height = 19
       Align = alBottom
       Progress = 50
@@ -45,16 +45,16 @@ object MainForm: TMainForm
   end
   object PanelMailFrom: TPanel
     Left = 0
-    Top = 78
-    Width = 666
-    Height = 78
+    Top = 94
+    Width = 684
+    Height = 70
     Align = alTop
     Caption = 'Mail From : '
     TabOrder = 2
     object GaugeMailFrom: TGauge
       Left = 1
-      Top = 58
-      Width = 664
+      Top = 50
+      Width = 682
       Height = 19
       Align = alBottom
       Progress = 50
@@ -65,16 +65,16 @@ object MainForm: TMainForm
   end
   object PanelParts: TPanel
     Left = 0
-    Top = 156
-    Width = 666
-    Height = 78
+    Top = 164
+    Width = 684
+    Height = 70
     Align = alTop
     Caption = 'Parts : '
     TabOrder = 3
     object GaugeParts: TGauge
       Left = 1
-      Top = 58
-      Width = 664
+      Top = 50
+      Width = 682
       Height = 19
       Align = alBottom
       Progress = 50
@@ -86,15 +86,15 @@ object MainForm: TMainForm
   object PanelLoadXLS: TPanel
     Left = 0
     Top = 234
-    Width = 666
-    Height = 78
+    Width = 684
+    Height = 70
     Align = alTop
     Caption = 'Load XLS : '
     TabOrder = 4
     object GaugeLoadXLS: TGauge
       Left = 1
-      Top = 58
-      Width = 664
+      Top = 50
+      Width = 682
       Height = 19
       Align = alBottom
       Progress = 50
@@ -105,16 +105,16 @@ object MainForm: TMainForm
   end
   object PanelMove: TPanel
     Left = 0
-    Top = 312
-    Width = 666
-    Height = 78
+    Top = 304
+    Width = 684
+    Height = 70
     Align = alTop
     Caption = 'Move : '
     TabOrder = 5
     object GaugeMove: TGauge
       Left = 1
-      Top = 58
-      Width = 664
+      Top = 50
+      Width = 682
       Height = 19
       Align = alBottom
       Progress = 50
@@ -125,7 +125,7 @@ object MainForm: TMainForm
   end
   object cbTimer: TCheckBox
     Left = 352
-    Top = 399
+    Top = 394
     Width = 306
     Height = 17
     Caption = 'Timer ON '
@@ -134,11 +134,26 @@ object MainForm: TMainForm
   end
   object cbBeginMove: TCheckBox
     Left = 24
-    Top = 400
+    Top = 395
     Width = 217
     Height = 17
     Caption = 'Move '#1087#1088#1072#1081#1089' '#1074' '#1072#1082#1090#1091#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099
     TabOrder = 7
+  end
+  object PanelError: TPanel
+    Left = 0
+    Top = 0
+    Width = 684
+    Height = 24
+    Align = alTop
+    Caption = 'Error : '
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clRed
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 8
   end
   object IdPOP33: TIdPOP3
     AutoLogin = True
@@ -227,6 +242,41 @@ object MainForm: TMainForm
           Action = actProtocol
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072
+    end
+    object actSendEmail: TdsdSMTPFileAction
+      Category = 'Send'
+      MoveParams = <>
+      Host.Value = '0'
+      Host.Component = ExportSettingsCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Port.Value = '0'
+      Port.Component = ExportSettingsCDS
+      Port.ComponentItem = 'Port'
+      UserName.Value = '0'
+      UserName.Component = ExportSettingsCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      Password.Value = '0'
+      Password.Component = ExportSettingsCDS
+      Password.ComponentItem = 'PasswordValue'
+      Password.DataType = ftString
+      Body.Value = '0'
+      Body.Component = ExportSettingsCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Subject.Value = '0'
+      Subject.Component = ExportSettingsCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      FromAddress.Value = '0'
+      FromAddress.Component = ExportSettingsCDS
+      FromAddress.ComponentItem = 'MailFrom'
+      FromAddress.DataType = ftString
+      ToAddress.Value = '0'
+      ToAddress.Component = ExportSettingsCDS
+      ToAddress.ComponentItem = 'MailTo'
+      ToAddress.DataType = ftString
     end
   end
   object MasterCDS: TClientDataSet
@@ -342,5 +392,46 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 296
     Top = 288
+  end
+  object spExportSettings_Email: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ExportSettings_Email'
+    DataSet = ExportSettingsCDS
+    DataSets = <
+      item
+        DataSet = ExportSettingsCDS
+      end>
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inByDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inByMail'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inByFileName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 224
+  end
+  object ExportSettingsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 128
+    Top = 192
   end
 end

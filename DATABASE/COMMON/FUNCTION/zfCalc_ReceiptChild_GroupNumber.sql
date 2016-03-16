@@ -19,7 +19,7 @@ BEGIN
      RETURN (CASE WHEN inGoodsId = zc_Goods_WorkIce()
                      THEN 6
 
-                  WHEN inGoodsKindId <> 0
+                  WHEN (inGoodsKindId <> 0 AND inInfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100()) -- Основное сырье + Мясное сырье
                     -- OR inGoodsKindId = zc_GoodsKind_WorkProgress()
                     OR inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                        THEN 3
