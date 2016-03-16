@@ -127,6 +127,7 @@ BEGIN
            , tmpMI.AmountPartner      :: TFloat AS AmountPartner      -- расчет составляющих по заявке на производство (без производства ПФ)
            , tmpMI.AmountPartnerPrior :: TFloat AS AmountPartnerPrior -- расчет составляющих по заявке на производство (для производства ПФ)
            , (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior) :: TFloat AS AmountPartner_all -- расчет составляющих по заявке на производство (итого)
+           , CAST (0 AS TFloat) AS AmountPartnerDozakaz              -- программа дозаказ
 
            , CASE WHEN ABS (tmpMI.AmountForecast) < 1 THEN tmpMI.AmountForecast ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1)) END :: TFloat AS AmountForecast -- Прогноз по факт. расходу на производство
            , CAST (CASE WHEN vbDayCount <> 0 THEN tmpMI.AmountForecast / vbDayCount ELSE 0 END AS NUMERIC (16, 1))                      :: TFloat AS CountForecast  -- Норм 1д (по пр.)

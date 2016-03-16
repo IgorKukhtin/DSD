@@ -82,6 +82,7 @@ type
     ceComment: TcxTextEdit;
     AmountPartnerPrior: TcxGridDBColumn;
     AmountPartner_all: TcxGridDBColumn;
+    AmountPartnerDozakaz: TcxGridDBColumn;
   private
     { Private declarations }
   public
