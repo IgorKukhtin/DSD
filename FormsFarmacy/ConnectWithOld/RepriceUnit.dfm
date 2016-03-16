@@ -3,7 +3,7 @@ object RepriceUnitForm: TRepriceUnitForm
   Top = 0
   Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
   ClientHeight = 540
-  ClientWidth = 864
+  ClientWidth = 890
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,10 +19,11 @@ object RepriceUnitForm: TRepriceUnitForm
   object AllGoodsPriceGrid: TcxGrid
     Left = 0
     Top = 249
-    Width = 864
+    Width = 890
     Height = 291
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 864
     object AllGoodsPriceGridTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsResult
@@ -229,36 +230,40 @@ object RepriceUnitForm: TRepriceUnitForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 864
+    Width = 890
     Height = 241
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 864
     object Panel4: TPanel
       Left = 1
       Top = 1
-      Width = 862
+      Width = 888
       Height = 239
       Align = alClient
       Caption = 'Panel4'
       TabOrder = 0
+      ExplicitWidth = 862
       object CheckListBox: TCheckListBox
         Left = 1
         Top = 1
-        Width = 860
+        Width = 886
         Height = 211
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
+        ExplicitWidth = 860
       end
       object Panel5: TPanel
         Left = 1
         Top = 212
-        Width = 860
+        Width = 886
         Height = 26
         Align = alBottom
         TabOrder = 1
+        ExplicitWidth = 860
         object lblProggres1: TLabel
-          Left = 367
+          Left = 348
           Top = 0
           Width = 22
           Height = 13
@@ -266,7 +271,7 @@ object RepriceUnitForm: TRepriceUnitForm
           Caption = '0 / 0'
         end
         object lblProggres2: TLabel
-          Left = 461
+          Left = 442
           Top = 0
           Width = 22
           Height = 13
@@ -274,30 +279,30 @@ object RepriceUnitForm: TRepriceUnitForm
           Caption = '0 / 0'
         end
         object SpeedButton1: TSpeedButton
-          Left = 728
+          Left = 635
           Top = 0
-          Width = 121
-          Height = 24
+          Width = 80
+          Height = 25
           Action = dsdGridToExcel1
         end
         object btnSelectNewPrice: TButton
-          Left = 233
+          Left = 220
           Top = 0
-          Width = 91
+          Width = 84
           Height = 25
           Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
           TabOrder = 0
           OnClick = btnSelectNewPriceClick
         end
         object ProgressBar1: TProgressBar
-          Left = 333
+          Left = 314
           Top = 13
           Width = 81
           Height = 10
           TabOrder = 1
         end
         object ProgressBar2: TProgressBar
-          Left = 421
+          Left = 402
           Top = 13
           Width = 93
           Height = 10
@@ -318,9 +323,9 @@ object RepriceUnitForm: TRepriceUnitForm
           Caption = '% '#1088#1072#1079#1085#1080#1094#1099' '#1094#1077#1085#1099
         end
         object btnReprice: TButton
-          Left = 592
+          Left = 745
           Top = 0
-          Width = 116
+          Width = 120
           Height = 25
           Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100'  >>>'
           TabOrder = 5
@@ -334,9 +339,9 @@ object RepriceUnitForm: TRepriceUnitForm
           Width = 82
         end
         object btnRepriceSelYes: TButton
-          Left = 520
+          Left = 510
           Top = 0
-          Width = 25
+          Width = 35
           Height = 25
           Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1055#1077#1088#1077#1086#1094#1077#1085#1082#1080
           Caption = '+'
@@ -344,9 +349,9 @@ object RepriceUnitForm: TRepriceUnitForm
           OnClick = btnRepriceSelYesClick
         end
         object btnRepriceSelNo: TButton
-          Left = 551
+          Left = 570
           Top = 0
-          Width = 25
+          Width = 35
           Height = 25
           Hint = #1059#1073#1088#1072#1090#1100' '#1086#1090#1084#1077#1090#1082#1091' '#1090#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1055#1077#1088#1077#1086#1094#1077#1085#1082#1080
           Caption = '-'
@@ -359,10 +364,11 @@ object RepriceUnitForm: TRepriceUnitForm
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 241
-    Width = 864
+    Width = 890
     Height = 8
     AlignSplitter = salTop
     Control = Panel1
+    ExplicitWidth = 864
   end
   object GetUnitsList: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForReprice'
@@ -468,7 +474,7 @@ object RepriceUnitForm: TRepriceUnitForm
     object dsdGridToExcel1: TdsdGridToExcel
       MoveParams = <>
       Grid = AllGoodsPriceGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472

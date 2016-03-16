@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Inventory(
 RETURNS VOID
 AS
 $BODY$
+   DECLARE vbTmp Integer;
    DECLARE vbAccountId Integer;
    DECLARE vbOperSumm_Partner TFloat;
    DECLARE vbOperSumm_Partner_byItem TFloat;
@@ -326,13 +327,59 @@ BEGIN
                                  );
       END IF;    
    */
+
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
-    
+
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_Inventory()
                                 , inUserId     := inUserId
                                  );
+
+     -- !!!5.3. формируется свойство <MovementItemId - для созданных партий этой инвентаризацией - ближайший документ прихода, из которого для ВСЕХ отчетов будем считать с/с> !!!
+     vbTmp:= (WITH tmpMIContainer AS
+                     (SELECT MIContainer.MovementItemId
+                           , Container.ObjectId AS GoodsId
+                      FROM MovementItemContainer AS MIContainer
+                           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                         ON ContainerLinkObject_MovementItem.Containerid = MIContainer.ContainerId
+                                                        AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                           INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                                                          AND Object_PartionMovementItem.ObjectCode = MIContainer.MovementItemId
+                           INNER JOIN Container ON Container.Id = MIContainer.ContainerId
+                      WHERE MIContainer.MovementId = inMovementId
+                        AND MIContainer.DescId = zc_MIContainer_Count()
+                     )
+                 , tmpIncome AS
+                     (SELECT *
+                      FROM
+                        (SELECT MI.Id AS MovementItemId_find
+                              , tmpMIContainer.MovementItemId
+                              , tmpMIContainer.GoodsId
+                              , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer.MovementItemId, tmpMIContainer.GoodsId ORDER BY CASE WHEN Movement.OperDate >= vbInventoryDate THEN Movement.OperDate - vbInventoryDate ELSE vbInventoryDate - Movement.OperDate END, Movement.OperDate) AS myRow
+                         FROM tmpMIContainer
+                              INNER JOIN Movement ON Movement.DescId = zc_Movement_Income() AND Movement.StatusId = zc_Enum_Status_Complete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                              INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                    ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                                   AND ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId
+                              INNER JOIN MovementItem AS MI
+                                                      ON MI.MovementId = Movement.Id
+                                                     AND MI.DescId = zc_MI_Master()
+                                                     AND MI.isErased = FALSE
+                                                     AND MI.ObjectId = tmpMIContainer.GoodsId
+                                                     AND MI.Amount <> 0
+                        ) AS tmp
+                      WHERE tmp.myRow = 1
+                     )
+              SELECT MAX (CASE WHEN TRUE = lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), tmpIncome.MovementItemId, tmpIncome.MovementItemId_find) THEN 1 ELSE 0 END)
+              FROM tmpIncome
+             );
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -340,6 +387,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 14.03.16                                        * !!!5.3. формируется свойство <MovementItemId - для созданных партий этой инвентаризацией - ближайший документ прихода, из которого для ВСЕХ отчетов будем считать с/с> !!!
  03.08.15                                                                  *Добавить в переучет строки, которые есть на остатке, но нет в переучете
  11.02.14                        * 
  05.02.14                        * 

@@ -9,7 +9,7 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
   Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls, Vcl.ActnList,
   dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
-  IdSSL, IdSSLOpenSSL, IdIMAP4;
+  IdSSL, IdSSLOpenSSL, IdIMAP4, dsdInternetAction;
 
 type
   // элемент "почтовый ящик"
@@ -74,6 +74,10 @@ type
     spUpdate_Protocol_LoadPriceList: TdsdStoredProc;
     actProtocol: TdsdExecStoredProc;
     mactExecuteImportSettings: TMultiAction;
+    PanelError: TPanel;
+    actSendEmail: TdsdSMTPFileAction;
+    spExportSettings_Email: TdsdStoredProc;
+    ExportSettingsCDS: TClientDataSet;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
@@ -89,6 +93,8 @@ type
     function GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;UserName,JuridicalMail:String):Integer;//находит Индекс в массиве по значению Host + MailJuridical
 
     function fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
+
+    function fError_SendEmail (inImportSettingsId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
 
     function fBeginAll  : Boolean; // обработка все
     function fInitArray : Boolean; // получает данные с сервера и на основании этих данных заполняет массивы
@@ -172,6 +178,42 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+//отправка сообщения если возникла ошибка
+function TMainForm.fError_SendEmail (inImportSettingsId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
+begin
+     if (inByFileName = '0') or (inByFileName = '4')
+     then if IdMessage.MessageParts.Count > 0
+          then PanelError.Caption:= '+Error : ' + PanelParts.Caption
+          else PanelError.Caption:= '+Error : ' + PanelMailFrom.Caption
+     else PanelError.Caption:= '+Error : ' + PanelLoadXLS.Caption;
+     Application.ProcessMessages;
+     //
+     with spExportSettings_Email do
+     begin
+       ParamByName('inObjectId').Value  :=inImportSettingsId;
+       ParamByName('inByDate').Value    :=inByDate;
+       ParamByName('inByMail').Value    :=inByMail;
+       ParamByName('inByFileName').Value:=inByFileName;
+       //получили кому надо отправить Email об ошибке
+       Execute;
+       DataSet.First;
+       while not DataSet.EOF do begin
+          {FormParams.ParamByName('Host').Value       :=DataSet.FieldByName('Host').AsString;
+          FormParams.ParamByName('Port').Value       :=DataSet.FieldByName('Port').AsInteger;
+          FormParams.ParamByName('UserName').Value   :=DataSet.FieldByName('UserName').AsString;
+          FormParams.ParamByName('Password').Value   :=DataSet.FieldByName('PasswordValue').AsString;
+          FormParams.ParamByName('AddressFrom').Value:=DataSet.FieldByName('MailFrom').AsString;
+          FormParams.ParamByName('AddressTo').Value  :=DataSet.FieldByName('MailTo').AsString;
+          FormParams.ParamByName('Subject').Value    :=DataSet.FieldByName('Subject').AsString;
+          FormParams.ParamByName('Body').Value       :=DataSet.FieldByName('Body').AsString;}
+          //
+          actSendEmail.Execute;
+          //перешли к следующему
+          DataSet.Next;
+       end;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 // получает данные с сервера и на основании этих данных заполняет массивы
 function TMainForm.fInitArray : Boolean;
 var i,nn:Integer;
@@ -288,6 +330,8 @@ var
   arch:i7zInArchive;
   StartTime:TDateTime;
   IdPOP3:TIdIMAP4;
+  searchResult, searchResult_save : TSearchRec;
+  fOK:Boolean;
 begin
      if vbIsBegin = true then exit;
      // запущена обработка
@@ -400,17 +444,65 @@ begin
                             ForceDirectories(vbArrayImportSettings[JurPos].Directory);
 
                             // ТОЛЬКО если "сегодня" не было загрузки JurPos
-                            if fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId ) = 0 then
+                            if fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId) = 0 then
                             begin
-                                  // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                                  StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                                  WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-                                  // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                                  StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                                  WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-                            end;
-                            // потом надо удалить письмо в почте
-                            flag:= true;
+                                 //НЕ будем копировать
+                                 fOK:=false;
+
+                                 //поиск файла xls
+                                 if System.SysUtils.FindFirst(mailFolder + '\*.xls', faAnyFile, searchResult) = 0 then
+                                 begin
+                                      searchResult_save:=searchResult;
+                                      if System.SysUtils.FindNext(searchResult) <> 0
+                                      then
+                                          //будем копировать
+                                          fOK:=true
+                                      else
+                                          //ошибка - найден НЕ ОДИН файл xls для загрузки
+                                          fError_SendEmail(vbArrayImportSettings[JurPos].Id
+                                                         , IdMessage.Date
+                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , '4');
+                                 end;
+                                 //поиск файла xlsx
+                                 if System.SysUtils.FindFirst(mailFolder + '\*.xlsx', faAnyFile, searchResult) = 0 then
+                                 begin
+                                      searchResult_save:=searchResult;
+                                      if (System.SysUtils.FindNext(searchResult) <> 0)and(fOK=false)
+                                      then
+                                          //будем копировать
+                                          fOK:=true
+                                      else
+                                          //ошибка - найден НЕ ОДИН файл xls для загрузки
+                                          fError_SendEmail(vbArrayImportSettings[JurPos].Id
+                                                         , IdMessage.Date
+                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , '4');
+                                 end
+                                 else if fOK = false
+                                      then
+                                           //ошибка - не найден файл xls для загрузки
+                                           fError_SendEmail(vbArrayImportSettings[JurPos].Id
+                                                          , IdMessage.Date
+                                                          , vbArrayImportSettings[JurPos].JuridicalMail
+                                                          , '0');
+                                           ;
+                                  if fOK = TRUE then
+                                  begin
+                                        // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
+                                        StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                        WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                                        // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
+                                        StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                        WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                                  end;
+                                  // потом надо удалить письмо в почте
+                                  //flag:= true;
+                                  flag:= fOK
+                            end
+                            else
+                                // если "сегодня" была загрузка JurPos - надо удалить письмо в почте
+                                flag:= true;
                         end
                         // если не нашли - все равно удалить письмо в почте
                         else flag:= true;
@@ -448,6 +540,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всех XLS
 function TMainForm.fBeginXLS : Boolean;
+var
+ searchResult, searchResult_save : TSearchRec;
 begin
      if vbIsBegin = true then exit;
      // запущена обработка
@@ -464,7 +558,31 @@ begin
            Application.ProcessMessages;
            //Загружаем если есть откуда
            if FieldByName('DirectoryImport').asString <> ''
-           then mactExecuteImportSettings.Execute;
+           then try
+                    //поиск файла xls
+                    if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.xls', faAnyFile, searchResult) = 0 then
+                    begin
+                         searchResult_save:=searchResult;
+                         if System.SysUtils.FindNext(searchResult) <> 0
+                         then
+                             // выполняется загрузка
+                             mactExecuteImportSettings.Execute
+                         else
+                             //ошибка - найден НЕ ОДИН файл xls для загрузки
+                             fError_SendEmail(FieldByName('Id').AsInteger
+                                            , NOW
+                                            //, FieldByName('JuridicalMail').AsString
+                                            , FieldByName('DirectoryImport').asString
+                                            , '2');
+                    end
+                    else;
+                        //ошибка - не найден файл xls для загрузки
+                        //та не, все нормально :)
+                except fError_SendEmail(FieldByName('Id').AsInteger
+                                      , searchResult_save.TimeStamp
+                                      , FieldByName('JuridicalMail').AsString
+                                      , searchResult_save.Name);
+                end;
 
            Next;
            //
@@ -521,6 +639,8 @@ end;
 // обработка все
 function TMainForm.fBeginAll : Boolean;
 begin
+     PanelError.Caption:= '';
+
      //инициализируем данные по всем поставщикам
      fInitArray;
      // обработка всей почты

@@ -149,6 +149,8 @@ BEGIN
        ,Object_SelectKind.Id                                AS SelectKindId
        ,Object_SelectKind.ObjectCode                        AS SelectKindCode
        ,CASE 
+            WHEN MovementDesc.Id = zc_Movement_Send()
+                THEN FALSE
             WHEN Object_SelectKind.ObjectCode = 3 
                 THEN TRUE
             WHEN Object_SelectKind.ObjectCode = 4
@@ -294,7 +296,7 @@ BEGIN
     WITH tmpMovement AS 
     (
         SELECT
-            date_trunc('day',MovementItemContainer.OperDate)::TDateTime AS OperDate
+            MovementItemContainer.OperDate
            ,MovementItemContainer.MovementDescId
            ,MovementItemContainer.IsActive
            ,CASE 
@@ -309,7 +311,7 @@ BEGIN
             END AS UnitTo
            ,CASE 
                 WHEN MovementItemContainer.IsActive = TRUE 
-                    THEN NULL::Integer
+                    THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
             ELSE MovementItemContainer.ObjectId_Analyzer
             END AS GoodsFrom
            ,CASE 
@@ -320,7 +322,7 @@ BEGIN
            ,SUM(CASE 
                     WHEN MovementItemContainer.IsActive = TRUE
                         THEN MovementItemContainer.Amount
-                ELSE -MovementItemContainer.Amount
+                ELSE -1 * MovementItemContainer.Amount
                 END)::TFloat as Amount
         FROM
             (
@@ -331,12 +333,12 @@ BEGIN
                 Where 
                     Setting.MovementDescId is not null
             ) as SettingDesc
-            Inner Join MovementItemContainer ON SettingDesc.MovementDescId = MovementItemContainer.MovementDescId
-                                            AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                                            AND date_trunc('day',MovementItemContainer.OperDate) between inDateStart AND inDateFinal
-            LEFT OUTER JOIN Container ON MovementItemContainer.ContainerId_Analyzer = Container.Id
+            Inner Join MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
+                                            AND MovementItemContainer.DescId         = zc_MIContainer_Count()
+                                            AND MovementItemContainer.OperDate BETWEEN inDateStart AND inDateFinal
+            LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId_Analyzer
         GROUP BY
-            date_trunc('day',MovementItemContainer.OperDate)::TDateTime
+            MovementItemContainer.OperDate
            ,MovementItemContainer.MovementDescId
            ,MovementItemContainer.IsActive
            ,CASE 
@@ -351,7 +353,7 @@ BEGIN
             END
            ,CASE 
                 WHEN MovementItemContainer.IsActive = TRUE 
-                    THEN NULL::Integer
+                    THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
             ELSE MovementItemContainer.ObjectId_Analyzer
             END
            ,CASE 
@@ -449,7 +451,7 @@ BEGIN
     Movement_SheetWorkTime AS
     (
         SELECT
-            date_trunc('day',Movement.OperDate)::TDateTime AS SheetWorkTime_Date
+            Movement.OperDate AS SheetWorkTime_Date
            ,MI_SheetWorkTime.ObjectId       AS MemberId
            ,Object_Member.ValueData         AS MemberName
            ,MIObject_Position.ObjectId      AS PositionId
@@ -480,7 +482,7 @@ BEGIN
         WHERE 
             Movement.DescId = zc_Movement_SheetWorkTime()
             AND
-            date_trunc('day',Movement.OperDate) between inDateStart AND inDateFinal
+            Movement.OperDate between inDateStart AND inDateFinal
             AND
             (
                 MovementLinkObject_Unit.ObjectId = inUnitId

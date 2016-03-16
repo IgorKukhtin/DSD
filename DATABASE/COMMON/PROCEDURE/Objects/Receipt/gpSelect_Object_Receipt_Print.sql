@@ -65,7 +65,10 @@ BEGIN
          , tmpReceiptChild.isWeightTotal ::Boolean AS isWeightTotal
          
          , Object_GoodsChild.ObjectCode       AS GoodsChildCode
-         , Object_GoodsChild.ValueData        AS GoodsChildName
+         , CASE WHEN Object_GoodsKindChild.Id <> zc_GoodsKind_WorkProgress() AND Object_GoodsKindChild.ObjectCode = 0
+                     THEN Object_GoodsChild.ValueData || ' ' || Object_GoodsKindChild.ValueData
+                ELSE Object_GoodsChild.ValueData
+           END :: TVarChar AS GoodsChildName
 
          , COALESCE (Object_MeasureChild_calc.ValueData, Object_MeasureChild.ValueData) :: TVarChar AS MeasureChildName_calc
          , tmpReceiptChild.GroupNumber :: integer As GroupNumber
@@ -241,4 +244,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpselect_object_receipt_print (1, 0, 0, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpselect_object_receipt_print (0, 5163, 8345, TRUE, zfCalc_UserAdmin())

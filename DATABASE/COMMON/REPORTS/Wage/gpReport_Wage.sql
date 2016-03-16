@@ -1,29 +1,29 @@
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage(
-    TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    Integer,   --РјРѕРґРµР»СЊ РЅР°С‡РёСЃР»РµРЅРёСЏ
-    Integer,   --СЃРѕС‚СЂСѓРґРЅРёРє
-    Integer,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
-    Boolean,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ РґРЅСЏРј
-    Boolean,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ РјРѕРґРµР»СЏРј
-    Boolean,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ С‚РёРїР°Рј РґРѕРєСѓРјРµРЅС‚РѕРІ РІ РјРѕРґРµР»Рё
-    Boolean,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ С‚РѕРІР°СЂР°Рј РІ С‚РёРїР°С… РґРѕРєСѓРјРµРЅС‚РѕРІ
-    TVarChar   --СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Integer,   --подразделение 
+    Integer,   --модель начисления
+    Integer,   --сотрудник
+    Integer,   --должность
+    Boolean,   --детализировать по дням
+    Boolean,   --детализировать по моделям
+    Boolean,   --детализировать по типам документов в модели
+    Boolean,   --детализировать по товарам в типах документов
+    TVarChar   --сессия пользователя
 );
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Wage(
-    IN inDateStart      TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    IN inDateFinal      TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    IN inUnitId         Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    IN inModelServiceId Integer,   --РјРѕРґРµР»СЊ РЅР°С‡РёСЃР»РµРЅРёСЏ
-    IN inMemberId       Integer,   --СЃРѕС‚СЂСѓРґРЅРёРє
-    IN inPositionId     Integer,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
-    IN inDetailDay      Boolean,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ РґРЅСЏРј
-    IN inDetailModelService Boolean,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ РјРѕРґРµР»СЏРј
-    IN inDetailModelServiceItemMaster Boolean,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ С‚РёРїР°Рј РґРѕРєСѓРјРµРЅС‚РѕРІ РІ РјРѕРґРµР»Рё
-    IN inDetailModelServiceItemChild  Boolean,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ С‚РѕРІР°СЂР°Рј РІ С‚РёРїР°С… РґРѕРєСѓРјРµРЅС‚РѕРІ
-    IN inSession        TVarChar   --СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inDateStart      TDateTime, --дата начала периода
+    IN inDateFinal      TDateTime, --дата окончания периода
+    IN inUnitId         Integer,   --подразделение 
+    IN inModelServiceId Integer,   --модель начисления
+    IN inMemberId       Integer,   --сотрудник
+    IN inPositionId     Integer,   --должность
+    IN inDetailDay      Boolean,   --детализировать по дням
+    IN inDetailModelService Boolean,   --детализировать по моделям
+    IN inDetailModelServiceItemMaster Boolean,   --детализировать по типам документов в модели
+    IN inDetailModelServiceItemChild  Boolean,   --детализировать по товарам в типах документов
+    IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
      StaffList                      Integer
@@ -65,7 +65,7 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 BEGIN
-    -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+    -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := inSession::Integer;
     CREATE TEMP TABLE Res(
@@ -128,11 +128,11 @@ BEGIN
            Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName,Report_1.OperDate,Report_1.Count_MemberInDay,Report_1.Gross,Report_1.GrossOnOneMember,
            Report_1.Amount,Report_1.AmountOnOneMember
     from gpSelect_Report_Wage_Model(inDateStart      := inDateStart,
-                                inDateFinal      := inDateFinal, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-                                inUnitId         := inUnitId,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-                                inModelServiceId := inModelServiceId,   --РјРѕРґРµР»СЊ РЅР°С‡РёСЃР»РµРЅРёСЏ
-                                inMemberId       := inMemberId,   --СЃРѕС‚СЂСѓРґРЅРёРє
-                                inPositionId     := inPositionId,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
+                                inDateFinal      := inDateFinal, --дата окончания периода
+                                inUnitId         := inUnitId,   --подразделение 
+                                inModelServiceId := inModelServiceId,   --модель начисления
+                                inMemberId       := inMemberId,   --сотрудник
+                                inPositionId     := inPositionId,   --должность
                                 inSession        := inSession) as Report_1;
     INSERT INTO Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay,MemberId,MemberName
                    ,SheetWorkTime_Amount,ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember)
@@ -157,10 +157,10 @@ BEGIN
        ,Report_2.Summ
     FROM 
         gpSelect_Report_Wage_Sum(inDateStart      := inDateStart,
-                                inDateFinal      := inDateFinal, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-                                inUnitId         := inUnitId,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-                                inMemberId       := inMemberId,   --СЃРѕС‚СЂСѓРґРЅРёРє
-                                inPositionId     := inPositionId,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
+                                inDateFinal      := inDateFinal, --дата окончания периода
+                                inUnitId         := inUnitId,   --подразделение 
+                                inMemberId       := inMemberId,   --сотрудник
+                                inPositionId     := inPositionId,   --должность
                                 inSession        := inSession) as Report_2;
     WITH ResDistinct AS (
         SELECT DISTINCT
@@ -339,8 +339,7 @@ BEGIN
                                       AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
             LEFT OUTER JOIN Object AS Object_PersonalServiceList
                                    ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
-            LEFT OUTER JOIN SMOrd ON tmpRes.ServiceModelCode = SMOrd.ServiceModelCode
-            LEFT OUTER JOIN SMOrd AS SMOrd ON tmpRes.ServiceModelCode = SMOrd.ServiceModelCode
+            LEFT OUTER JOIN SMOrd ON SMOrd.ServiceModelCode = tmpRes.ServiceModelCode
             LEFT OUTER JOIN SMOrd AS SMOrd_1 ON SMOrd_1.ServiceModelOrd = 1
             LEFT OUTER JOIN SMOrd AS SMOrd_2 ON SMOrd_2.ServiceModelOrd = 2
             LEFT OUTER JOIN SMOrd AS SMOrd_3 ON SMOrd_3.ServiceModelOrd = 3
@@ -354,15 +353,15 @@ ALTER FUNCTION gpSelect_Report_Wage (TDateTime,TDateTime,Integer,Integer,Integer
 
 /*
 Select * from gpSelect_Report_Wage(
-    inDateStart      := '20150701'::TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    inDateFinal      := '20150731'::TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    inUnitId         := 8448::Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    inModelServiceId := 0::Integer,   --РјРѕРґРµР»СЊ РЅР°С‡РёСЃР»РµРЅРёСЏ
-    inMemberId       := 0::Integer,   --СЃРѕС‚СЂСѓРґРЅРёРє
-    inPositionId     := 0::Integer,   --РґРѕР»Р¶РЅРѕСЃС‚СЊ
-    inDetailDay      := TRUE,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ РґРЅСЏРј
-    inDetailModelService           := TRUE,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ РјРѕРґРµР»СЏРј
-    inDetailModelServiceItemMaster := TRUE,   --РґРµС‚Р°Р»РёР·РёСЂРѕРІР°С‚СЊ РїРѕ С‚РёРїР°Рј РґРѕРєСѓРјРµРЅС‚РѕРІ РІ РјРѕРґРµР»Рё
+    inDateStart      := '20150701'::TDateTime, --дата начала периода
+    inDateFinal      := '20150731'::TDateTime, --дата окончания периода
+    inUnitId         := 8448::Integer,   --подразделение 
+    inModelServiceId := 0::Integer,   --модель начисления
+    inMemberId       := 0::Integer,   --сотрудник
+    inPositionId     := 0::Integer,   --должность
+    inDetailDay      := TRUE,   --детализировать по дням
+    inDetailModelService           := TRUE,   --детализировать по моделям
+    inDetailModelServiceItemMaster := TRUE,   --детализировать по типам документов в модели
     inDetailModelServiceItemChild  := TRUE,
     inSession        := '5');
 */    

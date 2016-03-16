@@ -13,7 +13,7 @@ uses
   dsdAddOn, ChoicePeriod, Vcl.Menus, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
-  cxGridCustomView, cxGrid, cxPC;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit;
 
 type
   TReport_WageForm = class(TAncestorReportForm)

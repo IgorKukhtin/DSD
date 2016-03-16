@@ -1483,7 +1483,9 @@ object ReceiptForm: TReceiptForm
         item
           DataSet = PrintMasterCDS
           UserName = 'Master'
-          IndexFieldNames = 'ReceiptCode;ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
+          IndexFieldNames = 
+            'ReceiptCode;ReceiptId;GroupNumber;InfoMoneyName;GoodsName;ChildI' +
+            'nfoMoneyName;GoodsChildName'
         end>
       Params = <>
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074

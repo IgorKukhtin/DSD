@@ -230,11 +230,29 @@ BEGIN
             AND AnalyzerId = 0;
       END IF;	
 
-     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
     
+     -- !!!5.0.1. формируется свойство <zc_MIFloat_JuridicalPrice - Цена поставщика с учетом НДС> !!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(), _tmpItem.MovementItemId, COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS.ValueData, 0) / 100 END)
+     FROM _tmpItem
+          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                      ON MIFloat_Price.MovementItemId = _tmpItem.MovementItemId
+                                     AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+          LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                    ON MovementBoolean_PriceWithVAT.MovementId = inMovementId
+                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                       ON MovementLinkObject_NDSKind.MovementId = inMovementId
+                                      AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+          LEFT JOIN ObjectFloat AS ObjectFloat_NDS
+                                ON ObjectFloat_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                               AND ObjectFloat_NDS.DescId = zc_ObjectFloat_NDSKind_NDS();
+
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
+
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_LossDebt()
+                                , inDescId     := zc_Movement_Income()
                                 , inUserId     := inUserId
                                  );
                                  
@@ -245,6 +263,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.03.16                                        * 
  11.02.14                        * 
  05.02.14                        * 
 */
