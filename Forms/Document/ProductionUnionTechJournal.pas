@@ -135,6 +135,7 @@ type
     colChildGoodsKindCompleteName: TcxGridDBColumn;
     actGoodsKindCompleteChoiceChild: TOpenChoiceForm;
     ExecuteDialog: TExecuteDialog;
+    isOrderSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -111,9 +111,11 @@ BEGIN
                               ELSE (DD.Amount - DD.SUM + DD.ContainerAmount) * (Container_Summ.Amount / DD.ContainerAmount)
                             END AS Summ
                         FROM DD
+                            -- !!! вообще убрал эту табл!!!
                             LEFT OUTER JOIN Container AS Container_Summ
                                                       ON Container_Summ.ParentId = DD.Id
                                                      AND Container_Summ.DescId = zc_Container_Summ() 
+                                                     AND 1=0 -- !!!убрал!!!
                         WHERE (DD.Amount - (DD.SUM - DD.ContainerAmount) > 0)
                     ),
         tmpAll AS  ( --Контейнеры и количество которое будет списано с подразделения "From"

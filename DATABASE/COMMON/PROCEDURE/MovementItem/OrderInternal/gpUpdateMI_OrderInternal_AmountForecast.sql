@@ -232,6 +232,8 @@ BEGIN
                                                                                      THEN zc_MIFloat_AmountForecastOrder()
                                                                                 ELSE NULL
                                                                            END
+                                                 , inAmount_ParamSecond := NULL
+                                                 , inDescId_ParamSecond := NULL
                                                  , inIsPack             := CASE WHEN vbIsBasis = FALSE
                                                                                      THEN vbIsPack
                                                                                 ELSE NULL

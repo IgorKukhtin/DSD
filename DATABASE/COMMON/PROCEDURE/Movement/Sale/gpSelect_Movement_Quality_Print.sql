@@ -206,20 +206,25 @@ BEGIN
                                                ON MovementLinkObject_Quality.MovementId = MovementLinkMovement_Master.MovementChildId
                                               AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
 
+                  LEFT JOIN Movement AS Movement_QualityNumber
+                                     ON Movement_QualityNumber.OperDate = MovementDate_OperDateIn.ValueData
+                                    AND Movement_QualityNumber.DescId = zc_Movement_QualityNumber()
+                                    AND Movement_QualityNumber.StatusId = zc_Enum_Status_Complete()
+
                   LEFT JOIN MovementString AS MS_QualityNumber
-                                           ON MS_QualityNumber.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                           ON MS_QualityNumber.MovementId = COALESCE (Movement_QualityNumber.Id, MovementLinkMovement_Child.MovementId) -- tmpMovement_find.MovementId
                                           AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
                   LEFT JOIN MovementDate AS MD_OperDateCertificate
-                                         ON MD_OperDateCertificate.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                         ON MD_OperDateCertificate.MovementId = COALESCE (Movement_QualityNumber.Id, MovementLinkMovement_Child.MovementId) -- tmpMovement_find.MovementId
                                         AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
                   LEFT JOIN MovementString AS MS_CertificateNumber
-                                           ON MS_CertificateNumber.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                           ON MS_CertificateNumber.MovementId = COALESCE (Movement_QualityNumber.Id, MovementLinkMovement_Child.MovementId) -- tmpMovement_find.MovementId
                                           AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
                   LEFT JOIN MovementString AS MS_CertificateSeries
-                                           ON MS_CertificateSeries.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                           ON MS_CertificateSeries.MovementId = COALESCE (Movement_QualityNumber.Id, MovementLinkMovement_Child.MovementId) -- tmpMovement_find.MovementId
                                           AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
                   LEFT JOIN MovementString AS MS_CertificateSeriesNumber
-                                           ON MS_CertificateSeriesNumber.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                           ON MS_CertificateSeriesNumber.MovementId = COALESCE (Movement_QualityNumber.Id, MovementLinkMovement_Child.MovementId) -- tmpMovement_find.MovementId
                                           AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
              WHERE MovementLinkMovement_Child.MovementChildId = inMovementId
                AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()

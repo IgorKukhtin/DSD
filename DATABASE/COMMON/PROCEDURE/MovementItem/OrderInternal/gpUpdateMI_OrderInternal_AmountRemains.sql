@@ -213,6 +213,8 @@ BEGIN
                                                  , inDescId_Param       := zc_MIFloat_AmountRemains()
                                                  , inAmount_ParamOrder  := NULL
                                                  , inDescId_ParamOrder  := NULL
+                                                 , inAmount_ParamSecond := NULL
+                                                 , inDescId_ParamSecond := NULL
                                                  , inIsPack             := CASE WHEN vbIsBasis = FALSE
                                                                                      THEN vbIsPack
                                                                                 ELSE NULL

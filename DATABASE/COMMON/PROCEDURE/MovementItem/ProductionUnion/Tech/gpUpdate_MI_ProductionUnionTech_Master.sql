@@ -67,6 +67,12 @@ BEGIN
 
    -- сохранили связь с <Рецептуры>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Receipt(), ioMovementItemId, inReceiptId);
+   -- сохранили св-во <на основании дозаявки>
+   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_WeightMain(), tmp.MovementItemId, CASE WHEN MIFloat_AmountSecond.ValueData > 0 THEN TRUE ELSE FALSE END)
+   FROM (SELECT ioMovementItemId AS MovementItemId) AS tmp
+        LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                    ON MIFloat_AmountSecond.MovementItemId = inMovementItemId_order
+                                   AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond();
 
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioMovementItemId, inCount);
