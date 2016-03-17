@@ -113,6 +113,7 @@ BEGIN
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartner      ELSE 0 END AS AmountPartner_sh
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartnerPrior ELSE 0 END AS AmountPartnerPrior_sh
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSend         ELSE 0 END AS Amount_sh_calc
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountRemains      ELSE 0 END AS AmountRemains_sh
 
            , tmpMI.Amount             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount
            , tmpMI.AmountSecond       * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSecond
@@ -120,6 +121,8 @@ BEGIN
            , tmpMI.AmountPartner      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartner
            , tmpMI.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerPrior
            , tmpMI.Amount_calc        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_calc
+           , tmpMI.AmountRemains      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountRemains
+           , CAST (0 AS Tfloat)    AS AmountPartnerDozakaz
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -130,6 +133,7 @@ BEGIN
                   , SUM (tmpMI.AmountPartnerPrior) AS AmountPartnerPrior
                   , SUM (tmpMI.AmountSend)    AS AmountSend
                   , SUM (CASE WHEN tmpMI.AmountRemains < tmpMI.AmountPartner THEN tmpMI.AmountPartner - tmpMI.AmountRemains ELSE 0 END) AS Amount_calc -- Расчетный заказ
+                  , SUM (tmpMI.AmountRemains) AS AmountRemains
              FROM (-- Заявка сырье
                    SELECT MovementItem.ObjectId                                  AS GoodsId
                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          AS GoodsKindId
