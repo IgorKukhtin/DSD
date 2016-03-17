@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpselect_movement_qualitynumber(
              , CertificateSeriesNumber TVarChar
              , QualityNumber TVarChar
               )
-AS
+AS 
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
