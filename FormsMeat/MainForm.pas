@@ -679,6 +679,8 @@ type
     N99: TMenuItem;
     actQualityNumber: TdsdOpenForm;
     N100: TMenuItem;
+    actCarExternal: TdsdOpenForm;
+    N101: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

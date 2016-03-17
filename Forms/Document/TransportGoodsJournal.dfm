@@ -4,7 +4,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   ClientWidth = 975
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 991
-  ExplicitHeight = 572
+  ExplicitHeight = 575
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -242,6 +242,13 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object CarJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' '#1075#1088#1091#1079#1086#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'CarJuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
@@ -351,6 +358,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
           ComponentItem = 'Id'
         end>
       ReportName = 'PrintMovement_PersonalService'
+      ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end

@@ -2,19 +2,17 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_QualityNumber (Integer, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_QualityNumber(
- INOUT ioId                         Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber                  TVarChar  , -- Номер документа
-    IN inOperDate                   TDateTime , -- Дата документа
-    IN inQualityNumber              TVarChar  , --
-    IN inCertificateNumber          TVarChar  , --
-    IN inOperDateCertificate        TDateTime , --
-    IN inCertificateSeries          TVarChar  , --
-    IN inCertificateSeriesNumber    TVarChar  , --
-    IN inUserId                     Integer     -- Пользователь
-)                              
-RETURNS Integer
-AS
+CREATE OR REPLACE FUNCTION lpinsertupdate_movement_qualitynumber(
+    INOUT ioid integer,
+    IN ininvnumber tvarchar,
+    IN inoperdate tdatetime,
+    IN inqualitynumber tvarchar,
+    IN incertificatenumber tvarchar,
+    IN inoperdatecertificate tdatetime,
+    IN incertificateseries tvarchar,
+    IN incertificateseriesnumber tvarchar,
+    IN inuserid integer)
+  RETURNS integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbOperDate TDateTime;
@@ -45,6 +43,7 @@ BEGIN
                                 , inDescId     := zc_Movement_QualityNumber()
                                 , inUserId     := inUserId
                                  );
+
 
 
 END;

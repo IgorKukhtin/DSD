@@ -2,13 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_QualityNumber (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_QualityNumber(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
-)
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+
+CREATE OR REPLACE FUNCTION gpselect_movement_qualitynumber(
+    IN instartdate tdatetime,
+    IN inenddate tdatetime,
+    IN iniserased boolean,
+    IN insession tvarchar)
+ RETURNS TABLE(Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
 
              , OperDateCertificate TDateTime
@@ -16,9 +16,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CertificateSeries TVarChar
              , CertificateSeriesNumber TVarChar
              , QualityNumber TVarChar
-             
               )
-AS
+AS 
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -73,6 +72,7 @@ BEGIN
                                     AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
 
       ;
+  
   
 END;
 $BODY$

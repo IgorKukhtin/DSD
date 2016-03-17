@@ -54,6 +54,7 @@ type
     ToName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    CarJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
