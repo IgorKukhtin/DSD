@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , isErased boolean
+             , isClose boolean, isFirst boolean
              ) AS
 $BODY$
 DECLARE
@@ -70,6 +71,8 @@ BEGIN
                ,NULL::TFloat                     AS RemainsNotMCS
                ,NULL::TFloat                     AS SummaNotMCS
                ,NULL::Boolean                    AS isErased
+               ,NULL::Boolean                    AS isClose 
+               ,NULL::Boolean                    AS isFirst 
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -104,6 +107,7 @@ BEGIN
                , COALESCE(Object_Price_View.MCSNotRecalc,False)  AS MCSNotRecalc
                , Object_Price_View.MCSNotRecalcDateChange        AS MCSNotRecalcDateChange
                , COALESCE(Object_Price_View.Fix,False)           AS Fix
+
                , Object_Price_View.FixDateChange                 AS FixDateChange
                , SelectMinPrice_AllGoods.MinExpirationDate       AS MinExpirationDate
 
@@ -114,6 +118,9 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0)) * COALESCE (Object_Price_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
                
                , Object_Goods_View.isErased                      AS isErased 
+
+               , Object_Goods_View.isClose
+               , Object_Goods_View.isFirst
                
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
@@ -186,6 +193,9 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0)) * COALESCE (Object_Price_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
                               
                , Object_Goods_View.isErased                AS isErased 
+
+               , Object_Goods_View.isClose
+               , Object_Goods_View.isFirst
                
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid

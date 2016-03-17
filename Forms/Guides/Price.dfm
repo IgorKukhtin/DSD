@@ -142,6 +142,18 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object clIsClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentVert = vaCenter
+            Width = 52
+          end
+          object clisFirst: TcxGridDBColumn
+            Caption = '1-'#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isFirst'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object StartDate: TcxGridDBColumn
             Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089
             DataBinding.FieldName = 'StartDate'

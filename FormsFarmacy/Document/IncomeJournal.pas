@@ -64,6 +64,7 @@ type
     actisDocument: TdsdExecStoredProc;
     bbisDocument: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    FromOKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public
