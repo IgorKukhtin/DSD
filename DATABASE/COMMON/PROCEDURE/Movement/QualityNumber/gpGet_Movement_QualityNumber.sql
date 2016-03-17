@@ -32,7 +32,7 @@ BEGIN
 
              , CAST ('' as TVarChar)       AS QualityNumber
              , CAST ('' as TVarChar)       AS CertificateNumber
-             , CAST (Null as TDateTime)    AS OperDateCertificate
+             , CURRENT_Date ::TDateTime    AS OperDateCertificate
              , CAST ('' as TVarChar)       AS CertificateSeries
              , CAST ('' as TVarChar)       AS CertificateSeriesNumber
       ;
