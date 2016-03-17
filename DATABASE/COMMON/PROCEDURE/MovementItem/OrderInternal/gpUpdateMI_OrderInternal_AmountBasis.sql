@@ -65,11 +65,6 @@ BEGIN
                                                                    AND MovementItem.isErased   = FALSE
                                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
 
-                                            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                                        ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
-                                                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
-                                                                       AND MIFloat_CuterCount.ValueData <> 0
-
                                             LEFT JOIN MovementItemBoolean AS MIBoolean_OrderSecond
                                                                           ON MIBoolean_OrderSecond.MovementItemId = MovementItem.Id
                                                                          AND MIBoolean_OrderSecond.DescId = zc_MIBoolean_OrderSecond()

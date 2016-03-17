@@ -35,7 +35,9 @@ BEGIN
           , CASE WHEN tmp.Num = 1 THEN 'ashtu777@ua.fm' WHEN tmp.Num = 2 THEN 'pravda_6@i.ua' ELSE 'price@neboley.dp.ua' END :: TVarChar AS MailTo
 
           , ('Ошибка авто - загрузки прайса поставщика ' || '(' || COALESCE (Object_Juridical.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object_Juridical.ValueData, '') || ' - ' || TO_CHAR (CURRENT_TIMESTAMP, 'dd.mm.yyyy hh:mm:ss') ) :: TVarChar AS Subject
-          , CASE WHEN inByFileName = '0'
+          , CASE WHEN inByFileName = '-1'
+                     THEN 'Ошибка сохранения данных в прайс поставщика "' || COALESCE (inByFileName, '') || '".'
+                 WHEN inByFileName = '0'
                      THEN 'Письмо получено "' || COALESCE (TO_CHAR (inByDate, 'dd.mm.yyyy hh:mm:ss'), '') || '" с электронного адреса "' || COALESCE (inByMail, '') || '". Не содержит файла *.xls для загрузки Прайса.Необходимо удалить письмо в ручном режиме.'
                  WHEN inByFileName = '4'
                      THEN 'Письмо получено "' || COALESCE (TO_CHAR (inByDate, 'dd.mm.yyyy hh:mm:ss'), '') || '" с электронного адреса "' || COALESCE (inByMail, '') || '". Содержит больше одно файла *.xls для загрузки.Необходимо удалить письмо и загрузить Прайс в ручном режиме.'

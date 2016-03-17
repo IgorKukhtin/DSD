@@ -621,8 +621,14 @@ begin
            PanelMove.Caption:= 'Move : ('+FormatDateTime('dd.mm.yyyy',DataSet.FieldByName('OperDate').AsDateTime) + ') ' + DataSet.FieldByName('JuridicalName').AsString + ' : ' + DataSet.FieldByName('ContractName').AsString + ' for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            Application.ProcessMessages;
            //
-           if DataSet.FieldByName('isMoved').AsBoolean = FALSE
-           then actMovePriceList.Execute;
+           try
+              if DataSet.FieldByName('isMoved').AsBoolean = FALSE
+              then actMovePriceList.Execute;
+           except fError_SendEmail(Dataset.FieldByName('Id').AsInteger
+                                 , NOW
+                                 , Dataset.FieldByName('JuridicalName').AsString
+                                 , '-1');
+           end;
            //
            DataSet.Next;
            //
