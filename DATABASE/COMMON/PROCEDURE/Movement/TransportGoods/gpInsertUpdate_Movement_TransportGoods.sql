@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_TransportGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -26,7 +28,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportGoods(
     IN inMemberId6           Integer   , -- Здав водій/експедитор
     IN inMemberName6         TVarChar  , -- Здав водій/експедитор
     IN inMemberId7           Integer   , -- Прийняв (відповідальна особа вантажоодержувача) 
-    IN inMemberName7         TVarChar  , -- Прийняв (відповідальна особа вантажоодержувача) 
+    IN inMemberName7         TVarChar  , -- Прийняв (відповідальна особа вантажоодержувача)
+
+    IN inCarName             TVarChar  , -- Номер авто
+    IN inCarModelId          Integer   , -- Марка авто
+
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -183,6 +189,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.03.16         *
  30.03.15                                        *
 */
 

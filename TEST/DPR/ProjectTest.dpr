@@ -801,7 +801,8 @@ uses
   QualityNumberJournal in '..\..\Forms\Document\QualityNumberJournal.pas' {QualityNumberJournalForm: TParentForm},
   QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm},
   CarExternal in '..\..\Forms\Guides\CarExternal.pas' {CarExternalForm: TParentForm},
-  CarExternalEdit in '..\..\Forms\Guides\CarExternalEdit.pas' {CarExternalEditForm: TParentForm};
+  CarExternalEdit in '..\..\Forms\Guides\CarExternalEdit.pas' {CarExternalEditForm: TParentForm},
+  CarUnion in '..\..\Forms\Guides\CarUnion.pas' {CarUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

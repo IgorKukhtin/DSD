@@ -2,20 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_QualityNumber (Integer, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
 
+-- Function: gpinsertupdate_movement_qualitynumber(integer, tvarchar, tdatetime, tvarchar, tvarchar, tdatetime, tvarchar, tvarchar, tvarchar)
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_QualityNumber(
- INOUT ioId                         Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber                  TVarChar  , -- Номер документа
-    IN inOperDate                   TDateTime , -- Дата документа
-    IN inQualityNumber              TVarChar  , --
-    IN inCertificateNumber          TVarChar  , --
-    IN inOperDateCertificate        TDateTime , --
-    IN inCertificateSeries          TVarChar  , --
-    IN inCertificateSeriesNumber    TVarChar  , --
-    IN inSession                    TVarChar    -- сессия пользователя
-)                              
-RETURNS Integer
-AS
+-- DROP FUNCTION gpinsertupdate_movement_qualitynumber(integer, tvarchar, tdatetime, tvarchar, tvarchar, tdatetime, tvarchar, tvarchar, tvarchar);
+
+CREATE OR REPLACE FUNCTION gpinsertupdate_movement_qualitynumber(
+    INOUT ioid integer,
+    IN ininvnumber tvarchar,
+    IN inoperdate tdatetime,
+    IN inqualitynumber tvarchar,
+    IN incertificatenumber tvarchar,
+    IN inoperdatecertificate tdatetime,
+    IN incertificateseries tvarchar,
+    IN incertificateseriesnumber tvarchar,
+    IN insession tvarchar)
+  RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbOperDate TDateTime;
@@ -27,7 +28,7 @@ BEGIN
 
  
     -- проверка
-     IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_QualityNumber() and Movement.OperDate = inOperDate)
+     IF COALESCE (ioId,0) = 0 and EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_QualityNumber() and Movement.OperDate = inOperDate)
      THEN
          RAISE EXCEPTION 'Ошибка. За дату <%> уже создан документ <Качественное удостоверение (номера)>.', inOperDate ::Date ;
      END IF;
@@ -48,6 +49,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
+
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

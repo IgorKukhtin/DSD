@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CarId Integer, CarName TVarChar, CarModelId Integer, CarModelName TVarChar
              , CarTrailerId Integer, CarTrailerName TVarChar, CarTrailerModelId Integer, CarTrailerModelName TVarChar
              , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , CarJuridicalId Integer, CarJuridicalName TVarChar
              , MemberId1 Integer, MemberName1 TVarChar
              , MemberId2 Integer, MemberName2 TVarChar
              , MemberId3 Integer, MemberName3 TVarChar
@@ -184,6 +185,9 @@ BEGIN
            , Object_PersonalDriver.Id         AS PersonalDriverId
            , Object_PersonalDriver.ValueData  AS PersonalDriverName
 
+           , Object_CarJuridical.Id         AS CarJuridicalId
+           , Object_CarJuridical.ValueData  AS CarJuridicalName
+
            , Object_Member1.Id        AS MemberId1
            , Object_Member1.ValueData AS MemberName1
            , Object_Member2.Id        AS MemberId2
@@ -238,6 +242,11 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
     
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Juridical 
+                                 ON ObjectLink_Car_Juridical.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_Juridical.DescId = zc_ObjectLink_Car_Juridical()
+            LEFT JOIN Object AS Object_CarJuridical ON Object_CarJuridical.Id = ObjectLink_Car_Juridical.ChildObjectId  
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member1
                                          ON MovementLinkObject_Member1.MovementId = Movement.Id
                                         AND MovementLinkObject_Member1.DescId = zc_MovementLinkObject_Member1()

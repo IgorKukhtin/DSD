@@ -1983,6 +1983,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCarExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarExternalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarExternalEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarUnionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarUnionForm');
+
 end;
 
 

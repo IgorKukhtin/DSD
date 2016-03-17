@@ -31,8 +31,8 @@ BEGIN
              , inOperDate                  AS OperDate
 
              , CAST ('' as TVarChar)       AS QualityNumber
-             , CAST (Nul as TDateTime)     AS CertificateNumber
-             , CAST ('' as TVarChar)       AS OperDateCertificate
+             , CAST ('' as TVarChar)       AS CertificateNumber
+             , CAST (Null as TDateTime)    AS OperDateCertificate
              , CAST ('' as TVarChar)       AS CertificateSeries
              , CAST ('' as TVarChar)       AS CertificateSeriesNumber
       ;

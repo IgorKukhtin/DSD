@@ -1,4 +1,4 @@
-object CarForm: TCarForm
+object CarUnionForm: TCarUnionForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080'>'
@@ -48,53 +48,60 @@ object CarForm: TCarForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clDescName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+        DataBinding.FieldName = 'DescName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 88
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 46
       end
       object clCarModel: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 105
       end
       object clName: TcxGridDBColumn
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 70
       end
       object clFuelMasterName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelMasterName'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 88
       end
       object clFuelChildName: TcxGridDBColumn
         Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelChildName'
         HeaderAlignmentVert = vaCenter
-        Width = 110
+        Width = 104
       end
       object clPersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 77
       end
       object clRegistrationCertificate: TcxGridDBColumn
         Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
         DataBinding.FieldName = 'RegistrationCertificate'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 70
       end
       object clUnit: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 85
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
@@ -110,7 +117,7 @@ object CarForm: TCarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 104
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -191,22 +198,13 @@ object CarForm: TCarForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbEdit'
+          ItemName = 'bbactShowAll'
         end
         item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -284,6 +282,10 @@ object CarForm: TCarForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbactShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -428,13 +430,6 @@ object CarForm: TCarForm
           Component = ClientDataSet
           ComponentItem = 'NameAll'
           DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -477,9 +472,28 @@ object CarForm: TCarForm
         end>
       isShowModal = False
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Car'
+    StoredProcName = 'gpSelect_Object_CarUnion'
     DataSet = ClientDataSet
     DataSets = <
       item

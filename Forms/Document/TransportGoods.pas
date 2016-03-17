@@ -59,6 +59,9 @@ type
     cxLabel15: TcxLabel;
     GuideMember4: TdsdGuides;
     GuidesTo: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edCarJuridical: TcxButtonEdit;
+    GuidesCarJuridical: TdsdGuides;
   private
     { Private declarations }
   public
