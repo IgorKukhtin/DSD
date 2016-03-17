@@ -106,7 +106,6 @@ object CarUnionForm: TCarUnionForm
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
         DataBinding.FieldName = 'JuridicalName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -418,6 +417,12 @@ object CarUnionForm: TCarUnionForm
           DataType = ftString
         end
         item
+          Name = 'CarModelId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarModelId'
+        end
+        item
           Name = 'CarModelName'
           Value = Null
           Component = ClientDataSet
@@ -429,6 +434,19 @@ object CarUnionForm: TCarUnionForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'NameAll'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -499,7 +517,14 @@ object CarUnionForm: TCarUnionForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 48
     Top = 216

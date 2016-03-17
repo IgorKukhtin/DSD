@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , RouteName TVarChar
              , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
              , PersonalDriverName TVarChar
+             , CarJuridicalName TVarChar
              , MemberName1 TVarChar
              , MemberName2 TVarChar
              , MemberName3 TVarChar
@@ -72,7 +73,8 @@ BEGIN
            , Object_CarModel.ValueData       AS CarModelName
            , Object_CarTrailer.ValueData     AS CarTrailerName
            , Object_PersonalDriver.ValueData AS PersonalDriverName
-
+           , Object_CarJuridical.Valuedata   AS CarJuridicalName
+              
            , Object_Member1.ValueData AS MemberName1
            , Object_Member2.ValueData AS MemberName2
            , Object_Member3.ValueData AS MemberName3
@@ -109,9 +111,14 @@ BEGIN
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
-                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel                                            -- авто 
+                                 ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN ObjectLink AS ObjectLink_CarExternal_CarModel                                    -- авто стороннее
+                                 ON ObjectLink_CarExternal_CarModel.ObjectId = Object_Car.Id             
+                                AND ObjectLink_CarExternal_CarModel.DescId = zc_ObjectLink_CarExternal_CarModel()
+
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = COALESCE(ObjectLink_Car_CarModel.ChildObjectId, ObjectLink_CarExternal_CarModel.ChildObjectId) 
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
                                          ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
@@ -122,7 +129,31 @@ BEGIN
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
-    
+
+--          определяем юр.лицо
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Juridical                                                      -- юр.лицо авто
+                                 ON ObjectLink_Car_Juridical.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_Juridical.DescId = zc_ObjectLink_Car_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_CarExternal_Juridical                                               -- юр.лицо авто стороннее
+                                 ON ObjectLink_CarExternal_Juridical.ObjectId = Object_Car.Id
+                                AND ObjectLink_CarExternal_Juridical.DescId = zc_ObjectLink_CarExternal_Juridical()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit                                                           -- подразделение авто
+                                 ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id                 
+                                AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical                                                     -- юр.лицо подразделения авто
+                             ON ObjectLink_Unit_Juridical.ObjectId =  ObjectLink_Car_Unit.ChildObjectId    
+                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract                                                      --  подразделение  Договор (перевыставление затрат)
+                                 ON ObjectLink_Unit_Contract.ObjectId = ObjectLink_Car_Unit.ChildObjectId  
+                                AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                 ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId 
+                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+
+            LEFT JOIN Object AS Object_CarJuridical ON Object_CarJuridical.Id = COALESCE(ObjectLink_Car_Juridical.ChildObjectId, COALESCE(ObjectLink_CarExternal_Juridical.ChildObjectId, COALESCE(ObjectLink_Unit_Juridical.ChildObjectId, COALESCE(ObjectLink_Contract_Juridical.ChildObjectId,0))) )
+
+--
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member1
                                          ON MovementLinkObject_Member1.MovementId = Movement.Id
                                         AND MovementLinkObject_Member1.DescId = zc_MovementLinkObject_Member1()
@@ -209,4 +240,4 @@ ALTER FUNCTION gpSelect_Movement_TransportGoods (TDateTime, TDateTime, Boolean, 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportGoods (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransportGoods (inStartDate:= '30.10.2015', inEndDate:= '01.12.2015', inIsErased:=false , inSession:= zfCalc_UserAdmin())

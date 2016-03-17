@@ -130,7 +130,6 @@
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
     TabOrder = 15
     Width = 247
   end
@@ -306,7 +305,6 @@
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -523,8 +521,7 @@
       item
         Name = 'inCarName'
         Value = Null
-        Component = GuideCar
-        ComponentItem = 'TextValue'
+        Component = edCar
         DataType = ftString
         ParamType = ptInput
       end
@@ -532,6 +529,13 @@
         Name = 'inCarModelId'
         Value = Null
         Component = GuideCarModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCarJuridicalId'
+        Value = Null
+        Component = GuidesCarJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -894,9 +898,9 @@
   object GuideCar: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCar
-    FormNameParam.Value = 'TCarForm'
+    FormNameParam.Value = 'TCarUnionForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCarForm'
+    FormName = 'TCarUnionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -913,11 +917,23 @@
         DataType = ftString
       end
       item
+        Name = 'CarModelId'
+        Value = Null
+        Component = GuideCarModel
+        ComponentItem = 'Key'
+      end
+      item
         Name = 'CarModelName'
         Value = Null
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesCarJuridical
+        ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
@@ -1191,7 +1207,7 @@
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

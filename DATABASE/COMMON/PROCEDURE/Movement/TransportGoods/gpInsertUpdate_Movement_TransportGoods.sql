@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_TransportGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar,Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportGoods(
@@ -32,19 +32,49 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportGoods(
 
     IN inCarName             TVarChar  , -- Номер авто
     IN inCarModelId          Integer   , -- Марка авто
-
+    IN inCarJuridicalId      Integer   , -- Юр.лицо авто
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCarId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportGoods());
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- ищем авто по номеру (если не находим записываем/перезаписывае в спр. Авто сторонние)
+     vbCarId := COALESCE((SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Car() AND Object.ValueData = inCarName),0);
+
+     IF COALESCE (vbCarId, 0) = 0 and inCarName <> ''
+        THEN
+              -- создание / пересохранение
+              vbCarId :=  lpInsertUpdate_Object_CarExternal (ioId	               := COALESCE(Object.Id,0)
+                                                           , inCode                    := COALESCE(Object.ObjectCode, lfGet_ObjectCode (0, zc_Object_CarExternal()) )
+                                                           , inName                    := inCarName
+                                                           , inRegistrationCertificate := COALESCE(RegistrationCertificate.ValueData, '')
+                                                           , inComment                 := COALESCE(ObjectString_Comment.ValueData, '')
+                                                           , inCarModelId              := inCarModelId
+                                                           , inJuridicalId             := inCarJuridicalId
+                                                           , inUserId                  := vbUserId
+                                              )
+                           FROM (SELECT  0 AS CarId) as tmpCarNew
+                               LEFT JOIN Object ON Object.DescId = zc_Object_CarExternal()
+                                               AND Object.ValueData = inCarName
+                               LEFT JOIN ObjectString AS RegistrationCertificate 
+                                                      ON RegistrationCertificate.ObjectId = Object.Id 
+                                                     AND RegistrationCertificate.DescId = zc_ObjectString_CarExternal_RegistrationCertificate()
+                               LEFT JOIN ObjectString AS ObjectString_Comment
+                                                      ON ObjectString_Comment.ObjectId = Object.Id 
+                                                     AND ObjectString_Comment.DescId = zc_ObjectString_CarExternal_Comment();
+
+            
+     END IF;
+     
+  
      IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inPersonalDriverId AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inPersonalDriverName)
      THEN
      -- нашли <Сотрудник (водитель)>
@@ -169,7 +199,7 @@ BEGIN
                                                   , inOperDate        := inOperDate
                                                   , inMovementId_Sale := inMovementId_Sale
                                                   , inInvNumberMark   := inInvNumberMark
-                                                  , inCarId           := inCarId
+                                                  , inCarId           := vbCarId
                                                   , inCarTrailerId    := inCarTrailerId
                                                   , inPersonalDriverId:= inPersonalDriverId
                                                   , inRouteId         := inRouteId
