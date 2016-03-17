@@ -317,7 +317,7 @@ object Report_JuridicalDefermentIncomeDialogForm: TReport_JuridicalDefermentInco
       end
       item
         Name = 'inDescCode'
-        Value = 'zc_Object_Goods'
+        Value = 'zc_Object_Juridical'
         DataType = ftString
       end>
     Left = 88

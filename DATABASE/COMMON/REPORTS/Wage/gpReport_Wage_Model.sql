@@ -409,6 +409,7 @@ BEGIN
                                           AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
              INNER JOIN MovementItem AS MI_SheetWorkTime
                                      ON MI_SheetWorkTime.MovementId = Movement.Id
+                                    AND MI_SheetWorkTime.isErased = FALSE
              INNER JOIN Object AS Object_Member
                                ON Object_Member.Id = MI_SheetWorkTime.ObjectId
              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
@@ -423,8 +424,7 @@ BEGIN
              INNER JOIN Object_WorkTimeKind_Wages_View AS Object_WorkTimeKind
                                                        ON Object_WorkTimeKind.Id = MIObject_WorkTimeKind.ObjectId
             
-        WHERE Movement.StatusId = zc_Enum_Status_Complete()
-          AND Movement.DescId = zc_Movement_SheetWorkTime()
+        WHERE Movement.DescId = zc_Movement_SheetWorkTime()
           AND Movement.OperDate BETWEEN inDateStart AND inDateFinal
        )
 
@@ -492,11 +492,12 @@ BEGIN
     FROM Setting_Wage_1 AS Setting
          CROSS JOIN tmpOperDate
          LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0) = COALESCE (Setting.PositionId, 0)
-                                       AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
-                                       AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
+                                            AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                            AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
          LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                        AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
                                        AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
+                                       AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId OR Movement_SheetGroup.MemberId IS NULL)
 
         LEFT OUTER JOIN ServiceModelMovement ON COALESCE (Setting.StaffListId, 0)                  = COALESCE (ServiceModelMovement.StaffListId, 0)
                                             AND COALESCE (Setting.UnitId, 0)                       = COALESCE (ServiceModelMovement.UnitId, 0)

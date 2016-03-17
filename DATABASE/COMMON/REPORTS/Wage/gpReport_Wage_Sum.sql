@@ -190,6 +190,7 @@ BEGIN
                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                 INNER JOIN MovementItem AS MI_SheetWorkTime 
                                         ON MI_SheetWorkTime.MovementId = Movement.Id
+                                       AND MI_SheetWorkTime.isErased = FALSE
                 INNER JOIN Object AS Object_Member
                                   ON Object_Member.Id = MI_SheetWorkTime.ObjectId
                 LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position

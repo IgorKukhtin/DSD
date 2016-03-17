@@ -4,7 +4,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   ClientWidth = 975
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 991
-  ExplicitHeight = 575
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -351,8 +351,6 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
           ComponentItem = 'Id'
         end>
       ReportName = 'PrintMovement_PersonalService'
-      ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
-      ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -612,7 +610,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TransportGoods_Print'
+    StoredProcName = 'gpSelect_Movement_TTN_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

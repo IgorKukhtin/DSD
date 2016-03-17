@@ -15,23 +15,28 @@ inherited Report_WageForm: TReport_WageForm
     TabOrder = 3
     ExplicitTop = 115
     ExplicitWidth = 991
-    ExplicitHeight = 466
+    ExplicitHeight = 286
     ClientRectBottom = 286
     ClientRectRight = 991
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 991
-      ExplicitHeight = 466
+      ExplicitHeight = 286
       inherited cxGrid: TcxGrid
         Width = 991
         Height = 286
         ExplicitWidth = 991
-        ExplicitHeight = 466
+        ExplicitHeight = 286
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00##'
               Kind = skSum
               Column = colGrossOnOneMember
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmountOnOneMember
             end>
           DataController.Summary.FooterSummaryItems = <
             item

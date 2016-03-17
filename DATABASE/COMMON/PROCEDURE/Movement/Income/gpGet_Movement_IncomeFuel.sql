@@ -326,7 +326,9 @@ BEGIN
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Income();
+         AND Movement.DescId = zc_Movement_Income()
+       LIMIT 1
+      ;
      END IF;
 
 END;

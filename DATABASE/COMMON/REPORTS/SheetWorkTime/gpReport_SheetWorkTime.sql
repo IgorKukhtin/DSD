@@ -100,11 +100,12 @@ BEGIN
                                                , MovementLinkObject_Unit.ObjectId              AS UnitId
                                           FROM tmpOperDate
                                                JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
-                                                             AND Movement.DescId = zc_Movement_SheetWorkTime()
+                                                            AND Movement.DescId = zc_Movement_SheetWorkTime()
                                                JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
+                                                                                    AND MI_SheetWorkTime.isErased = FALSE
                                                LEFT JOIN MovementItemLinkObject AS MIObject_Position
                                                                                 ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                                                                AND MIObject_Position.DescId = zc_MILinkObject_Position() 

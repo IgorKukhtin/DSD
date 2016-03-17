@@ -322,7 +322,7 @@ BEGIN
      IF vbMemberId_To <> 0 AND vbFounderId_To = 0
      THEN
          -- проверка
-         IF COALESCE ((SELECT View_Personal.PersonalId FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = vbMemberId_To AND View_Personal.isMain = TRUE LIMIT 1), 0) = 0
+         IF COALESCE ((SELECT View_Personal.PersonalId FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = vbMemberId_To AND View_Personal.isMain = TRUE AND View_Personal.isErased = FALSE LIMIT 1), 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Для физ. лицо <%> не определен <Сотрудник>.', lfGet_Object_ValueData (vbMemberId_To);
          END IF;
@@ -950,6 +950,7 @@ BEGIN
                                                   ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
                                                  AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
                         WHERE View_Personal.MemberId = vbMemberId_To
+                          AND View_Personal.isErased = FALSE
                           AND vbFounderId_To         = 0
                           AND View_Personal.isMain   = TRUE
                         LIMIT 1

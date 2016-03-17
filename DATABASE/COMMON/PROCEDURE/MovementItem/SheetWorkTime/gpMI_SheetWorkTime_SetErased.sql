@@ -32,7 +32,7 @@ BEGIN
                          SELECT MI_SheetWorkTime.Id 
                          FROM tmpOperDate
                               INNER JOIN Movement ON Movement.OperDate = tmpOperDate.OperDate
-                                                AND Movement.DescId = zc_Movement_SheetWorkTime()
+                                                 AND Movement.DescId = zc_Movement_SheetWorkTime()
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -41,16 +41,16 @@ BEGIN
                                                                           AND MI_SheetWorkTime.ObjectId  = inMemberId
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
                                                                      ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-                                                                    AND COALESCE (MIObject_Position.ObjectId, 0) = COALESCE (inPositionId, 0)
                                                                     AND MIObject_Position.DescId = zc_MILinkObject_Position() 
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
                                                                      ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
-                                                                    AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
                                                                     AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                      ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
-                                                                    AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                                                                     AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+                         WHERE COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
+                           AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
+                           AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                         ;
 
     -- устанавливаем новое значение

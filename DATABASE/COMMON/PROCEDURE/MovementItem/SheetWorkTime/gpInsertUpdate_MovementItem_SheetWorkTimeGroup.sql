@@ -48,23 +48,29 @@ BEGIN
           ON Movement_SheetWorkTime.Id = MI_SheetWorkTime.MovementId 
          AND Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() 
          AND Movement_SheetWorkTime.OperDate::Date BETWEEN vbStartDate AND vbEndDate
+
         JOIN MovementLinkObject AS MovementLinkObject_Unit 
           ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
          AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
          AND MovementLinkObject_Unit.ObjectId = inUnitId 
-        JOIN MovementItemLinkObject AS MIObject_Position
+
+        LEFT JOIN MovementItemLinkObject AS MIObject_Position
           ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-         AND ((MIObject_Position.ObjectId IS NULL) OR (MIObject_Position.ObjectId = inPositionId))
          AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-        JOIN MovementItemLinkObject AS MIObject_PositionLevel
+
+        LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
           ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
-         AND ((MIObject_PositionLevel.ObjectId IS NULL) OR (MIObject_PositionLevel.ObjectId = inPositionLevelId))
          AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
-        JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+
+        LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
           ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
-         AND ((MIObject_PersonalGroup.ObjectId IS NULL) OR (MIObject_PersonalGroup.ObjectId = inPersonalGroupId))
          AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-       WHERE MI_SheetWorkTime.ObjectId = inMemberId;
+
+       WHERE MI_SheetWorkTime.ObjectId = inMemberId
+         AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
+         AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
+         AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+       ;
        
        IF COALESCE(vbMovementItemCount, 0) <> 0 THEN
           RAISE EXCEPTION 'Сотрудник с такими свойствами уже есть в табеле!';
@@ -84,19 +90,21 @@ BEGIN
           ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
          AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
          AND MovementLinkObject_Unit.ObjectId = inUnitId 
-        JOIN MovementItemLinkObject AS MIObject_Position
+        LEFT JOIN MovementItemLinkObject AS MIObject_Position
           ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-         AND ((MIObject_Position.ObjectId IS NULL) OR (MIObject_Position.ObjectId = inOldPositionId))
          AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-        JOIN MovementItemLinkObject AS MIObject_PositionLevel
+        LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
           ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
-         AND ((MIObject_PositionLevel.ObjectId IS NULL) OR (MIObject_PositionLevel.ObjectId = inOldPositionLevelId))
          AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
-        JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+        LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
           ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
-         AND ((MIObject_PersonalGroup.ObjectId IS NULL) OR (MIObject_PersonalGroup.ObjectId = inOldPersonalGroupId))
          AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-       WHERE MI_SheetWorkTime.ObjectId = inOldMemberId;
+       WHERE MI_SheetWorkTime.ObjectId = inOldMemberId
+         AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inOldPositionId, 0)
+         AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inOldPositionLevelId, 0)
+         AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inOldPersonalGroupId, 0)
+        ;
+
        -- а теперь меняем ключи
        -- Сначала Физ Лицо. А потом все остальные
        UPDATE MovementItem SET ObjectId = inMemberId WHERE Id IN (SELECT Id FROM _tmpMI);
@@ -126,4 +134,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_SheetWorkTime (, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_SheetWorkTimeGroup (, inSession:= '2')
