@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSumm TFloat
              , PriceWithVAT Boolean
-             , FromId Integer, FromName TVarChar
+             , FromId Integer, FromName TVarChar, FromOKPO TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , ContractId Integer, ContractName TVarChar
@@ -55,7 +55,8 @@ BEGIN
                                    , Movement_Income_View.TotalSumm
                                    , Movement_Income_View.PriceWithVAT
                                    , Movement_Income_View.FromId
-                                   , Movement_Income_View.FromName
+                                   , Movement_Income_View.FromName 
+                                   , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS FromOKPO
                                    , Movement_Income_View.ToId
                                    , Movement_Income_View.ToName
                                    , Movement_Income_View.JuridicalName
@@ -77,6 +78,15 @@ BEGIN
                                    , Movement_Income_View.PaymentContainerId
                                FROM Movement_Income_View 
                                      JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
+
+                                     LEFT OUTER JOIN ObjectHistory AS ObjectHistory_Juridical
+                                                                   ON ObjectHistory_Juridical.ObjectId = Movement_Income_View.FromId
+                                                                  AND ObjectHistory_Juridical.DescId = zc_ObjectHistory_JuridicalDetails()
+                                                                  AND Movement_Income_View.OperDate >= ObjectHistory_Juridical.StartDate AND Movement_Income_View.OperDate < ObjectHistory_Juridical.EndDate
+                                     LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+                                                                   ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_Juridical.Id
+                                                                  AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+
                                WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate
                               )
         SELECT 
@@ -91,6 +101,7 @@ BEGIN
           , Movement_Income.PriceWithVAT
           , Movement_Income.FromId
           , Movement_Income.FromName
+          , Movement_Income.FromOKPO
           , Movement_Income.ToId
           , Movement_Income.ToName
           , Movement_Income.JuridicalName
@@ -123,6 +134,7 @@ BEGIN
           , Movement_Income.PriceWithVAT
           , Movement_Income.FromId
           , Movement_Income.FromName
+          , Movement_Income.FromOKPO
           , Movement_Income.ToId
           , Movement_Income.ToName
           , Movement_Income.JuridicalName
