@@ -36,6 +36,7 @@ type
     procedure LoadBoxFormTest;
     procedure LoadCashFormTest;
     procedure LoadCarFormTest;
+    procedure LoadCarExternalFormTest;
     procedure LoadCarModelFormTest;
     procedure LoadConditionPromoFormTest;
     procedure LoadContractKindFormTest;
@@ -1975,6 +1976,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarEditForm');
 end;
+
+procedure TLoadFormTest.LoadCarExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarExternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarExternalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarExternalEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadFuelFormTest;
 begin

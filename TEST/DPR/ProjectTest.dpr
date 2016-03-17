@@ -799,7 +799,9 @@ uses
   GoodsByGoodsKind_Order in '..\..\Forms\Guides\GoodsByGoodsKind_Order.pas' {GoodsByGoodsKind_OrderForm: TParentForm},
   ReceiptComponents in '..\..\Forms\Guides\ReceiptComponents.pas' {ReceiptComponentsForm: TParentForm},
   QualityNumberJournal in '..\..\Forms\Document\QualityNumberJournal.pas' {QualityNumberJournalForm: TParentForm},
-  QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm};
+  QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm},
+  CarExternal in '..\..\Forms\Guides\CarExternal.pas' {CarExternalForm: TParentForm},
+  CarExternalEdit in '..\..\Forms\Guides\CarExternalEdit.pas' {CarExternalEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
