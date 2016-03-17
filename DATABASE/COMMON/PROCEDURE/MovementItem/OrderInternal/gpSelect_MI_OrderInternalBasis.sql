@@ -46,14 +46,15 @@ BEGIN
      -- 
      CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
                                     , ReceiptId Integer
-                                    , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPartnerPrior TFloat
+                                    , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPartnerPrior TFloat, AmountPartnerSecond TFloat
                                     , AmountForecast TFloat
                                     , isErased Boolean) ON COMMIT DROP;
      INSERT INTO _tmpMI_master (MovementItemId, GoodsId, GoodsKindId
                               , ReceiptId
-                              , Amount, AmountSecond, AmountRemains, AmountPartner, AmountPartnerPrior
+                              , Amount, AmountSecond, AmountRemains, AmountPartner, AmountPartnerPrior, AmountPartnerSecond
                               , AmountForecast
                               , isErased)
+                              -- результат
                               SELECT MovementItem.Id AS MovementItemId
                                    , MovementItem.ObjectId AS GoodsId
                                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -65,6 +66,7 @@ BEGIN
                                    , COALESCE (MIFloat_AmountRemains.ValueData, 0)         AS AmountRemains
                                    , COALESCE (MIFloat_AmountPartner.ValueData, 0)         AS AmountPartner
                                    , COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0)    AS AmountPartnerPrior
+                                   , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0)   AS AmountPartnerSecond
                                    , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
 
                                    , MovementItem.isErased                                 AS isErased
@@ -86,6 +88,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
                                                                ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountPartnerPrior.DescId = zc_MIFloat_AmountPartnerPrior()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                                               ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
                                                                ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
@@ -100,6 +105,25 @@ BEGIN
 
        --
        OPEN Cursor1 FOR
+       WITH tmpMI_Send AS (-- группируется Перемещение
+                           SELECT tmpMI.GoodsId                          AS GoodsId
+                                , tmpMI.GoodsKindId                      AS GoodsKindId
+                                , SUM (tmpMI.Amount)                     AS Amount
+                           FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                      , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                      , SUM (MIContainer.Amount)                       AS Amount
+                                 FROM MovementItemContainer AS MIContainer
+                                 WHERE MIContainer.OperDate   = vbOperDate
+                                   AND MIContainer.DescId     = zc_MIContainer_Count()
+                                   AND MIContainer.MovementDescId = zc_Movement_Send()
+                                   AND MIContainer.WhereObjectId_Analyzer = vbFromId
+                                   AND MIContainer.isActive = TRUE
+                                 GROUP BY MIContainer.ObjectId_Analyzer
+                                        , MIContainer.ObjectIntId_Analyzer
+                                ) AS tmpMI
+                            GROUP BY tmpMI.GoodsId
+                                   , tmpMI.GoodsKindId
+                          )
        SELECT
              tmpMI.MovementItemId :: Integer      AS Id
            , Object_Goods.Id                      AS GoodsId
@@ -120,14 +144,15 @@ BEGIN
 
            , tmpMI.Amount           :: TFloat AS Amount           -- Заказ на склад
            , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на склад
+           , tmpMI_Send.Amount      :: TFloat AS AmountSend       -- Приход за "сегодня"
 
-           , CASE WHEN tmpMI.AmountRemains < tmpMI.AmountPartner + tmpMI.AmountPartnerPrior THEN tmpMI.AmountPartner + tmpMI.AmountPartnerPrior - tmpMI.AmountRemains ELSE 0 END :: TFloat AS Amount_calc  -- Расчетный заказ
+           , CASE WHEN tmpMI.AmountRemains + COALESCE (tmpMI_Send.Amount, 0) < tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond THEN tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond - tmpMI.AmountRemains - COALESCE (tmpMI_Send.Amount, 0) ELSE 0 END :: TFloat AS Amount_calc  -- Расчетный заказ
 
-           , tmpMI.AmountRemains      :: TFloat AS AmountRemains      -- Ост. начальн.
-           , tmpMI.AmountPartner      :: TFloat AS AmountPartner      -- расчет составляющих по заявке на производство (без производства ПФ)
-           , tmpMI.AmountPartnerPrior :: TFloat AS AmountPartnerPrior -- расчет составляющих по заявке на производство (для производства ПФ)
-           , (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior) :: TFloat AS AmountPartner_all -- расчет составляющих по заявке на производство (итого)
-           , CAST (0 AS TFloat) AS AmountPartnerDozakaz              -- программа дозаказ
+           , tmpMI.AmountRemains      :: TFloat  AS AmountRemains       -- Ост. начальн.
+           , tmpMI.AmountPartner      :: TFloat  AS AmountPartner       -- расчет составляющих по заявке на производство (без производства ПФ)
+           , tmpMI.AmountPartnerPrior :: TFloat  AS AmountPartnerPrior  -- расчет составляющих по заявке на производство (для производства ПФ)
+           , (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond) :: TFloat AS AmountPartner_all -- расчет составляющих по заявке на производство (итого)
+           , tmpMI.AmountPartnerSecond :: TFloat AS AmountPartnerSecond -- расчет ....
 
            , CASE WHEN ABS (tmpMI.AmountForecast) < 1 THEN tmpMI.AmountForecast ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1)) END :: TFloat AS AmountForecast -- Прогноз по факт. расходу на производство
            , CAST (CASE WHEN vbDayCount <> 0 THEN tmpMI.AmountForecast / vbDayCount ELSE 0 END AS NUMERIC (16, 1))                      :: TFloat AS CountForecast  -- Норм 1д (по пр.)
@@ -150,6 +175,9 @@ BEGIN
            , tmpMI.isErased
 
        FROM _tmpMI_master AS tmpMI
+            LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmpMI.GoodsId
+                                AND tmpMI_Send.GoodsKindId = tmpMI.GoodsKindId
+
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpMI.ReceiptId
             LEFT JOIN ObjectString AS ObjectString_Receipt_Code
                                    ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id

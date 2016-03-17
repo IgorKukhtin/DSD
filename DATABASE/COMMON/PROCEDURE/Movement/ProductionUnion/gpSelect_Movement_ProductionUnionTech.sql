@@ -29,7 +29,7 @@ BEGIN
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
      -- 
-     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat, isPartionDate Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat, isPartionDate Boolean, isOrderSecond Boolean) ON COMMIT DROP;
 
      -- определяется - ЦЕХ колбаса+дел-сы
      vbIsOrder:= (inFromId = inToId) AND EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId);
@@ -48,6 +48,11 @@ BEGIN
                                                 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                            ELSE 0
                                       END) AS Amount
+                               , SUM (CASE WHEN (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime
+                                                BETWEEN inStartDate AND inEndDate
+                                                THEN COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                           ELSE 0
+                                      END) AS AmountSecond
                                , SUM (CASE WHEN (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime
                                                 BETWEEN inStartDate AND inEndDate
                                                 THEN COALESCE (MIFloat_CuterCount.ValueData, 0) + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)
@@ -172,6 +177,7 @@ BEGIN
                                , tmpMI_order2.ReceiptId
                                , tmpMI_order2.ToId
                                , tmpMI_order2.Amount
+                               , CASE WHEN tmpMI_order2.AmountSecond <> 0 THEN TRUE ELSE FALSE END AS isOrderSecond
                                , tmpMI_order2.CuterCount
                           FROM tmpMI_order2
                           WHERE tmpMI_order2.ToId = inFromId
@@ -197,13 +203,14 @@ BEGIN
                               , tmpMI_order22.ToId
                               , tmpMI_order22.Amount
                               , tmpMI_order22.CuterCount
+                              , tmpMI_order22.isOrderSecond
                               , COALESCE (tmpMI_order_find.MovementItemId, 0) AS MovementItemId_find
                          FROM tmpMI_order22
                               LEFT JOIN tmpMI_order_find ON tmpMI_order_find.MovementItemId_order = tmpMI_order22.MovementItemId_order
                          )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
-    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate)
+    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate, isOrderSecond)
        SELECT COALESCE (tmpMI_production.MovementId, 0)                                          AS MovementId
             , COALESCE (tmpMI_production.StatusId, 0)                                            AS StatusId
             , COALESCE (tmpMI_production.InvNumber, '')                                          AS InvNumber
@@ -219,6 +226,7 @@ BEGIN
             , COALESCE (tmpMI_production.Amount, 0)            AS Amount
             , COALESCE (tmpMI_production.CuterCount, 0)        AS CuterCount
             , COALESCE (tmpMI_production.isPartionDate, FALSE) AS isPartionDate
+            , COALESCE (tmpMI_order.isOrderSecond, FALSE)      AS isOrderSecond
 
        FROM tmpMI_production
             FULL JOIN tmpMI_order ON tmpMI_order.MovementItemId_find = tmpMI_production.MovementItemId
@@ -288,6 +296,9 @@ BEGIN
             , (CASE WHEN _tmpListMaster.isPartionDate = TRUE THEN _tmpListMaster.OperDate ELSE MIDate_PartionGoods.ValueData END
              + (COALESCE (ObjectFloat_TermProduction.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS PartionGoodsDateClose
 
+
+            , CASE WHEN _tmpListMaster.MovementItemId > 0 THEN COALESCE (MIBoolean_OrderSecond.ValueData, FALSE) ELSE _tmpListMaster.isOrderSecond END :: Boolean AS isOrderSecond
+
             , Object_Status.ObjectCode            AS StatusCode
             , Object_Status.ValueData             AS StatusName
 
@@ -300,6 +311,10 @@ BEGIN
 
        FROM _tmpListMaster
              INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
+
+             LEFT JOIN MovementItemBoolean AS MIBoolean_OrderSecond
+                                           ON MIBoolean_OrderSecond.MovementItemId = _tmpListMaster.MovementItemId
+                                          AND MIBoolean_OrderSecond.DescId = zc_MIBoolean_OrderSecond()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId = _tmpListMaster.MovementItemId

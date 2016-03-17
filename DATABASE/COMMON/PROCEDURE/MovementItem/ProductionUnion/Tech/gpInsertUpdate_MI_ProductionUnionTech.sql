@@ -265,6 +265,13 @@ BEGIN
                                                                   , inReceiptId          := inReceiptId
                                                                   , inUserId             := vbUserId
                                                                    );
+   -- сохранили св-во <на основании дозаявки>
+   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_WeightMain(), tmp.MovementItemId, CASE WHEN MIFloat_AmountSecond.ValueData > 0 THEN TRUE ELSE FALSE END)
+   FROM (SELECT ioMovementItemId AS MovementItemId) AS tmp
+        LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                    ON MIFloat_AmountSecond.MovementItemId = inMovementItemId_order
+                                   AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond();
+
 
    -- сохранили <Подчиненный элемент документа>
    UPDATE _tmpChild SET MovementItemId = lpInsertUpdate_MI_ProductionUnionTech_Child (ioId                 := _tmpChild.MovementItemId

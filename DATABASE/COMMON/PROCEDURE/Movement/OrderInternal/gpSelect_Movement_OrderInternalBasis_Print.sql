@@ -83,9 +83,11 @@ BEGIN
        WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (vbFromId) AS lfSelect_Object_Unit_byGroup)
           , tmpMI_Send AS (-- группируется Перемещение
                            SELECT tmpMI.GoodsId                          AS GoodsId
+                                , tmpMI.GoodsKindId                      AS GoodsKindId
                                 , SUM (tmpMI.Amount)                     AS Amount
-                           FROM (SELECT MIContainer.ObjectId_Analyzer AS GoodsId
-                                      , SUM (MIContainer.Amount) AS Amount
+                           FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                      , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                      , SUM (MIContainer.Amount)                       AS Amount
                                  FROM MovementItemContainer AS MIContainer
                                       INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_Analyzer
                                  WHERE MIContainer.OperDate   = vbOperDate
@@ -93,8 +95,10 @@ BEGIN
                                    AND MIContainer.MovementDescId = zc_Movement_Send()
                                    AND MIContainer.isActive = TRUE
                                  GROUP BY MIContainer.ObjectId_Analyzer
+                                        , MIContainer.ObjectIntId_Analyzer
                                 ) AS tmpMI
                             GROUP BY tmpMI.GoodsId
+                                   , tmpMI.GoodsKindId
                           )
        SELECT
              Object_Unit.ObjectCode          AS UnitCode
@@ -107,22 +111,23 @@ BEGIN
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
 
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.Amount             ELSE 0 END AS Amount_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSecond       ELSE 0 END AS AmountSecond_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSend         ELSE 0 END AS AmountSend_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartner      ELSE 0 END AS AmountPartner_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartnerPrior ELSE 0 END AS AmountPartnerPrior_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSend         ELSE 0 END AS Amount_sh_calc
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountRemains      ELSE 0 END AS AmountRemains_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.Amount              ELSE 0 END AS Amount_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSecond        ELSE 0 END AS AmountSecond_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSend          ELSE 0 END AS AmountSend_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartner       ELSE 0 END AS AmountPartner_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartnerPrior  ELSE 0 END AS AmountPartnerPrior_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartnerSecond ELSE 0 END AS AmountPartnerSecond_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSend          ELSE 0 END AS Amount_sh_calc
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountRemains       ELSE 0 END AS AmountRemains_sh
 
-           , tmpMI.Amount             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount
-           , tmpMI.AmountSecond       * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSecond
-           , tmpMI.AmountSend         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSend
-           , tmpMI.AmountPartner      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartner
-           , tmpMI.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerPrior
-           , tmpMI.Amount_calc        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_calc
-           , tmpMI.AmountRemains      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountRemains
-           , CAST (0 AS Tfloat)    AS AmountPartnerDozakaz
+           , tmpMI.Amount               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount
+           , tmpMI.AmountSecond         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSecond
+           , tmpMI.AmountSend           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSend
+           , tmpMI.AmountPartner        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartner
+           , tmpMI.AmountPartnerPrior   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerPrior
+           , tmpMI.AmountPartnerSecond  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerSecond
+           , tmpMI.Amount_calc          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_calc
+           , tmpMI.AmountRemains        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountRemains
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -130,9 +135,10 @@ BEGIN
                   , SUM (tmpMI.Amount)        AS Amount
                   , SUM (tmpMI.AmountSecond)  AS AmountSecond
                   , SUM (tmpMI.AmountPartner) AS AmountPartner
-                  , SUM (tmpMI.AmountPartnerPrior) AS AmountPartnerPrior
+                  , SUM (tmpMI.AmountPartnerPrior)  AS AmountPartnerPrior
+                  , SUM (tmpMI.AmountPartnerSecond) AS AmountPartnerSecond
                   , SUM (tmpMI.AmountSend)    AS AmountSend
-                  , SUM (CASE WHEN tmpMI.AmountRemains < tmpMI.AmountPartner THEN tmpMI.AmountPartner - tmpMI.AmountRemains ELSE 0 END) AS Amount_calc -- Расчетный заказ
+                  , CASE WHEN SUM (tmpMI.AmountRemains + tmpMI.AmountSend) < SUM (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond) THEN SUM (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond - tmpMI.AmountRemains - tmpMI.AmountSend) ELSE 0 END AS Amount_calc -- Расчетный заказ
                   , SUM (tmpMI.AmountRemains) AS AmountRemains
              FROM (-- Заявка сырье
                    SELECT MovementItem.ObjectId                                  AS GoodsId
@@ -141,8 +147,9 @@ BEGIN
                         , SUM (MovementItem.Amount)                              AS Amount
                         , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))     AS AmountSecond
                         , SUM (COALESCE (MIFloat_AmountRemains.ValueData, 0))    AS AmountRemains
-                        , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))    AS AmountPartner
-                        , SUM (COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0)) AS AmountPartnerPrior
+                        , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))       AS AmountPartner
+                        , SUM (COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0))  AS AmountPartnerPrior
+                        , SUM (COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0)) AS AmountPartnerSecond
                         , 0                                                      AS AmountSend
                    FROM MovementItem
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
@@ -163,6 +170,9 @@ BEGIN
                         LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
                                                     ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
                                                    AND MIFloat_AmountPartnerPrior.DescId = zc_MIFloat_AmountPartnerPrior()
+                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                                    ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId     = zc_MI_Master()
                      AND MovementItem.isErased   = FALSE
@@ -171,13 +181,14 @@ BEGIN
                   UNION ALL
                    -- Перемещение
                    SELECT tmpMI_Send.GoodsId
-                        , 0 AS GoodsKindId
+                        , tmpMI_Send.GoodsKindId
                         , 0 AS ReceiptId
                         , 0 AS Amount
                         , 0 AS AmountSecond
                         , 0 AS AmountRemains
                         , 0 AS AmountPartner
                         , 0 AS AmountPartnerPrior
+                        , 0 AS AmountPartnerSecond
                         , (tmpMI_Send.Amount) AS AmountSend
                    FROM tmpMI_Send
                   ) AS tmpMI
@@ -219,7 +230,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
 
-       WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0 OR tmpMI.AmountSend <> 0 OR tmpMI.AmountPartner <> 0 OR tmpMI.AmountPartnerPrior <> 0 -- OR tmpMI.Amount_calc <> 0
+       WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0 OR tmpMI.AmountSend <> 0 OR tmpMI.AmountPartner <> 0 OR tmpMI.AmountPartnerPrior <> 0 OR tmpMI.AmountPartnerSecond <> 0 -- OR tmpMI.Amount_calc <> 0
        ;
     RETURN NEXT Cursor2;
 

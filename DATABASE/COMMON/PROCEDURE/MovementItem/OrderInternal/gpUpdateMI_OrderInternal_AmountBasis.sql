@@ -19,9 +19,9 @@ BEGIN
 
 
     -- таблица -
-   CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, ReceiptId Integer, CuterCount TFloat, GoodsId_child Integer, GoodsKindId_child Integer, Amount_child TFloat) ON COMMIT DROP;
+   CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, ReceiptId Integer, CuterCount TFloat, GoodsId_child Integer, GoodsKindId_child Integer, Amount_child TFloat, isOrderSecond Boolean) ON COMMIT DROP;
    --
-   INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, GoodsId_child, GoodsKindId_child, Amount_child)
+   INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, GoodsId_child, GoodsKindId_child, Amount_child, isOrderSecond)
                                  WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup)
                                     , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                                                    FROM Object_InfoMoney_View
@@ -39,6 +39,7 @@ BEGIN
                                       , tmp.GoodsId_child
                                       , tmp.GoodsKindId_child
                                       , tmp.Amount_child
+                                      , tmp.isOrderSecond
                                  FROM (-- !!!!ПРОИЗВОДСТВО (подтвержденная программа)!!!
                                        SELECT MovementItem.Id                               AS MovementItemId
                                             , MovementItem.ObjectId                         AS GoodsId
@@ -47,6 +48,7 @@ BEGIN
                                             , COALESCE (MILO_Receipt.ObjectId, 0)           AS ReceiptId
                                             , COALESCE (MIFloat_CuterCount.ValueData, 0)    AS CuterCount
                                             , COALESCE (MIFloat_CuterCount.ValueData, 0) * COALESCE (ObjectFloat_Value.ValueData, 0) AS Amount_child
+                                            , COALESCE (MIBoolean_OrderSecond.ValueData, FALSE) AS isOrderSecond
                                        FROM Movement
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                           ON MovementLinkObject_From.MovementId = Movement.Id
@@ -62,6 +64,15 @@ BEGIN
                                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                                    AND MovementItem.isErased   = FALSE
                                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
+                                            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                                                        ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                                                                       AND MIFloat_CuterCount.ValueData <> 0
+
+                                            LEFT JOIN MovementItemBoolean AS MIBoolean_OrderSecond
+                                                                          ON MIBoolean_OrderSecond.MovementItemId = MovementItem.Id
+                                                                         AND MIBoolean_OrderSecond.DescId = zc_MIBoolean_OrderSecond()
 
                                             LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                                         ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
@@ -93,7 +104,7 @@ BEGIN
                                      ;
 
        -- добавили те что разворачиваются по рецептурам
-       INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, GoodsId_child, GoodsKindId_child, Amount_child)
+       INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, GoodsId_child, GoodsKindId_child, Amount_child, isOrderSecond)
          WITH tmpGoods AS (SELECT tmpAll.GoodsId_child, SUM (tmpAll.Amount_child) AS Amount_child FROM tmpAll GROUP BY tmpAll.GoodsId_child)
             , tmpReceipt AS (SELECT tmpGoods.GoodsId_child
                                   , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
@@ -116,7 +127,8 @@ BEGIN
                                             , 0 AS CuterCount
                                             , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)     AS GoodsId_child
                                             , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_child
-                                            , tmpGoods.Amount_child * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData
+                                            , tmpGoods.Amount_child * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_child
+                                            , FALSE AS isOrderSecond
                                        FROM tmpGoods
                                             INNER JOIN tmpReceipt ON tmpReceipt.GoodsId_child = tmpGoods.GoodsId_child
                                             INNER JOIN ObjectFloat AS ObjectFloat_Value_master
@@ -151,12 +163,15 @@ BEGIN
                                                  , inDescId_Param       := zc_MIFloat_AmountPartner()
                                                  , inAmount_ParamOrder  := COALESCE (tmpAll.Amount_child_add, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPrior()
+                                                 , inAmount_ParamSecond := COALESCE (tmpAll.Amount_child_second, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamSecond := zc_MIFloat_AmountPartnerSecond()
                                                  , inIsPack             := NULL
                                                  , inUserId             := vbUserId
                                                   ) 
        FROM (SELECT tmpAll.GoodsId_child, tmpAll.GoodsKindId_child
-                  , SUM (CASE WHEN CuterCount <> 0 THEN tmpAll.Amount_child ELSE 0 END)              AS Amount_child
-                  , SUM (CASE WHEN COALESCE (CuterCount, 0) = 0 THEN tmpAll.Amount_child ELSE 0 END) AS Amount_child_add
+                  , SUM (CASE WHEN isOrderSecond = FALSE AND CuterCount <> 0 THEN tmpAll.Amount_child ELSE 0 END) AS Amount_child
+                  , SUM (CASE WHEN isOrderSecond = TRUE  AND CuterCount <> 0 THEN tmpAll.Amount_child ELSE 0 END) AS Amount_child_second
+                  , SUM (CASE WHEN COALESCE (CuterCount, 0) = 0              THEN tmpAll.Amount_child ELSE 0 END) AS Amount_child_add
              FROM tmpAll
              GROUP BY tmpAll.GoodsId_child, tmpAll.GoodsKindId_child
             ) AS tmpAll
@@ -190,6 +205,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.03.16                                        *
  27.06.15                                        * расчет, временно захардкодил
  19.06.15                                        *
  14.02.15         *

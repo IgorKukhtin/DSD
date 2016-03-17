@@ -121,6 +121,8 @@ BEGIN
                                                  , inDescId_Param       := zc_MIFloat_AmountPartner()
                                                  , inAmount_ParamOrder  := tmpAll.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPrior()
+                                                 , inAmount_ParamSecond := NULL
+                                                 , inDescId_ParamSecond := NULL
                                                  , inIsPack             := vbIsPack
                                                  , inUserId             := vbUserId
                                                   ) 
