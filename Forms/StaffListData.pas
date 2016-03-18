@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxContainer, dsdGuides,
-  cxTextEdit, cxMaskEdit, cxLabel, Vcl.ExtCtrls;
+  cxTextEdit, cxMaskEdit, cxLabel, Vcl.ExtCtrls, cxSplitter;
 
 type
   TStaffListDataForm = class(TParentForm)
@@ -119,6 +119,8 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     clHoursDay: TcxGridDBColumn;
     clcsummSummKindComment: TcxGridDBColumn;
+    cxSplitterBottom: TcxSplitter;
+    cxSplitter1: TcxSplitter;
   private
     { Private declarations }
   public

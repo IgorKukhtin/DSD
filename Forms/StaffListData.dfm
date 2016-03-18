@@ -21,12 +21,13 @@ object StaffListDataForm: TStaffListDataForm
     Left = 0
     Top = 49
     Width = 937
-    Height = 262
-    Align = alClient
+    Height = 256
+    Align = alTop
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 262
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -44,7 +45,7 @@ object StaffListDataForm: TStaffListDataForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -134,12 +135,13 @@ object StaffListDataForm: TStaffListDataForm
     Left = 0
     Top = 311
     Width = 937
-    Height = 144
-    Align = alBottom
+    Height = 138
+    Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 144
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -157,6 +159,7 @@ object StaffListDataForm: TStaffListDataForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -224,6 +227,7 @@ object StaffListDataForm: TStaffListDataForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -309,6 +313,24 @@ object StaffListDataForm: TStaffListDataForm
       Align = alCustom
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
+  end
+  object cxSplitterBottom: TcxSplitter
+    Left = 0
+    Top = 305
+    Width = 937
+    Height = 6
+    AlignSplitter = salTop
+    Control = cxGridStaffList
+    ExplicitTop = 455
+  end
+  object cxSplitter1: TcxSplitter
+    Left = 0
+    Top = 449
+    Width = 937
+    Height = 6
+    AlignSplitter = salBottom
+    Control = cxGridStaffListSumm
+    ExplicitTop = 43
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -836,7 +858,12 @@ object StaffListDataForm: TStaffListDataForm
       FormName = 'TStaffListEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+        end>
       isShowModal = False
       DataSource = StaffListDS
       DataSetRefresh = actRefresh

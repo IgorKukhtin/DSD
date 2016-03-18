@@ -3,7 +3,7 @@ inherited PriceForm: TPriceForm
   ClientHeight = 385
   ClientWidth = 826
   ExplicitWidth = 842
-  ExplicitHeight = 423
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -660,13 +660,6 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
       end
       item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = deOperDate
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
         Name = 'inisShowAll'
         Value = Null
         Component = actShowAll
@@ -894,11 +887,9 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'ioStartDate'
-        Value = 42370d
-        Component = MasterCDS
-        ComponentItem = 'StartDate'
+        Value = 73051d
         DataType = ftDateTime
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inPrice'
@@ -1000,10 +991,17 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'FixDateChange'
         DataType = ftDateTime
+      end
+      item
+        Name = 'outStartDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
       end>
     PackSize = 1
-    Left = 264
-    Top = 96
+    Left = 272
+    Top = 152
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null

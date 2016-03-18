@@ -154,7 +154,7 @@ BEGIN
         );
     
     RETURN QUERY
---табель
+    -- табель
     WITH Movement_SheetWorkTime AS
     (
         SELECT
@@ -165,6 +165,7 @@ BEGIN
            ,SUM(SheetWorkTime.SheetWorkTime_Amount) AS SheetWorkTime_Amount
            ,SUM(SheetWorkTime.Count_Day)            AS Count_Day
            ,SheetWorkTime.Count_MemberDay::Integer  AS Count_MemberDay
+           , COUNT (*) OVER (PARTITION BY ,SheetWorkTime.PositionId, ,SheetWorkTime.PositionLevelId) AS Count_Member
            ,SheetWorkTime.SUM_MemberHours::TFloat   AS SUM_MemberHours
            ,SUM(SummaAdd)::TFloat                   AS SummaADD
         FROM(
@@ -175,7 +176,7 @@ BEGIN
                ,MIObject_PositionLevel.ObjectId                AS PositionLevelId
                ,MI_SheetWorkTime.Amount                        AS SheetWorkTime_Amount
                ,1                                              as Count_Day
-               ,COUNT(*) OVER(PARTITION BY MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId) as Count_MemberDay
+               ,COUNT(*) OVER(PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) as Count_MemberDay
                ,SUM(MI_SheetWorkTime.Amount) OVER(PARTITION BY MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
                ,CASE 
                     WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day()
@@ -263,6 +264,9 @@ BEGIN
        ,Movement_SheetWorkTime.SUM_MemberHours::TFloat
        ,CASE 
             -- ‘онд за мес€ц
+            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
+                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_Member, 0))
+            -- ‘онд за мес€ц (по дн€м)
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
                 THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.Count_MemberDay,0) * Movement_SheetWorkTime.Count_Day)
             -- ƒоплата за 1 день на всех

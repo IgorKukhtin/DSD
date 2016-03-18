@@ -3,7 +3,6 @@ inherited Report_WageForm: TReport_WageForm
   ClientHeight = 401
   ClientWidth = 991
   AddOnFormData.RefreshAction = nil
-  ExplicitLeft = -201
   ExplicitWidth = 1007
   ExplicitHeight = 436
   PixelsPerInch = 96
@@ -170,7 +169,7 @@ inherited Report_WageForm: TReport_WageForm
             Width = 70
           end
           object Gross: TcxGridDBColumn
-            Caption = #1054#1073#1097#1072#1103' '#1084#1072#1089#1089#1072
+            Caption = #1041#1072#1079#1072' '#1080#1090#1086#1075#1086', '#1082#1075'.'
             DataBinding.FieldName = 'Gross'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -180,13 +179,14 @@ inherited Report_WageForm: TReport_WageForm
             Width = 92
           end
           object colGrossOnOneMember: TcxGridDBColumn
-            Caption = #1052#1072#1089#1089#1072' '#1085#1072' 1-'#1075#1086' '#1095#1077#1083'.'
+            Caption = #1041#1072#1079#1072' '#1085#1072' 1-'#1075#1086' '#1095#1077#1083', '#1082#1075'.'
             DataBinding.FieldName = 'GrossOnOneMember'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 90
           end
           object colAmount: TcxGridDBColumn

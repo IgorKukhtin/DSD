@@ -151,9 +151,9 @@ BEGIN
        ,Report_2.MemberName
        ,Report_2.SheetWorkTime_Amount
        ,Report_2.StaffListSummKindId
-       ,-1
-       ,Report_2.StaffListSummKindName
-       ,Report_2.StaffListSumm_Value
+       ,Report_2.StaffListSummKindId   AS ServiceModelCode
+       ,Report_2.StaffListSummKindName AS ServiceModelName
+       ,Report_2.StaffListSumm_Value   AS Price
        ,Report_2.Summ
     FROM 
         gpSelect_Report_Wage_Sum(inDateStart      := inDateStart,

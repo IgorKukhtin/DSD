@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit;
+  DataModul, cxButtonEdit, cxSplitter;
 
 type
   TModelServiceForm = class(TParentForm)
@@ -83,14 +83,12 @@ type
     clUnitName: TcxGridDBColumn;
     clModelServiceKindName: TcxGridDBColumn;
     actUpdateModelService: TdsdUpdateDataSet;
-    bbModelService: TdxBarButton;
+    bbInsert: TdxBarButton;
     ModelServiceKindChoiceForm: TOpenChoiceForm;
-    actInsertMaster: TdsdInsertUpdateAction;
+    actInsert: TdsdInsertUpdateAction;
     SelectKindChoiceForm: TOpenChoiceForm;
     UnitFromChoiceFormMaster: TOpenChoiceForm;
     UnitFromChoiceFormChild: TOpenChoiceForm;
-    InsertModelService: TInsertRecord;
-    ModelServiceChoiceForm: TOpenChoiceForm;
     GoodsFromChoiceForm: TOpenChoiceForm;
     GoodsToChoiceForm: TOpenChoiceForm;
     MovementDescChoiceForm: TOpenChoiceForm;
@@ -109,6 +107,8 @@ type
     bbErasedChild: TdxBarButton;
     bbUnErasedChild: TdxBarButton;
     isErasedChild: TcxGridDBColumn;
+    cxLeftSplitter: TcxSplitter;
+    cxSplitterBottom: TcxSplitter;
   private
     { Private declarations }
   public

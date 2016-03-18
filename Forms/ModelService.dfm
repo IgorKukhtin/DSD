@@ -21,12 +21,15 @@ object ModelServiceForm: TModelServiceForm
     Left = 0
     Top = 26
     Width = 461
-    Height = 358
+    Height = 352
     Align = alLeft
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -6
+    ExplicitTop = 20
+    ExplicitHeight = 358
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -39,26 +42,27 @@ object ModelServiceForm: TModelServiceForm
       OptionsBehavior.IncSearch = True
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 35
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 120
       end
       object clModelServiceKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -71,7 +75,9 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Width = 55
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object clUnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -84,14 +90,16 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 120
       end
       object clmsComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 100
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -109,15 +117,19 @@ object ModelServiceForm: TModelServiceForm
     end
   end
   object cxGridModelServiceItemMaster: TcxGrid
-    Left = 461
+    Left = 469
     Top = 26
-    Width = 519
-    Height = 358
+    Width = 511
+    Height = 352
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 467
+    ExplicitTop = 20
+    ExplicitWidth = 519
+    ExplicitHeight = 358
     object cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemMasterDS
@@ -134,7 +146,7 @@ object ModelServiceForm: TModelServiceForm
       OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -149,8 +161,9 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 150
       end
       object clToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
@@ -163,8 +176,9 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 150
       end
       object clMovementDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -176,14 +190,17 @@ object ModelServiceForm: TModelServiceForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 70
       end
       object clRatio: TcxGridDBColumn
         Caption = #1050#1086#1101#1092#1092'.'
         DataBinding.FieldName = 'Ratio'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
       end
       object clSelectKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1074#1099#1073#1086#1088#1072
@@ -196,8 +213,16 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object clmsimIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -209,12 +234,6 @@ object ModelServiceForm: TModelServiceForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 25
-      end
-      object clComment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentVert = vaCenter
-        Width = 80
       end
     end
     object cxGridLevel1: TcxGridLevel
@@ -249,11 +268,12 @@ object ModelServiceForm: TModelServiceForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clmsicFromName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088' '#1086#1090
+        Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
         DataBinding.FieldName = 'FromName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -263,11 +283,12 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 301
       end
       object clmsicToName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088' ('#1082#1086#1084#1091')'
+        Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
         DataBinding.FieldName = 'ToName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -277,12 +298,14 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 257
       end
       object clsfcComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 283
       end
@@ -290,12 +313,32 @@ object ModelServiceForm: TModelServiceForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
     end
     object cxGridLevel2: TcxGridLevel
       GridView = cxGridDBTableViewModelServiceItemChild
     end
+  end
+  object cxLeftSplitter: TcxSplitter
+    Left = 461
+    Top = 26
+    Width = 8
+    Height = 352
+    Control = cxGrid
+    ExplicitHeight = 501
+  end
+  object cxSplitterBottom: TcxSplitter
+    Left = 0
+    Top = 378
+    Width = 980
+    Height = 6
+    AlignSplitter = salBottom
+    Control = cxGridStaffListCost
+    ExplicitTop = 20
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -361,7 +404,7 @@ object ModelServiceForm: TModelServiceForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbModelService'
+          ItemName = 'bbInsert'
         end
         item
           Visible = True
@@ -402,11 +445,11 @@ object ModelServiceForm: TModelServiceForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -415,6 +458,18 @@ object ModelServiceForm: TModelServiceForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -448,8 +503,8 @@ object ModelServiceForm: TModelServiceForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object bbModelService: TdxBarButton
-      Action = InsertModelService
+    object bbInsert: TdxBarButton
+      Action = actInsert
       Category = 0
     end
     object bbUpdate: TdxBarButton
@@ -626,10 +681,31 @@ object ModelServiceForm: TModelServiceForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1086#1076#1077#1083#1100'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1086#1076#1077#1083#1100'>'
+      ImageIndex = 0
+      FormName = 'TModelServiceEditForm'
+      FormNameParam.Value = 'TModelServiceEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      DataSource = ModelServiceItemMasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1086#1076#1077#1083#1100'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1086#1076#1077#1083#1100'>'
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TModelServiceEditForm'
@@ -731,19 +807,6 @@ object ModelServiceForm: TModelServiceForm
         end>
       isShowModal = True
     end
-    object actInsertMaster: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1075#1083#1072#1074#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
-      ImageIndex = 0
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = True
-      DataSource = ModelServiceItemMasterDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object UnitFromChoiceFormMaster: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -815,40 +878,6 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
         end>
       isShowModal = True
-    end
-    object InsertModelService: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      View = cxGridDBTableView
-      Action = ModelServiceChoiceForm
-      Params = <>
-      Caption = 'InsertModelService'
-      ImageIndex = 0
-    end
-    object ModelServiceChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ModelServiceChoiceForm'
-      FormName = 'TModelServiceEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Name'
-          DataType = ftString
-        end>
-      isShowModal = False
     end
     object GoodsFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'

@@ -12,7 +12,8 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxLabel, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls;
 
 type
   TMCSForm = class(TPriceForm)

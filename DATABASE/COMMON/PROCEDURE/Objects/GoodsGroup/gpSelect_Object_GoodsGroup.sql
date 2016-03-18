@@ -13,9 +13,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              , GoodsPlatformId Integer, GoodsPlatformName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
-             ) AS
-$BODY$BEGIN
-
+             )
+AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
@@ -85,13 +86,12 @@ $BODY$BEGIN
                                AND ObjectLink_GoodsGroup_InfoMoney.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
        
-    WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup();
+    WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
+     ;
+         
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_GoodsGroup(TVarChar)
-  OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -103,8 +103,7 @@ ALTER FUNCTION gpSelect_Object_GoodsGroup(TVarChar)
  11.09.14         * add TradeMark
  04.09.14         *              
  12.06.13         *
- 00.06.13          
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsGroup('2')
+-- SELECT * FROM gpSelect_Object_GoodsGroup ('2')

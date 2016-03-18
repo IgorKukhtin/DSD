@@ -23,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
    OUT outMCSIsCloseDateChange    TDateTime ,    -- Дата изменения признака "Убить код"
    OUT outMCSNotRecalcDateChange  TDateTime ,    -- Дата изменения признака "Спецконтроль кода"
    OUT outFixDateChange           TDateTime ,    -- Дата изменения признака "Фиксированная цена"
+   OUT outStartDate               TDateTime ,    -- Дата
     IN inSession                  TVarChar       -- сессия пользователя
 )
 AS
@@ -146,6 +147,7 @@ BEGIN
        ((inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0)))
        
     THEN
+        -- сохранили историю
         PERFORM gpInsertUpdate_ObjectHistory_Price(
                 ioId       := 0 :: Integer,    -- ключ объекта <Элемент истории прайса>
                 inPriceId  := ioId,    -- Прайс
@@ -155,8 +157,9 @@ BEGIN
                 inMCSPeriod:= COALESCE (inMCSPeriod, 0)         :: TFloat,    -- Количество дней для анализа НТЗ
                 inMCSDay   := COALESCE (inMCSDay, 0)            :: TFloat,    -- Страховой запас дней НТЗ
                 inSession  := inSession);
-       -- сохранили историю
+       -- определили
        ioStartDate:= (SELECT MAX (StartDate) FROM ObjectHistory WHERE ObjectHistory.ObjectId = ioId AND DescId = zc_ObjectHistory_Price());
+       outStartDate:= ioStartDate;
 
     END IF;
     IF (inMCSIsClose is not null) AND (COALESCE(vbMCSIsClose,False) <> inMCSIsClose)

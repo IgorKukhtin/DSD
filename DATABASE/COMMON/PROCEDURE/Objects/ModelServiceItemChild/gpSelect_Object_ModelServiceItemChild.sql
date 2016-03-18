@@ -1,9 +1,9 @@
-п»ї-- Function: gpSelect_Object_ModelServiceItemChild()
+-- Function: gpSelect_Object_ModelServiceItemChild()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemChild(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemChild(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , Comment TVarChar
@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ModelServiceItemChild());
 
    RETURN QUERY 
@@ -25,10 +25,10 @@ BEGIN
          , ObjectString_Comment.ValueData      AS Comment
                                                         
          , Object_From.Id          AS FromId
-         , Object_From.ValueData   AS FromName
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN '(' || Object_From.ObjectCode :: TvarChar || ')' || Object_From.ValueData ELSE Object_From.ValueData END :: TVarChar AS FromName
 
          , Object_To.Id         AS ToId
-         , Object_To.ValueData  AS ToName
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN '(' || Object_To.ObjectCode :: TvarChar || ')' || Object_To.ValueData ELSE Object_To.ValueData END :: TVarChar AS ToName
 
          , Object_ModelServiceItemMaster.Id         AS ModelServiceItemMasterId
          , Object_ModelServiceItemMaster.ValueData  AS ModelServiceItemMasterName
@@ -59,16 +59,13 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_ModelServiceItemChild (TVarChar) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  20.10.13         * 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_ModelServiceItemChild ('2')

@@ -4,37 +4,41 @@ inherited MCSForm: TMCSForm
   ClientWidth = 758
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 774
-  ExplicitHeight = 457
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
+  inherited Panel: TPanel
+    Width = 758
+    ExplicitWidth = 758
+  end
   inherited PageControl: TcxPageControl
     Width = 758
-    Height = 393
+    Height = 361
     TabOrder = 3
     ExplicitWidth = 758
-    ExplicitHeight = 393
-    ClientRectBottom = 393
+    ExplicitHeight = 361
+    ClientRectBottom = 361
     ClientRectRight = 758
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 758
-      ExplicitHeight = 393
+      ExplicitHeight = 361
       inherited cxGrid: TcxGrid
         Width = 758
-        Height = 393
+        Height = 361
         ExplicitWidth = 758
-        ExplicitHeight = 393
+        ExplicitHeight = 361
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited clDateChange: TcxGridDBColumn
+            Visible = False
+          end
           inherited clPrice: TcxGridDBColumn
             Visible = False
             Options.Editing = False
-          end
-          inherited clDateChange: TcxGridDBColumn
-            Visible = False
           end
           inherited colFix: TcxGridDBColumn
             Options.Editing = False
@@ -44,11 +48,24 @@ inherited MCSForm: TMCSForm
     end
   end
   inherited ceUnit: TcxButtonEdit
-    Left = 374
-    Top = 80
     Enabled = False
-    ExplicitLeft = 374
-    ExplicitTop = 80
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = PriceForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
+      item
+        Component = UnitGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     inherited actStartLoadPrice: TMultiAction
@@ -101,7 +118,10 @@ inherited MCSForm: TMCSForm
       Enabled = False
     end
   end
-  object spGet_UserUnit: TdsdStoredProc [9]
+  inherited spInsertUpdate: TdsdStoredProc
+    Left = 264
+  end
+  object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
     DataSets = <>
     OutputType = otResult
