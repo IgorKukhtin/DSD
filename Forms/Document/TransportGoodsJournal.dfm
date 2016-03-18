@@ -4,7 +4,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   ClientWidth = 975
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 991
-  ExplicitHeight = 575
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -257,10 +257,10 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Width = 975
     ExplicitWidth = 975
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

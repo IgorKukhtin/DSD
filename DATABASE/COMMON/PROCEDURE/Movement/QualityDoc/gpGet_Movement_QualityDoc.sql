@@ -76,7 +76,7 @@ BEGIN
                                   AND MovementDate_OperDateOut.DescId = zc_MovementDate_OperDateOut()
 
             LEFT JOIN Movement AS Movement_QualityNumber
-                               ON Movement_QualityNumber.OperDate = MovementDate_OperDateIn.ValueData
+                               ON Movement_QualityNumber.OperDate = DATE_TRUNC ('DAY', MovementDate_OperDateIn.ValueData)
                               AND Movement_QualityNumber.DescId = zc_Movement_QualityNumber()
                               AND Movement_QualityNumber.StatusId = zc_Enum_Status_Complete()
 
@@ -125,7 +125,7 @@ BEGIN
      ELSE
      -- Результат
      RETURN QUERY 
-     WITH tmpOperDate AS (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Sale)
+     WITH tmpOperDate AS (SELECT COALESCE (MovementDate.ValueData, Movement.OperDate) AS OperDate FROM Movement LEFT JOIN MovementDate ON MovementDate.MovementId = Movement.Id AND MovementDate.DescId = zc_MovementDate_OperDatePartner() WHERE Movement.Id = inMovementId_Sale)
         , tmpQualityDoc AS (SELECT Movement.Id                           AS MovementId
                                  , MS_QualityNumber.ValueData            AS QualityNumber
                                  , MS_CertificateNumber.ValueData        AS CertificateNumber
@@ -140,6 +140,8 @@ BEGIN
                                  LEFT JOIN Movement ON Movement.DescId = zc_Movement_QualityDoc()
                                                     AND Movement.OperDate = tmpOperDate.OperDate
                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                    AND Movement_QualityNumber.Id IS NULL
+
                                  LEFT JOIN MovementString AS MS_QualityNumber
                                                           ON MS_QualityNumber.MovementId = COALESCE (Movement_QualityNumber.Id, Movement.Id)
                                                          AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()

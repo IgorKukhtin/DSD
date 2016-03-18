@@ -170,7 +170,6 @@ BEGIN
      WHERE Object_CarExternal.DescId = zc_Object_CarExternal()
        AND (Object_CarExternal.isErased = FALSE
         OR (Object_CarExternal.isErased = TRUE AND inIsShowAll = TRUE))
-       
     ;
 
 END;

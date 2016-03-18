@@ -27,10 +27,10 @@ BEGIN
 
 
  
-    -- проверка
-     IF COALESCE (ioId,0) = 0 and EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_QualityNumber() and Movement.OperDate = inOperDate)
+     -- проверка
+     IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_QualityNumber() AND Movement.OperDate = inOperDate AND Movement.Id <> COALESCE (ioId, 0))
      THEN
-         RAISE EXCEPTION 'Ошибка. За дату <%> уже создан документ <Качественное удостоверение (номера)>.', inOperDate ::Date ;
+         RAISE EXCEPTION 'Ошибка. За дату <%> уже создан документ <Качественное удостоверение (номера)>.', DATE (inOperDate);
      END IF;
  
      -- сохранили <Документ>
