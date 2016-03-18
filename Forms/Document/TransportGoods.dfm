@@ -4,7 +4,7 @@
   ClientWidth = 547
   AddOnFormData.isSingle = False
   ExplicitWidth = 553
-  ExplicitHeight = 445
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -119,12 +119,12 @@
   end
   object cxLabel9: TcxLabel [14]
     Left = 8
-    Top = 107
+    Top = 157
     Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
   end
   object edCar: TcxButtonEdit [15]
     Left = 8
-    Top = 127
+    Top = 178
     Properties.Buttons = <
       item
         Default = True
@@ -152,12 +152,12 @@
   end
   object cxLabel7: TcxLabel [18]
     Left = 135
-    Top = 157
+    Top = 207
     Caption = #1055#1088#1080#1094#1077#1087
   end
   object edCarTrailer: TcxButtonEdit [19]
     Left = 135
-    Top = 177
+    Top = 227
     Properties.Buttons = <
       item
         Default = True
@@ -169,12 +169,12 @@
   end
   object cxLabel4: TcxLabel [20]
     Left = 8
-    Top = 57
+    Top = 107
     Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
   end
   object edCarModel: TcxButtonEdit [21]
     Left = 8
-    Top = 80
+    Top = 127
     Properties.Buttons = <
       item
         Default = True
@@ -186,12 +186,12 @@
   end
   object cxLabel8: TcxLabel [22]
     Left = 8
-    Top = 157
+    Top = 207
     Caption = #1052#1072#1088#1082#1072' '#1087#1088#1080#1094#1077#1087#1072
   end
   object edCarTrailerModel: TcxButtonEdit [23]
     Left = 8
-    Top = 177
+    Top = 227
     Properties.Buttons = <
       item
         Default = True
@@ -296,12 +296,12 @@
   end
   object cxLabel16: TcxLabel [36]
     Left = 8
-    Top = 207
+    Top = 57
     Caption = #1070#1088'.'#1083#1080#1094#1086' - '#1042#1072#1085#1090#1072#1078#1086#1074#1110#1076#1087#1088#1072#1074#1085#1080#1082
   end
   object edCarJuridical: TcxButtonEdit [37]
     Left = 8
-    Top = 230
+    Top = 77
     Properties.Buttons = <
       item
         Default = True
@@ -942,8 +942,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 73
-    Top = 124
+    Left = 33
+    Top = 156
   end
   object GuidePersonalDriver: TdsdGuides
     KeyField = 'Id'
@@ -1001,8 +1001,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 178
-    Top = 173
+    Left = 186
+    Top = 205
   end
   object GuideMember1: TdsdGuides
     KeyField = 'Id'
@@ -1059,33 +1059,26 @@
   object GuideCarModel: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCarModel
-    FormNameParam.Value = 'TCarForm'
+    FormNameParam.Value = 'TCarModelForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCarForm'
+    FormName = 'TCarModelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuideCar
+        Component = GuideCarModel
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuideCar
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'CarModelName'
-        Value = Null
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 64
-    Top = 58
+    Left = 128
+    Top = 114
   end
   object GuideCarTrailerModel: TdsdGuides
     KeyField = 'Id'
@@ -1115,8 +1108,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 88
-    Top = 164
+    Left = 40
+    Top = 212
   end
   object GuideMember3: TdsdGuides
     KeyField = 'Id'
@@ -1222,7 +1215,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 121
-    Top = 228
+    Left = 153
+    Top = 68
   end
 end

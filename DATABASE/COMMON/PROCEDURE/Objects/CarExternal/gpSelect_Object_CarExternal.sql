@@ -22,7 +22,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - может ли пользовать видеть весь справочник
      vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
-
+     
      -- Результат
      RETURN QUERY 
        SELECT 
@@ -66,21 +66,17 @@ BEGIN
      WHERE Object_CarExternal.DescId = zc_Object_CarExternal()
        AND (Object_CarExternal.isErased = FALSE
         OR (Object_CarExternal.isErased = TRUE AND inIsShowAll = TRUE))
-      
     ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Object_CarExternal(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  17.03.16         *
 */
-/*
-UPDATE Object SET AccessKeyId = COALESCE (Object_Branch.AccessKeyId, zc_Enum_Process_AccessKey_TrasportDnepr()) FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink2 ON ObjectLink2.ObjectId = ObjectLink.ChildObjectId AND ObjectLink2.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink2.ChildObjectId WHERE ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_CarExternal_Unit() AND Object.DescId = zc_Object_CarExternal();
-*/
+
 -- тест
--- SELECT * FROM gpSelect_Object_CarExternal (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_CarExternal (TRUE, zfCalc_UserAdmin())

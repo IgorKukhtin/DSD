@@ -19,7 +19,8 @@ $BODY$
    DECLARE vbCode_calc Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_CarExternal());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_CarExternal());
+   vbUserId:= lpGetUserBySession (inSession);
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object_CarExternal (ioId	    := ioId

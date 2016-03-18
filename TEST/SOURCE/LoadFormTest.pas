@@ -1986,7 +1986,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarUnionForm');
-
 end;
 
 
