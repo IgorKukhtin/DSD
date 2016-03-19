@@ -25,10 +25,10 @@ BEGIN
          , ObjectString_Comment.ValueData      AS Comment
                                                         
          , Object_From.Id          AS FromId
-         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN '(' || Object_From.ObjectCode :: TvarChar || ')' || Object_From.ValueData ELSE Object_From.ValueData END :: TVarChar AS FromName
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN '(' || Object_From.ObjectCode :: TvarChar || ') ' || Object_From.ValueData ELSE Object_From.ValueData END :: TVarChar AS FromName
 
          , Object_To.Id         AS ToId
-         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN '(' || Object_To.ObjectCode :: TvarChar || ')' || Object_To.ValueData ELSE Object_To.ValueData END :: TVarChar AS ToName
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN '(' || Object_To.ObjectCode :: TvarChar || ') ' || Object_To.ValueData ELSE Object_To.ValueData END :: TVarChar AS ToName
 
          , Object_ModelServiceItemMaster.Id         AS ModelServiceItemMasterId
          , Object_ModelServiceItemMaster.ValueData  AS ModelServiceItemMasterName

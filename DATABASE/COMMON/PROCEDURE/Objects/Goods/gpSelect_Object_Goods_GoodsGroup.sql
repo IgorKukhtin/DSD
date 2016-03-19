@@ -101,23 +101,6 @@ BEGIN
        WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
 
     UNION ALL
-           Object_GoodsGroup.Id         AS Id 
-         , Object_GoodsGroup.ObjectCode AS Code
-         , Object_GoodsGroup.ValueData  AS Name
-    
-         , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
-         , Object_GoodsGroup_Parent.valuedata as  GoodsGroupName
-         
-         , Object_GoodsGroupStat.Id        AS GroupStatId
-         , Object_GoodsGroupStat.ValueData AS GroupStatName
-
-         , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
-         , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName              
-         
-         , ObjectDesc.ItemName as DescName
-         
-         , Object_GoodsGroup.isErased   AS isErased
-
      SELECT 
            0 :: Integer AS Id 
          , 0 :: Integer Code
