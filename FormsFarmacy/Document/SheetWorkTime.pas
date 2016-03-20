@@ -93,6 +93,9 @@ type
     HeaderCDS_Child: TClientDataSet;
     actUpdateChildDS: TdsdUpdateDataSet;
     spInsertUpdateMI_Child: TdsdStoredProc;
+    spInsertMaskMIMaster: TdsdStoredProc;
+    actAddMask: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
   public
   end;

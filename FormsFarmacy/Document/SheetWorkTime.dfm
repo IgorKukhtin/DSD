@@ -28,7 +28,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object edOperDate: TcxDateEdit
       Left = 1
       Top = 20
-      EditValue = 42335d
+      EditValue = 42430d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -64,7 +64,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Height = 201
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 94
     object cxGridDBBandedTableView: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -189,7 +188,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitTop = 504
   end
   object cxGrid1: TcxGrid
     Left = 0
@@ -198,7 +196,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Height = 220
     Align = alBottom
     TabOrder = 7
-    ExplicitTop = 270
     object cxGridDBBandedTableView1: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -430,6 +427,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMISetErased'
         end
         item
@@ -509,6 +514,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actAddMask
       Category = 0
     end
   end
@@ -803,6 +812,22 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actAddMask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMaskMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertMaskMIMaster
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1084#1091' '#1084#1077#1089#1103#1094#1091
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1084#1091' '#1084#1077#1089#1103#1094#1091
+      ImageIndex = 54
     end
   end
   object MasterDS: TDataSource
@@ -1137,5 +1162,28 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     PackSize = 1
     Left = 254
     Top = 351
+  end
+  object spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertMask_MI_SheetWorkTime'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42430d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 96
   end
 end

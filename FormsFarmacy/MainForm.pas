@@ -237,6 +237,8 @@ type
     N95: TMenuItem;
     actPriceOnDate: TdsdOpenForm;
     N96: TMenuItem;
+    actReport_ProfitForm: TdsdOpenForm;
+    N97: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
