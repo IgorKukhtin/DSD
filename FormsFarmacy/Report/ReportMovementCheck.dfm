@@ -1,29 +1,27 @@
 ﻿inherited ReportMovementCheckForm: TReportMovementCheckForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-  ClientWidth = 736
+  ClientWidth = 1251
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 752
-  ExplicitHeight = 343
+  ExplicitWidth = 1267
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 736
+    Width = 1251
     Height = 250
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 736
     ExplicitHeight = 250
     ClientRectBottom = 250
-    ClientRectRight = 736
+    ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 736
       ExplicitHeight = 250
       inherited cxGrid: TcxGrid
-        Width = 736
+        Width = 1251
         Height = 250
-        ExplicitLeft = -640
-        ExplicitTop = -20
         ExplicitWidth = 736
         ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -245,7 +243,7 @@
     end
   end
   inherited Panel: TPanel
-    Width = 736
+    Width = 1251
     Height = 32
     ExplicitWidth = 736
     ExplicitHeight = 32
@@ -335,6 +333,7 @@
         end>
       Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
       Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end

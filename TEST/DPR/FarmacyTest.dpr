@@ -397,7 +397,9 @@ uses
   PriceOnDate in '..\..\FormsFarmacy\Guides\PriceOnDate.pas' {PriceOnDateForm: TParentForm},
   BankAccountJournalFarmacyDialog in '..\..\FormsFarmacy\Document\BankAccountJournalFarmacyDialog.pas' {BankAccountJournalFarmacyDialogForm: TParentForm},
   QualityNumberJournal in '..\..\Forms\Document\QualityNumberJournal.pas' {QualityNumberJournalForm: TParentForm},
-  QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm};
+  QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm},
+  Report_Profit in '..\..\FormsFarmacy\Report\Report_Profit.pas' {Report_ProfitForm: TParentForm},
+  Report_ProfitDialog in '..\..\FormsFarmacy\Report\Report_ProfitDialog.pas' {Report_ProfitDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
