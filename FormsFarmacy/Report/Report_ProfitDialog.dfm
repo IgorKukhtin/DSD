@@ -188,7 +188,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Name = 'Juridical2Id'
         Value = Null
         Component = Juridical2Guides
-        ComponentItem = 'TextValue'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item

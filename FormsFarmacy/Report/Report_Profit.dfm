@@ -4,6 +4,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
   ClientWidth = 1592
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -294
   ExplicitWidth = 1608
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -14,7 +15,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
     Height = 577
     TabOrder = 3
     ExplicitTop = 91
-    ExplicitWidth = 1045
+    ExplicitWidth = 1592
     ExplicitHeight = 577
     ClientRectBottom = 577
     ClientRectRight = 1592
@@ -23,13 +24,11 @@ inherited Report_ProfitForm: TReport_ProfitForm
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 1045
+      ExplicitWidth = 1592
       ExplicitHeight = 553
       inherited cxGrid: TcxGrid
         Width = 1592
         Height = 369
-        ExplicitLeft = 3
-        ExplicitTop = 2
         ExplicitWidth = 1592
         ExplicitHeight = 369
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -337,9 +336,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummaSaleFree'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object clSummaFree: TcxGridDBColumn
@@ -347,9 +346,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummaFree'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object SummaProfitFree: TcxGridDBColumn
@@ -357,9 +356,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummaProfitFree'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object clSummaSale1: TcxGridDBColumn
@@ -367,9 +366,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummaSale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object clSumma1: TcxGridDBColumn
@@ -377,9 +376,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'Summa1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object SummaProfit1: TcxGridDBColumn
@@ -387,9 +386,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummaProfit1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object SummaProfitTax1: TcxGridDBColumn
@@ -397,9 +396,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummaProfitTax1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object clSummaSale2: TcxGridDBColumn
@@ -407,9 +406,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummaSale2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object clSumma2: TcxGridDBColumn
@@ -417,19 +416,19 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'Summa2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object SummaProfit2: TcxGridDBColumn
-            Caption = #1044#1054#1061#1054#1044' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'3, '#1075#1088#1085
+            Caption = #1044#1054#1061#1054#1044' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'2, '#1075#1088#1085
             DataBinding.FieldName = 'SummaProfit2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object SummaProfitTax2: TcxGridDBColumn
@@ -437,9 +436,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummaProfitTax2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 50
           end
           object SummaProfitAll: TcxGridDBColumn
@@ -461,7 +460,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitWidth = 1045
       end
       object grChart: TcxGrid
         Left = 0
@@ -470,7 +468,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Height = 176
         Align = alBottom
         TabOrder = 2
-        ExplicitWidth = 1045
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -513,7 +510,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitWidth = 1045
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -524,7 +520,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitWidth = 1045
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -599,7 +594,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
   inherited Panel: TPanel
     Width = 1592
     Height = 65
-    ExplicitWidth = 1045
+    ExplicitWidth = 1592
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 127
@@ -692,6 +687,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object ceTax1: TcxCurrencyEdit
       Left = 554
       Top = 6
+      EditValue = '5'
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 11
@@ -700,6 +696,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object ceTax2: TcxCurrencyEdit
       Left = 554
       Top = 39
+      EditValue = '3.35'
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 12
@@ -707,8 +704,8 @@ inherited Report_ProfitForm: TReport_ProfitForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 83
-    Top = 272
+    Left = 123
+    Top = 328
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -833,7 +830,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
           Name = 'Juridical2Id'
           Value = Null
           Component = Juridical2Guides
-          ComponentItem = 'TextValue'
+          ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
