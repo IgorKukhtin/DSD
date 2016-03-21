@@ -29,16 +29,6 @@ type
     JuridicalMainName: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     clSumma: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    tsPivot: TcxTabSheet;
-    cxDBPivotGrid1: TcxDBPivotGrid;
-    pcolPlanDate: TcxDBPivotGridField;
-    pcolWeek: TcxDBPivotGridField;
-    pcolUnitName: TcxDBPivotGridField;
-    pcolPlanAmount: TcxDBPivotGridField;
-    pcolFactAmount: TcxDBPivotGridField;
-    pcolDiffAmount: TcxDBPivotGridField;
-    pcolDayOfWeek: TcxDBPivotGridField;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actQuasiSchedule: TBooleanStoredProcAction;

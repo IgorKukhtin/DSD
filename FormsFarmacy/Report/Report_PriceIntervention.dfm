@@ -20,7 +20,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     ClientRectRight = 1212
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
-      Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
+      Caption = #1056#1077#1079#1091#1083#1100#1090#1080#1088#1091#1102#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1212
@@ -43,12 +43,6 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
               Position = spFooter
             end
             item
-              Format = ',0.00;-,0.00'
-              Kind = skSum
-              Position = spFooter
-              Column = Amount
-            end
-            item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = clSumma
@@ -60,7 +54,6 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -138,6 +131,116 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount1
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale1
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma1
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount2
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale2
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma2
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount3
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale3
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma3
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount4
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale4
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma4
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount5
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale5
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma5
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount6
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale6
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma6
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount7
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale7
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma7
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -151,7 +254,6 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -234,6 +336,116 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount1
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale1
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma1
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount2
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale2
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma2
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount3
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale3
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma3
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount4
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale4
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma4
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount5
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale5
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma5
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount6
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale6
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma6
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount7
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaSale7
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSumma7
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = Amount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -477,89 +689,6 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-        end
-      end
-    end
-    object tsPivot: TcxTabSheet
-      Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
-      ImageIndex = 1
-      object cxDBPivotGrid1: TcxDBPivotGrid
-        Left = 0
-        Top = 0
-        Width = 1212
-        Height = 346
-        Align = alClient
-        DataSource = MasterDS
-        Groups = <>
-        OptionsView.RowGrandTotalWidth = 118
-        TabOrder = 0
-        object pcolPlanDate: TcxDBPivotGridField
-          AreaIndex = 2
-          AllowedAreas = [faColumn, faRow, faFilter]
-          IsCaptionAssigned = True
-          Caption = #1044#1072#1090#1072
-          DataBinding.FieldName = 'PlanDate'
-          Visible = True
-          UniqueName = #1044#1072#1090#1072
-        end
-        object pcolWeek: TcxDBPivotGridField
-          AreaIndex = 0
-          AllowedAreas = [faColumn, faRow, faFilter]
-          IsCaptionAssigned = True
-          Caption = #1053#1077#1076#1077#1083#1103
-          DataBinding.FieldName = 'PlanDate'
-          GroupInterval = giDateWeekOfYear
-          Visible = True
-          UniqueName = #1053#1077#1076#1077#1083#1103
-        end
-        object pcolUnitName: TcxDBPivotGridField
-          Area = faRow
-          AreaIndex = 0
-          AllowedAreas = [faColumn, faRow, faFilter]
-          IsCaptionAssigned = True
-          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-          DataBinding.FieldName = 'UnitName'
-          Visible = True
-          UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        end
-        object pcolPlanAmount: TcxDBPivotGridField
-          Area = faData
-          AreaIndex = 0
-          AllowedAreas = [faFilter, faData]
-          IsCaptionAssigned = True
-          Caption = #1055#1083#1072#1085
-          DataBinding.FieldName = 'PlanAmount'
-          Visible = True
-          UniqueName = #1055#1083#1072#1085
-        end
-        object pcolFactAmount: TcxDBPivotGridField
-          Area = faData
-          AreaIndex = 1
-          AllowedAreas = [faFilter, faData]
-          IsCaptionAssigned = True
-          Caption = #1060#1072#1082#1090
-          DataBinding.FieldName = 'FactAmount'
-          Visible = True
-          UniqueName = #1060#1072#1082#1090
-        end
-        object pcolDiffAmount: TcxDBPivotGridField
-          Area = faData
-          AreaIndex = 2
-          AllowedAreas = [faFilter, faData]
-          IsCaptionAssigned = True
-          Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
-          DataBinding.FieldName = 'DiffAmount'
-          Visible = True
-          UniqueName = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
-        end
-        object pcolDayOfWeek: TcxDBPivotGridField
-          AreaIndex = 1
-          IsCaptionAssigned = True
-          Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
-          DataBinding.FieldName = 'PlanDate'
-          GroupInterval = giDateDayOfWeek
-          Visible = True
-          UniqueName = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
         end
       end
     end
