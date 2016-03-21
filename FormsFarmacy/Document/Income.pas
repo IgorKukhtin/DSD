@@ -104,6 +104,8 @@ type
     spisDocument: TdsdStoredProc;
     actisDocument: TdsdExecStoredProc;
     bbisDocument: TdxBarButton;
+    JuridicalPrice: TcxGridDBColumn;
+    JuridicalPriceWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

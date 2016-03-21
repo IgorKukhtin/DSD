@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Summ TFloat
              , SalePrice TFloat
              , SaleSumm TFloat
+             , JuridicalPrice TFloat
+             , JuridicalPriceWithVAT TFloat
              , isErased Boolean
              , ExpirationDate TDateTime
              , PartionGoods TVarChar
@@ -82,6 +84,8 @@ BEGIN
               , CAST (NULL AS TFloat)      AS Summ
               , CAST (NULL AS TFloat)      AS PriceSale
               , CAST (NULL AS TFloat)      AS SummSale
+              , CAST (NULL AS TFloat)      AS JuridicalPrice
+              , CAST (NULL AS TFloat)      AS JuridicalPriceWithVAT
               , FALSE                      AS isErased
               , NULL::TDateTime            AS ExpirationDate
               , NULL::TVarChar             AS PartionGoods
@@ -142,6 +146,8 @@ BEGIN
               , MovementItem.AmountSumm
               , MovementItem.PriceSale
               , MovementItem.SummSale
+              , COALESCE(MIFloat_JuridicalPrice.ValueData,0) ::TFloat AS JuridicalPrice
+              , COALESCE(MIFloat_JuridicalPriceWithVAT.ValueData,0) ::TFloat AS JuridicalPriceWithVAT
               , MovementItem.isErased
               , MovementItem.ExpirationDate
               , MovementItem.PartionGoods
@@ -175,6 +181,14 @@ BEGIN
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+
+                LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                            ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
+                                           AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceWithVAT
+                                            ON MIFloat_JuridicalPriceWithVAT.MovementItemId = MovementItem.Id
+                                           AND MIFloat_JuridicalPriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
                 LEFT JOIN (
                             SELECT
                                 MovementItem_Income_View.GoodsId
@@ -250,6 +264,8 @@ BEGIN
               , MovementItem.AmountSumm
               , MovementItem.PriceSale
               , MovementItem.SummSale
+              , COALESCE(MIFloat_JuridicalPrice.ValueData,0) ::TFloat AS JuridicalPrice
+              , COALESCE(MIFloat_JuridicalPriceWithVAT.ValueData,0) ::TFloat AS JuridicalPriceWithVAT
               , MovementItem.isErased
               , MovementItem.ExpirationDate
               , MovementItem.PartionGoods
@@ -284,6 +300,14 @@ BEGIN
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+
+                LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                            ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
+                                           AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceWithVAT
+                                            ON MIFloat_JuridicalPriceWithVAT.MovementItemId = MovementItem.Id
+                                           AND MIFloat_JuridicalPriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
                 LEFT JOIN (
                             SELECT
                                 MovementItem_Income_View.GoodsId
@@ -328,7 +352,6 @@ BEGIN
                                 JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MI_Income.Id
                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                
                             WHERE
                                 Movement_Income.DescId = zc_Movement_Income()
                                 AND

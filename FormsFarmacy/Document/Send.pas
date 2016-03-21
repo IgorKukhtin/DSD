@@ -45,6 +45,8 @@ type
     colPriceUnitFrom: TcxGridDBColumn;
     colPriceUnitTo: TcxGridDBColumn;
     colSumPriceIn: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    edComment: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -22,8 +22,10 @@ RETURNS TABLE (
   Price          TFloat,
   Price_original TFloat,
   PriceSale      TFloat,
+  PriceWithVAT   Tfloat,      --Цена поставщика с учетом НДС (без % корр.)
   Summa          TFloat,
   SummaSale      TFloat,
+  SummaWithVAT   Tfloat,      --Сумма поставщика с учетом НДС (без % корр.)
   SummaMargin    TFloat,
   PartionDescName  TVarChar,
   PartionInvNumber TVarChar,
@@ -97,7 +99,8 @@ BEGIN
                               , MovementLinkObject_NDSKind_Income.ObjectId                                 AS NDSKindId_Income
                               , tmpData_all.GoodsId
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
-                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_Income_Price.ValueData,    0)) AS Summa_original
+                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_Income_Price.ValueData, 0))    AS Summa_original
+                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
                               , SUM (tmpData_all.Amount)    AS Amount
                               , SUM (tmpData_all.SummaSale) AS SummaSale
                                 -- таким образом выделим цены = 0 (что б не искажать среднюю с/с)
@@ -107,6 +110,10 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
                                                           ON MIFloat_JuridicalPrice.MovementItemId = tmpData_all.MovementItemId
                                                          AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                              -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+                              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                          ON MIFloat_PriceWithVAT.MovementItemId = tmpData_all.MovementItemId
+                                                         AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
                               -- цена "оригинал", для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementItemFloat AS MIFloat_Income_Price
                                                           ON MIFloat_Income_Price.MovementItemId = tmpData_all.MovementItemId
@@ -143,9 +150,11 @@ BEGIN
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa          / tmpData.Amount ELSE 0 END :: TFloat AS Price
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa_original / tmpData.Amount ELSE 0 END :: TFloat AS Price_original
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale      / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT   / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
 
-           , tmpData.Summa     :: TFloat AS Summa
-           , tmpData.SummaSale :: TFloat AS SummaSale
+           , tmpData.Summa        :: TFloat AS Summa
+           , tmpData.SummaSale    :: TFloat AS SummaSale
+           , tmpData.SummaWithVAT :: TFloat AS SummaWithVAT
 
            , (tmpData.SummaSale - tmpData.Summa) :: TFloat AS SummaMargin
 
