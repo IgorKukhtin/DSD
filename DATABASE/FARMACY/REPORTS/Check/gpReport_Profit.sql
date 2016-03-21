@@ -109,8 +109,6 @@ BEGIN
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_Income_Price.ValueData,    0)) AS Summa_original
                               , SUM (tmpData_all.Amount)    AS Amount
                               , SUM (tmpData_all.SummaSale) AS SummaSale
-                                -- таким образом выделим цены = 0 (что б не искажать среднюю с/с)
-                              , CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0) = 0 THEN 0 ELSE 1 END AS isPrice
                          FROM tmpData_all
                               -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
@@ -133,7 +131,6 @@ BEGIN
                          GROUP BY MovementLinkObject_From_Income.ObjectId
                                 , tmpData_all.GoodsId
                                 , tmpData_all.UnitId
-                                , CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0) = 0 THEN 0 ELSE 1 END
                         )
       
                

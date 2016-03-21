@@ -1,5 +1,5 @@
-inherited Report_ProfitForm: TReport_ProfitForm
-  Caption = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
+  Caption = #1054#1090#1095#1077#1090' '#1062#1077#1085#1086#1074#1072#1103' '#1080#1085#1090#1077#1088#1074#1077#1085#1094#1080#1103
   ClientHeight = 668
   ClientWidth = 1592
   AddOnFormData.RefreshAction = actRefreshStart
@@ -792,8 +792,8 @@ inherited Report_ProfitForm: TReport_ProfitForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_ProfitDialogForm'
-      FormNameParam.Value = 'TReport_ProfitDialogForm'
+      FormName = 'TReport_PriceInterventionDialogForm'
+      FormNameParam.Value = 'TReport_PriceInterventionDialogForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
