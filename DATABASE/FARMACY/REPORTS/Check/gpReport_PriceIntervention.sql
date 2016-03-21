@@ -1,9 +1,10 @@
--- Function:  gpReport_InventoryPricing()
-
-DROP FUNCTION IF EXISTS gpReport_InventoryPricing (TDateTime, TDateTime, TFloat,TFloat, TFloat,TFloat, TFloat,TFloat, TVarChar);
+-- Function:  gpReport_PriceIntervention()
 
 
-CREATE OR REPLACE FUNCTION  gpReport_InventoryPricing(
+DROP FUNCTION IF EXISTS gpReport_PriceIntervention (TDateTime, TDateTime, TFloat,TFloat, TFloat,TFloat, TFloat,TFloat, TVarChar);
+
+
+CREATE OR REPLACE FUNCTION  gpReport_PriceIntervention(
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inPrice1           TFloat ,
@@ -177,37 +178,37 @@ BEGIN
            , Object_Unit.ObjectCode                  AS UnitCode
            , Object_Unit.ValueData                   AS UnitName
 
-           , tmp.Amount       AS Amount
-           , tmp.Summa        AS Summa
-           , tmp.SummaSale    AS SummaSale
+           , tmp.Amount    ::TFloat AS Amount
+           , tmp.Summa     ::TFloat AS Summa
+           , tmp.SummaSale ::TFloat AS SummaSale
 
-           , tmp.Amount1      AS Amount1
-           , tmp.Summa1       AS Summa1
-           , tmp.SummaSale1   AS SummaSale1
+           , tmp.Amount1    ::TFloat AS Amount1
+           , tmp.Summa1     ::TFloat AS Summa1
+           , tmp.SummaSale1 ::TFloat AS SummaSale1
 
-           , tmp.Amount2      AS Amount2
-           , tmp.Summa2       AS Summa2
-           , tmp.SummaSale2   AS SummaSale2
+           , tmp.Amount2    ::TFloat AS Amount2
+           , tmp.Summa2     ::TFloat AS Summa2
+           , tmp.SummaSale2 ::TFloat AS SummaSale2
 
-           , tmp.Amount3      AS Amount3
-           , tmp.Summa3       AS Summa3
-           , tmp.SummaSale3   AS SummaSale3
+           , tmp.Amount3    ::TFloat AS Amount3
+           , tmp.Summa3     ::TFloat AS Summa3
+           , tmp.SummaSale3 ::TFloat AS SummaSale3
 
-           , tmp.Amount4      AS Amount4
-           , tmp.Summa4       AS Summa4
-           , tmp.SummaSale4   AS SummaSale4
+           , tmp.Amount4    ::TFloat AS Amount4
+           , tmp.Summa4     ::TFloat AS Summa4
+           , tmp.SummaSale4 ::TFloat AS SummaSale4
 
-           , tmp.Amount5      AS Amount5
-           , tmp.Summa5       AS Summa5
-           , tmp.SummaSale5   AS SummaSale5
+           , tmp.Amount5    ::TFloat AS Amount5
+           , tmp.Summa5     ::TFloat AS Summa5
+           , tmp.SummaSale5 ::TFloat AS SummaSale5
 
-           , tmp.Amount6      AS Amount6
-           , tmp.Summa6       AS Summa6
-           , tmp.SummaSale6   AS SummaSale6
+           , tmp.Amount6    ::TFloat AS Amount6
+           , tmp.Summa6     ::TFloat AS Summa6
+           , tmp.SummaSale6 ::TFloat AS SummaSale6
 
-           , tmp.Amount7      AS Amount7
-           , tmp.Summa7       AS Summa7
-           , tmp.SummaSale7   AS SummaSale7
+           , tmp.Amount7    ::TFloat AS Amount7
+           , tmp.Summa7     ::TFloat AS Summa7
+           , tmp.SummaSale7 ::TFloat AS SummaSale7
            
        FROM (SELECT tmpData.UnitId
                   , SUM(tmpData.Amount)      AS Amount
@@ -266,4 +267,4 @@ $BODY$
  21.03.16         *
 */
 -- тест
--- SELECT * FROM gpReport_InventoryPricing (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
+-- SELECT * FROM gpReport_PriceIntervention (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')

@@ -29,14 +29,8 @@ type
     JuridicalMainName: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     clSumma: TcxGridDBColumn;
-    SummaProfit: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     tsPivot: TcxTabSheet;
-    cxSplitter1: TcxSplitter;
-    grChart: TcxGrid;
-    grChartDBChartView1: TcxGridDBChartView;
-    dgJuridicalMainName: TcxGridDBChartDataGroup;
-    dgUnit: TcxGridDBChartDataGroup;
-    grChartLevel1: TcxGridLevel;
     cxDBPivotGrid1: TcxDBPivotGrid;
     pcolPlanDate: TcxDBPivotGridField;
     pcolWeek: TcxDBPivotGridField;
@@ -49,7 +43,6 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     actQuasiSchedule: TBooleanStoredProcAction;
     bbQuasiSchedule: TdxBarButton;
-    CorrectPersentProfit: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     bb122: TdxBarControlContainerItem;
     bbEnd: TdxBarControlContainerItem;
@@ -58,10 +51,18 @@ type
     cxLabel5: TcxLabel;
     ceJuridical2: TcxButtonEdit;
     Juridical2Guides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    cePrice1: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    cePrice2: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    cePrice3: TcxCurrencyEdit;
+    cePrice4: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    ceTax1: TcxCurrencyEdit;
-    ceTax2: TcxCurrencyEdit;
+    cePrice5: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    cePrice6: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -25,14 +25,22 @@ type
     cxLabel7: TcxLabel;
     cxLabel3: TcxLabel;
     cxLabel5: TcxLabel;
-    ceJuridical1: TcxButtonEdit;
-    ceJuridical2: TcxButtonEdit;
-    cxLabel1: TcxLabel;
-    ceTax1: TcxCurrencyEdit;
-    cxLabel2: TcxLabel;
-    ceTax2: TcxCurrencyEdit;
     Juridical1Guides: TdsdGuides;
     Juridical2Guides: TdsdGuides;
+    ceJuridical1: TcxButtonEdit;
+    ceJuridical2: TcxButtonEdit;
+    cePrice1: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    cePrice2: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cePrice3: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    cePrice4: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    cePrice5: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    cePrice6: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
   private
     { Private declarations }
   public
