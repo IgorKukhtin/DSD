@@ -160,17 +160,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = PersentProfit
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
               Column = SummaProfitWithVAT
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-              Column = PersentProfitWithVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -295,22 +285,11 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = PersentProfit
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
               Column = SummaProfitWithVAT
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-              Column = PersentProfitWithVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -331,7 +310,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 209
           end
           object clSummaSale: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079','#1075#1088#1085
@@ -340,7 +319,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 123
           end
           object clSumma: TcxGridDBColumn
             Caption = #1057'/'#1089' '#1087#1088#1086#1076#1072#1078' '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093' '#1089' % '#1082#1086#1088#1088'.,'#1075#1088#1085
@@ -349,7 +328,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 98
           end
           object clSummaWithVAT: TcxGridDBColumn
             Caption = #1057'/'#1089' '#1087#1088#1086#1076#1072#1078' '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093' '#1073#1077#1079' % '#1082#1086#1088#1088'.,'#1075#1088#1085
@@ -358,7 +337,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 118
           end
           object SummaProfit: TcxGridDBColumn
             Caption = #1044#1086#1093#1086#1076' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'., '#1075#1088#1085
@@ -367,7 +346,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 77
           end
           object SummaProfitWithVAT: TcxGridDBColumn
             Caption = #1044#1086#1093#1086#1076' '#1073#1077#1079' % '#1082#1086#1088#1088'., '#1075#1088#1085
@@ -376,7 +355,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 79
           end
           object PersentProfit: TcxGridDBColumn
             Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072' ('#1089' % '#1082#1086#1088#1088'.)'
@@ -385,7 +364,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 95
           end
           object PersentProfitWithVAT: TcxGridDBColumn
             Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072' ('#1073#1077#1079' % '#1082#1086#1088#1088'.)'
@@ -394,7 +373,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 92
           end
           object clSummaSaleFree: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1088'.'#1087#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
@@ -552,13 +531,13 @@ inherited Report_ProfitForm: TReport_ProfitForm
           DiagramColumn.Active = True
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
-          object dgJuridicalMainName: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'JuridicalMainName'
-            DisplayText = #1070#1088'.'#1083#1080#1094#1086
-          end
           object dgUnit: TcxGridDBChartDataGroup
             DataBinding.FieldName = 'unitname'
             DisplayText = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          end
+          object dgJuridicalMainName: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'JuridicalMainName'
+            DisplayText = #1070#1088'.'#1083#1080#1094#1086
           end
           object serSummaSale: TcxGridDBChartSeries
             DataBinding.FieldName = 'SummaSale'
