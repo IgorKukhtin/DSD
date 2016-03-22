@@ -147,9 +147,9 @@ BEGIN
        ,Object_SelectKind.ValueData                         AS SelectKindName
        ,CASE WHEN MovementDesc.Id = zc_Movement_Send()
                   THEN FALSE
-             WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_InAmount(), zc_Enum_SelectKind_InWeight, zc_Enum_SelectKind_InHead()) -- Кол-во приход
+             WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_InAmount(), zc_Enum_SelectKind_InWeight(), zc_Enum_SelectKind_InHead()) -- Кол-во приход
                   THEN TRUE
-              WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_OutAmount(), zc_Enum_SelectKind_OutWeight, zc_Enum_SelectKind_OutHead()) -- Кол-во расход
+              WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_OutAmount(), zc_Enum_SelectKind_OutWeight(), zc_Enum_SelectKind_OutHead()) -- Кол-во расход
                   THEN FALSE
         END                                                 AS isActive              -- Тип выбора данных
        ,ObjectFloat_Ratio.ValueData                         AS Ratio                 -- Коэффициент для выбора данных
@@ -216,10 +216,10 @@ BEGIN
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
                                    ON ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId = Object_ModelService.Id
                                   AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
-        LEFT OUTER JOIN OBJECT AS Object_ModelServiceItemMaster
-                               ON ObjectLink_ModelServiceItemMaster_ModelService.ObjectId = Object_ModelServiceItemMaster.Id
-                              AND Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster()
-                              AND Object_ModelServiceItemMaster.isErased = FALSE
+        INNER JOIN Object AS Object_ModelServiceItemMaster
+                          ON Object_ModelServiceItemMaster.Id       = ObjectLink_ModelServiceItemMaster_ModelService.ObjectId
+                         AND Object_ModelServiceItemMaster.isErased = FALSE
+                         -- AND Object_ModelServiceItemMaster.DescId   = zc_Object_ModelServiceItemMaster()
         --Ftom  документы от кого
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_From
                                    ON ObjectLink_ModelServiceItemMaster_From.ObjectId = Object_ModelServiceItemMaster.Id
@@ -251,7 +251,7 @@ BEGIN
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
                                    ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId = Object_ModelServiceItemMaster.Id
                                   AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
-        LEFT OUTER JOIN OBJECT AS Object_ModelServiceItemChild
+        LEFT OUTER JOIN Object AS Object_ModelServiceItemChild
                                ON Object_ModelServiceItemChild.Id = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId
                               AND Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
                               AND Object_ModelServiceItemChild.isErased = FALSE
@@ -338,6 +338,59 @@ BEGIN
             ELSE Container.ObjectId
             END
        )
+         -- Модели начисления + необходимые документы для расчета по Кол-во голов
+       , tmpMovement_HeadCount AS
+       (SELECT tmpMI.OperDate
+             , tmpMI.MovementDescId
+             , tmpMI.IsActive
+             , tmpMI.FromId
+             , tmpMI.ToId
+             , tmpMI.GoodsId_from
+             , tmpMI.GoodsId_to
+             , tmpMI.GoodsKindId
+             , SUM (MIFloat_HeadCount.ValueData) AS Amount
+        FROM
+        (SELECT DISTINCT MovementItemContainer.MovementItemId
+           ,MovementItemContainer.OperDate
+           ,MovementItemContainer.MovementDescId
+           ,MovementItemContainer.IsActive
+           ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                      THEN MovementItemContainer.ObjectExtId_Analyzer
+                 ELSE MovementItemContainer.WhereObjectId_Analyzer
+            END AS FromId
+           ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                      THEN MovementItemContainer.WhereObjectId_Analyzer
+                 ELSE MovementItemContainer.ObjectExtId_Analyzer
+            END AS ToId
+           ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                      THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
+                 ELSE MovementItemContainer.ObjectId_Analyzer
+            END AS GoodsId_from
+           ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                      THEN MovementItemContainer.ObjectId_Analyzer
+                 ELSE Container.ObjectId
+            END AS GoodsId_to
+           ,MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
+
+        FROM (SELECT DISTINCT Setting.MovementDescId FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())) AS tmp  -- Кол-во голов приход + Кол-во голов расход
+             INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = tmp.MovementDescId
+                                             AND MovementItemContainer.DescId         = zc_MIContainer_Count()
+                                             AND MovementItemContainer.OperDate BETWEEN inDateStart AND inDateFinal
+             LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId_Analyzer
+       ) AS tmpMI
+             INNER JOIN MovementItemFloat AS MIFloat_HeadCount
+                                          ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
+                                         AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+        GROUP BY tmpMI.OperDate
+               , tmpMI.MovementDescId
+               , tmpMI.IsActive
+               , tmpMI.FromId
+               , tmpMI.ToId
+               , tmpMI.GoodsId_from
+               , tmpMI.GoodsId_to
+               , tmpMI.GoodsKindId
+       )
+
          -- Модели начисления + необходимые документы для расчета по Расценкам грн./кг.
        , tmpGoodsByGoodsKind AS
        (SELECT Object_GoodsByGoodsKind_View.Id, Object_GoodsByGoodsKind_View.GoodsId, Object_GoodsByGoodsKind_View.GoodsKindId
@@ -360,8 +413,10 @@ BEGIN
            ,Setting.SelectKindId
            ,Setting.ModelServiceItemChild_FromId
            ,Setting.ModelServiceItemChild_ToId
-           ,tmpMovement.OperDate AS OperDate
-           , SUM (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+           , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate) AS OperDate
+           , SUM (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
+                            THEN tmpMovement_HeadCount.Amount
+                       WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
                             THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                            THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
                                                     / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
@@ -370,7 +425,9 @@ BEGIN
                        ELSE tmpMovement.Amount
                   END) :: TFloat AS Gross  -- Общая база, кол-во
            , ROUND (Setting.Price * Setting.Ratio
-           * SUM (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+           * SUM (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
+                            THEN tmpMovement_HeadCount.Amount
+                       WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
                             THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                            THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
                                                     / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
@@ -380,8 +437,13 @@ BEGIN
                   END)
            , 2) :: TFloat AS Amount -- Общая сумма, грн
         FROM Setting_Wage_1 AS Setting
-             INNER JOIN tmpMovement ON tmpMovement.MovementDescId = Setting.MovementDescId
-                                   AND tmpMovement.IsActive = Setting.IsActive
+             LEFT JOIN tmpMovement ON tmpMovement.MovementDescId = Setting.MovementDescId
+                                  AND tmpMovement.IsActive = Setting.IsActive
+                                  AND Setting.SelectKindId NOT IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())
+             LEFT JOIN tmpMovement_HeadCount ON tmpMovement_HeadCount.MovementDescId = Setting.MovementDescId
+                                            AND tmpMovement_HeadCount.IsActive = Setting.IsActive
+                                            AND Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())
+
              LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = tmpMovement.GoodsId_from
                                           AND tmpGoodsByGoodsKind.GoodsKindId = tmpMovement.GoodsKindId
              LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
@@ -410,22 +472,22 @@ BEGIN
                                                              )
               )
         GROUP BY
-            Setting.StaffListId
-           ,Setting.UnitId
-           ,Setting.PositionId
-           ,Setting.PositionLevelId
-           ,Setting.ServiceModelId
-           ,Setting.Price
-           ,Setting.FromId
-           ,Setting.ToId
-           ,Setting.MovementDescId
-           ,Setting.SelectKindId
-           ,Setting.SelectKindCode
-           ,Setting.ModelServiceItemChild_FromId
-           ,Setting.ModelServiceItemChild_ToId
-           ,tmpMovement.OperDate
-           ,Setting.Price 
-           ,Setting.Ratio
+             Setting.StaffListId
+           , Setting.UnitId
+           , Setting.PositionId
+           , Setting.PositionLevelId
+           , Setting.ServiceModelId
+           , Setting.Price
+           , Setting.FromId
+           , Setting.ToId
+           , Setting.MovementDescId
+           , Setting.SelectKindId
+           , Setting.SelectKindCode
+           , Setting.ModelServiceItemChild_FromId
+           , Setting.ModelServiceItemChild_ToId
+           , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate)
+           , Setting.Price 
+           , Setting.Ratio
        )
          -- табель - кто в какие дни работал
        , Movement_Sheet AS

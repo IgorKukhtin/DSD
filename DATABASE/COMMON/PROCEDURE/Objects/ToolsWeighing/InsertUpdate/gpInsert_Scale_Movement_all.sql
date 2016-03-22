@@ -40,6 +40,22 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Нет данных для документа.';
      END IF;
+     -- проверка - договор не Маркетинг
+     IF (SELECT 1
+         FROM MovementLinkMovement AS MovementLinkMovement_Order
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                           ON MovementLinkObject_Contract.MovementId = MovementLinkMovement_Order.MovementChildId
+                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+              LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                   ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+         WHERE MovementLinkMovement_Order.MovementId = inMovementId
+           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+           AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Общефирменные + Маркетинг
+     THEN
+         RAISE EXCEPTION 'Ошибка.В заявке указан неправильный № договора = <%> <%>.', lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract())), lfGet_Object_ValueData (zc_Enum_InfoMoneyDestination_21500());
+     END IF;
 
 
      IF EXISTS (SELECT 1
