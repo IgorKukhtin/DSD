@@ -38,18 +38,15 @@ type
     dgUnit: TcxGridDBChartDataGroup;
     grChartLevel1: TcxGridLevel;
     cxDBPivotGrid1: TcxDBPivotGrid;
-    pcolPlanDate: TcxDBPivotGridField;
-    pcolWeek: TcxDBPivotGridField;
+    pcolJuridicalMainName: TcxDBPivotGridField;
     pcolUnitName: TcxDBPivotGridField;
-    pcolPlanAmount: TcxDBPivotGridField;
-    pcolFactAmount: TcxDBPivotGridField;
-    pcolDiffAmount: TcxDBPivotGridField;
-    pcolDayOfWeek: TcxDBPivotGridField;
+    pcolSummaSale: TcxDBPivotGridField;
+    pcolSumma: TcxDBPivotGridField;
+    pcolSummaProfit: TcxDBPivotGridField;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actQuasiSchedule: TBooleanStoredProcAction;
     bbQuasiSchedule: TdxBarButton;
-    CorrectPersentProfit: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     bb122: TdxBarControlContainerItem;
     bbEnd: TdxBarControlContainerItem;
@@ -58,10 +55,9 @@ type
     cxLabel5: TcxLabel;
     ceJuridical2: TcxButtonEdit;
     Juridical2Guides: TdsdGuides;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    ceTax1: TcxCurrencyEdit;
-    ceTax2: TcxCurrencyEdit;
+    SummaWithVAT2: TcxGridDBColumn;
+    SummaWithVAT1: TcxGridDBColumn;
+    pcolPersentProfit: TcxDBPivotGridField;
   private
     { Private declarations }
   public

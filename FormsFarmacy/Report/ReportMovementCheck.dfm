@@ -2,7 +2,6 @@
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
   ClientWidth = 1251
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitLeft = -461
   ExplicitWidth = 1267
   PixelsPerInch = 96
   TextHeight = 13
@@ -153,7 +152,7 @@
             Width = 50
           end
           object Price_original: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089'/'#1089
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'Price_original'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -162,7 +161,7 @@
             Width = 55
           end
           object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089'/'#1089' ('#1089' '#1053#1044#1057')'
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -171,13 +170,13 @@
             Width = 70
           end
           object colPriceWithVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1073#1077#1079' % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057') '
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1073#1077#1079' % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 74
+            Width = 78
           end
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
@@ -189,7 +188,7 @@
             Width = 58
           end
           object colSumma: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' ('#1089' '#1053#1044#1057')'
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -198,7 +197,7 @@
             Width = 70
           end
           object colSummaWithVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1073#1077#1079' % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1073#1077#1079' % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'

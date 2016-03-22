@@ -492,7 +492,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
           object clSumma: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093', '#1075#1088#1085
+            Caption = #1048#1090#1086#1075#1086' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -519,7 +519,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
           object clSumma1: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1077#1083'1 '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093', '#1075#1088#1085
+            Caption = #1055#1088#1077#1076#1077#1083'1 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -546,7 +546,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
           object clSumma2: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1077#1083'2 '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093', '#1075#1088#1085
+            Caption = #1055#1088#1077#1076#1077#1083'2 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -573,7 +573,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
           object clSumma3: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1077#1083'3 '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093', '#1075#1088#1085
+            Caption = #1055#1088#1077#1076#1077#1083'3 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -600,7 +600,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
           object clSumma4: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1077#1083'4 '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093', '#1075#1088#1085
+            Caption = #1055#1088#1077#1076#1077#1083'4 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -627,7 +627,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
           object clSumma5: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1077#1083'5 '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093', '#1075#1088#1085
+            Caption = #1055#1088#1077#1076#1077#1083'5 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -654,7 +654,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
           object clSumma6: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1077#1083'6 '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093', '#1075#1088#1085
+            Caption = #1055#1088#1077#1076#1077#1083'6 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -681,7 +681,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
           object clSumma7: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1077#1083'7 '#1074' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072#1093', '#1075#1088#1085
+            Caption = #1055#1088#1077#1076#1077#1083'7 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'

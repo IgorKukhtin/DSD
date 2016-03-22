@@ -1,23 +1,23 @@
 inherited Report_ProfitForm: TReport_ProfitForm
   Caption = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
   ClientHeight = 668
-  ClientWidth = 1592
+  ClientWidth = 1198
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1608
+  ExplicitWidth = 1214
   ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
-    Width = 1592
+    Width = 1198
     Height = 577
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1592
     ExplicitHeight = 577
     ClientRectBottom = 577
-    ClientRectRight = 1592
+    ClientRectRight = 1198
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
@@ -26,7 +26,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
       ExplicitWidth = 1592
       ExplicitHeight = 553
       inherited cxGrid: TcxGrid
-        Width = 1592
+        Width = 1198
         Height = 369
         ExplicitWidth = 1592
         ExplicitHeight = 369
@@ -41,12 +41,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-            end
-            item
-              Format = ',0.00;-,0.00'
-              Kind = skSum
-              Position = spFooter
-              Column = SummaProfit
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -124,7 +118,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = SummaProfitTax1
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -144,12 +137,30 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = SummaProfitTax2
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = SummaProfitAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaWithVAT1
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaWithVAT2
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaProfitWithVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -232,7 +243,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = SummaProfitTax1
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -252,17 +262,34 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = SummaProfitTax2
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = SummaProfitAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaWithVAT1
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaWithVAT2
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = clSummaWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaProfitWithVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -283,55 +310,73 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 209
           end
           object clSummaSale: TcxGridDBColumn
-            Caption = #1054#1041#1066#1045#1052' '#1055#1056#1054#1044#1040#1046'  '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079','#1075#1088#1085
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 123
           end
           object clSumma: TcxGridDBColumn
-            Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1055#1056#1054#1044#1040#1046'  '#1074' '#1079#1072#1082#1091#1087#1086#1095#1085' '#1094#1077#1085#1072#1093','#1075#1088#1085
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057'), '#1075#1088#1085
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 98
+          end
+          object clSummaWithVAT: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072'  '#1073#1077#1079' % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057'), '#1075#1088#1085
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 118
           end
           object SummaProfit: TcxGridDBColumn
-            Caption = #1044#1054#1061#1054#1044', '#1075#1088#1085
+            Caption = #1044#1086#1093#1086#1076' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaProfit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 77
+          end
+          object SummaProfitWithVAT: TcxGridDBColumn
+            Caption = #1044#1086#1093#1086#1076' '#1073#1077#1079' % '#1082#1086#1088#1088'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaProfitWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
           end
           object PersentProfit: TcxGridDBColumn
-            Caption = '% '#1044#1054#1061#1054#1044#1040' '#1054#1058' '#1042#1040#1051#1040
+            Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072' ('#1089' % '#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'PersentProfit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 95
           end
-          object CorrectPersentProfit: TcxGridDBColumn
-            Caption = #1050#1086#1088#1088#1077#1082#1090' % '#1044#1054#1061#1054#1044#1040' '#1054#1058' '#1042#1040#1051#1040
-            DataBinding.FieldName = 'CorrectPersentProfit'
+          object PersentProfitWithVAT: TcxGridDBColumn
+            Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072' ('#1073#1077#1079' % '#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'PersentProfitWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 92
           end
           object clSummaSaleFree: TcxGridDBColumn
-            Caption = #1054#1041#1066#1045#1052' '#1055#1056#1054#1044#1040#1046' '#1087#1088'.'#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079','#1075#1088#1085
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1088'.'#1087#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSaleFree'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -341,7 +386,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Width = 50
           end
           object clSummaFree: TcxGridDBColumn
-            Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1055#1056#1054#1044#1040#1046' '#1087#1088'.'#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1074' '#1079#1072#1082#1091#1087#1086#1095#1085' '#1094#1077#1085#1072#1093','#1075#1088#1085
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1088'.'#1087#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'SummaFree'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -351,17 +396,18 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Width = 50
           end
           object SummaProfitFree: TcxGridDBColumn
-            Caption = #1044#1054#1061#1054#1044' '#1087#1088'.'#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080', '#1075#1088#1085
+            Caption = #1044#1086#1093#1086#1076' '#1087#1088'. '#1087#1086#1089#1090'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaProfitFree'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1093#1086#1076' '#1087#1088#1086#1095#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080', '#1075#1088#1085
             Width = 50
           end
           object clSummaSale1: TcxGridDBColumn
-            Caption = #1054#1041#1066#1045#1052' '#1055#1056#1054#1044#1040#1046' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'1 '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1086#1089#1090'1 '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -371,7 +417,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Width = 50
           end
           object clSumma1: TcxGridDBColumn
-            Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1055#1056#1054#1044#1040#1046' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'1  '#1074' '#1079#1072#1082#1091#1087#1086#1095#1085' '#1094#1077#1085#1072#1093','#1075#1088#1085
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1086#1089#1090'1 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -380,8 +426,18 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object SummaWithVAT1: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1086#1089#1090'1 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1073#1077#1079' % '#1082#1086#1088#1088'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaWithVAT1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object SummaProfit1: TcxGridDBColumn
-            Caption = #1044#1054#1061#1054#1044' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'1, '#1075#1088#1085
+            Caption = #1044#1086#1093#1086#1076' '#1087#1086#1089#1090'1, '#1075#1088#1085
             DataBinding.FieldName = 'SummaProfit1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -390,9 +446,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object SummaProfitTax1: TcxGridDBColumn
-            Caption = #1050#1086#1088#1088#1077#1082#1090' '#1044#1054#1061#1054#1044' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'1, '#1075#1088#1085
-            DataBinding.FieldName = 'SummaProfitTax1'
+          object Tax1: TcxGridDBColumn
+            Caption = '% '#1082#1086#1088#1088'. '#1087#1086#1089#1090'1'
+            DataBinding.FieldName = 'Tax1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
@@ -401,7 +457,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Width = 50
           end
           object clSummaSale2: TcxGridDBColumn
-            Caption = #1054#1041#1066#1045#1052' '#1055#1056#1054#1044#1040#1046'  '#1087#1086#1089#1090#1072#1074#1097#1080#1082'2 '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079','#1075#1088#1085
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1086#1089#1090'2 '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079','#1075#1088#1085
             DataBinding.FieldName = 'SummaSale2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -411,7 +467,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Width = 50
           end
           object clSumma2: TcxGridDBColumn
-            Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1055#1056#1054#1044#1040#1046' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'2  '#1074' '#1079#1072#1082#1091#1087#1086#1095#1085' '#1094#1077#1085#1072#1093','#1075#1088#1085
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1086#1089#1090'2 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -420,8 +476,18 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object SummaWithVAT2: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1087#1086#1089#1090'2 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1073#1077#1079' % '#1082#1086#1088#1088'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaWithVAT2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object SummaProfit2: TcxGridDBColumn
-            Caption = #1044#1054#1061#1054#1044' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'2, '#1075#1088#1085
+            Caption = #1044#1086#1093#1086#1076' '#1087#1086#1089#1090'2, '#1075#1088#1085
             DataBinding.FieldName = 'SummaProfit2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -430,21 +496,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object SummaProfitTax2: TcxGridDBColumn
-            Caption = #1050#1086#1088#1088#1077#1082#1090' '#1044#1054#1061#1054#1044' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'2, '#1075#1088#1085
-            DataBinding.FieldName = 'SummaProfitTax2'
+          object Tax2: TcxGridDBColumn
+            Caption = '% '#1082#1086#1088#1088'. '#1087#1086#1089#1090'2'
+            DataBinding.FieldName = 'Tax2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object SummaProfitAll: TcxGridDBColumn
-            Caption = #1050#1086#1088#1088#1077#1082#1090' '#1044#1054#1061#1054#1044', '#1075#1088#1085
-            DataBinding.FieldName = 'SummaProfitAll'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -454,31 +511,33 @@ inherited Report_ProfitForm: TReport_ProfitForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 369
-        Width = 1592
+        Width = 1198
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
+        ExplicitWidth = 1592
       end
       object grChart: TcxGrid
         Left = 0
         Top = 377
-        Width = 1592
+        Width = 1198
         Height = 176
         Align = alBottom
         TabOrder = 2
+        ExplicitWidth = 1592
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
-          object dgJuridicalMainName: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'JuridicalMainName'
-            DisplayText = #1070#1088'.'#1083#1080#1094#1086
-          end
           object dgUnit: TcxGridDBChartDataGroup
             DataBinding.FieldName = 'unitname'
             DisplayText = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          end
+          object dgJuridicalMainName: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'JuridicalMainName'
+            DisplayText = #1070#1088'.'#1083#1080#1094#1086
           end
           object serSummaSale: TcxGridDBChartSeries
             DataBinding.FieldName = 'SummaSale'
@@ -509,34 +568,26 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitWidth = 1592
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
-        Width = 1592
+        Width = 1198
         Height = 553
         Align = alClient
         DataSource = MasterDS
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        object pcolPlanDate: TcxDBPivotGridField
-          AreaIndex = 2
-          AllowedAreas = [faColumn, faRow, faFilter]
-          IsCaptionAssigned = True
-          Caption = #1044#1072#1090#1072
-          DataBinding.FieldName = 'PlanDate'
-          Visible = True
-          UniqueName = #1044#1072#1090#1072
-        end
-        object pcolWeek: TcxDBPivotGridField
+        ExplicitWidth = 1592
+        object pcolJuridicalMainName: TcxDBPivotGridField
           AreaIndex = 0
           AllowedAreas = [faColumn, faRow, faFilter]
           IsCaptionAssigned = True
-          Caption = #1053#1077#1076#1077#1083#1103
-          DataBinding.FieldName = 'PlanDate'
-          GroupInterval = giDateWeekOfYear
+          Caption = #1070#1088'.'#1083#1080#1094#1086
+          DataBinding.FieldName = 'JuridicalMainName'
           Visible = True
-          UniqueName = #1053#1077#1076#1077#1083#1103
+          UniqueName = #1044#1072#1090#1072
         end
         object pcolUnitName: TcxDBPivotGridField
           Area = faRow
@@ -548,50 +599,50 @@ inherited Report_ProfitForm: TReport_ProfitForm
           Visible = True
           UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         end
-        object pcolPlanAmount: TcxDBPivotGridField
+        object pcolSummaSale: TcxDBPivotGridField
           Area = faData
           AreaIndex = 0
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1055#1083#1072#1085
-          DataBinding.FieldName = 'PlanAmount'
+          Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078
+          DataBinding.FieldName = 'SummaSale'
           Visible = True
           UniqueName = #1055#1083#1072#1085
         end
-        object pcolFactAmount: TcxDBPivotGridField
+        object pcolSumma: TcxDBPivotGridField
           Area = faData
           AreaIndex = 1
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1060#1072#1082#1090
-          DataBinding.FieldName = 'FactAmount'
+          Caption = #1057'/'#1089' '#1087#1088#1086#1076#1072#1078
+          DataBinding.FieldName = 'Summa'
           Visible = True
           UniqueName = #1060#1072#1082#1090
         end
-        object pcolDiffAmount: TcxDBPivotGridField
+        object pcolSummaProfit: TcxDBPivotGridField
           Area = faData
           AreaIndex = 2
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
-          DataBinding.FieldName = 'DiffAmount'
+          Caption = #1044#1086#1093#1086#1076
+          DataBinding.FieldName = 'SummaProfit'
           Visible = True
           UniqueName = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
         end
-        object pcolDayOfWeek: TcxDBPivotGridField
-          AreaIndex = 1
+        object pcolPersentProfit: TcxDBPivotGridField
+          Area = faColumn
+          AreaIndex = 0
           IsCaptionAssigned = True
-          Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
-          DataBinding.FieldName = 'PlanDate'
-          GroupInterval = giDateDayOfWeek
+          Caption = '% '#1076#1086#1093#1086#1076#1072
+          DataBinding.FieldName = 'PersentProfit'
           Visible = True
-          UniqueName = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+          UniqueName = '% '#1076#1086#1093#1086#1076#1072
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1592
+    Width = 1198
     Height = 65
     ExplicitWidth = 1592
     ExplicitHeight = 65
@@ -673,34 +724,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
       TextHint = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       Width = 214
     end
-    object cxLabel6: TcxLabel
-      Left = 532
-      Top = 40
-      Caption = '% :'
-    end
-    object cxLabel7: TcxLabel
-      Left = 532
-      Top = 7
-      Caption = '% :'
-    end
-    object ceTax1: TcxCurrencyEdit
-      Left = 554
-      Top = 6
-      EditValue = '5'
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####'
-      TabOrder = 11
-      Width = 68
-    end
-    object ceTax2: TcxCurrencyEdit
-      Left = 554
-      Top = 39
-      EditValue = '3.35'
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####'
-      TabOrder = 12
-      Width = 68
-    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 123
@@ -729,12 +752,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Properties.Strings = (
           'Key'
           'TextValue')
-      end
-      item
-        Component = ceTax1
-      end
-      item
-        Component = ceTax2
       end>
   end
   inherited ActionList: TActionList
@@ -839,20 +856,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
-        end
-        item
-          Name = 'Tax1'
-          Value = Null
-          Component = ceTax1
-          DataType = ftFloat
-          ParamType = ptInput
-        end
-        item
-          Name = 'Tax2'
-          Value = Null
-          Component = ceTax2
-          DataType = ftFloat
-          ParamType = ptInput
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -860,10 +863,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 128
+    Left = 560
+    Top = 72
   end
   inherited MasterCDS: TClientDataSet
-    Top = 128
+    Left = 504
+    Top = 80
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Profit'
@@ -899,21 +904,21 @@ inherited Report_ProfitForm: TReport_ProfitForm
       item
         Name = 'inTax1'
         Value = Null
-        Component = ceTax1
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Name = 'inTax2'
         Value = Null
-        Component = ceTax2
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
-    Top = 128
+    Left = 456
+    Top = 80
   end
   inherited BarManager: TdxBarManager
-    Top = 128
+    Left = 368
+    Top = 88
     DockControlHeights = (
       0
       0
