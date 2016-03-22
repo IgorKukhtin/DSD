@@ -1,6 +1,7 @@
 -- Function:  gpReport_Profit()
 
 DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, TFloat,TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION  gpReport_Profit(
@@ -8,8 +9,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Profit(
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inJuridical1Id     Integer,    -- поставщик оптима 
     IN inJuridical2Id     Integer,    -- поставщик фармпланета
-    IN inTax1             TFloat ,
-    IN inTax2             TFloat ,
+ --   IN inTax1             TFloat ,
+ --   IN inTax2             TFloat ,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -18,26 +19,30 @@ RETURNS TABLE (
   UnitCode              Integer, 
   UnitName              TVarChar,
   Summa                 TFloat,
+  SummaWithVAT          TFloat,
   SummaSale             TFloat,
   SummaProfit           TFloat,
   PersentProfit         TFloat,
+
+  SummaProfitWithVAT    TFloat,
+  PersentProfitWithVAT  TFloat,
   
   SummaFree             TFloat,
   SummaSaleFree         TFloat,
   SummaProfitFree       TFloat,
 
-  Summa1                TFloat,
+  Summa1                TFloat, 
+  SummaWithVAT1         TFloat,
   SummaSale1            TFloat,
   SummaProfit1          TFloat,
-  SummaProfitTax1       TFloat,
+  Tax1                  TFloat,
   
   Summa2                TFloat,
+  SummaWithVAT2         TFloat,
   SummaSale2            TFloat,
   SummaProfit2          TFloat,
-  SummaProfitTax2       TFloat,
+  Tax2                  TFloat
 
-  SummaProfitAll        TFloat,
-  CorrectPersentProfit  TFloat
 )
 AS
 $BODY$
@@ -105,15 +110,21 @@ BEGIN
            , tmpData AS (SELECT MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income  -- ПОСТАВЩИК
                               , tmpData_all.GoodsId
                               , tmpData_all.UnitId
-                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa--  tmpData.Summa
-                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_Income_Price.ValueData,    0)) AS Summa_original
+                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))         AS Summa
+                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_Income_Price.ValueData, 0))           AS Summa_original
+                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPriceWithVAT.ValueData, 0))  AS SummaWithVAT
+                      
                               , SUM (tmpData_all.Amount)    AS Amount
                               , SUM (tmpData_all.SummaSale) AS SummaSale
                          FROM tmpData_all
-                              -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
+                              -- цена с учетом НДС, для элемента прихода от поставщика (и % корректировки наценки zc_Object_Juridical) (или NULL)
                               LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
                                                           ON MIFloat_JuridicalPrice.MovementItemId = tmpData_all.MovementItemId
                                                          AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                              -- цена с учетом НДС, для элемента прихода от поставщика (без % корректировки)(или NULL)
+                              LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceWithVAT
+                                                          ON MIFloat_JuridicalPriceWithVAT.MovementItemId = tmpData_all.MovementItemId
+                                                         AND MIFloat_JuridicalPriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
                               -- цена "оригинал", для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementItemFloat AS MIFloat_Income_Price
                                                           ON MIFloat_Income_Price.MovementItemId = tmpData_all.MovementItemId
@@ -142,42 +153,47 @@ BEGIN
            , Object_Unit.ValueData                   AS UnitName
 
            , tmp.Summa                               :: TFloat AS Summa
+           , tmp.SummaWithVAT                        :: TFloat AS SummaWithVAT
            , tmp.SummaSale                           :: TFloat AS SummaSale
            , (tmp.SummaSale - tmp.Summa)             :: TFloat AS SummaProfit
-           , (100-tmp.Summa/tmp.SummaSale*100)       :: TFloat AS PersentProfit
+           , CASE WHEN tmp.SummaSale <> 0 THEN (100-tmp.Summa/tmp.SummaSale*100) ELSE 0 END    :: TFloat AS PersentProfit
+
+           , (tmp.SummaSale - tmp.SummaWithVAT)      :: TFloat AS SummaProfitWithVAT   --сумма дохода без уч.корректировки
+           , CASE WHEN tmp.SummaSale <> 0 THEN (100-tmp.SummaWithVAT/tmp.SummaSale*100) ELSE 0 END :: TFloat AS PersentProfitWithVAT
          
            , tmp.SummaFree                           :: TFloat AS SummaFree
            , tmp.SummaSaleFree                       :: TFloat AS SummaSaleFree
            , (tmp.SummaSaleFree - tmp.SummaFree)     :: TFloat AS SummaProfitFree
 
            , tmp.Summa1                              :: TFloat AS Summa1
+           , tmp.SummaWithVAT1                       :: TFloat AS SummaWithVAT1
            , tmp.SummaSale1                          :: TFloat AS SummaSale1
            , tmp.SummaProfit1                        :: TFloat AS SummaProfit1
-           , (tmp.SummaProfit1 + (tmp.SummaProfit1/100 * inTax1))  :: TFloat AS SummaProfitTax1
+           , CASE WHEN tmp.Summa1 <> 0 THEN ((tmp.SummaWithVAT1-tmp.Summa1)*100 / tmp.Summa1) ELSE 0 END  :: TFloat AS Tax1
 
            , tmp.Summa2                              :: TFloat AS Summa2
+           , tmp.SummaWithVAT2                       :: TFloat AS SummaWithVAT2
            , tmp.SummaSale2                          :: TFloat AS SummaSale2
            , tmp.SummaProfit2                        :: TFloat AS SummaProfit2
-           , (tmp.SummaProfit2 + (tmp.SummaProfit2/100 * inTax2))  :: TFloat AS SummaProfitTax2
-
-           , (tmp.SummaProfit1 + (tmp.SummaProfit1/100 * inTax1) + tmp.SummaProfit2 + (tmp.SummaProfit2/100 * inTax2) + (tmp.SummaSaleFree - tmp.SummaFree))     :: TFloat AS SummaProfitAll
-
-           , ((tmp.SummaProfit1 + (tmp.SummaProfit1/100 * inTax1) + tmp.SummaProfit2 + (tmp.SummaProfit2/100 * inTax2) + (tmp.SummaSaleFree - tmp.SummaFree))/ tmp.SummaSale * 100)  :: TFloat AS CorrectPersentProfit
-
+           , CASE WHEN tmp.Summa2 <> 0 THEN ((tmp.SummaWithVAT2-tmp.Summa2)*100 / tmp.Summa2) ELSE 0 END :: TFloat AS Tax2
+           
        FROM (SELECT tmpData.UnitId
-                  , SUM(tmpData.Summa)       AS Summa
-                  , SUM(tmpData.SummaSale)   AS SummaSale
-
+                  , SUM(tmpData.Summa)        AS Summa
+                  , SUM(tmpData.SummaSale)    AS SummaSale
+                  , SUM(tmpData.SummaWithVAT) AS SummaWithVAT
+                  
                   , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.Summa END)     AS SummaFree
                   , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.SummaSale END) AS SummaSaleFree
                   
                   , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.Summa ELSE 0 END)     AS Summa1
                   , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale1
                   , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit1
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT1
                   
                   , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.Summa ELSE 0 END)     AS Summa2
                   , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale2
                   , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit2
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT2
              FROM tmpData
              GROUP BY tmpData.UnitId) AS tmp
              
@@ -203,3 +219,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_Profit (inUnitId:= 0, indatestart:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
+--lect * from gpReport_Profit(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('02.01.2016')::TDateTime , inJuridical1Id := 59611::Integer , inJuridical2Id := 0 ::Integer, inTax1 := 5::TFloat , inTax2 := 3.35 ::TFloat,  inSession := '3'::TVarChar);

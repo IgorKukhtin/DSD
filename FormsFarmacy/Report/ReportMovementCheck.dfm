@@ -3,7 +3,6 @@
   ClientWidth = 1251
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 1267
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -45,6 +44,11 @@
               Format = ',0.00'
               Kind = skSum
               Column = colSummaMargin
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -71,6 +75,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False

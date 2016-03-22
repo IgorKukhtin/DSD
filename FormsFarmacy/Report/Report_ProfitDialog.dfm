@@ -86,7 +86,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
     TabOrder = 8
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
     TextHint = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-    Width = 176
+    Width = 280
   end
   object ceJuridical2: TcxButtonEdit
     Left = 82
@@ -102,33 +102,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
     TabOrder = 9
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
     TextHint = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-    Width = 176
-  end
-  object cxLabel1: TcxLabel
-    Left = 268
-    Top = 65
-    Caption = '% :'
-  end
-  object ceTax1: TcxCurrencyEdit
-    Left = 294
-    Top = 64
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 11
-    Width = 68
-  end
-  object cxLabel2: TcxLabel
-    Left = 268
-    Top = 93
-    Caption = '% :'
-  end
-  object ceTax2: TcxCurrencyEdit
-    Left = 294
-    Top = 92
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 13
-    Width = 68
+    Width = 280
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -197,20 +171,6 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Component = Juridical2Guides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'Tax1'
-        Value = Null
-        Component = ceTax1
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'Tax2'
-        Value = Null
-        Component = ceTax2
-        DataType = ftFloat
         ParamType = ptInput
       end>
     Left = 31

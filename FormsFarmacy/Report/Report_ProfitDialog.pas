@@ -27,10 +27,6 @@ type
     cxLabel5: TcxLabel;
     ceJuridical1: TcxButtonEdit;
     ceJuridical2: TcxButtonEdit;
-    cxLabel1: TcxLabel;
-    ceTax1: TcxCurrencyEdit;
-    cxLabel2: TcxLabel;
-    ceTax2: TcxCurrencyEdit;
     Juridical1Guides: TdsdGuides;
     Juridical2Guides: TdsdGuides;
   private
