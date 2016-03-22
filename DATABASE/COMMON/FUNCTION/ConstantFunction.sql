@@ -28,12 +28,12 @@ CREATE OR REPLACE FUNCTION zc_FormClass_Loss() RETURNS TVarChar AS $BODY$BEGIN R
 CREATE OR REPLACE FUNCTION zc_FormClass_Check() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TCheckForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_FormClass_Sale() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TSaleForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-/*Почта*/
-CREATE OR REPLACE FUNCTION zc_Mail_Host() RETURNS TVarChar AS $BODY$BEGIN RETURN ('smtp.mail.ru'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Mail_Port() RETURNS Integer AS $BODY$BEGIN RETURN (465); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Mail_From() RETURNS TVarChar AS $BODY$BEGIN RETURN ('zakaz_family-neboley@mail.ru'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Mail_User() RETURNS TVarChar AS $BODY$BEGIN RETURN ('zakaz_family-neboley@mail.ru'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Mail_Password() RETURNS TVarChar AS $BODY$BEGIN RETURN ('fgntrfghfdls6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;--fgntrfyt,jktq
+-- Почта
+CREATE OR REPLACE FUNCTION zc_Mail_Host()     RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'smtp.mail.ru'*/                 SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailKindId:= zc_Enum_EmailKind_OutOrder(), inSession:= '') AS gpSelect WHERE gpSelect.EmailToolsId = zc_Enum_EmailTools_Host());     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
+CREATE OR REPLACE FUNCTION zc_Mail_Port()     RETURNS Integer  AS $BODY$BEGIN RETURN (/*465*/                            SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailKindId:= zc_Enum_EmailKind_OutOrder(), inSession:= '') AS gpSelect WHERE gpSelect.EmailToolsId = zc_Enum_EmailTools_Port());     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
+CREATE OR REPLACE FUNCTION zc_Mail_From()     RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'zakaz_family-neboley@mail.ru'*/ SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailKindId:= zc_Enum_EmailKind_OutOrder(), inSession:= '') AS gpSelect WHERE gpSelect.EmailToolsId = zc_Enum_EmailTools_Mail());     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
+CREATE OR REPLACE FUNCTION zc_Mail_User()     RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'zakaz_family-neboley@mail.ru'*/ SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailKindId:= zc_Enum_EmailKind_OutOrder(), inSession:= '') AS gpSelect WHERE gpSelect.EmailToolsId = zc_Enum_EmailTools_User());     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
+CREATE OR REPLACE FUNCTION zc_Mail_Password() RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'fgntrfghfdls6'*/                SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailKindId:= zc_Enum_EmailKind_OutOrder(), inSession:= '') AS gpSelect WHERE gpSelect.EmailToolsId = zc_Enum_EmailTools_Password()); END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
 
 
 /*

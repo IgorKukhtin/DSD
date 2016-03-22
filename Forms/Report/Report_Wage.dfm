@@ -3,6 +3,7 @@ inherited Report_WageForm: TReport_WageForm
   ClientHeight = 401
   ClientWidth = 991
   AddOnFormData.RefreshAction = nil
+  ExplicitLeft = -201
   ExplicitWidth = 1007
   ExplicitHeight = 436
   PixelsPerInch = 96
@@ -169,7 +170,7 @@ inherited Report_WageForm: TReport_WageForm
             Width = 70
           end
           object Gross: TcxGridDBColumn
-            Caption = #1041#1072#1079#1072' '#1080#1090#1086#1075#1086', '#1082#1075'.'
+            Caption = #1041#1072#1079#1072' '#1080#1090#1086#1075#1086', '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Gross'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -179,7 +180,7 @@ inherited Report_WageForm: TReport_WageForm
             Width = 92
           end
           object colGrossOnOneMember: TcxGridDBColumn
-            Caption = #1041#1072#1079#1072' '#1085#1072' 1-'#1075#1086' '#1095#1077#1083', '#1082#1075'.'
+            Caption = #1041#1072#1079#1072' '#1085#1072' 1-'#1075#1086' '#1095#1077#1083', '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'GrossOnOneMember'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -190,7 +191,7 @@ inherited Report_WageForm: TReport_WageForm
             Width = 90
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1054#1073#1097#1072#1103' '#1089#1091#1084#1084#1072
+            Caption = #1054#1073#1097#1072#1103' '#1089#1091#1084#1084#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -200,7 +201,7 @@ inherited Report_WageForm: TReport_WageForm
             Width = 90
           end
           object colAmountOnOneMember: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1072' 1 '#1095#1077#1083
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072' 1 '#1095#1077#1083', '#1075#1088#1085
             DataBinding.FieldName = 'AmountOnOneMember'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
