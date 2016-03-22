@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , Comment TVarChar
               )
 
 AS
@@ -47,7 +48,7 @@ BEGIN
            , Object_From.ValueData              AS FromName
            , Object_To.Id                       AS ToId
            , Object_To.ValueData                AS ToName
-
+           , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -75,6 +76,10 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
             ;
 
 END;

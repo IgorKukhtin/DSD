@@ -399,7 +399,9 @@ uses
   QualityNumberJournal in '..\..\Forms\Document\QualityNumberJournal.pas' {QualityNumberJournalForm: TParentForm},
   QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm},
   Report_Profit in '..\..\FormsFarmacy\Report\Report_Profit.pas' {Report_ProfitForm: TParentForm},
-  Report_ProfitDialog in '..\..\FormsFarmacy\Report\Report_ProfitDialog.pas' {Report_ProfitDialogForm: TParentForm};
+  Report_ProfitDialog in '..\..\FormsFarmacy\Report\Report_ProfitDialog.pas' {Report_ProfitDialogForm: TParentForm},
+  Report_PriceIntervention in '..\..\FormsFarmacy\Report\Report_PriceIntervention.pas' {Report_PriceInterventionForm: TParentForm},
+  Report_PriceInterventionDialog in '..\..\FormsFarmacy\Report\Report_PriceInterventionDialog.pas' {Report_PriceInterventionDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 780
   ExplicitWidth = 796
-  ExplicitHeight = 652
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -253,6 +253,18 @@ inherited SendForm: TSendForm
       Top = 5
       Caption = #1050#1086#1084#1091
     end
+  end
+  object cxLabel7: TcxLabel [2]
+    Left = 241
+    Top = 45
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object edComment: TcxTextEdit [3]
+    Left = 241
+    Top = 63
+    Properties.ReadOnly = False
+    TabOrder = 7
+    Width = 506
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -767,89 +779,10 @@ inherited SendForm: TSendForm
         DataType = ftString
       end
       item
+        Name = 'Comment'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
+        Component = edComment
         DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 216
     Top = 248
@@ -893,9 +826,11 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end
       item
+        Name = 'inComment'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Value = 'False'
@@ -990,6 +925,7 @@ inherited SendForm: TSendForm
         Control = edTo
       end
       item
+        Control = edComment
       end
       item
       end
@@ -1249,7 +1185,7 @@ inherited SendForm: TSendForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
+    Left = 328
     Top = 16
   end
   object GuidesTo: TdsdGuides

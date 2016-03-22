@@ -12,17 +12,17 @@
     Height = 250
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 736
+    ExplicitWidth = 1251
     ExplicitHeight = 250
     ClientRectBottom = 250
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 736
+      ExplicitWidth = 1251
       ExplicitHeight = 250
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 250
-        ExplicitWidth = 736
+        ExplicitWidth = 1251
         ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -160,6 +160,15 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object colPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1073#1077#1079' % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057') '
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
@@ -177,6 +186,15 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object colSummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1073#1077#1079' % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
           end
           object colSummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
@@ -245,7 +263,7 @@
   inherited Panel: TPanel
     Width = 1251
     Height = 32
-    ExplicitWidth = 736
+    ExplicitWidth = 1251
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29

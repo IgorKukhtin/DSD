@@ -160,6 +160,11 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 77
           end
+          object colComment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'Comment'
+            Width = 147
+          end
         end
       end
     end
