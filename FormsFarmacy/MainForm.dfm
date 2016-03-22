@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 226
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1432,12 +1432,6 @@ inherited MainForm: TMainForm
       object miReport_LiquidForm: TMenuItem
         Action = actReport_LiquidForm
       end
-      object miReport_ProfitForm: TMenuItem
-        Action = actReport_ProfitForm
-      end
-      object miReport_PriceInterventionForm: TMenuItem
-        Action = actReport_PriceInterventionForm
-      end
       object N69: TMenuItem
         Caption = '-'
       end
@@ -1446,6 +1440,16 @@ inherited MainForm: TMainForm
       end
       object miReport_UploadOptimaForm: TMenuItem
         Action = actReport_UploadOptimaForm
+      end
+    end
+    object N40: TMenuItem [6]
+      Caption = #1041#1040#1048
+      Hint = #1041#1083#1086#1082' '#1072#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1093' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1081
+      object miReport_ProfitForm: TMenuItem
+        Action = actReport_ProfitForm
+      end
+      object miReport_PriceInterventionForm: TMenuItem
+        Action = actReport_PriceInterventionForm
       end
     end
     inherited miService: TMenuItem
