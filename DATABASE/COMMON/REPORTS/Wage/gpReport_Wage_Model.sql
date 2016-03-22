@@ -147,9 +147,9 @@ BEGIN
        ,Object_SelectKind.ValueData                         AS SelectKindName
        ,CASE WHEN MovementDesc.Id = zc_Movement_Send()
                   THEN FALSE
-             WHEN Object_SelectKind.ObjectCode = 3 
+             WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_InAmount(), zc_Enum_SelectKind_InWeight, zc_Enum_SelectKind_InHead()) -- Кол-во приход
                   THEN TRUE
-              WHEN Object_SelectKind.ObjectCode = 4
+              WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_OutAmount(), zc_Enum_SelectKind_OutWeight, zc_Enum_SelectKind_OutHead()) -- Кол-во расход
                   THEN FALSE
         END                                                 AS isActive              -- Тип выбора данных
        ,ObjectFloat_Ratio.ValueData                         AS Ratio                 -- Коэффициент для выбора данных
@@ -301,6 +301,7 @@ BEGIN
                             THEN MovementItemContainer.Amount
                        ELSE -1 * MovementItemContainer.Amount
                  END)::TFloat as Amount
+           ,MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
 
         FROM (SELECT DISTINCT
                      Setting.MovementDescId
@@ -315,6 +316,7 @@ BEGIN
             MovementItemContainer.OperDate
            ,MovementItemContainer.MovementDescId
            ,MovementItemContainer.IsActive
+           ,MovementItemContainer.ObjectIntId_Analyzer
            ,CASE 
                 WHEN MovementItemContainer.IsActive = TRUE
                     THEN MovementItemContainer.ObjectExtId_Analyzer
@@ -337,6 +339,12 @@ BEGIN
             END
        )
          -- Модели начисления + необходимые документы для расчета по Расценкам грн./кг.
+       , tmpGoodsByGoodsKind AS
+       (SELECT Object_GoodsByGoodsKind_View.Id, Object_GoodsByGoodsKind_View.GoodsId, Object_GoodsByGoodsKind_View.GoodsKindId
+        FROM (SELECT 0 AS X FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId = zc_Enum_SelectKind_InPack() LIMIT 1) AS tmp  -- Кол-во упаковок приход (расчет)
+             INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsKindId > tmp.X
+       )
+         -- Модели начисления + необходимые документы для расчета по Расценкам грн./кг.
        , ServiceModelMovement AS
        (SELECT
             Setting.StaffListId
@@ -353,11 +361,38 @@ BEGIN
            ,Setting.ModelServiceItemChild_FromId
            ,Setting.ModelServiceItemChild_ToId
            ,tmpMovement.OperDate AS OperDate
-           , SUM (tmpMovement.Amount)                                            :: TFloat AS Gross  -- Общая масса
-           , ROUND (Setting.Price * Setting.Ratio * SUM (tmpMovement.Amount), 2) :: TFloat AS Amount -- Общая сумма, грн
+           , SUM (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+                            THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                                           THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                                    / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                                      ELSE 0
+                                 END
+                       ELSE tmpMovement.Amount
+                  END) :: TFloat AS Gross  -- Общая база, кол-во
+           , ROUND (Setting.Price * Setting.Ratio
+           * SUM (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+                            THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                                           THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                                    / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                                      ELSE 0
+                                 END
+                       ELSE tmpMovement.Amount
+                  END)
+           , 2) :: TFloat AS Amount -- Общая сумма, грн
         FROM Setting_Wage_1 AS Setting
              INNER JOIN tmpMovement ON tmpMovement.MovementDescId = Setting.MovementDescId
                                    AND tmpMovement.IsActive = Setting.IsActive
+             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = tmpMovement.GoodsId_from
+                                          AND tmpGoodsByGoodsKind.GoodsKindId = tmpMovement.GoodsKindId
+             LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                   ON ObjectFloat_WeightTotal.ObjectId = tmpGoodsByGoodsKind.Id
+                                  AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = tmpMovement.GoodsId_from
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMovement.GoodsId_from
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         WHERE (Setting.FromId IS NULL OR tmpMovement.FromId IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.FromId) as UnitTree))
           AND (Setting.ToId   IS NULL OR tmpMovement.ToId   IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.ToId) AS UnitTree))
           AND (Setting.ModelServiceItemChild_FromId IS NULL OR (Setting.ModelServiceItemChild_FromDescId = zc_Object_Goods()
@@ -427,7 +462,7 @@ BEGIN
         WHERE Movement.DescId = zc_Movement_SheetWorkTime()
           AND Movement.OperDate BETWEEN inDateStart AND inDateFinal
        )
-
+         -- табель - если понадобится итог за месяц
        , Movement_SheetGroup AS
       (SELECT Movement_Sheet.MemberId
             , Movement_Sheet.MemberName

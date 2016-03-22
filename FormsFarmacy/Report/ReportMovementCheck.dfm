@@ -2,6 +2,7 @@
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
   ClientWidth = 1251
   AddOnFormData.RefreshAction = actRefreshStart
+  ExplicitLeft = -461
   ExplicitWidth = 1267
   PixelsPerInch = 96
   TextHeight = 13
