@@ -18,18 +18,21 @@ RETURNS TABLE (
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
-  Amount         TFloat,
-  Price          TFloat,
-  Price_original TFloat,
-  PriceSale      TFloat,
-  PriceWithVAT   Tfloat,      --Цена поставщика с учетом НДС (без % корр.)
-  Summa          TFloat,
-  SummaSale      TFloat,
-  SummaWithVAT   Tfloat,      --Сумма поставщика с учетом НДС (без % корр.)
-  SummaMargin    TFloat,
-  PartionDescName  TVarChar,
-  PartionInvNumber TVarChar,
-  PartionOperDate  TDateTime,
+  Amount                TFloat,
+  Price                 TFloat,
+ -- Price_original        TFloat,
+  PriceSale             TFloat,
+  PriceWithVAT          Tfloat,      --Цена поставщика с учетом НДС (без % корр.)
+  PriceWithOutVAT       Tfloat, 
+  Summa                 TFloat,
+  SummaSale             TFloat,
+  SummaWithVAT          Tfloat,      --Сумма поставщика с учетом НДС (без % корр.)
+  SummaWithOutVAT       Tfloat,
+  SummaMargin           TFloat,
+  SummaMarginWithVAT    TFloat,
+  PartionDescName       TVarChar,
+  PartionInvNumber      TVarChar,
+  PartionOperDate       TDateTime,
   PartionPriceDescName  TVarChar,
   PartionPriceInvNumber TVarChar,
   PartionPriceOperDate  TDateTime
@@ -99,7 +102,8 @@ BEGIN
                               , MovementLinkObject_NDSKind_Income.ObjectId                                 AS NDSKindId_Income
                               , tmpData_all.GoodsId
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
-                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_Income_Price.ValueData, 0))    AS Summa_original
+                              --, SUM (tmpData_all.Amount * COALESCE (MIFloat_Income_Price.ValueData, 0))    AS Summa_original
+                              , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0)) AS SummaWithOutVAT
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
                               , SUM (tmpData_all.Amount)    AS Amount
                               , SUM (tmpData_all.SummaSale) AS SummaSale
@@ -114,11 +118,15 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                                           ON MIFloat_PriceWithVAT.MovementItemId = tmpData_all.MovementItemId
                                                          AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                              -- цена без учета НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+                              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
+                                                          ON MIFloat_PriceWithOutVAT.MovementItemId = tmpData_all.MovementItemId
+                                                         AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                               -- цена "оригинал", для элемента прихода от поставщика (или NULL)
-                              LEFT JOIN MovementItemFloat AS MIFloat_Income_Price
+                             /* LEFT JOIN MovementItemFloat AS MIFloat_Income_Price
                                                           ON MIFloat_Income_Price.MovementItemId = tmpData_all.MovementItemId
                                                          AND MIFloat_Income_Price.DescId = zc_MIFloat_Price() 
-
+                             */
                               -- Поставшик, для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Income
                                                            ON MovementLinkObject_From_Income.MovementId = tmpData_all.MovementId
@@ -147,16 +155,19 @@ BEGIN
            ,Object_NDSKind_Income.ValueData                                     AS NDSKindName
 
            , tmpData.Amount :: TFloat AS Amount
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa          / tmpData.Amount ELSE 0 END :: TFloat AS Price
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa_original / tmpData.Amount ELSE 0 END :: TFloat AS Price_original
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale      / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT   / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
+           --, CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa_original  / tmpData.Amount ELSE 0 END :: TFloat AS Price_original
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale       / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithOutVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithOutVAT
 
-           , tmpData.Summa        :: TFloat AS Summa
-           , tmpData.SummaSale    :: TFloat AS SummaSale
-           , tmpData.SummaWithVAT :: TFloat AS SummaWithVAT
+           , tmpData.Summa           :: TFloat AS Summa
+           , tmpData.SummaSale       :: TFloat AS SummaSale
+           , tmpData.SummaWithVAT    :: TFloat AS SummaWithVAT
+           , tmpData.SummaWithOutVAT :: TFloat AS SummaWithOutVAT
 
-           , (tmpData.SummaSale - tmpData.Summa) :: TFloat AS SummaMargin
+           , (tmpData.SummaSale - tmpData.Summa)        :: TFloat AS SummaMargin
+           , (tmpData.SummaSale - tmpData.SummaWithVAT) :: TFloat AS SummaMarginWithVAT
 
            , MovementDesc_Income.ItemName AS PartionDescName
            , Movement_Income.InvNumber    AS PartionInvNumber
@@ -192,3 +203,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_Movement_Check(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateFinal := ('29.02.2016')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
 -- SELECT * FROM gpReport_Movement_Check (inUnitId:= 0, inDateStart:= '20150801'::TDateTime, inDateFinal:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
+--zc_MIFloat_PriceWithOutVAT

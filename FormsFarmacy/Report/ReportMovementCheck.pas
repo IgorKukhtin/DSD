@@ -39,7 +39,7 @@ type
     clNDSKindName: TcxGridDBColumn;
     JuridicalCode: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
-    Price_original: TcxGridDBColumn;
+    PriceWithOutVAT: TcxGridDBColumn;
     ñbPartion: TcxCheckBox;
     actRefreshIsPartion: TdsdDataSetRefresh;
     PartionDescName: TcxGridDBColumn;
