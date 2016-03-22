@@ -39,7 +39,7 @@ type
     clNDSKindName: TcxGridDBColumn;
     JuridicalCode: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
-    Price_original: TcxGridDBColumn;
+    PriceWithOutVAT: TcxGridDBColumn;
     ñbPartion: TcxCheckBox;
     actRefreshIsPartion: TdsdDataSetRefresh;
     PartionDescName: TcxGridDBColumn;
@@ -48,6 +48,8 @@ type
     PartionPriceDescName: TcxGridDBColumn;
     PartionPriceInvNumber: TcxGridDBColumn;
     PartionPriceOperDate: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

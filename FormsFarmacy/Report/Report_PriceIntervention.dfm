@@ -450,7 +450,6 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
