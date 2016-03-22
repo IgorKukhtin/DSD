@@ -280,17 +280,33 @@ $BODY$
  05.02.14                        * 
 */
 
--- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM lpComplete_Movement_Income (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
-
 /*
-select lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(),   MovementItem.Id, MovementItemFloat.ValueData)
-     , case when ObjectFloat_Juridical_Percent.ValueData > 0
-                 then lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(),  MovementItem.Id, MovementItemFloat.ValueData / (1 + ObjectFloat_Juridical_Percent.ValueData/100) )
+select tmp.*
+     , case when tmp.Price_calc <> tmp.Price
+                 then lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(),   tmp.MovementItemId, tmp.Price_calc)
             else null
        end
+
+     , case when tmp.PriceJur_calc <> tmp.PriceJur
+                 then lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(),  tmp.MovementItemId, tmp.PriceJur_calc)
+            else null
+       end
+from (
+select Movement.*
+, MovementItem.Id as MovementItemId
+, MovementItemFloat0.ValueData as Price_original
+
+, cast (COALESCE (MovementItemFloat0.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END as Numeric (16, 4)) AS Price_calc
+, COALESCE (MovementItemFloat2.ValueData, 0) as Price
+
+, cast (COALESCE (MovementItemFloat0.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END
+ / case when ObjectFloat_Juridical_Percent.ValueData > 0
+                 then (1 + ObjectFloat_Juridical_Percent.ValueData/100)
+            else 1
+       end
+  as Numeric (16, 4)) AS PriceJur_calc
+, COALESCE (MovementItemFloat.ValueData, 0) as PriceJur
+
 from Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -300,14 +316,48 @@ from Movement
                                AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
 
      inner join MovementItem on MovementItem.MovementId = Movement.Id
-     inner join MovementItemFloat on MovementItemFloat.MovementItemId = MovementItem.Id
+
+     inner join MovementItemFloat as MovementItemFloat0
+                                  on MovementItemFloat0.MovementItemId = MovementItem.Id
+                                 and MovementItemFloat0.DescId = zc_MIFloat_Price()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                        ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind_Income
+                                                           ON MovementLinkObject_NDSKind_Income.MovementId = Movement.Id
+                                                          AND MovementLinkObject_NDSKind_Income.DescId = zc_MovementLinkObject_NDSKind()
+                              LEFT JOIN ObjectFloat AS ObjectFloat_NDS_Income
+                                                    ON ObjectFloat_NDS_Income.ObjectId = MovementLinkObject_NDSKind_Income.ObjectId
+                                                   AND ObjectFloat_NDS_Income.DescId = zc_ObjectFloat_NDSKind_NDS()
+
+
+     left join MovementItemFloat on MovementItemFloat.MovementItemId = MovementItem.Id
                                  and MovementItemFloat.DescId = zc_MIFloat_JuridicalPrice()
 
      left join MovementItemFloat as MovementItemFloat2
                                  on MovementItemFloat2.MovementItemId = MovementItem.Id
                                 and MovementItemFloat2.DescId = zc_MIFloat_PriceWithVAT()
      
-where  Movement.DescId = zc_Movement_Income()
-   and Movement.OperDate between '01.01.2016' and '01.01.2016'
-   and MovementItemFloat2.MovementItemId is null
+where  Movement.StatusId = zc_Enum_Status_Complete()
+   and Movement.DescId = zc_Movement_Income()
+   and Movement.OperDate between '01.03.2016' and '01.04.2016'
+   and (cast (COALESCE (MovementItemFloat0.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END as Numeric (16, 4)) 
+        <>  COALESCE (MovementItemFloat2.ValueData, 0) 
+
+or  cast (COALESCE (MovementItemFloat0.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END
+ / case when ObjectFloat_Juridical_Percent.ValueData > 0
+                 then (1 + ObjectFloat_Juridical_Percent.ValueData/100)
+            else 1
+       end as Numeric (16, 4)) 
+  
+ <>  COALESCE (MovementItemFloat.ValueData, 0) 
+)
+) as tmp
 */
+
+-- тест
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpComplete_Movement_Income (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
+

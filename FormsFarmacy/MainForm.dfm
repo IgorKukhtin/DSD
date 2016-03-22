@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1399,52 +1399,52 @@ inherited MainForm: TMainForm
       object N39: TMenuItem
         Caption = '-'
       end
-      object N40: TMenuItem
+      object miReport_JuridicalSold: TMenuItem
         Action = actReport_JuridicalSold
       end
-      object N41: TMenuItem
+      object miReport_JuridicalCollation: TMenuItem
         Action = actReport_JuridicalCollation
       end
-      object N51: TMenuItem
+      object miReport_GoodRemains: TMenuItem
         Action = actReport_GoodRemains
       end
-      object N59: TMenuItem
+      object miReportMovementCheckForm: TMenuItem
         Action = actReportMovementCheckForm
       end
-      object N85: TMenuItem
+      object miReportMovementIncomeForm: TMenuItem
         Action = actReportMovementIncomeForm
       end
-      object N60: TMenuItem
+      object miReport_GoodsPartionMoveForm: TMenuItem
         Action = actReport_GoodsPartionMoveForm
       end
-      object N61: TMenuItem
+      object miReport_GoodsPartionHistoryForm: TMenuItem
         Action = actReport_GoodsPartionHistoryForm
       end
-      object N63: TMenuItem
+      object miReport_SoldForm: TMenuItem
         Action = actReport_SoldForm
       end
-      object N64: TMenuItem
+      object miReport_Sold_DayForm: TMenuItem
         Action = actReport_Sold_DayForm
       end
-      object N65: TMenuItem
+      object miReport_Sold_DayUserForm: TMenuItem
         Action = actReport_Sold_DayUserForm
       end
-      object N84: TMenuItem
+      object miReport_LiquidForm: TMenuItem
         Action = actReport_LiquidForm
       end
-      object N97: TMenuItem
+      object miReport_ProfitForm: TMenuItem
         Action = actReport_ProfitForm
       end
-      object N98: TMenuItem
+      object miReport_PriceInterventionForm: TMenuItem
         Action = actReport_PriceInterventionForm
       end
       object N69: TMenuItem
         Caption = '-'
       end
-      object N70: TMenuItem
+      object miReport_UploadBaDMForm: TMenuItem
         Action = actReport_UploadBaDMForm
       end
-      object N71: TMenuItem
+      object miReport_UploadOptimaForm: TMenuItem
         Action = actReport_UploadOptimaForm
       end
     end
