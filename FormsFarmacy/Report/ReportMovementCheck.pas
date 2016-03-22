@@ -48,6 +48,8 @@ type
     PartionPriceDescName: TcxGridDBColumn;
     PartionPriceInvNumber: TcxGridDBColumn;
     PartionPriceOperDate: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

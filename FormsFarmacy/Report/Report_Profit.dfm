@@ -14,7 +14,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
     Height = 577
     TabOrder = 3
     ExplicitTop = 91
-    ExplicitWidth = 1592
+    ExplicitWidth = 1198
     ExplicitHeight = 577
     ClientRectBottom = 577
     ClientRectRight = 1198
@@ -23,12 +23,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 1592
+      ExplicitWidth = 1198
       ExplicitHeight = 553
       inherited cxGrid: TcxGrid
         Width = 1198
         Height = 369
-        ExplicitWidth = 1592
+        ExplicitWidth = 1198
         ExplicitHeight = 369
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -516,7 +516,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitWidth = 1592
       end
       object grChart: TcxGrid
         Left = 0
@@ -525,7 +524,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Height = 176
         Align = alBottom
         TabOrder = 2
-        ExplicitWidth = 1592
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -568,7 +566,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
       ExplicitWidth = 1592
+      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -644,7 +644,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
   inherited Panel: TPanel
     Width = 1198
     Height = 65
-    ExplicitWidth = 1592
+    ExplicitWidth = 1198
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 127

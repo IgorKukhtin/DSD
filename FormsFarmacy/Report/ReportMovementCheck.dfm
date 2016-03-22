@@ -2,7 +2,7 @@
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
   ClientHeight = 480
   ClientWidth = 1251
-  AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -14,17 +14,17 @@
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 1251
-    ExplicitHeight = 250
+    ExplicitHeight = 422
     ClientRectBottom = 422
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
-      ExplicitHeight = 250
+      ExplicitHeight = 422
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 422
         ExplicitWidth = 1251
-        ExplicitHeight = 250
+        ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -393,6 +393,56 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_MovementCheckDialogForm'
+      FormNameParam.Value = 'TReport_MovementCheckDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'inIsPartion'
+          Value = 'False'
+          Component = сbPartion
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -444,6 +494,37 @@
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
     object dxBarButton1: TdxBarButton
       Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
       Category = 0
@@ -451,14 +532,18 @@
       Visible = ivAlways
       ImageIndex = 38
     end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 456
+    Left = 704
     Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Left = 496
-    Top = 0
+    Left = 872
+    Top = 16
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -467,7 +552,7 @@
       item
         Component = UnitGuides
       end>
-    Left = 752
+    Left = 776
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -492,7 +577,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 704
+    Left = 392
+    Top = 8
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
