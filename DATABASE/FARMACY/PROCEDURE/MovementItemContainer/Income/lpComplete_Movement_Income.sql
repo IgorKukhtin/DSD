@@ -283,6 +283,11 @@ $BODY$
 
 /*
 select tmp.*
+     , case when tmp.Price_OutVAT_calc <> tmp.Price_OutVAT
+                 then lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(),   tmp.MovementItemId, tmp.Price_OutVAT_calc)
+            else null
+       end
+
      , case when tmp.Price_calc <> tmp.Price
                  then lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(),   tmp.MovementItemId, tmp.Price_calc)
             else null
@@ -296,6 +301,9 @@ from (
 select Movement.*
 , MovementItem.Id as MovementItemId
 , MovementItemFloat0.ValueData as Price_original
+
+, coalesce (MIF_PriceWithOutVAT.ValueData, 0) as Price_OutVAT
+, cast (COALESCE (MovementItemFloat0.ValueData, 0) / CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END as Numeric (16, 4)) AS Price_OutVAT_calc
 
 , cast (COALESCE (MovementItemFloat0.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END as Numeric (16, 4)) AS Price_calc
 , COALESCE (MovementItemFloat2.ValueData, 0) as Price
@@ -334,16 +342,22 @@ from Movement
 
 
      left join MovementItemFloat on MovementItemFloat.MovementItemId = MovementItem.Id
-                                 and MovementItemFloat.DescId = zc_MIFloat_JuridicalPrice()
+                                and MovementItemFloat.DescId = zc_MIFloat_JuridicalPrice()
 
      left join MovementItemFloat as MovementItemFloat2
                                  on MovementItemFloat2.MovementItemId = MovementItem.Id
                                 and MovementItemFloat2.DescId = zc_MIFloat_PriceWithVAT()
+     left join MovementItemFloat as MIF_PriceWithOutVAT
+                                 on MIF_PriceWithOutVAT.MovementItemId = MovementItem.Id
+                                and MIF_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
      
 where  Movement.StatusId = zc_Enum_Status_Complete()
    and Movement.DescId = zc_Movement_Income()
    and Movement.OperDate between '01.03.2016' and '01.04.2016'
-   and (cast (COALESCE (MovementItemFloat0.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END as Numeric (16, 4)) 
+   and (coalesce (MIF_PriceWithOutVAT.ValueData, 0) 
+     <> cast (COALESCE (MovementItemFloat0.ValueData, 0) / CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END as Numeric (16, 4))
+
+or  cast (COALESCE (MovementItemFloat0.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END as Numeric (16, 4)) 
         <>  COALESCE (MovementItemFloat2.ValueData, 0) 
 
 or  cast (COALESCE (MovementItemFloat0.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS_Income.ValueData, 0) / 100 END
