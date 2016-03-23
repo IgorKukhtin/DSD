@@ -1197,6 +1197,35 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_BranchPrintKindItem_PrintKindItem() RET
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_BranchPrintKindItem_PrintKindItem', 'Связь с Элементами печати', zc_Object_BranchPrintKindItem(), zc_Object_PrintKindItem() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BranchPrintKindItem_PrintKindItem');
 
+--ExportJuridical
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ExportJuridical_EmailKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_EmailKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ExportJuridical_EmailKind', 'Связь с Видом почты', zc_Object_ExportJuridical(), zc_Object_EmailKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_EmailKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ExportJuridical_Retail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_Retail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ExportJuridical_Retail', 'Связь с Торговая сеть', zc_Object_ExportJuridical(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_Retail');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ExportJuridical_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ExportJuridical_Juridical', 'Связь с Юридические лица', zc_Object_ExportJuridical(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ExportJuridical_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ExportJuridical_Contract', 'Связь с Договором', zc_Object_ExportJuridical(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_Contract');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ExportJuridical_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_InfoMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ExportJuridical_InfoMoney', 'Связь с Статьи назначения', zc_Object_ExportJuridical(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_InfoMoney');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ExportJuridical_ExportKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_ExportKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ExportJuridical_ExportKind', 'Связь с Типы экспорта', zc_Object_ExportJuridical(), zc_Object_ExportKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_ExportKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ExportJuridical_ContactPerson() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_ContactPerson'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ExportJuridical_ContactPerson', 'Связь с Контактные лица', zc_Object_ExportJuridical(), zc_Object_ContactPerson() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ExportJuridical_ContactPerson');
+
 
 --!!! АПТЕКА
 
@@ -1367,6 +1396,7 @@ SELECT 'zc_ObjectLink_GoodsExternal_GoodsKind', 'Виды Товара', zc_Object_GoodsEx
 CREATE OR REPLACE FUNCTION zc_ObjectLink_EmailSettings_EmailKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_EmailSettings_EmailKind', 'Типы установок для почты', zc_Object_EmailSettings(), zc_Object_EmailKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailKind');
+--update  ObjectLinkDesc set ItemName = 'Вид почты' where Id = zc_ObjectLink_EmailSettings_EmailKind()  -- ДЛЯ ПРОДЖЕКТА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_EmailSettings_EmailTools() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailTools'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)

@@ -802,7 +802,14 @@ uses
   QualityNumber in '..\..\Forms\Document\QualityNumber.pas' {QualityNumberForm: TParentForm},
   CarExternal in '..\..\Forms\Guides\CarExternal.pas' {CarExternalForm: TParentForm},
   CarExternalEdit in '..\..\Forms\Guides\CarExternalEdit.pas' {CarExternalEditForm: TParentForm},
-  CarUnion in '..\..\Forms\Guides\CarUnion.pas' {CarUnionForm: TParentForm};
+  CarUnion in '..\..\Forms\Guides\CarUnion.pas' {CarUnionForm: TParentForm},
+  ExportKind in '..\..\Forms\Kind\ExportKind.pas' {ExportKindForm: TParentForm},
+  EmailTools in '..\..\Forms\Kind\EmailTools.pas' {EmailToolsForm: TParentForm},
+  EmailSettings in '..\..\Forms\Guides\EmailSettings.pas' {EmailSettingsForm: TParentForm},
+  EmailKind in '..\..\Forms\Kind\EmailKind.pas' {EmailKindForm: TParentForm},
+  EmailKindEdit in '..\..\Forms\Kind\EmailKindEdit.pas' {EmailKindEditForm: TParentForm},
+  ExportJuridical in '..\..\Forms\Guides\ExportJuridical.pas' {ExportJuridicalForm: TParentForm},
+  ExportJuridicalEdit in '..\..\Forms\Guides\ExportJuridicalEdit.pas' {ExportJuridicalEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

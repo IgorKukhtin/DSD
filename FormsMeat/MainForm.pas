@@ -681,6 +681,17 @@ type
     N100: TMenuItem;
     actCarExternal: TdsdOpenForm;
     N101: TMenuItem;
+    actExportKind: TdsdOpenForm;
+    miEmail: TMenuItem;
+    N102: TMenuItem;
+    actEmailTools: TdsdOpenForm;
+    N103: TMenuItem;
+    actEmailSettings: TdsdOpenForm;
+    N104: TMenuItem;
+    actEmailKind: TdsdOpenForm;
+    N105: TMenuItem;
+    actExportJuridical: TdsdOpenForm;
+    N106: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
