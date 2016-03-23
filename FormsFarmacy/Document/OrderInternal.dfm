@@ -3,7 +3,7 @@ inherited OrderInternalForm: TOrderInternalForm
   ClientHeight = 532
   ClientWidth = 1229
   ExplicitWidth = 1245
-  ExplicitHeight = 567
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -309,6 +309,20 @@ inherited OrderInternalForm: TOrderInternalForm
           end
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
+          end
+          object clIsClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object clisFirst: TcxGridDBColumn
+            Caption = '1-'#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isFirst'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
       end

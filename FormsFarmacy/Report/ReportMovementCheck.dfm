@@ -1,4 +1,4 @@
-﻿inherited ReportMovementCheckForm: TReportMovementCheckForm
+inherited ReportMovementCheckForm: TReportMovementCheckForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
   ClientHeight = 480
   ClientWidth = 1251
@@ -224,7 +224,7 @@
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 88
+            Width = 102
           end
           object colSummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
@@ -295,6 +295,21 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
+          object OurJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+            DataBinding.FieldName = 'OurJuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
@@ -344,12 +359,19 @@
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 188
     end
-    object сbPartion: TcxCheckBox
+    object cbPartion: TcxCheckBox
       Left = 547
       Top = 5
       Action = actRefreshIsPartion
       TabOrder = 6
       Width = 94
+    end
+    object cbPartionPrice: TcxCheckBox
+      Left = 657
+      Top = 5
+      Action = actRefreshPartionPrice
+      TabOrder = 7
+      Width = 200
     end
   end
   inherited ActionList: TActionList
@@ -377,6 +399,19 @@
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshPartionPrice: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
+      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -435,7 +470,14 @@
         item
           Name = 'inIsPartion'
           Value = 'False'
-          Component = сbPartion
+          Component = cbPartion
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'inisPartionPrice'
+          Value = Null
+          Component = cbPartionPrice
           DataType = ftBoolean
           ParamType = ptInput
         end>
@@ -479,7 +521,14 @@
       item
         Name = 'inIsPartion'
         Value = Null
-        Component = сbPartion
+        Component = cbPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisPartionPrice'
+        Value = 'False'
+        Component = cbPartionPrice
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -538,12 +587,12 @@
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 704
+    Left = 208
     Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Left = 872
-    Top = 16
+    Left = 432
+    Top = 64
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -552,7 +601,8 @@
       item
         Component = UnitGuides
       end>
-    Left = 776
+    Left = 296
+    Top = 56
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -577,8 +627,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 392
-    Top = 8
+    Left = 336
+    Top = 64
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -599,6 +649,7 @@
         DataType = ftString
       end>
     PackSize = 1
-    Left = 656
+    Left = 392
+    Top = 64
   end
 end
