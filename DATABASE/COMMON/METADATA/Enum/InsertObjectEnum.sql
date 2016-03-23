@@ -259,7 +259,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_DayHoursSheetWorkTime(),   inDescId:= zc_Object_ModelServiceKind(), inCode:= 4, inName:= 'По дням + по часам табель'    , inEnumName:= 'zc_Enum_ModelServiceKind_DayHoursSheetWorkTime');
      -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_MonthFundPay(),       inDescId:= zc_Object_ModelServiceKind(), inCode:= 4, inName:= 'За месяц Фонд/Доплата'  , inEnumName:= 'zc_Enum_ModelServiceKind_MonthFundPay');
      -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_TurnFundPay(),        inDescId:= zc_Object_ModelServiceKind(), inCode:= 5, inName:= 'За 1 смену Фонд/Доплата', inEnumName:= 'zc_Enum_ModelServiceKind_TurnFundPay');
-     -- PERFORM lpInsertUpdate_ObjectString (inDescId:= zc_ObjectString_ModelServiceKind_Comment(), inObjectId:= zc_Enum_ModelServiceKind_DayHoursSheetWorkTime(), inValueData:= 'значение для модели рассчитывается для каждого дня и само начисление происходит для ФИО из табеля по дням пропорционально ЧАСАМ');
+     -- SELECT lpInsertUpdate_ObjectString (inDescId:= zc_ObjectString_ModelServiceKind_Comment(), inObjectId:= zc_Enum_ModelServiceKind_DayHoursSheetWorkTime(), inValueData:= 'значение для модели рассчитывается для каждого дня и само начисление происходит для ФИО из табеля по дням пропорционально ЧАСАМ');
 
      -- !!! Типы выбора данных
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InWeight(),  inDescId:= zc_Object_SelectKind(), inCode:= 1, inName:= 'Кол-во приход с пересчетом в вес', inEnumName:= 'zc_Enum_SelectKind_InWeight');
