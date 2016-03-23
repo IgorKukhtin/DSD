@@ -51,6 +51,7 @@ type
     procedure LoadDefaultFormTest;
     procedure LoadDocumentTaxKindFormTest;
     procedure LoadEDIForm;
+    procedure LoadEmailForm;
     procedure LoadExternalForm;
     procedure LoadFreightFormTest;
     procedure LoadFounderFormTest;
@@ -1076,6 +1077,29 @@ procedure TLoadFormTest.LoadEDIForm;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalForm');
+end;
+
+procedure TLoadFormTest.LoadEmailForm;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExportKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExportKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailToolsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailToolsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailSettingsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailKindEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExportJuridicalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExportJuridicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExportJuridicalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExportJuridicalEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadExternalForm;

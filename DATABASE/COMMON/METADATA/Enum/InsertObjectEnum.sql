@@ -790,11 +790,22 @@ END $$;
 
 
 
+DO $$
+BEGIN
+
+     -- !!! Типы экспорта для почты
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Mida35273055(),inDescId:= zc_Object_ExportKind(), inCode:= 1, inName:= 'Мида - формат XML'    , inEnumName:= 'zc_Enum_ExportKind_Mida35273055');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Vez37171990(), inDescId:= zc_Object_ExportKind(), inCode:= 2, inName:= 'Везунчик - формат CSV', inEnumName:= 'zc_Enum_ExportKind_Vez37171990');
+
+
+END $$;
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 23.03.16          *
  03.03.16          *  Параметры установок для почты
                       Типы установок для почты
  23.11.15                                                                       *zc_Enum_ImportExportLinkType_UploadCompliance
