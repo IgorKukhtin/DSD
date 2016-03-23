@@ -62,7 +62,7 @@ BEGIN
             ,MIFloat_PriceSale.ValueData              AS PriceSale
             ,Object_OrderKind.Id                      AS OrderKindId
             ,Object_OrderKind.ValueData               AS OrderKindName
-            ,MIString_Comment.ValueData               AS Comment
+            ,CASE WHEN MIString_Comment.ValueData <> '' THEN MIString_Comment.ValueData WHEN MovementString_Comment.ValueData <> '' THEN MovementString_Comment.ValueData ELSE '' END :: TVarChar AS Comment
             ,MIString_PartionGoods.ValueData          AS PartionGoods
             ,MIDate_ExpirationDate.ValueData          AS ExpirationDate
             ,MovementDate_Payment.ValueData           AS PaymentDate
@@ -103,6 +103,9 @@ BEGIN
                                     AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
         LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
 
+        LEFT JOIN MovementString AS MovementString_Comment
+                                 ON MovementString_Comment.DescId = zc_MovementString_Comment()
+                                AND MovementString_Comment.MovementId = Movement.Id
         LEFT JOIN MovementItemString AS MIString_Comment 
                                      ON MIString_Comment.DescId = zc_MIString_Comment()
                                     AND MIString_Comment.MovementItemId = MovementItem.id  
@@ -128,7 +131,7 @@ BEGIN
                                     ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
     WHERE 
-        Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income())
+        Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send())
         AND 
         ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
         AND 

@@ -1,10 +1,10 @@
 inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   ActiveControl = ceMember
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100' '#1074' '#1090#1072#1073#1077#1083#1100' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/ '#1080#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
   ClientHeight = 219
   ClientWidth = 358
   ExplicitWidth = 364
-  ExplicitHeight = 247
+  ExplicitHeight = 244
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -25,8 +25,10 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 2
     Width = 158
   end
@@ -38,6 +40,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 3
     Width = 167
   end
@@ -49,6 +52,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 158
   end
@@ -58,6 +62,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -72,12 +77,15 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 158
   end
   object ceOperDate: TcxDateEdit [7]
     Left = 182
     Top = 131
+    EditValue = 42452d
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 167
   end
@@ -152,7 +160,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
       end
       item
         Name = 'OperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
       end>
     Top = 136
@@ -161,70 +169,70 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTimeGroup'
     Params = <
       item
-        Name = 'inmemberid'
+        Name = 'inMemberId'
         Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inpositionid'
+        Name = 'inPositionId'
         Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inpositionlevelid'
+        Name = 'inPositionLevelId'
         Value = ''
         Component = PositionLevelGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inunitid'
+        Name = 'inUnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inpersonalgroupid'
+        Name = 'inPersonalGroupId'
         Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inoldmemberid'
+        Name = 'inOldMemberId'
         Value = ''
         Component = FormParams
         ComponentItem = 'MemberId'
         ParamType = ptInput
       end
       item
-        Name = 'inoldpositionid'
+        Name = 'inOldPositionId'
         Value = ''
         Component = FormParams
         ComponentItem = 'PositionId'
         ParamType = ptInput
       end
       item
-        Name = 'inoldpositionlevelid'
+        Name = 'inOldPositionLevelId'
         Value = ''
         Component = FormParams
         ComponentItem = 'PositionLevelId'
         ParamType = ptInput
       end
       item
-        Name = 'inoldpersonalgroupid'
+        Name = 'inOldPersonalGroupId'
         Value = Null
         Component = FormParams
         ComponentItem = 'PersonalGroupId'
         ParamType = ptInput
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
@@ -272,7 +280,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
       end
       item
         Name = 'inoperdate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'OperDate'
         DataType = ftDateTime

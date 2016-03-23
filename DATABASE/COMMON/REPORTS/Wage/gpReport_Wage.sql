@@ -36,6 +36,8 @@ RETURNS TABLE(
     ,PersonalCount                  Integer
     ,HoursPlan                      TFloat
     ,HoursDay                       TFloat
+    ,PersonalGroupId                Integer
+    ,PersonalGroupName              TVarChar
     ,MemberId                       Integer
     ,MemberName                     TVarChar
     ,SheetWorkTime_Amount           TFloat
@@ -68,6 +70,8 @@ BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := inSession::Integer;
+
+
     CREATE TEMP TABLE Res(
          StaffList                      Integer
         ,UnitId                         Integer
@@ -79,6 +83,8 @@ BEGIN
         ,PersonalCount                  Integer
         ,HoursPlan                      TFloat
         ,HoursDay                       TFloat
+        ,PersonalGroupId                Integer
+        ,PersonalGroupName              TVarChar
         ,MemberId                       Integer
         ,MemberName                     TVarChar
         ,SheetWorkTime_Date             TDateTime
@@ -117,24 +123,27 @@ BEGIN
        ,ServiceModelOrd Integer
     ) ON COMMIT DROP;
     
-    Insert Into Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay,MemberId,MemberName,SheetWorkTime_Date,SheetWorkTime_Amount
+    -- Report_1
+    Insert Into Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date,SheetWorkTime_Amount
                    ,ServiceModelId,ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    ,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
                    ,OperDate,Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember)
-    Select Report_1.StaffList,Report_1.UnitId,Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.PersonalCount,Report_1.HoursPlan,Report_1.HoursDay,
-           Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date,Report_1.SheetWorkTime_Amount,Report_1.ServiceModelId,Report_1.ServiceModelCode,Report_1.ServiceModelName,Report_1.Price,
-           Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio,
-           Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId,
-           Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName,Report_1.OperDate,Report_1.Count_MemberInDay,Report_1.Gross,Report_1.GrossOnOneMember,
-           Report_1.Amount,Report_1.AmountOnOneMember
-    from gpSelect_Report_Wage_Model(inDateStart      := inDateStart,
+    SELECT Report_1.StaffList,Report_1.UnitId,Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.PersonalCount,Report_1.HoursPlan,Report_1.HoursDay
+         , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date,Report_1.SheetWorkTime_Amount,Report_1.ServiceModelId,Report_1.ServiceModelCode,Report_1.ServiceModelName,Report_1.Price
+         , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
+         , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId
+         , Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName,Report_1.OperDate,Report_1.Count_MemberInDay,Report_1.Gross,Report_1.GrossOnOneMember
+         , Report_1.Amount,Report_1.AmountOnOneMember
+    FROM gpSelect_Report_Wage_Model(inDateStart      := inDateStart,
                                 inDateFinal      := inDateFinal, --дата окончани€ периода
                                 inUnitId         := inUnitId,   --подразделение 
                                 inModelServiceId := inModelServiceId,   --модель начислени€
                                 inMemberId       := inMemberId,   --сотрудник
                                 inPositionId     := inPositionId,   --должность
                                 inSession        := inSession) as Report_1;
-    INSERT INTO Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay,MemberId,MemberName
+
+    -- Report_2
+    INSERT INTO Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName
                    ,SheetWorkTime_Amount,ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember)
     Select 
         Report_2.StaffList
@@ -147,6 +156,8 @@ BEGIN
        ,Report_2.PersonalCount
        ,Report_2.HoursPlan
        ,Report_2.HoursDay
+       ,Report_2.PersonalGroupId
+       ,Report_2.PersonalGroupName
        ,Report_2.MemberId
        ,Report_2.MemberName
        ,Report_2.SheetWorkTime_Amount
@@ -180,6 +191,7 @@ BEGIN
     FROM
         ResDistinct;
         
+    -- –езультат
     RETURN QUERY
         WITH tmpRes AS (
             SELECT
@@ -193,6 +205,8 @@ BEGIN
                ,Res.PersonalCount
                ,Res.HoursPlan
                ,Res.HoursDay
+               , Res.PersonalGroupId
+               , Res.PersonalGroupName
                ,Res.MemberId
                ,Res.MemberName
                ,CASE WHEN inDetailDay = TRUE
@@ -250,6 +264,8 @@ BEGIN
                ,Res.PersonalCount
                ,Res.HoursPlan
                ,Res.HoursDay
+               , Res.PersonalGroupId
+               , Res.PersonalGroupName
                ,Res.MemberId
                ,Res.MemberName
                ,CASE WHEN inDetailDay = TRUE
@@ -303,6 +319,8 @@ BEGIN
            ,tmpRes.PersonalCount
            ,tmpRes.HoursPlan
            ,tmpRes.HoursDay
+           , tmpRes.PersonalGroupId
+           , tmpRes.PersonalGroupName
            ,tmpRes.MemberId
            ,tmpRes.MemberName
            ,tmpRes.SheetWorkTime_Amount
@@ -318,10 +336,10 @@ BEGIN
            ,tmpRes.Count_MemberInDay
            ,tmpRes.Gross
            ,tmpRes.GrossOnOneMember
-           ,ROUND(tmpRes.Amount,2)::TFloat            AS Amount
-           ,ROUND(tmpRes.AmountOnOneMember,2)::TFloat AS AmountOnOneMember
-           ,Object_PersonalServiceList.Id             AS PersonalServiceListId
-           ,Object_PersonalServiceList.ValueData      AS PersonalServiceListName
+           ,ROUND (tmpRes.Amount, 2) :: TFloat            AS Amount
+           ,ROUND (tmpRes.AmountOnOneMember, 2) :: TFloat AS AmountOnOneMember
+           ,Object_PersonalServiceList.Id                 AS PersonalServiceListId
+           ,Object_PersonalServiceList.ValueData          AS PersonalServiceListName
            ,SMOrd.ServiceModelOrd
            ,SMOrd_1.ServiceModelName as ServiceModelName_1
            ,SMOrd_2.ServiceModelName as ServiceModelName_2
@@ -349,7 +367,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_Wage (TDateTime,TDateTime,Integer,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar) OWNER TO postgres;
 
 /*
 Select * from gpSelect_Report_Wage(
@@ -364,4 +381,4 @@ Select * from gpSelect_Report_Wage(
     inDetailModelServiceItemMaster := TRUE,   --детализировать по типам документов в модели
     inDetailModelServiceItemChild  := TRUE,
     inSession        := '5');
-*/    
+*/

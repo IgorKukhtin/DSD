@@ -272,7 +272,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Width = 70
           end
           object colAmount_21201: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
             DataBinding.FieldName = 'Amount_21201'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -508,6 +508,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -541,6 +542,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -622,6 +624,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = CarChoiceForm
       Params = <>
@@ -666,6 +669,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -694,6 +698,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -723,6 +728,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -907,7 +913,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
       end
       item
         Name = 'ioOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -1021,7 +1027,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

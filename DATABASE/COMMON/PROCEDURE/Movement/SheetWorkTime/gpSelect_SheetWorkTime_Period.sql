@@ -12,6 +12,7 @@ RETURNS TABLE (OperDate TDateTime, UnitId Integer, UnitName TVarChar, isComplete
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
    DECLARE vbMemberId Integer;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate   TDateTime;
@@ -54,52 +55,55 @@ BEGIN
      END IF;
 
 
-     vbStartDate := date_trunc ('MONTH', inStartDate);    -- первое число месяца
-     vbEndDate := date_trunc ('MONTH', inEndDate);        -- последнее число месяца
- 
+     -- первое число месяца
+     vbStartDate := DATE_TRUNC ('MONTH', inStartDate);
+     -- последнее число месяца
+     vbEndDate := DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+
+
+     -- Результат
      RETURN QUERY 
-       WITH tmpList AS (SELECT DISTINCT  Object_Personal_View.UnitId 
+       WITH tmpList AS (SELECT DISTINCT Object_Personal_View.UnitId
                         FROM Object_Personal_View
                         WHERE (Object_Personal_View.MemberId = vbMemberId OR vbMemberId = 0)
                        )
-       SELECT
-             Period.OperDate::TDateTime
+          , tmpMovement AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId, DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
+                            FROM Movement
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                 LEFT JOIN tmpList ON tmpList.UnitId = MovementLinkObject_Unit.ObjectId
+                            WHERE Movement.DescId = zc_Movement_SheetWorkTime()
+                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND (tmpList.UnitId > 0 OR vbMemberId = 0)
+                           )
+          , tmpPeriod AS (SELECT tmp.OperDate, tmpList.UnitId
+                          FROM (SELECT generate_series (vbStartDate, vbEndDate, '1 MONTH' :: INTERVAL) AS OperDate) AS tmp
+                               LEFT JOIN tmpList ON 1 =1 
+                         )
+       -- Результат
+       SELECT COALESCE (tmpPeriod.OperDate, tmpMovement.OperDate) :: TDateTime AS OperDate
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ValueData    AS UnitName
-           , ObjectLink_StaffList_Unit.isComplete
-       FROM (SELECT generate_series(vbStartDate, vbEndDate, '1 MONTH'::interval) OperDate) AS Period
-          , (/*SELECT DISTINCT ChildObjectId AS UnitId FROM ObjectLink WHERE DescId = zc_ObjectLink_StaffList_Unit() AND ChildObjectId > 0 AND vbMemberId = 0
-            UNION
-             */SELECT tmpList.UnitId, False AS isComplete  FROM tmpList
-            UNION
-             SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId
-                  , CASE WHEN COALESCE (Movement.Id,0) <> 0 THEN TRUE ELSE False END AS isComplete
-             FROM Movement
-                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                  LEFT JOIN tmpList ON tmpList.UnitId = MovementLinkObject_Unit.ObjectId
-             WHERE Movement.DescId = zc_Movement_SheetWorkTime()
-               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-               AND (tmpList.UnitId > 0 OR vbMemberId = 0)
-            ) AS ObjectLink_StaffList_Unit
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_StaffList_Unit.UnitId
+           , CASE WHEN tmpMovement.UnitId IS NOT NULL THEN TRUE ELSE FALSE END :: Boolean AS isComplete
+       FROM tmpPeriod
+            FULL JOIN tmpMovement ON tmpMovement.UnitId   = tmpPeriod.UnitId
+                                 AND tmpMovement.OperDate = tmpPeriod.OperDate
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (tmpPeriod.UnitId, tmpMovement.UnitId)
       ;
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.03.16                                        * all
  01.03.16         * add isComplete
  28.12.13                                        * add zc_ObjectLink_StaffList_Unit
  01.10.13         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SheetWorkTime (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
--- SELECT * FROM gpSelect_SheetWorkTime_Period (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_SheetWorkTime_Period (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inSession:= '5')

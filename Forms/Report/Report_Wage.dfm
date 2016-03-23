@@ -3,7 +3,6 @@ inherited Report_WageForm: TReport_WageForm
   ClientHeight = 401
   ClientWidth = 991
   AddOnFormData.RefreshAction = nil
-  ExplicitLeft = -201
   ExplicitWidth = 1007
   ExplicitHeight = 436
   PixelsPerInch = 96
@@ -64,6 +63,13 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 130
+          end
+          object PersonalGroupName: TcxGridDBColumn
+            Caption = #1041#1088#1080#1075#1072#1076#1072
+            DataBinding.FieldName = 'PersonalGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colPositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100

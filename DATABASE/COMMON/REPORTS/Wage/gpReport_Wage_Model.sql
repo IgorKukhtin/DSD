@@ -38,6 +38,8 @@ RETURNS TABLE(
     ,PersonalCount                  Integer
     ,HoursPlan                      TFloat
     ,HoursDay                       TFloat
+    ,PersonalGroupId                Integer
+    ,PersonalGroupName              TVarChar
     ,MemberId                       Integer
     ,MemberName                     TVarChar
     ,SheetWorkTime_Date             TDateTime
@@ -455,20 +457,20 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = tmpMovement.GoodsId_from
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-        WHERE (Setting.FromId IS NULL OR tmpMovement.FromId IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.FromId) as UnitTree))
-          AND (Setting.ToId   IS NULL OR tmpMovement.ToId   IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.ToId) AS UnitTree))
+        WHERE (Setting.FromId IS NULL OR COALESCE (tmpMovement_HeadCount.FromId, tmpMovement.FromId) IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.FromId) AS UnitTree))
+          AND (Setting.ToId   IS NULL OR COALESCE (tmpMovement_HeadCount.ToId,   tmpMovement.ToId)   IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.ToId)   AS UnitTree))
           AND (Setting.ModelServiceItemChild_FromId IS NULL OR (Setting.ModelServiceItemChild_FromDescId = zc_Object_Goods()
-                                                            AND tmpMovement.GoodsId_from = Setting.ModelServiceItemChild_FromId
+                                                            AND COALESCE (tmpMovement_HeadCount.GoodsId_from, tmpMovement.GoodsId_from) = Setting.ModelServiceItemChild_FromId
                                                                )
                                                             OR (Setting.ModelServiceItemChild_FromDescId = zc_Object_GoodsGroup()
-                                                            AND tmpMovement.GoodsId_from IN (SELECT GoodsTree.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (Setting.ModelServiceItemChild_FromId) AS GoodsTree)
+                                                            AND COALESCE (tmpMovement_HeadCount.GoodsId_from, tmpMovement.GoodsId_from) IN (SELECT GoodsTree.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (Setting.ModelServiceItemChild_FromId) AS GoodsTree)
                                                                )
               )
           AND (Setting.ModelServiceItemChild_ToId IS NULL OR (Setting.ModelServiceItemChild_ToDescId = zc_Object_Goods()
-                                                          AND tmpMovement.GoodsId_to = Setting.ModelServiceItemChild_ToId
+                                                          AND COALESCE (tmpMovement_HeadCount.GoodsId_to, tmpMovement.GoodsId_to) = Setting.ModelServiceItemChild_ToId
                                                              )
                                                           OR (Setting.ModelServiceItemChild_ToDescId = zc_Object_GoodsGroup()
-                                                          AND tmpMovement.GoodsId_to IN (SELECT GoodsTree.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (Setting.ModelServiceItemChild_ToId) AS GoodsTree)
+                                                          AND COALESCE (tmpMovement_HeadCount.GoodsId_to, tmpMovement.GoodsId_to) IN (SELECT GoodsTree.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (Setting.ModelServiceItemChild_ToId) AS GoodsTree)
                                                              )
               )
         GROUP BY
@@ -495,10 +497,12 @@ BEGIN
             Movement.OperDate               AS OperDate
            ,MI_SheetWorkTime.ObjectId       AS MemberId
            ,Object_Member.ValueData         AS MemberName
+           ,MIObject_PersonalGroup.ObjectId AS PersonalGroupId
            ,MIObject_Position.ObjectId      AS PositionId
            ,MIObject_PositionLevel.ObjectId AS PositionLevelId
            ,MI_SheetWorkTime.Amount         AS Amount
-           , COUNT(*) OVER(PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) as Count_MemberInDay
+           , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS AmountInDay
+           , COUNT(*) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_MemberInDay
         FROM Movement
              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -509,6 +513,9 @@ BEGIN
                                     AND MI_SheetWorkTime.isErased = FALSE
              INNER JOIN Object AS Object_Member
                                ON Object_Member.Id = MI_SheetWorkTime.ObjectId
+             LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                    ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
+                                                   AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
                                                     ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                                    AND MIObject_Position.DescId = zc_MILinkObject_Position() 
@@ -528,18 +535,22 @@ BEGIN
        , Movement_SheetGroup AS
       (SELECT Movement_Sheet.MemberId
             , Movement_Sheet.MemberName
+            , Movement_Sheet.PersonalGroupId
             , Movement_Sheet.PositionId
             , Movement_Sheet.PositionLevelId
             , (Movement_Sheet.Amount) AS Amount
-            , COUNT(*) OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId) as Count_Member
+            , SUM (Movement_Sheet.Amount) OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId) AS AmountInMonth
+            , COUNT(*) OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId) AS Count_Member
        FROM (SELECT Movement_Sheet.MemberId
                   , Movement_Sheet.MemberName
+                  , Movement_Sheet.PersonalGroupId
                   , Movement_Sheet.PositionId
                   , Movement_Sheet.PositionLevelId
                   , SUM (Movement_Sheet.Amount) AS Amount
              FROM Movement_Sheet
              GROUP BY Movement_Sheet.MemberId
                     , Movement_Sheet.MemberName
+                    , Movement_Sheet.PersonalGroupId
                     , Movement_Sheet.PositionId
                     , Movement_Sheet.PositionLevelId
             ) AS Movement_Sheet
@@ -557,6 +568,8 @@ BEGIN
        ,Setting.PersonalCount
        ,Setting.HoursPlan
        ,Setting.HoursDay
+       , Object_PersonalGroup.Id        AS PersonalGroupId
+       , Object_PersonalGroup.ValueData AS PersonalGroupName
        ,COALESCE (Movement_SheetGroup.MemberId,   Movement_Sheet.MemberId)   :: Integer  AS MemberId
        ,COALESCE (Movement_SheetGroup.MemberName, Movement_Sheet.MemberName) :: TVarChar AS MemberName
        ,tmpOperDate.OperDate :: TDateTime AS SheetWorkTime_Date
@@ -583,9 +596,22 @@ BEGIN
        , tmpOperDate.OperDate :: TDateTime
        , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay) :: Integer
        , ServiceModelMovement.Gross
-       , (ServiceModelMovement.Gross / COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay)) :: TFloat      AS GrossOnOneMember
+       , (ServiceModelMovement.Gross
+        / CASE WHEN (Movement_Sheet.AmountInDay = 0 OR ServiceModelMovement.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
+                    THEN 0
+               WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
+                    THEN Movement_Sheet.AmountInDay / ServiceModelMovement.Amount
+               ELSE COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay)
+          END) :: TFloat AS GrossOnOneMember
        , ServiceModelMovement.Amount
-       , ROUND (ServiceModelMovement.Amount / COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay), 2) :: TFloat AS AmountOnOneMember
+       , ROUND (ServiceModelMovement.Amount
+              / CASE WHEN (Movement_Sheet.AmountInDay = 0 OR ServiceModelMovement.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
+                          THEN 0
+                     WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
+                          THEN Movement_Sheet.AmountInDay / ServiceModelMovement.Amount
+                     ELSE COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay)
+                END
+              , 2) :: TFloat AS AmountOnOneMember
     FROM Setting_Wage_1 AS Setting
          CROSS JOIN tmpOperDate
          LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0) = COALESCE (Setting.PositionId, 0)
@@ -609,6 +635,8 @@ BEGIN
                                             AND COALESCE (Setting.ModelServiceItemChild_FromId, 0) = COALESCE (ServiceModelMovement.ModelServiceItemChild_FromId, 0)
                                             AND COALESCE (Setting.ModelServiceItemChild_ToId, 0)   = COALESCE (ServiceModelMovement.ModelServiceItemChild_ToId, 0)
                                             AND ServiceModelMovement.OperDate                      = tmpOperDate.OperDate
+
+        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
      ;
 
 END;

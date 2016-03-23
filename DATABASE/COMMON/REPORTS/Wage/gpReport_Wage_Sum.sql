@@ -38,6 +38,8 @@ RETURNS TABLE(
     ,StaffListSumm_Value            TFloat
     ,StaffListSummKindId            Integer
     ,StaffListSummKindName          TVarChar
+    ,PersonalGroupId                Integer
+    ,PersonalGroupName              TVarChar
     ,MemberId                       Integer
     ,MemberName                     TVarChar
     ,SheetWorkTime_Amount           TFloat
@@ -160,24 +162,26 @@ BEGIN
         SELECT
             SheetWorkTime.MemberId
            ,SheetWorkTime.MemberName
+           ,SheetWorkTime.PersonalGroupId
            ,SheetWorkTime.PositionId
            ,SheetWorkTime.PositionLevelId
            ,SUM(SheetWorkTime.SheetWorkTime_Amount) AS SheetWorkTime_Amount
            ,SUM(SheetWorkTime.Count_Day)            AS Count_Day
            ,SheetWorkTime.Count_MemberDay::Integer  AS Count_MemberDay
-           , COUNT (*) OVER (PARTITION BY ,SheetWorkTime.PositionId, ,SheetWorkTime.PositionLevelId) AS Count_Member
+           , COUNT (*) OVER (PARTITION BY SheetWorkTime.PositionId, SheetWorkTime.PositionLevelId) AS Count_Member
            ,SheetWorkTime.SUM_MemberHours::TFloat   AS SUM_MemberHours
            ,SUM(SummaAdd)::TFloat                   AS SummaADD
         FROM(
             SELECT
                 MI_SheetWorkTime.ObjectId                      AS MemberId
                ,Object_Member.ValueData                        AS MemberName
+               ,MIObject_PersonalGroup.ObjectId                AS PersonalGroupId
                ,MIObject_Position.ObjectId                     AS PositionId
                ,MIObject_PositionLevel.ObjectId                AS PositionLevelId
                ,MI_SheetWorkTime.Amount                        AS SheetWorkTime_Amount
                ,1                                              as Count_Day
-               ,COUNT(*) OVER(PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) as Count_MemberDay
-               ,SUM(MI_SheetWorkTime.Amount) OVER(PARTITION BY MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
+               ,COUNT(*) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) as Count_MemberDay
+               ,SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
                ,CASE 
                     WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day()
                         THEN Setting.StaffListSumm_Value / (SUM(MI_SheetWorkTime.Amount) OVER(PARTITION BY Movement.OperDate,MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId))*MI_SheetWorkTime.Amount
@@ -194,6 +198,9 @@ BEGIN
                                        AND MI_SheetWorkTime.isErased = FALSE
                 INNER JOIN Object AS Object_Member
                                   ON Object_Member.Id = MI_SheetWorkTime.ObjectId
+                LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                       ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
+                                                      AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
                 LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
                                                        ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                                       AND MIObject_Position.DescId = zc_MILinkObject_Position() 
@@ -236,12 +243,15 @@ BEGIN
         GROUP BY
             SheetWorkTime.MemberId
            ,SheetWorkTime.MemberName
+           ,SheetWorkTime.PersonalGroupId
            ,SheetWorkTime.PositionId
            ,SheetWorkTime.PositionLevelId
            ,SheetWorkTime.Count_MemberDay
            ,SheetWorkTime.SUM_MemberHours
     )
-    SELECT 
+
+   -- Результат
+   SELECT 
         Setting.StaffList
        ,Setting.UnitId
        ,Setting.UnitName
@@ -256,6 +266,8 @@ BEGIN
        ,Setting.StaffListSumm_Value
        ,Setting.StaffListSummKindId
        ,Setting.StaffListSummKindName
+       , Object_PersonalGroup.Id        AS PersonalGroupId
+       , Object_PersonalGroup.ValueData AS PersonalGroupName
        ,Movement_SheetWorkTime.MemberId
        ,Movement_SheetWorkTime.MemberName
        ,Movement_SheetWorkTime.SheetWorkTime_Amount::TFloat
@@ -286,14 +298,14 @@ BEGIN
                 THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.SUM_MemberHours,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
         END::TFloat AS Summ
     FROM Setting_Wage_2 AS Setting
-        LEFT OUTER JOIN Movement_SheetWorkTime ON COALESCE(Movement_SheetWorkTime.PositionId,0) = COALESCE(Setting.PositionId,0)
-                                              AND COALESCE(Movement_SheetWorkTime.PositionLevelId,0) = COALESCE(Setting.PositionLevelId,0)
+        LEFT OUTER JOIN Movement_SheetWorkTime ON COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
+                                              AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = Movement_SheetWorkTime.PersonalGroupId
     ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_Wage_Sum (TDateTime,TDateTime,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*
 Select * from gpSelect_Report_Wage_Sum(
@@ -303,4 +315,4 @@ Select * from gpSelect_Report_Wage_Sum(
     inMemberId     := 0::Integer,   --сотрудник
     inPositionId     := 0::Integer,   --должность
     inSession        := '5');
-*/    
+*/

@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_SheetWorkTime()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTimeGroup(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTimeGroup(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTimeGroup (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTimeGroup (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTimeGroup(
     IN inMemberId            Integer   , -- Ключ физ. лицо
@@ -20,106 +20,111 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMovementItemCount Integer;
-   DECLARE vbTypeId Integer;
-   DECLARE vbValue TVarChar;
+
    DECLARE vbStartDate TDateTime;
-   DECLARE vbEndDate TDateTime;
+   DECLARE vbEndDate   TDateTime;
+   DECLARE vbMICount   Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
-    
-    vbUserId := inSession;
+    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
+    vbUserId:= lpGetUserBySession (inSession);
 
-    vbTypeId := zc_Enum_WorkTimeKind_Work();
 
-    -- Первая задача. Это просто добавление нового документа
+    -- первое число месяца
+    vbStartDate := DATE_TRUNC ('MONTH', inOperDate);
+    -- последнее число месяца
+    vbEndDate := vbStartDate + INTERVAL '1 MONTH';
 
-    -- Вторая - Изменение внесенных документов. 
-    IF inOldMemberId = 0 THEN
-       PERFORM gpInsertUpdate_MovementItem_SheetWorkTime(inMemberId, inPositionId, inPositionLevelId, inUnitId, inPersonalGroupId, inOperDate, '0', vbTypeId, inSession);
-    ELSE
-       vbStartDate := date_trunc('month', inOperDate)                            ;    -- первое число месяца
-       vbEndDate := vbStartDate + interval '1 month' - interval '1 microseconds' ;    -- последнее число месяца
-       -- Сначала проверяем что нет с такими ключами
-       SELECT count(*) INTO vbMovementItemCount
-        FROM MovementItem AS MI_SheetWorkTime
-        JOIN Movement AS Movement_SheetWorkTime
-          ON Movement_SheetWorkTime.Id = MI_SheetWorkTime.MovementId 
-         AND Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() 
-         AND Movement_SheetWorkTime.OperDate::Date BETWEEN vbStartDate AND vbEndDate
+    -- Сначала проверяем что нет с такими ключами
+    SELECT COUNT(*)
+           INTO vbMICount
+    FROM MovementItem AS MI_SheetWorkTime
+            INNER JOIN Movement AS Movement_SheetWorkTime
+                                ON Movement_SheetWorkTime.Id = MI_SheetWorkTime.MovementId 
+                               AND Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() 
+                               AND Movement_SheetWorkTime.OperDate >= vbStartDate AND Movement_SheetWorkTime.OperDate < vbEndDate
 
-        JOIN MovementLinkObject AS MovementLinkObject_Unit 
-          ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-         AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
-         AND MovementLinkObject_Unit.ObjectId = inUnitId 
+            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit 
+                                          ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                         AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
+                                         AND MovementLinkObject_Unit.ObjectId = inUnitId 
 
-        LEFT JOIN MovementItemLinkObject AS MIObject_Position
-          ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-         AND MIObject_Position.DescId = zc_MILinkObject_Position() 
+            LEFT JOIN MovementItemLinkObject AS MIObject_Position
+                                             ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
+                                            AND MIObject_Position.DescId = zc_MILinkObject_Position() 
 
-        LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
-          ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
-         AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
+            LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                             ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
+                                            AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
 
-        LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
-          ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
-         AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+            LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                             ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
+                                            AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
 
        WHERE MI_SheetWorkTime.ObjectId = inMemberId
          AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
          AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
          AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
        ;
-       
-       IF COALESCE(vbMovementItemCount, 0) <> 0 THEN
-          RAISE EXCEPTION 'Сотрудник с такими свойствами уже есть в табеле!';
-       END IF;
 
-       CREATE TEMP TABLE _tmpMI (Id Integer) ON COMMIT DROP;
+    -- проверка
+    IF vbMICount > 0
+    THEN
+        RAISE EXCEPTION 'Сотрудник с такими параметрами уже есть в табеле.';
+    END IF;
 
-       -- Находим за месяц есть ли документы со старыми ключами во временную таблицу.
-       INSERT INTO _tmpMI(Id)
-       SELECT MI_SheetWorkTime.Id 
-        FROM MovementItem AS MI_SheetWorkTime
-        JOIN Movement AS Movement_SheetWorkTime
-          ON Movement_SheetWorkTime.Id = MI_SheetWorkTime.MovementId 
-         AND Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() 
-         AND Movement_SheetWorkTime.OperDate::Date BETWEEN vbStartDate AND vbEndDate
-        JOIN MovementLinkObject AS MovementLinkObject_Unit 
-          ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-         AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
-         AND MovementLinkObject_Unit.ObjectId = inUnitId 
-        LEFT JOIN MovementItemLinkObject AS MIObject_Position
-          ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-         AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-        LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
-          ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
-         AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
-        LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
-          ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
-         AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-       WHERE MI_SheetWorkTime.ObjectId = inOldMemberId
-         AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inOldPositionId, 0)
-         AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inOldPositionLevelId, 0)
-         AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inOldPersonalGroupId, 0)
-        ;
 
-       -- а теперь меняем ключи
-       -- Сначала Физ Лицо. А потом все остальные
-       UPDATE MovementItem SET ObjectId = inMemberId WHERE Id IN (SELECT Id FROM _tmpMI);
-       PERFORM 
-           -- сохранили связь с <Группировки Сотрудников>
-           lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalGroup(), Id, inPersonalGroupId),
-           -- сохранили связь с <Должностью>
-           lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), Id, inPositionId),
-           -- сохранили связь с <Разряд>
-           lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PositionLevel(), Id, inPositionLevelId)
+    -- все данные по этому сотруднику + ...
+    CREATE TEMP TABLE _tmpMI (MovementItemId Integer) ON COMMIT DROP;
+    -- 
+    INSERT INTO _tmpMI (MovementItemId)
+                         SELECT MI_SheetWorkTime.Id 
+                         FROM Movement
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId  = inUnitId
+                              INNER JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
+                                                                          AND MI_SheetWorkTime.ObjectId  = inOldMemberId
+                              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
+                                                                     ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
+                                                                    AND MIObject_Position.DescId = zc_MILinkObject_Position()
+                              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                                     ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
+                                                                    AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                                     ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
+                                                                    AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
+                         WHERE Movement.OperDate >= vbStartDate AND Movement.OperDate < vbEndDate
+                           AND Movement.DescId = zc_Movement_SheetWorkTime()
+                           AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inOldPositionId, 0)
+                           AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inOldPositionLevelId, 0)
+                           AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inOldPersonalGroupId, 0)
+                        ;
+
+    IF inOldMemberId = 0 OR NOT EXISTS (SELECT 1 FROM _tmpMI)
+    THEN
+       -- Это просто добавление нового документа
+       PERFORM gpInsertUpdate_MovementItem_SheetWorkTime (inMemberId, inPositionId, inPositionLevelId, inUnitId, inPersonalGroupId, inOperDate, '0', zc_Enum_WorkTimeKind_Work(), inSession);
+    ELSE
+       -- Изменение ВСЕХ документов
+
+       -- Физ Лицо.
+       UPDATE MovementItem SET ObjectId = inMemberId WHERE Id IN (SELECT MovementItemId FROM _tmpMI);
+       -- все остальные
+       PERFORM -- сохранили связь с <Группировки Сотрудников>
+               lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalGroup(), MovementItemId, inPersonalGroupId)
+               -- сохранили связь с <Должностью>
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), MovementItemId, inPositionId)
+               -- сохранили связь с <Разряд>
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PositionLevel(), MovementItemId, inPositionLevelId)
         FROM _tmpMI;     
+
+        -- сохранили протокол
+        PERFORM lpInsert_MovementItemProtocol (_tmpMI.MovementItemId, vbUserId, FALSE) FROM _tmpMI;
+
      END IF;                   
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 
 END;
 $BODY$

@@ -57,6 +57,7 @@ type
     colPersonalServiceListName: TcxGridDBColumn;
     actPrint2: TdsdPrintAction;
     dxBarButton2: TdxBarButton;
+    PersonalGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public
