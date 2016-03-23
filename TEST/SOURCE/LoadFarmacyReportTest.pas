@@ -70,6 +70,7 @@ begin
   LoadReportFromFile('Продажа', ReportPath + '\Продажа.fr3');
   LoadReportFromFile('Оплаты', ReportPath + '\Оплаты.fr3');
   LoadReportFromFile('Возвратная_накладная', ReportPath + '\Возвратная_накладная.fr3');
+  LoadReportFromFile('Отчет по продажам на кассах', ReportPath + '\Отчет по продажам на кассах.fr3');
 end;
 
 procedure TLoadReportTest.SetUp;

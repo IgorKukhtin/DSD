@@ -54,6 +54,8 @@ type
     actRefreshPartionPrice: TdsdDataSetRefresh;
     UnitName: TcxGridDBColumn;
     OurJuridicalName: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public
