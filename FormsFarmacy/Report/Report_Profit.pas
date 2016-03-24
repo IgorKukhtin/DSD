@@ -58,6 +58,8 @@ type
     SummaWithVAT2: TcxGridDBColumn;
     SummaWithVAT1: TcxGridDBColumn;
     pcolPersentProfit: TcxDBPivotGridField;
+    actPrint: TdsdPrintAction;
+    bbactPrint: TdxBarButton;
   private
     { Private declarations }
   public

@@ -328,7 +328,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 98
+            Width = 107
           end
           object clSummaWithVAT: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057'), '#1075#1088#1085
@@ -566,9 +566,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 1592
-      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -579,7 +576,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitWidth = 1592
         object pcolJuridicalMainName: TcxDBPivotGridField
           AreaIndex = 0
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -621,7 +617,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
         end
         object pcolSummaProfit: TcxDBPivotGridField
           Area = faData
-          AreaIndex = 2
+          AreaIndex = 3
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
           Caption = #1044#1086#1093#1086#1076
@@ -630,8 +626,8 @@ inherited Report_ProfitForm: TReport_ProfitForm
           UniqueName = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
         end
         object pcolPersentProfit: TcxDBPivotGridField
-          Area = faColumn
-          AreaIndex = 0
+          Area = faData
+          AreaIndex = 2
           IsCaptionAssigned = True
           Caption = '% '#1076#1086#1093#1086#1076#1072
           DataBinding.FieldName = 'PersentProfit'
@@ -861,6 +857,37 @@ inherited Report_ProfitForm: TReport_ProfitForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+      Hint = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'JuridicalMainName;UnitName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42371d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Left = 560
@@ -948,6 +975,14 @@ inherited Report_ProfitForm: TReport_ProfitForm
         end
         item
           Visible = True
+          ItemName = 'bbactPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1003,6 +1038,10 @@ inherited Report_ProfitForm: TReport_ProfitForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbactPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
