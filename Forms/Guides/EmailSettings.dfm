@@ -3,7 +3,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
   ClientHeight = 316
   ClientWidth = 753
   ExplicitWidth = 769
-  ExplicitHeight = 354
+  ExplicitHeight = 351
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,8 +24,9 @@ inherited EmailSettingsForm: TEmailSettingsForm
         ExplicitWidth = 753
         ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsData.Appending = True
-          OptionsData.Inserting = True
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -174,6 +175,10 @@ inherited EmailSettingsForm: TEmailSettingsForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

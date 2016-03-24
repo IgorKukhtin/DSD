@@ -783,10 +783,6 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Password(), inDescId:= zc_Object_EmailTools(), inCode:= 5, inName:= 'Password'                      , inEnumName:= 'zc_Enum_EmailTools_Password');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Directory(),inDescId:= zc_Object_EmailTools(), inCode:= 6, inName:= 'Директория формирования файлов', inEnumName:= 'zc_Enum_EmailTools_Directory');
     
-      -- !!! Типы установок для почты
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_OutOrder(),inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая для заказов поставщикам'  , inEnumName:= 'zc_Enum_EmailKind_OutOrder');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_InPrice(), inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Входящая для прайс-листа поставщика', inEnumName:= 'zc_Enum_EmailKind_InPrice');
-
 
 END $$;
 
