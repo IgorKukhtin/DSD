@@ -121,6 +121,7 @@ type
     clcsummSummKindComment: TcxGridDBColumn;
     cxSplitterBottom: TcxSplitter;
     cxSplitter1: TcxSplitter;
+    clisPositionLevel: TcxGridDBColumn;
   private
     { Private declarations }
   public
