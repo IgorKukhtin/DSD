@@ -36,6 +36,11 @@ inherited Report_WageForm: TReport_WageForm
               Format = ',0.00'
               Kind = skSum
               Column = colAmountOnOneMember
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSheetWorkTime_Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -47,6 +52,11 @@ inherited Report_WageForm: TReport_WageForm
               Format = ',0.00##'
               Kind = skSum
               Column = colGrossOnOneMember
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSheetWorkTime_Amount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -86,7 +96,7 @@ inherited Report_WageForm: TReport_WageForm
             Width = 98
           end
           object colPersonalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082
+            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082' ('#1074#1089#1077')'
             DataBinding.FieldName = 'PersonalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -101,14 +111,22 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
+          object SUM_MemberHours: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'SUM_MemberHours'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colSheetWorkTime_Amount: TcxGridDBColumn
-            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074
+            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' 1 '#1095#1077#1083
             DataBinding.FieldName = 'SheetWorkTime_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colServiceModelName: TcxGridDBColumn
             Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' / '#1058#1080#1087' '#1089#1091#1084#1084#1099

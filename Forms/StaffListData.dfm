@@ -27,8 +27,6 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 8
-    ExplicitWidth = 937
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -147,7 +145,6 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 937
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -216,7 +213,6 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 937
     object cxGridDBTableStaffListSumm: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListSummDS
@@ -303,7 +299,6 @@ object StaffListDataForm: TStaffListDataForm
     Height = 23
     Align = alTop
     TabOrder = 7
-    ExplicitWidth = 937
     object ceUnit: TcxButtonEdit
       Left = 471
       Top = 0
@@ -329,7 +324,6 @@ object StaffListDataForm: TStaffListDataForm
     Height = 6
     AlignSplitter = salTop
     Control = cxGridStaffList
-    ExplicitWidth = 937
   end
   object cxSplitter1: TcxSplitter
     Left = 0
@@ -338,7 +332,6 @@ object StaffListDataForm: TStaffListDataForm
     Height = 6
     AlignSplitter = salBottom
     Control = cxGridStaffListSumm
-    ExplicitWidth = 937
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -442,11 +435,11 @@ object StaffListDataForm: TStaffListDataForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -455,6 +448,18 @@ object StaffListDataForm: TStaffListDataForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0

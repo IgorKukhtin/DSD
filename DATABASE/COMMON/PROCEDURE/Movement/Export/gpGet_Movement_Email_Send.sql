@@ -40,7 +40,7 @@ BEGIN
                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                           )
           -- ВСЕ, кому надо отправить Email
-        , tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.EmailKindId, tmp.ContactPersonMail FROM lpSelect_Object_ExportJuridical_list() AS tmp)
+        , tmpExportJuridical AS (SELECT tmp.PartnerId, tmp.EmailKindId, STRING_AGG (tmp.ContactPersonMail, ';') AS ContactPersonMail FROM lpSelect_Object_ExportJuridical_list() AS tmp GROUP BY tmp.PartnerId, tmp.EmailKindId)
           -- ВСЕ параметры - откуда отправлять, для Одного Покупателя
         , tmpEmail_from AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= (SELECT tmp.EmailKindId
                                                                                           FROM tmpPartnerTo
@@ -51,7 +51,7 @@ BEGIN
      SELECT tmp.outFileName          :: TVarChar AS Subject
           , ''                       :: TBlob    AS Body
           , gpGet_Mail.Value                     AS AddressFrom
-          , tmpExportJuridical.ContactPersonMail AS AddressTo
+          , tmpExportJuridical.ContactPersonMail :: TVarChar AS AddressTo
           -- , case when inSession = '5' then 'ashtu777@ua.fm' else  tmpExportJuridical.ContactPersonMail end :: TVarChar AS AddressTo
           , gpGet_Host.Value                     AS Host
           , gpGet_Port.Value                     AS Port

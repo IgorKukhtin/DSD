@@ -58,6 +58,7 @@ type
     actPrint2: TdsdPrintAction;
     dxBarButton2: TdxBarButton;
     PersonalGroupName: TcxGridDBColumn;
+    SUM_MemberHours: TcxGridDBColumn;
   private
     { Private declarations }
   public

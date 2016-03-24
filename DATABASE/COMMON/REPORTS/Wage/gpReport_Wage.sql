@@ -40,7 +40,8 @@ RETURNS TABLE(
     ,PersonalGroupName              TVarChar
     ,MemberId                       Integer
     ,MemberName                     TVarChar
-    ,SheetWorkTime_Amount           TFloat
+    ,SUM_MemberHours                TFloat  -- итого часов всех сотрудников (с этой должностью+...)
+    ,SheetWorkTime_Amount           TFloat  -- итого часов сотрудника
     ,ServiceModelCode               Integer
     ,ServiceModelName               TVarChar
     ,Price                          TFloat
@@ -88,6 +89,7 @@ BEGIN
         ,MemberId                       Integer
         ,MemberName                     TVarChar
         ,SheetWorkTime_Date             TDateTime
+        ,SUM_MemberHours                TFloat
         ,SheetWorkTime_Amount           TFloat
         ,ServiceModelId                 Integer
         ,ServiceModelCode               Integer
@@ -124,12 +126,12 @@ BEGIN
     ) ON COMMIT DROP;
     
     -- Report_1
-    Insert Into Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date,SheetWorkTime_Amount
+    Insert Into Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
                    ,ServiceModelId,ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    ,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
                    ,OperDate,Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember)
     SELECT Report_1.StaffList,Report_1.UnitId,Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.PersonalCount,Report_1.HoursPlan,Report_1.HoursDay
-         , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date,Report_1.SheetWorkTime_Amount,Report_1.ServiceModelId,Report_1.ServiceModelCode,Report_1.ServiceModelName,Report_1.Price
+         , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date, Report_1.SUM_MemberHours, Report_1.SheetWorkTime_Amount, Report_1.ServiceModelId,Report_1.ServiceModelCode,Report_1.ServiceModelName,Report_1.Price
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
          , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId
          , Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName,Report_1.OperDate,Report_1.Count_MemberInDay,Report_1.Gross,Report_1.GrossOnOneMember
@@ -144,7 +146,7 @@ BEGIN
 
     -- Report_2
     INSERT INTO Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName
-                   ,SheetWorkTime_Amount,ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember)
+                   , SUM_MemberHours, SheetWorkTime_Amount, ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember)
     Select 
         Report_2.StaffList
        ,Report_2.UnitId
@@ -160,6 +162,7 @@ BEGIN
        ,Report_2.PersonalGroupName
        ,Report_2.MemberId
        ,Report_2.MemberName
+       ,Report_2.SUM_MemberHours
        ,Report_2.SheetWorkTime_Amount
        ,Report_2.StaffListSummKindId
        ,Report_2.StaffListSummKindId   AS ServiceModelCode
@@ -209,12 +212,13 @@ BEGIN
                , Res.PersonalGroupName
                ,Res.MemberId
                ,Res.MemberName
+               ,Res.SUM_MemberHours
                ,CASE WHEN inDetailDay = TRUE
                      THEN Res.SheetWorkTime_Amount
                 ELSE NULL::TFloat END                          AS SheetWorkTime_Amount
                ,CASE WHEN inDetailModelService = TRUE
                      THEN Res.ServiceModelCode
-                ELSE NULL::Integer END                        AS ServiceModelCode
+                ELSE NULL::Integer END                         AS ServiceModelCode
                ,CASE WHEN inDetailModelService = TRUE
                      THEN Res.ServiceModelName
                 ELSE NULL::TVarChar END                        AS ServiceModelName
@@ -268,6 +272,7 @@ BEGIN
                , Res.PersonalGroupName
                ,Res.MemberId
                ,Res.MemberName
+               ,Res.SUM_MemberHours
                ,CASE WHEN inDetailDay = TRUE
                      THEN Res.SheetWorkTime_Amount
                 ELSE NULL::TFloat END
@@ -323,6 +328,7 @@ BEGIN
            , tmpRes.PersonalGroupName
            ,tmpRes.MemberId
            ,tmpRes.MemberName
+           ,tmpRes.SUM_MemberHours
            ,tmpRes.SheetWorkTime_Amount
            ,tmpRes.ServiceModelCode
            ,tmpRes.ServiceModelName

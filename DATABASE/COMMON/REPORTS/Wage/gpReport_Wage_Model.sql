@@ -43,6 +43,7 @@ RETURNS TABLE(
     ,MemberId                       Integer
     ,MemberName                     TVarChar
     ,SheetWorkTime_Date             TDateTime
+    ,SUM_MemberHours                TFloat
     ,SheetWorkTime_Amount           TFloat
     ,ServiceModelId                 Integer
     ,ServiceModelCode               Integer
@@ -89,6 +90,7 @@ BEGIN
        ,UnitName TVarChar
        ,PositionId Integer
        ,PositionName TVarChar
+       ,isPositionLevel_all Boolean
        ,PositionLevelId Integer
        ,PositionLevelName TVarChar
        ,PersonalCount Integer
@@ -119,7 +121,7 @@ BEGIN
 
 
     -- получили Настройки
-    INSERT INTO Setting_Wage_1 (StaffListId,UnitId,UnitName,PositionId,PositionName,PositionLevelId ,PositionLevelName,PersonalCount,HoursPlan,HoursDay, ServiceModelKindId, ServiceModelId,ServiceModelCode
+    INSERT INTO Setting_Wage_1 (StaffListId,UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName, PersonalCount,HoursPlan,HoursDay, ServiceModelKindId, ServiceModelId,ServiceModelCode
                               , ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName, SelectKindId, SelectKindCode, SelectKindName, isActive
                               , Ratio,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName)
     SELECT
@@ -128,7 +130,8 @@ BEGIN
        ,Object_Unit.ValueData                               AS UnitName
        ,ObjectLink_StaffList_Position.ChildObjectId         AS PositionId             -- Должность
        ,Object_Position.ValueData                           AS PositionName
-       ,ObjectLink_StaffList_PositionLevel.ChildObjectId    AS PositionLevelId        -- Разряд должности
+       ,COALESCE (ObjectBoolean_PositionLevel.ValueData, FALSE) AS isPositionLevel_all
+       ,CASE WHEN ObjectBoolean_PositionLevel.ValueData = TRUE THEN 0 ELSE ObjectLink_StaffList_PositionLevel.ChildObjectId END AS PositionLevelId -- Разряд должности
        ,Object_PositionLevel.ValueData                      AS PositionLevelName
        ,ObjectFloat_PersonalCount.ValueData::Integer        AS PersonalCount          -- !!!информативно!!! кол-во сотрудников (из справочника Штатное расписание)
        ,ObjectFloat_HoursPlan.ValueData                     AS HoursPlan              -- !!!информативно!!! 1.Общий план часов в месяц на человека (из справочника Штатное расписание)
@@ -161,8 +164,10 @@ BEGIN
        ,ModelServiceItemChild_To.Id                         AS ModelServiceItemChild_ToId         -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
        ,ModelServiceItemChild_To.DescId                     AS ModelServiceItemChild_ToDescId
        ,ModelServiceItemChild_To.ValueData                  AS ModelServiceItemChild_ToName
-    FROM
-        Object as Object_StaffList
+    FROM Object as Object_StaffList
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionLevel
+                                ON ObjectBoolean_PositionLevel.ObjectId = Object_StaffList.Id 
+                               AND ObjectBoolean_PositionLevel.DescId = zc_ObjectBoolean_StaffList_PositionLevel()
         --Unit подразделение
         LEFT OUTER JOIN ObjectLink AS ObjectLink_StaffList_Unit
                                    ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
@@ -501,6 +506,7 @@ BEGIN
            ,MIObject_Position.ObjectId      AS PositionId
            ,MIObject_PositionLevel.ObjectId AS PositionLevelId
            ,MI_SheetWorkTime.Amount         AS Amount
+           , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
            , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS AmountInDay
            , COUNT(*) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_MemberInDay
         FROM Movement
@@ -572,8 +578,9 @@ BEGIN
        , Object_PersonalGroup.ValueData AS PersonalGroupName
        ,COALESCE (Movement_SheetGroup.MemberId,   Movement_Sheet.MemberId)   :: Integer  AS MemberId
        ,COALESCE (Movement_SheetGroup.MemberName, Movement_Sheet.MemberName) :: TVarChar AS MemberName
-       ,tmpOperDate.OperDate :: TDateTime AS SheetWorkTime_Date
-       ,Movement_Sheet.Amount             AS SheetWorkTime_Amount
+       ,tmpOperDate.OperDate :: TDateTime        AS SheetWorkTime_Date
+       ,Movement_Sheet.SUM_MemberHours :: TFloat AS SUM_MemberHours
+       ,Movement_Sheet.Amount                    AS SheetWorkTime_Amount
        ,Setting.ServiceModelId
        ,Setting.ServiceModelCode
        ,Setting.ServiceModelName
@@ -597,24 +604,26 @@ BEGIN
        , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay) :: Integer
        , ServiceModelMovement.Gross
        , (ServiceModelMovement.Gross
-        / CASE WHEN (Movement_Sheet.AmountInDay = 0 OR ServiceModelMovement.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
+        / NULLIF (
+          CASE WHEN (Movement_Sheet.AmountInDay = 0 OR ServiceModelMovement.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
                     THEN 0
                WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
-                    THEN Movement_Sheet.AmountInDay / ServiceModelMovement.Amount
+                    THEN Movement_Sheet.AmountInDay / NULLIF (ServiceModelMovement.Amount, 0)
                ELSE COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay)
-          END) :: TFloat AS GrossOnOneMember
+          END, 0)) :: TFloat AS GrossOnOneMember
        , ServiceModelMovement.Amount
        , ROUND (ServiceModelMovement.Amount
-              / CASE WHEN (Movement_Sheet.AmountInDay = 0 OR ServiceModelMovement.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
+              / NULLIF (
+                CASE WHEN (Movement_Sheet.AmountInDay = 0 OR ServiceModelMovement.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
                           THEN 0
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
-                          THEN Movement_Sheet.AmountInDay / ServiceModelMovement.Amount
+                          THEN Movement_Sheet.AmountInDay / NULLIF (ServiceModelMovement.Amount, 0)
                      ELSE COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay)
-                END
+                END, 0)
               , 2) :: TFloat AS AmountOnOneMember
     FROM Setting_Wage_1 AS Setting
          CROSS JOIN tmpOperDate
-         LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0) = COALESCE (Setting.PositionId, 0)
+         LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                             AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
                                             AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за месяц табель
          LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
