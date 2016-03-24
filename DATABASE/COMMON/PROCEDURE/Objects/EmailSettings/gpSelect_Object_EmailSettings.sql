@@ -63,8 +63,7 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -74,4 +73,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_EmailSettings ('2')
+-- SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= 0, inSession:= '5')

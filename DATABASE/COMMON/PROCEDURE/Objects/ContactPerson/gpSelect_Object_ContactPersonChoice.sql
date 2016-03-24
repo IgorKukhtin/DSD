@@ -83,21 +83,20 @@ BEGIN
                                    ON ObjectString_Comment.ObjectId = Object_ContactPerson.Id 
                                   AND ObjectString_Comment.DescId = zc_ObjectString_ContactPerson_Comment()
                                                              
-            JOIN ObjectLink AS ContactPerson_ContactPerson_Object
+            LEFT JOIN ObjectLink AS ContactPerson_ContactPerson_Object
                                  ON ContactPerson_ContactPerson_Object.ObjectId = Object_ContactPerson.Id
                                 AND ContactPerson_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
-            JOIN Object AS ContactPerson_Object ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
-                                                    AND ContactPerson_Object.DescId = zc_Object_Partner()
-                                                    AND (ContactPerson_Object.Id = inPartnerId OR inPartnerId = 0)
+            LEFT JOIN Object AS ContactPerson_Object ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
+                                                    -- AND ContactPerson_Object.DescId = zc_Object_Partner()
             
-            JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                  ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
                                 AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
-                                AND (ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = inContactPersonKindId OR inContactPersonKindId = 0)
             LEFT JOIN Object AS Object_ContactPersonKind ON Object_ContactPersonKind.Id = ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId
             
      WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
-       --AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+       AND (ContactPerson_Object.Id = inPartnerId OR inPartnerId = 0)
+       AND (ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = inContactPersonKindId OR inContactPersonKindId = 0)
     ;
 
 END;

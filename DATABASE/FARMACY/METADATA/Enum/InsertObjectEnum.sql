@@ -1106,7 +1106,12 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := 'TRUE'::TVarChar,
                                                       inSession           := vbUserId::TVarChar);
-                                                      
+
+
+      -- !!! Типы установок для почты
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_OutOrder(),inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая для заказов поставщикам'  , inEnumName:= 'zc_Enum_EmailKind_OutOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_InPrice(), inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Входящая для прайс-листа поставщика', inEnumName:= 'zc_Enum_EmailKind_InPrice');
+
 END $$;
 
 DO $$

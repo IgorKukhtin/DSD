@@ -4,7 +4,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   ClientWidth = 1177
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -393
   ExplicitWidth = 1193
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -781,7 +780,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Visible = False
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = ExportXmlDS
+      DataController.DataSource = ExportDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -834,41 +833,43 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   inherited ActionList: TActionList
     Left = 31
     Top = 186
-    object actExportXML: TMultiAction [0]
-      Category = 'XML'
+    object actExport: TMultiAction [0]
+      Category = 'Export_Email'
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_ExportXML_Email
+          Action = actGet_Export_Email
         end
         item
-          Action = actGet_ExportXml_FileName
+          Action = actGet_Export_FileName
         end
         item
-          Action = actSelect_ExportXml
+          Action = actSelect_Export
         end
         item
-          Action = actExportXml_Grid
+          Action = actExport_Grid
         end
         item
           Action = actSMTPFile
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1048#1044#1040' '#1087#1086' '#1087#1086#1095#1090#1077'?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1048#1044#1040' '#1087#1086' '#1087#1086#1095#1090#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1048#1044#1040
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1048#1044#1040
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1087#1086' '#1087#1086#1095#1090#1077 +
+        '?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       ImageIndex = 53
     end
-    object actGet_ExportXML_Email: TdsdExecStoredProc [1]
-      Category = 'XML'
+    object actGet_Export_Email: TdsdExecStoredProc [1]
+      Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_ExportXML_Email
+      StoredProc = spGet_Export_Email
       StoredProcList = <
         item
-          StoredProc = spGet_ExportXML_Email
+          StoredProc = spGet_Export_Email
         end>
-      Caption = 'actGet_ExportXML_Email'
+      Caption = 'actGet_Export_Email'
     end
     object actPrint_ExpInvoice: TdsdPrintAction [2]
       Category = 'Print_Export'
@@ -2185,65 +2186,73 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actGet_ExportXml_FileName: TdsdExecStoredProc
-      Category = 'XML'
+    object actGet_Export_FileName: TdsdExecStoredProc
+      Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_ExportXml_FileName
+      StoredProc = spGet_Export_FileName
       StoredProcList = <
         item
-          StoredProc = spGet_ExportXml_FileName
+          StoredProc = spGet_Export_FileName
         end>
-      Caption = 'actGet_ExportXml_FileName'
+      Caption = 'actGet_Export_FileName'
     end
-    object actSelect_ExportXml: TdsdExecStoredProc
-      Category = 'XML'
+    object actSelect_Export: TdsdExecStoredProc
+      Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelect_ExportXml
+      StoredProc = spSelect_Export
       StoredProcList = <
         item
-          StoredProc = spSelect_ExportXml
+          StoredProc = spSelect_Export
         end>
-      Caption = 'actSelect_ExportXml'
+      Caption = 'actSelect_Export'
     end
-    object actExportXml_Grid: TExportGrid
-      Category = 'XML'
+    object actExport_Grid: TExportGrid
+      Category = 'Export_Email'
       MoveParams = <>
       ExportType = cxegExportToText
       Grid = ExportXmlGrid
-      Caption = 'actExportXml_Grid'
+      Caption = 'actExport_Grid'
       OpenAfterCreate = False
       DefaultFileName = 'Report_'
       DefaultFileExt = 'XML'
     end
     object actSMTPFile: TdsdSMTPFileAction
-      Category = 'XML'
+      Category = 'Export_Email'
       MoveParams = <>
       Host.Value = '0'
-      Host.Component = FormParams
+      Host.Component = ExportEmailCDS
       Host.ComponentItem = 'Host'
+      Host.DataType = ftString
       Port.Value = '0'
-      Port.Component = FormParams
+      Port.Component = ExportEmailCDS
       Port.ComponentItem = 'Port'
+      Port.DataType = ftString
       UserName.Value = '0'
-      UserName.Component = FormParams
+      UserName.Component = ExportEmailCDS
       UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
       Password.Value = '0'
-      Password.Component = FormParams
+      Password.Component = ExportEmailCDS
       Password.ComponentItem = 'Password'
+      Password.DataType = ftString
       Body.Value = '0'
-      Body.Component = FormParams
+      Body.Component = ExportEmailCDS
       Body.ComponentItem = 'Body'
+      Body.DataType = ftString
       Subject.Value = '0'
-      Subject.Component = FormParams
+      Subject.Component = ExportEmailCDS
       Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
       FromAddress.Value = '0'
-      FromAddress.Component = FormParams
+      FromAddress.Component = ExportEmailCDS
       FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
       ToAddress.Value = '0'
-      ToAddress.Component = FormParams
+      ToAddress.Component = ExportEmailCDS
       ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
     end
   end
   inherited MasterDS: TDataSource
@@ -2606,7 +2615,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Category = 0
     end
     object dxBarButton1: TdxBarButton
-      Action = actExportXML
+      Action = actExport
       Category = 0
     end
   end
@@ -3507,24 +3516,24 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Left = 888
     Top = 384
   end
-  object ExportXmlCDS: TClientDataSet
+  object ExportCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 48
     Top = 480
   end
-  object ExportXmlDS: TDataSource
-    DataSet = ExportXmlCDS
+  object ExportDS: TDataSource
+    DataSet = ExportCDS
     Left = 80
     Top = 480
   end
-  object spSelect_ExportXml: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_XML_Mida'
-    DataSet = ExportXmlCDS
+  object spSelect_Export: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Email_Send'
+    DataSet = ExportCDS
     DataSets = <
       item
-        DataSet = ExportXmlCDS
+        DataSet = ExportCDS
       end>
     Params = <
       item
@@ -3538,8 +3547,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Left = 128
     Top = 480
   end
-  object spGet_ExportXml_FileName: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_XML_FileName'
+  object spGet_Export_FileName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_FileName'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3553,9 +3562,23 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actExportXml_Grid
+        Component = actExport_Grid
         ComponentItem = 'DefaultFileName'
         DataType = ftString
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
       end
       item
         Name = 'outFileName'
@@ -3568,10 +3591,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Left = 200
     Top = 464
   end
-  object spGet_ExportXML_Email: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_XML_Email'
-    DataSets = <>
-    OutputType = otResult
+  object spGet_Export_Email: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_Send'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
     Params = <
       item
         Name = 'inMovementId'
@@ -3579,64 +3605,21 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-      end
-      item
-        Name = 'Subject'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Subject'
-        DataType = ftString
-      end
-      item
-        Name = 'Body'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Body'
-        DataType = ftString
-      end
-      item
-        Name = 'AddressFrom'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AddressFrom'
-        DataType = ftString
-      end
-      item
-        Name = 'AddressTo'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AddressTo'
-        DataType = ftString
-      end
-      item
-        Name = 'Host'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Host'
-        DataType = ftString
-      end
-      item
-        Name = 'Port'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Port'
-      end
-      item
-        Name = 'UserName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UserName'
-        DataType = ftString
-      end
-      item
-        Name = 'Password'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Password'
-        DataType = ftString
       end>
     PackSize = 1
     Left = 272
     Top = 480
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 40
+    Top = 432
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 80
+    Top = 433
   end
 end

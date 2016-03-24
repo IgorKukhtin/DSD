@@ -190,22 +190,24 @@ type
     mactPrint_Transport: TMultiAction;
     bbPrint_Transport: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
-    ExportXmlCDS: TClientDataSet;
-    ExportXmlDS: TDataSource;
-    spSelect_ExportXml: TdsdStoredProc;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    spSelect_Export: TdsdStoredProc;
     ExportXmlGrid: TcxGrid;
     ExportXmlGridDBTableView: TcxGridDBTableView;
     RowData: TcxGridDBColumn;
     ExportXmlGridLevel: TcxGridLevel;
-    spGet_ExportXml_FileName: TdsdStoredProc;
-    actGet_ExportXml_FileName: TdsdExecStoredProc;
-    actSelect_ExportXml: TdsdExecStoredProc;
-    actExportXml_Grid: TExportGrid;
-    actExportXML: TMultiAction;
+    spGet_Export_FileName: TdsdStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actExport: TMultiAction;
     dxBarButton1: TdxBarButton;
-    spGet_ExportXML_Email: TdsdStoredProc;
-    actGet_ExportXML_Email: TdsdExecStoredProc;
+    spGet_Export_Email: TdsdStoredProc;
+    actGet_Export_Email: TdsdExecStoredProc;
     actSMTPFile: TdsdSMTPFileAction;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
   private
     { Private declarations }
   public

@@ -14,8 +14,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ExportKindCode Integer, ExportKindName TVarChar
              , ContactPersonCode Integer, ContactPersonName TVarChar
              , ContactPersonMail TVarChar
-             , isErased boolean
-             ) AS
+             , isErased Boolean
+             )
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
@@ -109,8 +110,8 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.03.16         *
- 
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_ExportJuridical (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ExportJuridical (zfCalc_UserAdmin())
+

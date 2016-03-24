@@ -604,6 +604,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         item
           Name = 'Id'
           Value = Null
+          Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
