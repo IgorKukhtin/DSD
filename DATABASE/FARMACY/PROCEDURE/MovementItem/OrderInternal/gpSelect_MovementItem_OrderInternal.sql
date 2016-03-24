@@ -72,6 +72,8 @@ BEGIN
            , COALESCE(tmpMI.NDSKindId, tmpGoods.NDSKindId)           AS NDSKindId
            , COALESCE(tmpMI.NDSKindName, tmpGoods.NDSKindName)       AS NDSKindName
            , COALESCE(tmpMI.NDS, tmpGoods.NDS)                       AS NDS
+           , COALESCE(tmpMI.isClose, tmpGoods.isClose)               AS isClose
+           , COALESCE(tmpMI.isFirst, tmpGoods.isFirst)               AS isFirst
            , CASE 
                WHEN COALESCE(tmpMI.isTOP, tmpGoods.isTOP) THEN 12615935
                ELSE 0
@@ -116,6 +118,8 @@ BEGIN
                   , Object_Goods.NDSKindId                       AS NDSKindId
                   , Object_Goods.NDSKindName                     AS NDSKindName
                   , Object_Goods.NDS                             AS NDS
+                  , Object_Goods.isClose                         AS isClose
+                  , Object_Goods.isFirst                         AS isFirst
              FROM Object_Goods_View AS Object_Goods
              WHERE Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
                    AND inShowAll = true       
@@ -135,6 +139,8 @@ BEGIN
                             , Object_Goods.NDSKindId                                           AS NDSKindId
                             , Object_Goods.NDSKindName                                         AS NDSKindName
                             , Object_Goods.NDS                                                 AS NDS
+                            , Object_Goods.isClose                                             AS isClose
+                            , Object_Goods.isFirst                                             AS isFirst
                             , MIString_Comment.ValueData                                       AS Comment
                             , COALESCE(PriceList.MakerName, MinPrice.MakerName)                AS MakerName
                             , MIBoolean_Calculated.ValueData                                   AS isCalculated
@@ -281,6 +287,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 23.03.16         *
  03.02.16         *
  23.03.15                         * 
  05.02.15                         * 

@@ -3,7 +3,7 @@ object StaffListDataForm: TStaffListDataForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1076#1072#1085#1085#1099#1077')>'
   ClientHeight = 599
-  ClientWidth = 937
+  ClientWidth = 975
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,15 @@ object StaffListDataForm: TStaffListDataForm
   object cxGridStaffList: TcxGrid
     Left = 0
     Top = 49
-    Width = 937
+    Width = 975
     Height = 256
     Align = alTop
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 262
+    ExplicitLeft = 8
+    ExplicitWidth = 937
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -91,6 +92,11 @@ object StaffListDataForm: TStaffListDataForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object clisPositionLevel: TcxGridDBColumn
+        Caption = #1042#1089#1077' "'#1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1080'"'
+        DataBinding.FieldName = 'isPositionLevel'
+        HeaderAlignmentVert = vaCenter
+      end
       object clHoursPlan: TcxGridDBColumn
         Caption = '1.'#1054#1073#1097'.'#1087#1083'.'#1095'.'#1074' '#1084#1077#1089'. '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072
         DataBinding.FieldName = 'HoursPlan'
@@ -134,14 +140,14 @@ object StaffListDataForm: TStaffListDataForm
   object cxGridStaffListCost: TcxGrid
     Left = 0
     Top = 311
-    Width = 937
+    Width = 975
     Height = 138
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 144
+    ExplicitWidth = 937
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -203,13 +209,14 @@ object StaffListDataForm: TStaffListDataForm
   object cxGridStaffListSumm: TcxGrid
     Left = 0
     Top = 455
-    Width = 937
+    Width = 975
     Height = 144
     Align = alBottom
     TabOrder = 2
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 937
     object cxGridDBTableStaffListSumm: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListSummDS
@@ -292,10 +299,11 @@ object StaffListDataForm: TStaffListDataForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 937
+    Width = 975
     Height = 23
     Align = alTop
     TabOrder = 7
+    ExplicitWidth = 937
     object ceUnit: TcxButtonEdit
       Left = 471
       Top = 0
@@ -317,20 +325,20 @@ object StaffListDataForm: TStaffListDataForm
   object cxSplitterBottom: TcxSplitter
     Left = 0
     Top = 305
-    Width = 937
+    Width = 975
     Height = 6
     AlignSplitter = salTop
     Control = cxGridStaffList
-    ExplicitTop = 455
+    ExplicitWidth = 937
   end
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 449
-    Width = 937
+    Width = 975
     Height = 6
     AlignSplitter = salBottom
     Control = cxGridStaffListSumm
-    ExplicitTop = 43
+    ExplicitWidth = 937
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1008,6 +1016,14 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'PersonalCount'
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisPositionLevel'
+        Value = Null
+        Component = StaffListCDS
+        ComponentItem = 'isPositionLevel'
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item

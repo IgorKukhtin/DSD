@@ -93,7 +93,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 9
-    Width = 305
+    Width = 152
   end
   object edComment: TcxTextEdit
     Left = 18
@@ -153,6 +153,13 @@
     Properties.DisplayFormat = ',0'
     TabOrder = 17
     Width = 143
+  end
+  object ceisPositionLevel: TcxCheckBox
+    Left = 180
+    Top = 244
+    Caption = #1042#1089#1077' '#1088#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+    TabOrder = 18
+    Width = 146
   end
   object ActionList: TActionList
     Left = 304
@@ -223,6 +230,13 @@
         Value = 0.000000000000000000
         Component = edPersonalCount
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisPositionLevel'
+        Value = Null
+        Component = ceisPositionLevel
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item

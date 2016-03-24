@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Check (Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Movement_Check (Integer, TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Check (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_Check(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inDateStart        TDateTime,  -- Дата начала
     IN inDateFinal        TDateTime,  -- Дата окончания
     IN inIsPartion        Boolean,    -- 
+    IN inisPartionPrice   Boolean,    -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -35,7 +37,10 @@ RETURNS TABLE (
   PartionOperDate       TDateTime,
   PartionPriceDescName  TVarChar,
   PartionPriceInvNumber TVarChar,
-  PartionPriceOperDate  TDateTime
+  PartionPriceOperDate  TDateTime,
+
+  UnitName              TVarChar,
+  OurJuridicalName      TVarChar
 )
 AS
 $BODY$
@@ -109,6 +114,9 @@ BEGIN
                               , SUM (tmpData_all.SummaSale) AS SummaSale
                                 -- таким образом выделим цены = 0 (что б не искажать среднюю с/с)
                               , CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0) = 0 THEN 0 ELSE 1 END AS isPrice
+                              --
+                              , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_Juridical_Income.ObjectId ELSE 0 END AS OurJuridicalId_Income
+                              , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END               AS ToId_Income
                          FROM tmpData_all
                               -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
@@ -135,6 +143,15 @@ BEGIN
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind_Income
                                                            ON MovementLinkObject_NDSKind_Income.MovementId = tmpData_all.MovementId
                                                           AND MovementLinkObject_NDSKind_Income.DescId = zc_MovementLinkObject_NDSKind()
+                              -- куда был приход от поставщика (склад или аптека)
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                           ON MovementLinkObject_To.MovementId = tmpData_all.MovementId
+                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                              -- на какое наше юр лицо был приход
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical_Income
+                                                           ON MovementLinkObject_Juridical_Income.MovementId = tmpData_all.MovementId
+                                                          AND MovementLinkObject_Juridical_Income.DescId = zc_MovementLinkObject_Juridical()
+                              --LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical_Income.ObjectId
 
                          GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END
                                 , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END
@@ -142,6 +159,8 @@ BEGIN
                                 , MovementLinkObject_NDSKind_Income.ObjectId
                                 , tmpData_all.GoodsId
                                 , CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0) = 0 THEN 0 ELSE 1 END
+                                , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_Juridical_Income.ObjectId ELSE 0 END
+                                , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END    
                         )
         SELECT
             Object_From_Income.ObjectCode                                      AS JuridicalCode
@@ -176,10 +195,15 @@ BEGIN
            , COALESCE (Movement_Price.InvNumber, Movement_Income.InvNumber)       AS PartionPriceInvNumber
            , COALESCE (Movement_Price.OperDate, Movement_Income.OperDate)         AS PartionPriceOperDate
 
+           , Object_To_Income.ValueData              AS UnitName
+           , Object_OurJuridical_Income.ValueData    AS OurJuridicalName
         FROM tmpData
              LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
              LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
              LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
+
+             LEFT JOIN Object AS Object_To_Income ON Object_To_Income.Id = tmpData.ToId_Income
+             LEFT JOIN Object AS Object_OurJuridical_Income ON Object_OurJuridical_Income.Id = tmpData.OurJuridicalId_Income
 
              LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = tmpData.MovementId_Income
              LEFT JOIN Movement AS Movement_Price ON Movement_Price.Id = tmpData.MovementId_find

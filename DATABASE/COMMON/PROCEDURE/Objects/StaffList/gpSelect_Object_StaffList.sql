@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_StaffList(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , HoursPlan TFloat, HoursDay TFloat, PersonalCount TFloat
+             , isPositionLevel Boolean
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
              , PositionId Integer, PositionName TVarChar                
@@ -42,6 +43,8 @@ BEGIN
          , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
          , ObjectFloat_HoursDay.ValueData      AS HoursDay
          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
+
+         , Coalesce(ObjectBoolean_PositionLevel.ValueData,False)  AS isPositionLevel
          
          , ObjectString_Comment.ValueData      AS Comment
                                                         
@@ -89,6 +92,10 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_StaffList.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_StaffList_Comment()
 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionLevel
+                                  ON ObjectBoolean_PositionLevel.ObjectId = Object_StaffList.Id 
+                                 AND ObjectBoolean_PositionLevel.DescId = zc_ObjectBoolean_StaffList_PositionLevel()
+
      WHERE Object_StaffList.DescId = zc_Object_StaffList();
   
 END;
@@ -99,6 +106,7 @@ ALTER FUNCTION gpSelect_Object_StaffList (Integer,TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.03.16         * add isPositionLevel
  30.11.13                                        * add zc_ObjectFloat_StaffList_HoursDay
  22.11.13                                        * Cyr1251
  31.10.13         * add Code

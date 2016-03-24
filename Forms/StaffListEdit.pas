@@ -18,7 +18,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, cxCheckBox;
 
 type
   TStaffListEditForm = class(TParentForm)
@@ -52,6 +52,7 @@ type
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     edHoursDay: TcxCurrencyEdit;
+    ceisPositionLevel: TcxCheckBox;
 
   private
     { Private declarations }

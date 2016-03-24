@@ -3,8 +3,8 @@
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093'>'
-  ClientHeight = 173
-  ClientWidth = 334
+  ClientHeight = 207
+  ClientWidth = 342
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 141
+    Top = 170
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@
   end
   object cxButton2: TcxButton
     Left = 223
-    Top = 141
+    Top = 170
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@
   end
   object edUnit: TcxButtonEdit
     Left = 10
-    Top = 83
+    Top = 112
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 63
+    Top = 92
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -80,22 +80,30 @@
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object сbPartion: TcxCheckBox
-    Left = 229
-    Top = 27
+    Left = 10
+    Top = 63
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
     TabOrder = 8
     Width = 86
   end
+  object cbPartionPrice: TcxCheckBox
+    Left = 121
+    Top = 63
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
+    TabOrder = 9
+    Width = 197
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 175
-    Top = 126
+    Top = 155
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 214
-    Top = 52
+    Top = 81
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -108,7 +116,7 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 255
-    Top = 98
+    Top = 127
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -147,9 +155,16 @@
         Component = сbPartion
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inisPartionPrice'
+        Value = Null
+        Component = cbPartionPrice
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 22
-    Top = 108
+    Top = 137
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -177,11 +192,11 @@
         ParamType = ptInput
       end>
     Left = 86
-    Top = 76
+    Top = 105
   end
   object ActionList: TActionList
     Left = 155
-    Top = 85
+    Top = 114
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -239,6 +254,6 @@
       end>
     PackSize = 1
     Left = 111
-    Top = 118
+    Top = 147
   end
 end

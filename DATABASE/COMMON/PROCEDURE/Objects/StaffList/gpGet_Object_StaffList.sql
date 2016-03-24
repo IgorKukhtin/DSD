@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_StaffList(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , HoursPlan TFloat, HoursDay TFloat, PersonalCount TFloat
+             , isPositionLevel Boolean
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
              , PositionId Integer, PositionName TVarChar                
@@ -30,8 +31,8 @@ BEGIN
            , CAST (NULL as TFloat) AS HoursPlan
            , CAST (NULL as TFloat) AS HoursDay
            , CAST (NULL as TFloat) AS PersonalCount
-
-		   , CAST ('' as TVarChar) AS Comment
+           , False                 AS isPositionLevel
+	   , CAST ('' as TVarChar) AS Comment
                                                         
            , CAST (0 as Integer)   AS UnitId
            , CAST ('' as TVarChar) AS UnitName
@@ -56,7 +57,7 @@ BEGIN
          , ObjectFloat_HoursPlan.ValueData     AS HoursPlan
          , ObjectFloat_HoursDay.ValueData      AS HoursDay
          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
-         
+         , Coalesce(ObjectBoolean_PositionLevel.ValueData,False)  AS isPositionLevel
          , ObjectString_Comment.ValueData      AS Comment
                                                         
          , Object_Unit.Id          AS UnitId
@@ -100,6 +101,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_StaffList.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_StaffList_Comment()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionLevel
+                                  ON ObjectBoolean_PositionLevel.ObjectId = Object_StaffList.Id 
+                                 AND ObjectBoolean_PositionLevel.DescId = zc_ObjectBoolean_StaffList_PositionLevel()
                                
      WHERE Object_StaffList.Id = inId;
      
@@ -113,6 +118,7 @@ ALTER FUNCTION gpGet_Object_StaffList (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.03.16         * add isPositionLevel
  30.11.13                                        * add zc_ObjectFloat_StaffList_HoursDay
  31.10.13         * add Code 
  18.10.13         * add FundPayMonth, FundPayTurn, Comment                

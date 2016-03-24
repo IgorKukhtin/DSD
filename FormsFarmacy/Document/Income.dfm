@@ -2,10 +2,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 904
-  ExplicitLeft = -131
-  ExplicitTop = -104
   ExplicitWidth = 920
-  ExplicitHeight = 561
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1875,7 +1873,7 @@
         ParamType = ptInput
       end>
     Left = 656
-    Top = 8
+    Top = 24
   end
   object spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_AmountManual'

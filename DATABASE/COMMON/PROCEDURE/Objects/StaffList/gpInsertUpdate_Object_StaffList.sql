@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList (Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList (Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList (Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffList(
  INOUT ioId                  Integer   , -- ключ объекта <Штатное расписание>
@@ -9,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffList(
     IN inHoursPlan           TFloat    , -- Общий план часов за месяц на человека
     IN inHoursDay            TFloat    , -- Дневной план часов на человека
     IN inPersonalCount       TFloat    , -- кол. человек
+    IN inisPositionLevel     Boolean   , -- Все "Разряды должности"
     IN inComment             TVarChar  , -- комментарий
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
@@ -44,6 +47,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_PersonalCount(), ioId, inPersonalCount);
   
    -- сохранили свойство <>   
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_StaffList_PositionLevel(), ioId, inisPositionLevel);
+
+   -- сохранили свойство <>   
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_StaffList_Comment(), ioId, inComment);
    
    -- сохранили связь с <Подразделением>
@@ -60,11 +66,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_StaffList (Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_StaffList (Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.03.16         * 
  30.11.13                                        * add zc_ObjectFloat_StaffList_HoursDay
  31.10.13         * add Code 
  18.10.13         * add FundPayMonth, FundPayTurn, Comment  
