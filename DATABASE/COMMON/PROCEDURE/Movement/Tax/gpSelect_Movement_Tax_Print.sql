@@ -218,6 +218,13 @@ BEGIN
                             ELSE 'Рудик Н.В.' 
                        END
               END                           :: TVarChar AS AccounterName_From
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN PersonalSigning_INN.ValueData
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                            THEN PersonalBookkeeper_INN.ValueData
+                            ELSE '2649713447' 
+                       END
+              END                           :: TVarChar AS AccounterINN_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
@@ -265,7 +272,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId =  MovementLinkMovement_Sale.MovementChildId
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-
+ 
             LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id =  MovementLinkMovement_Sale.MovementChildId
 
             LEFT JOIN MovementDate AS MovementDate_COMDOC
@@ -306,6 +313,10 @@ BEGIN
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
             LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
+
+            LEFT JOIN ObjectString AS PersonalBookkeeper_INN
+                                   ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId 
+                                  AND PersonalBookkeeper_INN.DescId = zc_ObjectString_Member_INN()
 
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
@@ -372,6 +383,10 @@ BEGIN
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
             LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+
+            LEFT JOIN ObjectString AS PersonalSigning_INN
+                                   ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId 
+                                  AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
 
        WHERE Movement.Id =  vbMovementId_Tax
          AND Movement.StatusId = zc_Enum_Status_Complete()
