@@ -175,7 +175,9 @@ BEGIN
                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                 INNER JOIN MovementItem AS MI_SheetWorkTime 
                                         ON MI_SheetWorkTime.MovementId = Movement.Id
+                                       AND MI_SheetWorkTime.Amount > 0
                                        AND MI_SheetWorkTime.isErased = FALSE
+
                 INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                   ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
                                                  AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
@@ -198,7 +200,6 @@ BEGIN
              AND (MovementLinkObject_Unit.ObjectId = inUnitId     OR inUnitId = 0)
              AND (MIObject_Position.ObjectId       = inPositionId OR inPositionId = 0)
              AND (MI_SheetWorkTime.ObjectId        = inMemberId   OR inMemberId = 0)
-             AND MI_SheetWorkTime.Amount > 0
           )
          -- собраны данные из табеля
        , Movement_SheetWorkTime AS

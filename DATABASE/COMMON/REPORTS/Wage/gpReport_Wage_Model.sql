@@ -516,9 +516,15 @@ BEGIN
                                           AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
              INNER JOIN MovementItem AS MI_SheetWorkTime
                                      ON MI_SheetWorkTime.MovementId = Movement.Id
+                                    AND MI_SheetWorkTime.Amount > 0
                                     AND MI_SheetWorkTime.isErased = FALSE
-             INNER JOIN Object AS Object_Member
-                               ON Object_Member.Id = MI_SheetWorkTime.ObjectId
+
+             INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                               ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
+                                              AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+             INNER JOIN Object_WorkTimeKind_Wages_View AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MIObject_WorkTimeKind.ObjectId
+             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MI_SheetWorkTime.ObjectId
+
              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                     ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                    AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
@@ -528,11 +534,6 @@ BEGIN
              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
                                                     ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
                                                    AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
-             INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
-                                               ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
-                                              AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
-             INNER JOIN Object_WorkTimeKind_Wages_View AS Object_WorkTimeKind
-                                                       ON Object_WorkTimeKind.Id = MIObject_WorkTimeKind.ObjectId
             
         WHERE Movement.DescId = zc_Movement_SheetWorkTime()
           AND Movement.OperDate BETWEEN inDateStart AND inDateFinal
