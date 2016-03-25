@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Member(
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-            , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
+            , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, Comment TVarChar
             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
             , isOfficial Boolean) AS
 $BODY$
@@ -26,6 +26,7 @@ BEGIN
            
            , CAST ('' as TVarChar)  AS INN
            , CAST ('' as TVarChar)  AS DriverCertificate
+           , CAST ('' as TVarChar)  AS Card
            , CAST ('' as TVarChar)  AS Comment
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST (0 as Integer)    AS InfoMoneyCode
@@ -41,6 +42,7 @@ BEGIN
          
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
+         , ObjectString_Card.ValueData              AS Card
          , ObjectString_Comment.ValueData           AS Comment
          
          , Object_InfoMoney_View.InfoMoneyId
@@ -54,14 +56,21 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                   ON ObjectBoolean_Official.ObjectId = Object_Member.Id
                                  AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
-          LEFT JOIN ObjectString AS ObjectString_INN ON ObjectString_INN.ObjectId = Object_Member.Id 
-                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
+          LEFT JOIN ObjectString AS ObjectString_INN 
+                                 ON ObjectString_INN.ObjectId = Object_Member.Id 
+                                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
  
-          LEFT JOIN ObjectString AS ObjectString_DriverCertificate ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
-                AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
+          LEFT JOIN ObjectString AS ObjectString_Card
+                                 ON ObjectString_Card.ObjectId = Object_Member.Id 
+                                AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
 
-          LEFT JOIN ObjectString AS ObjectString_Comment ON ObjectString_Comment.ObjectId = Object_Member.Id 
-                AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
+          LEFT JOIN ObjectString AS ObjectString_DriverCertificate 
+                                 ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
+                                AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
+
+          LEFT JOIN ObjectString AS ObjectString_Comment 
+                                 ON ObjectString_Comment.ObjectId = Object_Member.Id 
+                                AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
 
           LEFT JOIN ObjectLink AS ObjectLink_Member_InfoMoney
                                ON ObjectLink_Member_InfoMoney.ObjectId = Object_Member.Id

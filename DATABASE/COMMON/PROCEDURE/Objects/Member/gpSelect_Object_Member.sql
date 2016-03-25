@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
+             , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, Comment TVarChar
              , isOfficial Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime
@@ -50,6 +50,7 @@ BEGIN
          
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
+         , ObjectString_Card.ValueData              AS Card
          , ObjectString_Comment.ValueData           AS Comment
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
@@ -104,6 +105,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_INN
                                  ON ObjectString_INN.ObjectId = Object_Member.Id 
                                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
+          LEFT JOIN ObjectString AS ObjectString_Card
+                                 ON ObjectString_Card.ObjectId = Object_Member.Id 
+                                AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
@@ -168,6 +172,7 @@ BEGIN
            , CAST ('УДАЛИТЬ' as TVarChar)  AS NAME
            , CAST ('' as TVarChar)  AS INN
            , CAST ('' as TVarChar)  AS DriverCertificate
+           , CAST ('' as TVarChar)  AS Card
            , CAST ('' as TVarChar)  AS Comment
            , FALSE                  AS isOfficial
            , CAST (0 as Integer)    AS InfoMoneyId
@@ -200,6 +205,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.16         * add Card
  14.01.16         * add Car, StartSummerDate, EndSummerDate 
                            , SummerFuel, WinterFuel, Reparation, LimitMoney, LimitDistance
  19.02.15         * add InfoMoney
