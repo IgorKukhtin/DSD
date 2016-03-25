@@ -456,8 +456,8 @@ begin
           then begin
                     //получили еще раз
                     WeightReal_check:=MainForm.fGetScale_CurrentWeight;
-                    //если вдруг погрешность больше 0.1
-                    if abs(WeightReal_check-ParamsMI.ParamByName('RealWeight').AsFloat)>0.1
+                    //если вдруг погрешность больше 0.002
+                    if abs(WeightReal_check-ParamsMI.ParamByName('RealWeight').AsFloat)> SettingMain.Exception_WeightDiff
                     then
                         with DialogWeightForm do
                         begin

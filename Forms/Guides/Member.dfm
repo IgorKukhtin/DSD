@@ -43,7 +43,6 @@ object MemberForm: TMemberForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -61,6 +60,12 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 126
+      end
+      object clCard: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
+        DataBinding.FieldName = 'Card'
+        HeaderAlignmentVert = vaCenter
+        Width = 115
       end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
@@ -104,17 +109,11 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 126
       end
-      object clCard: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
-        DataBinding.FieldName = 'Card'
-        HeaderAlignmentVert = vaCenter
-        Width = 115
-      end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
-        Width = 73
+        Width = 150
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

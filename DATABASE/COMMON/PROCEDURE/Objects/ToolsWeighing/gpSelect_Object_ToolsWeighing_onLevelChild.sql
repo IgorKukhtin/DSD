@@ -53,7 +53,9 @@ BEGIN
             , 0 AS Code
             , tmp.Name :: TVarChar AS Name
             , gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', tmp.Name
-                                       , CASE WHEN STRPOS (tmp.Name, 'Weight') > 0
+                                       , CASE WHEN STRPOS (tmp.Name, 'Exception_WeightDiff') > 0
+                                                   THEN '0.010'
+                                              WHEN STRPOS (tmp.Name, 'Weight') > 0
                                                    THEN '0'
                                               WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
                                                    THEN '0'
@@ -95,8 +97,10 @@ BEGIN
        UNION SELECT 'BoxCount'           AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'BoxCode'            AS Name WHERE inIsCeh = FALSE
 
-       UNION SELECT 'WeightSkewer1'      AS Name WHERE inIsCeh = TRUE
-       UNION SELECT 'WeightSkewer2'      AS Name WHERE inIsCeh = TRUE
+       UNION SELECT 'Exception_WeightDiff' AS Name WHERE inIsCeh = FALSE
+
+       UNION SELECT 'WeightSkewer1'        AS Name WHERE inIsCeh = TRUE
+       UNION SELECT 'WeightSkewer2'        AS Name WHERE inIsCeh = TRUE
 
        UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE inIsCeh = TRUE
 
@@ -182,5 +186,5 @@ $BODY$
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (TRUE, 1, 'Service', zfCalc_UserAdmin())
 --
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'PriceList', zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'Default', zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 4, 'Default', zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'Service', zfCalc_UserAdmin())
