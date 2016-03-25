@@ -2,27 +2,25 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 423
   ClientWidth = 1345
-  ExplicitLeft = -572
-  ExplicitTop = -1
   ExplicitWidth = 1361
-  ExplicitHeight = 458
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1345
     Height = 337
     ExplicitWidth = 1345
-    ExplicitHeight = 576
+    ExplicitHeight = 337
     ClientRectBottom = 337
     ClientRectRight = 1345
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1345
-      ExplicitHeight = 552
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 1345
         Height = 313
         ExplicitWidth = 1345
-        ExplicitHeight = 552
+        ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -444,7 +442,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 140
           end
-          object colComment: TcxGridDBColumn [27]
+          object clCard: TcxGridDBColumn [27]
+            Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
+            DataBinding.FieldName = 'Card'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 115
+          end
+          object colComment: TcxGridDBColumn [28]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

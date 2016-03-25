@@ -8,12 +8,13 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar, INN TVarChar, isMain Boolean, isOfficial Boolean
+RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+             , INN TVarChar, Card TVarChar, isMain Boolean, isOfficial Boolean
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , MemberId Integer, MemberName  TVarChar
-             , PersonalServiceListId Integer, PersonalServiceListName  TVarChar
+             , MemberId Integer, MemberName TVarChar
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , SummTransportAdd TFloat, SummTransport TFloat, SummPhone TFloat
@@ -124,6 +125,7 @@ BEGIN
             , Object_Personal.ObjectCode              AS PersonalCode
             , Object_Personal.ValueData               AS PersonalName
             , ObjectString_Member_INN.ValueData       AS INN
+            , ObjectString_Member_Card.ValueData      AS Card
             , CASE WHEN tmpAll.MovementItemId > 0 THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean   AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
@@ -225,6 +227,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Member_INN
                                    ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId_Personal
                                   AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
+            LEFT JOIN ObjectString AS ObjectString_Member_Card
+                                   ON ObjectString_Member_Card.ObjectId = tmpAll.MemberId_Personal
+                                  AND ObjectString_Member_Card.DescId = zc_ObjectString_Member_Card()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
@@ -238,6 +243,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.03.16         * add Card
  07.05.15         * add PersonalServiceList
  01.10.14         * add redmine 30.09
  14.09.14                                        * ALL

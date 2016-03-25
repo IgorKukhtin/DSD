@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertificate TVarChar,
+RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertificate TVarChar, Card TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
                PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
@@ -55,6 +55,7 @@ BEGIN
          , Object_Personal_View.PersonalName AS MemberName
 
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
+         , ObjectString_Card.ValueData              AS Card
 
          , Object_Personal_View.PositionId
          , Object_Personal_View.PositionCode
@@ -96,6 +97,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Personal_View.MemberId 
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
+
+          LEFT JOIN ObjectString AS ObjectString_Card
+                                 ON ObjectString_Card.ObjectId = Object_Personal_View.MemberId 
+                                AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
       
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
@@ -139,6 +144,7 @@ BEGIN
          , 0 AS MemberCode
          , CAST ('УДАЛИТЬ' as TVarChar)  AS MemberName
          , CAST ('' as TVarChar) AS DriverCertificate
+         , CAST ('' as TVarChar) AS Card
          , 0 AS PositionId
          , 0 AS PositionCode
          , CAST ('' as TVarChar) AS PositionName
@@ -175,6 +181,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.16         * add Card
  26.08.15         * add ObjectLink_Personal_PersonalServiceListOfficial
  07.05.15         * add ObjectLink_Personal_PersonalServiceList
  24.09.13                                        * add vbIsAllUnit
