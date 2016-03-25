@@ -100,7 +100,8 @@ BEGIN
                , Object_PositionLevel.ValueData  AS PositionLevelName
                , Object_PersonalGroup.Id         AS PersonalGroupId
                , Object_PersonalGroup.ValueData  AS PersonalGroupName
-               , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased'
+               , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
+               , tmp.Amount                      AS AmountHours'
                || vbFieldNameText ||
         ' FROM
          (SELECT * FROM CROSSTAB (''
@@ -149,9 +150,10 @@ BEGIN
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.Key[2]
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = D.Key[3]
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]
-         LEFT JOIN (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased
+         LEFT JOIN (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased , Sum (tmpMI.Amount) AS Amount
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
+                    GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased
                    ) AS tmp ON tmp.MemberId = D.Key[1]
                            AND tmp.PositionId = D.Key[2]
                            AND tmp.PositionLevelId = D.Key[3]
@@ -171,6 +173,7 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean,
 /*   
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.03.16         * AmountHours
  20.01.16         * 
  07.01.14                         * Replace inPersonalId <> inMemberId
  30.11.13                                        * add isErased = FALSE
