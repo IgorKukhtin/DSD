@@ -1237,7 +1237,9 @@ begin
   begin
        SettingMain.WeightSkewer1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer1'));
        SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));
-  end;
+  end
+  else
+       SettingMain.Exception_WeightDiff:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'Exception_WeightDiff'));
   //
   Result:=true;
 end;

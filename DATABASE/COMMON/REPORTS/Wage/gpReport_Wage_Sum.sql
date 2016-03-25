@@ -151,7 +151,7 @@ BEGIN
     
     -- результат
     RETURN QUERY
-    WITH -- табель - элементы
+    WITH -- табель - кто в какие дни работал
          MI_SheetWorkTime AS
           (SELECT
                  MI_SheetWorkTime.ObjectId                      AS MemberId
@@ -173,6 +173,7 @@ BEGIN
                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                       AND (MovementLinkObject_Unit.ObjectId = inUnitId /*OR inUnitId = 0*/)
                 INNER JOIN MovementItem AS MI_SheetWorkTime 
                                         ON MI_SheetWorkTime.MovementId = Movement.Id
                                        AND MI_SheetWorkTime.Amount > 0
@@ -197,24 +198,23 @@ BEGIN
                                                          AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (Setting.PositionLevelId, 0)
            WHERE Movement.DescId = zc_Movement_SheetWorkTime()
              AND Movement.OperDate BETWEEN inDateStart AND inDateFinal
-             AND (MovementLinkObject_Unit.ObjectId = inUnitId     OR inUnitId = 0)
-             AND (MIObject_Position.ObjectId       = inPositionId OR inPositionId = 0)
-             AND (MI_SheetWorkTime.ObjectId        = inMemberId   OR inMemberId = 0)
+             /*AND (MIObject_Position.ObjectId       = inPositionId OR inPositionId = 0)
+             AND (MI_SheetWorkTime.ObjectId        = inMemberId   OR inMemberId = 0)*/
           )
          -- собраны данные из табеля
        , Movement_SheetWorkTime AS
        (SELECT
-            SheetWorkTime.MemberId
-           ,SheetWorkTime.MemberName
-           ,SheetWorkTime.PersonalGroupId
-           ,SheetWorkTime.PositionId
-           ,SheetWorkTime.PositionLevelId
-           ,SheetWorkTime.SUM_MemberHours            AS SUM_MemberHours
-           ,SUM (SheetWorkTime.SheetWorkTime_Amount) AS SheetWorkTime_Amount
-           ,SUM (SheetWorkTime.Count_Day)            AS Count_Day
-           ,SheetWorkTime.Count_MemberDay::Integer   AS Count_MemberDay
+             SheetWorkTime.MemberId
+           , SheetWorkTime.MemberName
+           , SheetWorkTime.PersonalGroupId
+           , SheetWorkTime.PositionId
+           , SheetWorkTime.PositionLevelId
+           , SheetWorkTime.SUM_MemberHours            AS SUM_MemberHours
+           , SUM (SheetWorkTime.SheetWorkTime_Amount) AS SheetWorkTime_Amount
+           , SUM (SheetWorkTime.Count_Day)            AS Count_Day
+           , SheetWorkTime.Count_MemberDay::Integer   AS Count_MemberDay
            , COUNT (*) OVER (PARTITION BY SheetWorkTime.PositionId, SheetWorkTime.PositionLevelId) AS Count_Member
-           ,SUM (SummaAdd)::TFloat                   AS SummaADD
+           , SUM (SummaAdd)::TFloat                   AS SummaADD
         FROM (SELECT MI_SheetWorkTime.MemberId
                    , MI_SheetWorkTime.MemberName
                    , MI_SheetWorkTime.PersonalGroupId
@@ -252,14 +252,14 @@ BEGIN
              )AS MI_SheetWorkTime
              )AS SheetWorkTime
         GROUP BY
-            SheetWorkTime.MemberId
-           ,SheetWorkTime.MemberName
-           ,SheetWorkTime.PersonalGroupId
-           ,SheetWorkTime.PositionId
-           ,SheetWorkTime.PositionLevelId
-           ,SheetWorkTime.Count_MemberDay
-           ,SheetWorkTime.SUM_MemberHours
-    )
+             SheetWorkTime.MemberId
+           , SheetWorkTime.MemberName
+           , SheetWorkTime.PersonalGroupId
+           , SheetWorkTime.PositionId
+           , SheetWorkTime.PositionLevelId
+           , SheetWorkTime.Count_MemberDay
+           , SheetWorkTime.SUM_MemberHours
+       )
 
    -- Результат
    SELECT 

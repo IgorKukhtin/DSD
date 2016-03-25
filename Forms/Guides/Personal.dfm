@@ -27,8 +27,6 @@ object PersonalForm: TPersonalForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 961
-    ExplicitHeight = 461
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -97,6 +95,14 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 133
+      end
+      object clCard: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
+        DataBinding.FieldName = 'Card'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 115
       end
       object clUnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -185,14 +191,6 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 35
-      end
-      object clCard: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
-        DataBinding.FieldName = 'Card'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 115
       end
     end
     object cxGridLevel: TcxGridLevel

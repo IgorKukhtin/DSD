@@ -40,6 +40,7 @@ type
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
     WeightSkewer1:Double;   // only ScaleCeh
     WeightSkewer2:Double;   // only ScaleCeh
+    Exception_WeightDiff:Double; // only Scale
     BranchCode:Integer;
     BranchName:String;
     ScaleCount:Integer;
