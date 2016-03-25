@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TaxCorrective(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, LineNum Integer, LineNumTax Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , Price TFloat, CountForPrice TFloat
@@ -29,8 +29,24 @@ BEGIN
 
      -- Результат
      RETURN QUERY
+     WITH
+     tmpMITax AS (SELECT MovementItem.ObjectId                                          AS GoodsId
+                       , COALESCE(MILinkObject_GoodsKind.ObjectId,0)                    AS GoodsKindId
+                       , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+                  FROM MovementLinkMovement AS MovementLinkMovement_Child
+                     LEFT JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Child.MovementChildId
+                                           AND MovementItem.DescId = zc_MI_Master()
+                                           AND MovementItem.isErased = False
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                  WHERE MovementLinkMovement_Child.MovementId = inMovementId 
+                    AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                  )
        SELECT
              0                                      AS Id
+           , 0                                      AS LineNum    
+           , 0                                      AS LineNumTax
            , tmpGoods.GoodsId                       AS GoodsId
            , tmpGoods.GoodsCode                     AS GoodsCode
            , tmpGoods.GoodsName                     AS GoodsName
@@ -87,6 +103,8 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum    
+           , tmpMITax.LineNum                       AS LineNumTax
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -132,12 +150,32 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
+            
+            LEFT JOIN tmpMITax ON tmpMITax.GoodsId = Object_Goods.Id
+                              AND tmpMITax.GoodsKindId = Object_GoodsKind.Id
             ;
      ELSE
 
      RETURN QUERY
+     WITH 
+     tmpMITax AS (SELECT MovementItem.ObjectId                                          AS GoodsId
+                       , COALESCE(MILinkObject_GoodsKind.ObjectId,0)                    AS GoodsKindId
+                       , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+                  FROM MovementLinkMovement AS MovementLinkMovement_Child
+                     LEFT JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Child.MovementChildId
+                                           AND MovementItem.DescId = zc_MI_Master()
+                                           AND MovementItem.isErased = False
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                  WHERE MovementLinkMovement_Child.MovementId = inMovementId 
+                    AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                  )
+     
        SELECT
              MovementItem.Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum    
+           , tmpMITax.LineNum                       AS LineNumTax
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -168,7 +206,6 @@ BEGIN
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -182,6 +219,9 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
+            
+            LEFT JOIN tmpMITax ON tmpMITax.GoodsId = Object_Goods.Id
+                              AND tmpMITax.GoodsKindId = Object_GoodsKind.Id
             ;
 
      END IF;
@@ -194,6 +234,7 @@ ALTER FUNCTION gpSelect_MovementItem_TaxCorrective (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.03.16         * add LineNum
  31.03.15         * 
  08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100
  10.02.14                                                        *

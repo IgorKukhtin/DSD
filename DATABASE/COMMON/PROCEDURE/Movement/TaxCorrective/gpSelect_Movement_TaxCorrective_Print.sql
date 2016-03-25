@@ -195,10 +195,10 @@ BEGIN
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
 
-      SELECT inMovementId AS inMovementId
-           , Movement.Id				                                AS MovementId
-           , Movement.InvNumber				                                AS InvNumber
-           , Movement.OperDate				                                AS OperDate
+      SELECT inMovementId                                                   AS inMovementId
+           , Movement.Id			                            AS MovementId
+           , Movement.InvNumber			                            AS InvNumber
+           , Movement.OperDate				                    AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
@@ -227,7 +227,7 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
 
-           , View_Contract.InvNumber         		                        AS ContractName
+           , View_Contract.InvNumber         		                    AS ContractName
            , ObjectDate_Signing.ValueData                                   AS ContractSigningDate
            , View_Contract.ContractKindName                                 AS ContractKind
 
@@ -286,6 +286,13 @@ BEGIN
                             ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/ 
                        END  
              END                                                :: TVarChar AS AccounterName_To
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN PersonalSigning_INN.ValueData
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                            THEN PersonalBookkeeper_INN.ValueData
+                            ELSE '2649713447' 
+                       END                                                    
+              END                                               :: TVarChar AS AccounterINN_To
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
@@ -471,6 +478,10 @@ BEGIN
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
             LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
 
+            LEFT JOIN ObjectString AS PersonalBookkeeper_INN
+                                   ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId 
+                                  AND PersonalBookkeeper_INN.DescId = zc_ObjectString_Member_INN()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -538,6 +549,10 @@ BEGIN
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
             LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+
+            LEFT JOIN ObjectString AS PersonalSigning_INN
+                                   ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId 
+                                  AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_child
                                            ON MovementLinkMovement_child.MovementId = Movement.Id
@@ -772,3 +787,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 -- тест
 -- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 520880, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());
+
