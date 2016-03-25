@@ -272,10 +272,20 @@ AS
              zc_movement_sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.01.2015' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('31.03.2016' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax0115' AS TVarChar)
+      UNION
+--налоговая c 01.04.2016
+      SELECT
+             zc_movement_sale()
+           , CAST ('Tax' AS TVarChar)
+           , CAST ('01.04.2016' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Tax0416' AS TVarChar)
       UNION
 
 --коррект
@@ -440,6 +450,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ProfitLossService' AS TVarChar)
 
+      UNION
 -- Транспортная Amstor
       SELECT
              zc_movement_sale()
