@@ -126,6 +126,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       object BandcolPositionName: TcxGridDBBandedColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         MinWidth = 64
         Options.Editing = False
@@ -138,6 +139,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       object BandcolPositionLevelName: TcxGridDBBandedColumn
         Caption = #1056#1072#1079#1088#1103#1076
         DataBinding.FieldName = 'PositionLevelName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         MinWidth = 64
         Options.Editing = False
@@ -151,7 +153,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Caption = #1041#1088#1080#1075#1072#1076#1072
         DataBinding.FieldName = 'PersonalGroupName'
         Visible = False
-        GroupIndex = 0
         HeaderAlignmentVert = vaCenter
         MinWidth = 64
         Options.Editing = False
@@ -159,6 +160,21 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Width = 73
         Position.BandIndex = 0
         Position.ColIndex = 4
+        Position.RowIndex = 0
+      end
+      object BandcolAmountHours: TcxGridDBBandedColumn
+        Caption = #1048#1090#1086#1075#1086' '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'AmountHours'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 64
+        Options.Editing = False
+        Options.Moving = False
+        Width = 65
+        Position.BandIndex = 0
+        Position.ColIndex = 6
         Position.RowIndex = 0
       end
       object TemplateColumn: TcxGridDBBandedColumn
@@ -783,6 +799,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = CrossDBViewAddOn
         ComponentItem = 'TypeId'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'OutAmountHours'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountHours'
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 398

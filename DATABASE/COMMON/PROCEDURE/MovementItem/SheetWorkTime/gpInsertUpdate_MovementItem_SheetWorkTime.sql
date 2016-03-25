@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inOperDate            TDateTime , -- дата
  INOUT ioValue               TVarChar  , -- часы
  INOUT ioTypeId              Integer   , 
+   OUT OutAmountHours        Tfloat    , 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -119,6 +120,35 @@ BEGIN
     ioValue := zfGet_ViewWorkHour (vbValue, ioTypeId);
                          
 
+    -- пересчитываем итого рабочее время
+    CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
+        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inOperDate), DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
+
+    OutAmountHours := (SELECT  SUM(MI_SheetWorkTime.Amount) as  AmountHours
+                       FROM tmpOperDate
+                        JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
+                                     AND Movement.DescId = zc_Movement_SheetWorkTime()
+                        JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                        JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
+                        LEFT JOIN MovementItemLinkObject AS MIObject_Position
+                                                         ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
+                                                        AND MIObject_Position.DescId = zc_MILinkObject_Position() 
+                        LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                         ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
+                                                        AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
+                        LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                         ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
+                                                        AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+                       WHERE MovementLinkObject_Unit.ObjectId = inUnitId
+                         AND MI_SheetWorkTime.ObjectId   = inMemberId
+                         AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
+                         AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
+                         AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+                       ); 
+
+
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
 
@@ -131,6 +161,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.16         * add OutAmountHours
  07.01.14                         * Replace inPersonalId <> inMemberId
  25.11.13                         * Add inPositionLevelId
  17.10.13                         *
