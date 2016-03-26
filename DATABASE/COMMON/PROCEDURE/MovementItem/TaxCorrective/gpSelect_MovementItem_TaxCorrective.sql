@@ -30,16 +30,9 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH
-     tmpMITax AS (SELECT MovementItem.ObjectId                                          AS GoodsId
-                       , COALESCE(MILinkObject_GoodsKind.ObjectId,0)                    AS GoodsKindId
-                       , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+     tmpMITax AS (SELECT tmp.GoodsId, tmp.Price, tmp.LineNum
                   FROM MovementLinkMovement AS MovementLinkMovement_Child
-                     LEFT JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Child.MovementChildId
-                                           AND MovementItem.DescId = zc_MI_Master()
-                                           AND MovementItem.isErased = False
-                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      LEFT JOIN lpSelect_TaxFromTaxCorrective(MovementLinkMovement_Child.MovementChildId) AS tmp ON 1=1
                   WHERE MovementLinkMovement_Child.MovementId = inMovementId 
                     AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
                   )
@@ -152,22 +145,15 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
             
             LEFT JOIN tmpMITax ON tmpMITax.GoodsId = Object_Goods.Id
-                              AND tmpMITax.GoodsKindId = Object_GoodsKind.Id
+                              AND tmpMITax.Price = MIFloat_Price.ValueData
             ;
      ELSE
 
      RETURN QUERY
      WITH 
-     tmpMITax AS (SELECT MovementItem.ObjectId                                          AS GoodsId
-                       , COALESCE(MILinkObject_GoodsKind.ObjectId,0)                    AS GoodsKindId
-                       , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+     tmpMITax AS (SELECT tmp.GoodsId, tmp.Price, tmp.LineNum
                   FROM MovementLinkMovement AS MovementLinkMovement_Child
-                     LEFT JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Child.MovementChildId
-                                           AND MovementItem.DescId = zc_MI_Master()
-                                           AND MovementItem.isErased = False
-                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      LEFT JOIN lpSelect_TaxFromTaxCorrective(MovementLinkMovement_Child.MovementChildId) AS tmp On 1=1
                   WHERE MovementLinkMovement_Child.MovementId = inMovementId 
                     AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
                   )
@@ -221,7 +207,7 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
             
             LEFT JOIN tmpMITax ON tmpMITax.GoodsId = Object_Goods.Id
-                              AND tmpMITax.GoodsKindId = Object_GoodsKind.Id
+                              AND tmpMITax.Price = MIFloat_Price.ValueData
             ;
 
      END IF;

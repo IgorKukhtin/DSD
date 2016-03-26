@@ -382,6 +382,7 @@ BEGIN
            , COALESCE(MovementLinkMovement_ChildEDI.MovementChildId, 0) AS EDIId
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
 
+           , tmpNumTax.LineNum
 
        FROM tmpMovement
 
@@ -563,6 +564,11 @@ BEGIN
                                          ON MovementLinkObject_DocumentTaxKind_Child.MovementId = MovementLinkMovement_child.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
+---- номера строк в НН
+            LEFT JOIN lpSelect_TaxFromTaxCorrective(Movement_child.Id) AS tmpNumTax 
+                                                                       ON tmpNumTax.GoodsId = Object_Goods.Id
+                                                                      AND tmpNumTax.Price = MIFloat_Price.ValueData
+----
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child_Sale
                                            ON MovementLinkMovement_Child_Sale.MovementChildId = MovementLinkMovement_Child.MovementChildId
                                           AND MovementLinkMovement_Child_Sale.DescId = zc_MovementLinkMovement_Master()
