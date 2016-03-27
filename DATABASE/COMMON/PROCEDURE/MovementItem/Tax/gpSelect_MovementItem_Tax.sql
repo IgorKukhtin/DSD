@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Tax(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , Price TFloat, CountForPrice TFloat
@@ -32,6 +32,7 @@ BEGIN
      RETURN QUERY
        SELECT
              0                                      AS Id
+           , 0                                      AS LineNum
            , tmpGoods.GoodsId                       AS GoodsId
            , tmpGoods.GoodsCode                     AS GoodsCode
            , tmpGoods.GoodsName                     AS GoodsName
@@ -87,6 +88,7 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -139,6 +141,7 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum           
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -195,6 +198,7 @@ ALTER FUNCTION gpSelect_MovementItem_Tax (Integer, Boolean, Boolean, TVarChar) O
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.03.16         * add LineNum
  31.03.15         * 
  08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100
  10.02.14                                                        *
