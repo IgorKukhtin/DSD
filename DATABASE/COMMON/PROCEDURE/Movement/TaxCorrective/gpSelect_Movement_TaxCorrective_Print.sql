@@ -243,6 +243,9 @@ BEGIN
                   THEN 'X'
                   WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                   THEN 'X'
+                  WHEN Movement.OperDate >= '01.04.2016' AND Movement_child.OperDate >= '01.04.2014' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                       AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
+                  THEN 'X'
                   ELSE ''
              END AS ERPN
            , Movement_child.Id as x11
