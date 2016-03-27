@@ -84,6 +84,7 @@ BEGIN
        UNION SELECT 'isBarCode'              AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isTareWeightEnter'      AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isPersonalComplete'     AS Name WHERE inIsCeh = FALSE
+       UNION SELECT 'isPersonalLoss'         AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isTax'                  AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isTransport'            AS Name WHERE inIsCeh = FALSE
 

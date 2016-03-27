@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Goods()
+-- Function: gpGet_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpGet_Object_Goods(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
-    IN inId          Integer,       -- РўРѕРІР°СЂ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Товар 
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
                GoodsGroupId Integer, GoodsGroupName TVarChar,
@@ -19,20 +19,22 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbObjectId Integer;
 BEGIN
-       vbUserId := lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Goods());
   
    IF COALESCE (inId, 0) = 0
    THEN
-       vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+       -- поиск <Торговой сети>
+       vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
-       RETURN QUERY 
+       -- Результат
+       RETURN QUERY
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE(GoodsCodeIntMax, 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
+           , GoodsCodeIntNew        AS Code
+           , CAST ('' AS TVarChar)  AS Name
               
            , CAST (0 as Integer)    AS GoodsGroupId
            , CAST ('' as TVarChar)  AS GoodsGroupName  
@@ -51,15 +53,14 @@ BEGIN
            , false         AS isUpload
            , CAST (NULL AS Boolean) AS isErased
 
-       FROM (SELECT MAX (Object_Goods.GoodsCodeInt) AS GoodsCodeIntMax
+       FROM (SELECT lfGet_ObjectCode_byRetail (vbObjectId, 0, zc_Object_Goods()) AS GoodsCodeIntNew) AS Object_Goods
+            LEFT JOIN Object AS ObjectMeasure ON ObjectMeasure.Id = lpGet_DefaultValue('TGoodsEditForm;zc_Object_Measure', vbUserId) :: Integer
+            LEFT JOIN Object AS ObjectNDSKind ON ObjectNDSKind.Id = lpGet_DefaultValue('TGoodsEditForm;zc_Object_NDSKind', vbUserId) :: Integer
+      ;
 
-             FROM Object_Goods_View AS Object_Goods
-            WHERE Object_Goods.ObjectId = vbObjectId) 
-       AS Object_Goods
-                LEFT JOIN Object AS ObjectMeasure ON ObjectMeasure.Id = lpGet_DefaultValue('TGoodsEditForm;zc_Object_Measure', vbUserId) :: Integer
-                LEFT JOIN Object AS ObjectNDSKind ON ObjectNDSKind.Id = lpGet_DefaultValue('TGoodsEditForm;zc_Object_NDSKind', vbUserId) :: Integer
-;
    ELSE
+
+     -- Результат
      RETURN QUERY 
      SELECT Object_Goods_View.Id             AS Id 
           , Object_Goods_View.GoodsCodeInt   AS Code
@@ -89,13 +90,14 @@ BEGIN
           , Object_Goods_View.isErased       AS isErased
           
      FROM Object_Goods_View
-        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferCode
-                               ON ObjectFloat_Goods_ReferCode.ObjectId = Object_Goods_View.Id 
-                              AND ObjectFloat_Goods_ReferCode.DescId = zc_ObjectFloat_Goods_ReferCode()   
-        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferPrice
-                               ON ObjectFloat_Goods_ReferPrice.ObjectId = Object_Goods_View.Id 
-                              AND ObjectFloat_Goods_ReferPrice.DescId = zc_ObjectFloat_Goods_ReferPrice()   
-    WHERE Object_Goods_View.Id = inId;
+          LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferCode
+                                 ON ObjectFloat_Goods_ReferCode.ObjectId = Object_Goods_View.Id 
+                                AND ObjectFloat_Goods_ReferCode.DescId = zc_ObjectFloat_Goods_ReferCode()   
+          LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferPrice
+                                 ON ObjectFloat_Goods_ReferPrice.ObjectId = Object_Goods_View.Id 
+                                AND ObjectFloat_Goods_ReferPrice.DescId = zc_ObjectFloat_Goods_ReferPrice()   
+     WHERE Object_Goods_View.Id = inId;
+
   END IF;
   
 END;
@@ -103,21 +105,19 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 
-
-
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.16                                        *
  10.06.15                        *  
  23.03.15                        *  
  16.02.15                        *  
- 13.11.14                        *  Р”РµС„РѕР»С‚С‹
+ 13.11.14                        *  Дефолты
  30.10.14                        *
  24.06.14         *
  20.06.13                        *
-
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpGet_Object_Goods('2')
+-- тест
+-- SELECT * FROM gpGet_Object_Goods (zfCalc_UserAdmin())

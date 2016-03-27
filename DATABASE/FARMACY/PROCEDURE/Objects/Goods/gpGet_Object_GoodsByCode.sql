@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Goods()
+-- Function: gpGet_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpGet_Object_GoodsByCode(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsByCode(
-    IN inGoodsCode   Integer,       -- РўРѕРІР°СЂ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inGoodsCode   Integer,       -- Товар 
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar) AS
 $BODY$
@@ -13,7 +13,7 @@ $BODY$
 BEGIN
        vbUserId := lpGetUserBySession (inSession);
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Goods());
   
        vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
@@ -35,11 +35,11 @@ ALTER FUNCTION gpGet_Object_GoodsByCode(integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  04.12.14                        *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Object_Goods('2')

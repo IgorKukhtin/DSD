@@ -238,6 +238,7 @@ type
     function Print_Movement_afterSave:Boolean;
     function GetParams_MovementDesc(BarCode: String):Boolean;
     function GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
+    function GetPanelPartnerCaption(execParams:TParams):String;
     procedure Create_Scale;
     procedure Initialize_Scale;
     procedure RefreshDataSet;
@@ -247,6 +248,7 @@ type
     procedure myActiveControl;
   public
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
+    function Save_Movement_PersonalLoss(execParams:TParams):Boolean;
     function fGetScale_CurrentWeight:Double;
   end;
 
@@ -257,7 +259,7 @@ var
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,GuideMovement,GuideMovementTransport
-    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint;
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -318,6 +320,14 @@ begin
      if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
      then exit;
 
+
+     //параметры для списания на сотрудника
+     if Save_Movement_PersonalLoss(ParamsMovement) = FALSE then
+     begin
+         ShowMessage('Ошибка.'+#10+#13+'Для документа <Списание> не определен <Сотрудник>.'+#10+#13+'Документ НЕ будет закрыт.');
+         ActiveControl:=cxDBGrid;
+         exit;
+     end;
 
      //параметры для печати
      if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
@@ -456,6 +466,26 @@ begin
           begin
                DMMainScaleForm.gpUpdate_Scale_Movement_PersonalComlete(execParams)
           end;
+     end;
+end;
+//------------------------------------------------------------------------------------------------
+function TMainForm.Save_Movement_PersonalLoss(execParams:TParams):Boolean;
+var lParams:TParams;
+begin
+     Result:= (GetArrayList_Value_byName(Default_Array,'isPersonalLoss') = AnsiUpperCase('FALSE'))
+           or (execParams.ParamByName('MovementDescId').asInteger <> zc_Movement_Loss);
+     if not Result then
+     begin
+          Create_ParamsPersonal(lParams,'');
+          //
+          Result:= GuidePersonalForm.Execute(lParams);
+          if Result then
+          begin
+               PanelPartner.Caption:='('+IntToStr(lParams.ParamByName('PersonalCode').asInteger)+')'+lParams.ParamByName('PersonalName').asString + ' *** ' + GetPanelPartnerCaption(ParamsMovement);
+               ParamAddValue(lParams,'MovementId', ftInteger,execParams.ParamByName('MovementId').asInteger);
+               DMMainScaleForm.gpUpdate_Scale_Movement_PersonalLoss(lParams);
+          end;
+          lParams.Free;
      end;
 end;
 //------------------------------------------------------------------------------------------------
@@ -1028,8 +1058,21 @@ begin
   err_count:=0;
 end;
 //------------------------------------------------------------------------------------------------
-procedure TMainForm.WriteParamsMovement;
+function TMainForm.GetPanelPartnerCaption(execParams:TParams):String;
 var str_edi:String;
+begin
+     with execParams do
+     begin
+          str_edi:='';
+          if ParamByName('isEdiInvoice').asBoolean=TRUE then str_edi:=str_edi+'cч.';
+          if ParamByName('isEdiOrdspr').asBoolean=TRUE then str_edi:=str_edi+'пн.';
+          if ParamByName('isEdiDesadv').asBoolean=TRUE then str_edi:=str_edi+'ув.';
+
+          Result:=str_edi+'('+IntToStr(ParamByName('calcPartnerCode').asInteger)+')'+ParamByName('calcPartnerName').asString;
+     end;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.WriteParamsMovement;
 begin
   with ParamsMovement do begin
 
@@ -1042,12 +1085,7 @@ begin
 
     if ParamByName('calcPartnerId').AsInteger<>0
     then begin
-             str_edi:='';
-             if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then str_edi:=str_edi+'cч.';
-             if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then str_edi:=str_edi+'пн.';
-             if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then str_edi:=str_edi+'ув.';
-
-             PanelPartner.Caption:=str_edi+'('+IntToStr(ParamByName('calcPartnerCode').asInteger)+')'+ParamByName('calcPartnerName').asString;
+             PanelPartner.Caption:=GetPanelPartnerCaption(ParamsMovement);
          end
     else PanelPartner.Caption:='';
 

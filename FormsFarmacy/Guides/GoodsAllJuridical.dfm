@@ -1,11 +1,11 @@
 inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1086#1074' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1086#1074' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
   ClientHeight = 492
   ClientWidth = 1079
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1095
-  ExplicitHeight = 530
+  ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,54 +27,83 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
         ExplicitWidth = 1079
         ExplicitHeight = 153
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsBehavior.IncSearch = True
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colId: TcxGridDBColumn
-            DataBinding.FieldName = 'GoodsId'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object MainId: TcxGridDBColumn
+          object MainId_1: TcxGridDBColumn
             Caption = 'MainId'
             DataBinding.FieldName = 'GoodsMainId'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 54
+            Width = 55
           end
-          object clCodeInt: TcxGridDBColumn
+          object Id_1: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object LinkId_1: TcxGridDBColumn
+            DataBinding.FieldName = 'LinkId'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Code_1: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
-            Visible = False
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 36
+            Width = 75
           end
-          object clCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
+          object CodeStr_1: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1090#1088#1086#1095#1085#1099#1081
+            DataBinding.FieldName = 'CodeStr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
+            Width = 75
           end
-          object clName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsName'
+          object Name_1: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 166
+            Width = 120
           end
-          object colMeasureName: TcxGridDBColumn
+          object MeasureName_1: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -82,7 +111,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 50
           end
-          object colNDSKindName: TcxGridDBColumn
+          object NDSKindName_1: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
@@ -90,37 +119,21 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 40
           end
-          object clGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 87
-          end
-          object colisErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object ObjectDescName: TcxGridDBColumn
+          object ObjectDescName_1: TcxGridDBColumn
             DataBinding.FieldName = 'ObjectDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 74
+            Width = 80
           end
-          object ObjectName: TcxGridDBColumn
+          object ObjectName_1: TcxGridDBColumn
             DataBinding.FieldName = 'ObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 100
           end
-          object MakerName: TcxGridDBColumn
+          object MakerName_1: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
@@ -128,7 +141,61 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 109
           end
-          object MinimumLot: TcxGridDBColumn
+          object GoodsGroupName_1: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object isClose_1: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isTOP_1: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'isTOP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isPromo_1: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isFirst_1: TcxGridDBColumn
+            Caption = '1-'#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isFirst'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isUpload_1: TcxGridDBColumn
+            DataBinding.FieldName = 'isUpload'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isSpecCondition_1: TcxGridDBColumn
+            DataBinding.FieldName = 'isSpecCondition'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object MinimumLot_1: TcxGridDBColumn
             Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'MinimumLot'
             HeaderAlignmentHorz = taCenter
@@ -136,31 +203,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 58
           end
-          object isClose: TcxGridDBColumn
-            Caption = #1047#1072#1082#1088#1099#1090
-            DataBinding.FieldName = 'isClose'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 21
-          end
-          object isTOP: TcxGridDBColumn
-            Caption = #1058#1054#1055
-            DataBinding.FieldName = 'isTOP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 29
-          end
-          object isPromo: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1103' '
-            DataBinding.FieldName = 'isPromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 29
-          end
-          object PercentMarkup: TcxGridDBColumn
+          object PercentMarkup_1: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
             HeaderAlignmentHorz = taCenter
@@ -168,13 +211,22 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 59
           end
-          object Price: TcxGridDBColumn
+          object Price_1: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 44
+          end
+          object isErased_1: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
       end
@@ -197,90 +249,116 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clGoodsMainId: TcxGridDBColumn
+          object MainId_2: TcxGridDBColumn
             Caption = 'MainId'
             DataBinding.FieldName = 'GoodsMainId'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
+            Width = 55
           end
-          object clId: TcxGridDBColumn
+          object Id_2: TcxGridDBColumn
             DataBinding.FieldName = 'Id'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
+            Width = 55
           end
-          object clCode1: TcxGridDBColumn
+          object LinkId_2: TcxGridDBColumn
+            DataBinding.FieldName = 'LinkId'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Code_2: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
+            Width = 75
           end
-          object clName1: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          object CodeStr_2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1090#1088#1086#1095#1085#1099#1081
+            DataBinding.FieldName = 'CodeStr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object Name_2: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1054#1073#1097#1077#1077
             DataBinding.FieldName = 'Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 140
+            Width = 120
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName_2: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 32
+            Width = 50
           end
-          object clNDSKindName: TcxGridDBColumn
+          object NDSKindName_2: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 42
+            Width = 40
           end
-          object colGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 57
-          end
-          object clObjectDescName: TcxGridDBColumn
+          object ObjectDescName_2: TcxGridDBColumn
             DataBinding.FieldName = 'ObjectDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 74
+            Width = 80
           end
-          object clObjectName: TcxGridDBColumn
+          object ObjectName_2: TcxGridDBColumn
             DataBinding.FieldName = 'ObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 100
           end
-          object colMakerName: TcxGridDBColumn
+          object MakerName_2: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
@@ -288,7 +366,61 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 109
           end
-          object clMinimumLot: TcxGridDBColumn
+          object GoodsGroupName_2: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object isClose_2: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isTOP_2: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'isTOP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isPromo_2: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isFirst_2: TcxGridDBColumn
+            Caption = '1-'#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isFirst'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isUpload_2: TcxGridDBColumn
+            DataBinding.FieldName = 'isUpload'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isSpecCondition_2: TcxGridDBColumn
+            DataBinding.FieldName = 'isSpecCondition'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object MinimumLot_2: TcxGridDBColumn
             Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'MinimumLot'
             HeaderAlignmentHorz = taCenter
@@ -296,33 +428,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 58
           end
-          object clisClose: TcxGridDBColumn
-            Caption = #1047#1072#1082#1088#1099#1090
-            DataBinding.FieldName = 'isClose'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 21
-          end
-          object clisTOP: TcxGridDBColumn
-            Caption = #1058#1054#1055
-            DataBinding.FieldName = 'isTOP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 29
-          end
-          object clisPromo: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1103
-            DataBinding.FieldName = 'isPromo'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 29
-          end
-          object clPercentMarkup: TcxGridDBColumn
+          object PercentMarkup_2: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
             HeaderAlignmentHorz = taCenter
@@ -330,13 +436,22 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 59
           end
-          object clPrice: TcxGridDBColumn
+          object Price_2: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 44
+          end
+          object isErased_2: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
         object cxGridLevelChild1: TcxGridLevel
@@ -371,144 +486,209 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
-          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object cxGoodsMainId: TcxGridDBColumn
+          object MainId_3: TcxGridDBColumn
             Caption = 'MainId'
-            DataBinding.FieldName = 'Id'
+            DataBinding.FieldName = 'GoodsMainId'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 51
+            Width = 55
           end
-          object cxGoodsId: TcxGridDBColumn
-            AlternateCaption = '40'
+          object Id_3: TcxGridDBColumn
             DataBinding.FieldName = 'Id'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 54
+            Width = 55
           end
-          object cxCode: TcxGridDBColumn
+          object LinkId_3: TcxGridDBColumn
+            DataBinding.FieldName = 'LinkId'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Code_3: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
+            Width = 75
           end
-          object cxGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          object CodeStr_3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1090#1088#1086#1095#1085#1099#1081
+            DataBinding.FieldName = 'CodeStr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object Name_3: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 221
+            Width = 120
           end
-          object cxMeasureName: TcxGridDBColumn
+          object MeasureName_3: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 32
+            Width = 50
           end
-          object cxNDSKindName: TcxGridDBColumn
+          object NDSKindName_3: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 42
+            Width = 40
           end
-          object cxGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'GoodsGroupName'
+          object ObjectDescName_3: TcxGridDBColumn
+            DataBinding.FieldName = 'ObjectDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 57
+            Width = 80
           end
-          object cxObjectDescName: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectDescName'
-            Options.Editing = False
-            Width = 70
-          end
-          object cxObjectName: TcxGridDBColumn
+          object ObjectName_3: TcxGridDBColumn
             DataBinding.FieldName = 'ObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 83
+            Width = 100
           end
-          object cxMakerName: TcxGridDBColumn
+          object MakerName_3: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 112
+            Width = 109
           end
-          object cxMinimumLot: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'MinimumLot'
+          object GoodsGroupName_3: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 150
           end
-          object cxisClose: TcxGridDBColumn
+          object isClose_3: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090
             DataBinding.FieldName = 'isClose'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 27
+            Width = 55
           end
-          object cxisTOP: TcxGridDBColumn
+          object isTOP_3: TcxGridDBColumn
             Caption = #1058#1054#1055
             DataBinding.FieldName = 'isTOP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 37
+            Width = 45
           end
-          object cxisPromo: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1103
+          object isPromo_3: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '
             DataBinding.FieldName = 'isPromo'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
-            Width = 29
+            Width = 45
           end
-          object cxPercentMarkup: TcxGridDBColumn
+          object isUpload_3: TcxGridDBColumn
+            DataBinding.FieldName = 'isUpload'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isSpecCondition_3: TcxGridDBColumn
+            DataBinding.FieldName = 'isSpecCondition'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isFirst_3: TcxGridDBColumn
+            Caption = '1-'#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isFirst'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object MinimumLot_3: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'MinimumLot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object PercentMarkup_3: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 88
+            Width = 59
           end
-          object cxPrice: TcxGridDBColumn
+          object Price_3: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 63
+            Width = 44
+          end
+          object isErased_3: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -527,15 +707,15 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
-    Top = 65528
+    Top = 48
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 624
-    Top = 16
+    Top = 72
   end
   inherited ActionList: TActionList
-    Left = 783
-    Top = 15
+    Left = 199
+    Top = 127
     object DataSetDelete: TDataSetDelete [0]
       Category = 'Delete'
       Caption = '&Delete'
@@ -548,10 +728,10 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spGoodsRetail
+          StoredProc = spSelectMaster
         end
         item
-          StoredProc = spGoodsJuridical
+          StoredProc = spSelectChild2
         end>
     end
     object mactListDelete: TMultiAction [2]
@@ -620,10 +800,10 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
     object actGoodsLinkRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGoodsRetail
+      StoredProc = spSelectMaster
       StoredProcList = <
         item
-          StoredProc = spGoodsRetail
+          StoredProc = spSelectMaster
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -664,23 +844,22 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
-    IndexFieldNames = 'Id'
-    MasterFields = 'Id'
     Left = 32
     Top = 80
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods_Common'
-    DataSet = ChildCDS_2
+    StoredProcName = 'gpSelect_Object_GoodsAll_Common'
+    DataSet = ChildCDS_1
     DataSets = <
       item
-        DataSet = ChildCDS_2
+        DataSet = ChildCDS_1
       end>
-    Left = 136
-    Top = 408
+    Left = 176
+    Top = 248
   end
   inherited BarManager: TdxBarManager
     Left = 736
+    Top = 72
     DockControlHeights = (
       0
       0
@@ -688,10 +867,6 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -754,13 +929,12 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
         Action = actUpdate
         ShortCut = 13
       end>
-    SearchAsFilter = False
-    Left = 200
-    Top = 72
+    Left = 272
+    Top = 80
   end
   inherited PopupMenu: TPopupMenu
     Left = 680
-    Top = 8
+    Top = 64
     object N9: TMenuItem [5]
       Action = mactListDelete
     end
@@ -781,17 +955,17 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
     Left = 776
     Top = 96
   end
-  object spGoodsRetail: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsAll_Retail'
-    DataSet = ChildCDS_1
+  object spSelectMaster: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsAll_Juridical'
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ChildCDS_1
+        DataSet = MasterCDS
       end>
     Params = <>
     PackSize = 1
-    Left = 320
-    Top = 248
+    Left = 184
+    Top = 72
   end
   object ChildCDS_1: TClientDataSet
     Aggregates = <>
@@ -800,13 +974,13 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 432
-    Top = 264
+    Left = 32
+    Top = 256
   end
   object ChildDS_1: TDataSource
     DataSet = ChildCDS_1
-    Left = 744
-    Top = 136
+    Left = 96
+    Top = 248
   end
   object DBViewAddOnChild1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -831,9 +1005,8 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    SearchAsFilter = False
-    Left = 208
-    Top = 256
+    Left = 272
+    Top = 248
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -842,6 +1015,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
       item
       end>
     Left = 568
+    Top = 56
   end
   object dsdStoredProc1: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_LinkGoods'
@@ -861,18 +1035,18 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
   end
   object ChildCDS_2: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'Id'
+    IndexFieldNames = 'GoodsMainId'
     MasterFields = 'GoodsMainId'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 440
-    Top = 408
+    Left = 40
+    Top = 416
   end
   object ChildDS_2: TDataSource
     DataSet = ChildCDS_2
-    Left = 368
-    Top = 384
+    Left = 96
+    Top = 424
   end
   object dsdDBViewAddOnChild2: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -899,20 +1073,19 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    SearchAsFilter = False
-    Left = 544
-    Top = 384
+    Left = 288
+    Top = 416
   end
-  object spGoodsJuridical: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsAll_Juridical'
-    DataSet = MasterCDS
+  object spSelectChild2: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsAll_Retail'
+    DataSet = ChildCDS_2
     DataSets = <
       item
-        DataSet = MasterCDS
+        DataSet = ChildCDS_2
       end>
     Params = <>
     PackSize = 1
-    Left = 392
-    Top = 80
+    Left = 176
+    Top = 408
   end
 end

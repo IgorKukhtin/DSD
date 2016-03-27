@@ -68,7 +68,6 @@ BEGIN
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
 
-
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
              , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
@@ -122,7 +121,7 @@ BEGIN
              , MovementFloat_TotalSumm.ValueData              AS TotalSumm
 
              , Object_From.ValueData              AS FromName
-             , Object_To.ValueData                AS ToName
+             , (CASE WHEN MovementDesc.Id = zc_Movement_Loss() AND Object_PersonalLoss.Id > 0 THEN '(' || Object_PersonalLoss.ObjectCode :: TVarChar || ')' || Object_PersonalLoss.ValueData || ' ***' ELSE '' END || Object_To.ValueData) :: TVarChar AS ToName
 
              , Object_PaidKind.ValueData          AS PaidKindName
              , View_Contract_InvNumber.InvNumber  AS ContractName
@@ -227,6 +226,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object AS Object_PersonalLoss ON Object_PersonalLoss.Id = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 

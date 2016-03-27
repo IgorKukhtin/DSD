@@ -213,9 +213,10 @@ BEGIN
                ,Res.MemberId
                ,Res.MemberName
                ,Res.SUM_MemberHours
-               ,CASE WHEN inDetailDay = TRUE
+               /*,CASE WHEN inDetailDay = TRUE
                      THEN Res.SheetWorkTime_Amount
-                ELSE NULL::TFloat END                          AS SheetWorkTime_Amount
+                ELSE NULL :: TFloat END                        AS SheetWorkTime_Amount*/
+               ,SUM (Res.SheetWorkTime_Amount) :: TFloat       AS SheetWorkTime_Amount
                ,CASE WHEN inDetailModelService = TRUE
                      THEN Res.ServiceModelCode
                 ELSE NULL::Integer END                         AS ServiceModelCode
@@ -273,9 +274,9 @@ BEGIN
                ,Res.MemberId
                ,Res.MemberName
                ,Res.SUM_MemberHours
-               ,CASE WHEN inDetailDay = TRUE
+               /*,CASE WHEN inDetailDay = TRUE
                      THEN Res.SheetWorkTime_Amount
-                ELSE NULL::TFloat END
+                ELSE NULL::TFloat END*/
                ,CASE WHEN inDetailModelService = TRUE
                      THEN Res.ServiceModelCode
                 ELSE NULL::Integer END

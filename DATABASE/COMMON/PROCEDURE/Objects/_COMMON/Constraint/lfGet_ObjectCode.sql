@@ -4,9 +4,10 @@
 
 CREATE OR REPLACE FUNCTION lfGet_ObjectCode(
     IN inObjectCode Integer, 
-    IN inDescId Integer
+    IN inDescId     Integer
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
   DECLARE vbObjectCode Integer;
 BEGIN
@@ -14,13 +15,14 @@ BEGIN
      THEN 
          SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO vbObjectCode FROM Object WHERE DescId = inDescId;
      ELSE
-         vbObjectCode:=inObjectCode;
+         vbObjectCode:= inObjectCode;
      END IF;
      
      RETURN (vbObjectCode);
 
 END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lfGet_ObjectCode (Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
@@ -29,7 +31,6 @@ ALTER FUNCTION lfGet_ObjectCode (Integer, Integer) OWNER TO postgres;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  28.06.13                                        * rename vbObjectCode
  20.06.13          *                             *
-
 */
 
 -- тест

@@ -51,7 +51,7 @@ type
     // Scale
     function gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
-
+    function gpUpdate_Scale_Movement_PersonalLoss(execParams:TParams): Boolean;
   end;
 
   function gpInitialize_Const: Boolean; // Scale + ScaleCeh
@@ -213,6 +213,24 @@ begin
        Params.AddParam('inPositionId2', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId2').AsInteger);
        Params.AddParam('inPositionId3', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId3').AsInteger);
        Params.AddParam('inPositionId4', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId4').AsInteger);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_PersonalComlete');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement_PersonalLoss(execParams:TParams): Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_Movement_PersonalLoss';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParams.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inPersonalId', ftInteger, ptInput, execParams.ParamByName('PersonalId').AsInteger);
        //try
          Execute;
        {except

@@ -40,6 +40,8 @@ type
     clisFirst: TcxGridDBColumn;
     spUpdate_Goods_isFirst: TdsdStoredProc;
     clColor_calc: TcxGridDBColumn;
+    RetailCode: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

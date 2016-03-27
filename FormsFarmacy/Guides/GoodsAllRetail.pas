@@ -16,21 +16,15 @@ uses
 
 type
   TGoodsAllRetailForm = class(TAncestorGuidesForm)
-    clCodeInt: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
     bbLabel: TdxBarControlContainerItem;
     bbJuridical: TdxBarControlContainerItem;
-    clCode: TcxGridDBColumn;
     cxGridGChild1: TcxGrid;
     cxGridDBTableViewChild1: TcxGridDBTableView;
-    clCode1: TcxGridDBColumn;
-    clName1: TcxGridDBColumn;
     cxGridLevelChild1: TcxGridLevel;
-    spGoodsRetail: TdsdStoredProc;
+    spSelectMaster: TdsdStoredProc;
     cxSplitter: TcxSplitter;
     ChildCDS_1: TClientDataSet;
     ChildDS_1: TDataSource;
-    clGoodsGroupName: TcxGridDBColumn;
     DBViewAddOnChild1: TdsdDBViewAddOn;
     actGoodsLinkRefresh: TdsdDataSetRefresh;
     RefreshDispatcher: TRefreshDispatcher;
@@ -43,37 +37,15 @@ type
     N9: TMenuItem;
     cxGrid2: TcxGrid;
     cxGridDBTableViewChild2: TcxGridDBTableView;
-    cxGoodsId: TcxGridDBColumn;
-    cxCode: TcxGridDBColumn;
-    cxGoodsName: TcxGridDBColumn;
-    cxObjectName: TcxGridDBColumn;
-    cxMakerName: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     ChildCDS_2: TClientDataSet;
     ChildDS_2: TDataSource;
     dsdDBViewAddOnChild2: TdsdDBViewAddOn;
-    spGoodsJuridicalChild_2: TdsdStoredProc;
-    colId: TcxGridDBColumn;
-    clId: TcxGridDBColumn;
-    clGoodsMainId: TcxGridDBColumn;
-    colNDSKindName: TcxGridDBColumn;
-    clObjectName: TcxGridDBColumn;
+    spSelectChild2: TdsdStoredProc;
     cxSplitter1: TcxSplitter;
-    cxGoodsMainId: TcxGridDBColumn;
-    colMeasureName: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    clObjectDescName: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clNDSKindName: TcxGridDBColumn;
-    clMinimumLot: TcxGridDBColumn;
-    clisClose: TcxGridDBColumn;
-    clisTOP: TcxGridDBColumn;
-    clPercentMarkup: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
-    colMakerName: TcxGridDBColumn;
-    cxObjectDescName: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    LinkId_1: TcxGridDBColumn;
+    isUpload_1: TcxGridDBColumn;
+    isSpecCondition_1: TcxGridDBColumn;
   private
     { Private declarations }
   public
