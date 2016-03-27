@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective(integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_TaxFromTaxCorrective(
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMovementId          Integer    -- Ключ объекта <Документ>
 )
 RETURNS TABLE (GoodsId Integer
              , Price TFloat
