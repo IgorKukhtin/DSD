@@ -17,6 +17,7 @@ BEGIN
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
    vbUserId := lpGetUserBySession(inSession);
 
+   -- проверка
    IF EXISTS(SELECT Object_LinkGoods_View.Id               
                FROM Object_LinkGoods_View
               WHERE Object_LinkGoods_View.GoodsMainId = inGoodsMainId
@@ -25,6 +26,15 @@ BEGIN
 
       RAISE EXCEPTION 'Связь между данными товарами уже установлена';
    END IF;
+   
+   -- проверка
+   IF COALESCE (inGoodsMainId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Главный товар не определен';
+   END IF; 
+   -- проверка
+   IF COALESCE (inGoodsId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Товар не определен';
+   END IF; 
 
    
    -- определили <Признак>

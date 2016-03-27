@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_GoodsAll_Retail()
+-- Function: gpSelect_Object_GoodsAll_Common()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GoodsAll_Retail(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsAll_Common(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsAll_Retail(
+CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsAll_Common(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isErased Boolean, 
@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                isClose Boolean, isTOP Boolean, isPromo Boolean, isFirst Boolean,
                isUpload Boolean, isSpecCondition Boolean,
                PercentMarkup TFloat, Price TFloat,
-               ObjectDescId Integer, ObjectDescName TVarChar, ObjectName TVarChar,
+               ObjectDescName TVarChar, ObjectName TVarChar,
                MakerName TVarChar
               ) AS
 $BODY$ 
@@ -28,14 +28,14 @@ BEGIN
    -- для остальных...
    RETURN QUERY 
    SELECT 
-             Object_Goods.Id
+             ObjectLink_Main.ChildObjectId      AS Id
            , Object_Goods.ObjectCode            AS Code
            , ObjectString_Goods_Code.ValueData  AS CodeStr
            , Object_Goods.ValueData             AS Name
            , Object_Goods.isErased
 
            , ObjectLink_Main.ObjectId      AS LinkId
-           , ObjectLink_Main.ChildObjectId AS GoodsMainId
+           , Object_Goods.Id               AS GoodsMainId
            , Object_GoodsGroup.Id          AS GoodsGroupId
            , Object_GoodsGroup.ValueData   AS GoodsGroupName
            , Object_Measure.Id             AS MeasureId
@@ -57,7 +57,6 @@ BEGIN
            , ObjectFloat_Goods_PercentMarkup.ValueData AS PercentMarkup  
            , ObjectFloat_Goods_Price.ValueData         AS Price
 
-           , ObjectDesc_GoodsObject.Id          AS  ObjectDescId
            , ObjectDesc_GoodsObject.itemname    AS  ObjectDescName
            , Object_GoodsObject.ValueData       AS  ObjectName
 
@@ -139,15 +138,12 @@ BEGIN
                                   ON ObjectBoolean_Goods_SpecCondition.ObjectId = Object_Goods.Id
                                  AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
 
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain
-                                  ON ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
-                                 AND ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
-                                 AND ObjectBoolean_Goods_isMain.ValueData = TRUE
+          INNER JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain
+                                   ON ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
+                                  AND ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
+                                  AND ObjectBoolean_Goods_isMain.ValueData = TRUE
 
     WHERE Object_Goods.DescId = zc_Object_Goods()
-      AND ObjectBoolean_Goods_isMain.ObjectId IS NULL
-      -- AND COALESCE (Object_GoodsObject.DescId, 0) NOT IN (zc_Object_Juridical(), zc_Object_GlobalConst(), zc_object_User(), zc_Object_Contract())
-      AND COALESCE (Object_GoodsObject.DescId, 0) IN (0, zc_Object_Retail()/*, zc_object_User(), zc_Object_Contract()*/)
    ;
   
 END;
@@ -162,14 +158,6 @@ $BODY$
  25.02.16         *
 */
 
-/*
--- select lfGet_ObjectCode_byRetail ((SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail()), 0, zc_Object_Goods())
-select lpInsertUpdate_ObjectLink (zc_ObjectLink_LinkGoods_Goods(), 1237571, 1237567);
-update Object set ObjectCode = 25743 where Id = 1237567;
-update Object set ObjectCode = 25743 where Id = 1237569;
-update ObjectString set ValueData = '25743' where ObjectId = 1237567 and DescId = zc_ObjectString_Goods_Code();
-*/
-
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsAll_Retail (zfCalc_UserAdmin()) AS tmp WHERE COALESCE (tmp.Code, 0) IN (SELECT COALESCE (tmp2.Code, 0) FROM gpSelect_Object_GoodsAll_Retail (zfCalc_UserAdmin()) AS tmp2 GROUP BY COALESCE (tmp2.Code, 0), COALESCE (tmp2.ObjectName, '') HAVING COUNT(*) > 1)
--- SELECT * FROM gpSelect_Object_GoodsAll_Retail (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_GoodsAll_Common (zfCalc_UserAdmin()) AS tmp WHERE COALESCE (tmp.Code, 0) IN (SELECT COALESCE (tmp2.Code, 0) FROM gpSelect_Object_GoodsAll_Common (zfCalc_UserAdmin()) AS tmp2 GROUP BY COALESCE (tmp2.Code, 0) HAVING COUNT(*) > 1)
+-- SELECT * FROM gpSelect_Object_GoodsAll_Common (zfCalc_UserAdmin())

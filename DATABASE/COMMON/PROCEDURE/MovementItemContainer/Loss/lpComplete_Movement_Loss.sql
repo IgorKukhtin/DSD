@@ -128,6 +128,10 @@ BEGIN
                                      ON ObjectLink_UnitFrom_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                     AND ObjectLink_UnitFrom_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
 
+                LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Unit
+                                     ON ObjectLink_PersonalTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
+                                    AND ObjectLink_PersonalTo_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                    AND Object_To.DescId = zc_Object_Personal()
                 LEFT JOIN ObjectLink AS ObjectLink_CarTo_Unit
                                      ON ObjectLink_CarTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
                                     AND ObjectLink_CarTo_Unit.DescId = zc_ObjectLink_Car_Unit()
@@ -139,14 +143,14 @@ BEGIN
                                                     AND Object_From.DescId = zc_Object_Member()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Branch
-                                     ON ObjectLink_Branch.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId))))
+                                     ON ObjectLink_Branch.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                                     AND ObjectLink_Branch.DescId = zc_ObjectLink_Unit_Branch()
                 LEFT JOIN ObjectLink AS ObjectLink_Business
-                                     ON ObjectLink_Business.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId))))
+                                     ON ObjectLink_Business.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                                     AND ObjectLink_Business.DescId = zc_ObjectLink_Unit_Business()
                 -- для затрат (!!!если не указан ArticleLoss!!!)
                 LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
-                       ON lfObject_Unit_byProfitLossDirection.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId))))
+                       ON lfObject_Unit_byProfitLossDirection.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                       AND MovementLinkObject_ArticleLoss.ObjectId IS NULL
 
            WHERE Movement.Id = inMovementId

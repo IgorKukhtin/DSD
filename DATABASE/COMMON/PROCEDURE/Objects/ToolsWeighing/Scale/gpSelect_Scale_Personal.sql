@@ -47,21 +47,23 @@ BEGIN
                             FROM Object_Personal_View AS View_Personal
                             WHERE View_Personal.IsErased = FALSE
                               AND View_Personal.isDateOut = FALSE
-                              /*AND (View_Personal.BranchId = vbBranchId_Constraint
-                                   OR vbIsConstraint = FALSE
-                                  )*/
-                              AND View_Personal.UnitId IN (8459 -- Склад Реализации
-                                                         , 8461 -- Склад Возвратов
-                                                          )
-                              AND View_Personal.PositionId IN (12970 -- кладовщик
-                                                             , 12964 -- кладовщик Киев
-                                                             , 12981 -- кладовщик возвратов
-                                                             , 12971 -- кладовщик ночь
-                                                             , 18315 -- комплектовщик
-                                                             , 12943 -- нач. отдела комплектации
-                                                             , 12988 -- стикеровщики
-                                                             -- , 12982 -- старший кладовщик
-                                                              )
+                              AND ((vbIsConstraint = FALSE
+                                AND View_Personal.UnitId IN (8459 -- Склад Реализации
+                                                           , 8461 -- Склад Возвратов
+                                                            )
+                                AND View_Personal.PositionId IN (12970 -- кладовщик
+                                                               , 12964 -- кладовщик Киев
+                                                               , 12981 -- кладовщик возвратов
+                                                               , 12971 -- кладовщик ночь
+                                                               , 18315 -- комплектовщик
+                                                               , 12943 -- нач. отдела комплектации
+                                                               , 12988 -- стикеровщики
+                                                               -- , 12982 -- старший кладовщик
+                                                                )
+                                   )
+                                OR (View_Personal.BranchId = vbBranchId_Constraint
+                                AND vbIsConstraint = TRUE
+                                  ))
                            )
 
        -- Результат

@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_RoleUser()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_RoleUser(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_RoleUser (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_RoleUser(
     IN inSession     TVarChar       -- сессия пользователя
@@ -76,8 +76,6 @@ ALTER FUNCTION gpSelect_Object_RoleUser(TVarChar)
 
 */
 
--- тест
--- SELECT * FROM gpSelect_Object_Role('2')
 /*SELECT  
   Role.ItemName AS RoleName,
   Process.ItemName AS ProcessName
@@ -94,3 +92,6 @@ FROM
 
 
 WHERE Object.DescId = zc_Object_RoleRight()*/
+
+-- тест
+-- SELECT * FROM gpSelect_Object_RoleUser (zfCalc_UserAdmin())

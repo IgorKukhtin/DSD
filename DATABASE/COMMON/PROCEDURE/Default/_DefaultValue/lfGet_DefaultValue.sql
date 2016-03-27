@@ -1,41 +1,40 @@
-п»ї-- Function: gpGet_DefaultValue()
+-- Function: gpGet_DefaultValue()
 
-DROP FUNCTION IF EXISTS lpGet_DefaultValue(TVarChar, Integer);
+-- DROP FUNCTION IF EXISTS lpGet_DefaultValue (TVarChar, Integer) CASCADE;
 
 CREATE OR REPLACE FUNCTION lpGet_DefaultValue(
-    IN inDefaultKey  TVarChar,      -- РєР»СЋС‡ РґРµС„РѕР»С‚Р°
-    IN inUserId      Integer        -- РєР»СЋС‡ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inDefaultKey  TVarChar,      -- ключ дефолта
+    IN inUserId      Integer        -- ключ пользователя
 )
 RETURNS TVarChar AS
 $BODY$
 BEGIN
   
-  RETURN
-  COALESCE((SELECT DefaultValue FROM DefaultValue 
-    JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
-LEFT JOIN (SELECT RoleId, 2 AS TypeId 
-            FROM ObjectLink_UserRole_View
-           WHERE UserId = inUserId
-           UNION 
-          SELECT inUserId, 1) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
-   WHERE DefaultKeys.Key = inDefaultKey
-   ORDER BY UserRole.TypeId 
-   LIMIT 1), '0');
-    
+  RETURN COALESCE (CASE WHEN 1=0 AND 0 < (SELECT RoleId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+                             THEN '-1' -- !!!захардодил для Pharmacy!!!
+                        ELSE (SELECT DefaultValue
+                              FROM DefaultValue 
+                                   INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
+                                   LEFT JOIN (SELECT RoleId, 2 AS OrderId FROM ObjectLink_UserRole_View WHERE UserId = inUserId
+                                             UNION 
+                                              SELECT inUserId AS RoleId, 1 AS OrderId
+                                             ) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
+                              WHERE DefaultKeys.Key = inDefaultKey
+                              ORDER BY UserRole.OrderId 
+                              LIMIT 1)
+                   END, '0') :: TVarChar;
+
 END;
 $BODY$
-
-LANGUAGE plpgsql IMMUTABLE;
-ALTER FUNCTION lpGet_DefaultValue(TVarChar, integer) OWNER TO postgres;
-
+  LANGUAGE plpgsql IMMUTABLE;
+ALTER FUNCTION lpGet_DefaultValue (TVarChar, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
- 18.02.14                         * add LEFT РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.02.14                         * add LEFT для пользователя.
  20.12.13                         *
-
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_Role('2')
+-- тест
+-- SELECT * FROM lpGet_DefaultValue ('zc_Object_Retail', zfCalc_UserAdmin() :: Integer)

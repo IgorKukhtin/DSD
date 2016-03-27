@@ -53,6 +53,7 @@ BEGIN
          WHERE MovementLinkMovement_Order.MovementId = inMovementId
            AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
            AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Общефирменные + Маркетинг
+        )
      THEN
          RAISE EXCEPTION 'Ошибка.В заявке указан неправильный № договора = <%> <%>.', lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract())), lfGet_Object_ValueData (zc_Enum_InfoMoneyDestination_21500());
      END IF;
@@ -433,8 +434,8 @@ BEGIN
                                                   , inPriceWithVAT          := FALSE
                                                   , inVATPercent            := 20
                                                   , inFromId                := FromId
-                                                  , inToId                  := NULL
-                                                  , inArticleLossId         := ToId -- !!!не ошибка!!!
+                                                  , inToId                  := ContractId -- !!!не ошибка!!!
+                                                  , inArticleLossId         := ToId       -- !!!не ошибка!!!
                                                   , inPaidKindId            := zc_Enum_PaidKind_SecondForm()
                                                   , inUserId                := vbUserId
                                                    )

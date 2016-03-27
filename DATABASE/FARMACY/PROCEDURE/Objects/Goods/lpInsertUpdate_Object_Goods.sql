@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, INTEGER, Boolean);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
@@ -11,82 +11,103 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDSKindId           Integer   ,    -- НДС
     IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
-    IN inUserId              Integer   ,    -- Пользователь
+    IN inUserId              Integer   ,    -- 
     IN inMakerId             Integer   ,    -- Производитель
     IN inMakerName           TVarChar  ,    -- Производитель
-    IN inCheckName           boolean  DEFAULT true
+    IN inCheckName           Boolean  DEFAULT true
 )
-RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
-  DECLARE vbCode INTEGER;
+  DECLARE vbCode Integer;
 BEGIN
-
-   --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
-   
-   -- !!! проверка уникальности <Наименование>
-   IF inCheckName THEN
+   -- !!!проверка уникальности <Наименование> для "любого" inObjectId
+   IF inCheckName = TRUE
+   THEN
       IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
-           WHERE ((inObjectId = 0 AND ObjectId IS NULL) OR (ObjectId = inObjectId AND inObjectId <> 0))
-             AND GoodsName = inName AND Id <> COALESCE(ioId, 0) ) THEN
-          RAISE EXCEPTION 'Значение "%" не уникально для справочника "Товары"', inName;
+                 WHERE GoodsName = inName AND Id <> COALESCE(ioId, 0)
+                   AND ((ObjectId IS NULL AND inObjectId = 0)
+                     OR (ObjectId = inObjectId AND inObjectId <> 0))
+                )
+      THEN
+          RAISE EXCEPTION 'Значение <(%)%>%не уникально для справочника %.', inCode, inName
+                        , CASE WHEN COALESCE (inObjectId, 0) = 0 THEN '' ELSE ' в торговой сети <' || COALESCE (lfGet_Object_ValueData (inObjectId), 'NULL') || '> ' END
+                        , CASE WHEN COALESCE (inObjectId, 0) = 0 THEN '<Товары - общие>' ELSE '<Товары>' END;
       END IF; 
    END IF;
 
-   -- !!! проверка уникальности <Код>
-   IF inObjectId = 0 THEN
+   -- проверка уникальности <Код>
+   IF COALESCE (inObjectId, 0) = 0
+   THEN
+      -- !!!для "общего справочника" - GoodsCodeInt
       IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
-               WHERE ObjectId IS NULL 
-                 AND GoodsCodeInt = inCode::Integer AND Id <> COALESCE(ioId, 0)  ) THEN
+                 WHERE GoodsCodeInt = inCode :: Integer AND Id <> COALESCE (ioId, 0)
+                   AND ObjectId IS NULL
+                )
+      THEN
          RAISE EXCEPTION 'Код "%" не уникально для справочника "Товары"', inCode;
       END IF; 
    ELSE
+      -- !!!для inObjectId - GoodsCode (TVarChar)
       IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
-               WHERE ObjectId = inObjectId 
-                 AND GoodsCode = inCode AND Id <> COALESCE(ioId, 0)  ) THEN
+                 WHERE GoodsCode = inCode AND Id <> COALESCE (ioId, 0)
+                   AND ObjectId = inObjectId 
+                )
+      THEN
          RAISE EXCEPTION 'Код "%" не уникально для справочника "Товары"', inCode;
       END IF; 
    END IF;
    
+   -- попытка преобразовать код
    BEGIN
-     vbCode := inCode::Integer;
+        vbCode:= inCode :: Integer;
    EXCEPTION           
-     WHEN data_exception THEN
-         vbCode := 0;
+            WHEN data_exception
+            THEN vbCode := 0;
    END;
 
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), vbCode, inName);
 
-   IF COALESCE(inObjectId, 0) <> 0 THEN
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), vbCode, inName);
+
+   -- если НЕ из "общего справочника"
+   IF COALESCE (inObjectId, 0) <> 0
+   THEN
       -- Строковый код
       PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), ioId, inCode);
       -- сохранили свойство <связи чьи товары>
       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), ioId, inObjectId);
+
    ELSE
-      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Goods_isMain(), ioId, true);
+       -- иначе отметили что товар из "общего справочника"
+       PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_isMain(), ioId, TRUE);
    END IF; 
 
+
    -- сохранили связь с <Группа>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
    -- сохранили свойство <НДС>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDSKind(), ioId, inNDSKindId );
 
    -- сохранили свойство <Производитель>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Maker(), ioId, inMakerId );
-
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Maker(), ioId, inMakerId);
    -- сохранили свойство <Производитель>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), ioId, inMakerName );
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), ioId, inMakerName);
 
-   -- сохранили протокол
-   -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
-END;$BODY$
+   -- сохранили протокол - !!!только для "общего справочника"!!!
+   IF COALESCE (inObjectId, 0) = 0
+   THEN
+       PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
+   END IF; 
 
-LANGUAGE plpgsql VOLATILE;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean) OWNER TO postgres;
-
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

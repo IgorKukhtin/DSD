@@ -1,15 +1,12 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods
-    (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods
-    (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, Boolean, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods
-    (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -27,77 +24,155 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inPercentMarkup	     TFloat    ,    -- % наценки
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUserName TVarChar;
+
    DECLARE vbObjectId Integer;
    DECLARE vbCode Integer;
    DECLARE vbMainGoodsId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
-   --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
-   vbUserId := lpGetUserBySession (inSession);
-   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
-   IF COALESCE(vbObjectId, 0) = 0 THEN
-      SELECT ValueData INTO vbUserName FROM Object WHERE Id = vbUserId;
-      RAISE EXCEPTION 'У пользователя "%" не установлена торговая сеть', vbUserName;
-   END IF;
+     -- поиск <Торговой сети>
+     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
-   -- !!! проверка уникальности <Код>
-   IF COALESCE(inMeasureId, 0) = 0 THEN
-      RAISE EXCEPTION 'Единица измерения должна быть определена';
-   END IF; 
 
-   -- !!! проверка уникальности <Код>
-   IF COALESCE(inNDSKindId, 0) = 0 THEN
-      RAISE EXCEPTION 'Тип НДС должен быть определен';
-   END IF; 
+     -- проверка <inName>
+     IF TRIM (COALESCE (inName, '')) = '' THEN
+        RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
+     END IF;
 
-   vbCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId), inCode::integer);
+     -- проверка <Торговой сети> - !!!только для Insert!!!
+     IF COALESCE (vbObjectId, 0) <= 0 AND COALESCE (ioId, 0) = 0 THEN
+        RAISE EXCEPTION 'У пользователя "%" не установлена торговая сеть', lfGet_Object_ValueData (vbUserId);
+     END IF;
+
+     -- проверка <Единица измерения>
+     IF COALESCE (inMeasureId, 0) = 0 THEN
+        RAISE EXCEPTION 'Единица измерения должна быть определена';
+     END IF;
+
+     -- проверка <Тип НДС>
+     IF COALESCE (inNDSKindId, 0) = 0 THEN
+        RAISE EXCEPTION 'Тип НДС должен быть определен';
+     END IF; 
+
+     -- <Код>
+     IF COALESCE (ioId, 0) = 0
+     THEN
+          -- проверка что параллельно не был создан товар с таким кодом
+          IF EXISTS (SELECT 1
+                     FROM ObjectLink
+                          INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inCode :: Integer
+                     WHERE ObjectLink.ChildObjectId = vbObjectId
+                       AND ObjectLink.DescId = zc_ObjectLink_Goods_Object()
+                    )
+          THEN
+              -- поиск нового
+              vbCode:= lfGet_ObjectCode_byRetail (vbObjectId, 0, zc_Object_Goods());
+          ELSE
+              -- или inCode или новый
+              vbCode:= lfGet_ObjectCode_byRetail (vbObjectId, inCode :: Integer, zc_Object_Goods());
+          END IF;
+     ELSE
+         -- !!!код не меняется!!!
+         vbCode:= COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), inCode :: Integer);
+     END IF;
+    
    
-   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, vbObjectId, vbUserId, 0, '');
-   
-   IF inMinimumLot = 0 THEN 
-      inMinimumLot := NULL;
-   END IF;   	
-
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(), ioId, inMinimumLot);
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferCode(), ioId, inReferCode);
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferPrice(), ioId, inReferPrice);
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Price(), ioId, inPrice);
-
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Close(), ioId, inIsClose);
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), ioId, inTOP);
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentMarkup(), ioId, inPercentMarkup);
-
-   -- Кусок ниже реализован временно пока работает одна сеть
-
-   -- Добавляем данные в общий справочник
-
-   SELECT Object_Goods_Main_View.Id INTO vbMainGoodsId
-     FROM Object_Goods_Main_View 
-    WHERE Object_Goods_Main_View.GoodsCode = vbCode; 
-
-   --
-   vbMainGoodsId := lpInsertUpdate_Object_Goods(vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, NULL, vbUserId, 0, '');
-
-   PERFORM gpInsertUpdate_Object_LinkGoods_Load(inCode, inCode, vbObjectId, inSession);
+     -- сохранили <Товар Торговой сети>
+     /*ioId:= lpInsertUpdate_Object_Goods_Retail (ioId            := ioId
+                                              , inCode          := CASE WHEN ioId <> 0 THEN inCode ELSE vbCode :: TVarChar END
+                                              , inName          := inName
+                                              , inGoodsGroupId  := inGoodsGroupId
+                                              , inMeasureId     := inMeasureId
+                                              , inNDSKindId     := inNDSKindId
+                                              , inMinimumLot    := inMinimumLot
+                                              , inReferCode     := inReferCode
+                                              , inReferPrice    := inReferPrice
+                                              , inPrice         := inPrice
+                                              , inIsClose       := inIsClose
+                                              , inTOP           := inTOP
+                                              , inPercentMarkup	:= inPercentMarkup
+                                              , inObjectId      := vbObjectId
+                                              , inUserId        := vbUserId
+                                               );*/
 
 
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+     -- !!!временно!!! - для сквозной синхронизации!!! со "всеми" Retail.Id (а не только vbObjectId)
+    PERFORM lpInsertUpdate_Object_Goods_Retail (ioId            := COALESCE (tmpGoods.GoodsId, ioId)
+                                              , inCode          := CASE WHEN ioId <> 0 THEN inCode ELSE vbCode :: TVarChar END
+                                              , inName          := inName
+                                              , inGoodsGroupId  := inGoodsGroupId
+                                              , inMeasureId     := inMeasureId
+                                              , inNDSKindId     := inNDSKindId
+                                              , inMinimumLot    := inMinimumLot
+                                              , inReferCode     := inReferCode
+                                              , inReferPrice    := inReferPrice
+                                              , inPrice         := inPrice
+                                              , inIsClose       := inIsClose
+                                              , inTOP           := inTOP
+                                              , inPercentMarkup	:= inPercentMarkup
+                                              , inObjectId      := Object_Retail.Id
+                                              , inUserId        := vbUserId
+                                               )
+     FROM Object AS Object_Retail
+          LEFT JOIN (SELECT DISTINCT
+                          , COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id) AS GoodsId
+                          , ObjectLink_Goods_Object.ChildObjectId                                     AS RetailId
+                     FROM Object AS Object_Goods
+                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                               ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                              AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                               ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                              AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain_find
+                                               ON ObjectLink_LinkGoods_GoodsMain_find.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                              AND ObjectLink_LinkGoods_GoodsMain_find.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods_find
+                                               ON ObjectLink_LinkGoods_Goods_find.ObjectId = ObjectLink_LinkGoods_GoodsMain_find.ObjectId
+                                              AND ObjectLink_LinkGoods_Goods_find.DescId = zc_ObjectLink_LinkGoods_Goods()
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
+                                               ON ObjectLink_Goods_Object.ObjectId = COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id)
+                                              AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                     WHERE Object_Goods.Id = ioId
+                    ) AS tmpGoods ON tmpGoods.RetailId = Object_Retail.Id AND tmpGoods.GoodsId > 0
+     WHERE Object_Retail.DescId = zc_Object_Retail();
 
-END;$BODY$
 
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar) OWNER TO postgres;
+     -- Кусок ниже реализован !!!временно!!! пока работает одна сеть или много сетей !!!но со сквозной синхронизацией!!!
 
+     -- !!!поиск по коду - vbCode!!!
+     vbMainGoodsId:= (SELECT Object_Goods_Main_View.Id FROM Object_Goods_Main_View  WHERE Object_Goods_Main_View.GoodsCode = vbCode);
+
+     -- Добавление/Изменение данных в общем справочнике
+     vbMainGoodsId := lpInsertUpdate_Object_Goods (vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, NULL, vbUserId, 0, '');
+
+     -- сохранили свойства - связи товаров сети с общим
+     PERFORM gpInsertUpdate_Object_LinkGoods_Load (inGoodsMainCode    := inCode
+                                                 , inGoodsCode        := inCode
+                                                 , inRetailId         := Object_Retail.Id
+                                                 , inSession          := inSession
+                                                  )
+     FROM Object AS Object_Retail
+     WHERE Object_Retail.DescId = zc_Object_Retail();
+
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar) OWNER TO postgres;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.16                                        *
  10.06.15                        *
  23.03.15                        *
  16.02.15                        *

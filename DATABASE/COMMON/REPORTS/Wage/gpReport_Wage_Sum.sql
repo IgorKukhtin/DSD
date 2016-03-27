@@ -220,7 +220,6 @@ BEGIN
                    , MI_SheetWorkTime.PersonalGroupId
                    , MI_SheetWorkTime.PositionId
                    , MI_SheetWorkTime.PositionLevelId
-                   -- , MI_SheetWorkTime.PositionLevelId_save AS PositionLevelId
                    , MI_SheetWorkTime.SheetWorkTime_Amount
                    , MI_SheetWorkTime.Count_Day
                    , COUNT(*) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS Count_MemberDay
@@ -232,7 +231,6 @@ BEGIN
                    , MI_SheetWorkTime.PersonalGroupId
                    , MI_SheetWorkTime.PositionId
                    , MI_SheetWorkTime.PositionLevelId
-                   , MI_SheetWorkTime.PositionLevelId AS PositionLevelId_save
                    , MI_SheetWorkTime.SheetWorkTime_Amount
                    , MI_SheetWorkTime.Count_Day
                    , MI_SheetWorkTime.SummaAdd
@@ -243,7 +241,6 @@ BEGIN
                    , MI_SheetWorkTime.PersonalGroupId
                    , MI_SheetWorkTime.PositionId
                    , 0 AS PositionLevelId
-                   , MI_SheetWorkTime.PositionLevelId AS PositionLevelId_save
                    , MI_SheetWorkTime.SheetWorkTime_Amount
                    , MI_SheetWorkTime.Count_Day
                    , 0 AS SummaAdd

@@ -11,46 +11,53 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_LinkGoods_Load(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+
    DECLARE vbGoodsMainId Integer;
-   DECLARE vbGoodsId  Integer;
-   DECLARE vbId  Integer;
+   DECLARE vbGoodsId     Integer;
+   DECLARE vbId          Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
---   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
 
-     SELECT Id INTO vbGoodsMainId FROM Object_Goods_Main_View
-      WHERE GoodsCode = inGoodsMainCode::Integer;
+     -- поиск
+     vbGoodsMainId:= (SELECT Id FROM Object_Goods_Main_View WHERE GoodsCode = inGoodsMainCode :: Integer);
+     -- поиск
 
-     SELECT Id INTO vbGoodsId FROM Object_Goods_View
-      WHERE ObjectId = inRetailId AND GoodsCode = inGoodsCode;
+     vbGoodsId:= (SELECT Id FROM Object_Goods_View WHERE ObjectId = inRetailId AND GoodsCode = inGoodsCode);
 
-     SELECT Id INTO vbId 
-       FROM Object_LinkGoods_View
-      WHERE Object_LinkGoods_View.GoodsMainId = vbGoodsMainId 
-        AND Object_LinkGoods_View.GoodsId = vbGoodsId;
+     -- проверка
+     IF COALESCE (vbGoodsMainId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Главный товар не определен.Главный код = <%> и Код = <%>', inGoodsMainCode, inGoodsCode;
+     END IF; 
+     -- проверка
+     IF COALESCE (vbGoodsId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Товар не определен.Главный код = <%> и Код = <%>', inGoodsMainCode, inGoodsCode;
+     END IF; 
 
-     IF COALESCE(vbId, 0) = 0 THEN
+     -- поиск
+     vbId:= (SELECT Id FROM Object_LinkGoods_View WHERE Object_LinkGoods_View.GoodsMainId = vbGoodsMainId 
+                                                    AND Object_LinkGoods_View.GoodsId = vbGoodsId);
 
-                 PERFORM gpInsertUpdate_Object_LinkGoods(
-                                   ioId := 0                     ,  
-                                   inGoodsMainId := vbGoodsMainId, -- Главный товар
-                                   inGoodsId  := vbGoodsId       , -- Товар для замены
-                                   inSession  := inSession         -- сессия пользователя
-                                   );
+     IF COALESCE(vbId, 0) = 0
+     THEN
+          PERFORM gpInsertUpdate_Object_LinkGoods (ioId          := 0
+                                                 , inGoodsMainId := vbGoodsMainId -- Главный товар
+                                                 , inGoodsId     := vbGoodsId     -- Товар для замены
+                                                 , inSession     := inSession     -- сессия пользователя
+                                                  );
      END IF;  
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_LinkGoods_Load (TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
-
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.16                                        *
  26.08.14                         *
  15.08.14                         *
-  
 */
 
 -- тест

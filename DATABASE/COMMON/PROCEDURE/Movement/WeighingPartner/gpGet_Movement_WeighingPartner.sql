@@ -67,15 +67,15 @@ BEGIN
              , MovementFloat_VATPercent.ValueData             AS VATPercent
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
 
-             , Object_From.Id                     AS FromId
-             , Object_From.ValueData              AS FromName
-             , Object_To.Id                       AS ToId
-             , Object_To.ValueData                AS ToName
+             , Object_From.Id                       AS FromId
+             , Object_From.ValueData                AS FromName
+             , Object_To.Id                         AS ToId
+             , Object_To.ValueData                  AS ToName
 
-             , Object_PaidKind.Id                 AS PaidKindId
-             , Object_PaidKind.ValueData          AS PaidKindName
-             , View_Contract_InvNumber.ContractId AS ContractId
-             , View_Contract_InvNumber.InvNumber  AS ContractName
+             , Object_PaidKind.Id                   AS PaidKindId
+             , Object_PaidKind.ValueData            AS PaidKindName
+             , MovementLinkObject_Contract.ObjectId AS ContractId
+             , View_Contract_InvNumber.InvNumber    AS ContractName
              , View_Contract_InvNumber.ContractTagName
 
              , Object_User.Id                     AS UserId

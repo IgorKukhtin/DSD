@@ -3,8 +3,9 @@ inherited GoodsForm: TGoodsForm
   ClientHeight = 423
   ClientWidth = 962
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitLeft = -189
   ExplicitWidth = 978
-  ExplicitHeight = 461
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -20,11 +21,13 @@ inherited GoodsForm: TGoodsForm
       inherited cxGrid: TcxGrid
         Width = 962
         Height = 397
-        ExplicitLeft = -3
         ExplicitWidth = 962
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -33,7 +36,7 @@ inherited GoodsForm: TGoodsForm
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 89
@@ -41,6 +44,7 @@ inherited GoodsForm: TGoodsForm
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 324
@@ -58,6 +62,7 @@ inherited GoodsForm: TGoodsForm
           object clMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
             DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 59
@@ -76,19 +81,25 @@ inherited GoodsForm: TGoodsForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = '0; ; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
           object clIsClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090
             DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 52
           end
           object cbIsTop: TcxGridDBColumn
             Caption = #1058#1054#1055
             DataBinding.FieldName = 'IsTop'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 37
           end
           object clisFirst: TcxGridDBColumn
@@ -102,17 +113,10 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##; ; '
-            HeaderAlignmentVert = vaCenter
-            Width = 84
-          end
-          object clisErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 51
+            Width = 84
           end
           object colPrice: TcxGridDBColumn
             AlternateCaption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
@@ -126,9 +130,40 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 70
           end
+          object RetailCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'RetailCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'RetailName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object clisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
           object clColor_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
@@ -292,6 +327,62 @@ inherited GoodsForm: TGoodsForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -480,11 +571,17 @@ inherited GoodsForm: TGoodsForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
       end
       item
         Name = 'Code'
