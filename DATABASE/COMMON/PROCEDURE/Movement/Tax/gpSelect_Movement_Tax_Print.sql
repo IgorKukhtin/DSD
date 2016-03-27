@@ -573,6 +573,7 @@ BEGIN
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
          AND MovementItem.Amount <> 0
+       ORDER BY 2
       ;
      RETURN NEXT Cursor2;
 

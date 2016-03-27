@@ -88,7 +88,7 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
-           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+           , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -141,7 +141,7 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id
-           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum           
+           , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum           
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -205,4 +205,5 @@ ALTER FUNCTION gpSelect_MovementItem_Tax (Integer, Boolean, Boolean, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Tax (inMovementId:= 4229, inShowAll:= True, inisErased:= True, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Tax (inMovementId:= 4229, inShowAll:= TRUE, inisErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItem_Tax (inMovementId:= 4229, inShowAll:= FALSE, inisErased:= FALSE, inSession:= zfCalc_UserAdmin())

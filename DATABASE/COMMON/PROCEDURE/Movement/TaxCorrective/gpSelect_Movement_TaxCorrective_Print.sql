@@ -194,7 +194,9 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
+  , tmpNumTax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child())))
 
+      -- ÐÅÇÓËÜÒÀÒ
       SELECT inMovementId                                                   AS inMovementId
            , Movement.Id			                            AS MovementId
            , Movement.InvNumber			                            AS InvNumber
@@ -413,7 +415,7 @@ BEGIN
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
                                    AND MovementItem.Amount <> 0
-            INNER JOIN MovementItemFloat AS MIFloat_Price
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                         -- AND MIFloat_Price.ValueData <> 0
@@ -568,9 +570,8 @@ BEGIN
                                         AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
 ---- íîìåðà ñòðîê â ÍÍ
-            LEFT JOIN lpSelect_TaxFromTaxCorrective(Movement_child.Id) AS tmpNumTax 
-                                                                       ON tmpNumTax.GoodsId = Object_Goods.Id
-                                                                      AND tmpNumTax.Price = MIFloat_Price.ValueData
+            LEFT JOIN tmpNumTax ON tmpNumTax.GoodsId = Object_Goods.Id
+                               AND tmpNumTax.Price = MIFloat_Price.ValueData
 ----
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child_Sale
                                            ON MovementLinkMovement_Child_Sale.MovementChildId = MovementLinkMovement_Child.MovementChildId
@@ -610,6 +611,8 @@ BEGIN
 
 
        ORDER BY MovementString_InvNumberPartner.ValueData
+              , Object_Goods.ValueData 
+              , Object_GoodsKind.ValueData
       ;
      RETURN NEXT Cursor1;
 
@@ -675,10 +678,10 @@ BEGIN
                 INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                        AND MovementItem.DescId     = zc_MI_Master()
                                        AND MovementItem.isErased   = FALSE
-                INNER JOIN MovementItemFloat AS MIFloat_Price
-                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                            -- AND MIFloat_Price.ValueData <> 0
+                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                           -- AND MIFloat_Price.ValueData <> 0
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -696,14 +699,15 @@ BEGIN
            , MIFloat_Price.ValueData                                        AS Price
            , SUM (MovementItem.Amount)                                      AS Amount
        FROM tmpMovementTaxCorrective
-            INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovementTaxCorrective.Id
+            INNER JOIN Movement ON Movement.Id =  tmpMovementTaxCorrective.Id
+            INNER JOIN MovementItem ON MovementItem.MovementId =  Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
                                    AND MovementItem.Amount <> 0
-            JOIN MovementItemFloat AS MIFloat_Price
-                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                  -- AND MIFloat_Price.ValueData <> 0
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                    -- AND MIFloat_Price.ValueData <> 0
        GROUP BY MovementItem.ObjectId
               , MIFloat_Price.ValueData
 
@@ -796,4 +800,3 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 -- òåñò
 -- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 520880, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());
-

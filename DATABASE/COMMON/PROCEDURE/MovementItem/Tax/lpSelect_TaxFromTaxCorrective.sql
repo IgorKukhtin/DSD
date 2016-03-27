@@ -16,8 +16,13 @@ BEGIN
     WITH 
      tmpMITax AS (SELECT MovementItem.ObjectId                                          AS GoodsId
                        , MIFloat_Price.ValueData                                        AS Price
-                       , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+                       , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum
                   FROM MovementItem 
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                     LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
