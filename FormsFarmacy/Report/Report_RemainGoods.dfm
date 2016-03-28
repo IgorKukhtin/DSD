@@ -1,51 +1,97 @@
 inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 364
-  ClientWidth = 676
-  ExplicitWidth = 692
+  ClientWidth = 930
+  ExplicitWidth = 946
   ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 56
-    Width = 676
+    Width = 930
     Height = 308
     TabOrder = 3
     ExplicitTop = 56
-    ExplicitWidth = 676
+    ExplicitWidth = 930
     ExplicitHeight = 308
     ClientRectBottom = 308
-    ClientRectRight = 676
+    ClientRectRight = 930
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 676
+      ExplicitWidth = 930
       ExplicitHeight = 308
       inherited cxGrid: TcxGrid
-        Width = 676
+        Width = 930
         Height = 308
-        ExplicitWidth = 676
+        ExplicitWidth = 930
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colOperAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithOutVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSumma
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaSale
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colOperSum
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colOperAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithOutVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSumma
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaSale
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmount
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -55,6 +101,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
@@ -62,13 +109,15 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 94
+            Width = 52
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 214
@@ -76,50 +125,19 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           object colNDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 42
           end
-          object colOperAmount: TcxGridDBColumn
+          object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
-            DataBinding.FieldName = 'OperAmount'
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
-          end
-          object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1073'/'#1053#1044#1057
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-          end
-          object colOperSum: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073'/'#1053#1044#1057
-            DataBinding.FieldName = 'OperSum'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-          end
-          object colPriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083'.'
-            DataBinding.FieldName = 'PriceOut'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-          end
-          object colSumSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083'.'
-            DataBinding.FieldName = 'SumOut'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
           end
           object colMinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
@@ -129,14 +147,158 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 118
           end
+          object JuridicalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'JuridicalCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PriceWithOutVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
+            DataBinding.FieldName = 'PriceWithOutVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colPriceSale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 58
+          end
+          object colSummaWithOutVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaWithOutVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
+          object colSummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
+          object colSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
+          end
+          object colSummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PartionDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartionInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#8470
+            DataBinding.FieldName = 'PartionInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PartionOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PartionPriceDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionPriceDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartionPriceInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#8470
+            DataBinding.FieldName = 'PartionPriceInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PartionPriceOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionPriceOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
+          object OurJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+            DataBinding.FieldName = 'OurJuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 676
+    Width = 930
     Height = 30
-    ExplicitWidth = 676
+    ExplicitWidth = 930
     ExplicitHeight = 30
     inherited deStart: TcxDateEdit
       Top = 4
@@ -178,6 +340,20 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       TabOrder = 5
       Width = 184
     end
+  end
+  object cbPartion: TcxCheckBox [2]
+    Left = 483
+    Top = 4
+    Action = actRefreshIsPartion
+    TabOrder = 6
+    Width = 94
+  end
+  object cbPartionPrice: TcxCheckBox [3]
+    Left = 583
+    Top = 4
+    Action = actRefreshPartionPrice
+    TabOrder = 7
+    Width = 200
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -255,6 +431,40 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end>
       isShowModal = False
     end
+    object actRefreshPartionPrice: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
+      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshIsPartion: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+  end
+  inherited MasterDS: TDataSource
+    Left = 16
+    Top = 160
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 208
+    Top = 168
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_GoodsOnUnitRemains'
@@ -272,9 +482,27 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsPartion'
+        Value = Null
+        Component = cbPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisPartionPrice'
+        Value = Null
+        Component = cbPartionPrice
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
+    Left = 48
+    Top = 152
   end
   inherited BarManager: TdxBarManager
+    Left = 152
+    Top = 144
     DockControlHeights = (
       0
       0
@@ -316,6 +544,10 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     Left = 424
     Top = 256
   end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 272
+    Top = 152
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
@@ -324,8 +556,8 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       item
         Component = deStart
       end>
-    Left = 88
-    Top = 112
+    Left = 96
+    Top = 144
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
