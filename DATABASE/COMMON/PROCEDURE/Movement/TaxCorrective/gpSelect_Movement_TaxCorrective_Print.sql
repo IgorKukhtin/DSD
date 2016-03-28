@@ -241,18 +241,9 @@ BEGIN
            , CASE WHEN inisClientCopy=TRUE
                   THEN '' ELSE 'X' END                                      AS CopyForUs
 
-           , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
-                  THEN 'X'
-                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND Movement.OperDate < '01.04.2015' AND Movement_child.OperDate < '01.04.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
-                  THEN 'X'
-                  WHEN Movement.OperDate >= '01.04.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
-                       AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
-                  THEN 'X'
-                  ELSE ''
-             END AS ERPN
-           , Movement_child.Id as x11
-           , Movement_child.OperDate as x12
-           , '51' ::TVarChar AS PZOB -- поля для Медка
+           , Movement_child.Id       AS x11
+           , Movement_child.OperDate AS x12
+           , '51' ::TVarChar         AS PZOB -- поля для Медка
 
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
@@ -260,11 +251,21 @@ BEGIN
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) >= 0
                   THEN TRUE
                   ELSE FALSE
-             END :: Boolean AS isERPN
+             END :: Boolean AS isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
 
+           , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
+                  THEN 'X'
+                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND Movement.OperDate < '01.04.2015' AND Movement_child.OperDate < '01.04.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                  THEN 'X'
+                  WHEN Movement.OperDate >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                       AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
+                  THEN 'X'
+                  ELSE ''
+             END :: TVarChar AS ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
            , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.02.2015'
                   THEN CASE WHEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0 THEN '' ELSE 'X' END
-                  ELSE '' END AS ERPN2
+                  ELSE ''
+             END :: TVarChar AS ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
 
            , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
                   THEN 'X' ELSE '' END                                      AS NotNDSPayer

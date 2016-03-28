@@ -46,6 +46,9 @@ type
     LinkId_1: TcxGridDBColumn;
     isUpload_1: TcxGridDBColumn;
     isSpecCondition_1: TcxGridDBColumn;
+    ReferCode_1: TcxGridDBColumn;
+    ReferPrice_1: TcxGridDBColumn;
+    MakerLinkName_1: TcxGridDBColumn;
   private
     { Private declarations }
   public

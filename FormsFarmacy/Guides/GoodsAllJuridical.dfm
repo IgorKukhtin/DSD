@@ -141,6 +141,14 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 109
           end
+          object MakerLinkName_1: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' - Link'
+            DataBinding.FieldName = 'MakerLinkName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object GoodsGroupName_1: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -218,6 +226,20 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 44
+          end
+          object ReferCode_1: TcxGridDBColumn
+            DataBinding.FieldName = 'ReferCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReferPrice_1: TcxGridDBColumn
+            DataBinding.FieldName = 'ReferPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object isErased_1: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -365,6 +387,14 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 109
+          end
+          object MakerLinkName_2: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' - Link'
+            DataBinding.FieldName = 'MakerLinkName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object GoodsGroupName_2: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -603,6 +633,14 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 109
           end
+          object MakerLinkName_3: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' - Link'
+            DataBinding.FieldName = 'MakerLinkName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object GoodsGroupName_3: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -680,6 +718,20 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 44
+          end
+          object ReferCode_3: TcxGridDBColumn
+            DataBinding.FieldName = 'ReferCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReferPrice_3: TcxGridDBColumn
+            DataBinding.FieldName = 'ReferPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object isErased_3: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

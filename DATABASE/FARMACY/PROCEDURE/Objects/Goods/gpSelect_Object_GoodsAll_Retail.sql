@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_GoodsAll_Retail()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GoodsAll_Retail(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsAll_Retail (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsAll_Retail(
     IN inSession     TVarChar       -- сессия пользователя
@@ -14,8 +14,9 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                isClose Boolean, isTOP Boolean, isPromo Boolean, isFirst Boolean,
                isUpload Boolean, isSpecCondition Boolean,
                PercentMarkup TFloat, Price TFloat,
+               ReferCode TFloat, ReferPrice TFloat,
                ObjectDescId Integer, ObjectDescName TVarChar, ObjectName TVarChar,
-               MakerName TVarChar
+               MakerName TVarChar, MakerLinkName TVarChar
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -56,12 +57,16 @@ BEGIN
 
            , ObjectFloat_Goods_PercentMarkup.ValueData AS PercentMarkup  
            , ObjectFloat_Goods_Price.ValueData         AS Price
+           , ObjectFloat_Goods_ReferCode.ValueData     AS ReferCode
+           , ObjectFloat_Goods_ReferPrice.ValueData    AS ReferPrice
+
 
            , ObjectDesc_GoodsObject.Id          AS  ObjectDescId
            , ObjectDesc_GoodsObject.itemname    AS  ObjectDescName
            , Object_GoodsObject.ValueData       AS  ObjectName
 
            , ObjectString_Goods_Maker.ValueData AS MakerName
+           , Object_Maker.ValueData             AS MakerLinkName
 
     FROM Object AS Object_Goods
 
@@ -82,6 +87,10 @@ BEGIN
                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Goods_Maker
+                              ON ObjectLink_Goods_Maker.ObjectId = Object_Goods.Id
+                             AND ObjectLink_Goods_Maker.DescId = zc_ObjectLink_Goods_Maker()
+         LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = ObjectLink_Goods_Maker.ChildObjectId
 
         -- НДС
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
@@ -117,6 +126,13 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
                               ON ObjectFloat_Goods_MinimumLot.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()   
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_Goods_ReferCode
+                              ON ObjectFloat_Goods_ReferCode.ObjectId = Object_Goods.Id
+                             AND ObjectFloat_Goods_ReferCode.DescId = zc_ObjectFloat_Goods_ReferCode()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Goods_ReferPrice
+                              ON ObjectFloat_Goods_ReferPrice.ObjectId = Object_Goods.Id
+                             AND ObjectFloat_Goods_ReferPrice.DescId = zc_ObjectFloat_Goods_ReferPrice()
 
         -- Boolean ...
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
