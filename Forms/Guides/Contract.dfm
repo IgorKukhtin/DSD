@@ -25,7 +25,6 @@ object ContractForm: TContractForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 1209
     object deStart: TcxDateEdit
       Left = 238
       Top = 4
@@ -79,7 +78,6 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1209
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -736,7 +734,6 @@ object ContractForm: TContractForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 611
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -939,7 +936,6 @@ object ContractForm: TContractForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitLeft = 615
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
@@ -1128,7 +1124,6 @@ object ContractForm: TContractForm
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitWidth = 1209
   end
   object cxRightSplitter: TcxSplitter
     Left = 618
@@ -1137,7 +1132,6 @@ object ContractForm: TContractForm
     Height = 172
     AlignSplitter = salRight
     Control = Panel
-    ExplicitLeft = 611
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -2931,7 +2925,7 @@ object ContractForm: TContractForm
     Top = 384
   end
   object spUpdateVat: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_isVat'
+    StoredProcName = 'gpUpdateObject_Contract_isVat'
     DataSets = <>
     OutputType = otResult
     Params = <
