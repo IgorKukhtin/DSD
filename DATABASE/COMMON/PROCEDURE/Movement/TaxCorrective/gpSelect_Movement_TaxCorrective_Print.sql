@@ -243,9 +243,9 @@ BEGIN
 
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN 'X'
-                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND Movement.OperDate < '01.04.2015' AND Movement_child.OperDate < '01.04.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                   THEN 'X'
-                  WHEN Movement.OperDate >= '01.04.2016' AND Movement_child.OperDate >= '01.04.2014' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                  WHEN Movement.OperDate >= '01.04.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
                   THEN 'X'
                   ELSE ''
@@ -388,6 +388,8 @@ BEGIN
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
 
            , tmpNumTax.LineNum
+           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay())
+                  THEN 'X' ELSE '' END    AS TaxKind --признак  сводной корректировки
 
        FROM tmpMovement
 

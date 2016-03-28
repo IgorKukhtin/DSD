@@ -263,7 +263,7 @@ BEGIN
            , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) AS EDIId
 
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
-
+           , CASE WHEN vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax() THEN 'X' ELSE '' END AS TaxKind --для сводной НН
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = inMovementId
@@ -539,7 +539,11 @@ BEGIN
                                          END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
-
+           , CAST (MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                              THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)))
+                                              ELSE MIFloat_Price.ValueData
+                                          END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                   AS NUMERIC (16, 2)) AS AmountSummNoVAT_12
 
        FROM MovementItem
             INNER JOIN MovementItemFloat AS MIFloat_Price

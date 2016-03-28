@@ -30,6 +30,8 @@ type
     actRefreshIsPartion: TdsdDataSetRefresh;
     cbPartion: TcxCheckBox;
     cbPartionPrice: TcxCheckBox;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
