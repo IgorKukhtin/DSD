@@ -202,6 +202,10 @@ type
     Panel1: TPanel;
     colContractSendName: TcxGridDBColumn;
     ContractSendChoiceForm: TOpenChoiceForm;
+    spUpdateVat: TdsdStoredProc;
+    actUpdateVat: TdsdExecStoredProc;
+    bbCustom: TdxBarButton;
+    clisVat: TcxGridDBColumn;
 
   private
     { Private declarations }
