@@ -13,7 +13,8 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxButtonEdit, dsdGuides, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxCheckBox;
 
 type
   TReport_GoodsRemainsForm = class(TAncestorReportForm)
@@ -21,15 +22,14 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     colGoodsCode: TcxGridDBColumn;
-    colOperAmount: TcxGridDBColumn;
-    colOperSum: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
     actOpenPartionReport: TdsdOpenForm;
     bbGoodsPartyReport: TdxBarButton;
-    colPriceSale: TcxGridDBColumn;
-    colSumSale: TcxGridDBColumn;
     colNDSKindName: TcxGridDBColumn;
+    actRefreshPartionPrice: TdsdDataSetRefresh;
+    actRefreshIsPartion: TdsdDataSetRefresh;
+    cbPartion: TcxCheckBox;
+    cbPartionPrice: TcxCheckBox;
   private
     { Private declarations }
   public
