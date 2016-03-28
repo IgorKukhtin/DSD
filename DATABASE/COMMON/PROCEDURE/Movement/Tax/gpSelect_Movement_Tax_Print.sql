@@ -29,6 +29,7 @@ $BODY$
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
     DECLARE vbNotNDSPayer_INN TVarChar;
+ 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -48,6 +49,7 @@ BEGIN
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)       AS GoodsPropertyId_basis
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId         AS GoodsPropertyId
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
+          
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
@@ -83,6 +85,7 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = tmpMovement.MovementId_Tax
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
@@ -152,14 +155,14 @@ BEGIN
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
 
-           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN MovementFloat_TotalSummMVAT.ValueData ELSE 0 END AS TotalSummMVAT
-           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
-           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) ELSE 0 END AS SummVAT
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN MovementFloat_TotalSummMVAT.ValueData ELSE 0 END AS TotalSummMVAT
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) ELSE 0 END AS SummVAT
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
-           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT_11
-           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT_11
-           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) END AS SummVAT_11
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN 0 ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT_11
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN 0 ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT_11
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN 0 ELSE COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) END AS SummVAT_11
 
            , Object_From.ValueData             		    AS FromName
            , Object_To.ValueData               		    AS ToName
@@ -387,6 +390,10 @@ BEGIN
             LEFT JOIN ObjectString AS PersonalSigning_INN
                                    ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId 
                                   AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Vat
+                                  ON ObjectBoolean_Vat.ObjectId = View_Contract.ContractId
+                                 AND ObjectBoolean_Vat.DescId = zc_ObjectBoolean_Contract_Vat()
 
        WHERE Movement.Id =  vbMovementId_Tax
          AND Movement.StatusId = zc_Enum_Status_Complete()
