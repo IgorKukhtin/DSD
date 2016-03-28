@@ -25,7 +25,6 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -85,6 +84,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     Left = 182
     Top = 131
     EditValue = 42452d
+    Properties.DisplayFormat = 'mmmm yyyy'
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 167
@@ -162,6 +162,22 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
+      end
+      item
+        Name = 'oldMemberId'
+        Value = ''
+      end
+      item
+        Name = 'oldPositionId'
+        Value = ''
+      end
+      item
+        Name = 'oldPositionLevelId'
+        Value = ''
+      end
+      item
+        Name = 'oldPersonalGroupId'
+        Value = Null
       end>
     Top = 136
   end
@@ -207,28 +223,28 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Name = 'inOldMemberId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'MemberId'
+        ComponentItem = 'oldMemberId'
         ParamType = ptInput
       end
       item
         Name = 'inOldPositionId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'PositionId'
+        ComponentItem = 'oldPositionId'
         ParamType = ptInput
       end
       item
         Name = 'inOldPositionLevelId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'PositionLevelId'
+        ComponentItem = 'oldPositionLevelId'
         ParamType = ptInput
       end
       item
         Name = 'inOldPersonalGroupId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'PersonalGroupId'
+        ComponentItem = 'oldPersonalGroupId'
         ParamType = ptInput
       end
       item
@@ -362,9 +378,9 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember
-    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMemberForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

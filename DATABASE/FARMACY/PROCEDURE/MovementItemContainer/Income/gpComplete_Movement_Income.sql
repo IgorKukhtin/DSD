@@ -10,6 +10,8 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+
+  DECLARE vbObjectId Integer;
   DECLARE vbJuridicalId Integer;
   DECLARE vbOperDate    TDateTime;
   DECLARE vbUnit        Integer;
@@ -18,6 +20,9 @@ BEGIN
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
      vbUserId:= inSession;
      
+     -- поиск <Торговой сети>
+     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
      -- Проверили что установлены все связи
      PERFORM lpCheckComplete_Movement_Income (inMovementId);
 
@@ -69,20 +74,24 @@ BEGIN
 
       
      PERFORM gpInsertUpdate_Object_LinkGoods(0                                 -- ключ объекта <Условия договора>
-                                          , DD.GoodsMainId
-                                          , DD.PartnerGoodsId
-                                          , inSession )
-
-
+                                           , DD.GoodsMainId
+                                           , DD.PartnerGoodsId
+                                           , inSession
+                                            )
      FROM (SELECT DISTINCT Object_LinkGoods_View.GoodsMainId -- Главный товар
                          , MovementItem.PartnerGoodsId       -- товар из группы
-                                    
-       FROM MovementItem_Income_View AS MovementItem
-                              LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.GoodsId
-                                    AND Object_LinkGoods_View.ObjectId = 4
-                              LEFT JOIN Object_LinkGoods_View AS LinkGoods_Juridical ON LinkGoods_Juridical.GoodsMainId = Object_LinkGoods_View.GoodsMainId 
-                                    AND LinkGoods_Juridical.GoodsId = MovementItem.PartnerGoodsId AND LinkGoods_Juridical.ObjectId = vbJuridicalId
-                             WHERE MovementItem.MovementId = inMovementId AND LinkGoods_Juridical.Id IS NULL) AS DD;
+           FROM MovementItem_Income_View AS MovementItem
+                LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.GoodsId
+                                               AND Object_LinkGoods_View.ObjectId = vbObjectId
+
+                LEFT JOIN Object_LinkGoods_View AS LinkGoods_Juridical
+                                                ON LinkGoods_Juridical.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+                                               AND LinkGoods_Juridical.GoodsId = MovementItem.PartnerGoodsId
+                                               AND LinkGoods_Juridical.ObjectId = vbJuridicalId
+           WHERE MovementItem.MovementId = inMovementId
+             AND LinkGoods_Juridical.Id IS NULL
+             AND MovementItem.PartnerGoodsId > 0
+          ) AS DD;
 
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

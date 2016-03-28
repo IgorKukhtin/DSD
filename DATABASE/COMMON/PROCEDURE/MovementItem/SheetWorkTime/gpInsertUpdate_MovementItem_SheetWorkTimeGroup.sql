@@ -105,7 +105,7 @@ BEGIN
     IF inOldMemberId = 0 OR NOT EXISTS (SELECT 1 FROM _tmpMI)
     THEN
        -- Это просто добавление нового документа
-       PERFORM gpInsertUpdate_MovementItem_SheetWorkTime (inMemberId, inPositionId, inPositionLevelId, inUnitId, inPersonalGroupId, inOperDate, '0', zc_Enum_WorkTimeKind_Work(), inSession);
+       PERFORM gpInsertUpdate_MovementItem_SheetWorkTime (inMemberId, inPositionId, inPositionLevelId, inUnitId, inPersonalGroupId, inOperDate, '0', NULL, inSession); -- zc_Enum_WorkTimeKind_Work()
     ELSE
        -- Изменение ВСЕХ документов
 
