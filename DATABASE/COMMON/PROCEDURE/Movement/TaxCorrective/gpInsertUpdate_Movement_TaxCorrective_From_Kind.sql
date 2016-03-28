@@ -380,19 +380,48 @@ BEGIN
                         
      -- данные для курсор2 - отдельно !!!для оптимизации!!!
               WITH tmpMovement AS (SELECT Movement.Id
+                                        , MIFloat_Price.ValueData AS Price
+                                        , SUM (MovementItem.Amount) AS Amount
+                                   FROM _tmp1_SubQuery AS tmpMovement_Tax
+                                        INNER JOIN MovementLinkMovement AS MLM_Child
+                                                                        ON MLM_Child.MovementChildId = tmpMovement_Tax.MovementId
+                                                                       AND MLM_Child.DescId = zc_MovementLinkMovement_Child()
+                                        INNER JOIN Movement ON Movement.Id       = MLM_Child.MovementId
+                                                           AND Movement.DescId   = zc_Movement_TaxCorrective()
+                                                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                               AND MovementItem.ObjectId   = vbGoodsId
+                                                               AND MovementItem.DescId     = zc_MI_Master()
+                                                               AND MovementItem.isErased   = FALSE
+                                        LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                                                                   -- AND MIFloat_Price.ValueData      = vbOperPrice
+                                   GROUP BY Movement.Id
+                                          , MIFloat_Price.ValueData
+                                  )
+             /*WITH tmpMovement2 AS (SELECT Movement.Id
+                                        , MIFloat_Price.ValueData AS Price
                                         , SUM (MovementItem.Amount) AS Amount
                                    FROM Movement
                                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                                AND MovementItem.ObjectId = vbGoodsId
                                                                AND MovementItem.DescId = zc_MI_Master()
                                                                AND MovementItem.isErased   = FALSE
-                                        INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                                    AND MIFloat_Price.ValueData = vbOperPrice
-                                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                        LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                                   -- AND MIFloat_Price.ValueData = vbOperPrice
+                                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                    WHERE Movement.DescId = zc_Movement_TaxCorrective()
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                                   GROUP BY Movement.Id)
+                                   GROUP BY Movement.Id
+                                          , MIFloat_Price.ValueData
+                                  )
+                 , tmpMovement AS (SELECT tmpMovement2.Id
+                                        , SUM (tmpMovement2.Amount) AS Amount
+                                   FROM tmpMovement2
+                                   WHERE tmpMovement2.Price = vbOperPrice
+                                   GROUP BY tmpMovement2.Id)*/
      INSERT INTO _tmp2_SubQuery (MovementId_Tax, Amount)
                                    SELECT CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END AS MovementId_Tax
                                         , SUM (Movement.Amount) AS Amount
@@ -633,11 +662,17 @@ BEGIN
      FROM Object AS Object_TaxKind
      WHERE Object_TaxKind.Id = inDocumentTaxKindId;
 
+if inSession = '5'
+then
+    RAISE EXCEPTION 'Admin - Errr _end ';
+    -- 'Повторите действие через 3 мин.'
+end if;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -655,4 +690,4 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId := 21838, inDocumentTaxKindId:=80770, inSession := '5');
+-- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3409416, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');

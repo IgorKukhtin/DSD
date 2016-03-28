@@ -1,22 +1,21 @@
--- Function: gpUpdateObject_isVat()
+-- Function: gpUpdateObject_Contract_isVat()
 
-DROP FUNCTION IF EXISTS gpUpdateObject_isVat (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateObject_Contract_isVat (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdateObject_isVat(
+CREATE OR REPLACE FUNCTION gpUpdateObject_Contract_isVat(
     IN inId                  Integer   , -- Ключ объекта <Документ>
     IN inisVAT               Boolean   , -- Проверен
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS  Void 
+RETURNS VOID
 AS
 $BODY$
     DECLARE vbUserId Integer;
 BEGIN
-     -- проверка
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract_VAT());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_Contract_isVAT());
 
-     -- определили признак
+     -- меняется признак
      inisVAT:= NOT inisVAT;
 
      -- сохранили свойство
@@ -37,4 +36,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpUpdateObject_isVat (ioId:= 275079, inisVAT:= 'False', inSession:= '2')
+-- SELECT * FROM gpUpdateObject_Contract_isVat (ioId:= 275079, inisVAT:= 'False', inSession:= '2')

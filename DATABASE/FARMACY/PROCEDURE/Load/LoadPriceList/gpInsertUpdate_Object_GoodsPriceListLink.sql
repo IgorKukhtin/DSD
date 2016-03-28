@@ -51,8 +51,8 @@ BEGIN
     SELECT Object_Goods_View.Id INTO vbGoodsId
       FROM Object_Goods_View 
      WHERE ObjectId = vbJuridicalId AND GoodsCode = vbGoodsCode;
-
-     PERFORM lpInsertUpdate_Object_Goods(
+     
+     vbGoodsId:= lpInsertUpdate_Object_Goods(
                            vbGoodsId  ,    -- ключ объекта <Товар>
                          vbGoodsCode  ,    -- Код объекта <Товар>
                          vbGoodsName  ,    -- Название объекта <Товар>
@@ -63,7 +63,7 @@ BEGIN
                              vbUserId , 
                                    0  ,
                        vbProducerName ,     
-                                false );
+                                FALSE );
     
     IF (SELECT COUNT(*) FROM Object_LinkGoods_View
                        WHERE ObjectId = vbJuridicalId AND vbMainGoodsId = GoodsMainId AND vbGoodsId = GoodsId) = 0 THEN

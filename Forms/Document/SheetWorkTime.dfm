@@ -312,6 +312,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate'
         end
         item
@@ -386,11 +394,15 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = InsertAction
+      Action = actInsert
+      Category = 0
+    end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
       Category = 0
     end
     object bbUpdate: TdxBarButton
-      Action = UpdateAction
+      Action = actUpdate
       Category = 0
     end
     object bbLoadFromTransport: TdxBarButton
@@ -535,10 +547,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Action = actUpdateMasterDS
         end>
     end
-    object InsertAction: TdsdInsertUpdateAction
+    object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1074' '#1090#1072#1073#1077#1083#1100
       ImageIndex = 0
@@ -548,19 +559,19 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       GuiParams = <
         item
           Name = 'MemberId'
-          Value = '0'
+          Value = Null
         end
         item
           Name = 'PositionId'
-          Value = 0
+          Value = Null
         end
         item
           Name = 'PositionLevelId'
-          Value = 0
+          Value = Null
         end
         item
           Name = 'PersonalGroupId'
-          Value = '0'
+          Value = Null
         end
         item
           Name = 'UnitId'
@@ -573,12 +584,94 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = 0d
           Component = edOperDate
           DataType = ftDateTime
+        end
+        item
+          Name = 'oldMemberId'
+          Value = Null
+        end
+        item
+          Name = 'oldPositionId'
+          Value = Null
+        end
+        item
+          Name = 'oldPositionLevelId'
+          Value = Null
+        end
+        item
+          Name = 'oldPersonalGroupId'
+          Value = Null
         end>
       isShowModal = True
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object UpdateAction: TdsdInsertUpdateAction
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1074' '#1090#1072#1073#1077#1083#1100
+      ImageIndex = 27
+      FormName = 'TSheetWorkTimeAddRecordForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'PositionLevelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionLevelId'
+        end
+        item
+          Name = 'PersonalGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalGroupId'
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'OperDate'
+          Value = 0d
+          Component = edOperDate
+          DataType = ftDateTime
+        end
+        item
+          Name = 'oldMemberId'
+          Value = Null
+        end
+        item
+          Name = 'oldPositionId'
+          Value = Null
+        end
+        item
+          Name = 'oldPositionLevelId'
+          Value = Null
+        end
+        item
+          Name = 'oldPersonalGroupId'
+          Value = Null
+        end>
+      isShowModal = True
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -623,6 +716,30 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = 0d
           Component = edOperDate
           DataType = ftDateTime
+        end
+        item
+          Name = 'oldMemberId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+        end
+        item
+          Name = 'oldPositionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'oldPositionLevelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionLevelId'
+        end
+        item
+          Name = 'oldPersonalGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalGroupId'
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -643,7 +760,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074
-      ImageIndex = 27
+      ImageIndex = 41
       QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
     end

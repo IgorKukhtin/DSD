@@ -65,9 +65,9 @@ type
     TemplateColumn: TcxGridDBBandedColumn;
     OpenWorkTimeKindForm: TOpenChoiceForm;
     MultiAction: TMultiAction;
-    InsertAction: TdsdInsertUpdateAction;
+    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    UpdateAction: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
     bbUpdate: TdxBarButton;
     spInsertUpdate_SheetWorkTime_FromTransport: TdsdStoredProc;
     actInsertUpdate_SheetWorkTime_FromTransport: TdsdExecStoredProc;
@@ -80,6 +80,8 @@ type
     isErased: TcxGridDBBandedColumn;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
   public
   end;
