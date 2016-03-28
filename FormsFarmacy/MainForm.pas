@@ -242,6 +242,8 @@ type
     actReport_PriceInterventionForm: TdsdOpenForm;
     miReport_PriceInterventionForm: TMenuItem;
     N40: TMenuItem;
+    actReportMovementCheckFarmForm: TdsdOpenForm;
+    N41: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

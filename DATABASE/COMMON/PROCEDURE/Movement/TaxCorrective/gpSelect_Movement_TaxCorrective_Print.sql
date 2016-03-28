@@ -243,9 +243,9 @@ BEGIN
 
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN 'X'
-                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND Movement.OperDate < '01.04.2015' AND Movement_child.OperDate < '01.04.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND Movement.OperDate < '01.04.2016' AND Movement_child.OperDate < '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                   THEN 'X'
-                  WHEN Movement.OperDate >= '01.04.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                  WHEN Movement.OperDate >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
                   THEN 'X'
                   ELSE ''
