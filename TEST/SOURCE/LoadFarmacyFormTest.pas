@@ -399,6 +399,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckDialogForm');
+  // для фармацевта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckFarmForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFarmForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckFarmDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckFarmDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
