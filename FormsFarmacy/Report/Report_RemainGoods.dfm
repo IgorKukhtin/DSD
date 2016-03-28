@@ -2,6 +2,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 364
   ClientWidth = 930
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 946
   ExplicitHeight = 402
   PixelsPerInch = 96
@@ -457,6 +458,56 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsRemainsDialogForm'
+      FormNameParam.Value = 'TReport_GoodsRemainsDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41395d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'inIsPartion'
+          Value = 'False'
+          Component = cbPartion
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'inisPartionPrice'
+          Value = 'False'
+          Component = cbPartionPrice
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -516,6 +567,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -537,6 +596,10 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     end
     object bbGoodsPartyReport: TdxBarButton
       Action = actOpenPartionReport
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

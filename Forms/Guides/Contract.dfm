@@ -3,7 +3,7 @@ object ContractForm: TContractForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
   ClientHeight = 536
-  ClientWidth = 1209
+  ClientWidth = 1216
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object ContractForm: TContractForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1209
+    Width = 1216
     Height = 30
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 1209
     object deStart: TcxDateEdit
       Left = 238
       Top = 4
@@ -73,11 +74,12 @@ object ContractForm: TContractForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 56
-    Width = 1209
+    Width = 1216
     Height = 303
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1209
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -702,6 +704,14 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
+      object clisVat: TcxGridDBColumn
+        Caption = 'C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103')'
+        DataBinding.FieldName = 'isVat'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 30
+      end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -719,15 +729,14 @@ object ContractForm: TContractForm
   object cxGridContractCondition: TcxGrid
     Left = 0
     Top = 364
-    Width = 611
+    Width = 618
     Height = 172
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -2
-    ExplicitTop = 365
+    ExplicitWidth = 611
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -923,14 +932,14 @@ object ContractForm: TContractForm
     end
   end
   object Panel: TPanel
-    Left = 615
+    Left = 622
     Top = 364
     Width = 594
     Height = 172
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitHeight = 154
+    ExplicitLeft = 615
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
@@ -941,7 +950,6 @@ object ContractForm: TContractForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 154
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -1023,7 +1031,6 @@ object ContractForm: TContractForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 154
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -1112,25 +1119,25 @@ object ContractForm: TContractForm
       Width = 5
       Height = 172
       Control = cxGridPartner
-      ExplicitHeight = 154
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 359
-    Width = 1209
+    Width = 1216
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
+    ExplicitWidth = 1209
   end
   object cxRightSplitter: TcxSplitter
-    Left = 611
+    Left = 618
     Top = 364
     Width = 4
     Height = 172
     AlignSplitter = salRight
     Control = Panel
-    ExplicitHeight = 154
+    ExplicitLeft = 611
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1220,6 +1227,14 @@ object ContractForm: TContractForm
         item
           Visible = True
           ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCustom'
         end
         item
           Visible = True
@@ -1455,6 +1470,10 @@ object ContractForm: TContractForm
     object bbProtocolOpenFormGoods: TdxBarButton
       Action = ProtocolOpenFormGoods
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
+      Category = 0
+    end
+    object bbCustom: TdxBarButton
+      Action = actUpdateVat
       Category = 0
     end
   end
@@ -2372,6 +2391,22 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
+    object actUpdateVat: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateVat
+      StoredProcList = <
+        item
+          StoredProc = spUpdateVat
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -2894,5 +2929,29 @@ object ContractForm: TContractForm
     PackSize = 1
     Left = 912
     Top = 384
+  end
+  object spUpdateVat: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isVat'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisVat'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isVat'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 328
+    Top = 259
   end
 end

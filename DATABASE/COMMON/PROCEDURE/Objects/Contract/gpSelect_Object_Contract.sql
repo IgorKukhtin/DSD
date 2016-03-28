@@ -52,6 +52,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , isStandart Boolean
              , isPersonal Boolean
              , isUnique Boolean
+             , isVat Boolean
 
              , DocumentCount TFloat, DateDocument TDateTime
 
@@ -216,6 +217,7 @@ BEGIN
 
        , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
        , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
+       , COALESCE (ObjectBoolean_Vat.ValueData, False)      AS isVat
        
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
        , ObjectDate_Document.ValueData AS DateDocument
@@ -278,6 +280,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Unique
                                 ON ObjectBoolean_Unique.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Vat
+                                ON ObjectBoolean_Vat.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Vat.DescId = zc_ObjectBoolean_Contract_Vat()
         
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
