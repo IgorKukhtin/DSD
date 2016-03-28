@@ -584,7 +584,8 @@ BEGIN
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
          AND MovementItem.Amount <> 0
-       ORDER BY 2
+       ORDER BY Object_Goods.ValueData
+              , Object_GoodsKind.ValueData
       ;
      RETURN NEXT Cursor2;
 
