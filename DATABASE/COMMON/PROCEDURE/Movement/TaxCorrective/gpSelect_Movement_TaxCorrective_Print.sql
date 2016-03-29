@@ -228,7 +228,7 @@ BEGIN
              END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
-           , CAST (REPEAT (' ', 8 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
+           , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
 
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData                          AS TotalSummMVAT

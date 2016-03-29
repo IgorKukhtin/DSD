@@ -878,6 +878,1113 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Width = 50
           end
         end
+        object cxGridDBBandedTableView1: TcxGridDBBandedTableView [1]
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = MasterDS
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount1
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale1
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma1
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount2
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale2
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma2
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount3
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale3
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma3
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount4
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale4
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma4
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount6
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale6
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma6
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount7
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale7
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma7
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount1
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale1
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma1
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount2
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale2
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma2
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount3
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale3
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma3
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount4
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale4
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma4
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount6
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale6
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma6
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxAmount7
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSummaSale7
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = cxSumma7
+            end>
+          DataController.Summary.SummaryGroups = <>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.ScrollBars = ssHorizontal
+          OptionsView.CellAutoHeight = True
+          OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.BandCaptionsInColumnAlternateCaption = True
+          Bands = <
+            item
+              Caption = #1060#1080#1082#1089#1072#1094#1080#1103
+              FixedKind = fkLeft
+              Options.HoldOwnColumnsOnly = True
+              Width = 279
+            end
+            item
+              Caption = #1048#1090#1086#1075#1086
+              Options.HoldOwnColumnsOnly = True
+              Options.Sizing = False
+            end
+            item
+              Caption = #1055#1088#1077#1076#1077#1083' 1'
+            end
+            item
+              Caption = #1055#1088#1077#1076#1077#1083' 2'
+            end
+            item
+              Caption = #1055#1088#1077#1076#1077#1083' 3'
+            end
+            item
+              Caption = #1055#1088#1077#1076#1077#1083' 4'
+            end
+            item
+              Caption = #1055#1088#1077#1076#1077#1083' 5'
+            end
+            item
+              Caption = #1055#1088#1077#1076#1077#1083' 6'
+            end
+            item
+              Caption = #1055#1088#1077#1076#1077#1083' 7'
+            end>
+          object cxJuridicalMainName: TcxGridDBBandedColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalMainName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 96
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxUnitName: TcxGridDBBandedColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 100
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxAmount: TcxGridDBBandedColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSummaSale: TcxGridDBBandedColumn
+            Caption = #1042' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSumma: TcxGridDBBandedColumn
+            Caption = #1042' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxAmount1: TcxGridDBBandedColumn
+            Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Amount1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 2
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSummaSale1: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSumma1: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 2
+            Position.ColIndex = 2
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentAmount1: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
+            DataBinding.FieldName = 'PersentAmount1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 2
+            Position.ColIndex = 3
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSummaSale1: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'PersentSummaSale1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 2
+            Position.ColIndex = 4
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSumma1: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentSumma1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 85
+            Position.BandIndex = 2
+            Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxAmount2: TcxGridDBBandedColumn
+            Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Amount2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 3
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSummaSale2: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 3
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSumma2: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 3
+            Position.ColIndex = 2
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentAmount2: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
+            DataBinding.FieldName = 'PersentAmount2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 3
+            Position.ColIndex = 3
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSummaSale2: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'PersentSummaSale2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 3
+            Position.ColIndex = 4
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSumma2: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentSumma2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 3
+            Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxAmount3: TcxGridDBBandedColumn
+            Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Amount3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 4
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSummaSale3: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 4
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSumma3: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 4
+            Position.ColIndex = 2
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentAmount3: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
+            DataBinding.FieldName = 'PersentAmount3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 4
+            Position.ColIndex = 3
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSummaSale3: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'PersentSummaSale3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 4
+            Position.ColIndex = 4
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSumma3: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentSumma3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 4
+            Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxAmount4: TcxGridDBBandedColumn
+            Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Amount4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 5
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSummaSale4: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 5
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSumma4: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 5
+            Position.ColIndex = 2
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentAmount4: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
+            DataBinding.FieldName = 'PersentAmount4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 5
+            Position.ColIndex = 3
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSummaSale4: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'PersentSummaSale4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 5
+            Position.ColIndex = 4
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSumma4: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentSumma4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 5
+            Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxAmount5: TcxGridDBBandedColumn
+            Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Amount5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 6
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSummaSale5: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 6
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSumma5: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 6
+            Position.ColIndex = 2
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentAmount5: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
+            DataBinding.FieldName = 'PersentAmount5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 6
+            Position.ColIndex = 3
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSummaSale5: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'PersentSummaSale5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 6
+            Position.ColIndex = 4
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSumma5: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentSumma5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 6
+            Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxAmount6: TcxGridDBBandedColumn
+            Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Amount6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 7
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSummaSale6: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 7
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSumma6: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 7
+            Position.ColIndex = 2
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentAmount6: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
+            DataBinding.FieldName = 'PersentAmount6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 7
+            Position.ColIndex = 3
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSummaSale6: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'PersentSummaSale6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 7
+            Position.ColIndex = 4
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSumma6: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentSumma6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 7
+            Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxAmount7: TcxGridDBBandedColumn
+            Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Amount7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 8
+            Position.ColIndex = 0
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSummaSale7: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 8
+            Position.ColIndex = 1
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxSumma7: TcxGridDBBandedColumn
+            Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 8
+            Position.ColIndex = 2
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentAmount7: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
+            DataBinding.FieldName = 'PersentAmount7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 8
+            Position.ColIndex = 3
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSummaSale7: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'PersentSummaSale7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 8
+            Position.ColIndex = 4
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentSumma7: TcxGridDBBandedColumn
+            Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentSumma7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+            Position.BandIndex = 8
+            Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxColor_Amount: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Amount'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object cxColor_Summa: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Summa'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object cxColor_SummaSale: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_SummaSale'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentAmount1: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentAmount1'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSumma1: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSumma1'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSummaSale1: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSummaSale1'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentAmount2: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentAmount2'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSumma2: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSumma2'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSummaSale2: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSummaSale2'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentAmount3: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentAmount3'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 11
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSumma3: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSumma3'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 12
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSummaSale3: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSummaSale3'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 13
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentAmount4: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentAmount4'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 14
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSumma4: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSumma4'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 15
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSummaSale4: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSummaSale4'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 16
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentAmount5: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentAmount5'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 17
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSumma5: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSumma5'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 18
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSummaSale5: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSummaSale5'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 19
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentAmount6: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentAmount6'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 20
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSumma6: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSumma6'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 21
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSummaSale6: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSummaSale6'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 22
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentAmount7: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentAmount7'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 23
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSumma7: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSumma7'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 24
+            Position.RowIndex = 0
+          end
+          object cxColor_PersentSummaSale7: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_PersentSummaSale7'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 25
+            Position.RowIndex = 0
+          end
+        end
+        inherited cxGridLevel: TcxGridLevel
+          GridView = cxGridDBBandedTableView1
+        end
       end
     end
   end
@@ -1200,10 +2307,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 128
+    Left = 520
+    Top = 80
   end
   inherited MasterCDS: TClientDataSet
-    Top = 128
+    Left = 472
+    Top = 88
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_PriceIntervention'
@@ -1264,10 +2373,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         DataType = ftFloat
         ParamType = ptInput
       end>
-    Top = 128
+    Left = 584
+    Top = 80
   end
   inherited BarManager: TdxBarManager
-    Top = 128
+    Left = 648
+    Top = 80
     DockControlHeights = (
       0
       0
@@ -1356,6 +2467,233 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBBandedTableView1
+    ColorRuleList = <
+      item
+        ColorColumn = cxAmount
+        BackGroundValueColumn = cxColor_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxAmount1
+        BackGroundValueColumn = cxColor_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxAmount2
+        BackGroundValueColumn = cxColor_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxAmount3
+        BackGroundValueColumn = cxColor_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxAmount4
+        BackGroundValueColumn = cxColor_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxAmount5
+        BackGroundValueColumn = cxColor_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxAmount6
+        BackGroundValueColumn = cxColor_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxAmount7
+        BackGroundValueColumn = cxColor_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSumma
+        BackGroundValueColumn = cxColor_Summa
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSumma1
+        BackGroundValueColumn = cxColor_Summa
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSumma2
+        BackGroundValueColumn = cxColor_Summa
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSumma3
+        BackGroundValueColumn = cxColor_Summa
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSumma4
+        BackGroundValueColumn = cxColor_Summa
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSumma5
+        BackGroundValueColumn = cxColor_Summa
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSumma6
+        BackGroundValueColumn = cxColor_Summa
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSumma7
+        BackGroundValueColumn = cxColor_Summa
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSummaSale
+        BackGroundValueColumn = cxColor_SummaSale
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSummaSale1
+        BackGroundValueColumn = cxColor_SummaSale
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSummaSale2
+        BackGroundValueColumn = cxColor_SummaSale
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSummaSale3
+        BackGroundValueColumn = cxColor_SummaSale
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSummaSale4
+        BackGroundValueColumn = cxColor_SummaSale
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSummaSale5
+        BackGroundValueColumn = cxColor_SummaSale
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSummaSale6
+        BackGroundValueColumn = cxColor_SummaSale
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxSummaSale7
+        BackGroundValueColumn = cxColor_SummaSale
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentAmount1
+        ValueColumn = cxColor_PersentAmount1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSumma1
+        ValueColumn = cxColor_PersentSumma1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSummaSale1
+        ValueColumn = cxColor_PersentSummaSale1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentAmount2
+        ValueColumn = cxColor_PersentAmount2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSumma2
+        ValueColumn = cxColor_PersentSumma2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSummaSale2
+        ValueColumn = cxColor_PersentSummaSale2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentAmount3
+        ValueColumn = cxColor_PersentAmount3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSumma3
+        ValueColumn = cxColor_PersentSumma3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSummaSale3
+        ValueColumn = cxColor_PersentSummaSale3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentAmount4
+        ValueColumn = cxColor_PersentAmount4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSumma4
+        ValueColumn = cxColor_PersentSumma4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSummaSale4
+        ValueColumn = cxColor_PersentSummaSale4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentAmount5
+        ValueColumn = cxColor_PersentAmount5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSumma5
+        ValueColumn = cxColor_PersentSumma5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSummaSale5
+        ValueColumn = cxColor_PersentSummaSale5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentAmount6
+        ValueColumn = cxColor_PersentAmount6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSumma6
+        ValueColumn = cxColor_PersentSumma6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSummaSale6
+        ValueColumn = cxColor_PersentSummaSale6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentAmount7
+        ValueColumn = cxColor_PersentAmount7
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSumma7
+        ValueColumn = cxColor_PersentSumma7
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxPersentSummaSale7
+        ValueColumn = cxColor_PersentSummaSale7
+        ColorValueList = <>
+      end>
     Left = 352
     Top = 288
   end
@@ -1373,8 +2711,8 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     ComponentList = <
       item
       end>
-    Left = 88
-    Top = 176
+    Left = 120
+    Top = 184
   end
   object Juridical1Guides: TdsdGuides
     KeyField = 'Id'

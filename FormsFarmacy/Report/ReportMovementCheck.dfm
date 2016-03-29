@@ -3,6 +3,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -175
   ExplicitWidth = 1267
   ExplicitHeight = 518
   PixelsPerInch = 96
