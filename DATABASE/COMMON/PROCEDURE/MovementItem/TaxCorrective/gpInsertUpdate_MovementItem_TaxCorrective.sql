@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_TaxCorrective()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TaxCorrective (integer, integer, integer, tfloat, tfloat, tfloat, integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TaxCorrective (integer, integer, integer, tfloat, tfloat, tfloat, integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TaxCorrective(
@@ -12,6 +13,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TaxCorrective(
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inLineNumTaxOld       Integer   , -- № п/п в НН
+    IN inLineNumTax          Integer   , -- № п/п в НН новое значение
+   OUT outisAuto             Boolean   , -- формируется автоматом (№ п/п в НН)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -35,6 +39,20 @@ BEGIN
                                           , inUserId             := vbUserId
                                            ) AS tmp;
 
+     -- проверяем значения № пп НН, если изменено , устанавливаем свойство Авто = False
+     outisAuto :=TRUE;
+     IF COALESCE (inLineNumTaxOld, 0) <> COALESCE (inLineNumTax, 0) AND COALESCE (inLineNumTax, 0) <> 0
+      THEN 
+          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, FALSE);
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP(), ioId, inLineNumTax);
+          outisAuto := FALSE;
+     END IF;
+     IF COALESCE (inLineNumTaxOld, 0) <> COALESCE (inLineNumTax, 0) AND COALESCE (inLineNumTax, 0) = 0
+      THEN 
+          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, TRUE);
+     END IF;
+ 
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -42,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.03.16         *
  10.02.14                                                        *
 */
 

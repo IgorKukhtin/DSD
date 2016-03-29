@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -73,7 +73,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Options.Editing = False
             Width = 55
           end
-          object colLineNumTax: TcxGridDBColumn [1]
+          object colLineNumTaxOld: TcxGridDBColumn [1]
+            DataBinding.FieldName = 'LineNumTaxOld'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 52
+          end
+          object colLineNumTax: TcxGridDBColumn [2]
             Caption = #8470' '#1087'/'#1087' ('#1053#1053')'
             DataBinding.FieldName = 'LineNumTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -81,10 +88,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn [2]
+          object colisAuto: TcxGridDBColumn [3]
+            DataBinding.FieldName = 'isAuto'
+            Options.Editing = False
+            Width = 30
+          end
+          object clGoodsGroupNameFull: TcxGridDBColumn [4]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -92,7 +103,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Options.Editing = False
             Width = 120
           end
-          object colCode: TcxGridDBColumn [3]
+          object colCode: TcxGridDBColumn [5]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -100,7 +111,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Options.Editing = False
             Width = 58
           end
-          object colName: TcxGridDBColumn [4]
+          object colName: TcxGridDBColumn [6]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -108,7 +119,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Options.Editing = False
             Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn [5]
+          object colGoodsKindName: TcxGridDBColumn [7]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -123,7 +134,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clMeasureName: TcxGridDBColumn [6]
+          object clMeasureName: TcxGridDBColumn [8]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -131,7 +142,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [7]
+          object colAmount: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -141,7 +152,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPrice: TcxGridDBColumn [8]
+          object colPrice: TcxGridDBColumn [10]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -151,14 +162,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [9]
+          object colCountForPrice: TcxGridDBColumn [11]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAmountSumm: TcxGridDBColumn [10]
+          object colAmountSumm: TcxGridDBColumn [12]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1386,33 +1397,42 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ParamType = ptInput
       end
       item
-        Name = 'del8'
+        Name = 'inLineNumTaxOld'
         Value = Null
-        DataType = ftFloat
+        Component = MasterCDS
+        ComponentItem = 'LineNumTaxOld'
+        ParamType = ptInput
       end
       item
-        Name = 'del9'
+        Name = 'inLineNumTax'
         Value = Null
-        DataType = ftFloat
+        Component = MasterCDS
+        ComponentItem = 'LineNumTax'
+        ParamType = ptInput
       end
       item
-        Name = 'del10'
+        Name = 'outisAuto'
         Value = Null
-        DataType = ftFloat
+        Component = MasterCDS
+        ComponentItem = 'isAuto'
+        DataType = ftBoolean
       end
       item
         Name = 'del11'
         Value = Null
         DataType = ftFloat
+        ParamType = ptUnknown
       end
       item
         Name = 'del12'
         Value = Null
         DataType = ftString
+        ParamType = ptUnknown
       end
       item
         Name = 'del13'
         Value = Null
+        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368

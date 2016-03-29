@@ -98,6 +98,8 @@ type
     bbChangeSignAmount: TdxBarButton;
     actOpenTax: TdsdOpenForm;
     bbOpenTax: TdxBarButton;
+    colisAuto: TcxGridDBColumn;
+    colLineNumTaxOld: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TaxCorrective(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, LineNum Integer, LineNumTax Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, LineNum Integer, LineNumTaxOld Integer, LineNumTax Integer, isAuto Boolean
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , Price TFloat, CountForPrice TFloat
@@ -41,7 +42,10 @@ BEGIN
        SELECT
              0                                      AS Id
            , 0                                      AS LineNum    
+           , 0                                      AS LineNumTaxOld
            , 0                                      AS LineNumTax
+           , True                                   AS isAuto
+
            , tmpGoods.GoodsId                       AS GoodsId
            , tmpGoods.GoodsCode                     AS GoodsCode
            , tmpGoods.GoodsName                     AS GoodsName
@@ -99,7 +103,10 @@ BEGIN
        SELECT
              MovementItem.Id                        AS Id
            , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum    
-           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNumTax
+           , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
+           , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax
+--           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNumTax
+           , COALESCE (MIBoolean_isAuto.ValueData, True) ::Boolean               AS isAuto
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -131,6 +138,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_NPP
+                                        ON MIFloat_NPP.MovementItemId = MovementItem.Id
+                                       AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                          ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -170,7 +184,9 @@ BEGIN
        SELECT
              MovementItem.Id
            , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum    
-           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNumTax
+           , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
+           , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax 
+           , COALESCE (MIBoolean_isAuto.ValueData, True) ::Boolean    AS isAuto
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -200,6 +216,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_NPP
+                                        ON MIFloat_NPP.MovementItemId = MovementItem.Id
+                                       AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                          ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
