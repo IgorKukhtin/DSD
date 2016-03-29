@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member_Desc(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
+             , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, Comment TVarChar
              , isOfficial Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime

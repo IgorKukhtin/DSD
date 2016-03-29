@@ -10,22 +10,30 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
-   vbUserId := lpGetUserBySession(inSession);
+   -- проверка прав пользователя на вызов процедуры
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_...());
+   vbUserId:= lpGetUserBySession(inSession);
 
-   PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Medoc(), inMovementId, true);
+   -- сохранили - выгрузка в медок прошла
+   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Medoc(), inMovementId, TRUE);
+
+   -- сохранили "текущая дата", вместо "регистрации" - если нет или убрали электронная (т.е. регистрация медка)
+   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), inMovementId, CURRENT_DATE)
+   FROM (SELECT inMovementId AS MovementId) AS tmp
+        LEFT JOIN MovementBoolean ON MovementBoolean.MovementId = tmp.MovementId
+                                 AND MovementBoolean.DescId = zc_MovementBoolean_Electron()
+   WHERE COALESCE (MovementBoolean.ValueData, FALSE) = FALSE
+   ;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.03.16                                        * 
  15.12.14                         * 
-
 */
 
 -- тест

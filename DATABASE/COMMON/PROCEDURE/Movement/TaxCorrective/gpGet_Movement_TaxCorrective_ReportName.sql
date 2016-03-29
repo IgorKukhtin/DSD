@@ -17,13 +17,15 @@ $BODY$
     DECLARE vbStatusId_TaxCorrective Integer;
 
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TaxCorrective());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
 
-     SELECT MAX(tmpMovement.OperDate)
+
+     -- поиск даты
+     SELECT MAX (CASE WHEN tmpMovement.OperDate1 > tmpMovement.OperDate2 THEN tmpMovement.OperDate1 ELSE tmpMovement.OperDate2 END)
             INTO vbOperDate
-     FROM (SELECT Movement_find.OperDate
+     FROM (SELECT COALESCE (MovementDate_DateRegistered.ValueData, Movement_find.OperDate) AS OperDate1
+                , Movement_find.OperDate AS OperDate2
            FROM Movement
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -34,52 +36,51 @@ BEGIN
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
                                                     AND Movement_find.StatusId = zc_Enum_Status_Complete()
+                LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                       ON MovementDate_DateRegistered.MovementId = Movement.Id
+                                      AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
           UNION
-           SELECT Movement_Master.OperDate
+           SELECT COALESCE (MovementDate_DateRegistered.ValueData, Movement_Master.OperDate) AS OperDate1
+                , Movement_Master.OperDate AS OperDate2
            FROM Movement
                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                 ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                                AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
                                                       AND Movement_Master.StatusId = zc_Enum_Status_Complete()
+                LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                       ON MovementDate_DateRegistered.MovementId = Movement_Master.Id
+                                      AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
            WHERE Movement.Id = inMovementId
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           ) AS tmpMovement;
 
 
-
-
-
-
---результат
-
-       SELECT
-            COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_TaxCorrective')
-       INTO vbPrintFormName
+       -- поиск формы
+       SELECT COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_TaxCorrective')
+              INTO vbPrintFormName
        FROM PrintForms_View
        WHERE vbOperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
          AND PrintForms_View.ReportType = 'TaxCorrective';
 
 
-
-     RETURN (vbPrintFormName);
-
-
+       -- Результат
+       RETURN (vbPrintFormName);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_TaxCorrective_ReportName (Integer, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.03.16                                        *
  25.11.14                                                        *
  10.02.14                                                        *
 */
 
 -- тест
---SELECT gpGet_Movement_TaxCorrective_ReportName FROM gpGet_Movement_TaxCorrective_ReportName(inMovementId := 40874,  inSession := '5'); -- все
+-- SELECT * FROM gpGet_Movement_TaxCorrective_ReportName (inMovementId:= 3412647, inSession:= '5'); -- все
