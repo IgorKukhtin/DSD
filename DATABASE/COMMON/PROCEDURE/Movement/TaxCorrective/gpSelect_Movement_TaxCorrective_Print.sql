@@ -200,7 +200,7 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
-  , tmpNumTax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child())))
+  , tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child())))
 
       -- РЕЗУЛЬТАТ
       SELECT inMovementId                                                   AS inMovementId
@@ -395,7 +395,7 @@ BEGIN
            , COALESCE(MovementLinkMovement_ChildEDI.MovementChildId, 0) AS EDIId
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
 
-           , tmpNumTax.LineNum
+           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNum
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay())
                   THEN 'X' ELSE '' END    AS TaxKind --признак  сводной корректировки
 
@@ -580,8 +580,14 @@ BEGIN
                                         AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
 ---- номера строк в НН
-            LEFT JOIN tmpNumTax ON tmpNumTax.GoodsId = Object_Goods.Id
-                               AND tmpNumTax.Price = MIFloat_Price.ValueData
+            LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
+                                           AND tmpMITax1.GoodsId     = Object_Goods.Id
+                                           AND tmpMITax1.GoodsKindId = Object_GoodsKind.Id
+                                           AND tmpMITax1.Price       = MIFloat_Price.ValueData
+            LEFT JOIN tmpMITax AS tmpMITax2 ON tmpMITax2.Kind        = 2
+                                           AND tmpMITax2.GoodsId     = Object_Goods.Id
+                                           AND tmpMITax2.Price       = MIFloat_Price.ValueData
+                                           AND tmpMITax1.GoodsId     IS NULL
 ----
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child_Sale
                                            ON MovementLinkMovement_Child_Sale.MovementChildId = MovementLinkMovement_Child.MovementChildId
