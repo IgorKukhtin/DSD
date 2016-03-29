@@ -377,7 +377,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-//exit;
+  //Отчет Ценовая интервенция
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionDialogForm');
+exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));

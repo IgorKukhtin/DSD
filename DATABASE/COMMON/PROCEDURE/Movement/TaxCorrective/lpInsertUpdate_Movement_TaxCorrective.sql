@@ -26,12 +26,12 @@ $BODY$
    DECLARE vbBranchId Integer;
 BEGIN
      -- проверка
-     IF inOperDate <> DATE_TRUNC ('day', inOperDate)
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
      -- проверка
-     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     IF COALESCE (inContractId, 0) = 0 -- AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
@@ -142,6 +142,14 @@ BEGIN
          -- сохранили протокол
          PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
      END IF;
+
+     -- сохранили "текущая дата", вместо "регистрации" - если нет или убрали электронная (т.е. регистрация медка)
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), tmp.MovementId, CURRENT_DATE)
+     FROM (SELECT ioId AS MovementId WHERE vbIsInsert = TRUE AND CURRENT_DATE >= '01.04.2016' ) AS tmp
+          LEFT JOIN MovementBoolean ON MovementBoolean.MovementId = tmp.MovementId
+                                   AND MovementBoolean.DescId = zc_MovementBoolean_Electron()
+     WHERE COALESCE (MovementBoolean.ValueData, FALSE) = FALSE
+    ;
 
 END;
 $BODY$

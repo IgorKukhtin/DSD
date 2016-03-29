@@ -1,22 +1,22 @@
 inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   Caption = #1054#1090#1095#1077#1090' '#1062#1077#1085#1086#1074#1072#1103' '#1080#1085#1090#1077#1088#1074#1077#1085#1094#1080#1103
-  ClientHeight = 461
+  ClientHeight = 492
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1228
-  ExplicitHeight = 499
+  ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
     Width = 1212
-    Height = 370
+    Height = 401
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1212
     ExplicitHeight = 370
-    ClientRectBottom = 370
+    ClientRectBottom = 401
     ClientRectRight = 1212
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -27,9 +27,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       ExplicitHeight = 346
       inherited cxGrid: TcxGrid
         Width = 1212
-        Height = 346
-        ExplicitLeft = 40
-        ExplicitTop = -3
+        Height = 377
         ExplicitWidth = 1212
         ExplicitHeight = 346
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -51,12 +49,242 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
               Format = ',0.####'
               Kind = skSum
               Column = cxAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma7
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = cxAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaSale7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma7
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -67,43 +295,52 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsData.Inserting = False
-          OptionsView.CellAutoHeight = True
           OptionsView.Footer = True
+          OptionsView.FooterAutoHeight = True
+          OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
+          OptionsView.HeaderFilterButtonShowMode = fbmButton
           OptionsView.Indicator = True
           Bands = <
             item
-              Caption = #1060#1080#1082#1089#1072#1094#1080#1103
+              Caption = #1048#1085#1092#1086
               FixedKind = fkLeft
               Options.HoldOwnColumnsOnly = True
+              Options.Moving = False
               Width = 279
             end
             item
               Caption = #1048#1090#1086#1075#1086
               Options.HoldOwnColumnsOnly = True
-              Options.Sizing = False
             end
             item
               Caption = #1055#1088#1077#1076#1077#1083' 1'
+              Options.HoldOwnColumnsOnly = True
             end
             item
               Caption = #1055#1088#1077#1076#1077#1083' 2'
+              Options.HoldOwnColumnsOnly = True
             end
             item
               Caption = #1055#1088#1077#1076#1077#1083' 3'
+              Options.HoldOwnColumnsOnly = True
             end
             item
               Caption = #1055#1088#1077#1076#1077#1083' 4'
+              Options.HoldOwnColumnsOnly = True
             end
             item
               Caption = #1055#1088#1077#1076#1077#1083' 5'
+              Options.HoldOwnColumnsOnly = True
             end
             item
               Caption = #1055#1088#1077#1076#1077#1083' 6'
+              Options.HoldOwnColumnsOnly = True
             end
             item
               Caption = #1055#1088#1077#1076#1077#1083' 7'
+              Options.HoldOwnColumnsOnly = True
             end>
           object cxJuridicalMainName: TcxGridDBBandedColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086

@@ -207,7 +207,8 @@ BEGIN
            , Movement.Id			                            AS MovementId
            , Movement.InvNumber			                            AS InvNumber
            , Movement.OperDate				                    AS OperDate
-           , 'J1201006'::TVarChar                                           AS CHARCODE
+           -- , 'J1201006'::TVarChar                                           AS CHARCODE
+           , CASE WHEN vbOperDate_begin < '01.04.2016' THEN 'J1201207' ELSE 'J1201208' END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
                   THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
