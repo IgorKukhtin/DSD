@@ -28,30 +28,51 @@ RETURNS TABLE (
   Amount1            TFloat,
   Summa1             TFloat,
   SummaSale1         TFloat,
+  PersentAmount1            TFloat,
+  PersentSumma1             TFloat,
+  PersentSummaSale1         TFloat,
   
   Amount2            TFloat,
   Summa2             TFloat,
   SummaSale2         TFloat,
+  PersentAmount2            TFloat,
+  PersentSumma2             TFloat,
+  PersentSummaSale2         TFloat,
   
   Amount3            TFloat,
   Summa3             TFloat,
   SummaSale3         TFloat,
+  PersentAmount3            TFloat,
+  PersentSumma3             TFloat,
+  PersentSummaSale3         TFloat,
   
   Amount4            TFloat,
   Summa4             TFloat,
   SummaSale4         TFloat,
+  PersentAmount4            TFloat,
+  PersentSumma4             TFloat,
+  PersentSummaSale4         TFloat,
   
   Amount5            TFloat,
   Summa5             TFloat,
   SummaSale5         TFloat,
+  PersentAmount5            TFloat,
+  PersentSumma5             TFloat,
+  PersentSummaSale5         TFloat,
 
   Amount6            TFloat,
   Summa6             TFloat,
   SummaSale6         TFloat,
+  PersentAmount6            TFloat,
+  PersentSumma6             TFloat,
+  PersentSummaSale6         TFloat,
 
   Amount7            TFloat,
   Summa7             TFloat,
-  SummaSale7         TFloat
+  SummaSale7         TFloat,
+  PersentAmount7            TFloat,
+  PersentSumma7             TFloat,
+  PersentSummaSale7         TFloat
     
 )
 AS
@@ -185,30 +206,51 @@ BEGIN
            , tmp.Amount1    ::TFloat AS Amount1
            , tmp.Summa1     ::TFloat AS Summa1
            , tmp.SummaSale1 ::TFloat AS SummaSale1
+           , CASE WHEN tmp.Amount <> 0 THEN (tmp.Amount1*100/tmp.Amount) ElSE 0 END          ::TFloat AS PersentAmount1
+           , CASE WHEN tmp.Summa <> 0 THEN (tmp.Summa1*100/tmp.Summa) ElSE 0 END             ::TFloat AS PersentSumma1
+           , CASE WHEN tmp.SummaSale <> 0 THEN (tmp.SummaSale1*100/tmp.SummaSale) ElSE 0 END ::TFloat AS PersentSummaSale1
 
            , tmp.Amount2    ::TFloat AS Amount2
            , tmp.Summa2     ::TFloat AS Summa2
            , tmp.SummaSale2 ::TFloat AS SummaSale2
+           , CASE WHEN tmp.Amount <> 0 THEN (tmp.Amount2*100/tmp.Amount) ElSE 0 END          ::TFloat AS PersentAmount2
+           , CASE WHEN tmp.Summa <> 0 THEN (tmp.Summa2*100/tmp.Summa) ElSE 0 END             ::TFloat AS PersentSumma2
+           , CASE WHEN tmp.SummaSale <> 0 THEN (tmp.SummaSale2*100/tmp.SummaSale) ElSE 0 END ::TFloat AS PersentSummaSale2
 
            , tmp.Amount3    ::TFloat AS Amount3
            , tmp.Summa3     ::TFloat AS Summa3
            , tmp.SummaSale3 ::TFloat AS SummaSale3
+           , CASE WHEN tmp.Amount <> 0 THEN (tmp.Amount3*100/tmp.Amount) ElSE 0 END   ::TFloat AS PersentAmount3
+           , CASE WHEN tmp.Summa <> 0 THEN (tmp.Summa3*100/tmp.Summa) ElSE 0 END     ::TFloat AS PersentSumma3
+           , CASE WHEN tmp.SummaSale <> 0 THEN (tmp.SummaSale3*100/tmp.SummaSale) ElSE 0 END ::TFloat AS PersentSummaSale3
 
            , tmp.Amount4    ::TFloat AS Amount4
            , tmp.Summa4     ::TFloat AS Summa4
            , tmp.SummaSale4 ::TFloat AS SummaSale4
+           , CASE WHEN tmp.Amount <> 0 THEN (tmp.Amount4*100/tmp.Amount) ElSE 0 END          ::TFloat AS PersentAmount4
+           , CASE WHEN tmp.Summa <> 0 THEN (tmp.Summa4*100/tmp.Summa) ElSE 0 END             ::TFloat AS PersentSumma4
+           , CASE WHEN tmp.SummaSale <> 0 THEN (tmp.SummaSale4*100/tmp.SummaSale) ElSE 0 END ::TFloat AS PersentSummaSale4
 
            , tmp.Amount5    ::TFloat AS Amount5
            , tmp.Summa5     ::TFloat AS Summa5
            , tmp.SummaSale5 ::TFloat AS SummaSale5
+           , CASE WHEN tmp.Amount <> 0 THEN (tmp.Amount5*100/tmp.Amount) ElSE 0 END          ::TFloat AS PersentAmount5
+           , CASE WHEN tmp.Summa <> 0 THEN (tmp.Summa5*100/tmp.Summa) ElSE 0 END             ::TFloat AS PersentSumma5
+           , CASE WHEN tmp.SummaSale <> 0 THEN (tmp.SummaSale5*100/tmp.SummaSale) ElSE 0 END ::TFloat AS PersentSummaSale5
 
            , tmp.Amount6    ::TFloat AS Amount6
            , tmp.Summa6     ::TFloat AS Summa6
            , tmp.SummaSale6 ::TFloat AS SummaSale6
+           , CASE WHEN tmp.Amount <> 0 THEN (tmp.Amount6*100/tmp.Amount) ElSE 0 END          ::TFloat AS PersentAmount6
+           , CASE WHEN tmp.Summa <> 0 THEN (tmp.Summa6*100/tmp.Summa) ElSE 0 END             ::TFloat AS PersentSumma6
+           , CASE WHEN tmp.SummaSale <> 0 THEN (tmp.SummaSale6*100/tmp.SummaSale) ElSE 0 END ::TFloat AS PersentSummaSale6
 
            , tmp.Amount7    ::TFloat AS Amount7
            , tmp.Summa7     ::TFloat AS Summa7
            , tmp.SummaSale7 ::TFloat AS SummaSale7
+           , CASE WHEN tmp.Amount <> 0 THEN (tmp.Amount7*100/tmp.Amount) ElSE 0 END          ::TFloat AS PersentAmount7
+           , CASE WHEN tmp.Summa <> 0 THEN (tmp.Summa7*100/tmp.Summa) ElSE 0 END             ::TFloat AS PersentSumma7
+           , CASE WHEN tmp.SummaSale <> 0 THEN (tmp.SummaSale7*100/tmp.SummaSale) ElSE 0 END ::TFloat AS PersentSummaSale7
            
        FROM (SELECT tmpData.UnitId
                   , SUM(tmpData.Amount)      AS Amount
@@ -268,3 +310,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_PriceIntervention (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
+--select * from gpReport_PriceIntervention(inStartDate := ('01.03.2016')::TDateTime , inEndDate := ('10.03.2016')::TDateTime , inPrice1 := 100 , inPrice2 := 200 , inPrice3 := 300 , inPrice4 := 400 , inPrice5 := 500 , inPrice6 := 600 ,  inSession := '3');
