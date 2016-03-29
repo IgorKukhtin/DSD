@@ -151,7 +151,7 @@ BEGIN
                                                                                  , inMovementId := inMovementId
                                                                                  , inGoodsId := Saldo.ObjectId
                                                                                  , inAmount := 0
-                                                                                 , inPrice := 0
+                                                                                 , inPrice := Object_Price.Price
                                                                                  , inSumm := 0
                                                                                  , inComment := ''
                                                                                  , inUserId := inUserId
@@ -185,6 +185,15 @@ BEGIN
                                          ON Saldo.ObjectId = MovementItem_Inventory.ObjectId
                                         AND MovementItem_Inventory.MovementId = inMovementId
                                         AND MovementItem_Inventory.DescId = zc_MI_Master()
+            LEFT OUTER JOIN (
+                                SELECT 
+                                    Object_Price_View.GoodsId
+                                  , Object_Price_View.Price
+                                FROM 
+                                    Object_Price_View
+                                WHERE 
+                                    Object_Price_View.UnitId = vbUnitId                    
+                            ) AS Object_Price ON Saldo.ObjectId = Object_Price.GoodsId
         WHERE
             Saldo.Amount > 0
             AND
