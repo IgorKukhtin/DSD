@@ -63,10 +63,19 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       WITH tmpList AS (SELECT DISTINCT Object_Personal_View.UnitId
+       WITH tmpList AS (SELECT DISTINCT ObjectLink.ObjectId AS UnitId
+                        FROM ObjectLink
+                             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                  ON ObjectLink_Personal_Member.ObjectId = ObjectLink.ChildObjectId
+                                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                        WHERE ObjectLink.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
+                          AND (ObjectLink_Personal_Member.ChildObjectId = vbMemberId OR vbMemberId = 0)
+                       )
+             /*tmpList AS (SELECT DISTINCT Object_Personal_View.UnitId
                         FROM Object_Personal_View
                         WHERE (Object_Personal_View.MemberId = vbMemberId OR vbMemberId = 0)
-                       )
+                       )*/
+
           , tmpMovement AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId, DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -102,7 +111,7 @@ $BODY$
  23.03.16                                        * all
  01.03.16         * add isComplete
  28.12.13                                        * add zc_ObjectLink_StaffList_Unit
- 01.10.13         *
+01.10.13         *
 */
 
 -- тест

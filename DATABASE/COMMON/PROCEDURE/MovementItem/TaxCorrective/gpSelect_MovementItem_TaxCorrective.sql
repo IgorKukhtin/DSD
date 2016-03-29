@@ -30,12 +30,14 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH
-     tmpMITax AS (SELECT tmp.GoodsId, tmp.Price, tmp.LineNum
-                  FROM MovementLinkMovement AS MovementLinkMovement_Child
-                      LEFT JOIN lpSelect_TaxFromTaxCorrective(MovementLinkMovement_Child.MovementChildId) AS tmp ON 1=1
-                  WHERE MovementLinkMovement_Child.MovementId = inMovementId 
-                    AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+     tmpMITax AS (SELECT tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum
+                  FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId
+                                                       FROM MovementLinkMovement AS MLM
+                                                       WHERE MLM.MovementId = inMovementId 
+                                                         AND MLM.DescId = zc_MovementLinkMovement_Child())
+                                                     ) AS tmp
                   )
+       -- Результат     
        SELECT
              0                                      AS Id
            , 0                                      AS LineNum    
@@ -97,7 +99,7 @@ BEGIN
        SELECT
              MovementItem.Id                        AS Id
            , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum    
-           , tmpMITax.LineNum                       AS LineNumTax
+           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNumTax
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -143,25 +145,32 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
-            
-            LEFT JOIN tmpMITax ON tmpMITax.GoodsId = Object_Goods.Id
-                              AND tmpMITax.Price = MIFloat_Price.ValueData
+
+            LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
+                                           AND tmpMITax1.GoodsId     = Object_Goods.Id
+                                           AND tmpMITax1.GoodsKindId = Object_GoodsKind.Id
+                                           AND tmpMITax1.Price       = MIFloat_Price.ValueData
+            LEFT JOIN tmpMITax AS tmpMITax2 ON tmpMITax2.Kind        = 2
+                                           AND tmpMITax2.GoodsId     = Object_Goods.Id
+                                           AND tmpMITax2.Price       = MIFloat_Price.ValueData
+                                           AND tmpMITax1.GoodsId     IS NULL
             ;
      ELSE
 
      RETURN QUERY
      WITH 
-     tmpMITax AS (SELECT tmp.GoodsId, tmp.Price, tmp.LineNum
-                  FROM MovementLinkMovement AS MovementLinkMovement_Child
-                      LEFT JOIN lpSelect_TaxFromTaxCorrective(MovementLinkMovement_Child.MovementChildId) AS tmp On 1=1
-                  WHERE MovementLinkMovement_Child.MovementId = inMovementId 
-                    AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+     tmpMITax AS (SELECT tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum
+                  FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId
+                                                       FROM MovementLinkMovement AS MLM
+                                                       WHERE MLM.MovementId = inMovementId 
+                                                         AND MLM.DescId = zc_MovementLinkMovement_Child())
+                                                     ) AS tmp
                   )
-     
+       -- Результат     
        SELECT
              MovementItem.Id
            , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum    
-           , tmpMITax.LineNum                       AS LineNumTax
+           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNumTax
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -206,8 +215,14 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
             
-            LEFT JOIN tmpMITax ON tmpMITax.GoodsId = Object_Goods.Id
-                              AND tmpMITax.Price = MIFloat_Price.ValueData
+            LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
+                                           AND tmpMITax1.GoodsId     = Object_Goods.Id
+                                           AND tmpMITax1.GoodsKindId = Object_GoodsKind.Id
+                                           AND tmpMITax1.Price       = MIFloat_Price.ValueData
+            LEFT JOIN tmpMITax AS tmpMITax2 ON tmpMITax2.Kind        = 2
+                                           AND tmpMITax2.GoodsId     = Object_Goods.Id
+                                           AND tmpMITax2.Price       = MIFloat_Price.ValueData
+                                           AND tmpMITax1.GoodsId     IS NULL
             ;
 
      END IF;
