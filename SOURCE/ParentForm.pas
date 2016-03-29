@@ -393,6 +393,7 @@ initialization
   RegisterClass (TUpdateRecord);
   RegisterClass (TAddOnFormRefresh);
   RegisterClass (TShellExecuteAction);
+  RegisterClass (TShowMessageAction);
 
 // дкъ реярю
 

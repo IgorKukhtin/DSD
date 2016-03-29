@@ -979,6 +979,9 @@ begin
      if Component is TdsdSMTPFileAction then
        (Component as TdsdSMTPFileAction).FileName := FValue
      else
+     if Component is TShowMessageAction then
+       (Component as TShowMessageAction).MessageText := String(FValue)
+     else
      if (Component is TCustomAction) AND (ComponentItem <> '') then
      Begin
        FRttiProperty := FRttiContext.GetType(Component.ClassType).GetProperty(ComponentItem);
