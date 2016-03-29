@@ -1224,10 +1224,6 @@
 				<Form>Report_ProfitDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceIntervention.pas">
-				<Form>Report_PriceInterventionForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceInterventionDialog.pas">
 				<Form>Report_PriceInterventionDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1246,6 +1242,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckFarm.pas">
 				<Form>ReportMovementCheckFarmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceIntervention.pas">
+				<Form>Report_PriceInterventionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

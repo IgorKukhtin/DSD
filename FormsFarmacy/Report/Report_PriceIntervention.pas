@@ -15,7 +15,7 @@ uses
   cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, cxPivotGridChartConnection,
   cxCustomPivotGrid, cxDBPivotGrid, cxGridChartView, cxGridDBChartView,
   cxSplitter, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxGridBandedTableView, cxGridDBBandedTableView;
 
 type
   TReport_PriceInterventionForm = class(TAncestorReportForm)
@@ -53,6 +53,18 @@ type
     cePrice5: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
     cePrice6: TcxCurrencyEdit;
+    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
+    cxJuridicalMainName: TcxGridDBBandedColumn;
+    cxUnitName: TcxGridDBBandedColumn;
+    cxAmount: TcxGridDBBandedColumn;
+    cxSummaSale: TcxGridDBBandedColumn;
+    cxSumma: TcxGridDBBandedColumn;
+    cxColor_Amount: TcxGridDBBandedColumn;
+    cxColor_Summa: TcxGridDBBandedColumn;
+    cxColor_SummaSale: TcxGridDBBandedColumn;
+    cxColor_PersentAmount1: TcxGridDBBandedColumn;
+    cxColor_PersentSumma1: TcxGridDBBandedColumn;
+    cxColor_PersentSummaSale1: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
