@@ -676,6 +676,19 @@ type
     property ShortCut;
   end;
 
+  TShowMessageAction = class(TdsdCustomAction)
+  private
+    FMessageText: String;
+    procedure SetMessageText(Value: String);
+    function GetMessageText: String;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property MessageText: String read GetMessageText write SetMessageText;
+  end;
 procedure Register;
 
 implementation
@@ -715,6 +728,8 @@ begin
   RegisterActions('DSDLib', [TOpenChoiceForm], TOpenChoiceForm);
   RegisterActions('DSDLib', [TUpdateRecord], TUpdateRecord);
   RegisterActions('DSDLib', [TShellExecuteAction], TShellExecuteAction);
+  RegisterActions('DSDLib', [TShowMessageAction], TShowMessageAction);
+
 end;
 
 { TdsdCustomDataSetAction }
@@ -2787,6 +2802,38 @@ begin
     ShellExecute(0, 'open', PChar(VarToStr(Param.Value)), '', '', 1);
     Result := True;
   End;
+end;
+
+{ TShowMessageAction }
+
+constructor TShowMessageAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FMessageText := '';
+end;
+
+destructor TShowMessageAction.Destroy;
+begin
+  //
+  inherited;
+end;
+
+function TShowMessageAction.GetMessageText: String;
+begin
+  Result := FMessageText;
+end;
+
+function TShowMessageAction.LocalExecute: Boolean;
+begin
+  if FMessageText <> '' then
+    ShowMessage(FMessageText);
+end;
+
+procedure TShowMessageAction.SetMessageText(Value: String);
+begin
+  FMessageText := Value;
+  if not (csDesigning in ComponentState) then
+    LocalExecute;
 end;
 
 end.

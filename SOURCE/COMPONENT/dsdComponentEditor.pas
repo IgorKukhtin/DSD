@@ -150,6 +150,10 @@ begin
               Proc('Key');
               Proc('JSONKey');
             end;
+            if (Component is TShowMessageAction) then
+            Begin
+              Proc('MessageText');
+            End;
             if (Component is TCustomAction) then
             Begin
               Proc('Enabled');
