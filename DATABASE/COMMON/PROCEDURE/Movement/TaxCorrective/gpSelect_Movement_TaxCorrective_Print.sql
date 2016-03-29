@@ -20,6 +20,8 @@ $BODY$
 
     DECLARE vbNotNDSPayer_INN TVarChar;
 
+    DECLARE vbOperDate_begin TDateTime;
+
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 BEGIN
@@ -33,7 +35,8 @@ BEGIN
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
           , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
-            INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective
+          , CASE WHEN Movement_TaxCorrective.OperDate > COALESCE (MovementDate_DateRegistered.ValueData, Movement_TaxCorrective.OperDate) THEN Movement_TaxCorrective.OperDate ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_TaxCorrective.OperDate) END AS OperDate_begin
+            INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective, vbOperDate_begin
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -46,6 +49,9 @@ BEGIN
           ) AS tmpMovement
           INNER JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = tmpMovement.MovementId_TaxCorrective
                                                        AND (Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete() OR tmpMovement.MovementId_TaxCorrective = inMovementId)
+          LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                 ON MovementDate_DateRegistered.MovementId = tmpMovement.MovementId_TaxCorrective
+                                AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
      ;
 /* пока убрал, т.к. проверка сумм происходит в непроведенном состоянии, надо или добавить параметр - "когда ругаться" или сделать еще одну печать-проверку
      -- очень важная проверка
@@ -243,7 +249,8 @@ BEGIN
 
            , Movement_child.Id       AS x11
            , Movement_child.OperDate AS x12
-           , '51' ::TVarChar         AS PZOB -- поля для Медка
+           , '51' ::TVarChar         AS PZOB           -- поле для Медка
+           , vbOperDate_begin        AS OperDate_begin -- поле для Медка
 
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
@@ -253,13 +260,13 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
 
-           , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
-                  THEN 'X'
-                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND Movement.OperDate < '01.04.2015' AND Movement_child.OperDate < '01.04.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
-                  THEN 'X'
-                  WHEN Movement.OperDate >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+           , CASE WHEN vbOperDate_begin >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
-                  THEN 'X'
+                       THEN 'X'
+                  WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
+                       THEN 'X'
+                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                       THEN 'X'
                   ELSE ''
              END :: TVarChar AS ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
            , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.02.2015'

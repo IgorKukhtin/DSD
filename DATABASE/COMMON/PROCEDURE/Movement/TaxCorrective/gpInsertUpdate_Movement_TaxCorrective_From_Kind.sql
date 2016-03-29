@@ -379,7 +379,7 @@ BEGIN
                                 , MB_Registered.ValueData;
                         
      -- данные для курсор2 - отдельно !!!для оптимизации!!!
-              WITH tmpMovement AS (SELECT Movement.Id
+              WITH tmpMovement2 AS (SELECT Movement.Id
                                         , MIFloat_Price.ValueData AS Price
                                         , SUM (MovementItem.Amount) AS Amount
                                    FROM _tmp1_SubQuery AS tmpMovement_Tax
@@ -416,12 +416,12 @@ BEGIN
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
                                    GROUP BY Movement.Id
                                           , MIFloat_Price.ValueData
-                                  )
+                                  )*/
                  , tmpMovement AS (SELECT tmpMovement2.Id
                                         , SUM (tmpMovement2.Amount) AS Amount
                                    FROM tmpMovement2
                                    WHERE tmpMovement2.Price = vbOperPrice
-                                   GROUP BY tmpMovement2.Id)*/
+                                   GROUP BY tmpMovement2.Id)
      INSERT INTO _tmp2_SubQuery (MovementId_Tax, Amount)
                                    SELECT CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END AS MovementId_Tax
                                         , SUM (Movement.Amount) AS Amount

@@ -71,17 +71,9 @@ BEGIN
                                         AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
      WHERE Movement.Id = inMovementId;
 
--- result
-       SELECT
-            COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Tax')
-       INTO vbPrintFormName
-       FROM Movement
-
-       LEFT JOIN PrintForms_View
-              ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
-             AND PrintForms_View.ReportType = 'Tax'
-
-       WHERE Movement.Id =  vbMovementId_Tax;
+     -- Результат
+     vbPrintFormName:= gpGet_Movement_Tax_ReportName (inMovementId:= vbMovementId_Tax, inSession:= inSession);
+--       WHERE Movement.Id =  vbMovementId_Tax;
 --         AND Movement.DescId = zc_Movement_Sale();
 
 
@@ -103,5 +95,4 @@ ALTER FUNCTION gpGet_Movement_Sale_ReportNameTax (Integer, TVarChar) OWNER TO po
 */
 
 -- тест
---SELECT gpGet_Movement_Sale_ReportNameTax FROM gpGet_Movement_Sale_ReportNameTax(inMovementId := 40874,  inSession := '5'); -- все
---SELECT * FROM gpGet_Movement_Sale_ReportNameTax(inMovementId := 40869,  inSession := '5'); -- Метро
+-- SELECT * FROM gpGet_Movement_Sale_ReportNameTax (inMovementId:= 3402070, inSession:= '5');

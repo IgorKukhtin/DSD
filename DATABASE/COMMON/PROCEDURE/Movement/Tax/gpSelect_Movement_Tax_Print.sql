@@ -26,6 +26,8 @@ $BODY$
 
     DECLARE vbCurrencyPartnerId Integer;
 
+    DECLARE vbOperDate_begin TDateTime;
+
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
     DECLARE vbNotNDSPayer_INN TVarChar;
@@ -49,8 +51,11 @@ BEGIN
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)       AS GoodsPropertyId_basis
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId         AS GoodsPropertyId
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
+
+          , CASE WHEN Movement_Tax.OperDate > COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate) THEN Movement_Tax.OperDate ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate) END AS OperDate_begin
           
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
+               , vbOperDate_begin
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -70,6 +75,9 @@ BEGIN
                                        ON MovementLinkObject_CurrencyPartner.MovementId = MovementLinkMovement_Master.MovementId
                                       AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
 
+          LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                 ON MovementDate_DateRegistered.MovementId = tmpMovement.MovementId_Tax
+                                AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                        ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.MovementId_Tax
                                       AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
@@ -134,7 +142,7 @@ BEGIN
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
-           , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006' ELSE 'J1201007' END ::TVarChar AS CHARCODE
+           , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006' WHEN vbOperDate_begin < '01.04.2016' THEN 'J1201007' ELSE 'J1201008' END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
                   THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
@@ -266,7 +274,8 @@ BEGIN
            , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) AS EDIId
 
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
-           , CASE WHEN vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax() THEN 'X' ELSE '' END AS TaxKind --для сводной НН
+           , CASE WHEN vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax() THEN 'X' ELSE '' END AS TaxKind -- для сводной НН
+           , vbOperDate_begin AS OperDate_begin -- поле для Медка
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = inMovementId
