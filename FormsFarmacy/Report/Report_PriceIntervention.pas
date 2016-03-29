@@ -26,9 +26,6 @@ type
     ceJuridical1: TcxButtonEdit;
     Juridical1Guides: TdsdGuides;
     dxBarControlContainerItem4: TdxBarControlContainerItem;
-    JuridicalMainName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    clSumma: TcxGridDBColumn;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actQuasiSchedule: TBooleanStoredProcAction;

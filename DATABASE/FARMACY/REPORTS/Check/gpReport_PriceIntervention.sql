@@ -373,33 +373,33 @@ BEGIN
            , 16777158  :: Integer  AS Color_Summa           -- желтый 8978431
            , 8978431   :: Integer  AS Color_SummaSale       --голубой 16380671
 
-           , CASE WHEN tmpDataAll.PersentAmount1 <> tmpMaxPersent.MaxPersentAmount1 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentAmount1
-           , CASE WHEN tmpDataAll.PersentSumma1 <> tmpMaxPersent.MaxPersentSumma1 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSumma1
-           , CASE WHEN tmpDataAll.PersentSummaSale1 <> tmpMaxPersent.MaxPersentSummaSale1 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSummaSale1
+           , CASE WHEN tmpDataAll.PersentAmount1 <> tmpMaxPersent.MaxPersentAmount1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount1
+           , CASE WHEN tmpDataAll.PersentSumma1 <> tmpMaxPersent.MaxPersentSumma1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma1
+           , CASE WHEN tmpDataAll.PersentSummaSale1 <> tmpMaxPersent.MaxPersentSummaSale1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale1
 
-           , CASE WHEN tmpDataAll.PersentAmount2 <> tmpMaxPersent.MaxPersentAmount2 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentAmount2
-           , CASE WHEN tmpDataAll.PersentSumma2 <> tmpMaxPersent.MaxPersentSumma2 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSumma2
-           , CASE WHEN tmpDataAll.PersentSummaSale2 <> tmpMaxPersent.MaxPersentSummaSale2 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSummaSale2       
+           , CASE WHEN tmpDataAll.PersentAmount2 <> tmpMaxPersent.MaxPersentAmount2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount2
+           , CASE WHEN tmpDataAll.PersentSumma2 <> tmpMaxPersent.MaxPersentSumma2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma2
+           , CASE WHEN tmpDataAll.PersentSummaSale2 <> tmpMaxPersent.MaxPersentSummaSale2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale2       
 
-           , CASE WHEN tmpDataAll.PersentAmount3 <> tmpMaxPersent.MaxPersentAmount3 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentAmount3
-           , CASE WHEN tmpDataAll.PersentSumma3 <> tmpMaxPersent.MaxPersentSumma3 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSumma3
-           , CASE WHEN tmpDataAll.PersentSummaSale3 <> tmpMaxPersent.MaxPersentSummaSale3 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSummaSale3   
+           , CASE WHEN tmpDataAll.PersentAmount3 <> tmpMaxPersent.MaxPersentAmount3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount3
+           , CASE WHEN tmpDataAll.PersentSumma3 <> tmpMaxPersent.MaxPersentSumma3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma3
+           , CASE WHEN tmpDataAll.PersentSummaSale3 <> tmpMaxPersent.MaxPersentSummaSale3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale3   
 
-           , CASE WHEN tmpDataAll.PersentAmount4 <> tmpMaxPersent.MaxPersentAmount4 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentAmount4
-           , CASE WHEN tmpDataAll.PersentSumma4 <> tmpMaxPersent.MaxPersentSumma4 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSumma4
-           , CASE WHEN tmpDataAll.PersentSummaSale4 <> tmpMaxPersent.MaxPersentSummaSale4 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSummaSale4    
+           , CASE WHEN tmpDataAll.PersentAmount4 <> tmpMaxPersent.MaxPersentAmount4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount4
+           , CASE WHEN tmpDataAll.PersentSumma4 <> tmpMaxPersent.MaxPersentSumma4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma4
+           , CASE WHEN tmpDataAll.PersentSummaSale4 <> tmpMaxPersent.MaxPersentSummaSale4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale4    
 
-           , CASE WHEN tmpDataAll.PersentAmount5 <> tmpMaxPersent.MaxPersentAmount5 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentAmount5
-           , CASE WHEN tmpDataAll.PersentSumma5 <> tmpMaxPersent.MaxPersentSumma5 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSumma5
-           , CASE WHEN tmpDataAll.PersentSummaSale5 <> tmpMaxPersent.MaxPersentSummaSale5 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSummaSale5
+           , CASE WHEN tmpDataAll.PersentAmount5 <> tmpMaxPersent.MaxPersentAmount5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount5
+           , CASE WHEN tmpDataAll.PersentSumma5 <> tmpMaxPersent.MaxPersentSumma5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma5
+           , CASE WHEN tmpDataAll.PersentSummaSale5 <> tmpMaxPersent.MaxPersentSummaSale5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale5
                       
-           , CASE WHEN tmpDataAll.PersentAmount6 <> tmpMaxPersent.MaxPersentAmount6 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentAmount6
-           , CASE WHEN tmpDataAll.PersentSumma6 <> tmpMaxPersent.MaxPersentSumma6 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSumma6
-           , CASE WHEN tmpDataAll.PersentSummaSale6 <> tmpMaxPersent.MaxPersentSummaSale6 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSummaSale6
+           , CASE WHEN tmpDataAll.PersentAmount6 <> tmpMaxPersent.MaxPersentAmount6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount6
+           , CASE WHEN tmpDataAll.PersentSumma6 <> tmpMaxPersent.MaxPersentSumma6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma6
+           , CASE WHEN tmpDataAll.PersentSummaSale6 <> tmpMaxPersent.MaxPersentSummaSale6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale6
 
-           , CASE WHEN tmpDataAll.PersentAmount7 <> tmpMaxPersent.MaxPersentAmount7 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentAmount7
-           , CASE WHEN tmpDataAll.PersentSumma7 <> tmpMaxPersent.MaxPersentSumma7 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSumma7
-           , CASE WHEN tmpDataAll.PersentSummaSale7 <> tmpMaxPersent.MaxPersentSummaSale7 THEN zc_Color_Black() ELSE zc_Color_Red() END    :: Integer AS Color_PersentSummaSale7 
+           , CASE WHEN tmpDataAll.PersentAmount7 <> tmpMaxPersent.MaxPersentAmount7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount7
+           , CASE WHEN tmpDataAll.PersentSumma7 <> tmpMaxPersent.MaxPersentSumma7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma7
+           , CASE WHEN tmpDataAll.PersentSummaSale7 <> tmpMaxPersent.MaxPersentSummaSale7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale7 
                                             
        FROM tmpDataAll
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id =tmpDataAll.UnitId
