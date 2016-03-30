@@ -35,7 +35,7 @@ BEGIN
      -- определ€етс€ <Ќалоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
           , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
-          , CASE WHEN Movement_TaxCorrective.OperDate > COALESCE (MovementDate_DateRegistered.ValueData, Movement_TaxCorrective.OperDate) THEN Movement_TaxCorrective.OperDate ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_TaxCorrective.OperDate) END AS OperDate_begin
+          , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_TaxCorrective.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_TaxCorrective.OperDate END AS OperDate_begin
             INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective, vbOperDate_begin
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
                             THEN inMovementId

@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_TaxCorrective (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_TaxCorrective(
     IN inMovementId        Integer   , -- ключ Документа
+   OUT outMessageText      Text      ,
     IN inUserId            Integer     -- пользователь
 )
- RETURNS VOID
+RETURNS Text
 AS
 $BODY$
   DECLARE vbDocumentTaxKindId Integer;
@@ -14,6 +15,12 @@ BEGIN
 
      -- определяется <Тип формирования налогового документа>
      vbDocumentTaxKindId:= (SELECT ObjectId  FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_DocumentTaxKind());
+
+     -- Проверка ошибки
+     outMessageText:= (SELECT tmp.MessageText FROM lpSelect_TaxCorrectiveFromTax (inMovementId) AS tmp);
+     -- !!!Выход если ошибка!!!
+     IF outMessageText <> '' THEN RETURN; END IF;
+
 
      IF vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Corrective()
      THEN

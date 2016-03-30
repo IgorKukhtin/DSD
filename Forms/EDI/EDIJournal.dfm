@@ -1129,6 +1129,9 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = EDIReturnComDoc
         end
         item
+          Action = actUpdate_DateRegistered
+        end
+        item
           Action = actStoredProcTaxCorrectivePrint
         end
         item
@@ -1274,6 +1277,9 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actUpdate_DateRegistered
+        end
         item
           Action = actStoredProcTaxPrint
         end
@@ -1540,6 +1546,17 @@ inherited EDIJournalForm: TEDIJournalForm
           StoredProc = spUpdateEdiOrdspr
         end>
       Caption = 'actUpdateEdiOrdsprTrue'
+    end
+    object actUpdate_DateRegistered: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_DateRegistered
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_DateRegistered
+        end>
+      Caption = 'actUpdate_DateRegistered'
     end
   end
   inherited MasterDS: TDataSource
@@ -2815,5 +2832,28 @@ inherited EDIJournalForm: TEDIJournalForm
     PackSize = 1
     Left = 240
     Top = 192
+  end
+  object spUpdate_DateRegistered: TdsdStoredProc
+    StoredProcName = 'gpUpdate_DateRegistered'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId_Tax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Tax'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Corrective'
+        Value = 'zc_MovementBoolean_EdiOrdspr'
+        Component = MasterCDS
+        ComponentItem = 'MovementId_TaxCorrective'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 200
   end
 end

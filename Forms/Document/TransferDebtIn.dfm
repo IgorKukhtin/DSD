@@ -3,7 +3,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
   ClientHeight = 532
   ClientWidth = 1140
   ExplicitWidth = 1156
-  ExplicitHeight = 570
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1320,6 +1320,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
     object actMedocProcedure: TdsdExecStoredProc
       Category = 'TaxLib'
@@ -2896,17 +2900,24 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'ouStatusCode'
+        Value = Null
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'StatusCode'
+      end
+      item
+        Name = 'outMessageText'
         Value = 'True'
-        DataType = ftBoolean
-        ParamType = ptInput
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 976
     Top = 329
   end
   object spMovementUnCompleteTaxCorrective: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_TaxCorrective'
     DataSets = <>
     OutputType = otResult
     Params = <

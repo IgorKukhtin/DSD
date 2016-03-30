@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -496,6 +496,19 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
         end>
     end
+    object actCompleteMovementProc: TdsdExecStoredProc [10]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+    end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -507,7 +520,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -707,6 +720,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       ImageIndex = 27
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1082' '#1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078#1085#1099#1081'?'
       InfoAfterExecute = #1047#1085#1072#1082' '#1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1080#1079#1084#1077#1085#1080#1083#1089#1103' '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078#1085#1099#1081
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   inherited MasterDS: TDataSource
@@ -945,8 +962,30 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_TaxCorrective'
-    Left = 88
-    Top = 40
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+      end>
+    Left = 80
+    Top = 32
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TaxCorrective'
@@ -2005,5 +2044,34 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     PackSize = 1
     Left = 226
     Top = 472
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_TaxCorrective'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ouStatusCode'
+        Value = Null
+        Component = StatusGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 88
   end
 end

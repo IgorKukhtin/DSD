@@ -102,6 +102,7 @@ type
     bbPrintReturnIn: TdxBarButton;
     actOpenTax: TdsdOpenForm;
     bbOpenTax: TdxBarButton;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

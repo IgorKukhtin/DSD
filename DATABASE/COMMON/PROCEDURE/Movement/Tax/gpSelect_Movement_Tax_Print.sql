@@ -52,7 +52,7 @@ BEGIN
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId         AS GoodsPropertyId
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
 
-          , CASE WHEN Movement_Tax.OperDate > COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate) THEN Movement_Tax.OperDate ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate) END AS OperDate_begin
+          , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_Tax.OperDate END AS OperDate_begin
           
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
                , vbOperDate_begin
@@ -746,4 +746,4 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 171760, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId:= 171760, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());

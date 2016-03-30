@@ -1,9 +1,9 @@
--- Function: gpInsertUpdate_MovementItem_Tax()
+-- Function: lpSelect_TaxFromTaxCorrective()
 
-DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective(integer);
+DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective (Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_TaxFromTaxCorrective(
-    IN inMovementId          Integer    -- Ключ объекта <Документ>
+    IN inMovementId          Integer    -- Ключ объекта <Документ> - Налоговая
 )
 RETURNS TABLE (Kind        Integer
              , GoodsId     Integer
@@ -64,8 +64,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+28.03.16                                         * ALL
 26.03.16          *
 */
 
 -- тест
--- SELECT * FROM lpSelect_TaxFromTaxCorrective (inMovementId:= 10)
+-- SELECT * FROM lpSelect_TaxFromTaxCorrective (inMovementId:= 171760)

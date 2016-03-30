@@ -158,9 +158,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -1193,6 +1190,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       ImageIndex = 12
       Status = mtComplete
       DataSource = TaxCorrectiveDS
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   inherited MasterDS: TDataSource
@@ -2411,7 +2412,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Top = 210
   end
   object spMovementUnCompleteTaxCorrective: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_TaxCorrective'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2496,10 +2497,17 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ParamType = ptInput
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'ouStatusCode'
+        Value = Null
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'StatusCode'
+      end
+      item
+        Name = 'outMessageText'
         Value = 'True'
-        DataType = ftBoolean
-        ParamType = ptInput
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 888

@@ -181,6 +181,8 @@ type
     InvNumberRegistered: TcxGridDBColumn;
     clPersonalSigningName: TcxGridDBColumn;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    spUpdate_DateRegistered: TdsdStoredProc;
+    actUpdate_DateRegistered: TdsdExecStoredProc;
   private
     { Private declarations }
   public

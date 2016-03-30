@@ -3,7 +3,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientHeight = 535
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -345
   ExplicitWidth = 1134
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -678,7 +677,20 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           DataType = ftBoolean
         end>
     end
-    object actMovementCheck: TdsdOpenForm [13]
+    object actCompleteProc: TdsdExecStoredProc [12]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+    end
+    object actMovementCheck: TdsdOpenForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -700,7 +712,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object ExecuteDialog: TExecuteDialog [23]
+    object ExecuteDialog: TExecuteDialog [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1004,6 +1016,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
     object mactMedocDECLAR: TMultiAction
       Category = 'TaxLib'
@@ -1361,17 +1377,24 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     StoredProcName = 'gpComplete_Movement_TaxCorrective'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'inislastcomplete'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
+        Name = 'ouStatusCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StatusCode'
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     Left = 80
     Top = 320
@@ -1380,7 +1403,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     StoredProcName = 'gpUnComplete_Movement_TaxCorrective'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -1432,6 +1455,29 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_TaxCorrective'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ouStatusCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StatusCode'
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+      end>
+    Left = 160
+    Top = 336
   end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'

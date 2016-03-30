@@ -12,7 +12,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_TaxCorrective());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_TaxCorrective());
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId

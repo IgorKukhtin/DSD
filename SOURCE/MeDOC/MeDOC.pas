@@ -960,7 +960,7 @@ begin
     // перший день періоду
     PERDATE := FormatDateTime('dd.mm.yyyy', StartOfTheMonth(HeaderDataSet.FieldByName('OperDate').AsDateTime));
     // код документу
-    CHARCODE := 'J1201208';//HeaderDataSet.FieldByName('CHARCODE').AsString;
+    CHARCODE := HeaderDataSet.FieldByName('CHARCODE').AsString;
     // Id документа
     DOCID := HeaderDataSet.FieldByName('MovementId').AsString;
   end;

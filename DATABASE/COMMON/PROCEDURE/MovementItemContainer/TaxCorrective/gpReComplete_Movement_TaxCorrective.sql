@@ -4,9 +4,11 @@ DROP FUNCTION IF EXISTS gpReComplete_Movement_TaxCorrective (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReComplete_Movement_TaxCorrective(
     IN inMovementId        Integer               , -- ключ Документа
+   OUT ouStatusCode        Integer               , -- Статус документа. Возвращается который должен быть
+   OUT outMessageText      Text                  ,
     IN inSession           TVarChar                -- сессия пользователя
 )
-RETURNS VOID
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -22,9 +24,11 @@ BEGIN
      END IF;
 
      -- Проводим Документ
-     PERFORM lpComplete_Movement_TaxCorrective (inMovementId     := inMovementId
-                                              , inUserId         := vbUserId
-                                               );
+     outMessageText:= lpComplete_Movement_TaxCorrective (inMovementId     := inMovementId
+                                                       , inUserId         := vbUserId
+                                                        );
+     -- Вернули статус (вдруг он не изменился)
+     ouStatusCode:= (SELECT Object.ObjectCode FROM Movement INNER JOIN Object ON Object.Id = Movement.StatusId WHERE Movement.Id = inMovementId);
 
 END;
 $BODY$

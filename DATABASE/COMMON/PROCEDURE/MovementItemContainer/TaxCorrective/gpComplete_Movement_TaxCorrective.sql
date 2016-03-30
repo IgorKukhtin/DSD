@@ -1,13 +1,15 @@
 -- Function: gpComplete_Movement_TaxCorrective()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_TaxCorrective (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_TaxCorrective (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_TaxCorrective(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+   OUT ouStatusCode        Integer               , -- Статус документа. Возвращается который должен быть
+   OUT outMessageText      Text                  ,
+    IN inSession           TVarChar                -- сессия пользователя
 )
- RETURNS void
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -16,9 +18,11 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_TaxCorrective());
 
      -- Проводим Документ
-     PERFORM lpComplete_Movement_TaxCorrective (inMovementId := inMovementId
-                                              , inUserId     := vbUserId);
+     outMessageText:= lpComplete_Movement_TaxCorrective (inMovementId := inMovementId
+                                                       , inUserId     := vbUserId);
 
+     -- Вернули статус (вдруг он не изменился)
+     ouStatusCode:= (SELECT Object.ObjectCode FROM Movement INNER JOIN Object ON Object.Id = Movement.StatusId WHERE Movement.Id = inMovementId);
 
 END;
 $BODY$

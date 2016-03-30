@@ -1,6 +1,6 @@
 -- Function: gpInsert_EDIFiles()
 
-DROP FUNCTION IF EXISTS gpUpdate_IsMedoc(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_IsMedoc (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_IsMedoc(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -17,8 +17,8 @@ BEGIN
    -- сохранили - выгрузка в медок прошла
    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Medoc(), inMovementId, TRUE);
 
-   -- сохранили "текущая дата", вместо "регистрации" - если нет или убрали электронная (т.е. регистрация медка)
-   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), inMovementId, CURRENT_DATE)
+   -- сохранили "текущая дата", вместо "регистрации" - если её нет или убрали признак электронная (т.е. регистрацию медка)
+   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), tmp.MovementId, CURRENT_DATE)
    FROM (SELECT inMovementId AS MovementId) AS tmp
         LEFT JOIN MovementBoolean ON MovementBoolean.MovementId = tmp.MovementId
                                  AND MovementBoolean.DescId = zc_MovementBoolean_Electron()

@@ -155,6 +155,7 @@ type
     Price_Pricelist_vat: TcxGridDBColumn;
     actOpenTax: TdsdOpenForm;
     bbOpenTax: TdxBarButton;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

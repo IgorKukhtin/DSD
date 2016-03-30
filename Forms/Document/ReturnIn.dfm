@@ -290,9 +290,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -1719,6 +1716,10 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 44
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1094#1077#1085' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'.'
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   inherited MasterDS: TDataSource
@@ -3409,10 +3410,17 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
-        Name = 'inislastcomplete'
-        Value = 'True'
-        DataType = ftBoolean
-        ParamType = ptInput
+        Name = 'ouStatusCode'
+        Value = Null
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'StatusCode'
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 888
@@ -3435,7 +3443,7 @@ inherited ReturnInForm: TReturnInForm
     Top = 281
   end
   object spMovementUnCompleteTaxCorrective: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_TaxCorrective'
     DataSets = <>
     OutputType = otResult
     Params = <

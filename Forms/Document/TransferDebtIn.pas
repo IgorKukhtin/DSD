@@ -124,6 +124,7 @@ type
     cxLabel18: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public
