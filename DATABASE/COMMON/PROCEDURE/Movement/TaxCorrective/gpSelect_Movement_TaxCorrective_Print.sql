@@ -395,7 +395,8 @@ BEGIN
            , COALESCE(MovementLinkMovement_ChildEDI.MovementChildId, 0) AS EDIId
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
 
-           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNum
+           --, COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNum
+           , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNum
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay())
                   THEN 'X' ELSE '' END    AS TaxKind --признак  сводной корректировки
 
@@ -429,6 +430,14 @@ BEGIN
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                         -- AND MIFloat_Price.ValueData <> 0
+
+            LEFT JOIN MovementItemFloat AS MIFloat_NPP
+                                        ON MIFloat_NPP.MovementItemId = MovementItem.Id
+                                       AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                          ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
+
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
