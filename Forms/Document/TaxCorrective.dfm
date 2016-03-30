@@ -91,9 +91,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Width = 55
           end
           object colisAuto: TcxGridDBColumn [3]
+            Caption = #8470' '#1087'/'#1087' ('#1053#1053') '#1087#1086#1080#1089#1082
             DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 30
+            Width = 52
           end
           object clGoodsGroupNameFull: TcxGridDBColumn [4]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -1275,7 +1278,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       item
         Guides = DocumentTaxKindGuides
       end>
-    Left = 160
+    Left = 184
     Top = 192
   end
   inherited HeaderSaver: THeaderSaver
