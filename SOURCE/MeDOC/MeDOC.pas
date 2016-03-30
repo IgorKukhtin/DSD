@@ -574,6 +574,11 @@ begin
    F.TimeSeparator := ':';
    F.ShortDateFormat := 'dd.mm.yyyy';
    F.ShortTimeFormat := 'hh24:mi:ss';
+
+   if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.04.2016', F) then
+      CreateJ1201008XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+   else
+
    if HeaderDataSet.FieldByName('OperDate').asDateTime < StrToDateTime( '01.12.2014', F) then
       CreateJ1201005XMLFile(HeaderDataSet, ItemsDataSet, FileName)
    else begin
@@ -1253,6 +1258,11 @@ begin
    F.TimeSeparator := ':';
    F.ShortDateFormat := 'dd.mm.yyyy';
    F.ShortTimeFormat := 'hh24:mi:ss';
+
+   if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.04.2016', F) then
+      CreateJ1201208XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+   else
+
    if HeaderDataSet.FieldByName('OperDate').asDateTime < StrToDateTime( '01.12.2014', F) then
       CreateJ1201205XMLFile(HeaderDataSet, ItemsDataSet, FileName)
    else begin
