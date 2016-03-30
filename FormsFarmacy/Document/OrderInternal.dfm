@@ -3,7 +3,7 @@ inherited OrderInternalForm: TOrderInternalForm
   ClientHeight = 532
   ClientWidth = 1229
   ExplicitWidth = 1245
-  ExplicitHeight = 570
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -822,6 +822,10 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       Caption = 'actDeleteLink'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1359,6 +1363,20 @@ inherited OrderInternalForm: TOrderInternalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CalcAmountAll'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+      end
+      item
+        Name = 'outAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
         DataType = ftFloat
       end>
     Left = 160

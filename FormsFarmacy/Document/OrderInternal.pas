@@ -95,6 +95,7 @@ type
     colisCalculated: TcxGridDBColumn;
     clCheckAmount: TcxGridDBColumn;
     colisOneJuridical: TcxGridDBColumn;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

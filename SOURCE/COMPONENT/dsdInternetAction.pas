@@ -218,7 +218,10 @@ var Recipients: TArrayOfS;
 begin
   RicipientsList := TStringList.Create;
   try
-    RicipientsList.Delimiter:=';';
+    if POS(';',ToAddress.Value) > 0
+    then RicipientsList.Delimiter:=';'
+    //else RicipientsList.Delimiter:=',' !!!это DEFAULT!!!
+    ;
     RicipientsList.DelimitedText := ToAddress.Value;
     SetLength(Recipients, RicipientsList.Count);
     for I := 0 to RicipientsList.Count - 1 do

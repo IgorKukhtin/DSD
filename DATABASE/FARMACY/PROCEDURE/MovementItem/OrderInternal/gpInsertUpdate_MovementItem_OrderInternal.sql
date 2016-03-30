@@ -22,12 +22,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
 RETURNS TABLE(ioId Integer, ioPrice TFloat, ioPartnerGoodsCode TVarChar, ioPartnerGoodsName TVarChar
             , ioJuridicalName TVarChar, ioContractName TVarChar
             , outSumm TFloat, outCalcAmount TFloat, outSummAll TFloat, outAmountAll TFloat, outCalcAmountAll TFloat
+            , outAmount TFloat, outMessageText TVarChar
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+
    DECLARE vbId Integer;
-   DECLARE vbAmount TFloat;   
+
    DECLARE vbSumm TFloat;   
    DECLARE vbCalcAmount TFloat;   
    DECLARE vbSummAll TFloat;   
@@ -36,12 +38,49 @@ $BODY$
    DECLARE vbMinimumLot TFloat;   
 
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
-    -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderInternal());
-    vbUserId := inSession;
-    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+     -- определяется <Торговая сеть>
+     vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
     
+
+     -- Поиск
+     vbId:= (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.ObjectId = inGoodsId AND MovementItem.isErased = FALSE);
+     -- Проверка что б такого элемента не было - т.е. ошибку лайт)
+     IF COALESCE (vbId, 0) <> 0 AND COALESCE (inId, 0) = 0
+     THEN
+        RETURN QUERY
+        SELECT MovementItem.Id    AS ioId
+             , inPrice            AS ioPrice
+             , inPartnerGoodsCode AS ioPartnerGoodsCode
+             , inPartnerGoodsName AS ioPartnerGoodsName
+             , inJuridicalName    AS ioJuridicalName
+             , inContractName     AS ioContractName
+             , (CEIL(inAmount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1) * inPrice) :: TFloat AS outSumm
+             , (CEIL(inAmount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))           :: TFloat AS outCalcAmount
+             , (COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((inAmount + COALESCE (MIFloat_AmountSecond.ValueData,0)) / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))) * inPrice) :: TFloat AS outSummAll
+             , (inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) :: TFloat AS outAmountAll
+             , COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) :: TFloat AS outCalcAmountAll
+
+            , MovementItem.Amount            AS outAmount
+             , ('Ошибка.' || CHR (13) || 'Для товара <' || || '> уже сформировано кол-во заказа = <' || || '>.' || CHR (13) || 'Информация обновилась.') :: TVarChar AS outMessageText 
+
+        FROM MovementItem
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                               ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                               ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+        WHERE MovementItem.Id = vbId_find;
+        -- Выход.
+        RETURN QUERY
+
+     END IF;
+
+
     IF inJuridicalName = '' THEN 
         PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, inGoodsId, vbUserId);
         SELECT MinPrice.Price
@@ -138,18 +177,20 @@ BEGIN
            , vbCalcAmount
            , vbSummAll
            , vbAmountAll
-           , vbCalcAmountAll;
+           , vbCalcAmountAll
+           , inAmount       AS outAmount
+           , '' :: TVarChar AS outMessageText
+          ;
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.03.16                                        * add ошибка лайт
  06.02.15                         *
  23.10.14                         *
  03.07.14                                                       *
