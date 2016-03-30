@@ -233,20 +233,13 @@ object Form1: TForm1
   object qryPrice: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      
-        'Select * from gpSelect_Object_Price(:UnitId, :StartDate, False,F' +
-        'alse,'#39'3'#39');')
+      'Select * from gpSelect_Object_Price(:UnitId, False,False,'#39'3'#39');')
     Params = <
       item
         DataType = ftInteger
         Name = 'UnitId'
         ParamType = ptInput
         Value = 0
-      end
-      item
-        DataType = ftDate
-        Name = 'StartDate'
-        ParamType = ptInput
       end>
     Left = 216
     Top = 104
@@ -256,11 +249,6 @@ object Form1: TForm1
         Name = 'UnitId'
         ParamType = ptInput
         Value = 0
-      end
-      item
-        DataType = ftDate
-        Name = 'StartDate'
-        ParamType = ptInput
       end>
   end
   object Timer1: TTimer
