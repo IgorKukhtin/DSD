@@ -58,14 +58,14 @@ BEGIN
              , inPartnerGoodsName AS ioPartnerGoodsName
              , inJuridicalName    AS ioJuridicalName
              , inContractName     AS ioContractName
-             , (CEIL(inAmount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1) * inPrice) :: TFloat AS outSumm
-             , (CEIL(inAmount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))           :: TFloat AS outCalcAmount
-             , (COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((inAmount + COALESCE (MIFloat_AmountSecond.ValueData,0)) / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))) * inPrice) :: TFloat AS outSummAll
-             , (inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) :: TFloat AS outAmountAll
-             , COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) :: TFloat AS outCalcAmountAll
+             , (CEIL (MovementItem.Amount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1) * inPrice) :: TFloat AS outSumm
+             , (CEIL (MovementItem.Amount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))           :: TFloat AS outCalcAmount
+             , (COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0)) / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))) * inPrice) :: TFloat AS outSummAll
+             , (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) :: TFloat AS outAmountAll
+             , COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) :: TFloat AS outCalcAmountAll
 
             , MovementItem.Amount            AS outAmount
-             , ('Ошибка.' || CHR (13) || 'Для товара <' || || '> уже сформировано кол-во заказа = <' || || '>.' || CHR (13) || 'Информация обновилась.') :: TVarChar AS outMessageText 
+             , ('Ошибка.' || CHR (13) || 'Для товара <' || lfGet_Object_ValueData (MovementItem.ObjectId) || '> уже сформировано кол-во заказа = <' || MovementItem.Amount :: TVarChar || '>.' || CHR (13) || 'Информация обновлена.') :: TVarChar AS outMessageText 
 
         FROM MovementItem
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
@@ -74,9 +74,11 @@ BEGIN
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                                ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                               AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-        WHERE MovementItem.Id = vbId_find;
-        -- Выход.
-        RETURN QUERY
+                                              AND MIFloat_AmountManual.ValueData <> 0
+        WHERE MovementItem.Id = vbId;
+
+        -- !!!Выход!!!
+        RETURN;
 
      END IF;
 

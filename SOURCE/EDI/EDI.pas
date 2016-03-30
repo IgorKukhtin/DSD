@@ -65,10 +65,21 @@ type
     // квитанция
     procedure ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
     procedure RecadvLoad(spHeader: TdsdStoredProc; Directory: String);
+
     procedure DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet; StoredProc: TdsdStoredProc;
       Directory: String; DebugMode: boolean);
+    procedure lpDeclarSave_start(HeaderDataSet, ItemsDataSet: TDataSet; StoredProc: TdsdStoredProc;
+      Directory: String; DebugMode: boolean);
+    procedure lpDeclarSave_start01042016(HeaderDataSet, ItemsDataSet: TDataSet; StoredProc: TdsdStoredProc;
+      Directory: String; DebugMode: boolean);
+
     procedure DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;  StoredProc: TdsdStoredProc;
       Directory: String; DebugMode: boolean);
+    procedure lpDeclarReturnSave_start(HeaderDataSet, ItemsDataSet: TDataSet;  StoredProc: TdsdStoredProc;
+      Directory: String; DebugMode: boolean);
+    procedure lpDeclarReturnSave_start01042016(HeaderDataSet, ItemsDataSet: TDataSet;  StoredProc: TdsdStoredProc;
+      Directory: String; DebugMode: boolean);
+
     //
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String;
       StartDate, EndDate: TDateTime);
@@ -403,6 +414,41 @@ end;
 
 procedure TEDI.DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;
   StoredProc: TdsdStoredProc; Directory: String; DebugMode: boolean);
+var F: TFormatSettings;
+begin
+     F.DateSeparator := '.';
+     F.TimeSeparator := ':';
+     F.ShortDateFormat := 'dd.mm.yyyy';
+     F.ShortTimeFormat := 'hh24:mi:ss';
+
+     if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.04.2016', F)
+     then lpDeclarReturnSave_start01042016(HeaderDataSet, ItemsDataSet, StoredProc, Directory, DebugMode)
+     else lpDeclarReturnSave_start(HeaderDataSet, ItemsDataSet, StoredProc, Directory, DebugMode);
+end;
+
+procedure TEDI.lpDeclarReturnSave_start(HeaderDataSet, ItemsDataSet: TDataSet;
+  StoredProc: TdsdStoredProc; Directory: String; DebugMode: boolean);
+const
+  C_DOC = 'J12';
+  C_DOC_SUB = '012';
+  C_DOC_CNT = '1';
+  C_REG = '28';
+  C_RAJ = '01';
+  PERIOD_TYPE = '1';
+  C_DOC_STAN = '1';
+var
+  DECLAR: IXMLDECLARType;
+  i: integer;
+  XMLFileName, P7SFileName, C_DOC_TYPE: string;
+  lDirectory: string;
+  C_DOC_VER: string;
+  F: TFormatSettings;
+begin
+
+end;
+
+procedure TEDI.lpDeclarReturnSave_start01042016(HeaderDataSet, ItemsDataSet: TDataSet;
+  StoredProc: TdsdStoredProc; Directory: String; DebugMode: boolean);
 const
   C_DOC = 'J12';
   C_DOC_SUB = '012';
@@ -423,6 +469,7 @@ begin
    F.TimeSeparator := ':';
    F.ShortDateFormat := 'dd.mm.yyyy';
    F.ShortTimeFormat := 'hh24:mi:ss';
+
    if HeaderDataSet.FieldByName('OperDate').asDateTime < StrToDateTime( '01.12.2014', F) then
      C_DOC_VER := '5'
    else begin
@@ -738,6 +785,41 @@ end;
 
 procedure TEDI.DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet;
      StoredProc: TdsdStoredProc;  Directory: String; DebugMode: boolean);
+var F: TFormatSettings;
+begin
+     F.DateSeparator := '.';
+     F.TimeSeparator := ':';
+     F.ShortDateFormat := 'dd.mm.yyyy';
+     F.ShortTimeFormat := 'hh24:mi:ss';
+
+     if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.04.2016', F)
+     then lpDeclarSave_start01042016(HeaderDataSet, ItemsDataSet, StoredProc, Directory, DebugMode)
+     else lpDeclarSave_start(HeaderDataSet, ItemsDataSet, StoredProc, Directory, DebugMode);
+end;
+
+procedure TEDI.lpDeclarSave_start01042016(HeaderDataSet, ItemsDataSet: TDataSet;
+     StoredProc: TdsdStoredProc;  Directory: String; DebugMode: boolean);
+const
+  C_DOC = 'J12';
+  C_DOC_SUB = '010';
+  C_DOC_CNT = '1';
+  C_REG = '28';
+  C_RAJ = '01';
+  PERIOD_TYPE = '1';
+  C_DOC_STAN = '1';
+var
+  DECLAR: IXMLDECLARType;
+  i: integer;
+  XMLFileName, P7SFileName, C_DOC_TYPE: string;
+  lDirectory: string;
+  C_DOC_VER: string;
+  F: TFormatSettings;
+begin
+
+end;
+
+procedure TEDI.lpDeclarSave_start(HeaderDataSet, ItemsDataSet: TDataSet;
+     StoredProc: TdsdStoredProc;  Directory: String; DebugMode: boolean);
 const
   C_DOC = 'J12';
   C_DOC_SUB = '010';
@@ -758,6 +840,7 @@ begin
    F.TimeSeparator := ':';
    F.ShortDateFormat := 'dd.mm.yyyy';
    F.ShortTimeFormat := 'hh24:mi:ss';
+
    // создать xml файл
    C_DOC_TYPE := IntToStr(HeaderDataSet.FieldByName('SendDeclarAmount')
     .asInteger);
