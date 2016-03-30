@@ -815,7 +815,245 @@ var
   C_DOC_VER: string;
   F: TFormatSettings;
 begin
+   F.DateSeparator := '.';
+   F.TimeSeparator := ':';
+   F.ShortDateFormat := 'dd.mm.yyyy';
+   F.ShortTimeFormat := 'hh24:mi:ss';
 
+   // создать xml файл
+   C_DOC_TYPE := IntToStr(HeaderDataSet.FieldByName('SendDeclarAmount').asInteger);
+
+  C_DOC_VER := '8';
+
+  DECLAR := NewDECLAR;
+  DECLAR.OwnerDocument.Encoding := 'WINDOWS-1251';
+  DECLAR.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_From').asString;
+  DECLAR.DECLARHEAD.C_DOC := C_DOC;
+  DECLAR.DECLARHEAD.C_DOC_SUB := C_DOC_SUB;
+  DECLAR.DECLARHEAD.C_DOC_VER := C_DOC_VER;
+  DECLAR.DECLARHEAD.C_DOC_TYPE := C_DOC_TYPE;
+  DECLAR.DECLARHEAD.C_DOC_CNT :=
+    copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1, 7);
+  DECLAR.DECLARHEAD.C_REG := C_REG;
+  DECLAR.DECLARHEAD.C_RAJ := C_RAJ;
+  DECLAR.DECLARHEAD.PERIOD_MONTH := FormatDateTime('mm',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  DECLAR.DECLARHEAD.PERIOD_TYPE := PERIOD_TYPE;
+  DECLAR.DECLARHEAD.PERIOD_YEAR := FormatDateTime('yyyy',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  DECLAR.DECLARHEAD.C_STI_ORIG := C_REG + C_RAJ;
+  DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
+  DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName
+    ('BuyerGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
+    ('SupplierGLNCode').asString;
+
+
+  if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
+  begin
+     // Не видається покупцю  / причина
+     DECLAR.DECLARBODY.HORIG1 := '1';
+     DECLAR.DECLARBODY.HTYPR := HeaderDataSet.FieldByName('NotNDSPayerC1').asString + HeaderDataSet.FieldByName('NotNDSPayerC2').asString;
+  end;
+
+   if HeaderDataSet.FieldByName('TaxKind').asString <> '' then
+     //До зведеної податкової накладної
+     DECLAR.DECLARBODY.H03 := '1';
+
+  DECLAR.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  DECLAR.DECLARBODY.HNUM := trim(HeaderDataSet.FieldByName('InvNumberPartner')
+    .asString);
+  DECLAR.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName
+    ('JuridicalName_From').asString;
+  DECLAR.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName
+    ('JuridicalName_To').asString;
+  DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').asString;
+  DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').asString;
+
+  //итоговые суммы
+  DECLAR.DECLARBODY.R01G7 :=
+    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  DECLAR.DECLARBODY.R03G7 :=
+    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  DECLAR.DECLARBODY.R03G11 := DECLAR.DECLARBODY.R03G7;
+  DECLAR.DECLARBODY.R04G11 :=
+    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+  //Посадова (уповноважена) особа/фізична особа
+  DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
+  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').asString;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG3S.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := ItemsDataSet.FieldByName('GoodsName').asString + ';GTIN:' +
+        ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString + ';IDBY:' +
+        ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG4S.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := ItemsDataSet.FieldByName('MeasureName').asString;
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG105_2S.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := ItemsDataSet.FieldByName('MeasureCode').asString;
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG5.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('Amount').AsFloat);
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG6.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('PriceNoVAT').AsFloat);
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG008.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := StringReplace(FormatFloat('0.00',
+        HeaderDataSet.FieldByName('VATPersent').AsFloat),
+        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG010.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := StringReplace(FormatFloat('0.00',
+        ItemsDataSet.FieldByName('AmountSummNoVat_12').AsFloat),
+        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+
+  // путь к файлу
+  if SendToFTP then
+    lDirectory := ExtractFilePath(ParamStr(0))
+  else
+    lDirectory := Self.Directory;
+
+  if not DirectoryExists(lDirectory) then
+    ForceDirectories(lDirectory);
+
+  XMLFileName := lDirectory + C_REG + C_RAJ +
+    PAD0(HeaderDataSet.FieldByName('OKPO_From').asString, 10) + C_DOC +
+    C_DOC_SUB + '0' + C_DOC_VER + C_DOC_STAN + '0' + C_DOC_TYPE +
+    PAD0(copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1,
+    7), 7) + '1' + FormatDateTime('mmyyyy',
+    HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.p7s';
+  DECLAR.OwnerDocument.SaveToFile(XMLFileName);
+  if not SendToFTP then begin
+     if Assigned(StoredProc) then
+        StoredProc.Execute;
+     exit;
+  end;
+  P7SFileName := XMLFileName; //StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
+  try
+    // подписать
+    SignFile(XMLFileName, stDeclar, DebugMode);
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+    begin
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+        'Налоговая сформирована и подписана';
+      FInsertEDIEvents.Execute;
+    end;
+    // перекинуть на FTP
+    PutFileToFTP(P7SFileName, '/outbox');
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+    begin
+      // Увеличить счетчик отправок
+      FUpdateDeclarAmount.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateDeclarAmount.ParamByName('inAmount').Value :=
+        StrToInt(C_DOC_TYPE) + 1;
+      FUpdateDeclarAmount.Execute;
+
+      FUpdateDeclarFileName.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateDeclarFileName.ParamByName('inFileName').Value :=
+        ExtractFileName(XMLFileName);
+      FUpdateDeclarFileName.Execute;
+
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+      FUpdateEDIErrorState.Execute;
+
+      // Записать данные в протокол
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+        'Налоговая отправлена на FTP';
+      FInsertEDIEvents.Execute;
+    end;
+  finally
+    // удалить файлы
+    if FileExists(XMLFileName) then
+      DeleteFile(XMLFileName);
+    if FileExists(P7SFileName) then
+      DeleteFile(P7SFileName);
+  end;
 end;
 
 procedure TEDI.lpDeclarSave_start(HeaderDataSet, ItemsDataSet: TDataSet;
