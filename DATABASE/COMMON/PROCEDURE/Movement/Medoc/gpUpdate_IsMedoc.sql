@@ -25,6 +25,10 @@ BEGIN
    WHERE COALESCE (MovementBoolean.ValueData, FALSE) = FALSE
    ;
 
+   -- сохранили протокол
+   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

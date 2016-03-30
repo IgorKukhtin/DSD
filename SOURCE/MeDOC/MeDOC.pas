@@ -11,6 +11,7 @@ type
     procedure CreateJ1201005XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201006XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201007XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201008XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   public
     procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   end;
@@ -20,6 +21,7 @@ type
     procedure CreateJ1201205XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201206XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201207XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201208XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   public
     procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   end;
@@ -302,6 +304,14 @@ begin
   ZVIT.OwnerDocument.SaveToFile(FileName);
 end;
 
+procedure TMedoc.CreateJ1201008XMLFile(HeaderDataSet, ItemsDataSet: TDataSet;
+  FileName: string);
+var
+  ZVIT: IXMLZVITType;
+  i: integer;
+begin
+
+end;
 procedure TMedoc.CreateJ1201007XMLFile(HeaderDataSet, ItemsDataSet: TDataSet;
   FileName: string);
 var
@@ -786,6 +796,15 @@ begin
 
   ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
   ZVIT.OwnerDocument.SaveToFile(FileName);
+end;
+
+procedure TMedocCorrective.CreateJ1201208XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+var
+  ZVIT: IXMLZVITType;
+  i: integer;
+  DocumentSumm: double;
+begin
+
 end;
 
 procedure TMedocCorrective.CreateJ1201207XMLFile(HeaderDataSet,
