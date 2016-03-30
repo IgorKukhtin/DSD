@@ -423,7 +423,8 @@ begin
            //Ціна постачання одиниці товару\послуги
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Код ставки
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00',HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A10', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
@@ -1085,7 +1086,7 @@ begin
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.###', 1 * FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
            //Код ставки
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A011', ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A011', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A013', ReplaceStr(FormatFloat('0.00', - FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
