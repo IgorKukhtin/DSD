@@ -3,8 +3,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientHeight = 535
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
+  ExplicitLeft = -345
   ExplicitWidth = 1134
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -813,13 +814,13 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actUpdateIsMedoc
+        end
+        item
           Action = actMedocProcedure
         end
         item
           Action = MedocAction
-        end
-        item
-          Action = actUpdateIsMedoc
         end
         item
           Action = actRefresh
@@ -1039,13 +1040,13 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actUpdateIsMedoc
+        end
+        item
           Action = spTaxPrint
         end
         item
           Action = MedocCorrectiveActionList
-        end
-        item
-          Action = actUpdateIsMedoc
         end>
       View = cxGridDBTableView
       Caption = 'mactMEDOCList'

@@ -4,7 +4,7 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -990,13 +990,13 @@ inherited TaxJournalForm: TTaxJournalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actUpdateIsMedoc
+        end
+        item
           Action = actSelectTax_Medoc
         end
         item
           Action = MedocAction
-        end
-        item
-          Action = actUpdateIsMedoc
         end
         item
           Action = actRefresh
@@ -1052,13 +1052,13 @@ inherited TaxJournalForm: TTaxJournalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actUpdateIsMedoc
+        end
+        item
           Action = actSelectTax_Medoc_list
         end
         item
           Action = MedocListAction
-        end
-        item
-          Action = actUpdateIsMedoc
         end>
       View = cxGridDBTableView
       Caption = 'mactMEDOCList'
