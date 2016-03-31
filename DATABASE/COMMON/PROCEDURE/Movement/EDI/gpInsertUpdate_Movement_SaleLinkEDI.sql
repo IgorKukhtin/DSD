@@ -44,8 +44,9 @@ AS
 $BODY$
 DECLARE
    vbUserId Integer;
+
    vbMovementId_EDI Integer;
-   vbMessageText Text;
+   vbMessageText    Text;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SaleLinkEDI());
