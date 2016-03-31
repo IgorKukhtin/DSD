@@ -808,6 +808,7 @@ BEGIN
                  AND vbIsLastOnMonth = TRUE
                  AND (_tmpRemainsSumm.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000(), zc_Enum_InfoMoneyGroup_30000()) -- Основное сырье + Доходы
                    OR _tmpRemainsSumm.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20600(), zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20800(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_21300()) -- Прочие материалы + Товары + Ирна + Чапли + Дворкин + Незавершенное производство
+                   OR _tmpRemainsSumm.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300(), zc_Enum_InfoMoneyDestination_20400(), zc_Enum_InfoMoneyDestination_20500()) -- ...........
                     ))
 
                  OR (vbUnitId IN (8413   -- Склад ГП ф.Кривой Рог
@@ -882,7 +883,6 @@ BEGIN
                                   AND HistoryCost.MovementItemId_diff = tmp_all.MovementItemId
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
        ;
-
 
      -- 3.2. определяется Счет для проводок по суммовому учету
      UPDATE _tmpItemSumm SET AccountId = _tmpItem_byAccount.AccountId
