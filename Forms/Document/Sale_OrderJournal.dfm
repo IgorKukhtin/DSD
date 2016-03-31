@@ -2186,6 +2186,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
     object actGet_Export_FileName: TdsdExecStoredProc
       Category = 'Export_Email'
       MoveParams = <>
@@ -2821,6 +2825,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

@@ -97,6 +97,7 @@ type
     actInsertMaskMulti: TMultiAction;
     bbInsertMaskMulti: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

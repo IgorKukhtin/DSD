@@ -979,6 +979,10 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
       Caption = 'actCopyTaxCorrective'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
     object MedocAction: TMedocAction
       Category = 'TaxLib'
       MoveParams = <>
@@ -1610,6 +1614,13 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'TaxKindName'
         DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 296
@@ -1820,6 +1831,13 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 201

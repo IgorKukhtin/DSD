@@ -5,9 +5,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_In (Integer, Integer, 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_EDIComdoc_In(
     IN inMovementId      Integer   , --
     IN inUserId          Integer   , -- пользователь
+   OUT outMessageText    Text      ,
     IN inSession         TVarChar    -- сесси€ пользовател€
 )                              
-RETURNS VOID
+RETURNS Text
 AS
 $BODY$
    DECLARE vbMovementId_ReturnIn      Integer;
@@ -200,7 +201,8 @@ BEGIN
     ;
 
      -- сохранили < орректировка к налоговой накладной>
-     SELECT tmp.outMovementId_Corrective INTO vbMovementId_TaxCorrective
+     SELECT tmp.outMovementId_Corrective,  tmp.outMessageText
+            INTO vbMovementId_TaxCorrective, outMessageText
      FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId            := vbMovementId_ReturnIn
                                                          , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Corrective()
                                                          , inDocumentTaxKindId_inf := NULL

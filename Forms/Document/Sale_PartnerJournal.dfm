@@ -5,7 +5,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1114
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1244,6 +1244,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = 'actSPPrintSaleProcName'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
     object actPrint_Tax_ReportName: TdsdExecStoredProc
       Category = 'Print_Tax'
       MoveParams = <>
@@ -2125,6 +2129,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

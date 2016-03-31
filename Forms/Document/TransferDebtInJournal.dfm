@@ -4,7 +4,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -477,7 +477,8 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 23
+    Top = 194
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransferDebtInForm'
       FormNameParam.Value = 'TTransferDebtInForm'
@@ -867,6 +868,10 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   inherited MasterDS: TDataSource
@@ -1300,6 +1305,13 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 296
@@ -1348,6 +1360,13 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

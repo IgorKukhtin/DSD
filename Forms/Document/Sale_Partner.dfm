@@ -3,7 +3,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 422
   ClientWidth = 1259
   ExplicitWidth = 1275
-  ExplicitHeight = 460
+  ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1487,6 +1487,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' '#1074#1072#1083#1102#1090#1077'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' '#1074#1072#1083#1102#1090#1077'.'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
     object actPrint_QualityDoc: TdsdPrintAction
       Category = 'Print_QualityDoc'
       MoveParams = <>
@@ -2910,6 +2914,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

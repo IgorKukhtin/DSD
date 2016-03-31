@@ -57,6 +57,7 @@ type
     Comment: TcxGridDBColumn;
     actInsertMaskMulti: TMultiAction;
     ExecuteDialog: TExecuteDialog;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

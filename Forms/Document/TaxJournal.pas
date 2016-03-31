@@ -113,6 +113,7 @@ type
     isCopy: TcxGridDBColumn;
     colPersonalSigningName: TcxGridDBColumn;
     ExecuteDialog1: TExecuteDialog;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

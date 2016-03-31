@@ -183,6 +183,7 @@ type
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     spUpdate_DateRegistered: TdsdStoredProc;
     actUpdate_DateRegistered: TdsdExecStoredProc;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

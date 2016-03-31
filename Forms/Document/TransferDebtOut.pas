@@ -146,6 +146,7 @@ type
     cxLabel19: TcxLabel;
     edPartnerFrom: TcxButtonEdit;
     GuidesPartnerFrom: TdsdGuides;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

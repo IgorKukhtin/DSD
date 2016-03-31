@@ -109,6 +109,7 @@ type
     MovementPromo: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

@@ -148,6 +148,7 @@ type
     mactPrint_Transport: TMultiAction;
     bbPrint_Transport: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

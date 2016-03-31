@@ -85,6 +85,7 @@ type
     clMeasureName: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

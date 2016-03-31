@@ -5,7 +5,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1258
-  ExplicitHeight = 679
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2180,6 +2180,10 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3067,6 +3071,13 @@ inherited SaleJournalForm: TSaleJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

@@ -2014,8 +2014,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
-    Left = 56
-    Top = 184
+    Left = 40
+    Top = 216
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn'
@@ -2785,6 +2785,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 232
@@ -2906,6 +2913,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 280
@@ -3256,8 +3270,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       item
         Name = 'ouStatusCode'
         Value = Null
-        Component = TaxCorrectiveCDS
-        ComponentItem = 'StatusCode'
       end
       item
         Name = 'outMessageText'
