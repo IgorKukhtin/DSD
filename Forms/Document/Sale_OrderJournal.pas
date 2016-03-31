@@ -208,6 +208,7 @@ type
     actSMTPFile: TdsdSMTPFileAction;
     ExportEmailCDS: TClientDataSet;
     ExportEmailDS: TDataSource;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

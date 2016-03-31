@@ -4,7 +4,7 @@
   ClientWidth = 1261
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1277
-  ExplicitHeight = 683
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1856,6 +1856,10 @@
         end>
       Caption = 'actSPSavePrintState'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3379,6 +3383,13 @@
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 456
@@ -3798,6 +3809,13 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'MessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 632

@@ -3,7 +3,6 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -511
   ExplicitWidth = 1300
   ExplicitHeight = 488
   PixelsPerInch = 96
@@ -1536,6 +1535,10 @@ inherited EDIJournalForm: TEDIJournalForm
         end>
       isShowModal = False
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
     object actUpdateEdiOrdsprTrue: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
@@ -2398,6 +2401,13 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerNameFind'
+        DataType = ftString
+      end
+      item
+        Name = 'MessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

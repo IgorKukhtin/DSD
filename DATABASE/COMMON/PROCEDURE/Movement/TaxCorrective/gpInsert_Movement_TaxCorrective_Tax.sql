@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS gpInsert_Movement_TaxCorrective_Tax (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_TaxCorrective_Tax(
     IN inMovementId_from     Integer   , -- Ключ объекта <Документ>
+   OUT outMessageText        Text      ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID 
+RETURNS Text
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -101,8 +102,8 @@ BEGIN
      IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_Complete_TaxCorrective())
      THEN
          -- Проводим Документ
-         PERFORM lpComplete_Movement_TaxCorrective (inMovementId := vbMovementId_to
-                                                  , inUserId     := vbUserId);
+         outMessageText:= lpComplete_Movement_TaxCorrective (inMovementId := vbMovementId_to
+                                                           , inUserId     := vbUserId);
      END IF;
 
 

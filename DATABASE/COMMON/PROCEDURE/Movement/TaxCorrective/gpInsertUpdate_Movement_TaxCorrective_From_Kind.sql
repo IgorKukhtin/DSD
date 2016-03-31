@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (
    OUT outDocumentTaxKindId     Integer  , --
    OUT outDocumentTaxKindName   TVarChar , --
    OUT outMovementId_Corrective Integer  , --
+   OUT outMessageText           Text     ,
     IN inSession                TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
@@ -644,10 +645,12 @@ BEGIN
      FROM (SELECT DISTINCT MovementId_Corrective FROM _tmpResult) AS tmpResult_update;
 
 
-     -- ФИНИШ - Проводим все <Налоговые документы>
-     PERFORM lpComplete_Movement_TaxCorrective (inMovementId := tmpResult_complete.MovementId_Corrective
-                                              , inUserId     := vbUserId)
-     FROM (SELECT DISTINCT MovementId_Corrective FROM _tmpResult) AS tmpResult_complete;
+     -- ФИНИШ - Проводим все <Налоговые документы (Корректировки)>
+     outMessageText:= (SELECT MAX (COALESCE (lpComplete_Movement_TaxCorrective (inMovementId := tmpResult_complete.MovementId_Corrective
+                                                                              , inUserId     := vbUserId)
+                                           , ''))
+                       FROM (SELECT DISTINCT MovementId_Corrective FROM _tmpResult) AS tmpResult_complete
+                      );
 
 
      -- результат

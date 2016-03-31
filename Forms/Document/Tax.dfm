@@ -3,7 +3,7 @@ inherited TaxForm: TTaxForm
   ClientHeight = 668
   ClientWidth = 1067
   ExplicitWidth = 1083
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -682,6 +682,10 @@ inherited TaxForm: TTaxForm
           StoredProc = spGetReporNameTax
         end>
       Caption = 'actSPPrintTaxProcName'
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
     object MedocAction: TMedocAction
       Category = 'TaxLib'
@@ -1893,6 +1897,13 @@ inherited TaxForm: TTaxForm
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

@@ -859,7 +859,6 @@ begin
 
    if HeaderDataSet.FieldByName('TaxKind').asString <> '' then
      //До зведеної податкової накладної
-     DECLAR.DECLARBODY.H03 := '1';
 
   DECLAR.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
@@ -885,8 +884,6 @@ begin
     .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
   //Посадова (уповноважена) особа/фізична особа
-  DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
-  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').asString;
 
   i := 1;
   ItemsDataSet.First;
@@ -955,35 +952,7 @@ begin
     ItemsDataSet.Next;
   end;
 
-  i := 1;
-  ItemsDataSet.First;
-  while not ItemsDataSet.Eof do
-  begin
-    with DECLAR.DECLARBODY.RXXXXG008.Add do
-    begin
-      ROWNUM := IntToStr(i);
-      NodeValue := StringReplace(FormatFloat('0.00',
-        HeaderDataSet.FieldByName('VATPersent').AsFloat),
-        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-    end;
-    inc(i);
-    ItemsDataSet.Next;
-  end;
 
-  i := 1;
-  ItemsDataSet.First;
-  while not ItemsDataSet.Eof do
-  begin
-    with DECLAR.DECLARBODY.RXXXXG010.Add do
-    begin
-      ROWNUM := IntToStr(i);
-      NodeValue := StringReplace(FormatFloat('0.00',
-        ItemsDataSet.FieldByName('AmountSummNoVat_12').AsFloat),
-        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-    end;
-    inc(i);
-    ItemsDataSet.Next;
-  end;
 
 
   // путь к файлу

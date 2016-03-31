@@ -2941,6 +2941,13 @@ inherited ReturnInForm: TReturnInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 232
@@ -3062,6 +3069,13 @@ inherited ReturnInForm: TReturnInForm
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 280
@@ -3412,8 +3426,6 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'ouStatusCode'
         Value = Null
-        Component = TaxCorrectiveCDS
-        ComponentItem = 'StatusCode'
       end
       item
         Name = 'outMessageText'

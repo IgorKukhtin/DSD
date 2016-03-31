@@ -37,12 +37,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isCheck Boolean
              , isElectron Boolean
              , isError Boolean
+
+             , MessageText Text
               )
 AS
 $BODY$
 DECLARE
-   vbMovementId_EDI Integer;
    vbUserId Integer;
+   vbMovementId_EDI Integer;
+   vbMessageText Text;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SaleLinkEDI());
@@ -157,10 +160,10 @@ BEGIN
      IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId_EDI AND MovementString.DescId = zc_MovementString_Desc())
      THEN
           -- !!!создаются док-ты <Возврат от покупателя> и <Корректировка к налоговой накладной>!!!
-          PERFORM lpInsertUpdate_Movement_EDIComdoc_In (inMovementId    := inMovementId_EDI
-                                                      , inUserId        := vbUserId
-                                                      , inSession       := inSession
-                                                       );
+          vbMessageText:= lpInsertUpdate_Movement_EDIComdoc_In (inMovementId    := inMovementId_EDI
+                                                              , inUserId        := vbUserId
+                                                              , inSession       := inSession
+                                                               );
      -- END !!!так для возврата!!!
 
      ELSE
@@ -180,11 +183,13 @@ BEGIN
      END IF;
      END IF;
 
-
+     -- Результат     
      RETURN QUERY 
-     SELECT * FROM lpGet_Movement_EDI (inMovementId:= inMovementId_EDI
-                                     , inUserId    := vbUserId
-                                      );
+     SELECT tmp.*
+          , vbMessageText AS MessageText
+     FROM lpGet_Movement_EDI (inMovementId:= inMovementId_EDI
+                            , inUserId    := vbUserId
+                             ) AS tmp;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

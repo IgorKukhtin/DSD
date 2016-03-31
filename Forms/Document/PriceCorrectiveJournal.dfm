@@ -4,7 +4,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -372,7 +372,8 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 15
+    Top = 194
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPriceCorrectiveForm'
       FormNameParam.Value = 'TPriceCorrectiveForm'
@@ -691,6 +692,10 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   inherited MasterDS: TDataSource
@@ -1077,6 +1082,13 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

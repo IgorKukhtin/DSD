@@ -210,6 +210,7 @@ type
     mactPrint_Transport: TMultiAction;
     actPrint_Transport: TdsdPrintAction;
     actPrint_Transport_ReportName: TdsdExecStoredProc;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 408
   ClientWidth = 1261
   ExplicitWidth = 1277
-  ExplicitHeight = 446
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1731,6 +1731,10 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Caption = 'actSPSavePrintState'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
     object actPrint_Transport: TdsdPrintAction
       Category = 'Print_TTN'
       MoveParams = <>
@@ -3263,6 +3267,13 @@ inherited Sale_OrderForm: TSale_OrderForm
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

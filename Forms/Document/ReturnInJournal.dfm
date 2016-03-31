@@ -4,7 +4,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1122
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -543,7 +543,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 31
+    Top = 138
     inherited actInsert: TdsdInsertUpdateAction [0]
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
@@ -1015,6 +1016,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1425,6 +1430,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 296
@@ -1566,6 +1578,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1

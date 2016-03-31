@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (
    OUT outInvNumberPartner_Master   TVarChar , --
    OUT outDocumentTaxKindId         Integer  , --
    OUT outDocumentTaxKindName       TVarChar , --
+   OUT outMessageText               Text     ,
     IN inUserId                     Integer    -- пользователь
 )
 RETURNS RECORD
@@ -823,8 +824,8 @@ BEGIN
      -- ФИНИШ - Проводим Корректировку
      IF vbMovementId_TaxCorrective <> 0
      THEN
-         PERFORM lpComplete_Movement_TaxCorrective (inMovementId := vbMovementId_TaxCorrective
-                                                  , inUserId     := inUserId);
+         outMessageText:= lpComplete_Movement_TaxCorrective (inMovementId := vbMovementId_TaxCorrective
+                                                           , inUserId     := inUserId);
      END IF;
 
 
@@ -868,4 +869,4 @@ ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 */
 
 -- тест
--- select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 328405 , inDocumentTaxKindId := 80788 , inDocumentTaxKindId_inf := 80788 ,  inSession := '5');
+-- select * from lpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 328405 , inDocumentTaxKindId := 80788 , inDocumentTaxKindId_inf := 80788 ,  inSession := '5');

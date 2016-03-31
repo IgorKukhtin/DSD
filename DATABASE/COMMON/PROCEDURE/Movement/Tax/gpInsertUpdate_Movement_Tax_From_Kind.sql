@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (
    OUT outInvNumberPartner_Master   TVarChar , --
    OUT outDocumentTaxKindId         Integer  , --
    OUT outDocumentTaxKindName       TVarChar , --
+   OUT outMessageText               Text     ,
     IN inSession                    TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
@@ -20,8 +21,8 @@ BEGIN
       vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind());
 
      -- сохранили и вернули параметры
-     SELECT tmp.outInvNumberPartner_Master, tmp.outDocumentTaxKindId, tmp.outDocumentTaxKindName
-            INTO outInvNumberPartner_Master, outDocumentTaxKindId, outDocumentTaxKindName
+     SELECT tmp.outInvNumberPartner_Master, tmp.outDocumentTaxKindId, tmp.outDocumentTaxKindName, tmp.outMessageText
+            INTO outInvNumberPartner_Master, outDocumentTaxKindId, outDocumentTaxKindName, outMessageText
      FROM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
                                                , inDocumentTaxKindId     := inDocumentTaxKindId
                                                , inDocumentTaxKindId_inf := inDocumentTaxKindId_inf

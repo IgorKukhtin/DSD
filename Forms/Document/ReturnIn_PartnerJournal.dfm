@@ -4,7 +4,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1122
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -541,7 +541,8 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 15
+    Top = 130
     inherited actInsert: TdsdInsertUpdateAction [0]
       FormName = 'TReturnIn_PartnerForm'
       FormNameParam.Value = 'TReturnIn_PartnerForm'
@@ -1013,6 +1014,10 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         end>
       Caption = 'spChecked'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1421,6 +1426,13 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 296
@@ -1562,6 +1574,13 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
       end>
     PackSize = 1
