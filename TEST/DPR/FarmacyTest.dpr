@@ -405,7 +405,8 @@ uses
   Report_RemainGoodsDialog in '..\..\FormsFarmacy\Report\Report_RemainGoodsDialog.pas' {Report_GoodsRemainsDialogForm: TParentForm},
   Report_MovementCheckFarmDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckFarmDialog.pas' {Report_MovementCheckFarmDialogForm: TParentForm},
   ReportMovementCheckFarm in '..\..\FormsFarmacy\Report\ReportMovementCheckFarm.pas' {ReportMovementCheckFarmForm: TParentForm},
-  Report_PriceIntervention in '..\..\FormsFarmacy\Report\Report_PriceIntervention.pas' {Report_PriceInterventionForm: TParentForm};
+  Report_PriceIntervention in '..\..\FormsFarmacy\Report\Report_PriceIntervention.pas' {Report_PriceInterventionForm: TParentForm},
+  Report_MovementIncomeDialog in '..\..\FormsFarmacy\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
