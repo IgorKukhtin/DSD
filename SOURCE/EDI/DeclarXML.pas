@@ -84,6 +84,11 @@ type
   IXMLDECLARBODYType = interface(IXMLNode)
     ['{C71FD00F-DC4D-4D88-B552-5595D3AF198F}']
     { Property Accessors }
+
+    function Get_HBOS: UnicodeString; // ***1
+    function Get_HKBOS: UnicodeString; // ***1
+    function Get_H03: UnicodeString; // ***1
+
     function Get_HORIG: UnicodeString;
     function Get_HORIG1: UnicodeString;
     function Get_HTYPR: UnicodeString;
@@ -129,6 +134,10 @@ type
     function Get_RXXXXG7: IXMLRXXXXTypeList;
     function Get_RXXXXG8: IXMLRXXXXTypeList;
     function Get_RXXXXG9: IXMLRXXXXTypeList;
+
+    function Get_RXXXXG008: IXMLRXXXXTypeList;  //
+    function Get_RXXXXG010: IXMLRXXXXTypeList;  //
+
     function Get_R01G7: UnicodeString;
     function Get_R01G9: UnicodeString;
     function Get_R01G11: UnicodeString;
@@ -137,6 +146,11 @@ type
     function Get_R03G11: UnicodeString;
     function Get_R04G7: UnicodeString;
     function Get_R04G11: UnicodeString;
+
+    procedure Set_HBOS(Value: UnicodeString); // ***2
+    procedure Set_HKBOS(Value: UnicodeString); // ***2
+    procedure Set_H03(Value: UnicodeString); // ***2
+
     procedure Set_HORIG(Value: UnicodeString);
     procedure Set_HORIG1(Value: UnicodeString);
     procedure Set_HTYPR(Value: UnicodeString);
@@ -177,6 +191,10 @@ type
     procedure Set_R04G7(Value: UnicodeString);
     procedure Set_R04G11(Value: UnicodeString);
     { Methods & Properties }
+    property HBOS: UnicodeString read Get_HBOS write Set_HBOS; //***3
+    property HKBOS: UnicodeString read Get_HKBOS write Set_HKBOS; //***3
+    property H03: UnicodeString read Get_H03 write Set_H03; //***3
+
     property HORIG: UnicodeString read Get_HORIG write Set_HORIG;
     property HORIG1: UnicodeString read Get_HORIG1 write Set_HORIG1;
     property HTYPR: UnicodeString read Get_HTYPR write Set_HTYPR;
@@ -222,6 +240,9 @@ type
     property RXXXXG7: IXMLRXXXXTypeList read Get_RXXXXG7;
     property RXXXXG8: IXMLRXXXXTypeList read Get_RXXXXG8;
     property RXXXXG9: IXMLRXXXXTypeList read Get_RXXXXG9;
+    property RXXXXG008: IXMLRXXXXTypeList read Get_RXXXXG008; //
+    property RXXXXG010: IXMLRXXXXTypeList read Get_RXXXXG010; //
+
     property R01G7: UnicodeString read Get_R01G7 write Set_R01G7;
     property R01G9: UnicodeString read Get_R01G9 write Set_R01G9;
     property R01G11: UnicodeString read Get_R01G11 write Set_R01G11;
@@ -330,8 +351,14 @@ type
     FRXXXXG7: IXMLRXXXXTypeList;
     FRXXXXG8: IXMLRXXXXTypeList;
     FRXXXXG9: IXMLRXXXXTypeList;
+    FRXXXXG008: IXMLRXXXXTypeList;     //
+    FRXXXXG010: IXMLRXXXXTypeList;     //
   protected
     { IXMLDECLARBODYType }
+    function Get_HBOS: UnicodeString; //***4.1
+    function Get_HKBOS: UnicodeString; //***4.1
+    function Get_H03: UnicodeString; //***4.1
+
     function Get_HORIG: UnicodeString;
     function Get_HORIG1: UnicodeString;
     function Get_HTYPR: UnicodeString;
@@ -377,6 +404,9 @@ type
     function Get_RXXXXG7: IXMLRXXXXTypeList;
     function Get_RXXXXG8: IXMLRXXXXTypeList;
     function Get_RXXXXG9: IXMLRXXXXTypeList;
+    function Get_RXXXXG008: IXMLRXXXXTypeList; //
+    function Get_RXXXXG010: IXMLRXXXXTypeList; //
+
     function Get_R01G7: UnicodeString;
     function Get_R01G9: UnicodeString;
     function Get_R01G11: UnicodeString;
@@ -385,6 +415,11 @@ type
     function Get_R03G11: UnicodeString;
     function Get_R04G7: UnicodeString;
     function Get_R04G11: UnicodeString;
+
+    procedure Set_HBOS(Value: UnicodeString); // ***5.1
+    procedure Set_HKBOS(Value: UnicodeString); // ***5.1
+    procedure Set_H03(Value: UnicodeString); // ***5.1
+
     procedure Set_HORIG(Value: UnicodeString);
     procedure Set_HORIG1(Value: UnicodeString);
     procedure Set_HTYPR(Value: UnicodeString);
@@ -493,6 +528,7 @@ function TXMLDECLARType.Get_DECLARBODY: IXMLDECLARBODYType;
 begin
   Result := ChildNodes['DECLARBODY'] as IXMLDECLARBODYType;
 end;
+
 
 { TXMLDECLARHEADType }
 
@@ -665,6 +701,8 @@ begin
   RegisterChildNode('RXXXXG7', TXMLRXXXXType);
   RegisterChildNode('RXXXXG8', TXMLRXXXXType);
   RegisterChildNode('RXXXXG9', TXMLRXXXXType);
+  RegisterChildNode('RXXXXG008', TXMLRXXXXType);    //
+  RegisterChildNode('RXXXXG010', TXMLRXXXXType);    //
 
   FRXXXXG1D := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG1D') as IXMLRXXXXTypeList;
   FRXXXXG2D := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG2D') as IXMLRXXXXTypeList;
@@ -681,7 +719,24 @@ begin
   FRXXXXG7 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG7') as IXMLRXXXXTypeList;
   FRXXXXG8 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG8') as IXMLRXXXXTypeList;
   FRXXXXG9 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG9') as IXMLRXXXXTypeList;
+  FRXXXXG008 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG008') as IXMLRXXXXTypeList;  //
+  FRXXXXG010 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG010') as IXMLRXXXXTypeList;  //
   inherited;
+end;
+
+function TXMLDECLARBODYType.Get_HBOS: UnicodeString; //***4.2
+begin
+  Result := ChildNodes['HBOS'].Text;
+end;
+
+function TXMLDECLARBODYType.Get_HKBOS: UnicodeString; //***4.2
+begin
+  Result := ChildNodes['HKBOS'].Text;
+end;
+
+function TXMLDECLARBODYType.Get_H03: UnicodeString; //***4.2
+begin
+  Result := ChildNodes['H03'].Text;
 end;
 
 function TXMLDECLARBODYType.Get_HORIG: UnicodeString;
@@ -702,6 +757,21 @@ end;
 function TXMLDECLARBODYType.Get_HPODNUM: UnicodeString;
 begin
   Result := ChildNodes['HPODNUM'].Text;
+end;
+
+procedure TXMLDECLARBODYType.Set_HBOS(Value: UnicodeString); // 5.2
+begin
+  ChildNodes['HBOS'].NodeValue := Value;
+end;
+
+procedure TXMLDECLARBODYType.Set_HKBOS(Value: UnicodeString); // 5.2
+begin
+  ChildNodes['HKBOS'].NodeValue := Value;
+end;
+
+procedure TXMLDECLARBODYType.Set_H03(Value: UnicodeString); // 5.2
+begin
+  ChildNodes['H03'].NodeValue := Value;
 end;
 
 procedure TXMLDECLARBODYType.Set_HORIG(Value: UnicodeString);
@@ -1062,6 +1132,16 @@ end;
 function TXMLDECLARBODYType.Get_RXXXXG9: IXMLRXXXXTypeList;
 begin
   Result := FRXXXXG9;
+end;
+
+function TXMLDECLARBODYType.Get_RXXXXG008: IXMLRXXXXTypeList;    //
+begin
+  Result := FRXXXXG008;
+end;
+
+function TXMLDECLARBODYType.Get_RXXXXG010: IXMLRXXXXTypeList;    //
+begin
+  Result := FRXXXXG010;
 end;
 
 function TXMLDECLARBODYType.Get_R01G7: UnicodeString;

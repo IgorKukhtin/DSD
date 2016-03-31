@@ -858,8 +858,10 @@ begin
   end;
 
    if HeaderDataSet.FieldByName('TaxKind').asString <> '' then
+   begin
      //До зведеної податкової накладної
      DECLAR.DECLARBODY.H03 := '1';
+   end;
 
   DECLAR.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
