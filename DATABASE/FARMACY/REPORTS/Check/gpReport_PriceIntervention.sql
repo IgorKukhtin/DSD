@@ -225,6 +225,60 @@ BEGIN
                         )
       
 , tmpDataAll AS (SELECT tmpData.UnitId
+                      , (tmpData.Amount)      AS Amount
+                      , (tmpData.Summa)       AS Summa
+                      , (tmpData.SummaSale)   AS SummaSale
+
+                      , (tmpData.Amount1)      AS Amount1
+                      , (tmpData.Summa1)       AS Summa1
+                      , (tmpData.SummaSale1)   AS SummaSale1
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount1*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount1
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa1*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma1
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale1*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale1
+                      
+                      , (tmpData.Amount2)      AS Amount2
+                      , (tmpData.Summa2)       AS Summa2
+                      , (tmpData.SummaSale2)   AS SummaSale2
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount2*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount2
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa2*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma2
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale2*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale2
+                      
+                      , (tmpData.Amount3)      AS Amount3
+                      , (tmpData.Summa3)       AS Summa3
+                      , (tmpData.SummaSale3)   AS SummaSale3
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount3*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount3
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa3*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma3
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale3*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale3
+                      
+                      , (tmpData.Amount4)      AS Amount4
+                      , (tmpData.Summa4)       AS Summa4
+                      , (tmpData.SummaSale4)   AS SummaSale4
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount4*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount4
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa4*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma4
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale4*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale4
+                      
+                      , (tmpData.Amount5)      AS Amount5
+                      , (tmpData.Summa5)       AS Summa5
+                      , (tmpData.SummaSale5)   AS SummaSale5
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount5*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount5
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa5*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma5
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale5*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale5
+                      
+                      , (tmpData.Amount6)      AS Amount6
+                      , (tmpData.Summa6)       AS Summa6
+                      , (tmpData.SummaSale6)   AS SummaSale6
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount6*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount6
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa6*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma6
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale6*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale6
+                      
+                      , (tmpData.Amount7)      AS Amount7
+                      , (tmpData.Summa7)       AS Summa7
+                      , (tmpData.SummaSale7)   AS SummaSale7
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount7*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount7
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa7*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma7
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale7*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale7
+                 FROM (
+                      SELECT tmpData.UnitId
                       , SUM(tmpData.Amount)      AS Amount
                       , SUM(tmpData.Summa)       AS Summa
                       , SUM(tmpData.SummaSale)   AS SummaSale
@@ -232,53 +286,33 @@ BEGIN
                       , SUM(tmpData.Amount1)      AS Amount1
                       , SUM(tmpData.Summa1)       AS Summa1
                       , SUM(tmpData.SummaSale1)   AS SummaSale1
-                      , SUM(CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount1*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount1
-                      , SUM(CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa1*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma1
-                      , SUM(CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale1*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale1
                       
                       , SUM(tmpData.Amount2)      AS Amount2
                       , SUM(tmpData.Summa2)       AS Summa2
                       , SUM(tmpData.SummaSale2)   AS SummaSale2
-                      , SUM(CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount2*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount2
-                      , SUM(CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa2*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma2
-                      , SUM(CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale2*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale2
                       
                       , SUM(tmpData.Amount3)      AS Amount3
                       , SUM(tmpData.Summa3)       AS Summa3
                       , SUM(tmpData.SummaSale3)   AS SummaSale3
-                      , SUM(CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount3*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount3
-                      , SUM(CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa3*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma3
-                      , SUM(CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale3*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale3
                       
                       , SUM(tmpData.Amount4)      AS Amount4
                       , SUM(tmpData.Summa4)       AS Summa4
                       , SUM(tmpData.SummaSale4)   AS SummaSale4
-                      , SUM(CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount4*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount4
-                      , SUM(CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa4*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma4
-                      , SUM(CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale4*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale4
                       
                       , SUM(tmpData.Amount5)      AS Amount5
                       , SUM(tmpData.Summa5)       AS Summa5
                       , SUM(tmpData.SummaSale5)   AS SummaSale5
-                      , SUM(CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount5*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount5
-                      , SUM(CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa5*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma5
-                      , SUM(CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale5*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale5
                       
                       , SUM(tmpData.Amount6)      AS Amount6
                       , SUM(tmpData.Summa6)       AS Summa6
                       , SUM(tmpData.SummaSale6)   AS SummaSale6
-                      , SUM(CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount6*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount6
-                      , SUM(CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa6*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma6
-                      , SUM(CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale6*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale6
                       
                       , SUM(tmpData.Amount7)      AS Amount7
                       , SUM(tmpData.Summa7)       AS Summa7
                       , SUM(tmpData.SummaSale7)   AS SummaSale7
-                      , SUM(CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount7*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount7
-                      , SUM(CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa7*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma7
-                      , SUM(CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale7*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale7
                  FROM tmpData
-                 GROUP BY tmpData.UnitId
+                 GROUP BY tmpData.UnitId) AS tmpData
+                 
                 )
 , tmpMaxPersent AS (SELECT MAX(tmpDataAll.PersentAmount1)    AS MaxPersentAmount1
                          , MAX(tmpDataAll.PersentSumma1)     AS MaxPersentSumma1
