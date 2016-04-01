@@ -4,7 +4,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1158
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -83,8 +82,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       inherited cxGrid: TcxGrid
         Width = 1142
         Height = 250
-        ExplicitLeft = 216
-        ExplicitTop = -3
         ExplicitWidth = 1142
         ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -142,6 +139,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             end
             item
               Format = ',0.00'
+              Kind = skSum
               Column = colSummaMarginWithVAT
             end
             item
