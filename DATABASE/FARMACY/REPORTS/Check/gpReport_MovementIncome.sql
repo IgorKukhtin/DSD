@@ -1,11 +1,14 @@
 -- Function:  gpReport_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Income (Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Income (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_Income(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inDateStart        TDateTime,  -- Дата начала
     IN inDateFinal        TDateTime,  -- Дата окончания
+    IN inIsPartion        Boolean,    -- 
+    IN inisPartionPrice   Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -15,14 +18,26 @@ RETURNS TABLE (
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
   FromName       TVarChar,
-  Amount         TFloat,
-  Price          TFloat,
-  PriceWithVAT   TFloat,
-  PriceSale      TFloat,
-  Summa          TFloat,
-  SummaWithVAT   TFloat,
-  SummaSale      TFloat,
-  SummaMargin    TFloat)
+  ToName         TVarChar,
+  OurJuridicalName TVarChar,
+  InvNumber        TVarChar,
+  OperDate         TDateTime,
+  DescName         TVarChar,
+
+  Price           TFloat,
+  PriceWithOutVAT TFloat,
+  PriceWithVAT    TFloat,
+  PriceSale       TFloat,
+  Amount          TFloat,
+
+  Summa              TFloat,
+  SummaWithOutVAT    TFloat,
+  SummaWithVAT       TFloat,
+  SummaSale          TFloat,
+  SummaMargin        TFloat,
+  SummaMarginWithVAT TFloat
+
+  )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -35,100 +50,148 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH tmpMovementIncome AS ( SELECT Movement_Income.Id AS MovementId
-                                     , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
-                                     , ObjectFloat_NDSKind_NDS.ValueData          AS NDS
-                                     , Object_From.ValueData                      AS FromName
+                                     , CASE WHEN inIsPartion = TRUE THEN MovementDesc_Income.ItemName ELSE CAST (NULL AS TVarChar) END AS DescName
+                                     , CASE WHEN inIsPartion = TRUE THEN Movement_Income.InvNumber ELSE CAST (NULL AS TVarChar) END AS InvNumber
+                                     , CASE WHEN inIsPartion = TRUE THEN Movement_Income.OperDate ELSE CAST (NULL AS TDateTime) END AS OperDate
+                                     , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
+                                     , MovementLinkObject_From.ObjectId           AS FromId
+                                     , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_Juridical_Income.ObjectId ELSE 0 END AS OurJuridicalId
+                                     , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END               AS ToId
                                 FROM Movement AS Movement_Income
+                                     -- куда был приход
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement_Income.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                   AND MovementLinkObject_To.ObjectId = inUnitId
+                                     --дата прихода на аптеку
                                      INNER JOIN MovementDate AS MovementDate_Branch
                                                              ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                             AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
                                                             AND date_trunc('day', MovementDate_Branch.ValueData) between inDateStart AND inDateFinal
-                                                            
+                                     -- от кого приход    Поставщик                   
                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                   ON MovementLinkObject_From.MovementId = Movement_Income.Id
                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                     LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                     --LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
                                      
-                                     LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                     /*LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                                ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Income.Id
                                                               AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                     */
                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                                   ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
                                                                  AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                                     LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
+                                     --LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
+                          
+                                     -- на какое наше юр лицо был приход
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical_Income
+                                                                 ON MovementLinkObject_Juridical_Income.MovementId = Movement_Income.Id
+                                                                AND MovementLinkObject_Juridical_Income.DescId = zc_MovementLinkObject_Juridical()
+                                                          
                                      LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                                            ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                                           AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                                                          
+
+                                     LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId                                                          
+                                     
                                  WHERE Movement_Income.DescId = zc_Movement_Income()
                                    AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
-                                    
-    
                               )
+
+, tmpData AS (SELECT tmpMovementIncome.InvNumber
+                   , tmpMovementIncome.OperDate
+                   , tmpMovementIncome.DescName
+                   , tmpMovementIncome.FromId
+                   , tmpMovementIncome.ToId
+                   , tmpMovementIncome.OurJuridicalId
+                  -- , tmpMovementIncome.PriceWithVAT
+                   , tmpMovementIncome.NDSKindId
+                   , MI_Income.ObjectId                              AS GoodsId
+                   , COALESCE (MIFloat_JuridicalPrice.ValueData, 0)  AS Price
+                   , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) AS PriceWithOutVAT
+                   , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    AS PriceWithVAT                   
+                   , COALESCE (MIFloat_PriceSale.ValueData, 0)       AS PriceSale
+                   , SUM (COALESCE (MI_Income.Amount, 0))                                                   AS Amount
+                   , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
+                   , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0)) AS SummaWithOutVAT
+                   , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT                   
+                   , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_PriceSale.ValueData, 0))       AS SummaSale
+              FROM tmpMovementIncome
+                  INNER JOIN MovementItem AS MI_Income 
+                                          ON MI_Income.MovementId = tmpMovementIncome.MovementId
+                                         AND MI_Income.isErased   = False
+                  -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
+                  LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                              ON MIFloat_JuridicalPrice.MovementItemId = MI_Income.Id
+                                             AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                   -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                               ON MIFloat_PriceWithVAT.MovementItemId = MI_Income.Id
+                                              AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                   -- цена без учета НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
+                                               ON MIFloat_PriceWithOutVAT.MovementItemId = MI_Income.Id
+                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()    
+                   --цена реализации
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                               ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
+                                              AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()  
+              GROUP BY tmpMovementIncome.InvNumber
+                     , tmpMovementIncome.OperDate
+                     , tmpMovementIncome.DescName
+                     , tmpMovementIncome.FromId
+                     , tmpMovementIncome.ToId
+                     , tmpMovementIncome.OurJuridicalId
+                  --   , tmpMovementIncome.PriceWithVAT
+                     , tmpMovementIncome.NDSKindId                                   
+                     , MI_Income.ObjectId
+                     , COALESCE (MIFloat_JuridicalPrice.ValueData, 0)
+                     , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0)
+                     , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)
+                     , COALESCE (MIFloat_PriceSale.ValueData, 0)
+              ) 
+
+
+
+
+
         SELECT
              Object_Goods_View.Id                           AS GoodsId
            , Object_Goods_View.GoodsCodeInt  ::Integer      AS GoodsCode
            , Object_Goods_View.GoodsName                    AS GoodsName
            , Object_Goods_View.GoodsGroupName               AS GoodsGroupName
            , Object_Goods_View.NDSKindName                  AS NDSKindName
-           , tmpMovementIncome.FromName
-           , SUM(MI_Income.Amount)::TFloat                  AS Amount
 
-           , MIFloat_Price.ValueData      ::TFloat                 AS Price
+           , Object_From.ValueData                          AS FromName
+           , Object_To.ValueData                            AS ToName
+           , Object_OurJuridical.ValueData                  AS OurJuridicalName
 
-           , CASE WHEN tmpMovementIncome.PriceWithVAT 
-                  THEN  MIFloat_Price.ValueData
-                  ELSE (MIFloat_Price.ValueData * (1 + tmpMovementIncome.NDS/100))
-             END                                     ::TFloat          AS PriceWithVAT
+           , tmpData.InvNumber
+           , tmpData.OperDate
+           , tmpData.DescName
 
-           , COALESCE(MIFloat_PriceSale.ValueData,0) ::TFloat                 AS PriceSale
-
-           , SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_Price.ValueData)::NUMERIC (16, 2))    ::TFloat AS Summa
-
-           , SUM(MI_Income.Amount *(CASE WHEN tmpMovementIncome.PriceWithVAT 
-                                           THEN  MIFloat_Price.ValueData 
-                                           ELSE (MIFloat_Price.ValueData * (1 + tmpMovementIncome.NDS/100)) 
-                                     END))                                                 ::TFloat          AS SummaWithVAT
-
-           , SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))  ::TFloat AS SummaSale
+           , tmpData.Price             ::TFloat AS Price
+           , tmpData.PriceWithOutVAT   ::TFloat AS PriceWithOutVAT
+           , tmpData.PriceWithVAT      ::TFloat AS PriceWithVAT
+           , tmpData.PriceSale         ::TFloat AS PriceSale
            
-           , (SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))
-             - SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_Price.ValueData)::NUMERIC (16, 2)))   ::TFloat AS SummaMargin
+           , tmpData.Amount            ::TFloat AS Amount
 
-
-        FROM tmpMovementIncome 
+           , tmpData.Summa             ::TFloat AS Summa
+           , tmpData.SummaWithOutVAT   ::TFloat AS SummaWithOutVAT
+           , tmpData.SummaWithVAT      ::TFloat AS SummaWithVAT
+           , tmpData.SummaSale         ::TFloat AS SummaSale
            
-            INNER JOIN MovementItem AS MI_Income 
-                                    ON MI_Income.MovementId = tmpMovementIncome.MovementId
-                                   AND MI_Income.isErased   = False
+           , (tmpData.SummaSale - tmpData.Summa)        :: TFloat AS SummaMargin
+           , (tmpData.SummaSale - tmpData.SummaWithVAT) :: TFloat AS SummaMarginWithVAT
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MI_Income.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                        ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
-                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-
+        FROM tmpData 
+            LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
+            LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = tmpData.NDSKindId
+            LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
+            LEFT JOIN Object AS Object_To ON Object_To.Id = tmpData.ToId
+            LEFT JOIN Object AS Object_OurJuridical ON Object_OurJuridical.Id = tmpData.OurJuridicalId
             
-            LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MI_Income.ObjectId
-          
-        GROUP BY
-            Object_Goods_View.Id
-           ,Object_Goods_View.GoodsCodeInt
-           ,Object_Goods_View.GoodsName
-           ,Object_Goods_View.GoodsGroupName
-           ,Object_Goods_View.NDSKindName 
-           , tmpMovementIncome.FromName
-           , MIFloat_Price.ValueData 
-           , CASE WHEN tmpMovementIncome.PriceWithVAT 
-                  THEN  MIFloat_Price.ValueData
-                  ELSE (MIFloat_Price.ValueData * (1 + tmpMovementIncome.NDS/100))
-             END                     
-           , COALESCE(MIFloat_PriceSale.ValueData,0) 
         ORDER BY
             GoodsGroupName, GoodsName;
 ----
@@ -136,18 +199,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION  gpReport_Movement_Income (Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 31.03.16         *
  03.02.16         * 
 
 */
 
 -- тест
--- SELECT * FROM gpReport_Movement_Income (inUnitId := 0, inDateStart = '20150801'::TDateTime, inDateFinal := '20150810'::TDateTime, inWithPartionGoods := FALSE, inSession := '3')
-
---select * from MovementItem         limit 10    _Income    _View 
---where price <> 0 and pricesale <> 0 limit 10
+--select * from gpReport_Movement_Income(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateFinal := ('01.02.2016')::TDateTime , inIsPartion := 'False' , inisPartionPrice := 'False' ,  inSession := '3');

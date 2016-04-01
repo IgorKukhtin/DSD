@@ -14,7 +14,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReport_MovementIncomeForm = class(TAncestorReportForm)
@@ -31,18 +31,18 @@ type
     colSumma: TcxGridDBColumn;
     colSummaSale: TcxGridDBColumn;
     colSummaMargin: TcxGridDBColumn;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
-    dxBarControlContainerItem3: TdxBarControlContainerItem;
-    dxBarControlContainerItem4: TdxBarControlContainerItem;
-    dxBarControlContainerItem5: TdxBarControlContainerItem;
-    dxBarControlContainerItem6: TdxBarControlContainerItem;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     clGoodsGroupName: TcxGridDBColumn;
     clNDSKindName: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
+    actRefreshPartionPrice: TdsdDataSetRefresh;
+    actRefreshIsPartion: TdsdDataSetRefresh;
+    cbPartion: TcxCheckBox;
+    cbPartionPrice: TcxCheckBox;
   private
     { Private declarations }
   public

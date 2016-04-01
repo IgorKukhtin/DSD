@@ -348,7 +348,7 @@ begin
   //Дата виписки ПН
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N11', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
 
-  if HeaderDataSet.FieldByName('taxkind').asString <> '' then
+  if HeaderDataSet.FieldByName('TaxKind').asString = 'X' then
      // Зведена податкова накладна
      CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N25', '1');
 
@@ -394,7 +394,7 @@ begin
   //Посадова (уповноважена) особа/фізична особа (законний представник)
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N10', HeaderDataSet.FieldByName('N10').AsString);
   //Реєстраційний номер облікової картки платника податку
-  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'INN', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('AccounterINN_From').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'INN', HeaderDataSet.FieldByName('AccounterINN_From').AsString);
 
   //Загальна сума з ПДВ ("основна ставка")
   //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A7_7', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
@@ -424,7 +424,7 @@ begin
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Код ставки
            //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00',HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.###', HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A10', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
@@ -986,7 +986,7 @@ begin
   if HeaderDataSet.FieldByName('ERPN').asString <> '' then
      // Підлягає реєстрації в ЄРПН постачальником (продавцем)
      CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N26', '1');
-  if HeaderDataSet.FieldByName('TaxKind').asString <> '' then
+  if HeaderDataSet.FieldByName('TaxKind').asString = 'X' then
      //До зведеної податкової накладної
      CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N27', '1');
 
@@ -1049,6 +1049,9 @@ begin
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A1_9', ReplaceStr(FormatFloat('0.00', - HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
   //Сума коригування податкового зобов'язання та податкового кредиту
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A2_9', ReplaceStr(FormatFloat('0.00', - HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Сума коригування податкового зобов'язання та податкового кредиту
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A2_92', ReplaceStr(FormatFloat('0.00', - HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+
 
   //Номер розрахунку коригування (для коректного відображення в Реєстрі первинних документів)
   if HeaderDataSet.FieldByName('InvNumberBranch').AsString <> ''
@@ -1086,7 +1089,7 @@ begin
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.###', 1 * FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
            //Код ставки
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A011', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A011', ReplaceStr(FormatFloat('0.###', HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A013', ReplaceStr(FormatFloat('0.00', - FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):

@@ -267,20 +267,22 @@ tmpMovementSaleTop AS (
            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                         ON MovementLinkObject_To.MovementId = Movement.Id
                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_From()
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
-                                        ON MovementLinkObject_Route.MovementId = Movement.Id
-                                       AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                       ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
-                                      AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
+           
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                           ON MovementLinkMovement_Order.MovementId = Movement.Id 
                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-           LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId        
-                                  
+           LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+                   
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                        ON MovementLinkObject_Route.MovementId = Movement_Order.Id
+                                       AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
+                                       ON MovementLinkObject_RouteSorting.MovementId = Movement_Order.Id
+                                      AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
+                                                             
        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND Movement.DescId = zc_Movement_Sale()
          AND Movement.StatusId = zc_Enum_Status_Complete()
