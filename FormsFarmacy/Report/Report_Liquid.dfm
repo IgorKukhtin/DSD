@@ -102,6 +102,11 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = clSummaReturnIn
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = colSummaJuridicalIncome
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -161,6 +166,11 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = clSummaReturnIn
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = colSummaJuridicalIncome
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -186,6 +196,17 @@ inherited Report_LiquidForm: TReport_LiquidForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 154
+          end
+          object colSummaJuridical: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1085#1072' '#1085#1072#1095#1072#1083#1086' '#1076#1085#1103' '#1074' '#1087#1088#1080#1093#1086#1076' '#1094#1077#1085#1072#1093' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaJuridical'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 102
           end
           object StartSum: TcxGridDBColumn
             Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
@@ -213,6 +234,15 @@ inherited Report_LiquidForm: TReport_LiquidForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 78
+          end
+          object colSummaJuridicalIncome: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1087#1088#1080#1093#1086#1076'. '#1094#1077#1085#1072#1093' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaJuridicalIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
           end
           object clSummaCheck: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1082#1072#1089#1089#1077' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
@@ -331,6 +361,8 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Height = 176
         Align = alBottom
         TabOrder = 2
+        ExplicitLeft = -80
+        ExplicitTop = 337
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -385,13 +417,10 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
-        Width = 1053
+        Width = 1275
         Height = 507
         Align = alClient
         DataSource = MasterDS

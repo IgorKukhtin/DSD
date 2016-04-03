@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpselect_report_liquid(
              , startsum tfloat
              , endsum tfloat
              , summaincome tfloat
+             , SummaJuridicalIncome tfloat
              , summacheck tfloat
              , summasale tfloat
              , summasendin tfloat
@@ -222,7 +223,8 @@ BEGIN
 
   
        ,  tmpMovementIncome AS (SELECT  date_trunc('day', MovementDate_Branch.ValueData) AS BranchDate
-                                            , SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2)) AS SummaIncome      
+                                            , SUM((COALESCE (MI_Income.Amount, 0) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2)) AS SummaIncome   
+                                            , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS SummaJuridical   
                                             , MovementLinkObject_To.ObjectId AS UnitId
                                 FROM Movement AS Movement_Income
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -241,7 +243,11 @@ BEGIN
                                      LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                                                  ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
                                                                 AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()  
-                                                          
+                                     -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
+                                     LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                                                 ON MIFloat_JuridicalPrice.MovementItemId = MI_Income.Id
+                                                                AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                                     
                                  WHERE Movement_Income.DescId = zc_Movement_Income()
                                    AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
                                  GROUP BY date_trunc('day', MovementDate_Branch.ValueData)
@@ -387,6 +393,7 @@ BEGIN
                          , tmpNTZ.AmountRem      ::TFloat AS StartSum                     --SumRem
                          , tmpNTZ.AmountRemEnd              ::TFloat AS EndSum
                          , tmpMovementIncome.SummaIncome    ::TFloat AS SummaIncome
+                         , tmpMovementIncome.SummaJuridical ::TFloat AS SummaJuridicalIncome
                          , tmpCheck.SummaCheck              ::TFloat AS SummaCheck
                          , tmpMovementSale.SummaSale        ::TFloat AS SummaSale
                          , tmpMovementSend.SummaSendIN      ::TFloat AS SummaSendIN
