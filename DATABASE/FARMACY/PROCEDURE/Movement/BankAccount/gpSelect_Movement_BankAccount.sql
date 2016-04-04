@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, Parent
              , AmountSumm TFloat 
              , AmountCurrency TFloat
              , Comment TVarChar
-             , BankAccountName TVarChar, BankName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
@@ -73,6 +73,7 @@ BEGIN
            , MovementFloat_AmountCurrency.ValueData AS AmountCurrency
 
            , MIString_Comment.ValueData        AS Comment
+           , MovementItem.ObjectId             AS BankAccountId
            , Object_BankAccount_View.Name      AS BankAccountName
            , Object_BankAccount_View.BankName  AS BankName
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
@@ -259,4 +260,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inIsErased:= FALSE, inIsPartnerDate:= FALSE, inBankAccountId:= NULL, inMoneyPlaceId:= NULL, inJuridicalCorporateId:= NULL, inSession:= zfCalc_UserAdmin())
