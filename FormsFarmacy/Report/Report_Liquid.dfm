@@ -107,6 +107,11 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = colSummaJuridicalIncome
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = colSummaJuridical
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -171,6 +176,11 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = colSummaJuridicalIncome
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = colSummaJuridical
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -198,14 +208,12 @@ inherited Report_LiquidForm: TReport_LiquidForm
             Width = 154
           end
           object colSummaJuridical: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1085#1072' '#1085#1072#1095#1072#1083#1086' '#1076#1085#1103' '#1074' '#1087#1088#1080#1093#1086#1076' '#1094#1077#1085#1072#1093' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095'. '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1087#1088#1080#1093#1086#1076'. '#1094#1077#1085#1072#1093' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaJuridical'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 102
           end
           object StartSum: TcxGridDBColumn
