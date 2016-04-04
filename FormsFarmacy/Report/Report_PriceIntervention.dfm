@@ -1,22 +1,22 @@
 inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   Caption = #1054#1090#1095#1077#1090' '#1062#1077#1085#1086#1074#1072#1103' '#1080#1085#1090#1077#1088#1074#1077#1085#1094#1080#1103
-  ClientHeight = 492
+  ClientHeight = 435
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1228
-  ExplicitHeight = 530
+  ExplicitHeight = 473
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
     Width = 1212
-    Height = 401
+    Height = 344
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1212
     ExplicitHeight = 401
-    ClientRectBottom = 401
+    ClientRectBottom = 344
     ClientRectRight = 1212
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -27,7 +27,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       ExplicitHeight = 377
       inherited cxGrid: TcxGrid
         Width = 1212
-        Height = 377
+        Height = 320
         ExplicitWidth = 1212
         ExplicitHeight = 377
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -46,243 +46,243 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           DataController.DataSource = MasterDS
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount1
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale1
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma1
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount2
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale2
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma2
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount3
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale3
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma3
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount4
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale4
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma4
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount5
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale5
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma5
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount6
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale6
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma6
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount7
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale7
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma7
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00'
+              Format = '0.####'
               Kind = skSum
               Column = cxAmount
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount1
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale1
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma1
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount2
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale2
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma2
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount3
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale3
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma3
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount4
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale4
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma4
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount5
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale5
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma5
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount6
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale6
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma6
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxAmount7
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSummaSale7
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = cxSumma7
             end>
@@ -371,7 +371,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -386,7 +386,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1042' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -401,7 +401,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1042' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -411,12 +411,26 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxPersentProfit: TcxGridDBBandedColumn
+            AlternateCaption = #1048#1090#1086#1075#1086': % '#1076#1086#1093#1086#1076#1072
+            Caption = '% '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxAmount1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -431,7 +445,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -446,7 +460,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -461,7 +475,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PersentAmount1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -476,7 +490,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PersentSummaSale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -491,7 +505,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PersentSumma1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -501,12 +515,26 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxPersentProfit1: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: % '#1076#1086#1093#1086#1076#1072
+            Caption = '% '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfit1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 2
+            Position.ColIndex = 6
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxAmount2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -520,7 +548,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -534,7 +562,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -548,7 +576,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PersentAmount2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -562,7 +590,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PersentSummaSale2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -576,7 +604,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PersentSumma2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -585,12 +613,26 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxPersentProfit2: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: % '#1076#1086#1093#1086#1076#1072
+            Caption = '% '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfit2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 3
+            Position.ColIndex = 6
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxAmount3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -604,7 +646,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -618,7 +660,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -632,7 +674,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PersentAmount3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -646,7 +688,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PersentSummaSale3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -660,7 +702,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PersentSumma3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -669,12 +711,26 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxPersentProfit3: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: % '#1076#1086#1093#1086#1076#1072
+            Caption = '% '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfit3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 4
+            Position.ColIndex = 6
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxAmount4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -688,7 +744,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -702,7 +758,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -716,7 +772,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PersentAmount4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -730,7 +786,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PersentSummaSale4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -744,7 +800,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PersentSumma4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -753,12 +809,26 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxPersentProfit4: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: % '#1076#1086#1093#1086#1076#1072
+            Caption = '% '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfit4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 5
+            Position.ColIndex = 6
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxAmount5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -772,7 +842,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -786,7 +856,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -800,7 +870,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PersentAmount5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -814,7 +884,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PersentSummaSale5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -828,7 +898,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PersentSumma5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -837,12 +907,26 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxPersentProfit5: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: % '#1076#1086#1093#1086#1076#1072
+            Caption = '% '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfit5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 6
+            Position.ColIndex = 6
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxAmount6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -856,7 +940,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -870,7 +954,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -884,7 +968,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PersentAmount6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -898,7 +982,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PersentSummaSale6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -912,7 +996,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PersentSumma6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -921,12 +1005,26 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxPersentProfit6: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: % '#1076#1086#1093#1086#1076#1072
+            Caption = '% '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfit6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 7
+            Position.ColIndex = 6
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxAmount7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -940,7 +1038,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -954,7 +1052,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -968,7 +1066,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PersentAmount7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -982,7 +1080,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PersentSummaSale7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -996,12 +1094,26 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PersentSumma7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
             Position.BandIndex = 8
             Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxPersentProfit7: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: % '#1076#1086#1093#1086#1076#1072
+            Caption = '% '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfit7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 8
+            Position.ColIndex = 6
             Position.LineCount = 2
             Position.RowIndex = 0
           end

@@ -62,6 +62,7 @@ type
     cxColor_PersentAmount1: TcxGridDBBandedColumn;
     cxColor_PersentSumma1: TcxGridDBBandedColumn;
     cxColor_PersentSummaSale1: TcxGridDBBandedColumn;
+    cxPersentProfit: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
