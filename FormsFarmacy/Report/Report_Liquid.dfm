@@ -487,7 +487,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitTop = 3
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -631,6 +630,25 @@ inherited Report_LiquidForm: TReport_LiquidForm
       Top = 1
       Caption = #1050#1086#1085'.'#1076#1072#1090#1072':'
     end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = UnitGuides
+        Properties.Strings = (
+          'key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     Left = 79

@@ -87,7 +87,6 @@ BEGIN
                                   , Container.Amount
                                   , Container.ObjectID AS GoodsId
                                   , Container.WhereObjectId AS UnitId
-                                  --, COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
                                   , COALESCE (MI_Income_find.Id, MI_Income.Id)         :: Integer AS MovementItemId
                                 FROM Container
                                     -- партия  -- для получения приходной цены остатка
@@ -113,7 +112,6 @@ BEGIN
 
           , ContainerGroup as (SELECT containerCount.GoodsId 
                                     , containerCount.unitid
-                                    --, containerCount.MovementItemId
                                     , Sum(containerCount.Amount) as Amount
                                     , Sum(containerCount.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0)) as SummaJuridical
                                FROM containerCount 
@@ -125,7 +123,6 @@ BEGIN
                                where containerCount.Amount <> 0
                                GROUP BY containerCount.GoodsId 
                                       , containerCount.unitid
-                                      --, containerCount.MovementItemId
                                )
 
     
@@ -134,8 +131,6 @@ BEGIN
                                   , case when date_trunc('day', MIContainer.OperDate) between inStartDate and inEndDate then date_trunc('day', MIContainer.OperDate) else zc_DateEnd() End AS operdate 
                                   , COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_Total
                                   , COALESCE (SUM (COALESCE (MIContainer.Amount, 0) * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ) , 0)  AS SummaJuridical
-                                  --, COALESCE (MIFloat_JuridicalPrice.ValueData, 0)   AS JuridicalPrice
-                                 -- , ContainerCount.MovementItemId
                                 FROM ContainerCount
                                     INNER JOIN MovementItemContainer AS MIContainer 
                                                                      ON MIContainer.ContainerId = containerCount.ContainerId
@@ -149,7 +144,6 @@ BEGIN
                                GROUP BY case when date_trunc('day', MIContainer.OperDate) between inStartDate and inEndDate then date_trunc('day', MIContainer.OperDate) else zc_DateEnd() end
                                       , ContainerCount.GoodsID
                                       , ContainerCount.UnitId
-                                      --, ContainerCount.MovementItemId
                                      HAVING SUM (MIContainer.Amount) <> 0
                            )
                 
@@ -159,23 +153,15 @@ BEGIN
                             , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)  AS Price
                             , COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0)  AS PriceEnd
                             , COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) AS MCSValueEnd
-                           -- , tmpGoods.MovementItemId
                             , tmpGoods.Amount
                             , tmpGoods.SummaJuridical
-                         /*  , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData, 0)    AS MCSPeriod
-                            , COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0)       AS MCSDay
-                            , COALESCE (ObjectHistoryFloat_MCSPeriodEnd.ValueData, 0) AS MCSPeriodEnd
-                            , COALESCE (ObjectHistoryFloat_MCSDayEnd.ValueData, 0)    AS MCSDayEnd
-                         */   
                        FROM 
                       (SELECT tmpGoods.UnitId, tmpGoods.GoodsID, tmpPrice.PriceId
-                            ---, tmpGoods.MovementItemId
                             , SUM (tmpGoods.Amount) AS Amount
                             , SUM (tmpGoods.SummaJuridical) AS SummaJuridical
                        FROM (SELECT DISTINCT
                                     MIContainer.UnitId
                                   , MIContainer.GoodsID
-                                  --, MIContainer.MovementItemId
                                   , 0 AS Amount
                                   , 0 AS SummaJuridical
                              FROM MIContainer
@@ -184,13 +170,11 @@ BEGIN
                                   , ContainerGroup.GoodsID
                                   , ContainerGroup.Amount
                                   , ContainerGroup.SummaJuridical
-                                  --, ContainerGroup.MovementItemId
                              FROM ContainerGroup
                             ) AS tmpGoods 
                             left JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsID
                                                AND tmpPrice.UnitId = tmpGoods.UnitId 
                        GROUP BY tmpGoods.UnitId, tmpGoods.GoodsID, tmpPrice.PriceId
-                            --, tmpGoods.MovementItemId
                       ) AS tmpGoods 
                       INNER JOIN _TIME ON 1=1
                            -- получаем значения цены и НТЗ из истории значений на дату на начало                                                          
@@ -214,25 +198,6 @@ BEGIN
                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValueEnd
                                                         ON ObjectHistoryFloat_MCSValueEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
                                                        AND ObjectHistoryFloat_MCSValueEnd.DescId = zc_ObjectHistoryFloat_Price_MCSValue()                         
-/*
-                           -- получаем значения Количество дней для анализа НТЗ из истории значений на дату    
-                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSPeriod
-                                                        ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
-                                                       AND ObjectHistoryFloat_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
-                          -- получаем значения Страховой запас дней НТЗ из истории значений на дату    
-                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
-                                                       ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
-                                                      AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay()
-
-                          -- получаем значения Количество дней для анализа НТЗ из истории значений на конец дня  
-                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSPeriodEnd
-                                                       ON ObjectHistoryFloat_MCSPeriodEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
-                                                      AND ObjectHistoryFloat_MCSPeriodEnd.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
-                          -- получаем значения Страховой запас дней НТЗ из истории значений на конец дня  
-                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDayEnd
-                                                       ON ObjectHistoryFloat_MCSDayEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
-                                                      AND ObjectHistoryFloat_MCSDayEnd.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
-  */                                                    
                       )
       
   -- расчет возврата (НТЗ)
@@ -267,7 +232,6 @@ BEGIN
                              , tmpGoodsMotion.MCSValueEnd
                              , tmpGoodsMotion.Amount
                              , tmpGoodsMotion.SummaJuridical
-                           
                         ) AS tmp
                   GROUP BY tmp.OperDate
                          , tmp.UnitId
@@ -517,7 +481,7 @@ BEGIN
                          , tmpMovementSale.SummaOrderInternal   ::TFloat AS SummaOrderInternal
                          , tmpMovementSale.SummaDocOrderExternal   ::TFloat AS SummaDocOrderExternal
                          , tmpMovementSale.SummaDocOrderInternal   ::TFloat AS SummaDocOrderInternal
-                         , tmpNTZ.AmountNotMCS                     ::TFloat AS  SummaReturnIn 
+                         , tmpNTZ.AmountNotMCS                     ::TFloat AS SummaReturnIn 
                          , tmpMCSPeriodDay.MCSPeriod   ::TFloat
                          , tmpMCSPeriodDay.MCSDay      ::TFloat
                     FROM _TIME
