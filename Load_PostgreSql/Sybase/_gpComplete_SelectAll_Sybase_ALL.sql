@@ -1,10 +1,12 @@
 -- Function: gpComplete_SelectAll_Sybase_ALL()
 
 DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
     IN inStartDate          TDateTime , -- 
     IN inEndDate            TDateTime , --
+    IN inIsSale             Boolean   , -- 
     IN inIsBefoHistoryCost  Boolean
 )                              
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code TVarChar, ItemName TVarChar
@@ -12,7 +14,14 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code 
 AS
 $BODY$
 BEGIN
+     -- !!!Замена!!!
+     IF inIsSale = TRUE
+     THEN 
+         inIsBefoHistoryCost:= FALSE;
+     END IF;
 
+
+     -- Результат
      RETURN QUERY 
      WITH tmpUnit AS (/*SELECT 8411 AS UnitId, NULL AS isMain -- Склад гп ф.Киев
                 UNION SELECT 8413 AS UnitId, NULL AS isMain  -- ф. Кр.Рог
@@ -89,6 +98,7 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Sale()) -- , zc_Movement_SendOnPrice()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
+       AND inIsSale            = TRUE
        AND (tmpUnit_from.UnitId > 0/* OR tmpUnit_To.UnitId > 0*/)
 
     UNION
@@ -284,6 +294,7 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
+       AND (inIsSale           = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
     UNION
      -- 4.2. From: Loss
      SELECT Movement.Id AS MovementId
@@ -388,5 +399,5 @@ create table dba._pgMovementReComlete
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 */
 -- тест
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inIsBefoHistoryCost:= TRUE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)

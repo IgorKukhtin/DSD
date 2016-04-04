@@ -197,6 +197,7 @@ type
     cbHistoryCost_diff: TCheckBox;
     cbLastCost: TCheckBox;
     cb100MSec: TCheckBox;
+    cbOnlySale: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
