@@ -382,18 +382,24 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidDialogForm');
- exit;
-  //Отчет Приход на точку
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeDialogForm');
+
+  //отчет доходности
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
 
   //Отчет Ценовая интервенция
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionDialogForm');
+ exit;
+  //Отчет Приход на точку
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
@@ -437,12 +443,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-
-  //отчет доходности
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
 
   //Отчет Ценовая интервенция
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));

@@ -1,7 +1,9 @@
 inherited Report_LiquidForm: TReport_LiquidForm
+  Left = 60
   Caption = #1054#1090#1095#1077#1090' '#1051#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080' '#1090#1086#1095#1082#1080
   ClientHeight = 579
   ClientWidth = 1275
+  Position = poDesigned
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1291
@@ -289,6 +291,15 @@ inherited Report_LiquidForm: TReport_LiquidForm
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
+          object clPersentCheck: TcxGridDBColumn
+            Caption = '% '#1087#1088#1086#1076#1072#1078' '#1086#1090' '#1082#1086#1085'. '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'PersentCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object clSummaSendIn: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1090#1086#1095#1082#1091' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaSendIn'
@@ -466,9 +477,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -479,6 +487,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
+        ExplicitTop = 3
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -508,33 +517,33 @@ inherited Report_LiquidForm: TReport_LiquidForm
           Visible = True
           UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         end
-        object pcolPlanAmount: TcxDBPivotGridField
+        object pcoStartSum: TcxDBPivotGridField
           Area = faData
           AreaIndex = 0
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1055#1083#1072#1085
-          DataBinding.FieldName = 'PlanAmount'
+          Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
+          DataBinding.FieldName = 'StartSum'
           Visible = True
           UniqueName = #1055#1083#1072#1085
         end
-        object pcolFactAmount: TcxDBPivotGridField
+        object pcolEndSum: TcxDBPivotGridField
           Area = faData
           AreaIndex = 1
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1060#1072#1082#1090
-          DataBinding.FieldName = 'FactAmount'
+          Caption = #1050#1086#1085#1077#1095#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
+          DataBinding.FieldName = 'EndSum'
           Visible = True
           UniqueName = #1060#1072#1082#1090
         end
-        object pcolDiffAmount: TcxDBPivotGridField
+        object pcolSummaIncome: TcxDBPivotGridField
           Area = faData
           AreaIndex = 2
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
-          DataBinding.FieldName = 'DiffAmount'
+          Caption = #1055#1088#1080#1093#1086#1076' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
+          DataBinding.FieldName = 'SummaIncome'
           Visible = True
           UniqueName = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
         end
@@ -546,6 +555,15 @@ inherited Report_LiquidForm: TReport_LiquidForm
           GroupInterval = giDateDayOfWeek
           Visible = True
           UniqueName = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+        end
+        object pcolSummaCheck: TcxDBPivotGridField
+          Area = faData
+          AreaIndex = 3
+          IsCaptionAssigned = True
+          Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1082#1072#1089#1089#1077' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
+          DataBinding.FieldName = 'SummaCheck'
+          Visible = True
+          UniqueName = #1055#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1082#1072#1089#1089#1077' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080
         end
       end
     end
@@ -712,10 +730,12 @@ inherited Report_LiquidForm: TReport_LiquidForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 128
+    Left = 752
+    Top = 88
   end
   inherited MasterCDS: TClientDataSet
-    Top = 128
+    Left = 776
+    Top = 168
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Report_Liquid'
@@ -748,10 +768,12 @@ inherited Report_LiquidForm: TReport_LiquidForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Top = 128
+    Left = 664
+    Top = 96
   end
   inherited BarManager: TdxBarManager
-    Top = 128
+    Left = 712
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -878,15 +900,15 @@ inherited Report_LiquidForm: TReport_LiquidForm
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
     DateEnd = nil
-    Left = 24
-    Top = 176
+    Left = 208
+    Top = 280
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
       end>
-    Left = 88
-    Top = 176
+    Left = 296
+    Top = 280
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -911,8 +933,8 @@ inherited Report_LiquidForm: TReport_LiquidForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 200
-    Top = 120
+    Left = 496
+    Top = 88
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -921,7 +943,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
       item
         Component = UnitGuides
       end>
-    Left = 200
+    Left = 504
     Top = 168
   end
   object spGet_UserUnit: TdsdStoredProc
@@ -943,7 +965,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 272
-    Top = 168
+    Left = 584
+    Top = 144
   end
 end

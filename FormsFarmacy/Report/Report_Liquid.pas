@@ -43,9 +43,9 @@ type
     pcolPlanDate: TcxDBPivotGridField;
     pcolWeek: TcxDBPivotGridField;
     pcolUnitName: TcxDBPivotGridField;
-    pcolPlanAmount: TcxDBPivotGridField;
-    pcolFactAmount: TcxDBPivotGridField;
-    pcolDiffAmount: TcxDBPivotGridField;
+    pcoStartSum: TcxDBPivotGridField;
+    pcolEndSum: TcxDBPivotGridField;
+    pcolSummaIncome: TcxDBPivotGridField;
     pcolDayOfWeek: TcxDBPivotGridField;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
@@ -58,6 +58,8 @@ type
     bbEnd: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    pcolSummaCheck: TcxDBPivotGridField;
+    clPersentCheck: TcxGridDBColumn;
   private
     { Private declarations }
   public
