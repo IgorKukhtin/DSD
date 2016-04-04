@@ -264,6 +264,8 @@ BEGIN
            , CASE WHEN vbOperDate_begin >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
                        THEN 'X'
+                  WHEN vbOperDate_begin >= '01.04.2016' AND OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+                       THEN 'X'
                   WHEN vbOperDate_begin >= '01.04.2016' 
                         THEN ''
                   WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
@@ -272,6 +274,7 @@ BEGIN
                        THEN 'X'
                   ELSE ''
              END :: TVarChar AS ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
+
            , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.02.2015'
                   THEN CASE WHEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0 THEN '' ELSE 'X' END
                   ELSE ''
