@@ -17,7 +17,7 @@ BEGIN
 
 
    -- сохранили "текущая дата", вместо "регистрации" - если нет если её нет или убрали признак электронная (т.е. регистрацию медка)
-   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), inMovementId, CURRENT_DATE)
+   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), tmp.MovementId, CURRENT_DATE)
    FROM (SELECT inMovementId_Tax AS MovementId WHERE inMovementId_Tax <> 0 AND COALESCE (inMovementId_Corrective, 0) = 0
         UNION 
          SELECT inMovementId_Corrective AS MovementId WHERE inMovementId_Corrective <> 0
@@ -28,7 +28,11 @@ BEGIN
    ;
 
    -- сохранили протокол
-   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+   PERFORM lpInsert_MovementProtocol (tmp.MovementId, vbUserId, FALSE)
+   FROM (SELECT inMovementId_Tax AS MovementId WHERE inMovementId_Tax <> 0 AND COALESCE (inMovementId_Corrective, 0) = 0
+        UNION 
+         SELECT inMovementId_Corrective AS MovementId WHERE inMovementId_Corrective <> 0
+        ) AS tmp;
 
 END;
 $BODY$

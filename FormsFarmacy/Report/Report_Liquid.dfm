@@ -112,6 +112,11 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = colSummaJuridical
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = colSummaJuridicalEnd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -181,6 +186,11 @@ inherited Report_LiquidForm: TReport_LiquidForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = colSummaJuridical
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = colSummaJuridicalEnd
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -210,6 +220,15 @@ inherited Report_LiquidForm: TReport_LiquidForm
           object colSummaJuridical: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095'. '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1087#1088#1080#1093#1086#1076'. '#1094#1077#1085#1072#1093' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaJuridical'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
+          end
+          object colSummaJuridicalEnd: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1085'. '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1087#1088#1080#1093#1086#1076'. '#1094#1077#1085#1072#1093' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaJuridicalEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -351,6 +370,30 @@ inherited Report_LiquidForm: TReport_LiquidForm
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
+          object clMCSPeriod: TcxGridDBColumn
+            Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'***'
+            DataBinding.FieldName = 'MCSPeriod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072' '#1053#1058#1047
+            Options.Editing = False
+            Width = 70
+          end
+          object clMCSDay: TcxGridDBColumn
+            Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'***'
+            DataBinding.FieldName = 'MCSDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081' '#1076#1083#1103' '#1053#1058#1047
+            Options.Editing = False
+            Width = 53
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -369,8 +412,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Height = 176
         Align = alBottom
         TabOrder = 2
-        ExplicitLeft = -80
-        ExplicitTop = 337
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -425,6 +466,9 @@ inherited Report_LiquidForm: TReport_LiquidForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
