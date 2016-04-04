@@ -15,19 +15,22 @@ object TransportJournalForm: TTransportJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1276
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitLeft = -8
+    ExplicitTop = -6
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42309d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -36,7 +39,7 @@ object TransportJournalForm: TTransportJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42309d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -389,14 +392,6 @@ object TransportJournalForm: TTransportJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -418,9 +413,9 @@ object TransportJournalForm: TTransportJournalForm
       WholeRow = False
     end
     object bbBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh

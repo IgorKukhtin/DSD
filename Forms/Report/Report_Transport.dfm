@@ -539,7 +539,7 @@ object Report_TransportForm: TReport_TransportForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -548,7 +548,7 @@ object Report_TransportForm: TReport_TransportForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -662,16 +662,31 @@ object Report_TransportForm: TReport_TransportForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDialogForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -690,6 +705,11 @@ object Report_TransportForm: TReport_TransportForm
     object bbDialogForm: TdxBarButton
       Action = ExecuteDialog
       Category = 0
+    end
+    object dxBarStatic: TdxBarStatic
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object ActionList: TActionList
@@ -833,15 +853,7 @@ object Report_TransportForm: TReport_TransportForm
         Component = PeriodChoice
       end
       item
-        Component = deStart
-      end
-      item
-        Component = deEnd
-      end
-      item
         Component = BranchGuides
-      end
-      item
       end>
     Left = 248
     Top = 16

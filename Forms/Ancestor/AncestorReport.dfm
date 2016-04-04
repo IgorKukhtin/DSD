@@ -4,16 +4,15 @@ inherited AncestorReportForm: TAncestorReportForm
   inherited PageControl: TcxPageControl
     Top = 57
     Height = 251
-    ExplicitTop = 59
-    ExplicitHeight = 249
+    ExplicitTop = 57
+    ExplicitHeight = 251
     ClientRectBottom = 251
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 241
+      ExplicitWidth = 575
+      ExplicitHeight = 251
       inherited cxGrid: TcxGrid
-        Width = 567
-        Height = 241
-        ExplicitWidth = 567
-        ExplicitHeight = 241
+        Height = 251
+        ExplicitHeight = 251
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -34,7 +33,7 @@ inherited AncestorReportForm: TAncestorReportForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41395d
+      EditValue = 42370d
       Properties.ShowTime = False
       TabOrder = 0
       Width = 85
@@ -42,7 +41,7 @@ inherited AncestorReportForm: TAncestorReportForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41395d
+      EditValue = 42370d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -106,6 +105,11 @@ inherited AncestorReportForm: TAncestorReportForm
       0
       26
       0)
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+      ShowCaption = False
+    end
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

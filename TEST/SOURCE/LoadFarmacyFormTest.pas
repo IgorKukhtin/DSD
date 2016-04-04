@@ -377,11 +377,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  //Отчет ликвидности
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsDialogForm');
  exit;
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
