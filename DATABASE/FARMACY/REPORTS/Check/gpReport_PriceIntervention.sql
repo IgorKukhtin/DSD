@@ -74,6 +74,15 @@ RETURNS TABLE (
   PersentSumma7             TFloat,
   PersentSummaSale7         TFloat,
 
+  PersentProfit       TFloat,
+  PersentProfit1      TFloat,
+  PersentProfit2      TFloat,
+  PersentProfit3      TFloat,
+  PersentProfit4      TFloat,
+  PersentProfit5      TFloat,
+  PersentProfit6      TFloat,
+  PersentProfit7      TFloat,
+
   Color_Amount       Integer,
   Color_Summa        Integer,
   Color_SummaSale    Integer,
@@ -178,33 +187,33 @@ BEGIN
                               , SUM (tmpData_all.Amount)    AS Amount
                               , SUM (tmpData_all.SummaSale) AS SummaSale
 
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice1 THEN tmpData_all.Amount ELSE 0 END ) AS Amount1
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice1 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale1
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice1 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa1
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice1 THEN tmpData_all.Amount ELSE 0 END ) AS Amount1
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice1 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale1
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice1 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa1
                               
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice1 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice2 THEN tmpData_all.Amount ELSE 0 END ) AS Amount2
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice1 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice2 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale2
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice1 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice2 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa2
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice1 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice2 THEN tmpData_all.Amount ELSE 0 END ) AS Amount2
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice1 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice2 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale2
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice1 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice2 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa2
 
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice2 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice3 THEN tmpData_all.Amount ELSE 0 END ) AS Amount3
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice2 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice3 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale3
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice2 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice3 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa3
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice2 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice3 THEN tmpData_all.Amount ELSE 0 END ) AS Amount3
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice2 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice3 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale3
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice2 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice3 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa3
 
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice3 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice4 THEN tmpData_all.Amount ELSE 0 END ) AS Amount4
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice3 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice4 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale4
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice3 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice4 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa4
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice3 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice4 THEN tmpData_all.Amount ELSE 0 END ) AS Amount4
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice3 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice4 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale4
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice3 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice4 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa4
 
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice4 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice5 THEN tmpData_all.Amount ELSE 0 END ) AS Amount5
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice4 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice5 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale5
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice4 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice5 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa5
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice4 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice5 THEN tmpData_all.Amount ELSE 0 END ) AS Amount5
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice4 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice5 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale5
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice4 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice5 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa5
 
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice5 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice6 THEN tmpData_all.Amount ELSE 0 END ) AS Amount6
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice5 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice6 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale6
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice5 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<=inPrice6 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa6
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice5 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice6 THEN tmpData_all.Amount ELSE 0 END ) AS Amount6
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice5 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice6 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale6
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice5 and COALESCE (MIFloat_JuridicalPrice.ValueData, 0)<inPrice6 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa6
 
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice6 THEN tmpData_all.Amount ELSE 0 END ) AS Amount7
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice6 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale7
-                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>inPrice6 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa7
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice6 THEN tmpData_all.Amount ELSE 0 END ) AS Amount7
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice6 THEN tmpData_all.SummaSale ELSE 0 END ) AS SummaSale7
+                              , SUM (CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0)>=inPrice6 THEN tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0) ELSE 0 END ) AS Summa7
                          FROM tmpData_all
                               -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
@@ -350,58 +359,68 @@ BEGIN
            , Object_Unit.ObjectCode                  AS UnitCode
            , Object_Unit.ValueData                   AS UnitName
 
-           , tmpDataAll.Amount    ::TFloat AS Amount
-           , tmpDataAll.Summa     ::TFloat AS Summa
-           , tmpDataAll.SummaSale ::TFloat AS SummaSale
+           , CAST (tmpDataAll.Amount    AS NUMERIC (16, 2)) ::TFloat AS Amount
+           , CAST (tmpDataAll.Summa     AS NUMERIC (16, 2)) ::TFloat AS Summa
+           , CAST (tmpDataAll.SummaSale AS NUMERIC (16, 2)) ::TFloat AS SummaSale
+           
 
-           , tmpDataAll.Amount1    ::TFloat AS Amount1
-           , tmpDataAll.Summa1     ::TFloat AS Summa1
-           , tmpDataAll.SummaSale1 ::TFloat AS SummaSale1
-           , tmpDataAll.PersentAmount1     ::TFloat AS PersentAmount1
-           , tmpDataAll.PersentSumma1      ::TFloat AS PersentSumma1
-           , tmpDataAll.PersentSummaSale1  ::TFloat AS PersentSummaSale1
+           , CAST (tmpDataAll.Amount1    AS NUMERIC (16, 2)) ::TFloat AS Amount1
+           , CAST (tmpDataAll.Summa1     AS NUMERIC (16, 2)) ::TFloat AS Summa1
+           , CAST (tmpDataAll.SummaSale1 AS NUMERIC (16, 2)) ::TFloat AS SummaSale1
+           , CAST (tmpDataAll.PersentAmount1    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount1
+           , CAST (tmpDataAll.PersentSumma1     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma1
+           , CAST (tmpDataAll.PersentSummaSale1 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale1
 
-           , tmpDataAll.Amount2    ::TFloat AS Amount2
-           , tmpDataAll.Summa2     ::TFloat AS Summa2
-           , tmpDataAll.SummaSale2 ::TFloat AS SummaSale2
-           , tmpDataAll.PersentAmount2     ::TFloat AS PersentAmount2
-           , tmpDataAll.PersentSumma2      ::TFloat AS PersentSumma2
-           , tmpDataAll.PersentSummaSale2  ::TFloat AS PersentSummaSale2
+           , CAST (tmpDataAll.Amount2    AS NUMERIC (16, 2)) ::TFloat AS Amount2
+           , CAST (tmpDataAll.Summa2     AS NUMERIC (16, 2)) ::TFloat AS Summa2
+           , CAST (tmpDataAll.SummaSale2 AS NUMERIC (16, 2)) ::TFloat AS SummaSale2
+           , CAST (tmpDataAll.PersentAmount2    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount2
+           , CAST (tmpDataAll.PersentSumma2     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma2
+           , CAST (tmpDataAll.PersentSummaSale2 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale2
 
-           , tmpDataAll.Amount3    ::TFloat AS Amount3
-           , tmpDataAll.Summa3     ::TFloat AS Summa3
-           , tmpDataAll.SummaSale3 ::TFloat AS SummaSale3
-           , tmpDataAll.PersentAmount3    ::TFloat AS PersentAmount3
-           , tmpDataAll.PersentSumma3     ::TFloat AS PersentSumma3
-           , tmpDataAll.PersentSummaSale3 ::TFloat AS PersentSummaSale3
+           , CAST (tmpDataAll.Amount3    AS NUMERIC (16, 2)) ::TFloat AS Amount3
+           , CAST (tmpDataAll.Summa3     AS NUMERIC (16, 2)) ::TFloat AS Summa3
+           , CAST (tmpDataAll.SummaSale3 AS NUMERIC (16, 2)) ::TFloat AS SummaSale3
+           , CAST (tmpDataAll.PersentAmount3    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount3
+           , CAST (tmpDataAll.PersentSumma3     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma3
+           , CAST (tmpDataAll.PersentSummaSale3 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale3
 
-           , tmpDataAll.Amount4    ::TFloat AS Amount4
-           , tmpDataAll.Summa4     ::TFloat AS Summa4
-           , tmpDataAll.SummaSale4 ::TFloat AS SummaSale4
-           , tmpDataAll.PersentAmount4    ::TFloat AS PersentAmount4
-           , tmpDataAll.PersentSumma4     ::TFloat AS PersentSumma4
-           , tmpDataAll.PersentSummaSale4 ::TFloat AS PersentSummaSale4
+           , CAST (tmpDataAll.Amount4    AS NUMERIC (16, 2)) ::TFloat AS Amount4
+           , CAST (tmpDataAll.Summa4     AS NUMERIC (16, 2)) ::TFloat AS Summa4
+           , CAST (tmpDataAll.SummaSale4 AS NUMERIC (16, 2)) ::TFloat AS SummaSale4
+           , CAST (tmpDataAll.PersentAmount4    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount4
+           , CAST (tmpDataAll.PersentSumma4     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma4
+           , CAST (tmpDataAll.PersentSummaSale4 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale4
 
-           , tmpDataAll.Amount5    ::TFloat AS Amount5
-           , tmpDataAll.Summa5     ::TFloat AS Summa5
-           , tmpDataAll.SummaSale5 ::TFloat AS SummaSale5
-           , tmpDataAll.PersentAmount5     ::TFloat AS PersentAmount5
-           , tmpDataAll.PersentSumma5      ::TFloat AS PersentSumma5
-           , tmpDataAll.PersentSummaSale5  ::TFloat AS PersentSummaSale5
+           , CAST (tmpDataAll.Amount5    AS NUMERIC (16, 2)) ::TFloat AS Amount5
+           , CAST (tmpDataAll.Summa5     AS NUMERIC (16, 2)) ::TFloat AS Summa5
+           , CAST (tmpDataAll.SummaSale5 AS NUMERIC (16, 2)) ::TFloat AS SummaSale5
+           , CAST (tmpDataAll.PersentAmount5    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount5
+           , CAST (tmpDataAll.PersentSumma5     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma5
+           , CAST (tmpDataAll.PersentSummaSale5 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale5
 
-           , tmpDataAll.Amount6    ::TFloat AS Amount6
-           , tmpDataAll.Summa6     ::TFloat AS Summa6
-           , tmpDataAll.SummaSale6 ::TFloat AS SummaSale6
-           , tmpDataAll.PersentAmount6     ::TFloat AS PersentAmount6
-           , tmpDataAll.PersentSumma6      ::TFloat AS PersentSumma6
-           , tmpDataAll.PersentSummaSale6  ::TFloat AS PersentSummaSale6
+           , CAST (tmpDataAll.Amount6    AS NUMERIC (16, 2)) ::TFloat AS Amount6
+           , CAST (tmpDataAll.Summa6     AS NUMERIC (16, 2)) ::TFloat AS Summa6
+           , CAST (tmpDataAll.SummaSale6 AS NUMERIC (16, 2)) ::TFloat AS SummaSale6
+           , CAST (tmpDataAll.PersentAmount6    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount6
+           , CAST (tmpDataAll.PersentSumma6     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma6
+           , CAST (tmpDataAll.PersentSummaSale6 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale6
 
-           , tmpDataAll.Amount7    ::TFloat AS Amount7
-           , tmpDataAll.Summa7     ::TFloat AS Summa7
-           , tmpDataAll.SummaSale7 ::TFloat AS SummaSale7
-           , tmpDataAll.PersentAmount7      ::TFloat AS PersentAmount7
-           , tmpDataAll.PersentSumma7       ::TFloat AS PersentSumma7
-           , tmpDataAll.PersentSummaSale7   ::TFloat AS PersentSummaSale7
+           , CAST (tmpDataAll.Amount7    AS NUMERIC (16, 2)) ::TFloat AS Amount7
+           , CAST (tmpDataAll.Summa7     AS NUMERIC (16, 2)) ::TFloat AS Summa7
+           , CAST (tmpDataAll.SummaSale7 AS NUMERIC (16, 2)) ::TFloat AS SummaSale7
+           , CAST (tmpDataAll.PersentAmount7    AS NUMERIC (16, 2))  ::TFloat AS PersentAmount7
+           , CAST (tmpDataAll.PersentSumma7     AS NUMERIC (16, 2))  ::TFloat AS PersentSumma7
+           , CAST (tmpDataAll.PersentSummaSale7 AS NUMERIC (16, 2))  ::TFloat AS PersentSummaSale7
+
+           , CAST (CASE WHEN tmpDataAll.SummaSale  <> 0 THEN 100 - tmpDataAll.Summa /tmpDataAll.SummaSale *100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit
+           , CAST (CASE WHEN tmpDataAll.SummaSale1 <> 0 THEN 100 - tmpDataAll.Summa1/tmpDataAll.SummaSale1*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit1
+           , CAST (CASE WHEN tmpDataAll.SummaSale2 <> 0 THEN 100 - tmpDataAll.Summa2/tmpDataAll.SummaSale2*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit2
+           , CAST (CASE WHEN tmpDataAll.SummaSale3 <> 0 THEN 100 - tmpDataAll.Summa3/tmpDataAll.SummaSale3*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit3
+           , CAST (CASE WHEN tmpDataAll.SummaSale4 <> 0 THEN 100 - tmpDataAll.Summa4/tmpDataAll.SummaSale4*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit4
+           , CAST (CASE WHEN tmpDataAll.SummaSale5 <> 0 THEN 100 - tmpDataAll.Summa5/tmpDataAll.SummaSale5*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit5
+           , CAST (CASE WHEN tmpDataAll.SummaSale6 <> 0 THEN 100 - tmpDataAll.Summa6/tmpDataAll.SummaSale6*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit6
+           , CAST (CASE WHEN tmpDataAll.SummaSale7 <> 0 THEN 100 - tmpDataAll.Summa7/tmpDataAll.SummaSale7*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit7
 
            , 14941410 :: Integer  AS Color_Amount            --нежно сал.14941410  -- 
            , 16777158  :: Integer  AS Color_Summa           -- желтый 8978431

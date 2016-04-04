@@ -156,10 +156,10 @@ BEGIN
            , tmp.SummaWithVAT                        :: TFloat AS SummaWithVAT
            , tmp.SummaSale                           :: TFloat AS SummaSale
            , (tmp.SummaSale - tmp.Summa)             :: TFloat AS SummaProfit
-           , CASE WHEN tmp.SummaSale <> 0 THEN (100-tmp.Summa/tmp.SummaSale*100) ELSE 0 END    :: TFloat AS PersentProfit
+           , CAST (CASE WHEN tmp.SummaSale <> 0 THEN (100-tmp.Summa/tmp.SummaSale*100) ELSE 0 END AS NUMERIC (16, 2))   :: TFloat AS PersentProfit
 
            , (tmp.SummaSale - tmp.SummaWithVAT)      :: TFloat AS SummaProfitWithVAT   --сумма дохода без уч.корректировки
-           , CASE WHEN tmp.SummaSale <> 0 THEN (100-tmp.SummaWithVAT/tmp.SummaSale*100) ELSE 0 END :: TFloat AS PersentProfitWithVAT
+           , CAST (CASE WHEN tmp.SummaSale <> 0 THEN (100-tmp.SummaWithVAT/tmp.SummaSale*100) ELSE 0 END AS NUMERIC (16, 2))  :: TFloat AS PersentProfitWithVAT
          
            , tmp.SummaFree                           :: TFloat AS SummaFree
            , tmp.SummaSaleFree                       :: TFloat AS SummaSaleFree
@@ -169,13 +169,13 @@ BEGIN
            , tmp.SummaWithVAT1                       :: TFloat AS SummaWithVAT1
            , tmp.SummaSale1                          :: TFloat AS SummaSale1
            , tmp.SummaProfit1                        :: TFloat AS SummaProfit1
-           , CASE WHEN tmp.Summa1 <> 0 THEN ((tmp.SummaWithVAT1-tmp.Summa1)*100 / tmp.Summa1) ELSE 0 END  :: TFloat AS Tax1
+           , CAST (CASE WHEN tmp.Summa1 <> 0 THEN ((tmp.SummaWithVAT1-tmp.Summa1)*100 / tmp.Summa1) ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS Tax1
 
            , tmp.Summa2                              :: TFloat AS Summa2
            , tmp.SummaWithVAT2                       :: TFloat AS SummaWithVAT2
            , tmp.SummaSale2                          :: TFloat AS SummaSale2
            , tmp.SummaProfit2                        :: TFloat AS SummaProfit2
-           , CASE WHEN tmp.Summa2 <> 0 THEN ((tmp.SummaWithVAT2-tmp.Summa2)*100 / tmp.Summa2) ELSE 0 END :: TFloat AS Tax2
+           , CAST (CASE WHEN tmp.Summa2 <> 0 THEN ((tmp.SummaWithVAT2-tmp.Summa2)*100 / tmp.Summa2) ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS Tax2
            
        FROM (SELECT tmpData.UnitId
                   , SUM(tmpData.Summa)        AS Summa

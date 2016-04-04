@@ -377,22 +377,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsDialogForm');
- exit;
+// exit;
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeDialogForm');
-
-  //Отчет Ценовая интервенция
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
@@ -442,7 +432,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
-
   //Отчет Ценовая интервенция
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
