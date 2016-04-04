@@ -1185,6 +1185,8 @@ begin
     .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
   //Посадова (уповноважена) особа/фізична особа
+  DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
+  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').asString;
 
   i := 1;
   ItemsDataSet.First;
