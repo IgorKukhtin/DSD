@@ -260,4 +260,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inIsErased:= FALSE, inIsPartnerDate:= FALSE, inBankAccountId:= NULL, inMoneyPlaceId:= NULL, inJuridicalCorporateId:= NULL, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inIsErased:= FALSE, inIsPartnerDate:= FALSE, inBankAccountId:= 0, inMoneyPlaceId:= 0, inJuridicalCorporateId:= 0, inSession:= zfCalc_UserAdmin())

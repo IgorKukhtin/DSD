@@ -1,3 +1,33 @@
+/* УБираем задвоенных
+select lpUnComplete_Movement (inMovementId := Movement .Id
+                                      , inUserId     := zfCalc_UserAdmin() :: Integer)
+from Movement 
+where Id in (
+
+with tmpAll as 
+(SELECT *
+FROM gpSelect_Movement_BankAccount (inStartDate:= '01.02.2016', inEndDate:= '16.03.2016', inIsErased:= FALSE, inIsPartnerDate:= FALSE, inBankAccountId:= 0, inMoneyPlaceId:= 0, inJuridicalCorporateId:= 0, inSession:= zfCalc_UserAdmin())
+where StatusCode = 2 and BankAccountId IN (1648977 -- house-1
+                                           , 1693572 -- house-2-АСНБ-4 
+                                          , 1694740 -- house-3-АСНБ-3 
+                                           , 1702164 -- house-4-АСНБ
+                                          , 1705473 -- house-5-АСНБ-2
+                                          , 1726712 -- house-6-Не болей
+                                           )
+
+
+)
+
+ , tmp as (SELECT  tmpAll.*
+                , row_number(*)  OVER (PARTITION BY BankAccountId, InvNumber, OperDate) as myR
+                , count(*)  OVER (PARTITION BY BankAccountId, InvNumber, OperDate) as myC
+           FROM tmpAll )
+
+ SELECT  tmp.Id
+ FROM tmp
+ where myC > 1 and myR = 2
+)
+*/
 /*
 +House - Шапиро И.А.
 House4 - Шапиро Д.Г.
