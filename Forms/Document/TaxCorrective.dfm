@@ -509,14 +509,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
     end
-    inherited actCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end>
-    end
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end

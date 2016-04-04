@@ -1386,8 +1386,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       item
         Name = 'ouStatusCode'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'StatusCode'
       end
       item
         Name = 'outMessageText'
@@ -1401,14 +1399,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_TaxCorrective'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
     Left = 80
     Top = 384
   end

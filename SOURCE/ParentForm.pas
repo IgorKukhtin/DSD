@@ -127,12 +127,16 @@ begin
        AddOnFormData.ExecuteDialogAction.RefreshAllow := false; // Что бы не было двух перечитываний.
        result := AddOnFormData.ExecuteDialogAction.Execute;
     end;
+
     FormSender := Sender;
-    // Если открыта первый раз и всегда перечитываем
-    if (not FisAlreadyOpen) or AddOnFormData.isAlwaysRefresh or NeedRefreshOnExecute then
-       // Перечитываем запросы
-       if Assigned(AddOnFormData.RefreshAction) then
-          AddOnFormData.RefreshAction.Execute;
+    // Если диалог был открыт нормально
+    if result = true
+    then
+        // Если открыта первый раз и всегда перечитываем
+        if (not FisAlreadyOpen) or AddOnFormData.isAlwaysRefresh or NeedRefreshOnExecute then
+           // Перечитываем запросы
+           if Assigned(AddOnFormData.RefreshAction) then
+              AddOnFormData.RefreshAction.Execute;
   finally
     FisAlreadyOpen := true;
     NeedRefreshOnExecute := false;

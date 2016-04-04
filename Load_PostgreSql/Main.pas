@@ -248,7 +248,7 @@ type
     procedure pSetNullGuide_Id_Postgres;
     procedure pSetNullDocument_Id_Postgres;
 
-    procedure pInsertHistoryCost;
+    procedure pInsertHistoryCost(isFirst:Boolean);
     procedure pInsertHistoryCost_Period(StartDate,EndDate:TDateTime;isPeriodTwo:Boolean);
     procedure pSelectData_afterLoad;
     // DocumentsCompelete :
@@ -1582,176 +1582,13 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StartProcess;
     procedure autoNal(isOneDay: Boolean);
-    var Day_ReComplete:Integer;
     begin
-               //start disable BN
-               cbSaleInt.Checked:=false;//загрузка док-тов:   3.3.Прод.пок.Int - БН
-               cbReturnInInt.Checked:=false;//загрузка док-тов:   3.4.Воз.от пок.Int - БН
-               cbTaxInt.Checked:=false;//загрузка док-тов:   8.3. Налоговые Int
-
-               cbCompleteSendOnPrice.Checked:=false;//проведение/распроведение док-тов:   2.2. Перемещение с филиалами
-               cbCompleteSaleInt.Checked:=false;//проведение/распроведение док-тов:   3.3.Прод.пок.Int - БН
-               cbCompleteReturnInInt.Checked:=false;//проведение/распроведение док-тов:   3.4.Воз.от пок.Int - БН
-               cbCompleteTaxInt.Checked:=false;//проведение/распроведение док-тов:   8.3. Налоговые Int
-
-               cbDeleteInt.Checked:=false;//3.0.2.Удаление Int
-               //end disable BN
-
-               try Day_ReComplete:=StrToInt(ParamStr(3));
-               except Day_ReComplete:=7
-               end;
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
-               then EndDateEdit.Text:=DateToStr(Date-1)
-               else EndDateEdit.Text:=DateToStr(Date-1);//DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               if isOneDay=true
-               then begin
-                         StartDateEdit.Text:=DateToStr(Date-1);
-                         EndDateEdit.Text:=DateToStr(Date-1);
-               end;
-
-               StartDateCompleteEdit.Text:=StartDateEdit.Text;
-               EndDateCompleteEdit.Text:=EndDateEdit.Text;
-
-
-               cbUpdateConrtact.Checked:=isOneDay; // исправить договор - Приход
-
-               cbIncomeBN.Checked:=true;//загрузка док-тов:  1.1. Приход от поставщика - БН
-               cbReturnOutBN.Checked:=true;//загрузка док-тов:  1.2. Возврат поставщику - БН
-               cbIncomePacker.Checked:=true;//загрузка док-тов:   1.3. Приход от заготовителя
-               cbIncomeNal.Checked:=true;//загрузка док-тов:  1.4. Приход от поставщика - НАЛ
-               cbReturnOutNal.Checked:=true;//загрузка док-тов:  1.5. Возврат поставщику - НАЛ
-               cbPartner_Income.Checked:=true;//загрузка док-тов:  !!!новые поставщики/договора НАЛ!!!
-               cbSaleIntNal.Checked:=true;//загрузка док-тов:  3.1.Прод.пок. - НАЛ
-               cbReturnInIntNal.Checked:=true;//загрузка док-тов:  3.2.Воз.от пок. - НАЛ
-               cbPartner_Sale.Checked:=true;//загрузка док-тов:  !!!новые покупатели/договора НАЛ!!!
-
-               cbCompleteIncomeBN.Checked:=true;//проведение/распроведение док-тов:  1.1. Приход от поставщика - БН
-               cbCompleteReturnOutBN.Checked:=true;//проведение/распроведение док-тов:  1.2. Возврат поставщику - БН
-               cbCompleteIncomeNal.Checked:=true;//проведение/распроведение док-тов:  1.4. Приход от поставщика - НАЛ
-               cbCompleteReturnOutNal.Checked:=true;//проведение/распроведение док-тов:  1.5. Возврат поставщику - НАЛ
-               cbCompleteSaleIntNal.Checked:=true;//проведение/распроведение док-тов:  3.1.Прод.пок. - НАЛ
-               cbCompleteReturnInIntNal.Checked:=true;//проведение/распроведение док-тов:  3.2.Воз.от пок. - НАЛ
-
-               cbDeleteInt.Checked:=not isOneDay ;//3.0.2.Удаление Int
-
-               UnitCodeSendOnPriceEdit.Text:='autoNal('+IntToStr(Day_ReComplete)+'Day)';
-               //Распроводим
-               cbComplete.Checked:=false;
-               cbUnComplete.Checked:=true;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
-               //
-               //Загружаем
-               OKDocumentButtonClick(Self);
-               //Проводим
-               cbComplete.Checked:=true;
-               cbUnComplete.Checked:=false;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
     end;
     procedure autoBN (isOneDay: Boolean);
-    var Day_ReComplete:Integer;
     begin
-               //start disable Nal
-               cbIncomeBN.Checked:=false;//загрузка док-тов:  1.1. Приход от поставщика - БН
-               cbReturnOutBN.Checked:=false;//загрузка док-тов:  1.2. Возврат поставщику - БН
-               cbIncomePacker.Checked:=false;//загрузка док-тов:   1.3. Приход от заготовителя
-               cbIncomeNal.Checked:=false;//загрузка док-тов:  1.4. Приход от поставщика - НАЛ
-               cbReturnOutNal.Checked:=false;//загрузка док-тов:  1.5. Возврат поставщику - НАЛ
-               cbPartner_Income.Checked:=false;//загрузка док-тов:  !!!новые поставщики/договора НАЛ!!!
-               cbSaleIntNal.Checked:=false;//загрузка док-тов:  3.1.Прод.пок. - НАЛ
-               cbReturnInIntNal.Checked:=false;//загрузка док-тов:  3.2.Воз.от пок. - НАЛ
-               cbPartner_Sale.Checked:=false;//загрузка док-тов:  !!!новые покупатели/договора НАЛ!!!
-
-               cbCompleteIncomeBN.Checked:=false;//проведение/распроведение док-тов:  1.1. Приход от поставщика - БН
-               cbCompleteReturnOutBN.Checked:=false;//проведение/распроведение док-тов:  1.2. Возврат поставщику - БН
-               cbCompleteIncomeNal.Checked:=false;//проведение/распроведение док-тов:  1.4. Приход от поставщика - НАЛ
-               cbCompleteReturnOutNal.Checked:=false;//проведение/распроведение док-тов:  1.5. Возврат поставщику - НАЛ
-               cbCompleteSaleIntNal.Checked:=false;//проведение/распроведение док-тов:  3.1.Прод.пок. - НАЛ
-               cbCompleteReturnInIntNal.Checked:=false;//проведение/распроведение док-тов:  3.2.Воз.от пок. - НАЛ
-
-               cbDeleteInt.Checked:=false;//3.0.2.Удаление Int
-               //end disable Nal
-
-               try Day_ReComplete:=StrToInt(ParamStr(3));
-               except Day_ReComplete:=7
-               end;
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
-               then EndDateEdit.Text:=DateToStr(Date-1)
-               else EndDateEdit.Text:=DateToStr(Date-1);//DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               if isOneDay=true
-               then begin
-                         StartDateEdit.Text:=DateToStr(Date-1);
-                         EndDateEdit.Text:=DateToStr(Date-1);
-               end;
-
-               StartDateCompleteEdit.Text:=StartDateEdit.Text;
-               EndDateCompleteEdit.Text:=EndDateEdit.Text;
-
-               cbSaleInt.Checked:=true;//загрузка док-тов:   3.3.Прод.пок.Int - БН
-               cbReturnInInt.Checked:=true;//загрузка док-тов:   3.4.Воз.от пок.Int - БН
-               cbTaxInt.Checked:=true;//загрузка док-тов:   8.3. Налоговые Int
-
-               cbCompleteSendOnPrice.Checked:=not isOneDay;//проведение/распроведение док-тов:   2.2. Перемещение с филиалами
-               cbCompleteSaleInt.Checked:=true;//проведение/распроведение док-тов:   3.3.Прод.пок.Int - БН
-               cbCompleteReturnInInt.Checked:=true;//проведение/распроведение док-тов:   3.4.Воз.от пок.Int - БН
-               cbCompleteTaxInt.Checked:=true;//проведение/распроведение док-тов:   8.3. Налоговые Int
-
-               cbDeleteInt.Checked:=not isOneDay;//3.0.2.Удаление Int
-
-               UnitCodeSendOnPriceEdit.Text:='autoBN('+IntToStr(Day_ReComplete)+'Day)';
-               //Распроводим
-               cbComplete.Checked:=false;
-               cbUnComplete.Checked:=true;
-               cbLastComplete.Checked:=true;
-               OKCompleteDocumentButtonClick(Self);
-               //
-               //Загружаем
-               OKDocumentButtonClick(Self);
-               //Проводим
-               cbComplete.Checked:=true;
-               cbUnComplete.Checked:=false;
-               cbLastComplete.Checked:=true;
-               OKCompleteDocumentButtonClick(Self);
     end;
     procedure autoGuide;
     begin
-               cbGoodsGroup.Checked:=true;//загрузка
-               //***cbJuridicalInt.Checked:=true;//загрузка
-               //***cbContractInt.Checked:=true;//загрузка Договора Int
-               //***cbPartnerInt.Checked:=true;//загрузка
-               //Загружаем справочники
-               OKGuideButtonClick(Self);
-
-               cbGoodsGroup.Checked:=true;//загрузка
-               //***cbJuridicalInt.Checked:=false;//нет загрузка
-               //***cbContractInt.Checked:=false;//нет загрузка Договора Int
-               //***cbPartnerInt.Checked:=false;//нет загрузка
-
-               cbMeasure.Checked:=true;//загрузка
-               cbGoods.Checked:=true;//загрузка
-               cbGoodsKind.Checked:=true;//загрузка
-               cbPriceList.Checked:=true;//загрузка
-               cbPriceListItems.Checked:=true;//загрузка
-               //***cbGoodsProperty_Detail.Checked:=true;//загрузка
-               //***cbGoodsPropertyValue.Checked:=true;//загрузка
-               //***cbGoodsByGoodsKind.Checked:=true;//загрузка
-               //***cbOrderType.Checked:=true;//загрузка
-               cbReceipt.Checked:=true;//загрузка
-               cbReceiptChild.Checked:=true;//загрузка
-
-               //Загружаем справочники
-               OKGuideButtonClick(Self);
     end;
 
     procedure autoALL (isOneDay: Boolean);
@@ -1784,84 +1621,27 @@ begin
 
      if ParamStr(2)='autoFillSoldTable'
      then begin
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-31)+') as RetV');
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-25)+') as RetV');
                StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-               EndDateEdit.Text:=DateToStr(Date-1);
 
-               cbFillSoldTable.Checked:=true;
-               //Загружаем
-               OKDocumentButtonClick(Self);
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-25)+') as RetV');
+               EndDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+               //if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
+               //then EndDateEdit.Text:=DateToStr(Date-1)
+               //else EndDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               // текущий месяц
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date)+') as RetV');
+
+               // !!!за текущий - не надо!!!
+               if EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime) then
+               begin
+                    cbFillSoldTable.Checked:=true;
+                    //Загружаем
+                    OKDocumentButtonClick(Self);
+               end;
      end;
 
-
-     if ParamStr(2)='autoReturnIn'
-     then begin
-               StartDateEdit.Text:=DateToStr(Date-1);
-               EndDateEdit.Text:=DateToStr(Date-1);
-
-               StartDateCompleteEdit.Text:=DateToStr(Date-1);
-               EndDateCompleteEdit.Text:=DateToStr(Date-1);
-
-               cbContractInt.Checked:=true;//загрузка Договора Int
-               //Загружаем справочники
-               OKGuideButtonClick(Self);
-
-               cbCompleteReturnInInt.Checked:=true;//загрузка док-тов: Воз.от пок.Int - БН
-               cbReturnInInt.Checked:=true;//проведение/распроведение док-тов: Воз.от пок.Int - БН
-
-               //Распроводим
-               cbComplete.Checked:=false;
-               cbUnComplete.Checked:=true;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
-               //
-               //Загружаем
-               OKDocumentButtonClick(Self);
-               //Проводим
-               cbComplete.Checked:=true;
-               cbUnComplete.Checked:=false;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
-     end;
-
-     if ParamStr(2)='autoGuide'
-     then begin
-               autoGuide;
-     end;
-     if ParamStr(2)='autoNal'
-     then begin
-               autoGuide;
-               autoNal(false);
-     end;
-
-     if ParamStr(2)='autoBN'
-     then begin
-               autoGuide;
-               autoBN(false);
-     end;
-
-     if ParamStr(2)='autoNalBN'
-     then begin
-               autoGuide;
-               autoBN(false);
-               autoNal(false);
-     end;
-
-     if ParamStr(2)='autoDayNalBN'
-     then begin
-               autoBN(true);
-               autoNal(true);
-     end;
-
-     if ParamStr(2)='autoDayNal'
-     then begin
-               autoNal(true);
-     end;
-
-     if ParamStr(2)='autoDayBN'
-     then begin
-               autoBN(true);
-     end;
 
      if ParamStr(2)='autoALL'
      then begin
@@ -1876,58 +1656,9 @@ begin
 
      if ParamStr(2)='auto'
      then begin
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-1)+') as RetV');
-               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-1)+') as RetV');
-               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
-               then EndDateEdit.Text:=DateToStr(Date-1)
-               else EndDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               StartDateCompleteEdit.Text:=StartDateEdit.Text;
-               EndDateCompleteEdit.Text:=EndDateEdit.Text;
-
-               cbSendUnitBranch.Checked:=true;//загрузка док-тов : Перемещение с филиалами
-               cbCompleteSendOnPrice.Checked:=true;//проведение/распроведение док-тов: Перемещение с филиалами
-               cbBranchSendOnPrice.Checked:=true;//ограничение: только 1код подразделения
-               //значение 1код подразделения
-               if ParamStr(3)<>'' then UnitCodeSendOnPriceEdit.Text:=ParamStr(3)
-               else UnitCodeSendOnPriceEdit.Text:='22121';
-               //Распроводим
-               cbComplete.Checked:=false;
-               cbUnComplete.Checked:=true;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
-               //
-               //Загружаем
-               OKDocumentButtonClick(Self);
-               //Проводим
-               cbComplete.Checked:=true;
-               cbUnComplete.Checked:=false;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
           end;
      if ParamStr(2)='autoReComplete'
      then begin
-               try Day_ReComplete:=StrToInt(ParamStr(3));
-               except Day_ReComplete:=7
-               end;
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               StartDateCompleteEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
-               then EndDateCompleteEdit.Text:=DateToStr(Date-1)
-               else EndDateCompleteEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               UnitCodeSendOnPriceEdit.Text:='ReComplete('+IntToStr(Day_ReComplete)+'Day)';
-               //Перепроводим
-               cbComplete.Checked:=true;
-               cbUnComplete.Checked:=true;
-               cbInsertHistoryCost.Checked:=true;
-               cbComplete_List.Checked:=true;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
           end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2352,11 +2083,11 @@ var tmpDate1,tmpDate2,tmpDate3:TDateTime;
     saveStartDate,saveEndDate:TDateTime;
     calcStartDate,calcEndDate:TDateTime;
 begin
-     if (cbSelectData_afterLoad.Checked)
+     {if (cbSelectData_afterLoad.Checked)
      then begin
                pSelectData_afterLoad;
                exit;
-     end;
+     end;}
      //
      //
      if System.Pos('auto',ParamStr(2))<=0
@@ -2490,7 +2221,13 @@ begin
           if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);}
-          if not fStop then pCompleteDocument_List(TRUE, FALSE, FALSE);
+
+           //
+           // сам расчет с/с - 1-ый
+           if not fStop then pInsertHistoryCost (TRUE);
+           //
+           // перепроведение
+           if not fStop then pCompleteDocument_List(TRUE, FALSE, FALSE);
 
      end;
      //
@@ -2500,10 +2237,10 @@ begin
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Partion;
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
      //
+     // сам расчет с/с - 2-ой
+     if not fStop then pInsertHistoryCost(FALSE);
      //
-     if not fStop then pInsertHistoryCost;
-     //
-     //
+     // перепроведение
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);
      //
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Diff;
@@ -10167,7 +9904,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pInsertHistoryCost;
+procedure TMainForm.pInsertHistoryCost(isFirst:Boolean);
 var calcStartDate,calcEndDate:TDateTime;
     saveStartDate,saveEndDate:TDateTime;
     Year, Month, Day: Word;
@@ -10204,19 +9941,22 @@ begin
                   else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, 0 as BranchId, 0 as BranchCode, null as BranchName');
              //
              //
-             fOpenSqToQuery (' select *'
-                            +' from gpSelect_HistoryCost_Branch ('+FormatToDateServer_notNULL(calcStartDate)
-                            +'                                  ,'+FormatToDateServer_notNULL(calcEndDate)
-                            +'                                  ,zfCalc_UserAdmin()'
-                            +'                                  )');
-             while not toSqlQuery.EOF do
+             if isFirst = FALSE then
              begin
-                  Add(' union all select cast('+FormatToDateServer_notNULL(toSqlQuery.FieldByName('StartDate').AsDatetime)+' as date) as StartDate'
-                     +'                , cast('+FormatToDateServer_notNULL(toSqlQuery.FieldByName('EndDate').AsDatetime)+' as date) as EndDate'
-                     +'                , '+IntToStr(toSqlQuery.FieldByName('BranchId').AsInteger)+' as BranchId'
-                     +'                , '+IntToStr(toSqlQuery.FieldByName('BranchCode').AsInteger)+' as BranchCode'
-                     +'                , '+FormatToVarCharServer_notNULL(toSqlQuery.FieldByName('BranchName').AsString)+' as BranchName');
-                  toSqlQuery.Next;
+                   fOpenSqToQuery (' select *'
+                                  +' from gpSelect_HistoryCost_Branch ('+FormatToDateServer_notNULL(calcStartDate)
+                                  +'                                  ,'+FormatToDateServer_notNULL(calcEndDate)
+                                  +'                                  ,zfCalc_UserAdmin()'
+                                  +'                                  )');
+                   while not toSqlQuery.EOF do
+                   begin
+                        Add(' union all select cast('+FormatToDateServer_notNULL(toSqlQuery.FieldByName('StartDate').AsDatetime)+' as date) as StartDate'
+                           +'                , cast('+FormatToDateServer_notNULL(toSqlQuery.FieldByName('EndDate').AsDatetime)+' as date) as EndDate'
+                           +'                , '+IntToStr(toSqlQuery.FieldByName('BranchId').AsInteger)+' as BranchId'
+                           +'                , '+IntToStr(toSqlQuery.FieldByName('BranchCode').AsInteger)+' as BranchCode'
+                           +'                , '+FormatToVarCharServer_notNULL(toSqlQuery.FieldByName('BranchName').AsString)+' as BranchName');
+                        toSqlQuery.Next;
+                   end;
              end;
              //
              //

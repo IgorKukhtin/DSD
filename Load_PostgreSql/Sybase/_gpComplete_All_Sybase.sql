@@ -14,14 +14,20 @@ $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
 
+     -- нашли
      SELECT DescId, StatusId INTO vbMovementDescId, vbStatusId FROM Movement WHERE Id = inMovementId;
 
+     -- !!!выход!!!
+     -- IF vbMovementDescId IN (zc_Movement_Sale()) THEN RETURN; END IF;
+
+     -- !!!проверка!!!
      IF COALESCE (vbMovementDescId, 0) = 0
      THEN
          RAISE EXCEPTION 'NOT FIND, inMovementId = %', inMovementId;
      END IF;
 
 
+     -- !!!выход - Инвентаризация!!!
      IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 15
      THEN 
          IF EXTRACT ('MINUTES' FROM CURRENT_TIMESTAMP) BETWEEN 40 AND 59 OR EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) <> 8

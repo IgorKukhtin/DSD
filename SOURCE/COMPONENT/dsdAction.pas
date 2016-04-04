@@ -2826,7 +2826,8 @@ end;
 function TShowMessageAction.LocalExecute: Boolean;
 begin
   if FMessageText <> '' then
-    ShowMessage(FMessageText);
+      //ShowMessage(FMessageText);
+    raise Exception.Create(FMessageText);
 end;
 
 procedure TShowMessageAction.SetMessageText(Value: String);
