@@ -522,7 +522,7 @@ begin
 
   //Посадова (уповноважена) особа/фізична особа
   DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
-  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').asString;
+  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_to').asString;
 
   i := 1;
   HeaderDataSet.First;
