@@ -224,7 +224,7 @@ $BODY$
  28.01.16         * 
  11.08.15                                                                       *
 */
+
 -- тест
 -- SELECT * FROM gpReport_Movement_Check(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateFinal := ('29.02.2016')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
 -- SELECT * FROM gpReport_Movement_Check (inUnitId:= 0, inDateStart:= '20150801'::TDateTime, inDateFinal:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
---zc_MIFloat_PriceWithOutVAT

@@ -39,12 +39,53 @@ BEGIN
                                  , Movement.OperDate
                                  , MovementLinkObject_Car.ObjectId AS CarId
                                  , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
-                                 , MovementItem.Id AS MovementItemId
-                                 , MovementItem.Amount AS DistanceFuelMaster
+                                 -- , MovementItem.Id AS MovementItemId
+                                 -- , MovementItem.Amount AS DistanceFuelMaster
+
+                                 , CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE THEN MovementItem.Amount ELSE COALESCE (MIFloat_DistanceFuelChild.ValueData) END AS DistanceFuel
+
                                  , MovementItem.ObjectId AS RouteId
                                  , MILinkObject_RouteKind.ObjectId AS RouteKindId
                                  , MIFloat_Weight.ValueData          AS Weight
                                  , MIFloat_WeightTransport.ValueData AS WeightTransport
+
+                                 , COALESCE (MIFloat_StartOdometre.ValueData, 0) AS StartOdometre
+                                 , COALESCE (MIFloat_EndOdometre.ValueData, 0)   AS EndOdometre
+
+                                 , MILinkObject_RateFuelKind.ObjectId AS RateFuelKindId
+                                 , COALESCE (MIContainer.ObjectId_Analyzer, MI.ObjectId) AS FuelId
+
+                                 , COALESCE (MIFloat_RateFuelKindTax.ValueData, 0)  AS RateFuelKindTax
+
+                                 , COALESCE (MIFloat_StartAmountFuel.ValueData, 0) AS AmountFuel_Start
+                                 , -1 * COALESCE (MIContainer.Amount, 0) AS AmountFuel_Out
+
+                                 , COALESCE (MIFloat_ColdHour.ValueData, 0)     AS ColdHour
+                                 , COALESCE (MIFloat_ColdDistance.ValueData, 0) AS ColdDistance
+
+                                 , COALESCE (MIFloat_AmountFuel.ValueData, 0)         AS AmountFuel
+                                 , COALESCE (MIFloat_AmountColdHour.ValueData, 0)     AS AmountColdHour
+                                 , COALESCE (MIFloat_AmountColdDistance.ValueData, 0) AS AmountColdDistance
+
+                                 , zfCalc_RateFuelValue_Distance     (inDistance           := CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE  THEN MovementItem.Amount                 -- если "Основной" вид топлива
+                                                                                                   WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = FALSE THEN MIFloat_DistanceFuelChild.ValueData -- если "Дополнительный" вид топлива
+                                                                                                   ELSE 0
+                                                                                              END
+                                                                    , inAmountFuel         := MIFloat_AmountFuel.ValueData
+                                                                    , inFuel_Ratio         := 1 -- !!!Коэффициент перевода нормы уже учтен!!!
+                                                                    , inRateFuelKindTax    := 0 -- !!!% дополнительного расхода в связи с сезоном/температурой уже учтен!!!
+                                                                     ) AS Amount_Distance_calc
+                                 , zfCalc_RateFuelValue_ColdHour     (inColdHour           := MIFloat_ColdHour.ValueData
+                                                                    , inAmountColdHour     := MIFloat_AmountColdHour.ValueData
+                                                                    , inFuel_Ratio         := 1 -- !!!Коэффициент перевода нормы уже учтен!!!
+                                                                    , inRateFuelKindTax    := 0 -- !!!% дополнительного расхода в связи с сезоном/температурой уже учтен!!!
+                                                                     ) AS Amount_ColdHour_calc
+                                 , zfCalc_RateFuelValue_ColdDistance (inColdDistance       := MIFloat_ColdDistance.ValueData
+                                                                    , inAmountColdDistance := MIFloat_AmountColdDistance.ValueData
+                                                                    , inFuel_Ratio         := 1 -- !!!Коэффициент перевода нормы уже учтен!!!
+                                                                    , inRateFuelKindTax    := 0 -- !!!% дополнительного расхода в связи с сезоном/температурой уже учтен!!!
+                                                                     ) AS Amount_ColdDistance_calc
+
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                                               ON MovementLinkObject_Car.MovementId = Movement.Id
@@ -55,6 +96,14 @@ BEGIN
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
+                                                             ON MIFloat_StartOdometre.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
+                                                             ON MIFloat_EndOdometre.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
+
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
                                                                   ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
@@ -64,9 +113,56 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_WeightTransport
                                                              ON MIFloat_WeightTransport.MovementItemId = MovementItem.Id
                                                             AND MIFloat_WeightTransport.DescId = zc_MIFloat_WeightTransport()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                                             ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
+
+                                 LEFT JOIN MovementItem AS MI ON MI.ParentId = MovementItem.Id
+                                                             AND MI.DescId   = zc_MI_Child()
+                                                             AND MI.isErased   = FALSE
+                                 LEFT JOIN MovementItemContainer AS MIContainer
+                                                                 ON MIContainer.MovementId = MI.MovementId
+                                                                AND MIContainer.MovementItemId = MI.Id
+                                                                AND MIContainer.DescId = zc_MIContainer_Count()
+                                                                AND MIContainer.MovementDescId = zc_Movement_Transport()
+
+                                 LEFT JOIN MovementItemBoolean AS MIBoolean_MasterFuel
+                                                               ON MIBoolean_MasterFuel.MovementItemId = MI.Id
+                                                              AND MIBoolean_MasterFuel.DescId = zc_MIBoolean_MasterFuel()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_StartAmountFuel
+                                                             ON MIFloat_StartAmountFuel.MovementItemId = MI.Id
+                                                            AND MIFloat_StartAmountFuel.DescId = zc_MIFloat_StartAmountFuel()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_ColdHour
+                                                             ON MIFloat_ColdHour.MovementItemId = MI.Id
+                                                            AND MIFloat_ColdHour.DescId = zc_MIFloat_ColdHour()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_ColdDistance
+                                                             ON MIFloat_ColdDistance.MovementItemId = MI.Id
+                                                            AND MIFloat_ColdDistance.DescId = zc_MIFloat_ColdDistance()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountColdHour
+                                                             ON MIFloat_AmountColdHour.MovementItemId = MI.Id
+                                                            AND MIFloat_AmountColdHour.DescId = zc_MIFloat_AmountColdHour()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountColdDistance
+                                                             ON MIFloat_AmountColdDistance.MovementItemId = MI.Id
+                                                            AND MIFloat_AmountColdDistance.DescId = zc_MIFloat_AmountColdDistance()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountFuel
+                                                             ON MIFloat_AmountFuel.MovementItemId = MI.Id
+                                                            AND MIFloat_AmountFuel.DescId = zc_MIFloat_AmountFuel()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_RateFuelKind
+                                                                  ON MILinkObject_RateFuelKind.MovementItemId = MI.Id
+                                                                 AND MILinkObject_RateFuelKind.DescId = zc_MILinkObject_RateFuelKind()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RateFuelKindTax
+                                                             ON MIFloat_RateFuelKindTax.MovementItemId = MI.Id
+                                                            AND MIFloat_RateFuelKindTax.DescId = zc_MIFloat_RateFuelKindTax()
+
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_Transport()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND (MI.ParentId IS NULL OR MI.Amount <> 0 OR MIFloat_StartAmountFuel.ValueData <> 0)
                            )
 
         SELECT zfConvert_StringToNumber (tmpFuel.InvNumber) AS InvNumberTransport
@@ -186,103 +282,33 @@ BEGIN
                    , tmpTransport.PersonalDriverId
                    , tmpTransport.RouteId
                    , tmpTransport.RouteKindId
-                   , MILinkObject_RateFuelKind.ObjectId AS RateFuelKindId
-                   , COALESCE (Container.ObjectId, MI.ObjectId) AS FuelId
+                   , tmpTransport.RateFuelKindId
+                   , tmpTransport.FuelId
 
-                   , CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE THEN tmpTransport.DistanceFuelMaster ELSE COALESCE (MIFloat_DistanceFuelChild.ValueData) END AS DistanceFuel
-                   , COALESCE (MIFloat_RateFuelKindTax.ValueData, 0)  AS RateFuelKindTax
-
---                   , 0 AS StartOdometre
---                   , 0 AS EndOdometre
+                   , tmpTransport.DistanceFuel
+                   , tmpTransport.RateFuelKindTax
 
                    , tmpTransport.Weight
                    , tmpTransport.WeightTransport
 
-                   , COALESCE (MIFloat_StartOdometre.ValueData, 0) AS StartOdometre
-                   , COALESCE (MIFloat_EndOdometre.ValueData, 0)   AS EndOdometre
+                   , tmpTransport.StartOdometre
+                   , tmpTransport.EndOdometre
 
-                   , COALESCE (MIFloat_StartAmountFuel.ValueData, 0) AS AmountFuel_Start
+                   , tmpTransport.AmountFuel_Start
                    , 0 AS AmountFuel_In
-                   , -1 * COALESCE (MIContainer.Amount, 0) AS AmountFuel_Out
+                   , tmpTransport.AmountFuel_Out
 
-                   , COALESCE (MIFloat_ColdHour.ValueData, 0)     AS ColdHour
-                   , COALESCE (MIFloat_ColdDistance.ValueData, 0) AS ColdDistance
+                   , tmpTransport.ColdHour
+                   , tmpTransport.ColdDistance
 
-                   , COALESCE (MIFloat_AmountFuel.ValueData, 0)         AS AmountFuel
-                   , COALESCE (MIFloat_AmountColdHour.ValueData, 0)     AS AmountColdHour
-                   , COALESCE (MIFloat_AmountColdDistance.ValueData, 0) AS AmountColdDistance
+                   , tmpTransport.AmountFuel
+                   , tmpTransport.AmountColdHour
+                   , tmpTransport.AmountColdDistance
 
-                   , zfCalc_RateFuelValue_Distance     (inDistance           := CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE  THEN tmpTransport.DistanceFuelMaster     -- если "Основной" вид топлива
-                                                                                     WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = FALSE THEN MIFloat_DistanceFuelChild.ValueData -- если "Дополнительный" вид топлива
-                                                                                     ELSE 0
-                                                                                END
-                                                      , inAmountFuel         := MIFloat_AmountFuel.ValueData
-                                                      , inFuel_Ratio         := 1 -- !!!Коэффициент перевода нормы уже учтен!!!
-                                                      , inRateFuelKindTax    := 0 -- !!!% дополнительного расхода в связи с сезоном/температурой уже учтен!!!
-                                                       ) AS Amount_Distance_calc
-                   , zfCalc_RateFuelValue_ColdHour     (inColdHour           := MIFloat_ColdHour.ValueData
-                                                      , inAmountColdHour     := MIFloat_AmountColdHour.ValueData
-                                                      , inFuel_Ratio         := 1 -- !!!Коэффициент перевода нормы уже учтен!!!
-                                                      , inRateFuelKindTax    := 0 -- !!!% дополнительного расхода в связи с сезоном/температурой уже учтен!!!
-                                                       ) AS Amount_ColdHour_calc
-                   , zfCalc_RateFuelValue_ColdDistance (inColdDistance       := MIFloat_ColdDistance.ValueData
-                                                      , inAmountColdDistance := MIFloat_AmountColdDistance.ValueData
-                                                      , inFuel_Ratio         := 1 -- !!!Коэффициент перевода нормы уже учтен!!!
-                                                      , inRateFuelKindTax    := 0 -- !!!% дополнительного расхода в связи с сезоном/температурой уже учтен!!!
-                                                       ) AS Amount_ColdDistance_calc
+                   , tmpTransport.Amount_Distance_calc
+                   , tmpTransport.Amount_ColdHour_calc
+                   , tmpTransport.Amount_ColdDistance_calc
               FROM tmpTransport
-                   LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
-                                               ON MIFloat_StartOdometre.MovementItemId = tmpTransport.MovementItemId
-                                              AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()
-                   LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
-                                               ON MIFloat_EndOdometre.MovementItemId = tmpTransport.MovementItemId
-                                              AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
-
-
-                   JOIN MovementItem AS MI ON MI.ParentId = tmpTransport.MovementItemId
-                                          AND MI.DescId   = zc_MI_Child()
-                                          AND MI.isErased   = FALSE
-                   LEFT JOIN MovementItemContainer AS MIContainer
-                                                   ON MIContainer.MovementItemId = MI.Id
-                                                  AND MIContainer.DescId = zc_MIContainer_Count()
-                   LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
-
-                   LEFT JOIN MovementItemBoolean AS MIBoolean_MasterFuel
-                                                 ON MIBoolean_MasterFuel.MovementItemId = MI.Id
-                                                AND MIBoolean_MasterFuel.DescId = zc_MIBoolean_MasterFuel()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_StartAmountFuel
-                                               ON MIFloat_StartAmountFuel.MovementItemId = MI.Id
-                                              AND MIFloat_StartAmountFuel.DescId = zc_MIFloat_StartAmountFuel()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_ColdHour
-                                               ON MIFloat_ColdHour.MovementItemId = MI.Id
-                                              AND MIFloat_ColdHour.DescId = zc_MIFloat_ColdHour()
-                   LEFT JOIN MovementItemFloat AS MIFloat_ColdDistance
-                                               ON MIFloat_ColdDistance.MovementItemId = MI.Id
-                                              AND MIFloat_ColdDistance.DescId = zc_MIFloat_ColdDistance()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountColdHour
-                                               ON MIFloat_AmountColdHour.MovementItemId = MI.Id
-                                              AND MIFloat_AmountColdHour.DescId = zc_MIFloat_AmountColdHour()
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountColdDistance
-                                               ON MIFloat_AmountColdDistance.MovementItemId = MI.Id
-                                              AND MIFloat_AmountColdDistance.DescId = zc_MIFloat_AmountColdDistance()
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountFuel
-                                               ON MIFloat_AmountFuel.MovementItemId = MI.Id
-                                              AND MIFloat_AmountFuel.DescId = zc_MIFloat_AmountFuel()
-
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_RateFuelKind
-                                                    ON MILinkObject_RateFuelKind.MovementItemId = MI.Id
-                                                   AND MILinkObject_RateFuelKind.DescId = zc_MILinkObject_RateFuelKind()
-                   LEFT JOIN MovementItemFloat AS MIFloat_RateFuelKindTax
-                                               ON MIFloat_RateFuelKindTax.MovementItemId = MI.Id
-                                              AND MIFloat_RateFuelKindTax.DescId = zc_MIFloat_RateFuelKindTax()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
-                                               ON MIFloat_DistanceFuelChild.MovementItemId = tmpTransport.MovementItemId
-                                              AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
---              WHERE 
              UNION ALL
               -- 2.2. Приход топлива
               SELECT Movement.ParentId AS MovementId
@@ -293,7 +319,7 @@ BEGIN
                    , MovementLinkObject_Route.ObjectId AS RouteId
                    , 0 AS RouteKindId
                    , 0 AS RateFuelKindId
-                   , Container.ObjectId AS FuelId
+                   , MIContainer.ObjectId_Analyzer AS FuelId
 
                    , 0 AS DistanceFuel
                    , 0 AS RateFuelKindTax
@@ -316,16 +342,17 @@ BEGIN
                    , 0 AS Amount_Distance_calc
                    , 0 AS Amount_ColdHour_calc
                    , 0 AS Amount_ColdDistance_calc
-              FROM Movement
-                   JOIN MovementItemContainer AS MIContainer
-                                              ON MIContainer.MovementId = Movement.Id
-                                             AND MIContainer.DescId = zc_MIContainer_Count()
+              FROM Container
                    -- так ограничили приходы только на Автомобиль
                    JOIN ContainerLinkObject AS ContainerLO_Car
-                                            ON ContainerLO_Car.ContainerId = MIContainer.ContainerId
+                                            ON ContainerLO_Car.ContainerId = Container.Id
                                            AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
                                            AND ContainerLO_Car.ObjectId > 0
-                   LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
+                   JOIN MovementItemContainer AS MIContainer
+                                              ON MIContainer.ContainerId = ContainerLO_Car.ContainerId
+                                             AND MIContainer.MovementDescId = zc_Movement_Income()
+                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                   LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
 
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                                 ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
@@ -337,9 +364,7 @@ BEGIN
                    LEFT JOIN Movement AS Movement_Transport
                                       ON Movement_Transport.Id     = Movement.ParentId
                                      AND Movement_Transport.DescId = zc_Movement_Transport()
-              WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                AND Movement.DescId = zc_Movement_Income()
-                AND Movement.StatusId = zc_Enum_Status_Complete()
+              WHERE Container.DescId = zc_container_Count()
 
              ) AS tmpAll
               GROUP BY tmpAll.MovementId
@@ -384,7 +409,6 @@ BEGIN
                , ViewObject_Unit.BranchName
        ;
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -401,4 +425,4 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 */
 
 -- тест
--- SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());

@@ -96,7 +96,6 @@ type
     colisPartner: TcxGridDBColumn;
     ExecuteDialog1: TExecuteDialog;
     actShowMessage: TShowMessageAction;
-    actCompleteProc: TdsdExecStoredProc;
   private
     { Private declarations }
   public

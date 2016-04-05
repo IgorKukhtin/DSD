@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems;
 
 type
   TReport_TransportForm = class(TParentForm)
@@ -83,6 +83,7 @@ type
     clWeight: TcxGridDBColumn;
     clWeightTransport: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    dxBarStatic: TdxBarStatic;
   private
   public
   end;

@@ -4,7 +4,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   ClientWidth = 930
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 946
-  ExplicitHeight = 402
+  ExplicitHeight = 399
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -94,6 +94,11 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
               Kind = skSum
               Column = colAmount
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -108,7 +113,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Width = 100
           end
           object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -302,7 +307,10 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     ExplicitWidth = 930
     ExplicitHeight = 30
     inherited deStart: TcxDateEdit
+      Left = 131
       Top = 4
+      EditValue = 42370d
+      ExplicitLeft = 131
       ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
@@ -313,10 +321,10 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
-      Left = 20
-      Caption = #1044#1072#1090#1072' '#1086#1089#1090#1072#1090#1082#1072':'
-      ExplicitLeft = 20
-      ExplicitWidth = 78
+      Left = 19
+      Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086':'
+      ExplicitLeft = 19
+      ExplicitWidth = 105
     end
     inherited cxLabel2: TcxLabel
       Left = 8
@@ -326,12 +334,12 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       ExplicitTop = 33
     end
     object cxLabel4: TcxLabel
-      Left = 192
+      Left = 230
       Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 277
+      Left = 320
       Top = 4
       Properties.Buttons = <
         item
@@ -339,18 +347,18 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 184
+      Width = 201
     end
   end
   object cbPartion: TcxCheckBox [2]
-    Left = 483
+    Left = 530
     Top = 4
     Action = actRefreshIsPartion
     TabOrder = 6
     Width = 94
   end
   object cbPartionPrice: TcxCheckBox [3]
-    Left = 583
+    Left = 627
     Top = 4
     Action = actRefreshPartionPrice
     TabOrder = 7
@@ -583,7 +591,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbGoodsPartyReport'
         end
         item
           Visible = True
@@ -591,8 +599,17 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end
         item
           Visible = True
-          ItemName = 'bbGoodsPartyReport'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+      ShowCaption = False
     end
     object bbGoodsPartyReport: TdxBarButton
       Action = actOpenPartionReport

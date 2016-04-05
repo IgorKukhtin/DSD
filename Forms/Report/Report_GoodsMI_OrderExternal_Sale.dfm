@@ -5,7 +5,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1108
-  ExplicitHeight = 425
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -546,14 +546,12 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -1225,12 +1223,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         Component = PeriodChoice
       end
       item
-        Component = deStart
-      end
-      item
-        Component = deEnd
-      end
-      item
         Component = GoodsGroupGuides
       end
       item
@@ -1244,8 +1236,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       end
       item
         Component = GuidesTo
-      end
-      item
       end>
     Left = 592
     Top = 144

@@ -677,20 +677,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           DataType = ftBoolean
         end>
     end
-    object actCompleteProc: TdsdExecStoredProc [12]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementComplete
-        end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
-    end
-    object actMovementCheck: TdsdOpenForm [14]
+    object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -712,7 +699,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object ExecuteDialog: TExecuteDialog [24]
+    object ExecuteDialog: TExecuteDialog [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False

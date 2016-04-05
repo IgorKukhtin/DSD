@@ -3,8 +3,6 @@
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, Boolean, Boolean, TVarChar);
 
-
-
 CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inRemainsDate      TDateTime,  -- Дата остатка
@@ -88,7 +86,7 @@ BEGIN
                                  FROM ContainerCount
                                       LEFT JOIN MovementItemContainer AS MIContainer 
                                                                       ON MIContainer.ContainerId = ContainerCount.ContainerId
-                                                                     AND MIContainer.OperDate > inRemainsDate
+                                                                     AND MIContainer.OperDate >= inRemainsDate
                                  GROUP BY ContainerCount.ContainerId, containerCount.GoodsId, containerCount.Amount
                                       , ContainerCount.MovementId_Income
                                       , ContainerCount.MovementId_find
@@ -200,14 +198,11 @@ BEGIN
                                                 inObjectId := vbObjectId, 
                                                 inUserId := vbUserId) AS SelectMinPrice_AllGoods
                                                                       ON SelectMinPrice_AllGoods.GoodsId = Object_Goods_View.Id
-
-;
+           ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_GoodsOnUnitRemains (Integer, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -215,10 +210,7 @@ $BODY$
  27.03.16         *
  28.01.16         *
  02.06.15                        *
-
 */
 
 -- тест
---select * from gpSelect_GoodsOnUnitRemains(inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');
-
-
+-- SELECT * FROM gpSelect_GoodsOnUnitRemains (inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');

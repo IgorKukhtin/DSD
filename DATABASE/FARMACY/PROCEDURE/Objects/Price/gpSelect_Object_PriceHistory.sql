@@ -336,17 +336,16 @@ BEGIN
               AND (inisShowDel = True OR Object_Goods_View.isErased = False)
             ORDER BY GoodsGroupName, GoodsName;
     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
  13.03.16         *
-
 */
 
 -- тест
---select * from gpSelect_Object_PriceHistory(inUnitId := 183292 , inStartDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+-- SELECT * FROM gpSelect_Object_PriceHistory(inUnitId := 183292 , inStartDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

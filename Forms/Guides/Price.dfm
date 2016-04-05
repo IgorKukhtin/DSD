@@ -14,13 +14,15 @@ inherited PriceForm: TPriceForm
     Align = alTop
     TabOrder = 6
     object deOperDate: TcxDateEdit
-      Left = 519
+      Left = 531
       Top = 5
       EditValue = 42460d
       Properties.DateOnError = deToday
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Visible = False
       Width = 154
@@ -102,6 +104,7 @@ inherited PriceForm: TPriceForm
               Kind = skSum
               Column = colRemains
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.CellEndEllipsis = True

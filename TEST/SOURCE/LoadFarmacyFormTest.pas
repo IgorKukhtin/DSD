@@ -377,24 +377,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  //Отчет ликвидности
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidDialogForm');
-
-  //отчет доходности
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
-
-  //Отчет Ценовая интервенция
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionDialogForm');
- exit;
+// exit;
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
@@ -444,6 +427,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
 
+  //отчет доходности
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
   //Отчет Ценовая интервенция
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');

@@ -1619,6 +1619,8 @@ end;
 
 var Day_ReComplete:Integer;
 begin
+     // !!!важно!!!
+     cbOnlySale.Checked:=  System.Pos('_SALE',ParamStr(2))>0;
 
      if ParamStr(2)='autoFillSoldTable'
      then begin
@@ -1644,11 +1646,11 @@ begin
      end;
 
 
-     if ParamStr(2)='autoALL'
+     if (ParamStr(2)='autoALL')or(ParamStr(2)='autoALL_SALE')
      then begin
                autoALL(true);
      end;
-     if ParamStr(2)='autoALLLAST'
+     if (ParamStr(2)='autoALLLAST')or(ParamStr(2)='autoALLLAST_SALE')
      then begin
                cbLastCost.Checked:=TRUE;
                cbHistoryCost_diff.Checked:=TRUE;
@@ -2196,18 +2198,21 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pInsertHistoryCost_Period(StartDate,EndDate:TDateTime;isPeriodTwo:Boolean);
-var cbLastCost_save:Boolean;
+var cbLastCost_save,cbOnlySale_save:Boolean;
 begin
      StartDateCompleteEdit.Text:=DateToStr(StartDate);
      EndDateCompleteEdit.Text:=DateToStr(EndDate);
+
      cbLastCost_save:=cbLastCost.Checked;
      if isPeriodTwo = TRUE then cbLastCost.Checked:=false;
+     cbOnlySale_save:=cbOnlySale.Checked;
+     if isPeriodTwo = TRUE then cbOnlySale.Checked:=false;
      //
      //!!!Integer!!!
 
      //if not fStop then pCompleteDocument_Cash;
 
-     if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
+     if (cbOnlySale.Checked = FALSE)and(cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
      begin
           {if not fStop then pCompleteDocument_Income(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_IncomeNal(cbLastComplete.Checked);
@@ -2247,6 +2252,7 @@ begin
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Diff;
      //
      if isPeriodTwo = TRUE then cbLastCost.Checked:=cbLastCost_save;
+     if isPeriodTwo = TRUE then cbOnlySale.Checked:=cbOnlySale_save;
      //
      {if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then begin pCompleteDocument_Income(cbLastComplete.Checked);pCompleteDocument_IncomeNal(cbLastComplete.Checked);end;
      if not fStop then pCompleteDocument_UpdateConrtact;
@@ -20436,19 +20442,22 @@ procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion,isDiff:Bo
 var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     i,SaveRecord:Integer;
     MSec_complete:Integer;
+    isSale_str:String;
 begin
      if (isPartion = FALSE) and (isDiff = FALSE) then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
      //
      myEnabledCB(cbComplete_List);
      //
+     if cbOnlySale.Checked = true then isSale_str:=',TRUE' else isSale_str:=',FALSE';
+     //
      // !!!заливка в сибасе!!!
 
      // Get Data
      if (ParamStr(2)='autoReComplete') and (isBefoHistoryCost = TRUE)
-     then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
+     then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',TRUE)')
      else
      if (ParamStr(2)='autoReComplete') and (isBefoHistoryCost = FALSE)
-     then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
+     then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE)')
      else
 
      if (isDiff = TRUE)
@@ -20460,11 +20469,11 @@ begin
          if (isBefoHistoryCost = TRUE)and(cbInsertHistoryCost_andReComplete.Checked)
          then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
          else if (isBefoHistoryCost = FALSE)and(cbInsertHistoryCost_andReComplete.Checked)
-              then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
+              then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE)')
               else
                   if isBefoHistoryCost = TRUE
-                  then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
-                  else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)');
+                  then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',TRUE)')
+                  else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE)');
 
      // delete Data on Sybase
      fromADOConnection.Connected:=false;

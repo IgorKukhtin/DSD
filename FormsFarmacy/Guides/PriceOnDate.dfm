@@ -4,7 +4,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
   ClientWidth = 1354
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1370
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -14,7 +14,6 @@ inherited PriceOnDateForm: TPriceOnDateForm
     Height = 32
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 1064
     object deOperDate: TcxDateEdit
       Left = 519
       Top = 5
@@ -22,6 +21,8 @@ inherited PriceOnDateForm: TPriceOnDateForm
       Properties.DateOnError = deToday
       Properties.DisplayFormat = 'dd.mm.yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Width = 90
     end
@@ -41,17 +42,16 @@ inherited PriceOnDateForm: TPriceOnDateForm
     Width = 1354
     Height = 362
     ExplicitTop = 58
-    ExplicitWidth = 1064
+    ExplicitWidth = 1354
     ExplicitHeight = 362
     ClientRectBottom = 362
     ClientRectRight = 1354
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1064
+      ExplicitWidth = 1354
       ExplicitHeight = 362
       inherited cxGrid: TcxGrid
         Width = 1354
         Height = 362
-        ExplicitLeft = 3
         ExplicitWidth = 1354
         ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView

@@ -694,3 +694,4 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3409416, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
+-- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3438646, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
