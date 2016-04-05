@@ -196,7 +196,16 @@ BEGIN
         
     -- Результат
     RETURN QUERY
-        WITH tmpRes AS (
+        WITH tmpPersonalServiceList AS (SELECT View_Personal.MemberId, MAX (ObjectLink_Personal_PersonalServiceList.ChildObjectId) AS PersonalServiceListId
+                                        FROM Object_Personal_View AS View_Personal
+                                             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                                  ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
+                                                                 AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                                                 AND ObjectLink_Personal_PersonalServiceList.ChildObjectId <> 0
+                                        WHERE View_Personal.isErased = FALSE
+                                        GROUP BY View_Personal.MemberId
+                                       )
+           , tmpRes AS (
             SELECT
                 Res.StaffList
                ,Res.UnitId
@@ -355,15 +364,16 @@ BEGIN
         FROM
             tmpRes
             LEFT OUTER JOIN Object_Personal_View AS Object_Personal
-                                                 ON COALESCE(Object_Personal.MemberId,0) = COALESCE(tmpRes.MemberId,0)
-                                                AND COALESCE(Object_Personal.PositionId,0) = COALESCE(tmpRes.PositionId,0)
-                                                AND COALESCE(Object_Personal.PositionLevelId,0) = COALESCE(tmpRes.PositionLevelId,0)
-                                                AND COALESCE(Object_Personal.UnitId,0) = COALESCE(tmpRes.UnitId,0)
+                                                 ON Object_Personal.MemberId                      = tmpRes.MemberId
+                                                AND COALESCE (Object_Personal.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
+                                                AND COALESCE (Object_Personal.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                                                AND COALESCE (Object_Personal.UnitId, 0)          = COALESCE (tmpRes.UnitId, 0)
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal.PersonalId
                                       AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
-            LEFT OUTER JOIN Object AS Object_PersonalServiceList
-                                   ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+            LEFT JOIN tmpPersonalServiceList ON tmpPersonalServiceList.MemberId = tmpRes.MemberId
+            LEFT OUTER JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, tmpPersonalServiceList.PersonalServiceListId)
+
             LEFT OUTER JOIN SMOrd ON SMOrd.ServiceModelCode = tmpRes.ServiceModelCode
             LEFT OUTER JOIN SMOrd AS SMOrd_1 ON SMOrd_1.ServiceModelOrd = 1
             LEFT OUTER JOIN SMOrd AS SMOrd_2 ON SMOrd_2.ServiceModelOrd = 2

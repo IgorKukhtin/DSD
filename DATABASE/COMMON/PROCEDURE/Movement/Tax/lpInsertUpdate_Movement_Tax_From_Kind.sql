@@ -50,14 +50,17 @@ BEGIN
 
 
       -- определется тип формирования для корректировки
-      vbDocumentTaxKindId_TaxCorrective:= CASE WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
-                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
-                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
-                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
-                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
-                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
+      vbDocumentTaxKindId_TaxCorrective:= CASE WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR() -- сводная налоговая по юр.л.(реализация-возвраты)
+                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR() -- сводная корректировка по юр.л.(реализация-возвраты)
+
+                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR() -- сводная налоговая по т.т.(реализация-возвраты)
+                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR() -- сводная корректировка по т.т.(реализация-возвраты)
+
+                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS() -- сводная налоговая по юр.л.(реализация)
+                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR() -- сводная корректировка по юр.л.(возвраты)
+
+                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS() -- сводная налоговая по т.т.(реализация)
+                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR() -- сводная корректировка по т.т.(возвраты)
                                           END;
 
       -- определяются параметры для <Налогового документа>
