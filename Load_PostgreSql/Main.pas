@@ -2229,7 +2229,7 @@ begin
           if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);}
 
            //
-           // сам расчет с/с - 1-ый
+           // сам расчет с/с - 1-ый - “ќЋ№ ќ производство
            if not fStop then pInsertHistoryCost (TRUE);
            //
            // перепроведение
@@ -2243,7 +2243,7 @@ begin
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Partion;
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
      //
-     // сам расчет с/с - 2-ой
+     // сам расчет с/с - 2-ой - производство + ‘»Ћ»јЋџ
      if not fStop then pInsertHistoryCost(FALSE);
      //
      // перепроведение

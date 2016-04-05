@@ -474,9 +474,11 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName
-    ('SupplierGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
-    ('BuyerGLNCode').asString;
+  DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
+                              + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime)
+                              + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
+                              + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+                               ;
 
   if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
   begin
@@ -654,7 +656,7 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := gfFloatToStr
-        (HeaderDataSet.FieldByName('VATPersent').AsFloat);
+        (HeaderDataSet.FieldByName('VATPercent').AsFloat);
     end;
     inc(i);
     HeaderDataSet.Next;
@@ -711,7 +713,7 @@ begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-        'Налоговая сформирована и подписана';
+        'Корректировка сформирована и подписана';
       FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
@@ -734,7 +736,7 @@ begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-        'Корректировочная налоговая отправлена на FTP';
+        'Корректировка отправлена на FTP';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -1144,9 +1146,12 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName
-    ('BuyerGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
-    ('SupplierGLNCode').asString;
+
+  DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
+                              + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI_tax').asDateTime)
+                              + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
+                              + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+                               ;
 
 
   if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
@@ -1250,6 +1255,19 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('PriceNoVAT').AsFloat);
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG008.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := gfFloatToStr(HeaderDataSet.FieldByName('VATPercent').AsFloat);
     end;
     inc(i);
     ItemsDataSet.Next;
@@ -1386,9 +1404,9 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName
-    ('BuyerGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
-    ('SupplierGLNCode').asString;
+  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
+                              + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+                               ;
 
   if C_DOC_VER <> '7' then
      DECLAR.DECLARBODY.HORIG := '1';
