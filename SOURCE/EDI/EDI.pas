@@ -512,17 +512,15 @@ begin
   DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_To').asString;
   DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_From').asString;
 
-  DECLAR.DECLARBODY.R01G9 := '-' + StringReplace
-    (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummmvat').AsFloat),
-    DecimalSeparator, cMainDecimalSeparator, []);
+
   DECLAR.DECLARBODY.R02G9 := '-' + StringReplace
     (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummvat').AsFloat),
     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  DECLAR.DECLARBODY.R01G9 := '-' + StringReplace
+    (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummmvat').AsFloat),
+    DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R001G03 := DECLAR.DECLARBODY.R02G9;
 
-  //Посадова (уповноважена) особа/фізична особа
-  DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
-  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_to').asString;
 
   i := 1;
   HeaderDataSet.First;
@@ -677,6 +675,9 @@ begin
     HeaderDataSet.Next;
   end;
 
+  //Посадова (уповноважена) особа/фізична особа
+  DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
+  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_to').asString;
 
   if SendToFTP then
     lDirectory := ExtractFilePath(ParamStr(0))
@@ -1173,20 +1174,19 @@ begin
   DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').asString;
 
   //итоговые суммы
-  DECLAR.DECLARBODY.R01G7 :=
-    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
+  DECLAR.DECLARBODY.R04G11 :=
+    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  DECLAR.DECLARBODY.R03G11 :=
+  StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT')
     .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R03G7 :=
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT')
     .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-  DECLAR.DECLARBODY.R03G11 := DECLAR.DECLARBODY.R03G7;
-  DECLAR.DECLARBODY.R04G11 :=
-    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT')
+  DECLAR.DECLARBODY.R01G7 :=
+    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
     .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
-  //Посадова (уповноважена) особа/фізична особа
-  DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
-  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').asString;
 
   i := 1;
   ItemsDataSet.First;
@@ -1255,7 +1255,9 @@ begin
     ItemsDataSet.Next;
   end;
 
-
+  //Посадова (уповноважена) особа/фізична особа
+  DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
+  DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').asString;
 
 
   // путь к файлу

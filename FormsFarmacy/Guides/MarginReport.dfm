@@ -1,24 +1,26 @@
-inherited MarginCategoryForm: TMarginCategoryForm
-  Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1086#1082
-  ClientHeight = 318
-  ClientWidth = 439
-  ExplicitWidth = 455
-  ExplicitHeight = 356
+inherited MarginReportForm: TMarginReportForm
+  Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072' ('#1062#1077#1085#1086#1074#1072#1103' '#1080#1085#1090#1077#1088#1074#1077#1085#1094#1080#1103')'
+  ClientHeight = 307
+  ClientWidth = 512
+  ExplicitWidth = 528
+  ExplicitHeight = 345
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 439
-    Height = 292
-    ExplicitWidth = 360
-    ClientRectBottom = 292
-    ClientRectRight = 439
+    Width = 512
+    Height = 281
+    ExplicitWidth = 363
+    ExplicitHeight = 281
+    ClientRectBottom = 281
+    ClientRectRight = 512
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 360
-      ExplicitHeight = 282
+      ExplicitWidth = 363
+      ExplicitHeight = 281
       inherited cxGrid: TcxGrid
-        Width = 439
-        Height = 292
-        ExplicitWidth = 360
+        Width = 512
+        Height = 281
+        ExplicitWidth = 363
+        ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -31,20 +33,13 @@ inherited MarginCategoryForm: TMarginCategoryForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentVert = vaCenter
-            Width = 77
+            Width = 88
           end
           object colName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
-            Width = 265
-          end
-          object colPercent: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' "'#1086#1073#1097#1080#1081'"'
-            DataBinding.FieldName = 'Percent'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 74
+            Width = 404
           end
         end
       end
@@ -71,7 +66,7 @@ inherited MarginCategoryForm: TMarginCategoryForm
     Top = 80
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MarginCategory'
+    StoredProcName = 'gpSelect_Object_MarginReport'
     Top = 80
   end
   inherited BarManager: TdxBarManager
@@ -107,7 +102,7 @@ inherited MarginCategoryForm: TMarginCategoryForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_MarginCategory'
+    StoredProcName = 'gpInsertUpdate_Object_MarginReport'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -144,14 +139,6 @@ inherited MarginCategoryForm: TMarginCategoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
-      end
-      item
-        Name = 'inPercent'
-        Value = '0'
-        Component = MasterCDS
-        ComponentItem = 'Percent'
-        DataType = ftFloat
-        ParamType = ptInput
       end>
     PackSize = 1
     Left = 296
