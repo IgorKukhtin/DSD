@@ -334,7 +334,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = TRUE
+       -- AND inIsBefoHistoryCost = TRUE -- *****
     UNION
      -- 4.4. To: Peresort
      SELECT Movement.Id AS MovementId
@@ -355,7 +355,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ProductionUnion())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = TRUE
+       -- AND inIsBefoHistoryCost = TRUE -- *****
     ) AS tmp
     -- WHERE tmp.MovementId >= 2212722 OR tmp.Code = 'zc_Movement_Inventory'
     ;

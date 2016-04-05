@@ -307,7 +307,7 @@ BEGIN
      -- 
      DELETE FROM _tmp1_SubQuery;
      DELETE FROM _tmp2_SubQuery;
-     -- данные для курсор2 - отдельно !!!для оптимизации!!!
+     -- данные для курсор2 - <Налоговые> отдельно !!!для оптимизации!!!
      INSERT INTO _tmp1_SubQuery (MovementId, OperDate, isRegistered, Amount)
                          SELECT Movement.Id AS MovementId
                               , Movement.OperDate
@@ -379,7 +379,7 @@ BEGIN
                                 , Movement.OperDate
                                 , MB_Registered.ValueData;
                         
-     -- данные для курсор2 - отдельно !!!для оптимизации!!!
+     -- данные для курсор2 - <Корректировки> к этим <Налоговым> отдельно !!!для оптимизации!!!
               WITH tmpMovement2 AS (SELECT Movement.Id
                                         , MIFloat_Price.ValueData AS Price
                                         , SUM (MovementItem.Amount) AS Amount
@@ -694,4 +694,4 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3409416, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
--- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3438646, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
+-- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3449385, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');

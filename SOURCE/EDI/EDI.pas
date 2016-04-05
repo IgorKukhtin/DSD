@@ -474,9 +474,11 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName
-    ('SupplierGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
-    ('BuyerGLNCode').asString;
+  DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
+                              + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime)
+                              + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
+                              + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+                               ;
 
   if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
   begin
@@ -1144,9 +1146,12 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName
-    ('BuyerGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
-    ('SupplierGLNCode').asString;
+
+  DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
+                              + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI_tax').asDateTime)
+                              + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
+                              + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+                               ;
 
 
   if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
@@ -1386,9 +1391,9 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName
-    ('BuyerGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
-    ('SupplierGLNCode').asString;
+  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
+                              + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+                               ;
 
   if C_DOC_VER <> '7' then
      DECLAR.DECLARBODY.HORIG := '1';
