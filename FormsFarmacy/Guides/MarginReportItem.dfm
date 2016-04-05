@@ -139,11 +139,13 @@ inherited MarginReportItemForm: TMarginReportItemForm
         end
         item
           Name = 'MarginReportId'
+          Value = Null
           Component = MarginReportGuides
           ComponentItem = 'Key'
         end
         item
           Name = 'MarginReportName'
+          Value = Null
           Component = MarginReportGuides
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -187,6 +189,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
     end
   end
   inherited MasterDS: TDataSource
+    Left = 56
     Top = 80
   end
   inherited MasterCDS: TClientDataSet

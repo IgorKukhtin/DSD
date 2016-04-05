@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginReportItem(
     IN inPersent7       Tfloat,        -- вирт. % для 7-ого передела 
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS INTEGER AS
+RETURNS VOID AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE vbid Integer;   

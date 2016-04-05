@@ -3,8 +3,8 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1062#1077#1085#1086#1074#1072#1103' '#1080#1085#1090#1077#1088#1074#1077#1085#1094#1080#1103'>'
-  ClientHeight = 294
-  ClientWidth = 438
+  ClientHeight = 324
+  ClientWidth = 429
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 102
-    Top = 257
+    Left = 97
+    Top = 289
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
   end
   object cxButton2: TcxButton
     Left = 276
-    Top = 257
+    Top = 285
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -62,58 +62,12 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
     Top = 29
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
-  object cxLabel3: TcxLabel
-    Left = 8
-    Top = 261
-    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' 1:'
-    Visible = False
-  end
-  object cxLabel5: TcxLabel
-    Left = 8
-    Top = 238
-    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' 2:'
-    Visible = False
-  end
-  object ceJuridical1: TcxButtonEdit
-    Left = 33
-    Top = 238
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Properties.ReadOnly = True
-    Properties.UseNullString = True
-    TabOrder = 8
-    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-    TextHint = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-    Visible = False
-    Width = 49
-  end
-  object ceJuridical2: TcxButtonEdit
-    Left = 43
-    Top = 261
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Properties.ReadOnly = True
-    Properties.UseNullString = True
-    TabOrder = 9
-    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-    TextHint = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-    Visible = False
-    Width = 39
-  end
   object cePrice1: TcxCurrencyEdit
     Left = 240
     Top = 64
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 10
+    TabOrder = 6
     Width = 142
   end
   object cxLabel4: TcxLabel
@@ -126,7 +80,7 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
     Top = 94
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 12
+    TabOrder = 8
     Width = 142
   end
   object cxLabel8: TcxLabel
@@ -139,7 +93,7 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
     Top = 124
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 14
+    TabOrder = 10
     Width = 142
   end
   object cxLabel9: TcxLabel
@@ -152,7 +106,7 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
     Top = 154
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 16
+    TabOrder = 12
     Width = 142
   end
   object cxLabel10: TcxLabel
@@ -165,7 +119,7 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
     Top = 184
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 18
+    TabOrder = 14
     Width = 142
   end
   object cxLabel11: TcxLabel
@@ -178,13 +132,31 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
     Top = 214
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 20
+    TabOrder = 16
     Width = 142
   end
   object cxLabel12: TcxLabel
     Left = 31
     Top = 215
     Caption = #1055#1088#1077#1076#1077#1083' '#1087#1088#1086#1084#1077#1078#1091#1090#1082#1072' 6 ('#1074' '#1094#1077#1085#1077' '#1079#1072#1082#1091#1087#1082#1080')'
+  end
+  object cxLabel3: TcxLabel
+    Left = 31
+    Top = 245
+    Caption = #1042#1080#1088#1090#1091#1072#1083#1100#1085#1072#1103' '#1082#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
+  end
+  object ceMarginReport: TcxButtonEdit
+    Left = 205
+    Top = 244
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 19
+    Width = 177
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -266,58 +238,49 @@ object Report_PriceInterventionDialogForm: TReport_PriceInterventionDialogForm
         Component = cePrice6
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'MarginReportId'
+        Value = Null
+        Component = MarginReportGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'MarginReportName'
+        Value = Null
+        Component = MarginReportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 399
     Top = 38
   end
-  object Juridical1Guides: TdsdGuides
+  object MarginReportGuides: TdsdGuides
     KeyField = 'Id'
-    FormNameParam.Value = 'TJuridicalForm'
+    LookupControl = ceMarginReport
+    FormNameParam.Value = 'TMarginReportForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
+    FormName = 'TMarginReportForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = Juridical1Guides
+        Component = MarginReportGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = Juridical1Guides
+        Component = MarginReportGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 16
+    Left = 216
     Top = 240
-  end
-  object Juridical2Guides: TdsdGuides
-    KeyField = 'Id'
-    FormNameParam.Value = 'TJuridicalForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = Juridical2Guides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = Juridical2Guides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 8
-    Top = 264
   end
 end

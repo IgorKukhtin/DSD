@@ -35,9 +35,6 @@ type
     bbEnd: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    cxLabel5: TcxLabel;
-    ceJuridical2: TcxButtonEdit;
-    Juridical2Guides: TdsdGuides;
     cxLabel8: TcxLabel;
     cePrice1: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
@@ -59,12 +56,9 @@ type
     cxColor_Amount: TcxGridDBBandedColumn;
     cxColor_Summa: TcxGridDBBandedColumn;
     cxColor_SummaSale: TcxGridDBBandedColumn;
-    cxColor_PersentAmount1: TcxGridDBBandedColumn;
-    cxColor_PersentSumma1: TcxGridDBBandedColumn;
-    cxColor_PersentSummaSale1: TcxGridDBBandedColumn;
-    cxPersentProfit: TcxGridDBBandedColumn;
     spInsertUpdate: TdsdStoredProc;
-    cxVitrPersent1: TcxGridDBBandedColumn;
+    actInsertUpdate: TdsdUpdateDataSet;
+    cxMarginCategoryName: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
