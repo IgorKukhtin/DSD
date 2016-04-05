@@ -1,24 +1,29 @@
-п»ї--Function: gpSelect_Object_MarginCategory(TVarChar)
+--Function: gpSelect_Object_MarginCategory(TVarChar)
 
---DROP FUNCTION gpSelect_Object_MarginCategory(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MarginCategory(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategory(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Percent TFloat
+             , isErased boolean) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_MarginCategory());
 
    RETURN QUERY 
-   SELECT 
-         Object.Id         AS Id 
-       , Object.ObjectCode AS Code
-       , Object.ValueData  AS Name
-       , Object.isErased   AS isErased
-   FROM Object
-   WHERE Object.DescId = zc_Object_MarginCategory();
+   SELECT Object_MarginCategory.Id         AS Id 
+        , Object_MarginCategory.ObjectCode AS Code
+        , Object_MarginCategory.ValueData  AS Name
+        , ObjectFloat_Percent.ValueData    AS Percent
+        , Object_MarginCategory.isErased   AS isErased
+   FROM Object AS Object_MarginCategory
+        LEFT JOIN ObjectFloat AS ObjectFloat_Percent 	
+                              ON ObjectFloat_Percent.ObjectId = Object_MarginCategory.Id
+                             AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()  
+   WHERE Object_MarginCategory.DescId = zc_Object_MarginCategory();
   
 END;$BODY$
 
@@ -29,11 +34,12 @@ ALTER FUNCTION gpSelect_Object_MarginCategory(TVarChar)
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.04.16         *
  09.04.15                         *
 
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_Object_MarginCategory('2') 
+-- тест
+-- SELECT * FROM gpSelect_Object_MarginCategory('2')

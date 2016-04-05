@@ -61,6 +61,7 @@ ALTER FUNCTION gpSelect_Object_MarginCategoryItem(Integer, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.04.16         *
  09.04.15                         *
 
 */

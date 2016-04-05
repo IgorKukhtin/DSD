@@ -1,4 +1,4 @@
-unit MarginCategory;
+unit MarginReportItem;
 
 interface
 
@@ -14,12 +14,13 @@ uses
   dxSkinsdxBarPainter;
 
 type
-  TMarginCategoryForm = class(TAncestorEnumForm)
-    colCode: TcxGridDBColumn;
+  TMarginReportItemForm = class(TAncestorEnumForm)
     colName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
-    colPercent: TcxGridDBColumn;
+    colPercent1: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    UnitChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
@@ -31,7 +32,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMarginCategoryForm)
+  RegisterClass(TMarginReportItemForm)
 
 
 end.
