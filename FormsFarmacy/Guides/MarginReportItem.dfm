@@ -2,6 +2,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
   Caption = #1069#1083#1077#1084#1077#1085#1090' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072' ('#1062#1077#1085#1086#1074#1072#1103' '#1080#1085#1090#1077#1088#1074#1077#1085#1094#1080#1103')'
   ClientHeight = 359
   ClientWidth = 885
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 901
   ExplicitHeight = 397
   PixelsPerInch = 96
@@ -55,6 +56,8 @@ inherited MarginReportItemForm: TMarginReportItemForm
           object colPercent1: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 1-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
@@ -62,6 +65,8 @@ inherited MarginReportItemForm: TMarginReportItemForm
           object colPercent2: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 2-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
@@ -69,6 +74,8 @@ inherited MarginReportItemForm: TMarginReportItemForm
           object colPercent3: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 3-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
@@ -76,6 +83,8 @@ inherited MarginReportItemForm: TMarginReportItemForm
           object colPercent4: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 4-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
@@ -83,6 +92,8 @@ inherited MarginReportItemForm: TMarginReportItemForm
           object colPercent5: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 5-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
@@ -90,6 +101,8 @@ inherited MarginReportItemForm: TMarginReportItemForm
           object colPercent6: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 6-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
@@ -97,6 +110,8 @@ inherited MarginReportItemForm: TMarginReportItemForm
           object colPercent7: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 7-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
@@ -388,5 +403,25 @@ inherited MarginReportItemForm: TMarginReportItemForm
       end>
     Left = 200
     Top = 128
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MarginReportId'
+        Value = ''
+        Component = MarginReportGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'MarginReportName'
+        Value = ''
+        Component = MarginReportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 759
+    Top = 110
   end
 end

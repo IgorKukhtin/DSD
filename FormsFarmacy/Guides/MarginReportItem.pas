@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, cxLabel, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxButtonEdit;
+  cxButtonEdit, cxCurrencyEdit;
 
 type
   TMarginReportItemForm = class(TAncestorEnumForm)
@@ -28,6 +28,7 @@ type
     bbMarginReport: TdxBarControlContainerItem;
     colMarginReportName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

@@ -59,6 +59,8 @@ type
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
     cxMarginCategoryName: TcxGridDBBandedColumn;
+    MarginReportItemOpenForm: TdsdOpenForm;
+    bbMarginReportItem: TdxBarButton;
   private
     { Private declarations }
   public

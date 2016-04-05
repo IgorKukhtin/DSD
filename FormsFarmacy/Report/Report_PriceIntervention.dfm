@@ -2284,6 +2284,30 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       Caption = 'actInsertUpdate'
       DataSource = MasterDS
     end
+    object MarginReportItemOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1069#1083#1077#1084#1077#1085#1090#1099' '#1074#1080#1088#1090'. '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      ImageIndex = 60
+      FormName = 'TMarginReportItemForm'
+      FormNameParam.Value = 'TMarginReportItemForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'MarginReportId'
+          Value = Null
+          Component = MarginReportGuides
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'MarginReportName'
+          Value = Null
+          Component = MarginReportGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 520
@@ -2397,6 +2421,14 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMarginReportItem'
         end>
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
@@ -2447,6 +2479,10 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbMarginReportItem: TdxBarButton
+      Action = MarginReportItemOpenForm
       Category = 0
     end
   end
