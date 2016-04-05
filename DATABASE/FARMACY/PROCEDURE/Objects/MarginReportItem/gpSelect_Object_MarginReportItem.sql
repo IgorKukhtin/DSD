@@ -1,12 +1,14 @@
 --Function: gpSelect_Object_MarginReportItem(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_MarginReportItem(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MarginReportItem(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MarginReportItem(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMarginReportId  Integer,
+    IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , MarginReportId Integer, MarginReportName TVarChar
+             , MarginReportId Integer, MarginReportName TVarChar 
              , UnitId Integer, UnitName TVarChar
              , Percent1 TFloat
              , Percent2 TFloat
@@ -23,11 +25,11 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT Object_MarginReportItem.Id        AS Id 
-        , Object_MarginReport.ObjectCode    AS Object_MarginReportId
-        , Object_MarginReport.ValueData     AS Object_MarginReportName
+        , Object_MarginReport.ObjectCode    AS MarginReportId
+        , Object_MarginReport.ValueData     AS MarginReportName
 
-        , Object_Unit.ObjectCode            AS Object_UnitId
-        , Object_Unit.ValueData             AS Object_UnitName
+        , Object_Unit.ObjectCode            AS UnitId
+        , Object_Unit.ValueData             AS UnitName
 
         , ObjectFloat_Percent1.ValueData    AS Percent1 
         , ObjectFloat_Percent2.ValueData    AS Percent2
@@ -62,9 +64,10 @@ $BODY$BEGIN
                               ON ObjectFloat_Percent7.ObjectId = Object_MarginReportItem.Id
                              AND ObjectFloat_Percent7.DescId = zc_ObjectFloat_MarginReportItem_Percent7()
   
-        LEFT JOIN ObjectLink AS ObjectLink_MarginReport
+        INNER JOIN ObjectLink AS ObjectLink_MarginReport
                              ON ObjectLink_MarginReport.DescId = zc_ObjectLink_MarginReportItem_MarginReport()
                             AND ObjectLink_MarginReport.ObjectId = Object_MarginReportItem.Id 
+                            AND (ObjectLink_MarginReport.ChildObjectId = inMarginReportId OR inMarginReportId = 0)
         LEFT JOIN Object AS Object_MarginReport ON Object_MarginReport.Id = ObjectLink_MarginReport.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit
@@ -77,7 +80,7 @@ $BODY$BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MarginReportItem(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_MarginReportItem(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

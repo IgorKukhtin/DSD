@@ -1,9 +1,9 @@
 -- Function: gpInsertUpdate_Object_MarginReportItem(Integer, Integer, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginReportItem (Integer, Integer, Integer, Tfloat, Tfloat,Tfloat,Tfloat,Tfloat,Tfloat,Tfloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginReportItem (Integer, Integer, Tfloat, Tfloat,Tfloat,Tfloat,Tfloat,Tfloat,Tfloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginReportItem(
- INOUT ioId             Integer,       --  люч объекта <¬иды форм оплаты>
     IN inMarginReportId Integer,       -- 
     IN inUnitId         Integer,       -- 
 
@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginReportItem(
 RETURNS INTEGER AS
 $BODY$
    DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
+   DECLARE vbid Integer;   
    
 BEGIN
  
@@ -27,34 +27,46 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_MarginReportItem());
    UserId := inSession;
 
-   -- ≈сли код не установлен, определ€ем его каи последний+1
-   Code_max := lfGet_ObjectCode(inCode, zc_Object_MarginReportItem());
-   
-   -- проверка прав уникальности дл€ свойства <Ќаименование ¬ида формы оплаты>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_MarginReportItem(), inName);
-   -- проверка прав уникальности дл€ свойства < од ¬ида формы оплаты>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_MarginReportItem(), Code_max);
+   -- проверка inMarginReportId должен быть установлен
+   IF COALESCE (inMarginReportId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'ќшибка. «начение < атегори€ наценки дл€ отчета (÷енова€ интервенци€)> должно быть установлено.';
+   END IF;
+
+   vbid := (SELECT  ObjectLink_MarginReport.ObjectId AS Id 
+            FROM ObjectLink AS ObjectLink_MarginReport
+               INNER JOIN ObjectLink AS ObjectLink_Unit
+                                     ON ObjectLink_Unit.DescId = zc_ObjectLink_MarginReportItem_Unit()
+                                    AND ObjectLink_Unit.ObjectId = ObjectLink_MarginReport.ObjectId
+                                    AND ObjectLink_Unit.ChildObjectId = inUnitId --2082813
+            WHERE ObjectLink_MarginReport.DescId = zc_ObjectLink_MarginReportItem_MarginReport()
+              AND ObjectLink_MarginReport.ChildObjectId = inMarginReportId );--2082813 
 
    -- сохранили <ќбъект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_MarginReportItem(), Code_max, inName);
+   vbid := lpInsertUpdate_Object (COALESCE (vbid,0), zc_Object_MarginReportItem(), 0, '');
    
    -- сохранили свойство <вирт. % дл€ 1-ого передела>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent1(), ioId, inPersent1);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent1(), vbid, inPersent1);
    -- сохранили свойство <вирт. % дл€ 2-ого передела>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent2(), ioId, inPersent2);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent2(), vbid, inPersent2);
    -- сохранили свойство <вирт. % дл€ 3-ого передела>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent3(), ioId, inPersent3);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent3(), vbid, inPersent3);
    -- сохранили свойство <вирт. % дл€ 4-ого передела>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent4(), ioId, inPersent4);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent4(), vbid, inPersent4);
    -- сохранили свойство <вирт. % дл€ 5-ого передела>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent5(), ioId, inPersent5);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent5(), vbid, inPersent5);
    -- сохранили свойство <вирт. % дл€ 6-ого передела>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent6(), ioId, inPersent6);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent6(), vbid, inPersent6);
    -- сохранили свойство <вирт. % дл€ 7-ого передела>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent7(), ioId, inPersent7);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginReportItem_Percent7(), vbid, inPersent7);
+
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MarginReportItem_MarginReport(), vbid, inMarginReportId);
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MarginReportItem_Unit(), vbid, inUnitId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (vbid, UserId);
 
    
 END;$BODY$

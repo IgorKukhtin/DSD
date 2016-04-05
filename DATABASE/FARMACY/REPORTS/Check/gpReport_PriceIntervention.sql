@@ -2,7 +2,7 @@
 
 
 DROP FUNCTION IF EXISTS gpReport_PriceIntervention (TDateTime, TDateTime, TFloat,TFloat, TFloat,TFloat, TFloat,TFloat, TVarChar);
-
+DROP FUNCTION IF EXISTS gpReport_PriceIntervention (TDateTime, TDateTime, TFloat,TFloat, TFloat,TFloat, TFloat,TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_PriceIntervention(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -13,11 +13,13 @@ CREATE OR REPLACE FUNCTION  gpReport_PriceIntervention(
     IN inPrice4           TFloat ,
     IN inPrice5           TFloat ,
     IN inPrice6           TFloat ,
+    IN inMarginReportId   Integer,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
   JuridicalMainCode  Integer, 
   JuridicalMainName  TVarChar,
+  UnitId             Integer, 
   UnitCode           Integer, 
   UnitName           TVarChar,
 
@@ -83,6 +85,14 @@ RETURNS TABLE (
   PersentProfit6      TFloat,
   PersentProfit7      TFloat,
 
+  VirtPercent1        TFloat,
+  VirtPercent2        TFloat,
+  VirtPercent3        TFloat,
+  VirtPercent4        TFloat,
+  VirtPercent5        TFloat,
+  VirtPercent6        TFloat,
+  VirtPercent7        TFloat,
+           
   Color_Amount       Integer,
   Color_Summa        Integer,
   Color_SummaSale    Integer,
@@ -353,9 +363,48 @@ BEGIN
                     FROM tmpDataAll
                     )               
 
+, tmpMarginReportItem AS (SELECT ObjectLink_Unit.ChildObjectId     AS UnitId
+                               , ObjectFloat_Percent1.ValueData    AS Percent1 
+                               , ObjectFloat_Percent2.ValueData    AS Percent2
+                               , ObjectFloat_Percent3.ValueData    AS Percent3
+                               , ObjectFloat_Percent4.ValueData    AS Percent4
+                               , ObjectFloat_Percent5.ValueData    AS Percent5
+                               , ObjectFloat_Percent6.ValueData    AS Percent6
+                               , ObjectFloat_Percent7.ValueData    AS Percent7 
+                          FROM ObjectLink AS ObjectLink_MarginReport
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent1 	
+                                                     ON ObjectFloat_Percent1.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent1.DescId = zc_ObjectFloat_MarginReportItem_Percent1()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent2 	
+                                                     ON ObjectFloat_Percent2.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent2.DescId = zc_ObjectFloat_MarginReportItem_Percent2()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent3 	
+                                                     ON ObjectFloat_Percent3.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent3.DescId = zc_ObjectFloat_MarginReportItem_Percent3()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent4 	
+                                                     ON ObjectFloat_Percent4.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent4.DescId = zc_ObjectFloat_MarginReportItem_Percent4()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent5 	
+                                                     ON ObjectFloat_Percent5.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent5.DescId = zc_ObjectFloat_MarginReportItem_Percent5()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent6 	
+                                                     ON ObjectFloat_Percent6.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent6.DescId = zc_ObjectFloat_MarginReportItem_Percent6()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent7 	
+                                                     ON ObjectFloat_Percent7.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent7.DescId = zc_ObjectFloat_MarginReportItem_Percent7()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                    ON ObjectLink_Unit.DescId = zc_ObjectLink_MarginReportItem_Unit()
+                                                   AND ObjectLink_Unit.ObjectId = ObjectLink_MarginReport.ObjectId
+                          WHERE ObjectLink_MarginReport.DescId = zc_ObjectLink_MarginReportItem_MarginReport()
+                            AND ObjectLink_MarginReport.ChildObjectId = inMarginReportId
+                            AND inMarginReportId <> 0 
+                          )
+
         SELECT
              Object_JuridicalMain.ObjectCode         AS JuridicalMainCode
            , Object_JuridicalMain.ValueData          AS JuridicalMainName
+           , Object_Unit.Id                          AS UnitId
            , Object_Unit.ObjectCode                  AS UnitCode
            , Object_Unit.ValueData                   AS UnitName
 
@@ -422,6 +471,14 @@ BEGIN
            , CAST (CASE WHEN tmpDataAll.SummaSale6 <> 0 THEN 100 - tmpDataAll.Summa6/tmpDataAll.SummaSale6*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit6
            , CAST (CASE WHEN tmpDataAll.SummaSale7 <> 0 THEN 100 - tmpDataAll.Summa7/tmpDataAll.SummaSale7*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit7
 
+           , tmpMarginReportItem.Percent1 AS VirtPercent1
+           , tmpMarginReportItem.Percent2 AS VirtPercent2
+           , tmpMarginReportItem.Percent3 AS VirtPercent3
+           , tmpMarginReportItem.Percent4 AS VirtPercent4
+           , tmpMarginReportItem.Percent5 AS VirtPercent5
+           , tmpMarginReportItem.Percent6 AS VirtPercent6
+           , tmpMarginReportItem.Percent7 AS VirtPercent7
+
            , 14941410 :: Integer  AS Color_Amount            --нежно сал.14941410  -- 
            , 16777158  :: Integer  AS Color_Summa           -- желтый 8978431
            , 8978431   :: Integer  AS Color_SummaSale       --голубой 16380671
@@ -463,6 +520,7 @@ BEGIN
                 LEFT JOIN Object AS Object_JuridicalMain ON Object_JuridicalMain.Id = ObjectLink_Unit_Juridical.ChildObjectId
 
                 LEFT JOIN tmpMaxPersent ON 1=1
+                LEFT JOIN tmpMarginReportItem ON tmpMarginReportItem.UnitId = Object_Unit.Id
 
         ORDER BY Object_JuridicalMain.ValueData 
                , Object_Unit.ValueData 

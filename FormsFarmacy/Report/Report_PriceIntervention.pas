@@ -23,8 +23,8 @@ type
     bbStart: TdxBarControlContainerItem;
     cxLabel3: TcxLabel;
     dxBarControlContainerItem3: TdxBarControlContainerItem;
-    ceJuridical1: TcxButtonEdit;
-    Juridical1Guides: TdsdGuides;
+    ceMarginReport: TcxButtonEdit;
+    MarginReportGuides: TdsdGuides;
     dxBarControlContainerItem4: TdxBarControlContainerItem;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
@@ -63,6 +63,8 @@ type
     cxColor_PersentSumma1: TcxGridDBBandedColumn;
     cxColor_PersentSummaSale1: TcxGridDBBandedColumn;
     cxPersentProfit: TcxGridDBBandedColumn;
+    spInsertUpdate: TdsdStoredProc;
+    cxVitrPersent1: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

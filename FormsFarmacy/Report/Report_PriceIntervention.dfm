@@ -15,7 +15,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1212
-    ExplicitHeight = 401
+    ExplicitHeight = 344
     ClientRectBottom = 344
     ClientRectRight = 1212
     ClientRectTop = 24
@@ -24,12 +24,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1212
-      ExplicitHeight = 377
+      ExplicitHeight = 320
       inherited cxGrid: TcxGrid
         Width = 1212
         Height = 320
         ExplicitWidth = 1212
-        ExplicitHeight = 377
+        ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -293,7 +293,6 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.FooterAutoHeight = True
@@ -348,6 +347,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 96
             Position.BandIndex = 0
             Position.ColIndex = 0
@@ -360,6 +360,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 100
             Position.BandIndex = 0
             Position.ColIndex = 1
@@ -375,6 +376,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -390,6 +392,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 1
             Position.ColIndex = 1
@@ -405,6 +408,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 1
             Position.ColIndex = 2
@@ -419,6 +423,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 3
@@ -434,6 +439,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 2
             Position.ColIndex = 0
@@ -449,6 +455,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 2
             Position.ColIndex = 1
@@ -464,6 +471,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 2
             Position.ColIndex = 2
@@ -479,6 +487,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 2
             Position.ColIndex = 3
@@ -494,6 +503,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 2
             Position.ColIndex = 4
@@ -509,6 +519,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 2
             Position.ColIndex = 5
@@ -523,6 +534,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 2
             Position.ColIndex = 6
@@ -537,6 +549,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 3
             Position.ColIndex = 0
@@ -551,6 +564,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 3
             Position.ColIndex = 1
@@ -565,6 +579,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 3
             Position.ColIndex = 2
@@ -579,6 +594,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 3
             Position.ColIndex = 3
@@ -593,6 +609,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 3
             Position.ColIndex = 4
@@ -607,6 +624,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 3
             Position.ColIndex = 5
@@ -621,6 +639,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 3
             Position.ColIndex = 6
@@ -635,6 +654,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 4
             Position.ColIndex = 0
@@ -649,6 +669,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 4
             Position.ColIndex = 1
@@ -663,6 +684,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 4
             Position.ColIndex = 2
@@ -677,6 +699,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 4
             Position.ColIndex = 3
@@ -691,6 +714,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 4
             Position.ColIndex = 4
@@ -705,6 +729,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 4
             Position.ColIndex = 5
@@ -719,6 +744,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 4
             Position.ColIndex = 6
@@ -733,6 +759,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 5
             Position.ColIndex = 0
@@ -747,6 +774,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 5
             Position.ColIndex = 1
@@ -761,6 +789,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 5
             Position.ColIndex = 2
@@ -775,6 +804,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 5
             Position.ColIndex = 3
@@ -789,6 +819,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 5
             Position.ColIndex = 4
@@ -803,6 +834,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 5
             Position.ColIndex = 5
@@ -817,6 +849,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 5
             Position.ColIndex = 6
@@ -831,6 +864,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 6
             Position.ColIndex = 0
@@ -845,6 +879,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 6
             Position.ColIndex = 1
@@ -859,6 +894,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 6
             Position.ColIndex = 2
@@ -873,6 +909,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 6
             Position.ColIndex = 3
@@ -887,6 +924,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 6
             Position.ColIndex = 4
@@ -901,6 +939,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 6
             Position.ColIndex = 5
@@ -915,6 +954,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 6
             Position.ColIndex = 6
@@ -929,6 +969,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 7
             Position.ColIndex = 0
@@ -943,6 +984,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 7
             Position.ColIndex = 1
@@ -957,6 +999,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 7
             Position.ColIndex = 2
@@ -971,6 +1014,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 7
             Position.ColIndex = 3
@@ -985,6 +1029,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 7
             Position.ColIndex = 4
@@ -999,6 +1044,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 7
             Position.ColIndex = 5
@@ -1013,6 +1059,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 7
             Position.ColIndex = 6
@@ -1027,6 +1074,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 8
             Position.ColIndex = 0
@@ -1041,6 +1089,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 8
             Position.ColIndex = 1
@@ -1055,6 +1104,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 8
             Position.ColIndex = 2
@@ -1069,6 +1119,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 8
             Position.ColIndex = 3
@@ -1083,6 +1134,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 8
             Position.ColIndex = 4
@@ -1097,6 +1149,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
             Position.BandIndex = 8
             Position.ColIndex = 5
@@ -1111,15 +1164,101 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
             Position.BandIndex = 8
             Position.ColIndex = 6
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxVitrPersent1: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VitrPersent1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 2
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVitrPersent2: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VitrPersent2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 3
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVitrPersent3: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VitrPersent3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 4
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVitrPersent4: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VitrPersent4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 5
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVitrPersent5: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VitrPersent5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 6
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVitrPersent6: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VitrPersent6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 7
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVitrPersent7: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VitrPersent7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 8
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxColor_Amount: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Amount'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 2
@@ -1128,6 +1267,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_Summa: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Summa'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 3
@@ -1136,6 +1276,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_SummaSale: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_SummaSale'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 4
@@ -1144,6 +1285,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentAmount1: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentAmount1'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 5
@@ -1152,6 +1294,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSumma1: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSumma1'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 6
@@ -1160,6 +1303,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSummaSale1: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSummaSale1'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 7
@@ -1168,6 +1312,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentAmount2: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentAmount2'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 8
@@ -1176,6 +1321,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSumma2: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSumma2'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 9
@@ -1184,6 +1330,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSummaSale2: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSummaSale2'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 10
@@ -1192,6 +1339,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentAmount3: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentAmount3'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 11
@@ -1200,6 +1348,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSumma3: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSumma3'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 12
@@ -1208,6 +1357,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSummaSale3: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSummaSale3'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 13
@@ -1216,6 +1366,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentAmount4: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentAmount4'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 14
@@ -1224,6 +1375,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSumma4: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSumma4'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 15
@@ -1232,6 +1384,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSummaSale4: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSummaSale4'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 16
@@ -1240,6 +1393,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentAmount5: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentAmount5'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 17
@@ -1248,6 +1402,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSumma5: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSumma5'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 18
@@ -1256,6 +1411,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSummaSale5: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSummaSale5'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 19
@@ -1264,6 +1420,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentAmount6: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentAmount6'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 20
@@ -1272,6 +1429,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSumma6: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSumma6'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 21
@@ -1280,6 +1438,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSummaSale6: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSummaSale6'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 22
@@ -1288,6 +1447,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentAmount7: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentAmount7'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 23
@@ -1296,6 +1456,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSumma7: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSumma7'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 24
@@ -1304,6 +1465,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           object cxColor_PersentSummaSale7: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PersentSummaSale7'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 25
@@ -1322,24 +1484,23 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     ExplicitWidth = 1212
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
-      Left = 127
+      Left = 78
       Top = 6
-      EditValue = 42370d
-      ExplicitLeft = 127
+      ExplicitLeft = 78
       ExplicitTop = 6
     end
     inherited deEnd: TcxDateEdit
-      Left = 127
+      Left = 78
       Top = 36
       EditValue = 42371d
-      ExplicitLeft = 127
+      ExplicitLeft = 78
       ExplicitTop = 36
     end
     inherited cxLabel1: TcxLabel
-      Left = 64
+      Left = 15
       Top = 7
       Caption = #1053#1072#1095'.'#1076#1072#1090#1072':'
-      ExplicitLeft = 64
+      ExplicitLeft = 15
       ExplicitTop = 7
       ExplicitWidth = 56
     end
@@ -1353,42 +1514,37 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       ExplicitWidth = 8
     end
     object cxLabel3: TcxLabel
-      Left = 971
-      Top = 15
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' 1:'
-      Visible = False
+      Left = 875
+      Top = 7
+      Caption = #1042#1080#1088#1090#1091#1072#1083#1100#1085#1072#1103' '#1082#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
     end
-    object ceJuridical1: TcxButtonEdit
-      Left = 1051
-      Top = 14
+    object ceMarginReport: TcxButtonEdit
+      Left = 875
+      Top = 36
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Properties.ReadOnly = True
       Properties.UseNullString = True
       TabOrder = 5
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-      TextHint = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-      Visible = False
-      Width = 57
+      Width = 230
     end
     object cxLabel4: TcxLabel
-      Left = 64
+      Left = 15
       Top = 40
       Caption = #1050#1086#1085'.'#1076#1072#1090#1072':'
     end
     object cxLabel5: TcxLabel
-      Left = 971
-      Top = 27
+      Left = 1138
+      Top = 7
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' 2:'
       Visible = False
     end
     object ceJuridical2: TcxButtonEdit
-      Left = 1051
-      Top = 41
+      Left = 1155
+      Top = 36
       Properties.Buttons = <
         item
           Default = True
@@ -1404,17 +1560,17 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       Width = 57
     end
     object cxLabel10: TcxLabel
-      Left = 444
+      Left = 408
       Top = 7
       Caption = #1055#1088#1077#1076#1077#1083' 3 ('#1074' '#1094#1077#1085#1077' '#1079#1072#1082#1091#1087#1082#1080')'
     end
     object cxLabel11: TcxLabel
-      Left = 444
+      Left = 408
       Top = 37
       Caption = #1055#1088#1077#1076#1077#1083' 4 ('#1074' '#1094#1077#1085#1077' '#1079#1072#1082#1091#1087#1082#1080')'
     end
     object cePrice3: TcxCurrencyEdit
-      Left = 585
+      Left = 549
       Top = 6
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
@@ -1422,7 +1578,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       Width = 80
     end
     object cePrice4: TcxCurrencyEdit
-      Left = 585
+      Left = 549
       Top = 36
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
@@ -1431,12 +1587,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     end
   end
   object cxLabel8: TcxLabel [2]
-    Left = 220
+    Left = 176
     Top = 7
     Caption = #1055#1088#1077#1076#1077#1083' 1 ('#1074' '#1094#1077#1085#1077' '#1079#1072#1082#1091#1087#1082#1080')'
   end
   object cePrice1: TcxCurrencyEdit [3]
-    Left = 358
+    Left = 314
     Top = 6
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -1444,12 +1600,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     Width = 80
   end
   object cxLabel9: TcxLabel [4]
-    Left = 219
+    Left = 175
     Top = 37
     Caption = #1055#1088#1077#1076#1077#1083' 2 ('#1074' '#1094#1077#1085#1077' '#1079#1072#1082#1091#1087#1082#1080')'
   end
   object cePrice2: TcxCurrencyEdit [5]
-    Left = 358
+    Left = 314
     Top = 36
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -1457,12 +1613,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     Width = 80
   end
   object cxLabel6: TcxLabel [6]
-    Left = 673
+    Left = 642
     Top = 7
     Caption = #1055#1088#1077#1076#1077#1083' 5 ('#1074' '#1094#1077#1085#1077' '#1079#1072#1082#1091#1087#1082#1080')'
   end
   object cePrice5: TcxCurrencyEdit [7]
-    Left = 813
+    Left = 782
     Top = 6
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -1470,12 +1626,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     Width = 80
   end
   object cxLabel12: TcxLabel [8]
-    Left = 673
+    Left = 642
     Top = 37
     Caption = #1055#1088#1077#1076#1077#1083' 6 ('#1074' '#1094#1077#1085#1077' '#1079#1072#1082#1091#1087#1082#1080')'
   end
   object cePrice6: TcxCurrencyEdit [9]
-    Left = 813
+    Left = 782
     Top = 36
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -1693,6 +1849,13 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = cePrice6
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'inMarginReportId'
+        Value = Null
+        Component = MarginReportGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 584
     Top = 80
@@ -1762,7 +1925,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       Category = 0
       Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       Visible = ivAlways
-      Control = ceJuridical1
+      Control = ceMarginReport
     end
     object bbQuasiSchedule: TdxBarButton
       Action = actQuasiSchedule
@@ -2035,31 +2198,31 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     Left = 120
     Top = 184
   end
-  object Juridical1Guides: TdsdGuides
+  object MarginReportGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceJuridical1
-    FormNameParam.Value = 'TJuridicalForm'
+    LookupControl = ceMarginReport
+    FormNameParam.Value = 'TMarginReportForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
+    FormName = 'TMarginReportForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = Juridical1Guides
+        Component = MarginReportGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = Juridical1Guides
+        Component = MarginReportGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1024
-    Top = 8
+    Left = 936
+    Top = 24
   end
   object Juridical2Guides: TdsdGuides
     KeyField = 'Id'
@@ -2084,7 +2247,86 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1040
-    Top = 32
+    Left = 1144
+    Top = 16
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_MarginReportItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMarginReportId'
+        Value = ''
+        Component = MarginReportGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPercent1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VitrPercent1'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPercent2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VitrPercent2'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPercent3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VitrPercent3'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPercent4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VitrPercent4'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPercent5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VitrPercent5'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPercent6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VitrPercent6'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPercent7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VitrPercent7'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 232
   end
 end
