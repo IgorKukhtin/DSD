@@ -656,7 +656,7 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := gfFloatToStr
-        (HeaderDataSet.FieldByName('VATPersent').AsFloat);
+        (HeaderDataSet.FieldByName('VATPercent').AsFloat);
     end;
     inc(i);
     HeaderDataSet.Next;
@@ -713,7 +713,7 @@ begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-        'Налоговая сформирована и подписана';
+        'Корректировка сформирована и подписана';
       FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
@@ -736,7 +736,7 @@ begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-        'Корректировочная налоговая отправлена на FTP';
+        'Корректировка отправлена на FTP';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -1255,6 +1255,19 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('PriceNoVAT').AsFloat);
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG008.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := gfFloatToStr(HeaderDataSet.FieldByName('VATPercent').AsFloat);
     end;
     inc(i);
     ItemsDataSet.Next;
