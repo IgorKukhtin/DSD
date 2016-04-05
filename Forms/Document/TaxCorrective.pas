@@ -101,8 +101,6 @@ type
     colisAuto: TcxGridDBColumn;
     colLineNumTaxOld: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
-    actCompleteMovementProc: TdsdExecStoredProc;
-    spMovementComplete: TdsdStoredProc;
   private
     { Private declarations }
   public
