@@ -2,7 +2,7 @@
 
 
 DROP FUNCTION IF EXISTS gpReport_PriceIntervention (TDateTime, TDateTime, TFloat,TFloat, TFloat,TFloat, TFloat,TFloat, TVarChar);
-
+DROP FUNCTION IF EXISTS gpReport_PriceIntervention (TDateTime, TDateTime, TFloat,TFloat, TFloat,TFloat, TFloat,TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_PriceIntervention(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -13,11 +13,13 @@ CREATE OR REPLACE FUNCTION  gpReport_PriceIntervention(
     IN inPrice4           TFloat ,
     IN inPrice5           TFloat ,
     IN inPrice6           TFloat ,
+    IN inMarginReportId   Integer,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
   JuridicalMainCode  Integer, 
   JuridicalMainName  TVarChar,
+  UnitId             Integer, 
   UnitCode           Integer, 
   UnitName           TVarChar,
 
@@ -28,92 +30,126 @@ RETURNS TABLE (
   Amount1            TFloat,
   Summa1             TFloat,
   SummaSale1         TFloat,
-  PersentAmount1            TFloat,
-  PersentSumma1             TFloat,
-  PersentSummaSale1         TFloat,
+  PercentAmount1            TFloat,
+  PercentSumma1             TFloat,
+  PercentSummaSale1         TFloat,
   
   Amount2            TFloat,
   Summa2             TFloat,
   SummaSale2         TFloat,
-  PersentAmount2            TFloat,
-  PersentSumma2             TFloat,
-  PersentSummaSale2         TFloat,
+  PercentAmount2            TFloat,
+  PercentSumma2             TFloat,
+  PercentSummaSale2         TFloat,
   
   Amount3            TFloat,
   Summa3             TFloat,
   SummaSale3         TFloat,
-  PersentAmount3            TFloat,
-  PersentSumma3             TFloat,
-  PersentSummaSale3         TFloat,
+  PercentAmount3            TFloat,
+  PercentSumma3             TFloat,
+  PercentSummaSale3         TFloat,
   
   Amount4            TFloat,
   Summa4             TFloat,
   SummaSale4         TFloat,
-  PersentAmount4            TFloat,
-  PersentSumma4             TFloat,
-  PersentSummaSale4         TFloat,
+  PercentAmount4            TFloat,
+  PercentSumma4             TFloat,
+  PercentSummaSale4         TFloat,
   
   Amount5            TFloat,
   Summa5             TFloat,
   SummaSale5         TFloat,
-  PersentAmount5            TFloat,
-  PersentSumma5             TFloat,
-  PersentSummaSale5         TFloat,
+  PercentAmount5            TFloat,
+  PercentSumma5             TFloat,
+  PercentSummaSale5         TFloat,
 
   Amount6            TFloat,
   Summa6             TFloat,
   SummaSale6         TFloat,
-  PersentAmount6            TFloat,
-  PersentSumma6             TFloat,
-  PersentSummaSale6         TFloat,
+  PercentAmount6            TFloat,
+  PercentSumma6             TFloat,
+  PercentSummaSale6         TFloat,
 
   Amount7            TFloat,
   Summa7             TFloat,
   SummaSale7         TFloat,
-  PersentAmount7            TFloat,
-  PersentSumma7             TFloat,
-  PersentSummaSale7         TFloat,
+  PercentAmount7            TFloat,
+  PercentSumma7             TFloat,
+  PercentSummaSale7         TFloat,
 
-  PersentProfit       TFloat,
-  PersentProfit1      TFloat,
-  PersentProfit2      TFloat,
-  PersentProfit3      TFloat,
-  PersentProfit4      TFloat,
-  PersentProfit5      TFloat,
-  PersentProfit6      TFloat,
-  PersentProfit7      TFloat,
+  PercentProfit       TFloat,
+  PercentProfit1      TFloat,
+  PercentProfit2      TFloat,
+  PercentProfit3      TFloat,
+  PercentProfit4      TFloat,
+  PercentProfit5      TFloat,
+  PercentProfit6      TFloat,
+  PercentProfit7      TFloat,
 
+  VirtPercent1        TFloat,
+  VirtPercent2        TFloat,
+  VirtPercent3        TFloat,
+  VirtPercent4        TFloat,
+  VirtPercent5        TFloat,
+  VirtPercent6        TFloat,
+  VirtPercent7        TFloat,
+
+  VirtSummaSale1      TFloat,
+  VirtSummaSale2      TFloat,
+  VirtSummaSale3      TFloat,
+  VirtSummaSale4      TFloat,
+  VirtSummaSale5      TFloat,
+  VirtSummaSale6      TFloat,
+  VirtSummaSale7      TFloat,
+           
+  VirtProfit1      TFloat,
+  VirtProfit2      TFloat,
+  VirtProfit3      TFloat,
+  VirtProfit4      TFloat,
+  VirtProfit5      TFloat,
+  VirtProfit6      TFloat,
+  VirtProfit7      TFloat,
+
+  MarginPercent1  TFloat, 
+  MarginPercent2  TFloat, 
+  MarginPercent3  TFloat, 
+  MarginPercent4  TFloat, 
+  MarginPercent5  TFloat, 
+  MarginPercent6  TFloat, 
+  MarginPercent7  TFloat, 
+
+  MarginCategoryName  TVarChar,
+  
   Color_Amount       Integer,
   Color_Summa        Integer,
   Color_SummaSale    Integer,
 
-  Color_PersentAmount1            Integer,
-  Color_PersentSumma1             Integer,
-  Color_PersentSummaSale1         Integer,
+  Color_PercentAmount1            Integer,
+  Color_PercentSumma1             Integer,
+  Color_PercentSummaSale1         Integer,
   
-  Color_PersentAmount2            Integer,
-  Color_PersentSumma2             Integer,
-  Color_PersentSummaSale2         Integer,
+  Color_PercentAmount2            Integer,
+  Color_PercentSumma2             Integer,
+  Color_PercentSummaSale2         Integer,
   
-  Color_PersentAmount3            Integer,
-  Color_PersentSumma3             Integer,
-  Color_PersentSummaSale3         Integer,
+  Color_PercentAmount3            Integer,
+  Color_PercentSumma3             Integer,
+  Color_PercentSummaSale3         Integer,
   
-  Color_PersentAmount4            Integer,
-  Color_PersentSumma4             Integer,
-  Color_PersentSummaSale4         Integer,
+  Color_PercentAmount4            Integer,
+  Color_PercentSumma4             Integer,
+  Color_PercentSummaSale4         Integer,
   
-  Color_PersentAmount5            Integer,
-  Color_PersentSumma5             Integer,
-  Color_PersentSummaSale5         Integer,
+  Color_PercentAmount5            Integer,
+  Color_PercentSumma5             Integer,
+  Color_PercentSummaSale5         Integer,
 
-  Color_PersentAmount6            Integer,
-  Color_PersentSumma6             Integer,
-  Color_PersentSummaSale6         Integer,
+  Color_PercentAmount6            Integer,
+  Color_PercentSumma6             Integer,
+  Color_PercentSummaSale6         Integer,
 
-  Color_PersentAmount7            Integer,
-  Color_PersentSumma7             Integer,
-  Color_PersentSummaSale7         Integer
+  Color_PercentAmount7            Integer,
+  Color_PercentSumma7             Integer,
+  Color_PercentSummaSale7         Integer
   
     
 )
@@ -241,51 +277,51 @@ BEGIN
                       , (tmpData.Amount1)      AS Amount1
                       , (tmpData.Summa1)       AS Summa1
                       , (tmpData.SummaSale1)   AS SummaSale1
-                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount1*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount1
-                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa1*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma1
-                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale1*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale1
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount1*100/tmpData.Amount) ElSE 0 END)           AS PercentAmount1
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa1*100/tmpData.Summa) ElSE 0 END)              AS PercentSumma1
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale1*100/tmpData.SummaSale) ElSE 0 END)  AS PercentSummaSale1
                       
                       , (tmpData.Amount2)      AS Amount2
                       , (tmpData.Summa2)       AS Summa2
                       , (tmpData.SummaSale2)   AS SummaSale2
-                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount2*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount2
-                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa2*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma2
-                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale2*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale2
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount2*100/tmpData.Amount) ElSE 0 END)           AS PercentAmount2
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa2*100/tmpData.Summa) ElSE 0 END)              AS PercentSumma2
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale2*100/tmpData.SummaSale) ElSE 0 END)  AS PercentSummaSale2
                       
                       , (tmpData.Amount3)      AS Amount3
                       , (tmpData.Summa3)       AS Summa3
                       , (tmpData.SummaSale3)   AS SummaSale3
-                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount3*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount3
-                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa3*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma3
-                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale3*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale3
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount3*100/tmpData.Amount) ElSE 0 END)           AS PercentAmount3
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa3*100/tmpData.Summa) ElSE 0 END)              AS PercentSumma3
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale3*100/tmpData.SummaSale) ElSE 0 END)  AS PercentSummaSale3
                       
                       , (tmpData.Amount4)      AS Amount4
                       , (tmpData.Summa4)       AS Summa4
                       , (tmpData.SummaSale4)   AS SummaSale4
-                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount4*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount4
-                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa4*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma4
-                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale4*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale4
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount4*100/tmpData.Amount) ElSE 0 END)           AS PercentAmount4
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa4*100/tmpData.Summa) ElSE 0 END)              AS PercentSumma4
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale4*100/tmpData.SummaSale) ElSE 0 END)  AS PercentSummaSale4
                       
                       , (tmpData.Amount5)      AS Amount5
                       , (tmpData.Summa5)       AS Summa5
                       , (tmpData.SummaSale5)   AS SummaSale5
-                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount5*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount5
-                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa5*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma5
-                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale5*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale5
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount5*100/tmpData.Amount) ElSE 0 END)           AS PercentAmount5
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa5*100/tmpData.Summa) ElSE 0 END)              AS PercentSumma5
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale5*100/tmpData.SummaSale) ElSE 0 END)  AS PercentSummaSale5
                       
                       , (tmpData.Amount6)      AS Amount6
                       , (tmpData.Summa6)       AS Summa6
                       , (tmpData.SummaSale6)   AS SummaSale6
-                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount6*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount6
-                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa6*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma6
-                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale6*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale6
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount6*100/tmpData.Amount) ElSE 0 END)           AS PercentAmount6
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa6*100/tmpData.Summa) ElSE 0 END)              AS PercentSumma6
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale6*100/tmpData.SummaSale) ElSE 0 END)  AS PercentSummaSale6
                       
                       , (tmpData.Amount7)      AS Amount7
                       , (tmpData.Summa7)       AS Summa7
                       , (tmpData.SummaSale7)   AS SummaSale7
-                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount7*100/tmpData.Amount) ElSE 0 END)           AS PersentAmount7
-                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa7*100/tmpData.Summa) ElSE 0 END)              AS PersentSumma7
-                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale7*100/tmpData.SummaSale) ElSE 0 END)  AS PersentSummaSale7
+                      , (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.Amount7*100/tmpData.Amount) ElSE 0 END)           AS PercentAmount7
+                      , (CASE WHEN tmpData.Summa <> 0 THEN (tmpData.Summa7*100/tmpData.Summa) ElSE 0 END)              AS PercentSumma7
+                      , (CASE WHEN tmpData.SummaSale <> 0 THEN (tmpData.SummaSale7*100/tmpData.SummaSale) ElSE 0 END)  AS PercentSummaSale7
                  FROM (
                       SELECT tmpData.UnitId
                       , SUM(tmpData.Amount)      AS Amount
@@ -323,39 +359,114 @@ BEGIN
                  GROUP BY tmpData.UnitId) AS tmpData
                  
                 )
-, tmpMaxPersent AS (SELECT MAX(tmpDataAll.PersentAmount1)    AS MaxPersentAmount1
-                         , MAX(tmpDataAll.PersentSumma1)     AS MaxPersentSumma1
-                         , MAX(tmpDataAll.PersentSummaSale1) AS MAxPersentSummaSale1
+, tmpMaxPercent AS (SELECT MAX(tmpDataAll.PercentAmount1)    AS MaxPercentAmount1
+                         , MAX(tmpDataAll.PercentSumma1)     AS MaxPercentSumma1
+                         , MAX(tmpDataAll.PercentSummaSale1) AS MAxPercentSummaSale1
 
-                         , MAX(tmpDataAll.PersentAmount2)    AS MaxPersentAmount2
-                         , MAX(tmpDataAll.PersentSumma2)     AS MaxPersentSumma2
-                         , MAX(tmpDataAll.PersentSummaSale2) AS MAxPersentSummaSale2
+                         , MAX(tmpDataAll.PercentAmount2)    AS MaxPercentAmount2
+                         , MAX(tmpDataAll.PercentSumma2)     AS MaxPercentSumma2
+                         , MAX(tmpDataAll.PercentSummaSale2) AS MAxPercentSummaSale2
 
-                         , MAX(tmpDataAll.PersentAmount3)    AS MaxPersentAmount3
-                         , MAX(tmpDataAll.PersentSumma3)     AS MaxPersentSumma3
-                         , MAX(tmpDataAll.PersentSummaSale3) AS MAxPersentSummaSale3
+                         , MAX(tmpDataAll.PercentAmount3)    AS MaxPercentAmount3
+                         , MAX(tmpDataAll.PercentSumma3)     AS MaxPercentSumma3
+                         , MAX(tmpDataAll.PercentSummaSale3) AS MAxPercentSummaSale3
 
-                         , MAX(tmpDataAll.PersentAmount4)    AS MaxPersentAmount4
-                         , MAX(tmpDataAll.PersentSumma4)     AS MaxPersentSumma4
-                         , MAX(tmpDataAll.PersentSummaSale4) AS MAxPersentSummaSale4
+                         , MAX(tmpDataAll.PercentAmount4)    AS MaxPercentAmount4
+                         , MAX(tmpDataAll.PercentSumma4)     AS MaxPercentSumma4
+                         , MAX(tmpDataAll.PercentSummaSale4) AS MAxPercentSummaSale4
 
-                         , MAX(tmpDataAll.PersentAmount5)    AS MaxPersentAmount5
-                         , MAX(tmpDataAll.PersentSumma5)     AS MaxPersentSumma5
-                         , MAX(tmpDataAll.PersentSummaSale5) AS MAxPersentSummaSale5
+                         , MAX(tmpDataAll.PercentAmount5)    AS MaxPercentAmount5
+                         , MAX(tmpDataAll.PercentSumma5)     AS MaxPercentSumma5
+                         , MAX(tmpDataAll.PercentSummaSale5) AS MAxPercentSummaSale5
 
-                         , MAX(tmpDataAll.PersentAmount6)    AS MaxPersentAmount6
-                         , MAX(tmpDataAll.PersentSumma6)     AS MaxPersentSumma6
-                         , MAX(tmpDataAll.PersentSummaSale6) AS MAxPersentSummaSale6
+                         , MAX(tmpDataAll.PercentAmount6)    AS MaxPercentAmount6
+                         , MAX(tmpDataAll.PercentSumma6)     AS MaxPercentSumma6
+                         , MAX(tmpDataAll.PercentSummaSale6) AS MAxPercentSummaSale6
 
-                         , MAX(tmpDataAll.PersentAmount7)    AS MaxPersentAmount7
-                         , MAX(tmpDataAll.PersentSumma7)     AS MaxPersentSumma7
-                         , MAX(tmpDataAll.PersentSummaSale7) AS MAxPersentSummaSale7                         
+                         , MAX(tmpDataAll.PercentAmount7)    AS MaxPercentAmount7
+                         , MAX(tmpDataAll.PercentSumma7)     AS MaxPercentSumma7
+                         , MAX(tmpDataAll.PercentSummaSale7) AS MAxPercentSummaSale7                         
                     FROM tmpDataAll
                     )               
 
+, tmpMarginReportItem AS (SELECT ObjectLink_Unit.ChildObjectId     AS UnitId
+                               , ObjectFloat_Percent1.ValueData    AS Percent1 
+                               , ObjectFloat_Percent2.ValueData    AS Percent2
+                               , ObjectFloat_Percent3.ValueData    AS Percent3
+                               , ObjectFloat_Percent4.ValueData    AS Percent4
+                               , ObjectFloat_Percent5.ValueData    AS Percent5
+                               , ObjectFloat_Percent6.ValueData    AS Percent6
+                               , ObjectFloat_Percent7.ValueData    AS Percent7 
+                          FROM ObjectLink AS ObjectLink_MarginReport
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent1 	
+                                                     ON ObjectFloat_Percent1.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent1.DescId = zc_ObjectFloat_MarginReportItem_Percent1()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent2 	
+                                                     ON ObjectFloat_Percent2.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent2.DescId = zc_ObjectFloat_MarginReportItem_Percent2()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent3 	
+                                                     ON ObjectFloat_Percent3.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent3.DescId = zc_ObjectFloat_MarginReportItem_Percent3()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent4 	
+                                                     ON ObjectFloat_Percent4.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent4.DescId = zc_ObjectFloat_MarginReportItem_Percent4()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent5 	
+                                                     ON ObjectFloat_Percent5.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent5.DescId = zc_ObjectFloat_MarginReportItem_Percent5()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent6 	
+                                                     ON ObjectFloat_Percent6.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent6.DescId = zc_ObjectFloat_MarginReportItem_Percent6()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent7 	
+                                                     ON ObjectFloat_Percent7.ObjectId = ObjectLink_MarginReport.ObjectId
+                                                    AND ObjectFloat_Percent7.DescId = zc_ObjectFloat_MarginReportItem_Percent7()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                    ON ObjectLink_Unit.DescId = zc_ObjectLink_MarginReportItem_Unit()
+                                                   AND ObjectLink_Unit.ObjectId = ObjectLink_MarginReport.ObjectId
+                          WHERE ObjectLink_MarginReport.DescId = zc_ObjectLink_MarginReportItem_MarginReport()
+                            AND ObjectLink_MarginReport.ChildObjectId = inMarginReportId
+                            AND inMarginReportId <> 0 
+                          )
+
+, tmpMarginCategory AS (SELECT DISTINCT  ObjectLink_MarginCategoryLink_Unit.ChildObjectId AS UnitId
+                                       , ObjectLink_MarginCategoryLink_MarginCategory.ChildObjectId AS MarginCategoryId
+                        FROM  ObjectLink AS ObjectLink_MarginCategoryLink_Unit
+                          --LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_MarginCategoryLink_Unit.ChildObjectId
+                          LEFT JOIN ObjectLink AS ObjectLink_MarginCategoryLink_MarginCategory
+                                               ON ObjectLink_MarginCategoryLink_MarginCategory.ObjectId = ObjectLink_MarginCategoryLink_Unit.ObjectId 
+                                              AND ObjectLink_MarginCategoryLink_MarginCategory.DescId = zc_ObjectLink_MarginCategoryLink_MarginCategory()
+                          --LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id =  ObjectLink_MarginCategoryLink_MarginCategory.ChildObjectId
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Percent 	
+                                                ON ObjectFloat_Percent.ObjectId = ObjectLink_MarginCategoryLink_MarginCategory.ChildObjectId
+                                               AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()  
+                        WHERE ObjectLink_MarginCategoryLink_Unit.DescId = zc_ObjectLink_MarginCategoryLink_Unit()
+                          AND COALESCE (ObjectFloat_Percent.ValueData,0) = 0
+                       ) 
+                             
+, tmpMarginCategoryItem AS (SELECT DISTINCT tmp.UnitId, tmp.MarginCategoryId
+                                 , max(tmp.MarginPercent1) AS MarginPercent1, max(tmp.MarginPercent2) AS MarginPercent2, max(tmp.MarginPercent3) AS MarginPercent3
+                                 , max(tmp.MarginPercent4) AS MarginPercent4, max(tmp.MarginPercent5) AS MarginPercent5, max(tmp.MarginPercent6) AS MarginPercent6
+                                 , max(tmp.MarginPercent7) AS MarginPercent7
+                            FROM (   
+                                  SELECT tmpMarginCategory.UnitId, tmpMarginCategory.MarginCategoryId
+                                       , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) < inPrice1 THEN Object_MarginCategoryItem.MarginPercent ELSE 0 END AS MarginPercent1
+                                       , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) >= inPrice1 AND COALESCE(Object_MarginCategoryItem.MinPrice,0) < inPrice2 THEN COALESCE(Object_MarginCategoryItem.MarginPercent,0) ELSE 0 END AS MarginPercent2
+                                       , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) >= inPrice2 AND COALESCE(Object_MarginCategoryItem.MinPrice,0) < inPrice3 THEN COALESCE(Object_MarginCategoryItem.MarginPercent,0) ELSE 0 END AS MarginPercent3
+                                       , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) >= inPrice3 AND COALESCE(Object_MarginCategoryItem.MinPrice,0) < inPrice4 THEN COALESCE(Object_MarginCategoryItem.MarginPercent,0) ELSE 0 END AS MarginPercent4
+                                       , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) >= inPrice4 AND COALESCE(Object_MarginCategoryItem.MinPrice,0) < inPrice5 THEN COALESCE(Object_MarginCategoryItem.MarginPercent,0) ELSE 0 END AS MarginPercent5
+                                       , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) >= inPrice5 AND COALESCE(Object_MarginCategoryItem.MinPrice,0) < inPrice6 THEN COALESCE(Object_MarginCategoryItem.MarginPercent,0) ELSE 0 END AS MarginPercent6
+                                       , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) >= inPrice6 THEN Object_MarginCategoryItem.MarginPercent ELSE 0 END AS MarginPercent7
+                                  FROM tmpMarginCategory
+                                      LEFT JOIN Object_MarginCategoryItem_View AS Object_MarginCategoryItem
+                                                                               ON Object_MarginCategoryItem.MarginCategoryId =tmpMarginCategory.MarginCategoryId
+                                  ) AS tmp
+                            GROUP BY tmp.UnitId, tmp.MarginCategoryId
+                            )
+
+                            
         SELECT
              Object_JuridicalMain.ObjectCode         AS JuridicalMainCode
            , Object_JuridicalMain.ValueData          AS JuridicalMainName
+           , Object_Unit.Id                          AS UnitId
            , Object_Unit.ObjectCode                  AS UnitCode
            , Object_Unit.ValueData                   AS UnitName
 
@@ -367,92 +478,126 @@ BEGIN
            , CAST (tmpDataAll.Amount1    AS NUMERIC (16, 2)) ::TFloat AS Amount1
            , CAST (tmpDataAll.Summa1     AS NUMERIC (16, 2)) ::TFloat AS Summa1
            , CAST (tmpDataAll.SummaSale1 AS NUMERIC (16, 2)) ::TFloat AS SummaSale1
-           , CAST (tmpDataAll.PersentAmount1    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount1
-           , CAST (tmpDataAll.PersentSumma1     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma1
-           , CAST (tmpDataAll.PersentSummaSale1 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale1
+           , CAST (tmpDataAll.PercentAmount1    AS NUMERIC (16, 2)) ::TFloat AS PercentAmount1
+           , CAST (tmpDataAll.PercentSumma1     AS NUMERIC (16, 2)) ::TFloat AS PercentSumma1
+           , CAST (tmpDataAll.PercentSummaSale1 AS NUMERIC (16, 2)) ::TFloat AS PercentSummaSale1
 
            , CAST (tmpDataAll.Amount2    AS NUMERIC (16, 2)) ::TFloat AS Amount2
            , CAST (tmpDataAll.Summa2     AS NUMERIC (16, 2)) ::TFloat AS Summa2
            , CAST (tmpDataAll.SummaSale2 AS NUMERIC (16, 2)) ::TFloat AS SummaSale2
-           , CAST (tmpDataAll.PersentAmount2    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount2
-           , CAST (tmpDataAll.PersentSumma2     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma2
-           , CAST (tmpDataAll.PersentSummaSale2 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale2
+           , CAST (tmpDataAll.PercentAmount2    AS NUMERIC (16, 2)) ::TFloat AS PercentAmount2
+           , CAST (tmpDataAll.PercentSumma2     AS NUMERIC (16, 2)) ::TFloat AS PercentSumma2
+           , CAST (tmpDataAll.PercentSummaSale2 AS NUMERIC (16, 2)) ::TFloat AS PercentSummaSale2
 
            , CAST (tmpDataAll.Amount3    AS NUMERIC (16, 2)) ::TFloat AS Amount3
            , CAST (tmpDataAll.Summa3     AS NUMERIC (16, 2)) ::TFloat AS Summa3
            , CAST (tmpDataAll.SummaSale3 AS NUMERIC (16, 2)) ::TFloat AS SummaSale3
-           , CAST (tmpDataAll.PersentAmount3    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount3
-           , CAST (tmpDataAll.PersentSumma3     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma3
-           , CAST (tmpDataAll.PersentSummaSale3 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale3
+           , CAST (tmpDataAll.PercentAmount3    AS NUMERIC (16, 2)) ::TFloat AS PercentAmount3
+           , CAST (tmpDataAll.PercentSumma3     AS NUMERIC (16, 2)) ::TFloat AS PercentSumma3
+           , CAST (tmpDataAll.PercentSummaSale3 AS NUMERIC (16, 2)) ::TFloat AS PercentSummaSale3
 
            , CAST (tmpDataAll.Amount4    AS NUMERIC (16, 2)) ::TFloat AS Amount4
            , CAST (tmpDataAll.Summa4     AS NUMERIC (16, 2)) ::TFloat AS Summa4
            , CAST (tmpDataAll.SummaSale4 AS NUMERIC (16, 2)) ::TFloat AS SummaSale4
-           , CAST (tmpDataAll.PersentAmount4    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount4
-           , CAST (tmpDataAll.PersentSumma4     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma4
-           , CAST (tmpDataAll.PersentSummaSale4 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale4
+           , CAST (tmpDataAll.PercentAmount4    AS NUMERIC (16, 2)) ::TFloat AS PercentAmount4
+           , CAST (tmpDataAll.PercentSumma4     AS NUMERIC (16, 2)) ::TFloat AS PercentSumma4
+           , CAST (tmpDataAll.PercentSummaSale4 AS NUMERIC (16, 2)) ::TFloat AS PercentSummaSale4
 
            , CAST (tmpDataAll.Amount5    AS NUMERIC (16, 2)) ::TFloat AS Amount5
            , CAST (tmpDataAll.Summa5     AS NUMERIC (16, 2)) ::TFloat AS Summa5
            , CAST (tmpDataAll.SummaSale5 AS NUMERIC (16, 2)) ::TFloat AS SummaSale5
-           , CAST (tmpDataAll.PersentAmount5    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount5
-           , CAST (tmpDataAll.PersentSumma5     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma5
-           , CAST (tmpDataAll.PersentSummaSale5 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale5
+           , CAST (tmpDataAll.PercentAmount5    AS NUMERIC (16, 2)) ::TFloat AS PercentAmount5
+           , CAST (tmpDataAll.PercentSumma5     AS NUMERIC (16, 2)) ::TFloat AS PercentSumma5
+           , CAST (tmpDataAll.PercentSummaSale5 AS NUMERIC (16, 2)) ::TFloat AS PercentSummaSale5
 
            , CAST (tmpDataAll.Amount6    AS NUMERIC (16, 2)) ::TFloat AS Amount6
            , CAST (tmpDataAll.Summa6     AS NUMERIC (16, 2)) ::TFloat AS Summa6
            , CAST (tmpDataAll.SummaSale6 AS NUMERIC (16, 2)) ::TFloat AS SummaSale6
-           , CAST (tmpDataAll.PersentAmount6    AS NUMERIC (16, 2)) ::TFloat AS PersentAmount6
-           , CAST (tmpDataAll.PersentSumma6     AS NUMERIC (16, 2)) ::TFloat AS PersentSumma6
-           , CAST (tmpDataAll.PersentSummaSale6 AS NUMERIC (16, 2)) ::TFloat AS PersentSummaSale6
+           , CAST (tmpDataAll.PercentAmount6    AS NUMERIC (16, 2)) ::TFloat AS PercentAmount6
+           , CAST (tmpDataAll.PercentSumma6     AS NUMERIC (16, 2)) ::TFloat AS PercentSumma6
+           , CAST (tmpDataAll.PercentSummaSale6 AS NUMERIC (16, 2)) ::TFloat AS PercentSummaSale6
 
            , CAST (tmpDataAll.Amount7    AS NUMERIC (16, 2)) ::TFloat AS Amount7
            , CAST (tmpDataAll.Summa7     AS NUMERIC (16, 2)) ::TFloat AS Summa7
            , CAST (tmpDataAll.SummaSale7 AS NUMERIC (16, 2)) ::TFloat AS SummaSale7
-           , CAST (tmpDataAll.PersentAmount7    AS NUMERIC (16, 2))  ::TFloat AS PersentAmount7
-           , CAST (tmpDataAll.PersentSumma7     AS NUMERIC (16, 2))  ::TFloat AS PersentSumma7
-           , CAST (tmpDataAll.PersentSummaSale7 AS NUMERIC (16, 2))  ::TFloat AS PersentSummaSale7
+           , CAST (tmpDataAll.PercentAmount7    AS NUMERIC (16, 2))  ::TFloat AS PercentAmount7
+           , CAST (tmpDataAll.PercentSumma7     AS NUMERIC (16, 2))  ::TFloat AS PercentSumma7
+           , CAST (tmpDataAll.PercentSummaSale7 AS NUMERIC (16, 2))  ::TFloat AS PercentSummaSale7
 
-           , CAST (CASE WHEN tmpDataAll.SummaSale  <> 0 THEN 100 - tmpDataAll.Summa /tmpDataAll.SummaSale *100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit
-           , CAST (CASE WHEN tmpDataAll.SummaSale1 <> 0 THEN 100 - tmpDataAll.Summa1/tmpDataAll.SummaSale1*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit1
-           , CAST (CASE WHEN tmpDataAll.SummaSale2 <> 0 THEN 100 - tmpDataAll.Summa2/tmpDataAll.SummaSale2*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit2
-           , CAST (CASE WHEN tmpDataAll.SummaSale3 <> 0 THEN 100 - tmpDataAll.Summa3/tmpDataAll.SummaSale3*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit3
-           , CAST (CASE WHEN tmpDataAll.SummaSale4 <> 0 THEN 100 - tmpDataAll.Summa4/tmpDataAll.SummaSale4*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit4
-           , CAST (CASE WHEN tmpDataAll.SummaSale5 <> 0 THEN 100 - tmpDataAll.Summa5/tmpDataAll.SummaSale5*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit5
-           , CAST (CASE WHEN tmpDataAll.SummaSale6 <> 0 THEN 100 - tmpDataAll.Summa6/tmpDataAll.SummaSale6*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit6
-           , CAST (CASE WHEN tmpDataAll.SummaSale7 <> 0 THEN 100 - tmpDataAll.Summa7/tmpDataAll.SummaSale7*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentProfit7
+           , CAST (CASE WHEN tmpDataAll.SummaSale  <> 0 THEN 100 - tmpDataAll.Summa /tmpDataAll.SummaSale *100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit
+           , CAST (CASE WHEN tmpDataAll.SummaSale1 <> 0 THEN 100 - tmpDataAll.Summa1/tmpDataAll.SummaSale1*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit1
+           , CAST (CASE WHEN tmpDataAll.SummaSale2 <> 0 THEN 100 - tmpDataAll.Summa2/tmpDataAll.SummaSale2*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit2
+           , CAST (CASE WHEN tmpDataAll.SummaSale3 <> 0 THEN 100 - tmpDataAll.Summa3/tmpDataAll.SummaSale3*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit3
+           , CAST (CASE WHEN tmpDataAll.SummaSale4 <> 0 THEN 100 - tmpDataAll.Summa4/tmpDataAll.SummaSale4*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit4
+           , CAST (CASE WHEN tmpDataAll.SummaSale5 <> 0 THEN 100 - tmpDataAll.Summa5/tmpDataAll.SummaSale5*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit5
+           , CAST (CASE WHEN tmpDataAll.SummaSale6 <> 0 THEN 100 - tmpDataAll.Summa6/tmpDataAll.SummaSale6*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit6
+           , CAST (CASE WHEN tmpDataAll.SummaSale7 <> 0 THEN 100 - tmpDataAll.Summa7/tmpDataAll.SummaSale7*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit7
 
+           , COALESCE(tmpMarginReportItem.Percent1,0)  ::TFloat AS VirtPercent1
+           , COALESCE(tmpMarginReportItem.Percent2,0)  ::TFloat AS VirtPercent2
+           , COALESCE(tmpMarginReportItem.Percent3,0)  ::TFloat AS VirtPercent3
+           , COALESCE(tmpMarginReportItem.Percent4,0)  ::TFloat AS VirtPercent4
+           , COALESCE(tmpMarginReportItem.Percent5,0)  ::TFloat AS VirtPercent5
+           , COALESCE(tmpMarginReportItem.Percent6,0)  ::TFloat AS VirtPercent6
+           , COALESCE(tmpMarginReportItem.Percent7,0)  ::TFloat AS VirtPercent7
+
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent1,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent1,0) <> 100 THEN tmpDataAll.Summa1 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent1,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale1
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent2,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent2,0) <> 100 THEN tmpDataAll.Summa2 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent2,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale2
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent3,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent3,0) <> 100 THEN tmpDataAll.Summa3 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent3,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale3
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent4,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent4,0) <> 100 THEN tmpDataAll.Summa4 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent4,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale4
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent5,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent5,0) <> 100 THEN tmpDataAll.Summa5 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent5,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale5
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent6,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent6,0) <> 100 THEN tmpDataAll.Summa6 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent6,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale6
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent7,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent7,0) <> 100 THEN tmpDataAll.Summa7 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent7,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale7
+           
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent1,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent1,0) <> 100 THEN (tmpDataAll.Summa1 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent1,0)))-tmpDataAll.Summa1 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit1
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent2,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent2,0) <> 100 THEN (tmpDataAll.Summa2 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent2,0)))-tmpDataAll.Summa2 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit2
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent3,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent3,0) <> 100 THEN (tmpDataAll.Summa3 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent3,0)))-tmpDataAll.Summa3 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit3
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent4,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent4,0) <> 100 THEN (tmpDataAll.Summa4 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent4,0)))-tmpDataAll.Summa4 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit4
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent5,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent5,0) <> 100 THEN (tmpDataAll.Summa5 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent5,0)))-tmpDataAll.Summa5 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit5
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent6,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent6,0) <> 100 THEN (tmpDataAll.Summa6 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent6,0)))-tmpDataAll.Summa6 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit6
+           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent7,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent7,0) <> 100 THEN (tmpDataAll.Summa7 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent7,0)))-tmpDataAll.Summa7 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit7
+
+           , tmpMarginCategoryItem.MarginPercent1  ::TFloat 
+           , tmpMarginCategoryItem.MarginPercent2  ::TFloat 
+           , tmpMarginCategoryItem.MarginPercent3  ::TFloat 
+           , tmpMarginCategoryItem.MarginPercent4  ::TFloat 
+           , tmpMarginCategoryItem.MarginPercent5  ::TFloat 
+           , tmpMarginCategoryItem.MarginPercent6  ::TFloat 
+           , tmpMarginCategoryItem.MarginPercent7  ::TFloat 
+
+           , Object_MarginCategory.ValueData AS MarginCategoryName
+           
            , 14941410 :: Integer  AS Color_Amount            --нежно сал.14941410  -- 
            , 16777158  :: Integer  AS Color_Summa           -- желтый 8978431
            , 8978431   :: Integer  AS Color_SummaSale       --голубой 16380671
 
-           , CASE WHEN tmpDataAll.PersentAmount1 <> tmpMaxPersent.MaxPersentAmount1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount1
-           , CASE WHEN tmpDataAll.PersentSumma1 <> tmpMaxPersent.MaxPersentSumma1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma1
-           , CASE WHEN tmpDataAll.PersentSummaSale1 <> tmpMaxPersent.MaxPersentSummaSale1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale1
+           , CASE WHEN tmpDataAll.PercentAmount1 <> tmpMaxPercent.MaxPercentAmount1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentAmount1
+           , CASE WHEN tmpDataAll.PercentSumma1 <> tmpMaxPercent.MaxPercentSumma1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSumma1
+           , CASE WHEN tmpDataAll.PercentSummaSale1 <> tmpMaxPercent.MaxPercentSummaSale1 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSummaSale1
 
-           , CASE WHEN tmpDataAll.PersentAmount2 <> tmpMaxPersent.MaxPersentAmount2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount2
-           , CASE WHEN tmpDataAll.PersentSumma2 <> tmpMaxPersent.MaxPersentSumma2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma2
-           , CASE WHEN tmpDataAll.PersentSummaSale2 <> tmpMaxPersent.MaxPersentSummaSale2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale2       
+           , CASE WHEN tmpDataAll.PercentAmount2 <> tmpMaxPercent.MaxPercentAmount2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentAmount2
+           , CASE WHEN tmpDataAll.PercentSumma2 <> tmpMaxPercent.MaxPercentSumma2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSumma2
+           , CASE WHEN tmpDataAll.PercentSummaSale2 <> tmpMaxPercent.MaxPercentSummaSale2 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSummaSale2       
 
-           , CASE WHEN tmpDataAll.PersentAmount3 <> tmpMaxPersent.MaxPersentAmount3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount3
-           , CASE WHEN tmpDataAll.PersentSumma3 <> tmpMaxPersent.MaxPersentSumma3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma3
-           , CASE WHEN tmpDataAll.PersentSummaSale3 <> tmpMaxPersent.MaxPersentSummaSale3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale3   
+           , CASE WHEN tmpDataAll.PercentAmount3 <> tmpMaxPercent.MaxPercentAmount3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentAmount3
+           , CASE WHEN tmpDataAll.PercentSumma3 <> tmpMaxPercent.MaxPercentSumma3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSumma3
+           , CASE WHEN tmpDataAll.PercentSummaSale3 <> tmpMaxPercent.MaxPercentSummaSale3 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSummaSale3   
 
-           , CASE WHEN tmpDataAll.PersentAmount4 <> tmpMaxPersent.MaxPersentAmount4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount4
-           , CASE WHEN tmpDataAll.PersentSumma4 <> tmpMaxPersent.MaxPersentSumma4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma4
-           , CASE WHEN tmpDataAll.PersentSummaSale4 <> tmpMaxPersent.MaxPersentSummaSale4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale4    
+           , CASE WHEN tmpDataAll.PercentAmount4 <> tmpMaxPercent.MaxPercentAmount4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentAmount4
+           , CASE WHEN tmpDataAll.PercentSumma4 <> tmpMaxPercent.MaxPercentSumma4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSumma4
+           , CASE WHEN tmpDataAll.PercentSummaSale4 <> tmpMaxPercent.MaxPercentSummaSale4 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSummaSale4    
 
-           , CASE WHEN tmpDataAll.PersentAmount5 <> tmpMaxPersent.MaxPersentAmount5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount5
-           , CASE WHEN tmpDataAll.PersentSumma5 <> tmpMaxPersent.MaxPersentSumma5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma5
-           , CASE WHEN tmpDataAll.PersentSummaSale5 <> tmpMaxPersent.MaxPersentSummaSale5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale5
+           , CASE WHEN tmpDataAll.PercentAmount5 <> tmpMaxPercent.MaxPercentAmount5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentAmount5
+           , CASE WHEN tmpDataAll.PercentSumma5 <> tmpMaxPercent.MaxPercentSumma5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSumma5
+           , CASE WHEN tmpDataAll.PercentSummaSale5 <> tmpMaxPercent.MaxPercentSummaSale5 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSummaSale5
                       
-           , CASE WHEN tmpDataAll.PersentAmount6 <> tmpMaxPersent.MaxPersentAmount6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount6
-           , CASE WHEN tmpDataAll.PersentSumma6 <> tmpMaxPersent.MaxPersentSumma6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma6
-           , CASE WHEN tmpDataAll.PersentSummaSale6 <> tmpMaxPersent.MaxPersentSummaSale6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale6
+           , CASE WHEN tmpDataAll.PercentAmount6 <> tmpMaxPercent.MaxPercentAmount6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentAmount6
+           , CASE WHEN tmpDataAll.PercentSumma6 <> tmpMaxPercent.MaxPercentSumma6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSumma6
+           , CASE WHEN tmpDataAll.PercentSummaSale6 <> tmpMaxPercent.MaxPercentSummaSale6 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSummaSale6
 
-           , CASE WHEN tmpDataAll.PersentAmount7 <> tmpMaxPersent.MaxPersentAmount7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentAmount7
-           , CASE WHEN tmpDataAll.PersentSumma7 <> tmpMaxPersent.MaxPersentSumma7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSumma7
-           , CASE WHEN tmpDataAll.PersentSummaSale7 <> tmpMaxPersent.MaxPersentSummaSale7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PersentSummaSale7 
+           , CASE WHEN tmpDataAll.PercentAmount7 <> tmpMaxPercent.MaxPercentAmount7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentAmount7
+           , CASE WHEN tmpDataAll.PercentSumma7 <> tmpMaxPercent.MaxPercentSumma7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSumma7
+           , CASE WHEN tmpDataAll.PercentSummaSale7 <> tmpMaxPercent.MaxPercentSummaSale7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSummaSale7 
                                             
        FROM tmpDataAll
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id =tmpDataAll.UnitId
@@ -462,8 +607,12 @@ BEGIN
                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                 LEFT JOIN Object AS Object_JuridicalMain ON Object_JuridicalMain.Id = ObjectLink_Unit_Juridical.ChildObjectId
 
-                LEFT JOIN tmpMaxPersent ON 1=1
+                LEFT JOIN tmpMaxPercent ON 1=1
+                LEFT JOIN tmpMarginReportItem ON tmpMarginReportItem.UnitId = Object_Unit.Id
 
+                LEFT JOIN tmpMarginCategoryItem ON tmpMarginCategoryItem.UnitId = Object_Unit.Id
+                LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = tmpMarginCategoryItem.MarginCategoryId
+                
         ORDER BY Object_JuridicalMain.ValueData 
                , Object_Unit.ValueData 
         ;
@@ -479,3 +628,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_PriceIntervention (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
 --select * from gpReport_PriceIntervention(inStartDate := ('01.03.2016')::TDateTime , inEndDate := ('10.03.2016')::TDateTime , inPrice1 := 100 , inPrice2 := 200 , inPrice3 := 300 , inPrice4 := 400 , inPrice5 := 500 , inPrice6 := 600 ,  inSession := '3');
+--select * from gpReport_PriceIntervention(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('02.01.2016')::TDateTime , inPrice1 := 15 , inPrice2 := 30 , inPrice3 := 50 , inPrice4 := 70 , inPrice5 := 300 , inPrice6 := 1000 , inMarginReportId := 2082814 ,  inSession := '3');

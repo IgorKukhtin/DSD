@@ -11,16 +11,24 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxContainer, cxLabel, dsdGuides, cxTextEdit, cxMaskEdit,
+  cxButtonEdit, cxCurrencyEdit;
 
 type
   TMarginReportItemForm = class(TAncestorEnumForm)
-    colName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
     colPercent1: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     UnitChoiceForm: TOpenChoiceForm;
+    ceMarginReport: TcxButtonEdit;
+    MarginReportGuides: TdsdGuides;
+    textMarginReport: TdxBarControlContainerItem;
+    cxLabel1: TcxLabel;
+    bbMarginReport: TdxBarControlContainerItem;
+    colMarginReportName: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

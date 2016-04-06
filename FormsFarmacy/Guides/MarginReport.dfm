@@ -1,25 +1,25 @@
 inherited MarginReportForm: TMarginReportForm
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072' ('#1062#1077#1085#1086#1074#1072#1103' '#1080#1085#1090#1077#1088#1074#1077#1085#1094#1080#1103')'
-  ClientHeight = 307
-  ClientWidth = 512
-  ExplicitWidth = 528
-  ExplicitHeight = 345
+  ClientHeight = 309
+  ClientWidth = 453
+  ExplicitWidth = 469
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 512
-    Height = 281
-    ExplicitWidth = 363
+    Width = 453
+    Height = 283
+    ExplicitWidth = 512
     ExplicitHeight = 281
-    ClientRectBottom = 281
-    ClientRectRight = 512
+    ClientRectBottom = 283
+    ClientRectRight = 453
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 363
+      ExplicitWidth = 512
       ExplicitHeight = 281
       inherited cxGrid: TcxGrid
-        Width = 512
-        Height = 281
-        ExplicitWidth = 363
+        Width = 453
+        Height = 283
+        ExplicitWidth = 512
         ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -81,6 +81,10 @@ inherited MarginReportForm: TMarginReportForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -100,6 +104,10 @@ inherited MarginReportForm: TMarginReportForm
           ItemName = 'bbGridToExcel'
         end>
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 376
+    Top = 160
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_MarginReport'

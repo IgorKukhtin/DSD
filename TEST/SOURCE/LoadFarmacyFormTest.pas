@@ -53,6 +53,7 @@ type
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
     procedure LoadMargineCategory;
+    procedure LoadMarginReport;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
     procedure LoadKindFormTest;
@@ -315,6 +316,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryLinkForm');
 end;
 
+procedure TLoadFormTest.LoadMarginReport;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginReportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginReportItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginReportItemForm');
+end;
+
 procedure TLoadFormTest.LoadMeasureFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureForm'));
@@ -378,6 +387,7 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 // exit;
+
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
@@ -432,6 +442,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
+
   //Отчет Ценовая интервенция
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');

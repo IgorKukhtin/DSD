@@ -23,12 +23,6 @@ type
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cxLabel3: TcxLabel;
-    cxLabel5: TcxLabel;
-    Juridical1Guides: TdsdGuides;
-    Juridical2Guides: TdsdGuides;
-    ceJuridical1: TcxButtonEdit;
-    ceJuridical2: TcxButtonEdit;
     cePrice1: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     cePrice2: TcxCurrencyEdit;
@@ -41,6 +35,9 @@ type
     cxLabel11: TcxLabel;
     cePrice6: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
+    cxLabel3: TcxLabel;
+    ceMarginReport: TcxButtonEdit;
+    MarginReportGuides: TdsdGuides;
   private
     { Private declarations }
   public

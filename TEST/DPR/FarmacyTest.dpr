@@ -407,7 +407,8 @@ uses
   ReportMovementCheckFarm in '..\..\FormsFarmacy\Report\ReportMovementCheckFarm.pas' {ReportMovementCheckFarmForm: TParentForm},
   Report_PriceIntervention in '..\..\FormsFarmacy\Report\Report_PriceIntervention.pas' {Report_PriceInterventionForm: TParentForm},
   Report_MovementIncomeDialog in '..\..\FormsFarmacy\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
-  MarginReport in '..\..\FormsFarmacy\Guides\MarginReport.pas' {MarginReportForm: TParentForm};
+  MarginReport in '..\..\FormsFarmacy\Guides\MarginReport.pas' {MarginReportForm: TParentForm},
+  MarginReportItem in '..\..\FormsFarmacy\Guides\MarginReportItem.pas' {MarginReportItemForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
