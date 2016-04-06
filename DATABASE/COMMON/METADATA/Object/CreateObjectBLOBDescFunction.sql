@@ -33,7 +33,11 @@ INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
 
 CREATE OR REPLACE FUNCTION zc_objectBlob_Goods_Description() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Goods_Description'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
-   SELECT zc_object_Goods(), 'zc_objectBlob_Goods_Description','Описание товара' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Goods_Description');
+   SELECT zc_object_Goods(), 'zc_objectBlob_Goods_Description','Описание товара на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Goods_Description');
+
+CREATE OR REPLACE FUNCTION zc_objectBlob_Goods_Site() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Goods_Site'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_object_Goods(), 'zc_objectBlob_Goods_Site','Название товара на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Goods_Site');
 
 CREATE OR REPLACE FUNCTION zc_ObjectBlob_RouteMember_Description() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_RouteMember_Description'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)

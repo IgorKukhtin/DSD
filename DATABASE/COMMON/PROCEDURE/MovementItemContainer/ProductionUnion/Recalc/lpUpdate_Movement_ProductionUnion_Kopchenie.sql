@@ -136,20 +136,20 @@ BEGIN
 
      -- Распроводим
      PERFORM lpUnComplete_Movement (inMovementId     := tmp.MovementId
-                                  , inUserId         := zc_Enum_Process_Auto_Kopchenie())
+                                  , inUserId         := inUserId)
      FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = FALSE AND _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId) AS tmp
           INNER JOIN Movement ON Movement.Id = tmp.MovementId
                              AND Movement.StatusId = zc_Enum_Status_Complete();
 
      -- удаляются документы !!!важно MovementItemId_child = 0!!!
      PERFORM lpSetErased_Movement (inMovementId:= tmp.MovementId
-                                 , inUserId    := zc_Enum_Process_Auto_Kopchenie()
+                                 , inUserId    := inUserId
                                   )
      FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = TRUE AND _tmpResult.MovementId <> 0 AND _tmpResult.MovementItemId_child = 0 GROUP BY _tmpResult.MovementId) AS tmp
     ;
      -- удаляются элементы, !!!т.е. не по MovementItemId_master!!!
      PERFORM lpSetErased_MovementItem (inMovementItemId:= _tmpResult.MovementItemId_child
-                                     , inUserId        := zc_Enum_Process_Auto_Kopchenie()
+                                     , inUserId        := inUserId
                                       )
      FROM _tmpResult
           LEFT JOIN _tmpResult AS _tmpResult_movement ON _tmpResult_movement.MovementId           = _tmpResult.MovementId
@@ -168,7 +168,7 @@ BEGIN
                                                          , inFromId                := inUnitId
                                                          , inToId                  := inUnitId
                                                          , inIsPeresort            := FALSE
-                                                         , inUserId                := zc_Enum_Process_Auto_Kopchenie()
+                                                         , inUserId                := inUserId
                                                           ) AS MovementId
            FROM (SELECT inEndDate AS OperDate
                  FROM _tmpResult
@@ -201,7 +201,7 @@ BEGIN
                                                  , inPartionGoods_child     := NULL
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoodsDate_child := NULL
-                                                 , inUserId                 := zc_Enum_Process_Auto_Kopchenie()
+                                                 , inUserId                 := inUserId
                                                   )
      FROM _tmpResult
           LEFT JOIN Container ON Container.Id = _tmpResult.ContainerId
@@ -216,7 +216,7 @@ BEGIN
      -- !!!Проводим но не ВСЁ!!!
      PERFORM lpComplete_Movement_ProductionUnion (inMovementId     := tmp.MovementId
                                                 , inIsHistoryCost  := TRUE
-                                                , inUserId         := zc_Enum_Process_Auto_Kopchenie())
+                                                , inUserId         := inUserId)
      FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = FALSE AND _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId) AS tmp
           INNER JOIN Movement ON Movement.Id = tmp.MovementId
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()

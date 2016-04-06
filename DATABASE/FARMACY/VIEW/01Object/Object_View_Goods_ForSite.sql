@@ -6,6 +6,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
     SELECT 
         Object_Goods.Id                                         as id
        ,Object_Goods.GoodsCodeInt                               as article
+       ,ObjectBlob_Site.ValueData                               as Name_Site
        ,Object_Goods.GoodsName                                  as name
        ,ObjectString_Foto.ValueData                             as foto
        ,ObjectString_Thumb.ValueData                            as thumb
@@ -31,6 +32,9 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
         LEFT OUTER JOIN ObjectString AS ObjectString_Thumb
                                      ON ObjectString_Thumb.ObjectId = Object_Goods.Id 
                                     AND ObjectString_Thumb.DescId = zc_ObjectString_Goods_Thumb()
+        LEFT OUTER JOIN ObjectBlob AS ObjectBlob_Site
+                                   ON ObjectBlob_Site.ObjectId = Object_Goods.Id
+                                  AND ObjectBlob_Site.DescId = zc_objectBlob_Goods_Site()
         LEFT OUTER JOIN ObjectBlob AS ObjectBlob_Description
                                    ON ObjectBlob_Description.ObjectId = Object_Goods.Id
                                   AND ObjectBlob_Description.DescId = zc_objectBlob_Goods_Description()
@@ -39,11 +43,11 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
                                   AND ObjectLink_Goods_Appointment.DescId = zc_ObjectLink_Goods_Appointment();
 
 ALTER TABLE Object_Goods_View_ForSite  OWNER TO postgres;
-/*-------------------------------------------------------------------------------*/
+
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
  23.11.15                                                          *
 */
 
---Select * from Object_Goods_View_ForSite as Object_Goods Where Object_Goods.ObjectId = lpGet_DefaultValue('zc_Object_Retail', 3)::Integer LIMIT 100
+-- Select * from Object_Goods_View_ForSite as Object_Goods Where Object_Goods.ObjectId = lpGet_DefaultValue('zc_Object_Retail', 3)::Integer LIMIT 100

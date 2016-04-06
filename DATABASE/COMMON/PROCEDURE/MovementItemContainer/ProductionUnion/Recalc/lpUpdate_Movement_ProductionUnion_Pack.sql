@@ -424,20 +424,20 @@ BEGIN
 
      -- Распроводим
      PERFORM lpUnComplete_Movement (inMovementId     := tmp.MovementId
-                                  , inUserId         := zc_Enum_Process_Auto_Pack())
+                                  , inUserId         := inUserId)
      FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = FALSE AND _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId) AS tmp
           INNER JOIN Movement ON Movement.Id = tmp.MovementId
                              AND Movement.StatusId = zc_Enum_Status_Complete();
 
      -- удаляются документы !!!важно MovementItemId = 0!!!
      PERFORM lpSetErased_Movement (inMovementId:= tmp.MovementId
-                                 , inUserId    := zc_Enum_Process_Auto_Pack()
+                                 , inUserId    := inUserId
                                   )
      FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = TRUE AND _tmpResult.MovementId <> 0 AND _tmpResult.MovementItemId = 0 GROUP BY _tmpResult.MovementId) AS tmp
     ;
      -- удаляются элементы - Master
      PERFORM lpSetErased_MovementItem (inMovementItemId:= _tmpResult.MovementItemId
-                                     , inUserId        := zc_Enum_Process_Auto_Pack()
+                                     , inUserId        := inUserId
                                       )
      FROM _tmpResult
           LEFT JOIN _tmpResult AS _tmpResult_movement ON _tmpResult_movement.MovementId     = _tmpResult.MovementId
@@ -448,7 +448,7 @@ BEGIN
     ;
      -- удаляются элементы - Child
      PERFORM lpSetErased_MovementItem (inMovementItemId:= _tmpResult_child.MovementItemId
-                                     , inUserId        := zc_Enum_Process_Auto_Pack()
+                                     , inUserId        := inUserId
                                       )
      FROM _tmpResult_child
           LEFT JOIN _tmpResult AS _tmpResult_movement ON _tmpResult_movement.MovementId     = _tmpResult_child.MovementId
@@ -467,7 +467,7 @@ BEGIN
                                                          , inFromId                := inUnitId
                                                          , inToId                  := inUnitId
                                                          , inIsPeresort            := FALSE
-                                                         , inUserId                := zc_Enum_Process_Auto_Pack()
+                                                         , inUserId                := inUserId
                                                           ) AS MovementId
            FROM (SELECT _tmpResult.OperDate
                  FROM _tmpResult
@@ -510,7 +510,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inGoodsKindId            := tmp.GoodsKindId
-                                                 , inUserId                 := zc_Enum_Process_Auto_Pack()
+                                                 , inUserId                 := inUserId
                                                   )
      FROM (SELECT _tmpResult.ContainerId, CLO_GoodsKind.ObjectId AS GoodsKindId
            FROM _tmpResult
@@ -538,7 +538,7 @@ BEGIN
                                                  , inGoodsKindId            := CLO_GoodsKind.ObjectId
                                                  , inGoodsKindCompleteId    := NULL
                                                  , inCount_onCount          := 0
-                                                 , inUserId                 := zc_Enum_Process_Auto_Pack()
+                                                 , inUserId                 := inUserId
                                                   )
      FROM _tmpResult_child
           LEFT JOIN _tmpResult ON _tmpResult.ContainerId = _tmpResult_child.ContainerId_master
@@ -562,7 +562,7 @@ BEGIN
                                                  , inGoodsKindId            := ObjectLink_ReceiptChild_GoodsKind.ChildObjectId
                                                  , inGoodsKindCompleteId    := NULL
                                                  , inCount_onCount          := 0
-                                                 , inUserId                 := zc_Enum_Process_Auto_Pack()
+                                                 , inUserId                 := inUserId
                                                   )
      FROM _tmpResult
                               INNER JOIN ObjectFloat AS ObjectFloat_Value_master
@@ -599,7 +599,7 @@ BEGIN
      -- !!!Проводим но не ВСЁ!!!
      PERFORM lpComplete_Movement_ProductionUnion (inMovementId     := tmp.MovementId
                                                 , inIsHistoryCost  := TRUE
-                                                , inUserId         := zc_Enum_Process_Auto_Pack())
+                                                , inUserId         := inUserId)
      FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = FALSE AND _tmpResult.MovementId <> 0 AND _tmpResult.DescId_mi = zc_MI_Master() GROUP BY _tmpResult.MovementId) AS tmp
           INNER JOIN Movement ON Movement.Id = tmp.MovementId
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
