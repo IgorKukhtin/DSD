@@ -406,6 +406,7 @@ BEGIN
                   , Object_Quality.ObjectCode   AS QualityCode
                   , Object_Quality.ValueData    AS QualityName
                   , OS_QualityComment.ValueData AS QualityComment
+                  , ObjectFloat_Quality_NumberPrint.ValueData AS NumberPrint
 
                   , Object_GoodsQuality.ValueData AS Value17
                   , ObjectString_Value1.ValueData AS Value1
@@ -436,7 +437,7 @@ BEGIN
                    INNER JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
                                           ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                          AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
-                                         AND ObjectFloat_Quality_NumberPrint.ValueData = 2 -- !!!так захардкодил!!!
+                                         AND ObjectFloat_Quality_NumberPrint.ValueData >= 2 -- !!!так захардкодил!!!
 
                    LEFT JOIN ObjectString AS ObjectString_Value1
                                           ON ObjectString_Value1.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
@@ -556,6 +557,7 @@ BEGIN
                   , MS_ExpertPrior.ValueData                           AS ExpertPrior
                   , MS_ExpertLast.ValueData                            AS ExpertLast
                   , MB_Comment.ValueData                               AS Comment
+                  , tmpMovement_find.MovementId                        AS MovementId_find
                   , 0                                                  AS ReportType
                   , tmpMovement_find.OperDateIn                        AS OperDateIn
                   , tmpMovement_find.OperDateOut                       AS OperDateOut
@@ -607,6 +609,7 @@ BEGIN
            , '' :: TVarChar    AS CarName
            , TRUE :: Boolean   AS isJuridicalBasis
 
+           , tmpGoodsQuality.NumberPrint
            , tmpGoodsQuality.QualityCode
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
@@ -633,6 +636,7 @@ BEGIN
            , tmpMovement_QualityParams.QualityNumber
            , tmpMovement_QualityParams.Comment AS QualityComment_Movement
            , tmpMovement_QualityParams.ReportType
+           , tmpMovement_QualityParams.MovementId_find
 
        FROM tmpMI
             INNER JOIN Movement ON Movement.Id =  tmpMI.MovementId

@@ -1,79 +1,97 @@
 -- Function: gpUpdate_Goods_FromSite()
 
-DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite(Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite(Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite(Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TBlob, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_FromSite(
     IN inGoodsCode           Integer   ,    -- ключ объекта <Товар>
+    IN inName                TBlob     ,    -- Название товара на сайте
     IN inPhoto               TVarChar  ,    -- Фото
-    IN inThumb               TVarChar  ,    --Превью
-    IN inDescription         TBlob     ,    --Описание товара
-    IN inManufacturer        TVarChar  ,    --производитель (ObjectString_Goods_Maker)
-    IN inAppointmentCode     Integer   ,    --назначение препарата
-    IN inAppointmentName     TVarChar  ,    --назначение препарата
-    IN inPublished           Boolean   ,    --Опубликован
+    IN inThumb               TVarChar  ,    -- Превью
+    IN inDescription         TBlob     ,    -- Описание товара на сайте
+    IN inManufacturer        TVarChar  ,    -- производитель (ObjectString_Goods_Maker)
+    IN inAppointmentCode     Integer   ,    -- назначение препарата
+    IN inAppointmentName     TVarChar  ,    -- назначение препарата
+    IN inPublished           Boolean   ,    -- Опубликован
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS VOID AS
+RETURNS VOID
+AS
 $BODY$
-    DECLARE vbId Integer;
-    DECLARE vbApoitmentId Integer;
+  DECLARE vbUserId Integer;
+
+  DECLARE vbId Integer;
+  DECLARE vbCount Integer;
+  DECLARE vbApoitmentId Integer;
 BEGIN
-    Select
-        id
-    INTO
-        vbId
-    FROM
-        Object_Goods_View
-    Where 
-        ObjectId = 4 
-        AND
-        GoodsCodeInt = inGoodsCode;
-    IF COALESCE(vbId,0)<> 0
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
+    vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- поиск
+    SELECT MAX (Id), COUNT (*)
+           INTO vbId, vbCount
+    FROM Object_Goods_View
+    WHERE ObjectId = lpGet_DefaultValue ('zc_Object_Retail', vbUserId) :: Integer AND GoodsCodeInt = inGoodsCode;
+
+    
+    -- проверка
+    IF COALESCE (vbId, 0) = 0
     THEN
-        -- сохранили свойство <Фото>
-        PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Foto(), vbId, inPhoto );
-        -- сохранили свойство <Превью>
-        PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Thumb(), vbId, inThumb );
-        -- сохранили свойство <Описание>
-        PERFORM lpInsertUpdate_ObjectBlob(zc_objectBlob_Goods_Description(), vbId, inDescription );
-        -- сохранили свойство <производитель>
-        PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), vbId, inManufacturer );
-        -- сохранили свойство <Опубликован>
-        PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Goods_Published(), vbId, inPublished );
-        
-        IF COALESCE(inAppointmentCode,0)<>0
-        THEN
-            SELECT
-                ID
-            INTO
-                vbApoitmentId
-            FROM
-                Object
-            WHERE
-                DescId = zc_Object_Appointment()
-                AND
-                ObjectCode::Integer = inAppointmentCode;
-            
-            IF COALESCE(vbApoitmentId,0) = 0
-            THEN
-                vbApoitmentId := lpInsertUpdate_Object(vbApoitmentId, zc_Object_Appointment(), inAppointmentCode, inAppointmentName);
-            END IF;
-            -- сохранили свойство <Apoitment>
-            PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Appointment(), vbId, vbApoitmentId );
-        END IF;
+        RAISE EXCEPTION 'Ошибка.Товаров с кодом <%> не найден.', inGoodsCode;
+    END IF;
+    -- проверка
+    IF vbCount > 1
+    THEN
+        RAISE EXCEPTION 'Ошибка.Товаров с кодом <%> больше чем 1.', inGoodsCode;
     END IF;
 
-END;$BODY$
 
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Goods_FromSite(Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar) OWNER TO postgres;
+    -- если нашли
+    IF vbId <> 0
+    THEN
+        -- сохранили свойство <Фото>
+        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Foto(), vbId, inPhoto);
+        -- сохранили свойство <Превью>
+        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Thumb(), vbId, inThumb);
+        -- сохранили свойство <название на сайте>
+        PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Site(), vbId, inName);
+        -- сохранили свойство <описание на сайте>
+        PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Description(), vbId, inDescription);
+        -- сохранили свойство <производитель>
+        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), vbId, inManufacturer);
+        -- сохранили свойство <Опубликован>
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Published(), vbId, inPublished);
+        
+    END IF;
 
-  
+    -- для адекватного кода
+    IF inAppointmentCode <> 0
+    THEN
+        -- поиск по коду
+        vbApoitmentId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Appointment() AND ObjectCode = inAppointmentCode);
+        -- добавили/изменили - ВСЕГДА
+        vbApoitmentId:= lpInsertUpdate_Object (vbApoitmentId, zc_Object_Appointment(), inAppointmentCode, inAppointmentName);
+
+        -- если нашли
+        IF vbId <> 0
+        THEN
+            -- сохранили свойство <Apoitment>
+            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Appointment(), vbId, vbApoitmentId);
+        END IF;
+
+    END IF;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
- 11.11.14                                                          *
-
+ 06.04.16                                        * ALL
+ 11.11.15                                                          *
 */
