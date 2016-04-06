@@ -3,9 +3,8 @@ inherited PaymentForm: TPaymentForm
   ClientHeight = 513
   ClientWidth = 1005
   AddOnFormData.AddOnFormRefresh.ParentList = 'Payment'
-  ExplicitTop = -74
   ExplicitWidth = 1021
-  ExplicitHeight = 548
+  ExplicitHeight = 551
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,19 +13,19 @@ inherited PaymentForm: TPaymentForm
     Height = 446
     ExplicitTop = 67
     ExplicitWidth = 1005
-    ExplicitHeight = 547
+    ExplicitHeight = 446
     ClientRectBottom = 446
     ClientRectRight = 1005
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1005
-      ExplicitHeight = 523
+      ExplicitHeight = 422
       inherited cxGrid: TcxGrid
         Top = 61
         Width = 1005
         Height = 361
         ExplicitTop = 61
         ExplicitWidth = 1005
-        ExplicitHeight = 462
+        ExplicitHeight = 361
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -541,6 +540,30 @@ inherited PaymentForm: TPaymentForm
         end
         item
           StoredProc = spSelect_PaymentCorrSumm
+        end>
+    end
+    inherited actMISetErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end
+        item
+          StoredProc = spInsertUpdate_MovementFloat_TotalSummPayment
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end
+        item
+          StoredProc = spInsertUpdate_MovementFloat_TotalSummPayment
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet

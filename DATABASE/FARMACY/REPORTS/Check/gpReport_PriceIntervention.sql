@@ -441,8 +441,8 @@ BEGIN
                         WHERE ObjectLink_MarginCategoryLink_Unit.DescId = zc_ObjectLink_MarginCategoryLink_Unit()
                           AND COALESCE (ObjectFloat_Percent.ValueData,0) = 0
                        ) 
-                             
-, tmpMarginCategoryItem AS (SELECT DISTINCT tmp.UnitId, tmp.MarginCategoryId
+
+      , tmpMargCatItem AS ( SELECT DISTINCT tmp.UnitId, tmp.MarginCategoryId
                                  , max(tmp.MarginPercent1) AS MarginPercent1, max(tmp.MarginPercent2) AS MarginPercent2, max(tmp.MarginPercent3) AS MarginPercent3
                                  , max(tmp.MarginPercent4) AS MarginPercent4, max(tmp.MarginPercent5) AS MarginPercent5, max(tmp.MarginPercent6) AS MarginPercent6
                                  , max(tmp.MarginPercent7) AS MarginPercent7
@@ -460,8 +460,14 @@ BEGIN
                                                                                ON Object_MarginCategoryItem.MarginCategoryId =tmpMarginCategory.MarginCategoryId
                                   ) AS tmp
                             GROUP BY tmp.UnitId, tmp.MarginCategoryId
-                            )
+                           )
 
+, tmpMarginCategoryItem AS (SELECT *
+                            FROM (SELECT *, ROW_NUMBER()OVER(PARTITION BY tmp.UnitId Order By tmp.UnitId, tmp.MarginCategoryId desc) AS Ord
+                                  FROM tmpMargCatItem AS tmp
+                                  ) as tmp
+                            WHERE tmp.Ord = 1  
+                            )
                             
         SELECT
              Object_JuridicalMain.ObjectCode         AS JuridicalMainCode
