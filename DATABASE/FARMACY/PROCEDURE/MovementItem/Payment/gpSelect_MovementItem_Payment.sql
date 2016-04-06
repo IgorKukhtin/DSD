@@ -47,16 +47,14 @@ BEGIN
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Payment());
     vbUserId:= lpGetUserBySession (inSession);
 
-        SELECT
-            Movement_Payment.JuridicalId
-        INTO
-            vbJuridicalId
-        FROM
-            Movement_Payment_View AS Movement_Payment
-        WHERE
-            Movement_Payment.Id = inMovementId;
+        SELECT MovementLinkObject_Juridical.ObjectId AS JuridicalId
+      INTO vbJuridicalId
+        FROM MovementLinkObject AS MovementLinkObject_Juridical
+        WHERE MovementLinkObject_Juridical.MovementId = inMovementId
+          AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical();
+
     
-    
+
     -- –ÂÁÛÎ¸Ú‡Ú
     IF inShowAll THEN
         
@@ -64,48 +62,80 @@ BEGIN
         RETURN QUERY
             WITH
             Income AS 
-            (
-                SELECT
-                    Movement_Income.id
-                  , Movement_Income.InvNumber
-                  , Movement_Income.OperDate
-                  , Movement_Income.PaymentDate
-                  , Movement_Income.StatusName
-                  , Movement_Income.FromId
-                  , Movement_Income.FromName
-                  , COALESCE(NULLIF(ObjectFloat_Juridical_PayOrder.ValueData,0),999999)::TFloat AS PayOrder
-                  , Movement_Income.ToId
-                  , Movement_Income.ToName
-                  , Movement_Income.NDSKindName
-                  , Movement_Income.ContractName
-                  , Movement_Income.TotalSumm
-                  , Movement_Income.PaySumm
-                FROM
-                    Movement_Income_View AS Movement_Income
+            ( SELECT Movement.Id                                AS Id
+                   , Movement.InvNumber                         AS InvNumber
+                   , Movement.OperDate                          AS OperDate
+                   , MovementDate_Payment.ValueData             AS PaymentDate
+                   , Object_Status.ValueData                    AS StatusName
+                   , MovementLinkObject_From.ObjectId           AS FromId
+                   , Object_From.ValueData                      AS FromName
+                   , MovementLinkObject_To.ObjectId             AS ToId
+                   , Object_To.Name                             AS ToName
+                   , Object_NDSKind.ValueData                   AS NDSKindName
+                   , Object_Contract.ValueData                  AS ContractName
+                   , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+                   , Container.Amount                           AS PaySumm
+                   , COALESCE(NULLIF(ObjectFloat_Juridical_PayOrder.ValueData,0),999999)::TFloat AS PayOrder
+              FROM Movement 
+                    LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+                    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                            ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                           AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                 ON MovementLinkObject_From.MovementId = Movement.Id
+                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                 ON MovementLinkObject_To.MovementId = Movement.Id
+                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                    LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+        
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                 ON MovementLinkObject_NDSKind.MovementId = Movement.Id
+                                                AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                    LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                 ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                    LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                 ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                                AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+
+                    LEFT JOIN MovementDate    AS MovementDate_Payment
+                                              ON MovementDate_Payment.MovementId =  Movement.Id
+                                             AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+
                     LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Juridical_PayOrder
-                                                ON ObjectFloat_Juridical_PayOrder.ObjectId = Movement_Income.FromId
+                                                ON ObjectFloat_Juridical_PayOrder.ObjectId = MovementLinkObject_From.ObjectId
                                                AND ObjectFloat_Juridical_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
-                WHERE
-                    Movement_Income.JuridicalId = vbJuridicalId
-                    AND
-                    Movement_Income.PaySumm > 0
-                    AND
-                    COALESCE(Movement_Income.PaymentDate,Movement_Income.OperDate) between inDateStart AND inDateEnd
+                    -- œ‡ÚËˇ Ì‡ÍÎ‡‰ÌÓÈ
+                    LEFT JOIN Object AS Object_Movement
+                                     ON Object_Movement.ObjectCode = Movement.Id 
+                                    AND Object_Movement.DescId = zc_Object_PartionMovement()
+                    LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
+                                       AND Container.ObjectId = Object_Movement.Id
+                                       AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
+                           
+              WHERE Movement.DescId = zc_Movement_Income()
+                AND MovementLinkObject_Juridical.ObjectId = vbJuridicalId
+                AND COALESCE(MovementDate_Payment.ValueData, Movement.OperDate) between inDateStart AND inDateEnd
+                AND Container.Amount  > 0
             ),
             MI_SavedPayment AS 
-            (
-                Select 
-                    MI_Payment.IncomeId
-                FROM
-                    MovementItem_Payment_View AS MI_Payment
-                WHERE
-                    MI_Payment.MovementId = inMovementId
-                    AND
-                    (
-                        MI_Payment.isErased = FALSE
-                        or
-                        inIsErased = TRUE
-                    )
+            (   SELECT MIFloat_IncomeId.ValueData::Integer AS IncomeId
+                FROM MovementItem AS MI_Payment
+                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
+                                                       ON MIFloat_IncomeId.MovementItemId = MI_Payment.ID
+                                                      AND MIFloat_IncomeId.DescId = zc_MIFloat_MovementId()
+                WHERE MI_Payment.MovementId = inMovementId
+                  AND MI_Payment.DescId = zc_MI_Master()
+                  AND (MI_Payment.isErased = FALSE OR inIsErased = TRUE)
             ),
         tmpJuridicalSettings AS 
             (SELECT distinct tmp.JuridicalId
@@ -116,7 +146,101 @@ BEGIN
              WHERE tmp.MainJuridicalId = vbJuridicalId
                AND Coalesce (tmp.Name, '') <> '' 
              GROUP BY tmp.JuridicalId
-             )
+             ),
+    tmpMI_Payment AS 
+            (SELECT MI_Payment.Id                               AS Id
+                  , MIFloat_IncomeId.ValueData::Integer         AS IncomeId
+                  , Movement_Income.InvNumber                   AS Income_InvNumber
+                  , Movement_Income.Operdate                    AS Income_Operdate
+                  , MovementDate_Payment.ValueData              AS Income_DatePayment
+                  , Object_Status.ValueData                     AS Income_StatusName
+                  , MLO_From.ObjectId                           AS Income_JuridicalId
+                  , Object_From.ValueData                       AS Income_JuridicalName
+                  , COALESCE(NULLIF(ObjectFloat_Juridical_PayOrder.ValueData,0),999999)::TFloat AS Income_PayOrder
+                  , MLO_To.ObjectId                             AS Income_UnitId
+                  , Object_To.Name                              AS Income_UnitName
+                  , Object_NDSKind.ValueData                    AS Income_NDSKindName
+                  , Object_Contract.ValueData                   AS Income_ContractName
+                  , MovementFloat_TotalSumm.ValueData           AS Income_TotalSumm
+                  , Container.Amount                            AS Income_PaySumm
+                  , MIFloat_CorrBonus.ValueData                 AS SummaCorrBonus
+                  , MIFloat_CorrReturnOut.ValueData             AS SummaCorrReturnOut
+                  , MIFloat_CorrOther.ValueData                 AS SummaCorrOther
+                  , MI_Payment.Amount                           AS SummaPay
+                  , MILinkObject_BankAccount.ObjectId           AS BankAccountId
+                  , Object_BankAccount.Name                     AS BankAccountName
+                  , Object_BankAccount.BankName                 AS BankName
+                  , MI_Payment.isErased                         AS isErased
+                  , COALESCE(MIBoolean_NeedPay.ValueData,FALSE) AS NeedPay
+                 
+           FROM  MovementItem AS MI_Payment
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
+                                                      ON MIFloat_IncomeId.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_IncomeId.DescId = zc_MIFloat_MovementId()
+                    LEFT OUTER JOIN Movement AS Movement_Income ON Movement_Income.Id = MIFloat_IncomeId.ValueData::INTEGER
+                    LEFT OUTER JOIN Object AS Object_Status ON Object_Status.Id = Movement_Income.StatusId
+                    LEFT OUTER JOIN MovementLinkObject AS MLO_From
+                                                       ON MLO_From.MovementId = Movement_Income.Id
+                                                      AND MLO_From.DescId = zc_MovementLinkObject_From()
+                    LEFT OUTER JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+                               
+                    LEFT OUTER JOIN MovementLinkObject AS MLO_To
+                                                       ON MLO_To.MovementId = Movement_Income.Id
+                                                      AND MLO_To.DescId = zc_MovementLinkObject_To()
+                    LEFT OUTER JOIN Object_Unit_View AS Object_To ON Object_To.Id = MLO_To.ObjectId
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                 ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
+                                                AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                    LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
+                                   
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                 ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
+                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                    LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+        
+                    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                            ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
+                                           AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                    LEFT JOIN MovementDate    AS MovementDate_Payment
+                                              ON MovementDate_Payment.MovementId = Movement_Income.Id
+                                             AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+
+                    LEFT JOIN Object AS Object_Movement
+                                     ON Object_Movement.ObjectCode = Movement_Income.Id
+                                    AND Object_Movement.DescId = zc_Object_PartionMovement()
+                    LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
+                                       AND Container.ObjectId = Object_Movement.Id
+                                       AND Container.KeyValue like '%,'||Object_To.JuridicalId::TVarChar||';%'
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrBonus
+                                                      ON MIFloat_CorrBonus.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_CorrBonus.DescId = zc_MIFloat_CorrBonus()
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrReturnOut
+                                                      ON MIFloat_CorrReturnOut.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_CorrReturnOut.DescId = zc_MIFloat_CorrReturnOut()
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrOther
+                                                      ON MIFloat_CorrOther.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_CorrOther.DescId = zc_MIFloat_CorrOther()
+                    LEFT OUTER JOIN MovementitemLinkObject AS MILinkObject_BankAccount
+                                                           ON MILinkObject_BankAccount.MovementItemId = MI_Payment.ID
+                                                          AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+                    LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = MILinkObject_BankAccount.ObjectId
+
+                    LEFT JOIN MovementItemBoolean AS MIBoolean_NeedPay
+                                                  ON MIBoolean_NeedPay.MovementItemId = MI_Payment.Id
+                                                 AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
+
+                    LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Juridical_PayOrder
+                                                ON ObjectFloat_Juridical_PayOrder.ObjectId = MLO_From.ObjectId
+                                               AND ObjectFloat_Juridical_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
+                    LEFT OUTER JOIN MovementItem AS MI_MovementBankAccount
+                                                 ON MI_MovementBankAccount.ParentId = MI_Payment.Id
+                WHERE MI_Payment.DescId = zc_MI_Master()
+                  AND MI_Payment.MovementId = inMovementId
+                  AND (MI_Payment.isErased = FALSE OR inIsErased = TRUE)
+            )
+    
       
                 
             SELECT
@@ -182,16 +306,8 @@ BEGIN
               , tmpJuridicalSettings.StartDate AS ContractStartDate
               , tmpJuridicalSettings.EndDate   AS ContractEndDate
             FROM 
-                MovementItem_Payment_View AS MI_Payment
+                tmpMI_Payment AS MI_Payment
                 LEFT JOIN tmpJuridicalSettings ON tmpJuridicalSettings.JuridicalId = MI_Payment.Income_JuridicalId
-            WHERE
-                MI_Payment.MovementId = inMovementId
-                AND
-                (
-                    MI_Payment.isErased = FALSE
-                    or
-                    inIsErased = TRUE
-                )
             ORDER BY
                 7,5,3;
                 
@@ -207,7 +323,101 @@ BEGIN
              WHERE tmp.MainJuridicalId = vbJuridicalId
                AND Coalesce (tmp.Name, '') <> '' 
              GROUP BY tmp.JuridicalId
-             )
+             ),
+    tmpMI_Payment AS 
+            (SELECT MI_Payment.Id                               AS Id
+                  , MIFloat_IncomeId.ValueData::Integer         AS IncomeId
+                  , Movement_Income.InvNumber                   AS Income_InvNumber
+                  , Movement_Income.Operdate                    AS Income_Operdate
+                  , MovementDate_Payment.ValueData              AS Income_DatePayment
+                  , Object_Status.ValueData                     AS Income_StatusName
+                  , MLO_From.ObjectId                           AS Income_JuridicalId
+                  , Object_From.ValueData                       AS Income_JuridicalName
+                  , COALESCE(NULLIF(ObjectFloat_Juridical_PayOrder.ValueData,0),999999)::TFloat AS Income_PayOrder
+                  , MLO_To.ObjectId                             AS Income_UnitId
+                  , Object_To.Name                              AS Income_UnitName
+                  , Object_NDSKind.ValueData                    AS Income_NDSKindName
+                  , Object_Contract.ValueData                   AS Income_ContractName
+                  , MovementFloat_TotalSumm.ValueData           AS Income_TotalSumm
+                  , Container.Amount                            AS Income_PaySumm
+                  , MIFloat_CorrBonus.ValueData                 AS SummaCorrBonus
+                  , MIFloat_CorrReturnOut.ValueData             AS SummaCorrReturnOut
+                  , MIFloat_CorrOther.ValueData                 AS SummaCorrOther
+                  , MI_Payment.Amount                           AS SummaPay
+                  , MILinkObject_BankAccount.ObjectId           AS BankAccountId
+                  , Object_BankAccount.Name                     AS BankAccountName
+                  , Object_BankAccount.BankName                 AS BankName
+                  , MI_Payment.isErased                         AS isErased
+                  , COALESCE(MIBoolean_NeedPay.ValueData,FALSE) AS NeedPay
+                 
+           FROM  MovementItem AS MI_Payment
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
+                                                      ON MIFloat_IncomeId.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_IncomeId.DescId = zc_MIFloat_MovementId()
+                    LEFT OUTER JOIN Movement AS Movement_Income ON Movement_Income.Id = MIFloat_IncomeId.ValueData::INTEGER
+                    LEFT OUTER JOIN Object AS Object_Status ON Object_Status.Id = Movement_Income.StatusId
+                    LEFT OUTER JOIN MovementLinkObject AS MLO_From
+                                                       ON MLO_From.MovementId = Movement_Income.Id
+                                                      AND MLO_From.DescId = zc_MovementLinkObject_From()
+                    LEFT OUTER JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+                               
+                    LEFT OUTER JOIN MovementLinkObject AS MLO_To
+                                                       ON MLO_To.MovementId = Movement_Income.Id
+                                                      AND MLO_To.DescId = zc_MovementLinkObject_To()
+                    LEFT OUTER JOIN Object_Unit_View AS Object_To ON Object_To.Id = MLO_To.ObjectId
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                 ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
+                                                AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                    LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
+                                   
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                 ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
+                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                    LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+        
+                    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                            ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
+                                           AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                    LEFT JOIN MovementDate    AS MovementDate_Payment
+                                              ON MovementDate_Payment.MovementId = Movement_Income.Id
+                                             AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+
+                    LEFT JOIN Object AS Object_Movement
+                                     ON Object_Movement.ObjectCode = Movement_Income.Id
+                                    AND Object_Movement.DescId = zc_Object_PartionMovement()
+                    LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
+                                       AND Container.ObjectId = Object_Movement.Id
+                                       AND Container.KeyValue like '%,'||Object_To.JuridicalId::TVarChar||';%'
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrBonus
+                                                      ON MIFloat_CorrBonus.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_CorrBonus.DescId = zc_MIFloat_CorrBonus()
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrReturnOut
+                                                      ON MIFloat_CorrReturnOut.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_CorrReturnOut.DescId = zc_MIFloat_CorrReturnOut()
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrOther
+                                                      ON MIFloat_CorrOther.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_CorrOther.DescId = zc_MIFloat_CorrOther()
+                    LEFT OUTER JOIN MovementitemLinkObject AS MILinkObject_BankAccount
+                                                           ON MILinkObject_BankAccount.MovementItemId = MI_Payment.ID
+                                                          AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+                    LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = MILinkObject_BankAccount.ObjectId
+
+                    LEFT JOIN MovementItemBoolean AS MIBoolean_NeedPay
+                                                  ON MIBoolean_NeedPay.MovementItemId = MI_Payment.Id
+                                                 AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
+
+                    LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Juridical_PayOrder
+                                                ON ObjectFloat_Juridical_PayOrder.ObjectId = MLO_From.ObjectId
+                                               AND ObjectFloat_Juridical_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
+                    LEFT OUTER JOIN MovementItem AS MI_MovementBankAccount
+                                                 ON MI_MovementBankAccount.ParentId = MI_Payment.Id
+                WHERE MI_Payment.DescId = zc_MI_Master()
+                  AND MI_Payment.MovementId = inMovementId
+                  AND (MI_Payment.isErased = FALSE OR inIsErased = TRUE)
+            )
+    
 
 
             SELECT
@@ -239,16 +449,9 @@ BEGIN
               , tmpJuridicalSettings.StartDate AS ContractStartDate
               , tmpJuridicalSettings.EndDate   AS ContractEndDate
 
-            FROM MovementItem_Payment_View AS MI_Payment
+            FROM tmpMI_Payment AS MI_Payment
                  LEFT JOIN tmpJuridicalSettings ON tmpJuridicalSettings.JuridicalId = MI_Payment.Income_JuridicalId
-            WHERE 
-                MI_Payment.MovementId = inMovementId
-                AND
-                (
-                    MI_Payment.isErased = FALSE
-                    or
-                    inIsErased = TRUE
-                )
+            
             ORDER BY
                 MI_Payment.Income_JuridicalName
                ,MI_Payment.Income_DatePayment
@@ -263,6 +466,7 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 06.04.16         *
  21.12.15                                                          *
  07.12.15                                                          *
  29.10.15                                                          *
@@ -270,3 +474,4 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 
 
 --select * from gpSelect_MovementItem_Payment(inMovementId := 506904 , inShowAll := 'False' , inIsErased := 'False' , inDateStart := ('08.05.2015')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
+--SELECT * FROM Movement_Payment_View where id = 992827
