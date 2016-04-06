@@ -1280,7 +1280,9 @@ begin
     with DECLAR.DECLARBODY.RXXXXG010.Add do
     begin
       ROWNUM := IntToStr(i);
-      NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('AmountSummNoVAT_12').AsFloat);
+      NodeValue := StringReplace(FormatFloat('0.00',
+        ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
+        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
     end;
     inc(i);
     ItemsDataSet.Next;
