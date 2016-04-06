@@ -76,6 +76,15 @@ RETURNS TABLE (
   PercentSumma7             TFloat,
   PercentSummaSale7         TFloat,
 
+  SummaProfit       TFloat,
+  SummaProfit1      TFloat,
+  SummaProfit2      TFloat,
+  SummaProfit3      TFloat,
+  SummaProfit4      TFloat,
+  SummaProfit5      TFloat,
+  SummaProfit6      TFloat,
+  SummaProfit7      TFloat,
+
   PercentProfit       TFloat,
   PercentProfit1      TFloat,
   PercentProfit2      TFloat,
@@ -529,6 +538,15 @@ BEGIN
            , CAST (tmpDataAll.PercentAmount7    AS NUMERIC (16, 2))  ::TFloat AS PercentAmount7
            , CAST (tmpDataAll.PercentSumma7     AS NUMERIC (16, 2))  ::TFloat AS PercentSumma7
            , CAST (tmpDataAll.PercentSummaSale7 AS NUMERIC (16, 2))  ::TFloat AS PercentSummaSale7
+
+           , CAST ((tmpDataAll.SummaSale  - tmpDataAll.Summa)  AS NUMERIC (16, 2)) ::TFloat AS SummaProfit
+           , CAST ((tmpDataAll.SummaSale1 - tmpDataAll.Summa1) AS NUMERIC (16, 2)) ::TFloat AS SummaProfit1
+           , CAST ((tmpDataAll.SummaSale2 - tmpDataAll.Summa2) AS NUMERIC (16, 2)) ::TFloat AS SummaProfit2
+           , CAST ((tmpDataAll.SummaSale3 - tmpDataAll.Summa3) AS NUMERIC (16, 2)) ::TFloat AS SummaProfit3
+           , CAST ((tmpDataAll.SummaSale4 - tmpDataAll.Summa4) AS NUMERIC (16, 2)) ::TFloat AS SummaProfit4
+           , CAST ((tmpDataAll.SummaSale5 - tmpDataAll.Summa5) AS NUMERIC (16, 2)) ::TFloat AS SummaProfit5
+           , CAST ((tmpDataAll.SummaSale6 - tmpDataAll.Summa6) AS NUMERIC (16, 2)) ::TFloat AS SummaProfit6
+           , CAST ((tmpDataAll.SummaSale7 - tmpDataAll.Summa7) AS NUMERIC (16, 2)) ::TFloat AS SummaProfit7
 
            , CAST (CASE WHEN tmpDataAll.SummaSale  <> 0 THEN 100 - tmpDataAll.Summa /tmpDataAll.SummaSale *100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit
            , CAST (CASE WHEN tmpDataAll.SummaSale1 <> 0 THEN 100 - tmpDataAll.Summa1/tmpDataAll.SummaSale1*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit1
