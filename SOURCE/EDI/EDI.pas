@@ -1273,6 +1273,20 @@ begin
     ItemsDataSet.Next;
   end;
 
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG010.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('AmountSummNoVAT_12').AsFloat);
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+
   //Посадова (уповноважена) особа/фізична особа
   DECLAR.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').asString;
   DECLAR.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').asString;

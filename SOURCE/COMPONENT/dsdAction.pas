@@ -2824,10 +2824,18 @@ begin
 end;
 
 function TShowMessageAction.LocalExecute: Boolean;
+var lMessageText:String;
 begin
+  //
   if FMessageText <> '' then
+  begin
+      // вот так криво, т.к. после raise .... на форме ничего нельзя поделать
+      lMessageText:=FMessageText;
+      FMessageText:='';
+      //
+      raise Exception.Create(lMessageText);
       //ShowMessage(FMessageText);
-    raise Exception.Create(FMessageText);
+  end;
 end;
 
 procedure TShowMessageAction.SetMessageText(Value: String);
