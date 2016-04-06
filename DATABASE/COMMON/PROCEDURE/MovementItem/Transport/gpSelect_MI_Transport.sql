@@ -311,7 +311,7 @@ BEGIN
 
             , MovementItem.isErased
             
-        FROM (SELECT FALSE AS isErased UNION ALL SELECT TRUE AS isErased) AS tmpIsErased -- !!!Показываем Все!!!
+        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased -- !!!Показываем Все!!!
              JOIN MovementItem ON MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Child()
                               AND MovementItem.isErased   = tmpIsErased.isErased

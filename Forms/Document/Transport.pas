@@ -242,6 +242,13 @@ type
     MIChildProtocolOpenForm: TdsdOpenForm;
     bbMIProtocol: TdxBarButton;
     bbMIChildProtocol: TdxBarButton;
+    spErasedMIChild: TdsdStoredProc;
+    SetErasedChild: TdsdUpdateErased;
+    bbSetErasedChild: TdxBarButton;
+    spUnErasedMIChild: TdsdStoredProc;
+    SetUnErasedChild: TdsdUpdateErased;
+    bbSetUnErasedChild: TdxBarButton;
+    colchisErased: TcxGridDBColumn;
   private
   public
   end;
