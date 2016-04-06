@@ -465,7 +465,7 @@ BEGIN
                          , tmpNTZ.AmountRem      ::TFloat AS StartSum                     --SumRem
                          , tmpNTZ.AmountRemEnd              ::TFloat AS EndSum
                          
-                         , CASE WHEN tmpNTZ.AmountRemEnd <> 0 THEN tmpCheck.SummaCheck*100/tmpNTZ.AmountRemEnd ELSE 0 END ::TFloat AS PersentCheck
+                         , CAST (CASE WHEN tmpNTZ.AmountRemEnd <> 0 THEN tmpCheck.SummaCheck*100/tmpNTZ.AmountRemEnd ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PersentCheck
                          
                          , tmpNTZ.SummaJuridicalRemains     ::TFloat AS SummaJuridical
                          , tmpNTZ.SummaJuridicalRemainsEnd  ::TFloat AS SummaJuridicalEnd
