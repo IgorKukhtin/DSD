@@ -38,6 +38,17 @@ $BODY$
   DECLARE vbCurrencyDocumentId Integer;
   DECLARE vbCurrencyValue TFloat;
   DECLARE vbParValue TFloat;
+
+   DECLARE vbMovementId_Tax_find   Integer;
+   DECLARE vbAmount_Tax_find       TFloat;
+
+   DECLARE vbGoodsId     Integer;
+   DECLARE vbGoodsKindId Integer;
+   DECLARE vbAmount      TFloat;
+   DECLARE vbOperPrice   TFloat;
+
+   DECLARE curMI_ReturnIn refcursor;
+   DECLARE curMI_Tax refcursor;
 BEGIN
       -- это значит пользователь установил в журнале "другой" тип формирования
       IF inDocumentTaxKindId_inf <> 0 THEN inDocumentTaxKindId:= inDocumentTaxKindId_inf; END IF;
@@ -57,13 +68,31 @@ BEGIN
           DELETE FROM _tmpMI;
           -- временная таблица - существующие документы "Корректировки" - !!!только сводные!!!
           DELETE FROM _tmpMovementCorrective;
+          -- временная таблица - привязка "Корректировки" к "Налоговой" - !!!только сводные!!!
+          DELETE FROM _tmpMovementCorrective_new;
+          -- временная таблица - новая строчная часть "Корректировки"
+          DELETE FROM _tmpMICorrective;
+          -- временная таблица - для оптимизации
+          DELETE FROM _tmp1_SubQuery;
+          DELETE FROM _tmp2_SubQuery;
+          -- временная таблица - 
+          DELETE FROM _tmpRes;
       ELSE
           -- временная таблица "база" документов
           CREATE TEMP TABLE _tmpMovement (MovementId Integer, DescId Integer, DocumentTaxKindId Integer) ON COMMIT DROP;
           -- временная таблица "база" строчной части
-          CREATE TEMP TABLE _tmpMI (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount_Tax TFloat, Amount_TaxCorrective TFloat, MovementId_Tax Integer, MovementId_Corrective Integer) ON COMMIT DROP;
+          CREATE TEMP TABLE _tmpMI (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount_Tax TFloat, Amount_TaxCorrective TFloat) ON COMMIT DROP;
           -- временная таблица - существующие документы "Корректировки" - !!!только сводные!!!
           CREATE TEMP TABLE _tmpMovementCorrective (MovementId Integer, MovementId_Tax Integer) ON COMMIT DROP;
+          -- временная таблица - привязка "Корректировки" к "Налоговой" - !!!только сводные!!!
+          CREATE TEMP TABLE _tmpMovementCorrective_new (MovementId Integer, MovementId_Tax Integer) ON COMMIT DROP;
+          -- временная таблица - новая строчная часть "Корректировки"
+          CREATE TEMP TABLE _tmpMICorrective (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount TFloat, MovementId_Corrective Integer, MovementId_Tax Integer) ON COMMIT DROP;
+          -- временная таблица - для оптимизации
+          CREATE TEMP TABLE _tmp1_SubQuery (MovementId Integer, OperDate TDateTime, isRegistered Boolean, Amount TFloat) ON COMMIT DROP;
+          CREATE TEMP TABLE _tmp2_SubQuery (MovementId_Tax Integer, Amount TFloat) ON COMMIT DROP;
+          -- временная таблица - 
+          CREATE TEMP TABLE _tmpRes (MessageText Text) ON COMMIT DROP;
       END IF;
 
 
@@ -702,11 +731,7 @@ BEGIN
             WHERE MovementItem.MovementId = vbMovementId_Tax
               AND MovementItem.isErased = FALSE
            ) AS tmpMI_Tax 
-           /*LEFT JOIN _tmpMI ON _tmpMI.GoodsId     = tmpMI_Tax.GoodsId
-                           AND _tmpMI.GoodsKindId = tmpMI_Tax.GoodsKindId
-                           AND _tmpMI.Price       = tmpMI_Tax.Price 
-                           AND _tmpMI.Amount_Tax  <> 0
-     WHERE _tmpMI.GoodsId IS NULL */;
+          ;
 
 
       -- 8. сохранили строчную часть заново у Налоговой
@@ -719,30 +744,14 @@ BEGIN
                                              , inGoodsKindId  := _tmpMI.GoodsKindId
                                              , inUserId       := inUserId)
       FROM _tmpMI
-           /*LEFT JOIN (SELECT MAX (MovementItem.Id)   AS MovementItemId
-                           , MovementItem.ObjectId   AS GoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           , COALESCE (MIFloat_Price.ValueData, 0) AS Price
-                      FROM MovementItem
-                           LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      WHERE MovementItem.MovementId = vbMovementId_Tax
-                        AND MovementItem.isErased = FALSE 
-                      GROUP BY MovementItem.ObjectId
-                             , MILinkObject_GoodsKind.ObjectId
-                             , MIFloat_Price.ValueData
-                     ) AS tmpMI_Tax ON tmpMI_Tax.GoodsId     = _tmpMI.GoodsId
-                                   AND tmpMI_Tax.GoodsKindId = _tmpMI.GoodsKindId
-                                   AND tmpMI_Tax.Price       = _tmpMI.Price*/
       WHERE _tmpMI.Amount_Tax <> 0;
 
      -- 9. ФИНИШ - 1 - Проводим Налоговую
      PERFORM lpComplete_Movement_Tax (inMovementId := vbMovementId_Tax
                                     , inUserId     := inUserId);
+
+
+      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
       -- !!!ТОЛЬКО для сводных корректировок - сложнейший алгоритм!!!
@@ -759,6 +768,10 @@ BEGIN
               IF NOT FOUND THEN EXIT; END IF;
 
 
+           -- 
+           DELETE FROM _tmp1_SubQuery;
+           DELETE FROM _tmp2_SubQuery;
+
           IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
           THEN
               -- по Юр Лицу
@@ -772,11 +785,16 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '12 MONTH' AND vbOperDate - INTERVAL '1 DAY'
+                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '4 MONTH' AND vbOperDate - INTERVAL '0 DAY' -- !!!обязательно 0 DAY, что б попала текущая сводная <Налоговая>!!!
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                            AND MovementLinkObject_Contract.ObjectId = vbContractId
+                              -- т.е. ТОЛЬКО "сводные..." ... ?или надо все?
+                              /*INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                            ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                                           AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                           AND MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())*/
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.ObjectId = vbGoodsId
                                                      AND MovementItem.DescId = zc_MI_Master()
@@ -793,7 +811,7 @@ BEGIN
                            AND MLO_To.DescId = zc_MovementLinkObject_To()
                          GROUP BY Movement.Id
                                 , Movement.OperDate
-                                , MB_Registered.ValueData
+                                , MB_Registered.ValueData;
           ELSE
               -- по Контрагенту
               -- данные для курсор2 - <Налоговые> отдельно !!!для оптимизации!!!
@@ -806,11 +824,16 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '12 MONTH' AND vbOperDate - INTERVAL '1 DAY'
+                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '4 MONTH' AND vbOperDate - INTERVAL '0 DAY' -- !!!обязательно 0 DAY, что б попала текущая сводная <Налоговая>!!!
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                            AND MovementLinkObject_Contract.ObjectId = vbContractId
+                              -- т.е. ТОЛЬКО "сводные..." ... ?или надо все?
+                              /*INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                            ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                                           AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                           AND MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())*/
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.ObjectId = vbGoodsId
                                                      AND MovementItem.DescId = zc_MI_Master()
@@ -827,11 +850,11 @@ BEGIN
                            AND MLO_To.DescId = zc_MovementLinkObject_Partner()
                          GROUP BY Movement.Id
                                 , Movement.OperDate
-                                , MB_Registered.ValueData
+                                , MB_Registered.ValueData;
           END IF;
 
-              -- данные для курсор2 - <Корректировки> к этим <Налоговым> отдельно !!!для оптимизации!!!
-              WITH tmpMovement2 AS (SELECT Movement.Id
+             -- данные для курсор2 - <Корректировки> к этим <Налоговым> отдельно !!!для оптимизации!!!
+             WITH tmpMovement2 AS (SELECT Movement.Id
                                         , MIFloat_Price.ValueData AS Price
                                         , SUM (MovementItem.Amount) AS Amount
                                    FROM _tmp1_SubQuery AS tmpMovement_Tax
@@ -857,7 +880,7 @@ BEGIN
                                    FROM tmpMovement2
                                    WHERE tmpMovement2.Price = vbOperPrice
                                    GROUP BY tmpMovement2.Id)
-              -- Результат
+              -- Результат - !!!без "текущих" корректировок!!!
               INSERT INTO _tmp2_SubQuery (MovementId_Tax, Amount)
                                    SELECT CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END AS MovementId_Tax
                                         , SUM (Movement.Amount) AS Amount
@@ -870,7 +893,153 @@ BEGIN
                                                                        AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
                                    GROUP BY CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END;
 
-      END IF; -- !!!ТОЛЬКО для сводных корректировок - сложнейший алгоритм!!!
+              -- курсор2 - все налоговые !!!за минусом прошлых корректировок!!! по товару и цене
+              OPEN curMI_Tax FOR
+                   SELECT tmpMovement_Tax.MovementId
+                        , tmpMovement_Tax.Amount - COALESCE (tmpMovement_Corrective.Amount, 0) AS Amount
+                         -- это все налоговые по покупатель, товар и цена
+                   FROM _tmp1_SubQuery AS tmpMovement_Tax
+                        -- это !!!все!!! корректировки по товар и цена (для !!!всех!!! налоговых)
+                        LEFT JOIN _tmp2_SubQuery AS tmpMovement_Corrective ON tmpMovement_Corrective.MovementId_Tax = tmpMovement_Tax.MovementId
+                   WHERE tmpMovement_Tax.Amount > COALESCE (tmpMovement_Corrective.Amount, 0)
+                     AND tmpMovement_Tax.isRegistered = FALSE
+                   ORDER BY tmpMovement_Tax.OperDate DESC, 2 DESC
+                  ;
+
+              -- начало цикла по курсору2 - налоговые
+              LOOP
+                  -- данные по налоговым
+                  FETCH curMI_Tax INTO vbMovementId_Tax_find, vbAmount_Tax_find;
+                  -- если данные закончились, или все кол-во найдено тогда выход
+                  IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
+
+                  --
+                  IF vbAmount_Tax_find > vbAmount
+                  THEN
+                      -- получилось в налоговой больше чем искали, !!!сохраняем в табл-результата!!!
+                      INSERT INTO _tmpMICorrective (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, Price, CountForPrice)
+                         SELECT 0, vbMovementId_Tax_find, vbGoodsId, vbGoodsKindId, vbAmount, vbOperPrice, 1 AS CountForPrice;
+                      -- обнуляем кол-во что бы больше не искать
+                      vbAmount:= 0;
+                  ELSE
+                      -- получилось в налоговой меньше чем искали, !!!сохраняем в табл-результата!!!
+                      INSERT INTO _tmpMICorrective (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, Price, CountForPrice)
+                         SELECT 0, vbMovementId_Tax_find, vbGoodsId, vbGoodsKindId, vbAmount_Tax_find, vbOperPrice, 1 AS CountForPrice;
+                      -- уменьшаем на кол-во которое нашли и продолжаем поиск
+                      vbAmount:= vbAmount - vbAmount_Tax_find;
+                  END IF;
+
+              END LOOP; -- финиш цикла по курсору2 - налоговые
+              CLOSE curMI_Tax; -- закрыли курсор2 - налоговые
+
+              -- если что-то осталось - в "пустую" <Налоговую>
+              IF vbAmount > 0
+              THEN
+                  INSERT INTO _tmpMICorrective (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, Price, CountForPrice)
+                     SELECT 0, 0, vbGoodsId, vbGoodsKindId, vbAmount, vbOperPrice, 1 AS CountForPrice;
+              END IF;
+
+         END LOOP; -- финиш цикла по курсору1 - возвраты
+         CLOSE curMI_ReturnIn; -- закрыли курсор1 - возвраты
+
+         -- осталось для привязки - найти существующие корректировки !!!"по налоговой"!!!
+         UPDATE _tmpMICorrective SET MovementId_Corrective = _tmpMovementCorrective.MovementId
+         FROM _tmpMovementCorrective
+         WHERE _tmpMICorrective.MovementId_Tax = _tmpMovementCorrective.MovementId_Tax;
+
+         -- проверка - "итоги" для корректировки из _tmpMI = сумме в привязках из _tmpMICorrective
+         IF EXISTS (SELECT 1
+                    FROM (SELECT _tmpMI.GoodsId, _tmpMI.GoodsKindId, _tmpMI.Price, SUM (_tmpMI.Amount_TaxCorrective) AS Amount FROM _tmpMI GROUP BY _tmpMI.GoodsId, _tmpMI.GoodsKindId, _tmpMI.Price
+                          ) AS tmpFrom
+                         FULL JOIN (SELECT _tmpMICorrective.GoodsId, _tmpMICorrective.GoodsKindId, _tmpMICorrective.Price, SUM (_tmpMICorrective.Amount) AS Amount FROM _tmpMICorrective GROUP BY _tmpMICorrective.GoodsId, _tmpMICorrective.GoodsKindId, _tmpMICorrective.Price
+                                   ) AS tmpTo ON tmpFrom.GoodsId     = tmpTo.GoodsId
+                                             AND tmpFrom.GoodsKindId = tmpTo.GoodsKindId
+                                             AND tmpFrom.Price       = tmpTo.Price
+                    WHERE COALESCE (tmpFrom.Amount, 0) <> COALESCE (tmpTo.Amount, 0)
+                   )
+         THEN
+             RAISE EXCEPTION 'Ошибка."итоги" для корректировки из _tmpMI <> сумме в привязках из _tmpMICorrective.';
+         END IF;
+
+         -- проверка - у одной <Корректировки> - ОДНА <Налоговая> + НАОБОРОТ
+         IF EXISTS (SELECT 1
+                    FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+                         ) AS tmp
+                    WHERE tmp.MovementId_Corrective <> 0
+                    GROUP BY tmp.MovementId_Corrective
+                    HAVING COUNT(*) > 1
+                   )
+         OR EXISTS (SELECT 2
+                    FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+                         ) AS tmp
+                    GROUP BY tmp.MovementId_Tax
+                    HAVING COUNT(*) > 1
+                   )
+         THEN
+             RAISE EXCEPTION 'Ошибка.у одной <Корректировки> НЕ ОДНА <Налоговая>. <%> + <%> + <%>   -   <%> + <%> + <%>'
+                                                                                  , (-- 1.1.
+                                                                                     SELECT tmp.MovementId_Corrective
+                                                                                     FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+                                                                                          ) AS tmp
+                                                                                     WHERE tmp.MovementId_Corrective <> 0
+                                                                                     GROUP BY tmp.MovementId_Corrective
+                                                                                     HAVING COUNT(*) > 1
+                                                                                     ORDER BY tmp.MovementId_Corrective
+                                                                                     LIMIT 1
+                                                                                    )
+                                                                                  , (-- 1.2.
+                                                                                     SELECT MIN (tmp.MovementId_Tax)
+                                                                                     FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+                                                                                          ) AS tmp
+                                                                                     WHERE tmp.MovementId_Corrective <> 0
+                                                                                     GROUP BY tmp.MovementId_Corrective
+                                                                                     HAVING COUNT(*) > 1
+                                                                                     ORDER BY tmp.MovementId_Corrective
+                                                                                     LIMIT 1
+                                                                                    )
+                                                                                  , (-- 1.3.
+                                                                                     SELECT MAX (tmp.MovementId_Tax)
+                                                                                     FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+                                                                                          ) AS tmp
+                                                                                     WHERE tmp.MovementId_Corrective <> 0
+                                                                                     GROUP BY tmp.MovementId_Corrective
+                                                                                     HAVING COUNT(*) > 1
+                                                                                     ORDER BY tmp.MovementId_Corrective
+                                                                                     LIMIT 1
+                                                                                    )
+
+                                                                                  , (-- 2.1.
+                                                                                     SELECT tmp.MovementId_Tax
+                                                                                     FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+                                                                                          ) AS tmp
+                                                                                     GROUP BY tmp.MovementId_Tax
+                                                                                     HAVING COUNT(*) > 1
+                                                                                     ORDER BY tmp.MovementId_Tax
+                                                                                     LIMIT 1
+                                                                                    )
+                                                                                  , (-- 2.2.
+                                                                                     SELECT MIN (tmp.MovementId_Corrective)
+                                                                                     FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+                                                                                          ) AS tmp
+                                                                                     GROUP BY tmp.MovementId_Tax
+                                                                                     HAVING COUNT(*) > 1
+                                                                                     ORDER BY tmp.MovementId_Tax
+                                                                                     LIMIT 1
+                                                                                    )
+                                                                                  , (-- 2.3.
+                                                                                     SELECT MAX (tmp.MovementId_Corrective)
+                                                                                     FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+                                                                                          ) AS tmp
+                                                                                     GROUP BY tmp.MovementId_Tax
+                                                                                     HAVING COUNT(*) > 1
+                                                                                     ORDER BY tmp.MovementId_Tax
+                                                                                     LIMIT 1
+                                                                                    )
+            ;
+         END IF;
+
+      END IF; -- !!!ТОЛЬКО для сводных корректировок - сложнейший алгоритм!!! - завершили привязку к налоговым или не привязку (т.е. все данные в табл-результат)
+
 
       -- 3. удаляем все "лишние" корректировки у "базы" + "сводные"
       PERFORM lpSetErased_Movement_TaxCorrective (inMovementId:= tmp.MovementId
@@ -883,35 +1052,36 @@ BEGIN
                                                 -- AND MovementLinkMovement.MovementId <> COALESCE (vbMovementId_TaxCorrective, 0)
                  INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
                                     AND Movement.StatusId <> zc_Enum_Status_Erased()
-                 LEFT JOIN _tmpMI ON _tmpMI.MovementId_Corrective = MovementLinkMovement.MovementId
-            WHERE _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()
-              AND _tmpMI.MovementId_Corrective IS NULL
+                 LEFT JOIN _tmpMICorrective ON _tmpMICorrective.MovementId_Corrective = MovementLinkMovement.MovementId
+            WHERE _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+              AND _tmpMICorrective.MovementId_Corrective IS NULL
            UNION
             -- по идее здесь только "сводные"
             SELECT _tmpMovementCorrective.MovementId
             FROM _tmpMovementCorrective
-                 LEFT JOIN _tmpMI ON _tmpMI.MovementId_Corrective = _tmpMovementCorrective.MovementId
-            WHERE _tmpMI.MovementId_Corrective IS NULL
+                 LEFT JOIN _tmpMICorrective ON _tmpMICorrective.MovementId_Corrective = _tmpMovementCorrective.MovementId
+            WHERE _tmpMICorrective.MovementId_Corrective IS NULL
            ) AS tmp;
 
       -- 4. распроводим корректировку
       PERFORM lpUnComplete_Movement (inMovementId:= tmp.MovementId
                                    , inUserId    := inUserId)
       FROM (-- Много корректировок
-            SELECT DISTINCT _tmpMI.MovementId_Corrective AS MovementId FROM _tmpMI WHERE _tmpMI.MovementId_Corrective <> 0 
+            SELECT DISTINCT _tmpMICorrective.MovementId_Corrective AS MovementId FROM _tmpMICorrective WHERE _tmpMICorrective.MovementId_Corrective <> 0 
            ) AS tmp;
 
       -- 5. сохранили корректировку (почти всегда)
       IF EXISTS (SELECT Amount_TaxCorrective FROM _tmpMI WHERE Amount_TaxCorrective <> 0)
       THEN
-           SELECT tmp.ioId INTO vbMovementId_TaxCorrective
-           FROM lpInsertUpdate_Movement_TaxCorrective (ioId               := vbMovementId_TaxCorrective
-                                                     , inInvNumber        := COALESCE ((SELECT InvNumber FROM Movement WHERE Id = vbMovementId_TaxCorrective), '')
-                                                     , inInvNumberPartner := COALESCE ((SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementString_InvNumberPartner()), '')
-                                                     , inInvNumberBranch  := COALESCE ((SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementString_InvNumberBranch()), '')
+         -- сохранили/изменили документы
+         INSERT INTO _tmpMovementCorrective_new (MovementId, MovementId_Tax)
+         SELECT lpInsertUpdate_Movement_TaxCorrective (ioId               := tmp.MovementId_Corrective
+                                                     , inInvNumber        := COALESCE ((SELECT InvNumber FROM Movement WHERE Id = tmp.MovementId_Corrective), '')
+                                                     , inInvNumberPartner := COALESCE ((SELECT ValueData FROM MovementString WHERE MovementId = tmp.MovementId_Corrective AND DescId = zc_MovementString_InvNumberPartner()), '')
+                                                     , inInvNumberBranch  := COALESCE ((SELECT ValueData FROM MovementString WHERE MovementId = tmp.MovementId_Corrective AND DescId = zc_MovementString_InvNumberBranch()), '')
                                                      , inOperDate         := vbOperDate
-                                                     , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementBoolean_Checked()), FALSE)
-                                                     , inDocument         := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementBoolean_Document()), FALSE)
+                                                     , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = tmp.MovementId_Corrective AND DescId = zc_MovementBoolean_Checked()), FALSE)
+                                                     , inDocument         := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = tmp.MovementId_Corrective AND DescId = zc_MovementBoolean_Document()), FALSE)
                                                      , inPriceWithVAT     := FALSE -- в корректировках цены всегда будут без НДС -- vbPriceWithVAT
                                                      , inVATPercent       := vbVATPercent
                                                      , inFromId           := vbToId
@@ -920,7 +1090,21 @@ BEGIN
                                                      , inContractId       := vbContractId
                                                      , inDocumentTaxKindId:= vbDocumentTaxKindId_TaxCorrective
                                                      , inUserId           := inUserId
-                                                      ) AS tmp;
+                                                      ) AS MovementId
+              , tmp.MovementId_Tax
+         FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective
+              ) AS tmp;
+
+         -- перенесли в строчную часть
+         UPDATE _tmpMICorrective SET MovementId_Corrective = _tmpMovementCorrective_new.MovementId
+         FROM _tmpMovementCorrective_new
+         WHERE _tmpMICorrective.MovementId_Tax        = _tmpMovementCorrective_new.MovementId_Tax
+           AND _tmpMICorrective.MovementId_Corrective = 0;
+
+         -- сохранили привязку - !!!ради чего все это делалось!!!
+         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), tmp.MovementId_Corrective, tmp.MovementId_Tax)
+         FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective, _tmpMICorrective.MovementId_Tax FROM _tmpMICorrective) AS tmp;
+
       END IF;
 
       -- 6. сохранили для "база" связь с <Тип формирования налогового документа> !!!только для корректировок!!!
@@ -929,65 +1113,37 @@ BEGIN
       WHERE _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn());
 
       -- 7. удаляем !!!все!!! строки из Корректировки
-      PERFORM gpMovementItem_TaxCorrective_SetErased (inMovementItemId := tmpMI_TaxCorrective.MovementItemId
-                                                    , inSession := inUserId :: TVarChar)
-      FROM 
-           (SELECT MovementItem.Id         AS MovementItemId
-                 , MovementItem.ObjectId   AS GoodsId
-                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                 , COALESCE (MIFloat_Price.ValueData, 0) AS Price
-            FROM MovementItem
-                 LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                            AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-            WHERE MovementItem.MovementId = vbMovementId_TaxCorrective
-              AND MovementItem.isErased = FALSE
-           ) AS tmpMI_TaxCorrective
-           /*LEFT JOIN _tmpMI ON _tmpMI.GoodsId     = tmpMI_TaxCorrective.GoodsId
-                           AND _tmpMI.GoodsKindId = tmpMI_TaxCorrective.GoodsKindId
-                           AND _tmpMI.Price       = tmpMI_TaxCorrective.Price 
-                           AND _tmpMI.Amount_TaxCorrective  <> 0
-     WHERE _tmpMI.GoodsId IS NULL */;
+      PERFORM gpMovementItem_TaxCorrective_SetErased (inMovementItemId:= tmp.MovementItemId
+                                                    , inSession       := inUserId :: TVarChar)
+      FROM (SELECT MovementItem.Id         AS MovementItemId
+            FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective AS MovementId FROM _tmpMICorrective) AS tmp
+                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
+                                        AND MovementItem.isErased = FALSE
+           ) AS tmp
+     ;
 
       -- 8. сохранили строчную часть заново у Корректировки
       PERFORM lpInsertUpdate_MovementItem_TaxCorrective (ioId           := 0 -- tmpMI_TaxCorrective.MovementItemId
-                                                       , inMovementId   := vbMovementId_TaxCorrective
+                                                       , inMovementId   := _tmpMI.MovementId_Corrective
                                                        , inGoodsId      := _tmpMI.GoodsId
-                                                       , inAmount       := _tmpMI.Amount_TaxCorrective
+                                                       , inAmount       := _tmpMI.Amount
                                                        , inPrice        := _tmpMI.Price
                                                        , ioCountForPrice:= _tmpMI.CountForPrice
                                                        , inGoodsKindId  := _tmpMI.GoodsKindId
                                                        , inUserId       := inUserId)
-      FROM _tmpMI
-           /*LEFT JOIN (SELECT MAX (MovementItem.Id)   AS MovementItemId
-                           , MovementItem.ObjectId   AS GoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           , COALESCE (MIFloat_Price.ValueData, 0) AS Price
-                      FROM MovementItem
-                           LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      WHERE MovementItem.MovementId = vbMovementId_TaxCorrective
-                        AND MovementItem.isErased = FALSE 
-                      GROUP BY MovementItem.ObjectId
-                             , MILinkObject_GoodsKind.ObjectId
-                             , MIFloat_Price.ValueData
-                     ) AS tmpMI_TaxCorrective ON tmpMI_TaxCorrective.GoodsId     = _tmpMI.GoodsId
-                                             AND tmpMI_TaxCorrective.GoodsKindId = _tmpMI.GoodsKindId
-                                             AND tmpMI_TaxCorrective.Price       = _tmpMI.Price*/
-      WHERE _tmpMI.Amount_TaxCorrective <> 0;
+      FROM _tmpMICorrective AS _tmpMI
+     ;
 
      -- 9. ФИНИШ - 2 - Проводим Корректировку
-     IF vbMovementId_TaxCorrective <> 0
+     IF vbDocumentTaxKindId_TaxCorrective <> 0
      THEN
-         outMessageText:= lpComplete_Movement_TaxCorrective (inMovementId := vbMovementId_TaxCorrective
-                                                           , inUserId     := inUserId);
+         --
+         INSERT INTO _tmpRes (MessageText)
+            SELECT lpComplete_Movement_TaxCorrective (inMovementId := tmp.MovementId
+                                                    , inUserId     := inUserId)
+            FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective AS MovementId FROM _tmpMICorrective) AS tmp;
+         --
+         outMessageText:= (SELECT _tmpRes.MessageText FROM _tmpRes WHERE _tmpRes.MessageText <> '' LIMIT 1);
      END IF;
 
 

@@ -423,6 +423,7 @@ BEGIN
                                    FROM tmpMovement2
                                    WHERE tmpMovement2.Price = vbOperPrice
                                    GROUP BY tmpMovement2.Id)
+     -- Результат - !!!без "текущей" корректировки!!!
      INSERT INTO _tmp2_SubQuery (MovementId_Tax, Amount)
                                    SELECT CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END AS MovementId_Tax
                                         , SUM (Movement.Amount) AS Amount
