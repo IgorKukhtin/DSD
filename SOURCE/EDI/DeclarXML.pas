@@ -89,6 +89,7 @@ type
     function Get_HKBOS: UnicodeString; // ***1
     function Get_H03: UnicodeString; // ***1
     function Get_HERPN0: UnicodeString; // ***1
+    function Get_HFBUY: UnicodeString; // ***1
 
     function Get_HORIG: UnicodeString;
     function Get_HORIG1: UnicodeString;
@@ -154,6 +155,7 @@ type
     procedure Set_HKBOS(Value: UnicodeString); // ***2
     procedure Set_H03(Value: UnicodeString); // ***2
     procedure Set_HERPN0(Value: UnicodeString); // ***2
+    procedure Set_HFBUY(Value: UnicodeString); // ***2
 
     procedure Set_HORIG(Value: UnicodeString);
     procedure Set_HORIG1(Value: UnicodeString);
@@ -200,6 +202,7 @@ type
     property HKBOS: UnicodeString read Get_HKBOS write Set_HKBOS; //***3
     property H03: UnicodeString read Get_H03 write Set_H03; //***3
     property HERPN0: UnicodeString read Get_HERPN0 write Set_HERPN0; //***3
+    property HFBUY: UnicodeString read Get_HFBUY write Set_HFBUY; //***3
 
     property HORIG: UnicodeString read Get_HORIG write Set_HORIG;
     property HORIG1: UnicodeString read Get_HORIG1 write Set_HORIG1;
@@ -368,6 +371,7 @@ type
     function Get_HKBOS: UnicodeString; //***4.1
     function Get_H03: UnicodeString; //***4.1
     function Get_HERPN0: UnicodeString; //***4.1
+    function Get_HFBUY: UnicodeString; //***4.1
 
     function Get_HORIG: UnicodeString;
     function Get_HORIG1: UnicodeString;
@@ -432,6 +436,7 @@ type
     procedure Set_HKBOS(Value: UnicodeString); // ***5.1
     procedure Set_H03(Value: UnicodeString); // ***5.1
     procedure Set_HERPN0(Value: UnicodeString); // ***5.1
+    procedure Set_HFBUY(Value: UnicodeString); // ***5.1
 
     procedure Set_HORIG(Value: UnicodeString);
     procedure Set_HORIG1(Value: UnicodeString);
@@ -878,6 +883,17 @@ procedure TXMLDECLARBODYType.Set_HKBUY(Value: UnicodeString);
 begin
   ChildNodes['HKBUY'].NodeValue := Value;
 end;
+
+function TXMLDECLARBODYType.Get_HFBUY: UnicodeString;
+begin
+  Result := ChildNodes['HFBUY'].Text;
+end;
+
+procedure TXMLDECLARBODYType.Set_HFBUY(Value: UnicodeString);
+begin
+  ChildNodes['HFBUY'].NodeValue := Value;
+end;
+
 
 function TXMLDECLARBODYType.Get_HLOCSEL: UnicodeString;
 begin

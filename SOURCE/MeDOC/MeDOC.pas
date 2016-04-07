@@ -364,6 +364,8 @@ begin
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N3', HeaderDataSet.FieldByName('JuridicalName_To').AsString);
   //ІПН покупця
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N4', HeaderDataSet.FieldByName('INN_To').AsString);
+  // № Філії покупця
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'DEPT_POK', HeaderDataSet.FieldByName('InvNumberBranch_To').AsString);
   // Код ЄДРПОУ покупця
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'EDR_POK', HeaderDataSet.FieldByName('OKPO_To').AsString);
   //Місцезнаходження покупця
@@ -1029,6 +1031,8 @@ begin
   //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N5', HeaderDataSet.FieldByName('JuridicalAddress_From').AsString);
   //Телефон покупця
   //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N6', HeaderDataSet.FieldByName('Phone_From').AsString);
+  // № Філії покупця
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'DEPT_POK', HeaderDataSet.FieldByName('InvNumberBranch_From').AsString);
   // Код ЄДРПОУ підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'EDR_POK', HeaderDataSet.FieldByName('OKPO_From').AsString);
   //Номер свідоцтва покупця

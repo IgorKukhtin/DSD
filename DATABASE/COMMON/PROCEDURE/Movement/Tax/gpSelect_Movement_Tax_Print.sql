@@ -183,7 +183,7 @@ BEGIN
 
            --, OH_JuridicalDetails_To.FullName            AS JuridicalName_To
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
-                  THEN 'Õ≈œÀ¿“Õ» '
+                  THEN 'ÕÂÔÎ‡ÚÌËÍ'
              ELSE OH_JuridicalDetails_To.FullName END   AS JuridicalName_To
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN ''
@@ -199,6 +199,8 @@ BEGIN
            , OH_JuridicalDetails_To.BankName            AS BankName_To
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
 --           , OH_JuridicalDetails_To.Phone               AS Phone_To
+           , CAST (REPEAT (' ', 4 - LENGTH (OH_JuridicalDetails_To.InvNumberBranch)) || OH_JuridicalDetails_To.InvNumberBranch AS TVarChar) AS InvNumberBranch_To
+
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN ''
              ELSE OH_JuridicalDetails_To.Phone END      AS Phone_To
@@ -240,6 +242,7 @@ BEGIN
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
            , OH_JuridicalDetails_From.Phone             AS Phone_From
+           , OH_JuridicalDetails_From.InvNumberBranch   AS InvNumberBranch_From
 
            , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
            , COALESCE (MovementDate_COMDOC.ValueData, COALESCE (Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData))    AS OperDatePartnerEDI_tax

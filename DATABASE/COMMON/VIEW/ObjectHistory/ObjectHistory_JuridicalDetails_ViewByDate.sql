@@ -20,6 +20,7 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
        , Object_Bank.valuedata                          AS BankName
        , ObjectString_MFO.ValueData                     AS MFO
        , COALESCE (ObjectHistoryString_Phone.ValueData, CAST ('' AS TVarChar)) AS Phone
+       , COALESCE (ObjectHistoryString_InvNumberBranch.ValueData, CAST ('' AS TVarChar)) AS InvNumberBranch
 
   FROM ObjectHistory AS ObjectHistory_JuridicalDetails
 
@@ -59,6 +60,10 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
                                 ON ObjectHistoryString_Phone.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                AND ObjectHistoryString_Phone.DescId = zc_ObjectHistoryString_JuridicalDetails_Phone()
 
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_InvNumberBranch
+                                ON ObjectHistoryString_InvNumberBranch.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                               AND ObjectHistoryString_InvNumberBranch.DescId = zc_ObjectHistoryString_JuridicalDetails_InvNumberBranch()
+
   WHERE ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
  ;
 
@@ -70,6 +75,7 @@ ALTER TABLE ObjectHistory_JuridicalDetails_ViewByDate  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.04.16         * InvNumberBranch 
  26.11.15         * add MainName
  14.04.14                                                       *  -- выравнивание пробелами INN для печати
  12.02.14                                                       *  + phone

@@ -333,14 +333,15 @@ BEGIN
 
 
            , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
-                  THEN 'НЕПЛАТНИК'
+                  THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.FullName END                     AS JuridicalName_From
            , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
-                  THEN 'НЕПЛАТНИК'
+                  THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
 
            , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
            , OH_JuridicalDetails_From.INN                                   AS INN_From
+           , CAST (REPEAT (' ', 4 - LENGTH (OH_JuridicalDetails_From.InvNumberBranch)) || OH_JuridicalDetails_From.InvNumberBranch AS TVarChar) AS InvNumberBranch_From
            , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
            , OH_JuridicalDetails_From.AccounterName                         AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount                           AS BankAccount_From
