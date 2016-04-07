@@ -8,7 +8,8 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dsdDB, Vcl.ActnList,
   dsdAction, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons, cxControls,
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit,
-  cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, MeDocCOM;
+  cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, MeDocCOM, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TLoadFlagFromMedocForm = class(TAncestorDialogForm)

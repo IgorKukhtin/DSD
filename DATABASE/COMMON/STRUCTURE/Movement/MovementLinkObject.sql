@@ -31,8 +31,8 @@ ALTER TABLE MovementLinkObject
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
-CREATE INDEX idx_MovementLinkObject_ObjectId ON MovementLinkObject(ObjectId); -- для констрейнта
 CREATE UNIQUE INDEX idx_MovementLinkObject_MovementId_DescId ON MovementLinkObject (MovementId, DescId);
+CREATE INDEX idx_MovementLinkObject_ObjectId_DescId ON MovementLinkObject(ObjectId, DescId); -- для констрейнта
 
 /*
  ПРИМЕЧАНИЯ:
