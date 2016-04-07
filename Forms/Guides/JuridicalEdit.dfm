@@ -125,7 +125,6 @@
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 15
-    ExplicitHeight = 613
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
@@ -135,14 +134,12 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitHeight = 613
       ClientRectBottom = 599
       ClientRectRight = 841
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitHeight = 589
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -174,7 +171,6 @@
           Height = 575
           Align = alRight
           TabOrder = 8
-          ExplicitHeight = 589
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -320,7 +316,6 @@
       object PartnerTS: TcxTabSheet
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
         ImageIndex = 1
-        ExplicitHeight = 589
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -336,7 +331,6 @@
           Height = 549
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 563
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
@@ -377,7 +371,6 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitHeight = 589
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -393,7 +386,6 @@
           Height = 549
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 563
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -717,7 +709,7 @@
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    TabOrder = 32
+    TabOrder = 31
     Width = 167
   end
   object cxLabel21: TcxLabel [30]
@@ -731,6 +723,19 @@
     Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1074' '#1085#1072#1082#1083'.'
     TabOrder = 35
     Width = 225
+  end
+  object edInvNumberBranch: TcxDBTextEdit [32]
+    Left = 302
+    Top = 273
+    DataBinding.DataField = 'InvNumberBranch'
+    DataBinding.DataSource = JuridicalDetailsDS
+    TabOrder = 36
+    Width = 193
+  end
+  object cxLabel23: TcxLabel [33]
+    Left = 302
+    Top = 251
+    Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1551,14 +1556,14 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 80
-    Top = 40
+    Left = 104
+    Top = 48
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 40
+    Left = 64
+    Top = 48
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS
@@ -1569,7 +1574,7 @@
     Aggregates = <>
     Params = <>
     Left = 320
-    Top = 272
+    Top = 312
   end
   object ContractDS: TDataSource
     DataSet = ContractCDS
@@ -1614,8 +1619,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 208
-    Top = 330
+    Left = 472
+    Top = 514
   end
   object spPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartnerJuridical'
@@ -1652,8 +1657,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 456
-    Top = 256
+    Left = 432
+    Top = 304
   end
   object JuridicalDetailsAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1687,8 +1692,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 392
-    Top = 248
+    Left = 384
+    Top = 304
   end
   object ContractAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1809,10 +1814,18 @@
         ComponentItem = 'Phone'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberBranch'
+        Value = Null
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'InvNumberBranch'
+        DataType = ftString
+        ParamType = ptInput
       end>
     PackSize = 1
-    Left = 272
-    Top = 320
+    Left = 392
+    Top = 520
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'

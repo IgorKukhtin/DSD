@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpGet_ObjectHistory_JuridicalDetails(
 RETURNS TABLE (Id Integer, StartDate TDateTime, BankName TVarChar, BankId Integer,
                FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
                NumberVAT TVarChar, AccounterName TVarChar, MainName TVarChar,
-               BankAccount TVarChar, Phone TVarChar
+               BankAccount TVarChar, Phone TVarChar,
+               InvNumberBranch TVarChar
                )
 AS
 $BODY$
@@ -37,6 +38,7 @@ BEGIN
            , ObjectHistoryString_JuridicalDetails_MainName.ValueData                        AS MainName
            , ObjectHistoryString_JuridicalDetails_BankAccount.ValueData                     AS BankAccount
            , ObjectHistoryString_JuridicalDetails_Phone.ValueData                           AS Phone
+           , ObjectHistoryString_JuridicalDetails_InvNumberBranch.ValueData                 AS InvNumberBranch
 
        FROM ObjectHistory_JuridicalDetails
   FULL JOIN (SELECT zc_DateStart() AS StartDate, inJuridicalId AS ObjectId ) AS Empty
@@ -72,7 +74,11 @@ BEGIN
         AND ObjectHistoryString_JuridicalDetails_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount()
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Phone
          ON ObjectHistoryString_JuridicalDetails_Phone.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
-        AND ObjectHistoryString_JuridicalDetails_Phone.DescId = zc_ObjectHistoryString_JuridicalDetails_Phone();
+        AND ObjectHistoryString_JuridicalDetails_Phone.DescId = zc_ObjectHistoryString_JuridicalDetails_Phone()
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_InvNumberBranch
+         ON ObjectHistoryString_JuridicalDetails_InvNumberBranch.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+        AND ObjectHistoryString_JuridicalDetails_InvNumberBranch.DescId = zc_ObjectHistoryString_JuridicalDetails_InvNumberBranch()
+;
 
 
 END;
@@ -85,6 +91,7 @@ ALTER FUNCTION gpGet_ObjectHistory_JuridicalDetails (Integer, TDateTime, TVarCha
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.04.16         * add InvNumberBranch 
  26.11.15         * add MainName
  18.02.14                        *
 */
