@@ -6,11 +6,10 @@ DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc
        (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TFloat, TVarChar);
 
-
-
-
 CREATE OR REPLACE FUNCTION gpUpdate_IsElectronFromMedoc(
    OUT outId                 Integer    ,
+--    IN SEND_DPA TVarChar   , -- 
+--    IN FormCode TVarChar   , -- 
     IN inMedocCode           Integer    ,
     IN inFromINN             TVarChar   , -- ИНН от кого
     IN inToINN               TVarChar   , -- ИНН кому
@@ -34,6 +33,51 @@ $BODY$
    DECLARE vbAccessKey Integer;
    DECLARE vbMedocId Integer;
 BEGIN
+/*
+CREATE TABLE _Medoc(
+  inMedocCode           Integer    NULL,
+  inFromINN             TVarChar   NULL, -- ИНН от кого
+  inToINN               TVarChar   NULL, -- ИНН кому
+  inInvNumber           TVarChar   NULL, -- Номер
+  inOperDate            TDateTime  NULL, -- Дата
+  inInvNumberBranch     TVarChar   NULL, -- Филиал
+  inInvNumberRegistered TVarChar   NULL, -- Номер
+  inDateRegistered      TDateTime  NULL, -- Дата
+  inDocKind             TVarChar   NULL, -- Тип документа
+  inContract            TVarChar   NULL, -- Договор
+  inTotalSumm           TFloat     NULL -- Сумма документа
+);
+-- delete from _Medoc;
+insert into _Medoc(
+    SEND_DPA    , -- ИНН от кого
+    FormCode , -- ИНН от кого
+  inMedocCode           ,
+  inFromINN             ,
+  inToINN               ,
+  inInvNumber           ,
+  inOperDate            ,
+  inInvNumberBranch     ,
+  inInvNumberRegistered ,
+  inDateRegistered      ,
+  inDocKind             ,
+  inContract            ,
+  inTotalSumm           )
+select   
+    SEND_DPA ,
+    FormCode ,
+inMedocCode           ,
+  inFromINN             ,
+  inToINN               ,
+  inInvNumber           ,
+  inOperDate            ,
+  inInvNumberBranch     ,
+  inInvNumberRegistered ,
+  inDateRegistered      ,
+  inDocKind             ,
+  inContract            ,
+  inTotalSumm           ;
+return;
+*/
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
     vbUserId:= lpGetUserBySession(inSession);
@@ -64,15 +108,18 @@ BEGIN
    -- Если ключ пустой, то добавили новый ключ МЕДОК
    IF COALESCE (vbMedocId, 0) = 0 OR (inInvNumberBranch  = '2' AND inOperDate < '01.12.2015') -- OR (vbAccessKey = zc_Enum_Process_AccessKey_DocumentKiev() AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMedocId AND Movement.ParentId IS NULL))
    THEN 
+      -- добавили новый документ МЕДОК
       vbMedocId := lpInsertUpdate_Movement_Medoc(vbMedocId, inMedocCode, inInvNumber, inOperDate,
                            inFromINN, inToINN, inInvNumberBranch, inInvNumberRegistered, inDateRegistered, inDocKind, inContract, 
                            inTotalSumm, vbUserId);
-      -- если приход, то вышли
+
+      -- !!!если приход, то вышли!!!
       IF (SELECT Movement_Medoc_View.isIncome 
             FROM Movement_Medoc_View WHERE Movement_Medoc_View.Id = vbMedocId) THEN 
          outId := 0;   	
          RETURN;
       END IF;
+
       -- Если это филиал, то добавили документ
       IF vbAccessKey <> 0 THEN 
          IF inDocKind = 'Tax' THEN
@@ -198,6 +245,10 @@ BEGIN
    -- сохранили 
    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), vbMedocId, CURRENT_TIMESTAMP);
 
+   -- !!!не загружать строчную часть!!!
+   outId := 0;   	
+ 
+
    -- insert into _tmp111 (Id)  select inMedocCode union select -1 * coalesce (vbMedocId, 0);
    -- select * from _tmp111
    -- delete from _tmp111
@@ -222,11 +273,9 @@ BEGIN
      END IF;
 */
 
-
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

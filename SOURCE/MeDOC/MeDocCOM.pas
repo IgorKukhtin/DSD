@@ -170,11 +170,11 @@ end;
 function TMedocComAction.LocalExecute: boolean;
 var DocumentList: IZDataset;
     s, SEND_DPA: string;
-    i, MovementId, MedocCode, FormCode: integer;
+    ii, i, MovementId, MedocCode, FormCode: integer;
     MedocDocument: IZDocument;
     HeaderDataSet: IZDataset;
     LineDataSet: IZDataset;
-    DocKind, SEND_DPA_DATE: String;
+    str1, DocKind, SEND_DPA_DATE: String;
 begin
   with TMedocCOM.Create do
     try
@@ -210,35 +210,54 @@ begin
                   Continue;
                end;
 
-               if (SEND_DPA = '12') or (SEND_DPA = '11') then begin
+str1:='';
+for ii := 0 to HeaderDataSet.Fields.Count-1 do
+   if VarToStr(HeaderDataSet.Fields[ii].Value) = ''
+   then str1:= str1 + HeaderDataSet.Fields[ii].Name
+          + ' *** ' + 'NULL' + #10 + #13
+   else str1:= str1 + HeaderDataSet.Fields[ii].Name
+         + ' *** ' + VarToStr(HeaderDataSet.Fields[ii].Value)
+         + #10 + #13;
+str1:= 'FormCode  ' + IntToStr(FormCode) + #10 + #13 + str1;
+//showMessage(str1);
+
+               if (SEND_DPA = '12') or (SEND_DPA = '11') then
+               try
                   FormCode := DocumentList.Fields['FORM'].Value;
-                  if (FormCode = 11518) or (FormCode = 11530) then
+                  if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) then
                      DocKind := 'Tax'
                   else
                      DocKind := 'TaxCorrective';
+
                   with FspUpdate_IsElectronFromMedoc do begin
+
                     ParamByName('inMedocCODE').Value := MedocCode;
                     ParamByName('inFromINN').Value := HeaderDataSet.Fields['FIRM_INN'].Value;
                     ParamByName('inToINN').Value := HeaderDataSet.Fields['N4'].Value;
+
                     if DocKind = 'Tax' then begin
                        ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N2_11'].Value;
                        ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N11'].Value);
                        ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N2_13'].Value;
                        ParamByName('inContract').Value := HeaderDataSet.Fields['N81'].Value;
-                       ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A7_7'].Value +
+                       ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A7_11'].Value;
+                                                          {HeaderDataSet.Fields['A7_7'].Value +
                                                            HeaderDataSet.Fields['A7_8'].Value +
-                                                           HeaderDataSet.Fields['A7_9'].Value;
+                                                           HeaderDataSet.Fields['A7_9'].Value;}
                     end
                     else begin
                        ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N1_11'].Value;
                        ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N15'].Value);
                        ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N1_13'].Value;
                        ParamByName('inContract').Value := HeaderDataSet.Fields['N2_3'].Value;
-                       ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A1_9'].Value +
+                       ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A2_92'].Value +
+                                                           HeaderDataSet.Fields['A1_9'].Value;
+                                                           {HeaderDataSet.Fields['A1_9'].Value +
                                                            HeaderDataSet.Fields['A1_10'].Value +
                                                            HeaderDataSet.Fields['A1_11'].Value +
-                                                           HeaderDataSet.Fields['A2_9'].Value;
+                                                           HeaderDataSet.Fields['A2_9'].Value;}
                     end;
+
                     ParamByName('inInvNumberRegistered').Value := HeaderDataSet.Fields['SEND_DPA_RN'].Value;
                     SEND_DPA_DATE := HeaderDataSet.Fields['SEND_DPA_DATE'].Value;
                     if SEND_DPA_DATE <> '' then
@@ -270,6 +289,8 @@ begin
                          LineDataSet.Next;
                        end;
                   end;
+               except
+                     raise Exception.Create(str1);
                end;
                Application.ProcessMessages;
                DocumentList.Next;

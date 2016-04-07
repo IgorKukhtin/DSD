@@ -62,7 +62,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
-      CharCode.Value = 'J1201007'
+      CharCode.Value = 'J1201008'
       Caption = 'TaxJur'
     end
     object TaxCorrectiveJur: TMedocComAction
@@ -70,7 +70,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
-      CharCode.Value = 'J1201207'
+      CharCode.Value = 'J1201208'
       Caption = 'TaxCorrectiveJur'
     end
     object TaxFiz: TMedocComAction
@@ -78,7 +78,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
-      CharCode.Value = 'F1201007'
+      CharCode.Value = 'F1201008'
       Caption = 'TaxFiz'
     end
     object TaxCorrectiveFiz: TMedocComAction
@@ -86,7 +86,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
-      CharCode.Value = 'F1201207'
+      CharCode.Value = 'F1201208'
       Caption = 'TaxCorrectiveFiz'
     end
     object MultiAction: TMultiAction
@@ -140,7 +140,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
     Params = <
       item
         Name = 'inPeriod'
-        Value = Null
+        Value = 'NULL'
         Component = dePeriodDate
         DataType = ftDateTime
         ParamType = ptInput

@@ -19,6 +19,8 @@ CREATE TABLE MovementBLOB(
 /*-------------------------------------------------------------------------------*/
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
+CREATE UNIQUE INDEX idx_MovementBLOB_MovementId_DescId ON MovementBLOB (MovementId, DescId); 
+
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

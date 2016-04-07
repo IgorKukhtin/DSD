@@ -20,6 +20,7 @@ CREATE TABLE MovementBoolean(
 
 /*                                  Индексы                                      */
 CREATE UNIQUE INDEX idx_MovementBoolean_MovementId_DescId ON MovementBoolean (MovementId, DescId); 
+CREATE INDEX idx_MovementBoolean_ValueData_DescId ON MovementBoolean (ValueData, DescId); 
 
 
 /*

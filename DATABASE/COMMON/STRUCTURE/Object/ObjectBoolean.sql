@@ -21,6 +21,7 @@ CREATE TABLE ObjectBoolean(
 
 
 CREATE UNIQUE INDEX idx_ObjectBoolean_ObjectId_DescId_ValueData ON ObjectBoolean (ObjectId, DescId, ValueData);
+CREATE INDEX idx_ObjectBoolean_ValueData_DescId_ObjectId ON ObjectBoolean (ValueData, DescId, ObjectId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

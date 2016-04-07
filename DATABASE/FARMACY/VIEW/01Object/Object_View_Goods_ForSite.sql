@@ -6,6 +6,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
     SELECT 
         Object_Goods.Id                                         as id
        ,Object_Goods.GoodsCodeInt                               as article
+       ,ObjectFloat_Goods_Site.ValueData                        as Id_Site
        ,ObjectBlob_Site.ValueData                               as Name_Site
        ,Object_Goods.GoodsName                                  as name
        ,ObjectString_Foto.ValueData                             as foto
@@ -23,6 +24,9 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        ,CASE WHEN Object_Goods.isErased=TRUE THEN 1::Integer ELSE 0::Integer END                                   as deleted
        ,Object_Goods.ObjectId                                   as ObjectId
     FROM Object_Goods_View AS Object_Goods
+        LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Site
+                                    ON ObjectFloat_Goods_Site.ObjectId = Object_Goods.Id
+                                   AND ObjectFloat_Goods_Site.DescId = zc_ObjectFloat_Goods_Site()
         LEFT OUTER JOIN ObjectBoolean AS ObjectBoolean_Goods_Published
                                       ON ObjectBoolean_Goods_Published.ObjectId = Object_Goods.Id
                                      AND ObjectBoolean_Goods_Published.DescId = zc_ObjectBoolean_Goods_Published()

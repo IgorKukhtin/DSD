@@ -4,14 +4,16 @@ DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TVarChar, TVarChar, TB
 DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TBlob, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, Integer, TBlob, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_FromSite(
     IN inGoodsCode           Integer   ,    -- ключ объекта <Товар>
+    IN inId                  Integer   ,    -- Ключ товара на сайте
     IN inName                TBlob     ,    -- Название товара на сайте
     IN inPhoto               TVarChar  ,    -- Фото
     IN inThumb               TVarChar  ,    -- Превью
     IN inDescription         TBlob     ,    -- Описание товара на сайте
-    IN inManufacturer        TVarChar  ,    -- производитель (ObjectString_Goods_Maker)
+    IN inManufacturer        TVarChar  ,    -- производитель
     IN inAppointmentCode     Integer   ,    -- назначение препарата
     IN inAppointmentName     TVarChar  ,    -- назначение препарата
     IN inPublished           Boolean   ,    -- Опубликован
@@ -53,6 +55,8 @@ BEGIN
     -- если нашли
     IF vbId <> 0
     THEN
+        -- сохранили свойство <Ключ товара на сайте>
+        PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Site(), vbId, inId);
         -- сохранили свойство <Фото>
         PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Foto(), vbId, inPhoto);
         -- сохранили свойство <Превью>
@@ -75,6 +79,9 @@ BEGIN
         vbApoitmentId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Appointment() AND ObjectCode = inAppointmentCode);
         -- добавили/изменили - ВСЕГДА
         vbApoitmentId:= lpInsertUpdate_Object (vbApoitmentId, zc_Object_Appointment(), inAppointmentCode, inAppointmentName);
+
+        -- сохранили протокол
+        PERFORM lpInsert_ObjectProtocol (vbApoitmentId, vbUserId);
 
         -- если нашли
         IF vbId <> 0
