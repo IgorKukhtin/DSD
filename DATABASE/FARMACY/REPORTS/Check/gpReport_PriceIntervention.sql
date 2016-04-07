@@ -94,6 +94,7 @@ RETURNS TABLE (
   PercentProfit6      TFloat,
   PercentProfit7      TFloat,
 
+  VirtPercent         TFloat,
   VirtPercent1        TFloat,
   VirtPercent2        TFloat,
   VirtPercent3        TFloat,
@@ -102,6 +103,7 @@ RETURNS TABLE (
   VirtPercent6        TFloat,
   VirtPercent7        TFloat,
 
+  VirtSummaSale       TFloat,
   VirtSummaSale1      TFloat,
   VirtSummaSale2      TFloat,
   VirtSummaSale3      TFloat,
@@ -110,6 +112,7 @@ RETURNS TABLE (
   VirtSummaSale6      TFloat,
   VirtSummaSale7      TFloat,
            
+  VirtProfit       TFloat,
   VirtProfit1      TFloat,
   VirtProfit2      TFloat,
   VirtProfit3      TFloat,
@@ -477,6 +480,43 @@ BEGIN
                                   ) as tmp
                             WHERE tmp.Ord = 1  
                             )
+
+
+-- расчет по виртуальным процентам 
+, tmpDataAll_2 AS (SELECT tmpDataAll.*
+                        
+                        , COALESCE(tmpMarginReportItem.Percent1,0)  ::TFloat AS VirtPercent1
+                        , COALESCE(tmpMarginReportItem.Percent2,0)  ::TFloat AS VirtPercent2
+                        , COALESCE(tmpMarginReportItem.Percent3,0)  ::TFloat AS VirtPercent3
+                        , COALESCE(tmpMarginReportItem.Percent4,0)  ::TFloat AS VirtPercent4
+                        , COALESCE(tmpMarginReportItem.Percent5,0)  ::TFloat AS VirtPercent5
+                        , COALESCE(tmpMarginReportItem.Percent6,0)  ::TFloat AS VirtPercent6
+                        , COALESCE(tmpMarginReportItem.Percent7,0)  ::TFloat AS VirtPercent7
+
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent1,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent1,0) <> 100 THEN tmpDataAll.Summa1 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent1,0)) ELSE 0 END AS VirtSummaSale1
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent2,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent2,0) <> 100 THEN tmpDataAll.Summa2 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent2,0)) ELSE 0 END AS VirtSummaSale2
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent3,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent3,0) <> 100 THEN tmpDataAll.Summa3 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent3,0)) ELSE 0 END AS VirtSummaSale3
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent4,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent4,0) <> 100 THEN tmpDataAll.Summa4 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent4,0)) ELSE 0 END AS VirtSummaSale4
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent5,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent5,0) <> 100 THEN tmpDataAll.Summa5 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent5,0)) ELSE 0 END AS VirtSummaSale5
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent6,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent6,0) <> 100 THEN tmpDataAll.Summa6 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent6,0)) ELSE 0 END AS VirtSummaSale6
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent7,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent7,0) <> 100 THEN tmpDataAll.Summa7 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent7,0)) ELSE 0 END AS VirtSummaSale7
+           
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent1,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent1,0) <> 100 THEN (tmpDataAll.Summa1 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent1,0)))-tmpDataAll.Summa1 ELSE 0 END AS VirtProfit1
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent2,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent2,0) <> 100 THEN (tmpDataAll.Summa2 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent2,0)))-tmpDataAll.Summa2 ELSE 0 END AS VirtProfit2
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent3,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent3,0) <> 100 THEN (tmpDataAll.Summa3 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent3,0)))-tmpDataAll.Summa3 ELSE 0 END AS VirtProfit3
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent4,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent4,0) <> 100 THEN (tmpDataAll.Summa4 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent4,0)))-tmpDataAll.Summa4 ELSE 0 END AS VirtProfit4
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent5,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent5,0) <> 100 THEN (tmpDataAll.Summa5 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent5,0)))-tmpDataAll.Summa5 ELSE 0 END AS VirtProfit5
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent6,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent6,0) <> 100 THEN (tmpDataAll.Summa6 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent6,0)))-tmpDataAll.Summa6 ELSE 0 END AS VirtProfit6
+                        , CASE WHEN COALESCE(tmpMarginReportItem.Percent7,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent7,0) <> 100 THEN (tmpDataAll.Summa7 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent7,0)))-tmpDataAll.Summa7 ELSE 0 END AS VirtProfit7
+
+                 FROM tmpDataAll
+                      LEFT JOIN tmpMarginReportItem ON tmpMarginReportItem.UnitId = tmpDataAll.UnitId      
+                )
+, tmpTotalVirt AS (SELECT tmpDataAll_2.UnitId
+                        , (COALESCE(tmpDataAll_2.VirtSummaSale1,0) + COALESCE(tmpDataAll_2.VirtSummaSale2,0) + COALESCE(tmpDataAll_2.VirtSummaSale3,0)
+                         + COALESCE(tmpDataAll_2.VirtSummaSale4,0)+ COALESCE(tmpDataAll_2.VirtSummaSale5,0)+ COALESCE(tmpDataAll_2.VirtSummaSale6,0)+ COALESCE(tmpDataAll_2.VirtSummaSale7,0) ) AS VirtSummaSale
+                   FROM tmpDataAll_2
+                   )                
                             
         SELECT
              Object_JuridicalMain.ObjectCode         AS JuridicalMainCode
@@ -557,29 +597,32 @@ BEGIN
            , CAST (CASE WHEN tmpDataAll.SummaSale6 <> 0 THEN 100 - tmpDataAll.Summa6/tmpDataAll.SummaSale6*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit6
            , CAST (CASE WHEN tmpDataAll.SummaSale7 <> 0 THEN 100 - tmpDataAll.Summa7/tmpDataAll.SummaSale7*100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS PercentProfit7
 
-           , COALESCE(tmpMarginReportItem.Percent1,0)  ::TFloat AS VirtPercent1
-           , COALESCE(tmpMarginReportItem.Percent2,0)  ::TFloat AS VirtPercent2
-           , COALESCE(tmpMarginReportItem.Percent3,0)  ::TFloat AS VirtPercent3
-           , COALESCE(tmpMarginReportItem.Percent4,0)  ::TFloat AS VirtPercent4
-           , COALESCE(tmpMarginReportItem.Percent5,0)  ::TFloat AS VirtPercent5
-           , COALESCE(tmpMarginReportItem.Percent6,0)  ::TFloat AS VirtPercent6
-           , COALESCE(tmpMarginReportItem.Percent7,0)  ::TFloat AS VirtPercent7
+           , CAST (CASE WHEN tmpTotalVirt.VirtSummaSale  <> 0 THEN 100 - tmpDataAll.Summa /tmpTotalVirt.VirtSummaSale * 100 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtPercent
+           , tmpDataAll.VirtPercent1  ::TFloat AS VirtPercent1
+           , tmpDataAll.VirtPercent2  ::TFloat AS VirtPercent2
+           , tmpDataAll.VirtPercent3  ::TFloat AS VirtPercent3
+           , tmpDataAll.VirtPercent4  ::TFloat AS VirtPercent4
+           , tmpDataAll.VirtPercent5  ::TFloat AS VirtPercent5
+           , tmpDataAll.VirtPercent6  ::TFloat AS VirtPercent6
+           , tmpDataAll.VirtPercent7  ::TFloat AS VirtPercent7
 
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent1,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent1,0) <> 100 THEN tmpDataAll.Summa1 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent1,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale1
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent2,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent2,0) <> 100 THEN tmpDataAll.Summa2 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent2,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale2
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent3,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent3,0) <> 100 THEN tmpDataAll.Summa3 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent3,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale3
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent4,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent4,0) <> 100 THEN tmpDataAll.Summa4 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent4,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale4
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent5,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent5,0) <> 100 THEN tmpDataAll.Summa5 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent5,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale5
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent6,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent6,0) <> 100 THEN tmpDataAll.Summa6 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent6,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale6
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent7,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent7,0) <> 100 THEN tmpDataAll.Summa7 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent7,0)) ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale7
-           
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent1,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent1,0) <> 100 THEN (tmpDataAll.Summa1 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent1,0)))-tmpDataAll.Summa1 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit1
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent2,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent2,0) <> 100 THEN (tmpDataAll.Summa2 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent2,0)))-tmpDataAll.Summa2 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit2
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent3,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent3,0) <> 100 THEN (tmpDataAll.Summa3 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent3,0)))-tmpDataAll.Summa3 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit3
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent4,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent4,0) <> 100 THEN (tmpDataAll.Summa4 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent4,0)))-tmpDataAll.Summa4 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit4
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent5,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent5,0) <> 100 THEN (tmpDataAll.Summa5 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent5,0)))-tmpDataAll.Summa5 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit5
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent6,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent6,0) <> 100 THEN (tmpDataAll.Summa6 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent6,0)))-tmpDataAll.Summa6 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit6
-           , CAST (CASE WHEN COALESCE(tmpMarginReportItem.Percent7,0) <> 0 AND COALESCE(tmpMarginReportItem.Percent7,0) <> 100 THEN (tmpDataAll.Summa7 * 100 /(100 - COALESCE(tmpMarginReportItem.Percent7,0)))-tmpDataAll.Summa7 ELSE 0 END AS NUMERIC (16, 2)) ::TFloat AS VirtProfit7
+           , CAST (tmpTotalVirt.VirtSummaSale AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale
+           , CAST ( tmpDataAll.VirtSummaSale1 AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale1
+           , CAST ( tmpDataAll.VirtSummaSale2 AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale2
+           , CAST ( tmpDataAll.VirtSummaSale3 AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale3
+           , CAST ( tmpDataAll.VirtSummaSale4 AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale4
+           , CAST ( tmpDataAll.VirtSummaSale5 AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale5
+           , CAST ( tmpDataAll.VirtSummaSale6 AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale6
+           , CAST ( tmpDataAll.VirtSummaSale7 AS NUMERIC (16, 2)) ::TFloat AS VirtSummaSale7
+
+           , CAST ( CASE WHEN  tmpTotalVirt.VirtSummaSale  <> 0 THEN (tmpTotalVirt.VirtSummaSale - tmpDataAll.Summa) ELSE 0 END  AS NUMERIC (16, 2)) ::TFloat AS VirtProfit
+           , CAST ( tmpDataAll.VirtProfit1 AS NUMERIC (16, 2)) ::TFloat AS VirtProfit1
+           , CAST ( tmpDataAll.VirtProfit2 AS NUMERIC (16, 2)) ::TFloat AS VirtProfit2
+           , CAST ( tmpDataAll.VirtProfit3 AS NUMERIC (16, 2)) ::TFloat AS VirtProfit3
+           , CAST ( tmpDataAll.VirtProfit4 AS NUMERIC (16, 2)) ::TFloat AS VirtProfit4
+           , CAST ( tmpDataAll.VirtProfit5 AS NUMERIC (16, 2)) ::TFloat AS VirtProfit5
+           , CAST ( tmpDataAll.VirtProfit6 AS NUMERIC (16, 2)) ::TFloat AS VirtProfit6
+           , CAST ( tmpDataAll.VirtProfit7 AS NUMERIC (16, 2)) ::TFloat AS VirtProfit7
 
            , tmpMarginCategoryItem.MarginPercent1  ::TFloat 
            , tmpMarginCategoryItem.MarginPercent2  ::TFloat 
@@ -623,7 +666,7 @@ BEGIN
            , CASE WHEN tmpDataAll.PercentSumma7 <> tmpMaxPercent.MaxPercentSumma7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSumma7
            , CASE WHEN tmpDataAll.PercentSummaSale7 <> tmpMaxPercent.MaxPercentSummaSale7 THEN zc_Color_White() ELSE zc_Color_Cyan() END    :: Integer AS Color_PercentSummaSale7 
                                             
-       FROM tmpDataAll
+       FROM tmpDataAll_2 AS tmpDataAll
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id =tmpDataAll.UnitId
 
                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -632,8 +675,9 @@ BEGIN
                 LEFT JOIN Object AS Object_JuridicalMain ON Object_JuridicalMain.Id = ObjectLink_Unit_Juridical.ChildObjectId
 
                 LEFT JOIN tmpMaxPercent ON 1=1
-                LEFT JOIN tmpMarginReportItem ON tmpMarginReportItem.UnitId = Object_Unit.Id
-
+               -- LEFT JOIN tmpMarginReportItem ON tmpMarginReportItem.UnitId = Object_Unit.Id
+                LEFT JOIN tmpTotalVirt ON tmpTotalVirt.UnitId = Object_Unit.Id
+                
                 LEFT JOIN tmpMarginCategoryItem ON tmpMarginCategoryItem.UnitId = Object_Unit.Id
                 LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = tmpMarginCategoryItem.MarginCategoryId
                 
@@ -653,3 +697,4 @@ $BODY$
 -- SELECT * FROM gpReport_PriceIntervention (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
 --select * from gpReport_PriceIntervention(inStartDate := ('01.03.2016')::TDateTime , inEndDate := ('10.03.2016')::TDateTime , inPrice1 := 100 , inPrice2 := 200 , inPrice3 := 300 , inPrice4 := 400 , inPrice5 := 500 , inPrice6 := 600 ,  inSession := '3');
 --select * from gpReport_PriceIntervention(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('02.01.2016')::TDateTime , inPrice1 := 15 , inPrice2 := 30 , inPrice3 := 50 , inPrice4 := 70 , inPrice5 := 300 , inPrice6 := 1000 , inMarginReportId := 2082814 ,  inSession := '3');
+--select * from gpReport_PriceIntervention(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('02.01.2016')::TDateTime , inPrice1 := 15 , inPrice2 := 50 , inPrice3 := 100 , inPrice4 := 200 , inPrice5 := 300 , inPrice6 := 1000 , inMarginReportId := 2082837 ,  inSession := '3');

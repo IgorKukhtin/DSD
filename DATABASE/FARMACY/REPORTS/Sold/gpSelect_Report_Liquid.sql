@@ -65,21 +65,27 @@ BEGIN
        
     RETURN QUERY
         WITH 
-           tmpPrice as(         
-                        SELECT ObjectLink_Price_Unit.ChildObjectId      AS UnitId
+
+   tmpUnit AS (SELECT Object_Unit.Id       AS UnitId 
+               FROM Object AS Object_Unit
+               WHERE Object_Unit.DescId = zc_Object_Unit()
+                 AND (Object_Unit.Id = inUnitId OR inUnitId = 0)
+          --     LIMIT 5
+               )
+        
+        , tmpPrice AS ( SELECT ObjectLink_Price_Unit.ChildObjectId      AS UnitId
                              , Price_Goods.ChildObjectId                AS GoodsId
-                             , Object_Price.Id                          AS PriceId 
-                        FROM Object AS Object_Price 
-                           INNER JOIN ObjectLink AS ObjectLink_Price_Unit
-                                                ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
+                             , ObjectLink_Price_Unit.ObjectId           AS PriceId 
+                        FROM tmpUnit
+                           
+                           LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
+                                                ON ObjectLink_Price_Unit.ChildObjectId = tmpUnit.UnitId
                                                AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()      
-                                               AND (ObjectLink_Price_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
                                                                        
                            LEFT JOIN ObjectLink AS Price_Goods
-                                                ON Price_Goods.ObjectId = Object_Price.Id
-                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-
-                       WHERE  Object_Price.DescId = zc_Object_Price() --and Price_Goods.ChildObjectId = 16000 
+                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods() 
+                         WHERE COALESCE (Price_Goods.ChildObjectId,0) <> 0 and COALESCE (ObjectLink_Price_Unit.ObjectId,0) <> 0 
                       )
 
         ,    ContainerCount AS (SELECT
@@ -88,7 +94,8 @@ BEGIN
                                   , Container.ObjectID AS GoodsId
                                   , Container.WhereObjectId AS UnitId
                                   , COALESCE (MI_Income_find.Id, MI_Income.Id)         :: Integer AS MovementItemId
-                                FROM Container
+                                FROM tmpUnit
+                                    LEFT JOIN Container ON Container.WhereObjectId = tmpUnit.UnitId 
                                     -- партия  -- для получения приходной цены остатка
                                     LEFT OUTER JOIN ContainerLinkObject AS CLO_MI 
                                                                         ON CLO_MI.ContainerId = container.Id
@@ -106,7 +113,7 @@ BEGIN
                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                                     
                                 WHERE Container.descid = zc_container_count()
-                                  AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
+                                  --AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
                                 
                               )
 
@@ -246,7 +253,9 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement_Income.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                  AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId=0)
+                                                                  --AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId=0)
+                                     INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+                                     
                                      INNER JOIN MovementDate AS MovementDate_Branch
                                                              ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                             AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
@@ -275,9 +284,11 @@ BEGIN
                               , SUM(COALESCE(-MIContainer.Amount,0)*MIFloat_Price.ValueData) AS SummaCheck
                          FROM Movement AS Movement_Check
                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                          ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                         AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId=0)
+                                                          ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                       --AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId=0)
+                            INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                            
                             INNER JOIN MovementItem AS MI_Check
                                     ON MI_Check.MovementId = Movement_Check.Id
                                    AND MI_Check.DescId = zc_MI_Master()
@@ -319,11 +330,11 @@ BEGIN
                                      INNER JOIN Movement ON Movement.DescId = tmpDescMovement.DescMovementId
                                                        AND Movement.StatusId = zc_Enum_Status_Complete() 
                                                        AND date_trunc('day', Movement.OperDate) between inStartDate AND inEndDate
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                                   AND MovementLinkObject_Unit.DescId = CASE WHEN  Movement.DescId = zc_Movement_OrderExternal() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_Unit() END
-                                                                  AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId=0)
-                                                                         
+                                                                  --AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId=0)
+                                     INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
                                      INNER JOIN MovementItem AS MovementItem
                                                              ON MovementItem.MovementId = Movement.Id
                                                             AND MovementItem.isErased   = False
@@ -356,11 +367,14 @@ BEGIN
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_FROM
                                                                    ON MovementLinkObject_FROM.MovementId = Movement_Send.Id
                                                                   AND MovementLinkObject_FROM.DescId = zc_MovementLinkObject_FROM()
-                                                                  AND (MovementLinkObject_FROM.ObjectId = inUnitId OR inUnitId=0)
+                                   --                               AND (MovementLinkObject_FROM.ObjectId = inUnitId OR inUnitId=0)
+                                   LEFT JOIN tmpUnit AS tmpUnitFrom ON tmpUnitFrom.UnitId = MovementLinkObject_FROM.ObjectId 
+                                   
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement_Send.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                  AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId=0)
+                                                                  --AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId=0)
+                                   LEFT JOIN tmpUnit AS tmpUnitTo ON tmpUnitTo.UnitId = MovementLinkObject_To.ObjectId
 
                                    LEFT JOIN MovementItem AS MovementItem_Send
                                                              ON MovementItem_Send.MovementId = Movement_Send.Id
@@ -509,6 +523,8 @@ BEGIN
 
                         LEFT JOIN tmpMCSPeriodDay ON tmpMCSPeriodDay.OperDate = _TIME.PlanDate
                                                  AND tmpMCSPeriodDay.UnitId   = Object_Unit.Id
+
+                    WHERE  (COALESCE(tmpNTZ.SummaJuridicalRemains,0) + COALESCE(tmpNTZ.SummaJuridicalRemainsEnd,)) <> 0
                         
                         
 ;
@@ -523,4 +539,5 @@ $BODY$
 */
 
 --select * from gpSelect_Report_Liquid(inStartDate := ('01.12.2015')::TDateTime , inEndDate := ('31.12.2015')::TDateTime , inUnitId := 183292 , inQuasiSchedule := 'False' ,  inSession := '3');
---select * from gpSelect_Report_Liquid(inStartDate := ('08.02.2016')::TDateTime , inEndDate := ('08.02.2016')::TDateTime , inUnitId := 183292 , inQuasiSchedule := 'False' ,  inSession := '3');
+--select * from gpSelect_Report_Liquid(inStartDate := ('01.02.2016')::TDateTime , inEndDate := ('01.02.2016')::TDateTime , inUnitId := 0 , inQuasiSchedule := 'False' ,  inSession := '3');
+--select * from gpSelect_Report_Liquid(inStartDate := ('08.02.2016')::TDateTime , inEndDate := ('08.02.2016')::TDateTime , inUnitId := 0 , inQuasiSchedule := 'False' ,  inSession := '3');
