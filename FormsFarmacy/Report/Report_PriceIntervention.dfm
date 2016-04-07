@@ -1,22 +1,22 @@
 inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   Caption = #1054#1090#1095#1077#1090' '#1062#1077#1085#1086#1074#1072#1103' '#1080#1085#1090#1077#1088#1074#1077#1085#1094#1080#1103
-  ClientHeight = 435
+  ClientHeight = 431
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1228
-  ExplicitHeight = 473
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
     Width = 1212
-    Height = 344
+    Height = 340
     TabOrder = 5
     ExplicitTop = 91
     ExplicitWidth = 1212
-    ExplicitHeight = 344
-    ClientRectBottom = 344
+    ExplicitHeight = 340
+    ClientRectBottom = 340
     ClientRectRight = 1212
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -24,12 +24,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1212
-      ExplicitHeight = 320
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1212
-        Height = 320
+        Height = 316
         ExplicitWidth = 1212
-        ExplicitHeight = 320
+        ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -234,6 +234,56 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
               Format = ',0.####'
               Kind = skSum
               Column = cxVirtProfit7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxVirtProfit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxVirtSummaSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -425,6 +475,56 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
               Format = ',0.####'
               Kind = skSum
               Column = cxVirtProfit7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaProfit7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxVirtProfit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxVirtSummaSale
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -582,6 +682,68 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxSummaProfit: TcxGridDBBandedColumn
+            AlternateCaption = #1048#1090#1086#1075#1086': '#1076#1086#1093#1086#1076
+            Caption = #1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'SummaProfit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 4
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVitrPercent: TcxGridDBBandedColumn
+            AlternateCaption = #1048#1090#1086#1075#1086': '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VirtPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+            Position.BandIndex = 1
+            Position.ColIndex = 5
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVirtSummaSale: TcxGridDBBandedColumn
+            AlternateCaption = #1048#1090#1086#1075#1086': '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            DataBinding.FieldName = 'VirtSummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 85
+            Position.BandIndex = 1
+            Position.ColIndex = 6
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVirtProfit: TcxGridDBBandedColumn
+            AlternateCaption = #1048#1090#1086#1075#1086': '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
+            Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'VirtProfit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 85
+            Position.BandIndex = 1
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxAmount1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
@@ -693,6 +855,21 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxSummaProfit1: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1076#1086#1093#1086#1076
+            Caption = #1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'SummaProfit1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 2
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxVitrPercent1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
@@ -703,12 +880,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
             Position.BandIndex = 2
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtSummaSale1: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -724,7 +901,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.RowIndex = 0
           end
           object cxVirtProfit1: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -735,7 +912,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 2
-            Position.ColIndex = 8
+            Position.ColIndex = 11
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -859,6 +1036,21 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxSummaProfit2: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1076#1086#1093#1086#1076
+            Caption = #1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'SummaProfit2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 3
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxVitrPercent2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
@@ -869,12 +1061,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
             Position.BandIndex = 3
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtSummaSale2: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -885,12 +1077,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 3
-            Position.ColIndex = 9
+            Position.ColIndex = 10
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtProfit2: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -901,7 +1093,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 3
-            Position.ColIndex = 8
+            Position.ColIndex = 9
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -916,7 +1108,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 63
             Position.BandIndex = 3
-            Position.ColIndex = 10
+            Position.ColIndex = 11
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1025,6 +1217,21 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxSummaProfit3: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1076#1086#1093#1086#1076
+            Caption = #1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'SummaProfit3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 4
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxVitrPercent3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
@@ -1035,12 +1242,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
             Position.BandIndex = 4
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtSummaSale3: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 3:'#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1051,12 +1258,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 4
-            Position.ColIndex = 9
+            Position.ColIndex = 10
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtProfit3: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1067,7 +1274,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 4
-            Position.ColIndex = 8
+            Position.ColIndex = 9
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1082,7 +1289,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 63
             Position.BandIndex = 4
-            Position.ColIndex = 10
+            Position.ColIndex = 11
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1191,6 +1398,21 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxSummaProfit4: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1076#1086#1093#1086#1076
+            Caption = #1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'SummaProfit4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 5
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxVitrPercent4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
@@ -1201,12 +1423,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
             Position.BandIndex = 5
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtSummaSale4: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1217,23 +1439,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 5
-            Position.ColIndex = 9
-            Position.LineCount = 2
-            Position.RowIndex = 0
-          end
-          object cxVirtProfit4: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
-            Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
-            DataBinding.FieldName = 'VirtProfit4'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 85
-            Position.BandIndex = 5
-            Position.ColIndex = 8
+            Position.ColIndex = 10
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1248,7 +1454,23 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 63
             Position.BandIndex = 5
-            Position.ColIndex = 10
+            Position.ColIndex = 11
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
+          object cxVirtProfit4: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
+            Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'VirtProfit4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 85
+            Position.BandIndex = 5
+            Position.ColIndex = 9
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1357,6 +1579,21 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxSummaProfit5: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1076#1086#1093#1086#1076
+            Caption = #1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'SummaProfit5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 6
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxVitrPercent5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
@@ -1367,12 +1604,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
             Position.BandIndex = 6
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtSummaSale5: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1383,12 +1620,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 6
-            Position.ColIndex = 9
+            Position.ColIndex = 10
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtProfit5: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1399,7 +1636,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 6
-            Position.ColIndex = 8
+            Position.ColIndex = 9
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1414,7 +1651,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 63
             Position.BandIndex = 6
-            Position.ColIndex = 10
+            Position.ColIndex = 11
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1434,7 +1671,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.RowIndex = 0
           end
           object cxSummaSale6: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6:   '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1523,6 +1760,21 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxSummaProfit6: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1076#1086#1093#1086#1076
+            Caption = #1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'SummaProfit6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 7
+            Position.ColIndex = 7
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxVitrPercent6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
@@ -1533,12 +1785,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
             Position.BandIndex = 7
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtSummaSale6: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1549,12 +1801,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 7
-            Position.ColIndex = 9
+            Position.ColIndex = 10
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtProfit6: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1565,7 +1817,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 7
-            Position.ColIndex = 8
+            Position.ColIndex = 9
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1580,7 +1832,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 63
             Position.BandIndex = 7
-            Position.ColIndex = 10
+            Position.ColIndex = 11
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1689,20 +1941,37 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent7: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074#1080#1088#1090'. %'
-            Caption = #1074#1080#1088#1090'. %'
-            DataBinding.FieldName = 'VirtPercent7'
+          object cxSummaProfit7: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1076#1086#1093#1086#1076
+            Caption = #1076#1086#1093#1086#1076
+            DataBinding.FieldName = 'SummaProfit7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Options.Editing = False
+            Width = 60
             Position.BandIndex = 8
             Position.ColIndex = 7
             Position.LineCount = 2
             Position.RowIndex = 0
           end
+          object cxVitrPercent7: TcxGridDBBandedColumn
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074#1080#1088#1090'. %'
+            Caption = #1074#1080#1088#1090'. %'
+            DataBinding.FieldName = 'VirtPercent7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 8
+            Position.ColIndex = 8
+            Position.LineCount = 2
+            Position.RowIndex = 0
+          end
           object cxVirtSummaSale7: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1713,12 +1982,12 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 8
-            Position.ColIndex = 9
+            Position.ColIndex = 10
             Position.LineCount = 2
             Position.RowIndex = 0
           end
           object cxVirtProfit7: TcxGridDBBandedColumn
-            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
+            AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1729,7 +1998,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 85
             Position.BandIndex = 8
-            Position.ColIndex = 8
+            Position.ColIndex = 9
             Position.LineCount = 2
             Position.RowIndex = 0
           end
@@ -1744,7 +2013,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Options.Editing = False
             Width = 63
             Position.BandIndex = 8
-            Position.ColIndex = 10
+            Position.ColIndex = 11
             Position.LineCount = 2
             Position.RowIndex = 0
           end

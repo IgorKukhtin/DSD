@@ -844,6 +844,14 @@
             Options.Editing = False
             Width = 70
           end
+          object colchisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
         end
         object cxGridChildLevel: TcxGridLevel
           GridView = cxGridChildDBTableView
@@ -861,9 +869,6 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1178,14 +1183,11 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
         Width = 1200
-        Height = 397
+        Height = 261
         Align = alClient
         TabOrder = 0
         object cxGridReportDBTableView: TcxGridDBTableView
@@ -1602,7 +1604,7 @@
       DataSource = MasterDS
     end
     object actUpdateChildDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
+      Category = 'DSDLibChild'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIChild
@@ -1638,6 +1640,23 @@
       ShortCut = 45
       ImageIndex = 0
     end
+    object SetUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLibChild'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spUnErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIChild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
+    end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -1670,30 +1689,6 @@
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
-    end
-    object UnitChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'UnitChoiceForm'
-      FormName = 'TUnit_ObjectForm'
-      FormNameParam.Value = 'TUnit_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitName'
-          DataType = ftString
-        end>
-      isShowModal = True
     end
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1776,6 +1771,45 @@
           DataType = ftString
         end>
       isShowModal = True
+    end
+    object UnitChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'UnitChoiceForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object SetErasedChild: TdsdUpdateErased
+      Category = 'DSDLibChild'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1087#1083#1080#1074#1086'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1087#1083#1080#1074#1086'>'
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
     end
     object FreightChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2199,7 +2233,7 @@
       RefreshOnTabSetChanges = True
     end
     object MIChildProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'DSDLibChild'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1093' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1093' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -2447,8 +2481,8 @@
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 206
-    Top = 286
+    Left = 222
+    Top = 294
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -2595,7 +2629,7 @@
   object ChildDS: TDataSource
     DataSet = ChildCDS
     Left = 44
-    Top = 270
+    Top = 278
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Transport'
@@ -2970,8 +3004,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 74
-    Top = 269
+    Left = 98
+    Top = 309
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -3120,6 +3154,14 @@
         item
           Visible = True
           ItemName = 'bbUnErasedIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedChild'
         end
         item
           Visible = True
@@ -3285,6 +3327,14 @@
       Action = MIChildProtocolOpenForm
       Category = 0
     end
+    object bbSetErasedChild: TdxBarButton
+      Action = SetErasedChild
+      Category = 0
+    end
+    object bbSetUnErasedChild: TdxBarButton
+      Action = SetUnErasedChild
+      Category = 0
+    end
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -3366,8 +3416,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 114
-    Top = 314
+    Left = 106
+    Top = 298
   end
   object spInsertUpdateMIIncome: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TransportIncome'
@@ -3608,7 +3658,7 @@
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 614
+    Left = 790
     Top = 185
   end
   object spUnErasedMIMaster: TdsdStoredProc
@@ -3874,5 +3924,51 @@
       end>
     Left = 922
     Top = 75
+  end
+  object spErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 846
+    Top = 321
+  end
+  object spUnErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 798
+    Top = 329
   end
 end

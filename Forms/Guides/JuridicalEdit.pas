@@ -134,6 +134,8 @@ type
     cxLabel22: TcxLabel;
     edMainName: TcxDBTextEdit;
     cbisDiscountPrice: TcxCheckBox;
+    edInvNumberBranch: TcxDBTextEdit;
+    cxLabel23: TcxLabel;
   private
     { Private declarations }
   public
