@@ -98,4 +98,4 @@ ALTER FUNCTION gpSelect_ObjectHistory_JuridicalDetails (Integer, TVarChar, TVarC
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_JuridicalDetails (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP)
+-- SELECT * FROM gpSelect_ObjectHistory_JuridicalDetails (zc_PriceList_ProductionSeparate(), '', '', zfCalc_UserAdmin())
