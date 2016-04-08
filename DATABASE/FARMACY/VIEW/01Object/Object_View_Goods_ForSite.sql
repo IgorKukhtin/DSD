@@ -6,7 +6,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
     SELECT 
         Object_Goods.Id                                         as id
        ,Object_Goods.GoodsCodeInt                               as article
-       ,ObjectFloat_Goods_Site.ValueData                        as Id_Site
+       ,ObjectFloat_Goods_Site.ValueData :: Integer             as Id_Site
        ,ObjectBlob_Site.ValueData                               as Name_Site
        ,Object_Goods.GoodsName                                  as name
        ,ObjectString_Foto.ValueData                             as foto
