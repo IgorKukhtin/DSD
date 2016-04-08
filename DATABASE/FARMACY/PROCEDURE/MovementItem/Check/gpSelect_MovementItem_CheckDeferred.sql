@@ -19,44 +19,44 @@ BEGIN
         vbUnitKey := '0';
      END IF;   
    vbUnitId := vbUnitKey::Integer;
-     RETURN QUERY
-   WITH Mov
-   AS
-   (
-      SELECT       
-          Movement.Id
-        FROM Movement 
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                      AND MovementLinkObject_Unit.ObjectId = vbUnitId
 
-          LEFT OUTER JOIN MovementBoolean AS MovementBoolean_Deferred
-                                      ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+     RETURN QUERY
+     
+   WITH 
+  tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId)   
+                        
+, tmpMov AS
+      ( SELECT Movement.Id
+        FROM tmpStatus
+          LEFT JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
+                            AND Movement.DescId = zc_Movement_Check()
                             
-        WHERE Movement.DescId = zc_Movement_Check()
-          AND
-          Movement.StatusId = zc_Enum_Status_UnComplete()
-          AND
-          MovementBoolean_Deferred.ValueData = True 
-          AND
-          (
-             MovementLinkObject_Unit.ObjectId = vbUnitId 
-             OR 
-             vbUnitId = 0
-          )
-    )
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                       AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
+
+          INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                     ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                    AND MovementBoolean_Deferred.ValueData = True 
+       
+       )
+
        SELECT
-             MovementItem.MovementId 
-           , MovementItem.GoodsId
-           , MovementItem.GoodsName
+             MovementItem.MovementId          AS MovementId 
+           , MovementItem.ObjectId    AS GoodsId
+           , Object_Goods.ValueData   AS GoodsName
            , MovementItem.Amount
-           , MovementItem.Price
-       FROM Mov
-       Inner Join MovementItem_Check_View AS MovementItem 
-                                        ON Mov.Id = MovementItem.MovementId  
-      WHERE MovementItem.isErased   = false;
+           , MIFloat_Price.ValueData  AS Price
+       FROM tmpMov
+          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
+                                 AND MovementItem.isErased   = false
+          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+      ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -66,6 +66,7 @@ ALTER FUNCTION gpSelect_MovementItem_CheckDeferred (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿. ¬ÓÓ·Í‡ÎÓ ¿.¿
+ 08.04.16         *
  03.07.15                                                                       * 
  25.05.15                         *
  
