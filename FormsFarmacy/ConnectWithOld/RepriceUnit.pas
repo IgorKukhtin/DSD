@@ -106,6 +106,10 @@ type
     cdsResultisPromo: TBooleanField;
     colisTop: TcxGridDBColumn;
     colisPromo: TcxGridDBColumn;
+    cdsResultMidPriceSale: TCurrencyField;
+    colMidPriceSale: TcxGridDBColumn;
+    cdsResultMidPriceDiff: TCurrencyField;
+    colMidPriceDiff: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -365,6 +369,8 @@ begin
           cdsResult.FieldByName('isIncome').AsBoolean := AllGoodsPriceCDS.FieldByName('isIncome').AsBoolean;
           cdsResult.FieldByName('isTop').AsBoolean := AllGoodsPriceCDS.FieldByName('isTop').AsBoolean;
           cdsResult.FieldByName('isPromo').AsBoolean := AllGoodsPriceCDS.FieldByName('isPromo').AsBoolean;
+          cdsResult.FieldByName('MidPriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceDiff').AsCurrency;
+          cdsResult.FieldByName('MidPriceSale').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceSale').AsCurrency;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

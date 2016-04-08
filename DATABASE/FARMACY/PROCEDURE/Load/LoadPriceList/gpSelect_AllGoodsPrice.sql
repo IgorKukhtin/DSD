@@ -29,6 +29,8 @@ RETURNS TABLE (
     Juridical_GoodsName TVarChar,   --Наименование у поставщика
     ProducerName        TVarChar,   --производитель
     SumReprice          TFloat,     --сумма переоценки
+    MidPriceSale        TFloat,     --средняя цена остатка
+    MidPriceDiff        TFloat,     --отклонение от средняя цена остатка
     MinExpirationDate   TDateTime,  --Минимальный срок годности препарата на точке
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
     isPriceFix          Boolean ,   -- фиксированная цена
@@ -256,6 +258,7 @@ BEGIN
             SelectMinPrice_AllGoods.Partner_GoodsName        AS Partner_GoodsName,
             SelectMinPrice_AllGoods.MakerName                AS ProducerName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
+            SelectMinPrice_AllGoods.MidPriceSale             AS MidPriceSale,
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
             CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
@@ -316,6 +319,8 @@ BEGIN
         ResultSet.Partner_GoodsName      AS Juridical_GoodsName,
         ResultSet.ProducerName           AS ProducerName,
         ROUND(((ResultSet.NewPrice - ResultSet.LastPrice)*ResultSet.RemainsCount),2)::TFloat AS SumReprice,
+        ResultSet.MidPriceSale,
+        CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceSale) * 100 - 100)   END    ::TFloat AS MidPriceDiff, 
         ResultSet.MinExpirationDate,
         ResultSet.isOneJuridical,
         ResultSet.isPriceFix,
