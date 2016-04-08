@@ -1260,6 +1260,14 @@
 				<Form>MarginReportItemForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncomeFarmDialog.pas">
+				<Form>Report_MovementIncomeFarmDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncomeFarm.pas">
+				<Form>Report_MovementIncomeFarmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
