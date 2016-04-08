@@ -393,7 +393,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeDialogForm');
-
+   //Отчет Приход на точку для фармацевта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeFarmForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeFarmForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeFarmDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeFarmDialogForm');
+                   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
@@ -448,6 +453,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionDialogForm');
+  }
 end;
 
 

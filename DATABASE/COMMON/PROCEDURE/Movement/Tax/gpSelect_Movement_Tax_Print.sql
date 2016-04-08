@@ -161,10 +161,10 @@ BEGIN
            ,  CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
 
            , vbPriceWithVAT                             AS PriceWithVAT
-           , vbVATPercent                               AS VATPercent
+           , CASE WHEN  COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN 902 ELSE vbVATPercent END          AS VATPercent
 
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN MovementFloat_TotalSummMVAT.ValueData ELSE 0 END AS TotalSummMVAT
-           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() OR COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) ELSE 0 END AS SummVAT
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
@@ -280,6 +280,11 @@ BEGIN
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
            , CASE WHEN vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax() THEN 'X' ELSE '' END AS TaxKind -- для сводной НН
            , vbOperDate_begin AS OperDate_begin -- поле для Медка
+
+
+           , COALESCE (ObjectBoolean_Vat.ValueData, False) AS  isVat
+
+
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = inMovementId
@@ -394,6 +399,8 @@ BEGIN
                                  ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
+            -- ставка 0 таможня
+           
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract.ContractId
@@ -403,10 +410,10 @@ BEGIN
             LEFT JOIN ObjectString AS PersonalSigning_INN
                                    ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId 
                                   AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
-
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Vat
-                                  ON ObjectBoolean_Vat.ObjectId = View_Contract.ContractId
-                                 AND ObjectBoolean_Vat.DescId = zc_ObjectBoolean_Contract_Vat()
+            -- ставка 0 таможня
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Vat
+                                    ON ObjectBoolean_Vat.ObjectId = View_Contract.ContractId
+                                   AND ObjectBoolean_Vat.DescId = zc_ObjectBoolean_Contract_Vat()
 
        WHERE Movement.Id =  vbMovementId_Tax
          AND Movement.StatusId = zc_Enum_Status_Complete()

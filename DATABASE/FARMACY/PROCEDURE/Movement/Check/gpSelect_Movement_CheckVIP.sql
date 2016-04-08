@@ -59,6 +59,17 @@ BEGIN
                               
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                        AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+   	    INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+		                       ON MovementBoolean_Deferred.MovementId = Movement.Id
+		                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+				      AND COALESCE(MovementBoolean_Deferred.ValueData,False) = TRUE
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
@@ -66,22 +77,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                        AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-
+				      
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                          ON MovementLinkObject_CashRegister.MovementId = Movement.Id
                                         AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
             LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
 
-   	    LEFT OUTER JOIN MovementBoolean AS MovementBoolean_Deferred
-		                            ON MovementBoolean_Deferred.MovementId = Movement.Id
-					   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-					   
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                          ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
@@ -91,9 +92,8 @@ BEGIN
                                      ON MovementString_Bayer.MovementId = Movement.Id
                                     AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
                                           
-        WHERE COALESCE(MovementBoolean_Deferred.ValueData,False) = TRUE
-       
-;
+        
+       ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
