@@ -11,6 +11,7 @@ RETURNS TABLE (
     GoodsCode          integer,
     GoodsName          TVarChar,
     Remains            TFloat,
+    MidPriceSale       TFloat,
     MinExpirationDate  TDateTime,
     PartionGoodsDate   TDateTime,
     Partner_GoodsId    Integer,
@@ -55,8 +56,9 @@ BEGIN
     (
         Select
             Container.ObjectId, -- здесь товар "сети"
-            SUM(Container.Amount)::TFloat as Amount,
-            MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate
+            SUM(Container.Amount)::TFloat                      AS Amount,
+            MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate,
+            AVG(COALESCE (MIFloat_PriceSale.ValueData, 0))     AS MidPriceSale
         from 
             Container
             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
@@ -67,6 +69,10 @@ BEGIN
             LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                               ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
                                              AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+            --цена реализации
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                        ON MIFloat_PriceSale.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale() 
         WHERE
             Container.DescId = zc_Container_Count()
             AND
@@ -85,7 +91,8 @@ BEGIN
             Object_LinkGoods_View.GoodsMainId, -- здесь "общий" товар
             PriceList_GoodsLink.GoodsId,       -- здесь товар "поставщика"
             Remains.Amount,
-            Remains.MinExpirationDate
+            Remains.MinExpirationDate,
+            Remains.MidPriceSale
         FROM 
             Remains
             INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = Remains.objectid -- Связь товара сети с общим
@@ -100,6 +107,7 @@ BEGIN
       , ddd.GoodsName  
       , ddd.Remains
       , ddd.MinExpirationDate
+      , ddd.MidPriceSale
       , ddd.Price
       , ddd.PartionGoodsDate
       , ddd.Partner_GoodsId
@@ -123,6 +131,7 @@ BEGIN
           , Goods.GoodsName                    AS GoodsName  
           , GoodsList.Amount                   AS Remains
           , GoodsList.MinExpirationDate        AS MinExpirationDate
+          , GoodsList.MidPriceSale             AS MidPriceSale
           , PriceList.Amount                   AS Price
           , Min(PriceList.Amount) OVER (PARTITION BY GoodsList.ObjectId) AS MinPrice
           , PriceList.Id                       AS PriceListMovementItemId
@@ -198,6 +207,7 @@ BEGIN
         MinPriceList.GoodsCode,
         MinPriceList.GoodsName,
         MinPriceList.Remains,
+        MinPriceList.MidPriceSale ::TFloat,
         MinPriceList.MinExpirationDate,
         MinPriceList.PartionGoodsDate,
         MinPriceList.Partner_GoodsId,

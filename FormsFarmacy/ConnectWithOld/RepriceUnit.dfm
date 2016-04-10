@@ -100,6 +100,23 @@ object RepriceUnitForm: TRepriceUnitForm
         Options.Editing = False
         Width = 74
       end
+      object colMidPriceSale: TcxGridDBColumn
+        Caption = #1057#1088'.'#1094#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'. '#1086#1089#1090#1072#1090#1082#1072
+        DataBinding.FieldName = 'MidPriceSale'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        Options.Editing = False
+        Width = 80
+      end
+      object colMidPriceDiff: TcxGridDBColumn
+        Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1086#1090' '#1089#1088'.'#1094#1077#1085#1099
+        DataBinding.FieldName = 'MidPriceDiff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '+0.0%;-0.0%; ;'
+        Options.Editing = False
+        Width = 70
+      end
       object colPercent: TcxGridDBColumn
         Caption = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'PriceDiff'
@@ -598,6 +615,14 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'isPromo'
         DataType = ftBoolean
+      end
+      item
+        Name = 'MidPriceSale'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'MidPriceDiff'
+        DataType = ftCurrency
       end>
     IndexDefs = <>
     Params = <>
@@ -606,7 +631,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      F90200009619E0BD01000000180000001A000000000003000000F90202496404
+      4B0300009619E0BD01000000180000001C0000000000030000004B0302496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -629,7 +654,10 @@ object RepriceUnitForm: TRepriceUnitForm
       6F6E4461746504000600000000000E69734F6E654A757269646963616C020003
       00000000000B4A757269646963616C496404000100000000000A697350726963
       654669780200030000000000086973496E636F6D650200030000000000056973
-      546F70020003000000000007697350726F6D6F02000300000000000000}
+      546F70020003000000000007697350726F6D6F02000300000000000C4D696450
+      7269636553616C65080004000000010007535542545950450200490006004D6F
+      6E6579000C4D6964507269636544696666080004000000010007535542545950
+      450200490006004D6F6E6579000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -717,6 +745,12 @@ object RepriceUnitForm: TRepriceUnitForm
     end
     object cdsResultisPromo: TBooleanField
       FieldName = 'isPromo'
+    end
+    object cdsResultMidPriceSale: TCurrencyField
+      FieldName = 'MidPriceSale'
+    end
+    object cdsResultMidPriceDiff: TCurrencyField
+      FieldName = 'MidPriceDiff'
     end
   end
   object UnitsCDS: TClientDataSet
