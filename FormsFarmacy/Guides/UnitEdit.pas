@@ -8,7 +8,9 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, cxCurrencyEdit, cxCheckBox, ParentForm, dsdGuides, dsdDB,
-  dsdAction, cxMaskEdit, cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters;
+  dsdAction, cxMaskEdit, cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters,
+  Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit, cxCalendar, cxSpinEdit,
+  cxTimeEdit;
 
 type
   TUnitEditForm = class(TParentForm)
@@ -37,6 +39,12 @@ type
     cxLabel4: TcxLabel;
     ceTaxService: TcxCurrencyEdit;
     cbRepriceAuto: TcxCheckBox;
+    cxLabel6: TcxLabel;
+    ceTaxServiceNigth: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    edStartServiceNigth: TcxTimeEdit;
+    edEndServiceNigth: TcxTimeEdit;
   private
     { Private declarations }
   public

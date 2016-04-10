@@ -9,7 +9,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
-             , TaxService TFloat
+             , TaxService TFloat, TaxServiceNigth TFloat
+             , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , isRepriceAuto Boolean) AS
 $BODY$
 BEGIN
@@ -36,6 +37,11 @@ BEGIN
       , ''::TVarChar                                       AS RouteSortingName
 
       , ObjectFloat_TaxService.ValueData                     AS TaxService
+      , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
+
+      , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
+      , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
+
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
 
     FROM Object AS Object_Unit
@@ -61,9 +67,22 @@ BEGIN
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_TaxServiceNigth
+                              ON ObjectFloat_TaxServiceNigth.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_TaxServiceNigth.DescId = zc_ObjectFloat_Unit_TaxServiceNigth()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RepriceAuto.DescId = zc_ObjectBoolean_Unit_RepriceAuto()
+
+        LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
+                             ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
+                            AND ObjectDate_StartServiceNigth.DescId = zc_ObjectDate_Unit_StartServiceNigth()
+
+        LEFT JOIN ObjectDate AS ObjectDate_EndServiceNigth
+                             ON ObjectDate_EndServiceNigth.ObjectId = Object_Unit.Id
+                            AND ObjectDate_EndServiceNigth.DescId = zc_ObjectDate_Unit_EndServiceNigth()
+
 
     WHERE Object_Unit.DescId = zc_Object_Unit();
   
@@ -77,6 +96,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.04.16         *
  24.02.16         * add RepriceAuto
  21.08.14                         *
  27.06.14         *
