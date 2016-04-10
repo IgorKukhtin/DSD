@@ -43,8 +43,8 @@ type
     ceTaxServiceNigth: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
-    edStartServiceNigth: TcxTimeEdit;
-    edEndServiceNigth: TcxTimeEdit;
+    edEndServiceNigth: TcxDateEdit;
+    edStartServiceNigth: TcxDateEdit;
   private
     { Private declarations }
   public

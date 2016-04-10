@@ -66,8 +66,9 @@ BEGIN
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
 
-      , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
-      , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
+      , CASE WHEN COALESCE(ObjectDate_StartServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartServiceNigth.ValueData ELSE Null END ::TDateTime  AS StartServiceNigth
+      , CASE WHEN COALESCE(ObjectDate_EndServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndServiceNigth.ValueData ELSE Null END ::TDateTime  AS EndServiceNigth
+      --, ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
 
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
 
@@ -135,3 +136,5 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Unit('2')
+
+select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);

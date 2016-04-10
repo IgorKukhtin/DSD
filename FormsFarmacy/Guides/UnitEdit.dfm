@@ -151,19 +151,28 @@
     Top = 156
     Caption = #1054#1082#1086#1085'. '#1085#1086#1095'. '#1089#1084#1077#1085#1099
   end
-  object edStartServiceNigth: TcxTimeEdit
-    Left = 255
+  object edEndServiceNigth: TcxDateEdit
+    Left = 361
     Top = 175
-    Properties.AutoCorrectHours = False
-    Properties.AutoSelect = False
-    Properties.TimeFormat = tfHourMin
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
     TabOrder = 19
     Width = 100
   end
-  object edEndServiceNigth: TcxTimeEdit
-    Left = 364
+  object edStartServiceNigth: TcxDateEdit
+    Left = 255
     Top = 175
-    Properties.TimeFormat = tfHourMin
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DateOnError = deNull
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    Properties.Nullstring = ' '
+    Properties.YearsInMonthList = False
     TabOrder = 20
     Width = 100
   end
@@ -246,12 +255,13 @@
       item
         Name = 'inStartServiceNigth'
         Value = '0'
+        Component = edStartServiceNigth
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndServiceNigth'
-        Value = '0'
+        Component = edEndServiceNigth
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -282,6 +292,9 @@
         Component = MarginCategoryGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Value = Null
       end>
     PackSize = 1
     Left = 384
@@ -303,7 +316,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -373,10 +386,13 @@
       end
       item
         Name = 'StartServiceNigth'
+        Component = edStartServiceNigth
+        DataType = ftDateTime
       end
       item
         Name = 'EndServiceNigth'
         Value = 'NULL'
+        Component = edEndServiceNigth
         DataType = ftDateTime
       end
       item
