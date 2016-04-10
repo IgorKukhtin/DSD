@@ -513,7 +513,8 @@ begin
     ('JuridicalName_From').asString;
   DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_To').asString;
   DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_From').asString;
-  DECLAR.DECLARBODY.HFBUY := HeaderDataSet.FieldByName('InvNumberBranch_From').asString;
+  if HeaderDataSet.FieldByName('InvNumberBranch_From').asString <> ''
+  then DECLAR.DECLARBODY.HFBUY := HeaderDataSet.FieldByName('InvNumberBranch_From').asString;
 
   DECLAR.DECLARBODY.R02G9 := '-' + StringReplace
     (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummvat').AsFloat),
@@ -1177,7 +1178,10 @@ begin
     ('JuridicalName_To').asString;
   DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').asString;
   DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').asString;
-  DECLAR.DECLARBODY.HFBUY := HeaderDataSet.FieldByName('InvNumberBranch_To').asString;
+
+  if HeaderDataSet.FieldByName('InvNumberBranch_To').asString <> ''
+  then DECLAR.DECLARBODY.HFBUY := HeaderDataSet.FieldByName('InvNumberBranch_To').asString;
+
 
   //итоговые суммы
   DECLAR.DECLARBODY.R04G11 :=

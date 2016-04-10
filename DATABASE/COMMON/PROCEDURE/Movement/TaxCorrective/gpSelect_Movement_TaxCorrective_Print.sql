@@ -341,7 +341,7 @@ BEGIN
 
            , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
            , OH_JuridicalDetails_From.INN                                   AS INN_From
-           , CAST (REPEAT (' ', 4 - LENGTH (OH_JuridicalDetails_From.InvNumberBranch)) || OH_JuridicalDetails_From.InvNumberBranch AS TVarChar) AS InvNumberBranch_From
+           , OH_JuridicalDetails_From.InvNumberBranch                       AS InvNumberBranch_From
            , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
            , OH_JuridicalDetails_From.AccounterName                         AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount                           AS BankAccount_From

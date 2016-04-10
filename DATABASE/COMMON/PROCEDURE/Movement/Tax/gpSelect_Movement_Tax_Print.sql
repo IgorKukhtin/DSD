@@ -199,7 +199,7 @@ BEGIN
            , OH_JuridicalDetails_To.BankName            AS BankName_To
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
 --           , OH_JuridicalDetails_To.Phone               AS Phone_To
-           , CAST (REPEAT (' ', 4 - LENGTH (OH_JuridicalDetails_To.InvNumberBranch)) || OH_JuridicalDetails_To.InvNumberBranch AS TVarChar) AS InvNumberBranch_To
+           , OH_JuridicalDetails_To.InvNumberBranch     AS InvNumberBranch_To
 
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN ''
