@@ -137,4 +137,4 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_Unit('2')
 
-select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);
+--select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);

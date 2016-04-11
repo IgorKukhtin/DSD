@@ -61,10 +61,25 @@ BEGIN
     WITH
    tmpUnit AS (SELECT ObjectLink_Unit_Parent.ObjectId                      AS UnitId 
                     , COALESCE(ObjectFloat_TaxService.ValueData,0)::TFloat AS TaxService 
+                    , COALESCE(ObjectFloat_TaxServiceNigth.ValueData,0)    AS TaxServiceNigth
+
+                    , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
+                    , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
                FROM ObjectLink AS ObjectLink_Unit_Parent
                    LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                                          ON ObjectFloat_TaxService.ObjectId = ObjectLink_Unit_Parent.ObjectId 
                                         AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService() 
+                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxServiceNigth
+                                         ON ObjectFloat_TaxServiceNigth.ObjectId = ObjectLink_Unit_Parent.ObjectId 
+                                        AND ObjectFloat_TaxServiceNigth.DescId = zc_ObjectFloat_Unit_TaxServiceNigth()
+
+                   LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
+                                        ON ObjectDate_StartServiceNigth.ObjectId = ObjectLink_Unit_Parent.ObjectId 
+                                       AND ObjectDate_StartServiceNigth.DescId = zc_ObjectDate_Unit_StartServiceNigth()
+                   LEFT JOIN ObjectDate AS ObjectDate_EndServiceNigth
+                                        ON ObjectDate_EndServiceNigth.ObjectId = ObjectLink_Unit_Parent.ObjectId 
+                                       AND ObjectDate_EndServiceNigth.DescId = zc_ObjectDate_Unit_EndServiceNigth()
+                                       
                WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
                  AND (ObjectLink_Unit_Parent.ObjectId = inUnitId  OR ObjectLink_Unit_Parent.ChildObjectId = inUnitId )
                )
@@ -128,18 +143,37 @@ BEGIN
                    WHERE Movement.DescId = zc_Movement_SheetWorkTime()
                      AND Movement.OperDate between inDateStart AND inDateEnd
                 )
+
+ -- выбираем из подразделений ночные интервалы
+, tmpNightTime AS (select ( '' ||tmpDateVip.OperDate ::Date || ' '||tmpUnit.StartServiceNigth ::Time):: TDateTime   AS OperDate
+                   from tmpUnit
+                     LEFT JOIN tmpDateVip ON 1=1
+                   Where COALESCE (tmpUnit.StartServiceNigth::Time, '00:00') <> '00:00' 
+                  union 
+                   select ( '' ||tmpDateVip.OperDate ::Date || ' '||tmpUnit.EndServiceNigth ::Time):: TDateTime AS OperDate
+                   from tmpUnit
+                     LEFT JOIN tmpDateVip ON 1=1
+                   Where COALESCE (tmpUnit.EndServiceNigth::Time, '00:00') <> '00:00' 
+                   )                 
    -- начало интервалов           
-   , tmp2 AS (SELECT tmp1.OperDate1 AS OperDate
-               FROM tmp1
-             UNION ALL 
-               SELECT tmp1.OperDate2 AS OperDate
-               FROM tmp1
-             union 
-               SELECT tmpDateVip.OperDate
-               FROM tmpDateVip
-             union 
-               SELECT tmpDateVip.OperDate2 AS OperDate
-               FROM tmpDateVip
+   , tmp2 AS (SELECT Distinct tmp.OperDate
+              FROM (
+                     SELECT tmp1.OperDate1 AS OperDate
+                     FROM tmp1
+                   UNION ALL 
+                     SELECT tmp1.OperDate2 AS OperDate
+                     FROM tmp1
+                   union 
+                     SELECT tmpDateVip.OperDate
+                     FROM tmpDateVip
+                   union 
+                     SELECT tmpDateVip.OperDate2 AS OperDate
+                     FROM tmpDateVip
+                   Union     -- + деление на ночные смены
+                     SELECT Distinct tmpNightTime.OperDate
+                     FROM tmpNightTime
+                   ) AS tmp 
+              ORDER BY 1 
               )
    -- таблица всех интервалов  =  tmp3         
  , tmpListDate AS (SELECT tmp.OperDate1, tmp.OperDate2 -interval  '1 minute' AS OperDate2
