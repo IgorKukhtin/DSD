@@ -130,7 +130,7 @@ inherited GoodsForm: TGoodsForm
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.##; ; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
