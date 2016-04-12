@@ -691,10 +691,6 @@
 				<Form>MovementDescForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\JuridicalEdit.pas">
-				<Form>JuridicalEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas"/>
 			<DCCReference Include="..\..\Forms\Kind\WorkTimeKind_Object.pas">
 				<Form>WorkTimeKind_ObjectForm</Form>
@@ -2579,6 +2575,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ExportJuridicalEdit.pas">
 				<Form>ExportJuridicalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalEdit.pas">
+				<Form>JuridicalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

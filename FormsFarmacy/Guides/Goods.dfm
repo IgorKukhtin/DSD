@@ -3,9 +3,8 @@ inherited GoodsForm: TGoodsForm
   ClientHeight = 423
   ClientWidth = 962
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitLeft = -189
   ExplicitWidth = 978
-  ExplicitHeight = 458
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -108,6 +107,12 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object clisSecond: TcxGridDBColumn
+            Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isSecond'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object cbPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
@@ -171,6 +176,10 @@ inherited GoodsForm: TGoodsForm
       end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 67
+    Top = 312
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -183,6 +192,8 @@ inherited GoodsForm: TGoodsForm
       end>
   end
   inherited ActionList: TActionList
+    Left = 103
+    Top = 255
     inherited actRefresh: TdsdDataSetRefresh
       Category = 'Refresh'
     end
@@ -301,6 +312,9 @@ inherited GoodsForm: TGoodsForm
       StoredProcList = <
         item
           StoredProc = spUpdate_Goods_isFirst
+        end
+        item
+          StoredProc = spUpdate_Goods_isSecond
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -463,6 +477,10 @@ inherited GoodsForm: TGoodsForm
         ColorValueList = <>
       end>
     SearchAsFilter = False
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 144
+    Top = 256
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Goods'
@@ -692,5 +710,35 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 704
     Top = 176
+  end
+  object spUpdate_Goods_isSecond: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isSecond'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisSecond'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isFirst'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outColor'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_calc'
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 256
   end
 end
