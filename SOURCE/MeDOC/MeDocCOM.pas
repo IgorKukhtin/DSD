@@ -212,18 +212,22 @@ begin
 
 str1:='';
 for ii := 0 to HeaderDataSet.Fields.Count-1 do
+begin
    if VarToStr(HeaderDataSet.Fields[ii].Value) = ''
    then str1:= str1 + HeaderDataSet.Fields[ii].Name
           + ' *** ' + 'NULL' + #10 + #13
    else str1:= str1 + HeaderDataSet.Fields[ii].Name
          + ' *** ' + VarToStr(HeaderDataSet.Fields[ii].Value)
          + #10 + #13;
-str1:= 'FormCode  ' + IntToStr(FormCode) + #10 + #13 + str1;
+end;
+
 //showMessage(str1);
 
-               if (SEND_DPA = '12') or (SEND_DPA = '11') then
+               if ((SEND_DPA = '12') or (SEND_DPA = '11')) then
                try
                   FormCode := DocumentList.Fields['FORM'].Value;
+                  if FormCode <> 12943  then
+                  begin
                   if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) then
                      DocKind := 'Tax'
                   else
@@ -289,8 +293,9 @@ str1:= 'FormCode  ' + IntToStr(FormCode) + #10 + #13 + str1;
                          LineDataSet.Next;
                        end;
                   end;
+                  end; // if FormCode <> 0
                except
-                     raise Exception.Create(str1);
+                     raise Exception.Create('FormCode  ' + IntToStr(FormCode) + #10 + #13 + str1);
                end;
                Application.ProcessMessages;
                DocumentList.Next;

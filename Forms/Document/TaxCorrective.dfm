@@ -1432,28 +1432,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ParamType = ptInput
       end
       item
-        Name = 'outisAuto'
+        Name = 'outIsAuto'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isAuto'
         DataType = ftBoolean
-      end
-      item
-        Name = 'del11'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Name = 'del12'
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Name = 'del13'
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
@@ -1513,6 +1496,23 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inLineNumTaxOld'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLineNumTax'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsAuto'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAuto'
+        DataType = ftBoolean
       end>
     Left = 80
     Top = 432

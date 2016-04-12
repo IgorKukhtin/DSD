@@ -721,7 +721,7 @@ BEGIN
                   AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                   AND vbMovementDescId = zc_Movement_TransferDebtOut()
                )
-       AND inUserId <> zfCalc_UserAdmin() :: Integer -- !!!кроме пользователя Админ!!!
+       AND inUserId NOT IN (zfCalc_UserAdmin() :: Integer, zc_Enum_Process_Auto_PrimeCost()) -- !!!кроме пользователя Админ!!!
      THEN PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
                                                        , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
                                                        , inDocumentTaxKindId_inf := NULL
@@ -771,8 +771,8 @@ where Movement.DescId in (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebt
 --  and Movement.Id = 3085412 
 --  and Movement.OperDate between '01.12.2015' and '31.12.2015'
 ) as a
-  /*left          JOIN MovementLinkObject AS MovementLinkObject_From
+  --left          JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = a.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-*/
+--
 */

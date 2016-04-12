@@ -10,6 +10,8 @@ CREATE OR REPLACE VIEW View_LoadPriceListItem_ForSite AS
        , ObjectFloat_Goods_Site.ValueData :: Integer             as Id_Site
        , ObjectLink_Goods_Object.ChildObjectId                   as ObjectId
        , (LoadPriceListItem.Price * ((100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)) / 100)) :: TFloat AS Price -- Цена С НДС
+       , LoadPriceListItem.Price AS Price_original -- Цена
+       , ObjectFloat_NDSKind_NDS.ValueData AS NDS
 
        , Object_Juridical.Id         AS JuridicalId
        , Object_Juridical.ObjectCode AS JuridicalCode

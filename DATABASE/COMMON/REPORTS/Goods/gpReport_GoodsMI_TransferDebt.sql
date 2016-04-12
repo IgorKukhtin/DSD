@@ -39,62 +39,38 @@ BEGIN
                 (SELECT tmpReportContainerSumm.InfoMoneyId       
                       , tmpReportContainerSumm.GoodsId   
                       , tmpReportContainerSumm.GoodsKindId
-                      , (tmpReportContainerSumm.Amount) AS Amount
+                      , (tmpReportContainerSumm.Amount)      AS Amount
                       , (tmpReportContainerSumm.SummPartner) AS SummPartner
-                 FROM (SELECT tmpReportContainer.InfoMoneyId
-                            , MovementItem.ObjectId AS GoodsId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                            , SUM (MovementItem.Amount) AS Amount
-                            , SUM (MIReport.Amount) AS SummPartner
-                       FROM (SELECT ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
-                                  , ReportContainerLink.ReportContainerId
-                             FROM (SELECT zc_Enum_Account_110401() AS Id
-                                        , CASE WHEN inDescId = zc_Movement_TransferDebtOut() THEN zc_Enum_AccountKind_Passive() ELSE zc_Enum_AccountKind_Active() END AS AccountKindId
-                                        , CASE WHEN inDescId = zc_Movement_TransferDebtOut() THEN zc_Enum_AccountKind_Active() ELSE zc_Enum_AccountKind_Passive() END AS AccountKindId_child
-                                  ) AS tmpAccount
-                                  INNER JOIN Container ON Container.ObjectId = tmpAccount.Id
-                                                      AND Container.DescId = zc_Container_Summ()
-                                  INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = Container.Id
-                                                                AND ReportContainerLink.AccountKindId = tmpAccount.AccountKindId
-                                  INNER JOIN ReportContainerLink AS ReportContainerLink_child ON ReportContainerLink_child.ReportContainerId = ReportContainerLink.ReportContainerId
-                                                                                             AND ReportContainerLink_child.AccountKindId = tmpAccount.AccountKindId_child
-                                  INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                                                 ON ContainerLO_Juridical.ContainerId = ReportContainerLink_child.ContainerId
-                                                                AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                                                AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
-                                  INNER JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                                                 ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink_child.ContainerId
-                                                                AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                                AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
-                                  INNER JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
-                                                                 ON ContainerLinkObject_PaidKind.ContainerId = ReportContainerLink_child.ContainerId
-                                                                AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                                                AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
-                             ) AS tmpReportContainer
-                             INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpReportContainer.ReportContainerId
-                                                                      AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
-                             INNER JOIN Movement ON Movement.Id = MIReport.MovementId
-                                                AND Movement.DescId = inDescId
-                             INNER JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
-                                                    AND MovementItem.DescId = zc_MI_Master()
-                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-           
-                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                       ON MovementBoolean_PriceWithVAT.MovementId =  MIReport.MovementId
-                                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                                     ON MovementFloat_VATPercent.MovementId =  MIReport.MovementId
-                                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-                             LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                         ON MIFloat_Price.MovementItemId = MIReport.MovementItemId
-                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
-                       GROUP BY tmpReportContainer.InfoMoneyId
-                              , MovementItem.ObjectId
-                              , MILinkObject_GoodsKind.ObjectId
+                 FROM (SELECT ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
+                            , MIContainer.ObjectId_analyzer          AS GoodsId
+                            , MIContainer.ObjectIntId_analyzer       AS GoodsKindId
+                            , SUM (MovementItem.Amount)              AS Amount
+                            , SUM (MIContainer.Amount * CASE WHEN inDescId = zc_Movement_TransferDebtOut() THEN 1 ELSE -1 END) AS SummPartner
+                       FROM MovementItemContainer AS MIContainer
+                            INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
+                                                           ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerIntId_Analyzer
+                                                          AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                                          AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                            INNER JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                                           ON ContainerLinkObject_InfoMoney.ContainerId = MIContainer.ContainerIntId_Analyzer
+                                                          AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                          AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+                            INNER JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
+                                                           ON ContainerLinkObject_PaidKind.ContainerId = MIContainer.ContainerIntId_Analyzer
+                                                          AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                                                          AND (ContainerLinkObject_PaidKind.ObjectId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
+
+                            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+           
+                            INNER JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+
+                       WHERE MIContainer.MovementDescId = inDescId
+                         AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_TransferDebtOut() THEN TRUE ELSE FALSE END
+                         AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                       GROUP BY ContainerLinkObject_InfoMoney.ObjectId
+                              , MIContainer.ObjectId_analyzer
+                              , MIContainer.ObjectIntId_analyzer
                       ) AS tmpReportContainerSumm
                  WHERE tmpReportContainerSumm.Amount <> 0
                     OR tmpReportContainerSumm.SummPartner <> 0
@@ -149,6 +125,7 @@ ALTER FUNCTION gpReport_GoodsMI_TransferDebt (TDateTime, TDateTime, Integer, Int
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.04.16                                        * all
  13.05.14                                        *
 */
 
