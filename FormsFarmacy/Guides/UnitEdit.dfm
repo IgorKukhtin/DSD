@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 202
+  ClientHeight = 261
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 100
-    Top = 163
+    Left = 84
+    Top = 227
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 294
-    Top = 163
+    Left = 278
+    Top = 227
     Width = 75
     Height = 25
     Action = FormClose
@@ -108,29 +108,77 @@
     Width = 209
   end
   object cxLabel4: TcxLabel
-    Left = 255
-    Top = 102
+    Left = 15
+    Top = 156
     Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
   end
   object ceTaxService: TcxCurrencyEdit
-    Left = 255
-    Top = 121
+    Left = 15
+    Top = 175
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 13
-    Width = 77
+    Width = 90
   end
   object cbRepriceAuto: TcxCheckBox
-    Left = 351
+    Left = 255
     Top = 121
     Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
     Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
     TabOrder = 14
     Width = 113
   end
+  object cxLabel6: TcxLabel
+    Left = 134
+    Top = 156
+    Caption = '% '#1074' '#1085#1086#1095#1085'. '#1089#1084'.'
+  end
+  object ceTaxServiceNigth: TcxCurrencyEdit
+    Left = 134
+    Top = 175
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 16
+    Width = 90
+  end
+  object cxLabel7: TcxLabel
+    Left = 255
+    Top = 156
+    Caption = #1053#1072#1095'. '#1085#1086#1095'. '#1089#1084#1077#1085#1099
+  end
+  object cxLabel8: TcxLabel
+    Left = 364
+    Top = 156
+    Caption = #1054#1082#1086#1085'. '#1085#1086#1095'. '#1089#1084#1077#1085#1099
+  end
+  object edEndServiceNigth: TcxDateEdit
+    Left = 361
+    Top = 175
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    TabOrder = 19
+    Width = 100
+  end
+  object edStartServiceNigth: TcxDateEdit
+    Left = 255
+    Top = 175
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DateOnError = deNull
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    Properties.Nullstring = ' '
+    Properties.YearsInMonthList = False
+    TabOrder = 20
+    Width = 100
+  end
   object ActionList: TActionList
-    Left = 224
-    Top = 144
+    Left = 208
+    Top = 208
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -198,6 +246,26 @@
         ParamType = ptInput
       end
       item
+        Name = 'inTaxServiceNigth'
+        Value = Null
+        Component = ceTaxServiceNigth
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartServiceNigth'
+        Value = '0'
+        Component = edStartServiceNigth
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndServiceNigth'
+        Component = edEndServiceNigth
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inisRepriceAuto'
         Value = Null
         Component = cbRepriceAuto
@@ -224,10 +292,13 @@
         Component = MarginCategoryGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Value = Null
       end>
     PackSize = 1
-    Left = 416
-    Top = 152
+    Left = 384
+    Top = 200
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -236,8 +307,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 264
-    Top = 144
+    Left = 248
+    Top = 208
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -245,7 +316,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -308,14 +379,31 @@
         DataType = ftFloat
       end
       item
+        Name = 'TaxServiceNigth'
+        Value = Null
+        Component = ceTaxServiceNigth
+        DataType = ftFloat
+      end
+      item
+        Name = 'StartServiceNigth'
+        Component = edStartServiceNigth
+        DataType = ftDateTime
+      end
+      item
+        Name = 'EndServiceNigth'
+        Value = 'NULL'
+        Component = edEndServiceNigth
+        DataType = ftDateTime
+      end
+      item
         Name = 'isRepriceAuto'
         Value = Null
         Component = cbRepriceAuto
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 192
-    Top = 144
+    Left = 176
+    Top = 208
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'

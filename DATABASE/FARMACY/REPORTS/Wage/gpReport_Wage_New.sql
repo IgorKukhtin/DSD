@@ -63,15 +63,39 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH
-   tmpUnit AS (SELECT ObjectLink_Unit_Parent.ObjectId                      AS UnitId 
-                    , COALESCE(ObjectFloat_TaxService.ValueData,0)::TFloat AS TaxService 
-               FROM ObjectLink AS ObjectLink_Unit_Parent
-                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
-                                         ON ObjectFloat_TaxService.ObjectId = ObjectLink_Unit_Parent.ObjectId 
-                                        AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService() 
-               WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-                 AND (ObjectLink_Unit_Parent.ObjectId = inUnitId  OR ObjectLink_Unit_Parent.ChildObjectId = inUnitId )
-               )
+   tmpUnit AS (SELECT *
+                     , CASE WHEN tmpUnit.EndServiceNigth  < tmpUnit.StartServiceNigth  THEN '23:59:00' WHEN tmpUnit.EndServiceNigth  > tmpUnit.StartServiceNigth THEN tmpUnit.EndServiceNigth END    AS StartServiceNigthEnd
+                     , CASE WHEN tmpUnit.EndServiceNigth  < tmpUnit.StartServiceNigth  THEN '00:00:00' WHEN tmpUnit.EndServiceNigth  > tmpUnit.StartServiceNigth THEN tmpUnit.StartServiceNigth  END AS EndServiceNigthStart
+               FROM 
+                   (SELECT ObjectLink_Unit_Parent.ObjectId                      AS UnitId 
+                         , COALESCE(ObjectFloat_TaxService.ValueData,0)::TFloat AS TaxService 
+                         , COALESCE(ObjectFloat_TaxServiceNigth.ValueData,0)    AS TaxServiceNigth
+
+                         , ObjectDate_StartServiceNigth.ValueData       ::Time  AS StartServiceNigth
+                         , ObjectDate_EndServiceNigth.ValueData         ::Time  AS EndServiceNigth
+                    FROM ObjectLink AS ObjectLink_Unit_Parent
+                        LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
+                                              ON ObjectFloat_TaxService.ObjectId = ObjectLink_Unit_Parent.ObjectId 
+                                             AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService() 
+                        LEFT JOIN ObjectFloat AS ObjectFloat_TaxServiceNigth
+                                              ON ObjectFloat_TaxServiceNigth.ObjectId = ObjectLink_Unit_Parent.ObjectId 
+                                             AND ObjectFloat_TaxServiceNigth.DescId = zc_ObjectFloat_Unit_TaxServiceNigth()
+
+                        LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
+                                             ON ObjectDate_StartServiceNigth.ObjectId = ObjectLink_Unit_Parent.ObjectId 
+                                            AND ObjectDate_StartServiceNigth.DescId = zc_ObjectDate_Unit_StartServiceNigth()
+                                            AND Coalesce(ObjectDate_StartServiceNigth.ValueData::Time, '00:00') <> '00:00'
+                                            AND COALESCE(ObjectFloat_TaxServiceNigth.ValueData,0) <> 0
+                        LEFT JOIN ObjectDate AS ObjectDate_EndServiceNigth
+                                             ON ObjectDate_EndServiceNigth.ObjectId = ObjectLink_Unit_Parent.ObjectId 
+                                            AND ObjectDate_EndServiceNigth.DescId = zc_ObjectDate_Unit_EndServiceNigth()
+                                            AND Coalesce(ObjectDate_EndServiceNigth.ValueData::Time, '00:00') <> '00:00' 
+                                            AND COALESCE(ObjectFloat_TaxServiceNigth.ValueData,0) <> 0
+                                                                               
+                    WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                      AND (ObjectLink_Unit_Parent.ObjectId = inUnitId  OR ObjectLink_Unit_Parent.ChildObjectId = inUnitId )
+                    ) AS tmpUnit
+                )
  , tmpAdmin AS (SELECT tmpUnit.UnitId
                      , 3       AS PersonalId   -- сотрудник админ 
                      , 1672498 AS PositionId   -- должность фармацевт - для выпадающих периодов
@@ -150,18 +174,37 @@ BEGIN
                    WHERE Movement.DescId = zc_Movement_SheetWorkTime()
                      AND Movement.OperDate between inDateStart AND inDateEnd
                 )
+                
+ -- выбираем из подразделений ночные интервалы
+, tmpNightTime AS (select ( '' ||tmpDate.OperDate ::Date || ' '||tmpUnit.StartServiceNigth ::Time):: TDateTime   AS OperDate
+                   from tmpUnit
+                     LEFT JOIN tmpDate ON 1=1
+                   Where COALESCE (tmpUnit.StartServiceNigth::Time, '00:00') <> '00:00' 
+                  union 
+                   select ( '' ||tmpDate.OperDate ::Date || ' '||tmpUnit.EndServiceNigth ::Time):: TDateTime AS OperDate
+                   from tmpUnit
+                     LEFT JOIN tmpDate ON 1=1
+                   Where COALESCE (tmpUnit.EndServiceNigth::Time, '00:00') <> '00:00' 
+                   )                
    -- начало интервалов           
-   , tmp2 AS (SELECT tmp1.OperDate1 AS OperDate
-               FROM tmp1
-             UNION ALL 
-               SELECT tmp1.OperDate2 AS OperDate
-               FROM tmp1
-             union 
-               SELECT tmpDate.OperDate
-               FROM tmpDate
-             union 
-               SELECT tmpDate.OperDate2 AS OperDate
-               FROM tmpDate
+   , tmp2 AS (SELECT Distinct tmp.OperDate
+              FROM (
+                     SELECT tmp1.OperDate1 AS OperDate
+                     FROM tmp1
+                   UNION ALL 
+                     SELECT tmp1.OperDate2 AS OperDate
+                     FROM tmp1
+                   union 
+                     SELECT tmpDate.OperDate
+                     FROM tmpDate
+                   union 
+                     SELECT tmpDate.OperDate2 AS OperDate
+                     FROM tmpDate
+                   Union     -- + деление на ночные смены
+                     SELECT Distinct tmpNightTime.OperDate
+                     FROM tmpNightTime
+                   ) AS tmp 
+              ORDER BY 1 
               )
    -- таблица всех интервалов  =  tmp3         
  , tmpListDate AS (SELECT tmp.OperDate1, tmp.OperDate2 -interval  '1 minute' AS OperDate2
@@ -236,10 +279,14 @@ BEGIN
                 WHERE tmpPosition.TaxService<>0
                )
 --% выплат для всех у кого % выплат = 0
- , tmpList2 AS (SELECT tmpListPersonal.OperDate1, tmpListPersonal.OperDate2
+ , tmpList2 AS ( SELECT tmpListPersonal.OperDate1, tmpListPersonal.OperDate2
                      , tmpUnit.UnitId
-                    -- , tmpPosition.PositionId
-                     , (tmpUnit.TaxService - COALESCE(tmp.TaxService,0))::TFloat AS TaxService
+                    -- , (tmpUnit.TaxService - COALESCE(tmp.TaxService,0))::TFloat AS TaxService
+                     , CASE WHEN (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpListPersonal.OperDate1::Time >= tmpUnit.StartServiceNigth AND tmpListPersonal.OperDate2::Time <= tmpUnit.StartServiceNigthEnd)
+                              OR (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpListPersonal.OperDate1::Time >= tmpUnit.EndServiceNigthStart AND tmpListPersonal.OperDate2::Time <= tmpUnit.EndServiceNigth)
+                            THEN tmpUnit.TaxServiceNigth - COALESCE(tmp.TaxService,0)
+                            ELSE (tmpUnit.TaxService - COALESCE(tmp.TaxService,0))
+                       END   AS TaxService
                 FROM tmpUnit
                    LEFT JOIN tmpListPersonal ON tmpListPersonal.UnitId = tmpUnit.UnitId
                    LEFT JOIN tmpPosition ON tmpPosition.PositionId = tmpListPersonal.PositionId
@@ -248,12 +295,17 @@ BEGIN
                               GROUP BY tmpList1.OperDate1, tmpList1.UnitId
                               ) AS tmp ON tmp.UnitId   = tmpListPersonal.UnitId 
                                       AND tmp.OperDate1 = tmpListPersonal.OperDate1
+                                      
                 Where tmpPosition.TaxService = 0
                 GROUP BY tmpListPersonal.OperDate1, tmpListPersonal.OperDate2
                        , tmpUnit.UnitId
-                       , tmpUnit.TaxService
-                       ,  COALESCE(tmp.TaxService,0)
+                       , CASE WHEN (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpListPersonal.OperDate1::Time >= tmpUnit.StartServiceNigth AND tmpListPersonal.OperDate2::Time <= tmpUnit.StartServiceNigthEnd)
+                                OR (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpListPersonal.OperDate1::Time >= tmpUnit.EndServiceNigthStart AND tmpListPersonal.OperDate2::Time <= tmpUnit.EndServiceNigth)
+                              THEN tmpUnit.TaxServiceNigth - COALESCE(tmp.TaxService,0)
+                              ELSE (tmpUnit.TaxService - COALESCE(tmp.TaxService,0))
+                         END  
                )
+               
 -- теперь все должности подразделения с % выплат
  , tmplist3 AS (SELECT tmpList1.OperDate1, tmpList1.OperDate2
                  , tmpList1.UnitId
@@ -367,12 +419,27 @@ BEGIN
                                  , tmpMovementCheck.UnitId
                                  , tmpListPersonalAll.PersonalId
                                  , tmpListPersonalAll.PositionId
-                                 , tmpUnit.TaxService :: Tfloat  AS TaxService
+                                 
+                                 , CASE WHEN inIsDay = TRUE 
+                                            THEN
+                                                CASE WHEN (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpMovementCheck.OperDate1::Time >= tmpUnit.StartServiceNigth AND tmpMovementCheck.OperDate2::Time <= tmpUnit.StartServiceNigthEnd)
+                                                       OR (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpMovementCheck.OperDate1::Time >= tmpUnit.EndServiceNigthStart AND tmpMovementCheck.OperDate2::Time <= tmpUnit.EndServiceNigth)
+                                                     THEN tmpUnit.TaxServiceNigth
+                                                     ELSE tmpUnit.TaxService
+                                                END
+                                            ELSE tmpUnit.TaxService
+                                   END AS TaxService
+                                  
                                  , SUM(CASE WHEN inIsDay = TRUE THEN tmpListPersonalAll.TaxService ELSE 0 END) :: Tfloat AS TaxServicePosition
-                                 , SUM(CASE WHEN inIsDay = TRUE THEN (tmpListPersonalAll.TaxService/tmpListPersonalAll.PersonalCount) ELSE 0 END) :: Tfloat AS TaxServicePersonal
+                                 , SUM(CASE WHEN inIsDay = TRUE THEN (tmpListPersonalAll.TaxService/tmpListPersonalAll.PersonalCount) ELSE 0 END)  AS TaxServicePersonal
                                  , SUM( tmpMovementCheck.SummaSale ) :: Tfloat  AS SummaSale
-                                 , SUM( ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService / 100)/tmpListPersonalAll.PersonalCount) )   :: Tfloat AS SummaWage
-                                 , SUM( CASE WHEN tmpUnit.TaxService<>0 THEN ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService /tmpUnit.TaxService)/tmpListPersonalAll.PersonalCount) ELSE 0 END )  :: Tfloat AS SummaPersonal
+                                 , SUM( ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService / 100)/tmpListPersonalAll.PersonalCount) )    AS SummaWage
+                                -- , SUM( CASE WHEN tmpUnit.TaxService<>0 THEN ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService /tmpUnit.TaxService)/tmpListPersonalAll.PersonalCount) ELSE 0 END )   AS SummaPersonal
+                                 , SUM( CASE WHEN (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpMovementCheck.OperDate1::Time >= tmpUnit.StartServiceNigth AND tmpMovementCheck.OperDate2::Time <= tmpUnit.StartServiceNigthEnd)
+                                               OR (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpMovementCheck.OperDate1::Time >= tmpUnit.EndServiceNigthStart AND tmpMovementCheck.OperDate2::Time <= tmpUnit.EndServiceNigth)
+                                             THEN ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService /tmpUnit.TaxServiceNigth)/tmpListPersonalAll.PersonalCount)
+                                             ELSE CASE WHEN tmpUnit.TaxService<>0 THEN ((tmpMovementCheck.SummaSale * tmpListPersonalAll.TaxService /tmpUnit.TaxService)/tmpListPersonalAll.PersonalCount) ELSE 0 END
+                                        END)  AS SummaPersonal
                                  , tmpListPersonalAll.PersonalCount
                             FROM tmpUnit
                               LEFT JOIN tmpMovementCheck ON tmpMovementCheck.UnitId = tmpUnit.UnitId
@@ -385,7 +452,15 @@ BEGIN
                                    , tmpMovementCheck.UnitId
                                    , tmpListPersonalAll.PersonalId
                                    , tmpListPersonalAll.PositionId  
-                                   , tmpUnit.TaxService
+                                   , CASE WHEN inIsDay = TRUE 
+                                            THEN
+                                                CASE WHEN (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpMovementCheck.OperDate1::Time >= tmpUnit.StartServiceNigth AND tmpMovementCheck.OperDate2::Time <= tmpUnit.StartServiceNigthEnd)
+                                                       OR (COALESCE(tmpUnit.TaxServiceNigth,0) <> 0  AND tmpMovementCheck.OperDate1::Time >= tmpUnit.EndServiceNigthStart AND tmpMovementCheck.OperDate2::Time <= tmpUnit.EndServiceNigth)
+                                                     THEN tmpUnit.TaxServiceNigth
+                                                     ELSE tmpUnit.TaxService
+                                                END
+                                            ELSE tmpUnit.TaxService
+                                     END
                                    , tmpListPersonalAll.PersonalCount
                             ) AS tmpALL
                         GROUP BY tmpALL.Operdate1, tmpALL.OperDate2
@@ -471,6 +546,15 @@ BEGIN
                      , tmpALL.PositionId 
                      , tmpALL.UnitId
                      , tmpALL.TaxService
+                     /*, CASE WHEN COALESCE(tmpALL.TaxServiceNigth,0) <> 0 
+                            THEN CASE WHEN (tmpItogi.OperDate1::Time >= tmpAll.StartServiceNigth AND tmpItogi.OperDate2::Time <= tmpAll.StartServiceNigthEnd)
+                                        OR (tmpItogi.OperDate1::Time >= tmpAll.EndServiceNigthStart AND tmpItogi.OperDate2::Time <= tmpAll.EndServiceNigth)
+                                      THEN tmpALL.TaxServiceNigth
+                                      ELSE tmpALL.TaxService
+                                 END
+                            ELSE tmpALL.TaxService
+                        END AS TaxService
+                       */     
                      , CASE WHEN inIsDay = TRUE THEN tmpALL.TaxServicePosition ELSE 0 END AS TaxServicePosition
                      , CASE WHEN inIsDay = TRUE 
                             THEN tmpAll.TaxServicePersonal 
@@ -507,7 +591,7 @@ BEGIN
          , Object_Unit.ValueData         AS UnitName
          , Object_Personal.ValueData     AS PersonalName
          , Object_Position.ValueData     AS PositionName
-         , tmpResult.TaxService
+         , tmpResult.TaxService  ::tfloat
          , CASE WHEN inIsDay = TRUE THEN tmpResult.TaxServicePosition ELSE tmpResult_position.SumTaxService END    ::tfloat AS TaxServicePosition
          , tmpResult.TaxServicePersonal ::Tfloat AS TaxServicePersonal
          , tmpResult.SummaSale  ::Tfloat 

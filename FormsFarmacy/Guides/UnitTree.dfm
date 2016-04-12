@@ -70,7 +70,6 @@ object UnitTreeForm: TUnitTreeForm
     Height = 377
     Align = alClient
     TabOrder = 6
-    ExplicitWidth = 447
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -137,6 +136,14 @@ object UnitTreeForm: TUnitTreeForm
       object colTaxService: TcxGridDBColumn
         Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
         DataBinding.FieldName = 'TaxService'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object colTaxServiceNigth: TcxGridDBColumn
+        Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080' '#1085#1086#1095#1100
+        DataBinding.FieldName = 'TaxServiceNigth'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter

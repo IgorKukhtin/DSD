@@ -4,13 +4,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, I
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TFloat, Boolean, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
     IN inName                    TVarChar  ,    -- Название объекта <Подразделение>
     IN inTaxService              TFloat    ,    -- % от выручки
+    IN inTaxServiceNigth         TFloat    ,    -- % от выручки в ночную смену
+    IN inStartServiceNigth       TDateTime ,
+    IN inEndServiceNigth         TDateTime ,
     IN inisRepriceAuto           Boolean   ,    -- участвует в автопереоценке
     IN inParentId                Integer   ,    -- ссылка на подразделение
     IN inJuridicalId             Integer   ,    -- ссылка на Юридические лицо
@@ -59,7 +62,20 @@ BEGIN
 
    -- % бонусирования
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_TaxService(), ioId, inTaxService);
-   
+   -- % ночной
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_TaxServiceNigth(), ioId, inTaxServiceNigth);
+
+   IF inStartServiceNigth ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_StartServiceNigth(), ioId, inStartServiceNigth);
+   END IF;
+   IF inEndServiceNigth ::Time <> '00:00'
+   THEN   
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_EndServiceNigth(), ioId, inEndServiceNigth);
+   END IF;
+
    -- участвует в автопереоценке
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_RepriceAuto(), ioId, inisRepriceAuto);
 
@@ -90,6 +106,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.04.16         *
  24.02.16         * 
  14.02.16         * 
  27.06.14         * 

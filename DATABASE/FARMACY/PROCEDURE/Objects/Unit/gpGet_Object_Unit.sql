@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                MarginCategoryId Integer, MarginCategoryName TVarChar,
                isLeaf boolean, 
-               TaxService TFloat,
+               TaxService TFloat, TaxServiceNigth TFloat,
+               StartServiceNigth TDateTime, EndServiceNigth TDateTime,
                isRepriceAuto Boolean
                ) AS
 $BODY$
@@ -37,6 +38,11 @@ BEGIN
            , CAST ('' as TVarChar) AS MarginCategoryName
            , false                 AS isLeaf
            , CAST (0 as TFloat)    AS TaxService
+           , CAST (0 as TFloat)    AS TaxServiceNigth
+           
+           , CAST (Null as TDateTime) AS StartServiceNigth
+           , CAST (Null as TDateTime) AS EndServiceNigth
+
            , False                 AS isRepriceAuto
 ;
    ELSE
@@ -58,6 +64,12 @@ BEGIN
       , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
 
       , ObjectFloat_TaxService.ValueData                     AS TaxService
+      , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
+
+      , CASE WHEN COALESCE(ObjectDate_StartServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartServiceNigth.ValueData ELSE Null END ::TDateTime  AS StartServiceNigth
+      , CASE WHEN COALESCE(ObjectDate_EndServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndServiceNigth.ValueData ELSE Null END ::TDateTime  AS EndServiceNigth
+      --, ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
+
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
 
     FROM Object AS Object_Unit
@@ -84,10 +96,21 @@ BEGIN
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_TaxServiceNigth
+                              ON ObjectFloat_TaxServiceNigth.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_TaxServiceNigth.DescId = zc_ObjectFloat_Unit_TaxServiceNigth()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RepriceAuto.DescId = zc_ObjectBoolean_Unit_RepriceAuto()
 
+        LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
+                             ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
+                            AND ObjectDate_StartServiceNigth.DescId = zc_ObjectDate_Unit_StartServiceNigth()
+
+        LEFT JOIN ObjectDate AS ObjectDate_EndServiceNigth
+                             ON ObjectDate_EndServiceNigth.ObjectId = Object_Unit.Id
+                            AND ObjectDate_EndServiceNigth.DescId = zc_ObjectDate_Unit_EndServiceNigth()
 
     WHERE Object_Unit.Id = inId;
 
@@ -104,6 +127,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.04.16         *
  24.02.16         * 
  27.06.14         *
  11.06.13                        *
@@ -112,3 +136,5 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Unit('2')
+
+--select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);
