@@ -106,12 +106,14 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'isFirst'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object clisSecond: TcxGridDBColumn
             Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isSecond'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object cbPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
@@ -727,7 +729,7 @@ inherited GoodsForm: TGoodsForm
         Name = 'inisSecond'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isFirst'
+        ComponentItem = 'isSecond'
         DataType = ftBoolean
         ParamType = ptInput
       end

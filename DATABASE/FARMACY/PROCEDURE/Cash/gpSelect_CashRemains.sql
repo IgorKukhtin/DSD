@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
 RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
                Remains TFloat, Price TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
-               isFirst boolean, Color_calc Integer
+               isFirst boolean, isSecond boolean, Color_calc Integer
                )
 AS
 $BODY$
@@ -93,8 +93,9 @@ BEGIN
             CashSessionSnapShot.MCSValue,
             Link_Goods_AlternativeGroup.ChildObjectId as AlternativeGroupId,
             ObjectFloat_NDSKind_NDS.ValueData AS NDS,
-            COALESCE(ObjectBoolean_First.ValueData, False)         AS isFirst,
-            CASE WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
+            COALESCE(ObjectBoolean_First.ValueData, False)          AS isFirst,
+            COALESCE(ObjectBoolean_Second.ValueData, False)         AS isSecond,
+            CASE WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 10965163  ELSE zc_Color_White() END AS Color_calc
         FROM
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -110,7 +111,9 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_First
                                     ON ObjectBoolean_First.ObjectId = Goods.Id
                                    AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
-            
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
+                                    ON ObjectBoolean_Second.ObjectId = Goods.Id
+                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()            
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -124,6 +127,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 12.04.16         *
  02.11.15                                                                       *NDS
  10.09.15                                                                       *CashSessionSnapShot
  22.08.15                                                                       *разделение вип и отложеных

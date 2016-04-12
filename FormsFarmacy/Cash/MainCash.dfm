@@ -177,8 +177,6 @@ inherited MainCashForm: TMainCashForm
       Height = 166
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = -4
-      ExplicitTop = 2
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -189,6 +187,7 @@ inherited MainCashForm: TMainCashForm
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.IncSearch = True
+        OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.CancelOnExit = False
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
@@ -247,6 +246,18 @@ inherited MainCashForm: TMainCashForm
           Options.Editing = False
           VisibleForCustomization = False
           Width = 40
+        end
+        object MaincolisFirst: TcxGridDBColumn
+          Caption = '1-'#1074#1099#1073#1086#1088
+          DataBinding.FieldName = 'isFirst'
+          Options.Editing = False
+          Width = 60
+        end
+        object MaincolisSecond: TcxGridDBColumn
+          Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
+          DataBinding.FieldName = 'isSecond'
+          Options.Editing = False
+          Width = 60
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -753,6 +764,16 @@ inherited MainCashForm: TMainCashForm
       end
       item
         ColorColumn = MainColReserved
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MaincolisFirst
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MaincolisSecond
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end>

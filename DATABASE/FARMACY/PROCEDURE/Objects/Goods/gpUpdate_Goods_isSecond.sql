@@ -18,14 +18,21 @@ BEGIN
    END IF;
 
    vbUserId := lpGetUserBySession (inSession);
+
   
    IF inisSecond = TRUE 
    THEN
-      outColor = zc_Color_Red();  --16380671
+      outColor = 10965163  ; --zc_Color_Red();  --16380671
    ELSE 
-      outColor = zc_Color_White();
+      IF (select COALESCE(ObjectBoolean.ValueData, False) FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Goods_First() AND ObjectBoolean.ObjectId = inId) = True
+      THEN
+          outColor = zc_Color_GreenL();
+      ELSE
+          outColor = zc_Color_White();
+      END IF;
    END IF;
 
+   
 
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Second(), inId, inisSecond);
 

@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MinimumLot TFloat, ReferCode TFloat, ReferPrice TFloat, Price TFloat, 
                isClose boolean, 
                isTOP boolean, PercentMarkup TFloat,  isUpload Boolean,
+               isFirst boolean, isSecond boolean, 
                isErased boolean
                ) AS
 $BODY$
@@ -51,6 +52,8 @@ BEGIN
            , false         AS isTOP
            , 0::TFloat     AS PercentMarkup
            , false         AS isUpload
+           , false         AS isFirst
+           , false         AS isSecond
            , CAST (NULL AS Boolean) AS isErased
 
        FROM (SELECT lfGet_ObjectCode_byRetail (vbObjectId, 0, zc_Object_Goods()) AS GoodsCodeIntNew) AS Object_Goods
@@ -86,6 +89,9 @@ BEGIN
           , Object_Goods_View.PercentMarkup  AS PercentMarkup
 
           , Object_Goods_View.IsUpload       AS isUpload
+
+          , Object_Goods_View.isFirst        AS isFirst
+          , Object_Goods_View.isSecond       AS isSecond
           
           , Object_Goods_View.isErased       AS isErased
           
@@ -109,6 +115,7 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.04.16         *
  25.03.16                                        *
  10.06.15                        *  
  23.03.15                        *  

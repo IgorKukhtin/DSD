@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , isErased boolean
-             , isClose boolean, isFirst boolean
+             , isClose boolean, isFirst boolean , isSecond boolean
              ) AS
 $BODY$
 DECLARE
@@ -78,6 +78,7 @@ BEGIN
                ,NULL::Boolean                    AS isErased
                ,NULL::Boolean                    AS isClose 
                ,NULL::Boolean                    AS isFirst 
+               ,NULL::Boolean                    AS isSecond 
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -126,6 +127,7 @@ BEGIN
 
                , Object_Goods_View.isClose
                , Object_Goods_View.isFirst
+               , Object_Goods_View.isSecond
                
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
@@ -201,6 +203,7 @@ BEGIN
 
                , Object_Goods_View.isClose
                , Object_Goods_View.isFirst
+               , Object_Goods_View.isSecond
                
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
@@ -238,6 +241,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 12.04.16         *
  13.03.16         * убираем историю
  23.02.16         *
  22.12.15                                                         *
