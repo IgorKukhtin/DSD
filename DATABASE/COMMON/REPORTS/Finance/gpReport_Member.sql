@@ -122,35 +122,41 @@ BEGIN
                 GROUP BY tmpContainer.Id, tmpContainer.Amount, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId
                UNION ALL
                 SELECT tmpContainer.Id AS ContainerId, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId
-                     , CASE WHEN Movement.DescId = zc_Movement_Income()
+                     , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
                                  THEN MovementLinkObject_From.ObjectId
-                            WHEN Movement.DescId = zc_Movement_PersonalAccount()
-                                 THEN MovementItem.ObjectId
-                            WHEN Movement.DescId = zc_Movement_PersonalReport()
+
+                            WHEN MIContainer.MovementDescId = zc_Movement_PersonalAccount()
+                                 THEN MIContainer.ObjectId_Analyzer -- MovementItem.ObjectId
+
+                            WHEN MIContainer.MovementDescId = zc_Movement_PersonalReport()
                                  THEN MILinkObject_MoneyPlace.ObjectId
-                            WHEN Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NULL
+
+                            WHEN MIContainer.MovementDescId = zc_Movement_PersonalSendCash() AND COALESCE (Container_Analyzer.ObjectId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода -- AND MIReport.MovementItemId IS NULL
                              AND tmpContainer.MemberId = ObjectLink_Personal_Member_mi.ChildObjectId
                                  THEN ObjectLink_Personal_Member.ChildObjectId
-                            WHEN Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NULL
+
+                            WHEN MIContainer.MovementDescId = zc_Movement_PersonalSendCash() AND COALESCE (Container_Analyzer.ObjectId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода -- AND MIReport.MovementItemId IS NULL
                              AND tmpContainer.MemberId = ObjectLink_Personal_Member.ChildObjectId
                                  THEN ObjectLink_Personal_Member_mi.ChildObjectId
-                            WHEN Movement.DescId = zc_Movement_Cash()
-                                 THEN MovementItem.ObjectId
+
+                            WHEN MIContainer.MovementDescId = zc_Movement_Cash()
+                                 THEN MIContainer.ObjectId_Analyzer -- MovementItem.ObjectId
+
                        END AS ObjectId_by
                      , 0 AS StartAmount
                      , 0 AS EndAmount
                      , 0 AS DebetSumm
                      , 0 AS KreditSumm
-                     , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash()) THEN MIContainer.Amount ELSE 0 END) AS MoneySumm
-                     , SUM (CASE WHEN (Movement.DescId = zc_Movement_PersonalReport()) OR (Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NOT NULL) THEN -1 * MIContainer.Amount ELSE 0 END)  AS ReportSumm
-                     , SUM (CASE WHEN Movement.DescId IN (zc_Movement_PersonalAccount(), zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS AccountSumm
-                     , SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NULL THEN MIContainer.Amount ELSE 0 END) AS SendSumm
+                     , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash()) THEN MIContainer.Amount ELSE 0 END) AS MoneySumm
+                     , SUM (CASE WHEN (MIContainer.MovementDescId = zc_Movement_PersonalReport()) OR (MIContainer.MovementDescId = zc_Movement_PersonalSendCash() AND Container_Analyzer.ObjectId = zc_Enum_Account_100301() /*MIReport.MovementItemId IS NOT NULL*/) THEN -1 * MIContainer.Amount ELSE 0 END)  AS ReportSumm
+                     , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalAccount(), zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS AccountSumm
+                     , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalSendCash() AND COALESCE (Container_Analyzer.ObjectId, 0) <> zc_Enum_Account_100301() /*MIReport.MovementItemId IS NULL*/ THEN MIContainer.Amount ELSE 0 END) AS SendSumm
                      , COALESCE (MIString_Comment.ValueData, '') AS Comment
                 FROM tmpContainer
                      LEFT JOIN MovementItemContainer AS MIContainer
                                                      ON MIContainer.ContainerId = tmpContainer.Id
                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                     LEFT JOIN MovementItemReport AS MIReport ON MIReport.MovementItemId = MIContainer.MovementItemId
+                     /*LEFT JOIN MovementItem Report AS MIReport ON MIReport.MovementItemId = MIContainer.MovementItemId
                                                              AND ((MIReport.ActiveContainerId = MIContainer.ContainerId
                                                                AND MIReport.PassiveAccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                                                AND MIContainer.Amount > 0
@@ -158,17 +164,18 @@ BEGIN
                                                                OR (MIReport.PassiveContainerId = MIContainer.ContainerId
                                                                AND MIReport.ActiveAccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                                                AND MIContainer.Amount < 0
-                                                                 ))
-                     LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
-                     LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                                                                 ))*/
+                     -- LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                     LEFT JOIN Container AS Container_Analyzer ON Container_Analyzer.Id = MIContainer.ContainerId_Analyzer
+
                      LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_mi
-                                          ON ObjectLink_Personal_Member_mi.ObjectId = MovementItem.ObjectId
+                                          ON ObjectLink_Personal_Member_mi.ObjectId = MIContainer.ObjectId_Analyzer -- MovementItem.ObjectId
                                          AND ObjectLink_Personal_Member_mi.DescId = zc_ObjectLink_Personal_Member()
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                  ON MovementLinkObject_From.MovementId = MIContainer.MovementId
                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
-                                                  ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                                  ON MovementLinkObject_Personal.MovementId = MIContainer.MovementId
                                                  AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
                      LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                           ON ObjectLink_Personal_Member.ObjectId = MovementLinkObject_Personal.ObjectId
@@ -180,20 +187,21 @@ BEGIN
                                                   ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
                                                  AND MIString_Comment.DescId = zc_MIString_Comment()
                 GROUP BY tmpContainer.Id, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId
-                     , CASE WHEN Movement.DescId = zc_Movement_Income()
+                     , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
                                  THEN MovementLinkObject_From.ObjectId
-                            WHEN Movement.DescId = zc_Movement_PersonalAccount()
-                                 THEN MovementItem.ObjectId
-                            WHEN Movement.DescId = zc_Movement_PersonalReport()
+                            WHEN MIContainer.MovementDescId = zc_Movement_PersonalAccount()
+                                 THEN MIContainer.ObjectId_Analyzer -- MovementItem.ObjectId
+                            WHEN MIContainer.MovementDescId = zc_Movement_PersonalReport()
                                  THEN MILinkObject_MoneyPlace.ObjectId
-                            WHEN Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NULL
+                            WHEN MIContainer.MovementDescId = zc_Movement_PersonalSendCash() AND COALESCE (Container_Analyzer.ObjectId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода -- AND MIReport.MovementItemId IS NULL
                              AND tmpContainer.MemberId = ObjectLink_Personal_Member_mi.ChildObjectId
                                  THEN ObjectLink_Personal_Member.ChildObjectId
-                            WHEN Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NULL
+
+                            WHEN MIContainer.MovementDescId = zc_Movement_PersonalSendCash() AND COALESCE (Container_Analyzer.ObjectId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода -- AND MIReport.MovementItemId IS NULL
                              AND tmpContainer.MemberId = ObjectLink_Personal_Member.ChildObjectId
                                  THEN ObjectLink_Personal_Member_mi.ChildObjectId
-                            WHEN Movement.DescId = zc_Movement_Cash()
-                                 THEN MovementItem.ObjectId
+                            WHEN MIContainer.MovementDescId = zc_Movement_Cash()
+                                 THEN MIContainer.ObjectId_Analyzer -- MovementItem.ObjectId
                        END
                      , COALESCE (MIString_Comment.ValueData, '')
                ) AS Operation_all
@@ -239,4 +247,4 @@ ALTER FUNCTION gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer,
 */
 
 -- тест
--- SELECT * FROM gpReport_Member (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
+-- SELECT * FROM gpReport_Member (inStartDate:= '01.08.2016', inEndDate:= '05.08.2016', inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');

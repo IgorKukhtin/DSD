@@ -287,7 +287,7 @@ BEGIN
                                                                       AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
                                WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                               ) AS tmpListContainer
-                              JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpListContainer.ReportContainerId
+                              JOIN MovementItem Report AS MIReport ON MIReport.ReportContainerId = tmpListContainer.ReportContainerId
                                                                  AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
 
                               JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId

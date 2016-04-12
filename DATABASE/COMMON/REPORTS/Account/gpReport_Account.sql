@@ -1,5 +1,7 @@
 -- Function: gpReport_Account ()
 
+DROP FUNCTION IF EXISTS gpReport_Account_Print (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Account_no_otomize (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 

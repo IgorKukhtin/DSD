@@ -35,7 +35,6 @@ BEGIN
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
      THEN
-         vbUserId:= NULL;
          RETURN;
      END IF;
 
@@ -90,10 +89,10 @@ BEGIN
                   , Movement.DescId        AS MovementDescId
                   , Movement.InvNumber
                   , Movement.StatusId
-                  , MIReport.MovementId
-                  , MIReport.OperDate
-                  , MIReport.MovementItemId
-                  , MIReport.Amount * CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN -1 ELSE 1 END AS Amount
+                  , MIContainer.MovementId
+                  , MIContainer.OperDate
+                  , MIContainer.MovementItemId
+                  , MIContainer.Amount /** CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN -1 ELSE 1 END*/ AS Amount
                   , CLO_InfoMoney.ObjectId AS InfoMoneyId
                   , CLO_Branch.ObjectId    AS BranchId
                   -- , 0 AS UnitId
@@ -101,12 +100,12 @@ BEGIN
                   , CLO_Car.ObjectId       AS CarId
 
              FROM ContainerLinkObject AS CLO_Member
-                  INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = CLO_Member.ContainerId
-                  INNER JOIN MovementItemReport AS MIReport 
-                                                ON MIReport.ReportContainerId = ReportContainerLink.ReportContainerId
-                                               AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
-                                               AND MIReport.Amount <> 0
-                  LEFT JOIN Movement ON Movement.Id = MIReport.MovementId
+                  INNER JOIN MovementItemContainer AS MIContainer
+                                                   ON MIContainer.ContainerId = CLO_Member.ContainerId
+                                                  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                  AND MIContainer.DescId = zc_MIContainer_Summ()
+                                                  AND MIContainer.Amount <> 0
+                  LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                   LEFT JOIN ContainerLinkObject AS CLO_Goods
                                                 ON CLO_Goods.ContainerId = CLO_Member.ContainerId
                                                AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
@@ -119,16 +118,16 @@ BEGIN
                   LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                 ON CLO_Branch.ContainerId = CLO_Member.ContainerId
                                                AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-                  LEFT JOIN ContainerLinkObject AS ContainerLO_Member_inf ON ContainerLO_Member_inf.ContainerId = CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.ActiveContainerId ELSE MIReport.PassiveContainerId END
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_Member_inf ON ContainerLO_Member_inf.ContainerId = MIContainer.ContainerId_Analyzer
                                                                          AND ContainerLO_Member_inf.DescId = zc_ContainerLinkObject_Member()
                                                                          AND ContainerLO_Member_inf.ObjectId > 0
-                  LEFT JOIN ContainerLinkObject AS ContainerLO_Cash_inf ON ContainerLO_Cash_inf.ContainerId = CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.ActiveContainerId ELSE MIReport.PassiveContainerId END
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_Cash_inf ON ContainerLO_Cash_inf.ContainerId = MIContainer.ContainerId_Analyzer
                                                                        AND ContainerLO_Cash_inf.DescId = zc_ContainerLinkObject_Cash()
                                                                        AND ContainerLO_Cash_inf.ObjectId > 0
-                  LEFT JOIN ContainerLinkObject AS ContainerLO_BankAccount_inf ON ContainerLO_BankAccount_inf.ContainerId = CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.ActiveContainerId ELSE MIReport.PassiveContainerId END
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_BankAccount_inf ON ContainerLO_BankAccount_inf.ContainerId = MIContainer.ContainerId_Analyzer
                                                                               AND ContainerLO_BankAccount_inf.DescId = zc_ContainerLinkObject_BankAccount()
                                                                               AND ContainerLO_BankAccount_inf.ObjectId > 0
-                  LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical_inf ON ContainerLO_Juridical_inf.ContainerId = CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.ActiveContainerId ELSE MIReport.PassiveContainerId END
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical_inf ON ContainerLO_Juridical_inf.ContainerId = MIContainer.ContainerId_Analyzer
                                                                             AND ContainerLO_Juridical_inf.DescId = zc_ContainerLinkObject_Juridical()
                                                                             AND ContainerLO_Juridical_inf.ObjectId > 0
              WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()

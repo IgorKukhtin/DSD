@@ -209,7 +209,7 @@ BEGIN
                           , MILinkObject_Branch.ObjectId AS BranchId_inf
                      FROM tmpContainer
                           JOIN ReportContainerLink ON ReportContainerLink.ContainerId = tmpContainer.ContainerId
-                          JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = ReportContainerLink.ReportContainerId
+                          JOIN MovementItem Report AS MIReport ON MIReport.ReportContainerId = ReportContainerLink.ReportContainerId
                                                              AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                            ON MILinkObject_Route.MovementItemId = MIReport.MovementItemId

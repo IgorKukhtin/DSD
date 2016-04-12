@@ -155,10 +155,10 @@ var i: Integer;
     Hour_calc, Minute_calc: word;
     StartTime_calc,EndTime_calc:TDateTime;
 begin
-     //находит »ндекс в массиве по значению UserName
+     //находит »ндекс в массиве по значению UserName + JuridicalMail
     Result:=-1;
     for i := 0 to Length(ArrayList)-1 do
-      if (ArrayList[i].UserName = UserName) and (AnsiUpperCase(ArrayList[i].JuridicalMail) = AnsiUpperCase(JuridicalMail))
+      if (ArrayList[i].UserName = UserName) and (System.Pos(AnsiUpperCase(JuridicalMail), AnsiUpperCase(ArrayList[i].JuridicalMail)) > 0)
       then begin Result:=i;break;end;
     //
     // проверка - текущее врем€

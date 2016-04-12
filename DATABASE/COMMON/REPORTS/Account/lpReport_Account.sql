@@ -260,94 +260,82 @@ BEGIN
                FROM (SELECT tmpContainer.BusinessId
                           , tmpContainer.ContainerId
                           , tmpContainer.AccountId
-                          , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()
-                                      THEN MIReport.PassiveContainerId
-                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
-                                      THEN MIReport.ActiveContainerId
-                                 ELSE 0
-                            END AS ContainerId_inf
-                          , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()
-                                      THEN MIReport.PassiveAccountId
-                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
-                                      THEN MIReport.ActiveAccountId
-                            END AS AccountId_inf
+                          , MIContainer.ContainerId_Analyzer AS ContainerId_inf
+                          , Container.ObjectId AS AccountId_inf
                           , CASE WHEN tmpContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                       THEN tmpContainer.ContainerId
-                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()
-                                      THEN MIReport.PassiveContainerId
-                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
-                                      THEN MIReport.ActiveContainerId
-                                 ELSE 0
+                                 ELSE MIContainer.ContainerId_Analyzer
                             END AS ContainerId_ProfitLoss
-                          , SUM (CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() AND MIReport.ActiveAccountId <> zc_Enum_Account_100301() -- прибыль текущего периода
-                                           THEN MIReport.Amount
+                          , SUM (CASE WHEN MIContainer.isActive = TRUE AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
+                                           THEN MIContainer.Amount
                                       ELSE 0
                                  END) AS SummIn
-                          , SUM (CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
-                                           THEN MIReport.Amount
-                                      WHEN MIReport.ActiveAccountId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                           THEN -1 * MIReport.Amount
+                          , SUM (CASE WHEN MIContainer.isActive = FALSE OR MIContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                           THEN -1 * MIContainer.Amount
                                       ELSE 0
                                  END) AS SummOut
 
-                          , Movement.DescId                                                                  AS MovementDescId
-                          , CASE WHEN vbIsMovement = TRUE THEN Movement.Id        ELSE 0    END :: Integer   AS MovementId
-                          , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber ELSE ''   END :: TVarChar  AS InvNumber
-                          , CASE WHEN vbIsMovement = TRUE THEN MIReport.OperDate  ELSE NULL END :: TDateTime AS OperDate
+                          , Movement.DescId                                                                    AS MovementDescId
+                          , CASE WHEN vbIsMovement = TRUE THEN Movement.Id          ELSE 0    END :: Integer   AS MovementId
+                          , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END :: TVarChar  AS InvNumber
+                          , CASE WHEN vbIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDateTime AS OperDate
 
-                          , CASE WHEN vbIsMovement = TRUE THEN MovementItem.ObjectId ELSE 0 END :: Integer            AS ObjectId_inf
+                          , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer ELSE 0 END :: Integer            AS ObjectId_inf
                           , CASE WHEN vbIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END :: Integer AS MoneyPlaceId_inf
 
                           , MILinkObject_Route.ObjectId  AS RouteId_inf
                           , MILinkObject_Unit.ObjectId   AS UnitId_inf
                           , MILinkObject_Branch.ObjectId AS BranchId_inf
 
-                          , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN MIReport.Amount / ABS (MIContainer_Count.Amount) ELSE 0 END AS OperPrice
+                          , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (MIContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END AS OperPrice
 
                      FROM tmpContainer
-                          JOIN ReportContainerLink ON ReportContainerLink.ContainerId = tmpContainer.ContainerId
-                          JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = ReportContainerLink.ReportContainerId
-                                                             AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
+                          INNER JOIN MovementItemContainer AS MIContainer
+                                                           ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                          /*JOIN ReportContainerLink ON ReportContainerLink.ContainerId = tmpContainer.ContainerId
+                          JOIN MovementItem Report AS MIReport ON MIReport.ReportContainerId = ReportContainerLink.ReportContainerId
+                                                             AND MIReport.OperDate BETWEEN inStartDate AND inEndDate*/
+                          LEFT JOIN Container ON Container.Id = MIContainer.ContainerId_Analyzer
+
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
-                                                           ON MILinkObject_Route.MovementItemId = MIReport.MovementItemId
+                                                           ON MILinkObject_Route.MovementItemId = MIContainer.MovementItemId
                                                           AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                           ON MILinkObject_Unit.MovementItemId = MIReport.MovementItemId
+                                                           ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId
                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                           ON MILinkObject_Branch.MovementItemId = MIReport.MovementItemId
+                                                           ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
                                                           AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                          LEFT JOIN Movement ON Movement.Id = MIReport.MovementId
-                          LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MIReport.MovementItemId
+                          LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                          LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MIContainer.MovementItemId
                                                                               AND MIContainer_Count.DescId = zc_MIContainer_Count()
                                                                               AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_Income())
-                          LEFT JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                                           ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                           ON MILinkObject_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                           AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
 
                      WHERE (MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
                      GROUP BY tmpContainer.BusinessId
                             , tmpContainer.ContainerId
                             , tmpContainer.AccountId
-                            , ReportContainerLink.AccountKindId
-                            , MIReport.PassiveContainerId
-                            , MIReport.ActiveContainerId
-                            , MIReport.PassiveAccountId
-                            , MIReport.ActiveAccountId
-                            , Movement.DescId
-                            , CASE WHEN vbIsMovement = TRUE THEN Movement.Id        ELSE 0    END
-                            , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber ELSE ''   END
-                            , CASE WHEN vbIsMovement = TRUE THEN MIReport.OperDate  ELSE NULL END
 
-                            , CASE WHEN vbIsMovement = TRUE THEN MovementItem.ObjectId ELSE 0 END
+                            , MIContainer.ContainerId_Analyzer
+                            , Container.ObjectId
+
+                            , Movement.DescId
+                            , CASE WHEN vbIsMovement = TRUE THEN Movement.Id          ELSE 0    END
+                            , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END
+                            , CASE WHEN vbIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END
+
+                            , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer ELSE 0 END
                             , CASE WHEN vbIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END
 
                             , MILinkObject_Route.ObjectId
                             , MILinkObject_Unit.ObjectId
                             , MILinkObject_Branch.ObjectId
 
-                            , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN MIReport.Amount / ABS (MIContainer_Count.Amount) ELSE 0 END
+                            , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (MIContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END
 
                      ) AS tmpMIReport
              GROUP BY tmpMIReport.BusinessId
@@ -513,4 +501,4 @@ ALTER FUNCTION lpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 0, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 0, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());

@@ -649,29 +649,69 @@ BEGIN
                        THEN _tmpItem.ObjectIntId_Analyzer
                    ELSE _tmpItem.UnitId
               END AS WhereObjectId_Analyzer -- !!!замена!!!
-            , COALESCE (tmpProfitLoss.ContainerId, _tmpItem.ContainerId) AS ContainerId_Analyzer -- статья ОПиУ или сам в себя
+            , COALESCE (tmpProfitLoss.ContainerId, tmpFind.ContainerId) AS ContainerId_Analyzer -- статья ОПиУ или Контейнер - корреспондент
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
                        THEN _tmpItem.UnitId
                    ELSE _tmpItem.ObjectIntId_Analyzer
               END AS ObjectIntId_Analyzer -- !!!замена!!!
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
             , 0                                   AS ParentId
-            , _tmpItem.OperSumm
+            , _tmpItem.OperSumm + COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) AS OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive
        FROM _tmpItem
             LEFT JOIN (SELECT _tmpItem.MovementItemId, MAX (_tmpItem.ContainerId) AS ContainerId FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() GROUP BY _tmpItem.MovementItemId
-                     ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem.MovementItemId
-                                       AND _tmpItem.AccountId <> zc_Enum_Account_100301()
+                      ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem.MovementItemId
+                                        AND _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
+            LEFT JOIN (SELECT _tmpItem.MovementItemId, NOT _tmpItem.IsActive AS IsActive, MAX (_tmpItem.ContainerId) AS ContainerId FROM _tmpItem WHERE _tmpItem.AccountId <> zc_Enum_Account_100301() GROUP BY _tmpItem.MovementItemId, _tmpItem.IsActive
+                      ) AS tmpFind ON tmpFind.MovementItemId = _tmpItem.MovementItemId
+                                  AND tmpFind.IsActive       = _tmpItem.IsActive
+                                  AND _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
+            LEFT JOIN _tmpItem AS _tmpItem_Diff ON _tmpItem_Diff.ContainerId_Diff <> 0 AND _tmpItem_Diff.MovementItemId = _tmpItem.MovementItemId
+                                               AND _tmpItem.ObjectDescId = zc_Object_BankAccount()
+                                               AND _tmpItem.ContainerId_Diff = 0
       UNION ALL
-       -- это !!!одна!!! проводка для "курсовой разницы"
+       -- это !!!одна!!! проводка для "курсовой разницы" - "zc_Object_BankAccount"
+       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
+            , _tmpItem.ContainerId
+            , _tmpItem.AccountId                  AS AccountId
+            , zc_Enum_AnalyzerId_ProfitLoss()     AS AnalyzerId -- то что относится к ОПиУ, кроме проводок с товарами
+            , _tmpItem.ObjectId                   AS ObjectId_Analyzer
+            , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
+                       THEN _tmpItem.ObjectIntId_Analyzer
+                   ELSE _tmpItem.UnitId
+              END AS WhereObjectId_Analyzer  -- !!!замена!!!
+            , _tmpItem_Diff.ContainerId_Diff -- Контейнер - корреспондент (статья ОПиУ)
+            , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
+                       THEN _tmpItem.UnitId
+                   ELSE _tmpItem.ObjectIntId_Analyzer
+              END AS ObjectIntId_Analyzer -- !!!замена!!!
+            , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
+            , 0                                   AS ParentId
+            , -1 * COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) AS OperSumm
+            , _tmpItem.OperDate
+            , _tmpItem.IsActive  -- !!!такая же!!!
+       FROM _tmpItem
+            LEFT JOIN (SELECT _tmpItem.MovementItemId, MAX (_tmpItem.ContainerId) AS ContainerId FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() GROUP BY _tmpItem.MovementItemId
+                      ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem.MovementItemId
+                                        AND _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
+            LEFT JOIN (SELECT _tmpItem.MovementItemId, NOT _tmpItem.IsActive AS IsActive, MAX (_tmpItem.ContainerId) AS ContainerId FROM _tmpItem WHERE _tmpItem.AccountId <> zc_Enum_Account_100301() GROUP BY _tmpItem.MovementItemId, _tmpItem.IsActive
+                      ) AS tmpFind ON tmpFind.MovementItemId = _tmpItem.MovementItemId
+                                  AND tmpFind.IsActive       = _tmpItem.IsActive
+                                  AND _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
+            INNER JOIN _tmpItem AS _tmpItem_Diff ON _tmpItem_Diff.ContainerId_Diff <> 0 AND _tmpItem_Diff.MovementItemId = _tmpItem.MovementItemId
+       WHERE _tmpItem.ObjectDescId = zc_Object_BankAccount()
+         AND _tmpItem.ContainerId_Diff = 0
+
+      UNION ALL
+       -- это !!!одна!!! проводка для "курсовой разницы" - "Прибыль"
        SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Diff
             , zc_Enum_Account_100301()            AS AccountId -- прибыль текущего периода
             , 0                                   AS AnalyzerId
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
             , _tmpItem.UnitId                     AS WhereObjectId_Analyzer
-            , _tmpItem.ContainerId_Diff           AS ContainerId_Analyzer
+            , _tmpItem_BankAccount.ContainerId    AS ContainerId_Analyzer -- корреспондент
             , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
             , 0                                   AS ParentId
@@ -679,6 +719,9 @@ BEGIN
             , _tmpItem.OperDate
             , FALSE AS IsActive -- !!!всегда по Кредиту!!!
        FROM _tmpItem
+             INNER JOIN _tmpItem AS _tmpItem_BankAccount ON _tmpItem_BankAccount.MovementItemId   = _tmpItem.MovementItemId
+                                                        AND _tmpItem_BankAccount.ObjectDescId     = zc_Object_BankAccount()
+                                                        AND _tmpItem_BankAccount.ContainerId_Diff = 0
        WHERE _tmpItem.ContainerId_Diff <> 0
       UNION ALL
        -- это !!!одна!!! проводка для "забалансового" Валютного счета 

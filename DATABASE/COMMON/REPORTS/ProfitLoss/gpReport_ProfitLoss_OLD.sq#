@@ -78,7 +78,7 @@ BEGIN
                                  , MILinkObject_Route.ObjectId  AS RouteId_inf
                             FROM tmpContainer
 
-                                 INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpContainer.ReportContainerId
+                                 INNER JOIN MovementItem Report AS MIReport ON MIReport.ReportContainerId = tmpContainer.ReportContainerId
                                                                           AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                   ON MILinkObject_Unit.MovementItemId = MIReport.MovementItemId

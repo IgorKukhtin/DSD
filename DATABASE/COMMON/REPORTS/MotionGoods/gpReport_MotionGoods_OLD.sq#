@@ -507,7 +507,7 @@ BEGIN
                                  FROM tmpContainer_Summ
                                       LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId_Summ
                                                                                     AND MIContainer.OperDate >= inStartDate
-                                      /*LEFT JOIN MovementItemReport AS MIContainer ON MIContainer.ReportContainerId = tmpContainer_Summ.ReportContainerId
+                                      /*LEFT JOIN MovementItem Report AS MIContainer ON MIContainer.ReportContainerId = tmpContainer_Summ.ReportContainerId
                                                                                  AND MIContainer.OperDate >= inStartDate*/
                                       LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
                                                                 ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId

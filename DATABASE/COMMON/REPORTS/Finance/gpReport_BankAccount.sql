@@ -187,8 +187,10 @@ BEGIN
                 , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
                 , 0                         AS StartAmount
                 , 0                         AS EndAmount
-                , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm
-                , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm
+                  -- нужен OR ... т.к. дл€ ќѕи” надо проводки разделить, и там будет другой знак
+                , SUM (CASE WHEN (MIContainer.Amount > 0 OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss())) AND NOT (MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm
+                  -- нужен AND ... т.к. дл€ ќѕи” надо проводки разделить, и там будет другой знак
+                , SUM (CASE WHEN (MIContainer.Amount < 0 OR (MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss())) AND NOT (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm
                 , 0                         AS StartAmount_Currency
                 , 0                         AS EndAmount_Currency
                 , 0                         AS DebetSumm_Currency
@@ -293,45 +295,50 @@ BEGIN
                 , 0                         AS EndAmount_Currency
                 , 0                         AS DebetSumm_Currency
                 , 0                         AS KreditSumm_Currency
-                , SUM (CASE WHEN MIReport.ActiveContainerId = tmpContainer.ContainerId THEN 1 ELSE -1 END * MIReport.Amount ) AS Summ_Currency
-                , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIReport.MovementId ELSE 0 END AS MovementId
+                -- , SUM (CASE WHEN MIReport.ActiveContainerId = tmpContainer.ContainerId THEN 1 ELSE -1 END * MIReport.Amount ) AS Summ_Currency
+                , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_Currency
+                , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId /*MIReport.MovementId*/ ELSE 0 END AS MovementId
                 , COALESCE (MIString_Comment.ValueData, '') AS Comment
            FROM (SELECT tmpContainer.*
-                      , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN zc_Enum_AccountKind_Passive() ELSE zc_Enum_AccountKind_Active() END AccountKindId_find
-                      , ReportContainerLink.ReportContainerId
+                      -- , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN zc_Enum_AccountKind_Passive() ELSE zc_Enum_AccountKind_Active() END AccountKindId_find
+                      -- , ReportContainerLink.ReportContainerId
                  FROM tmpContainer
-                      INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = tmpContainer.ContainerId
+                      -- INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = tmpContainer.ContainerId
                 ) AS tmpContainer
-                INNER JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = tmpContainer.ReportContainerId
+                /*INNER JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = tmpContainer.ReportContainerId
                                               AND ReportContainerLink.AccountKindId = tmpContainer.AccountKindId_find
                                               AND ReportContainerLink.AccountId = zc_Enum_Account_100301()
-                INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpContainer.ReportContainerId
+                INNER JOIN MovementItem Report AS MIReport ON MIReport.ReportContainerId = tmpContainer.ReportContainerId
                                                          AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
-                                                         AND MIReport.MovementDescId <> zc_Movement_Currency()
+                                                         AND MIReport.MovementDescId <> zc_Movement_Currency()*/
+                INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                               AND MIContainer.MovementDescId <> zc_Movement_Currency()
+                                                               AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() -- то что относитс€ к ќѕи”, кроме проводок с товарами
                 LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
-                                                 ON MILO_MoneyPlace.MovementItemId = MIReport.MovementItemId
+                                                 ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                 AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
                                                 AND inIsDetail = TRUE
                 LEFT JOIN MovementItemLinkObject AS MILO_Contract
-                                                 ON MILO_Contract.MovementItemId = MIReport.MovementItemId
+                                                 ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
                                                 AND MILO_Contract.DescId = zc_MILinkObject_Contract()
                                                 AND inIsDetail = TRUE
                 LEFT JOIN MovementItemLinkObject AS MILO_Unit
-                                                 ON MILO_Unit.MovementItemId = MIReport.MovementItemId
+                                                 ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
                                                 AND MILO_Unit.DescId = zc_MILinkObject_Unit()
                                                 AND inIsDetail = TRUE
                 LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
-                                                 ON MILO_InfoMoney.MovementItemId = MIReport.MovementItemId
+                                                 ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
                                                 AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                                 AND inIsDetail = TRUE
                 LEFT JOIN MovementItemString AS MIString_Comment
-                                             ON MIString_Comment.MovementItemId = MIReport.MovementItemId
+                                             ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
                                             AND MIString_Comment.DescId = zc_MIString_Comment()
                                             AND inIsDetail = TRUE
 
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                   , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
-                  , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIReport.MovementId ELSE 0 END
+                  , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
                   , COALESCE (MIString_Comment.ValueData, '')
           ) AS Operation_all
 
@@ -380,4 +387,4 @@ ALTER FUNCTION gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpReport_BankAccount (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_BankAccount (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());

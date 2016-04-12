@@ -10,6 +10,10 @@ BEGIN
      -- таблица - Проводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpitem')
+     THEN
+         DELETE FROM _tmpItem;
+     ELSE
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat
                                , MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_Diff Integer, ProfitLossId_Diff Integer
@@ -23,6 +27,7 @@ BEGIN
                                , CurrencyId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
+     END IF;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

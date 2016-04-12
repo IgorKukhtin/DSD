@@ -125,33 +125,29 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH tmpListContainerSumm AS
-                      (SELECT tmpListContainer.JuridicalId
-                            , tmpListContainer.InfoMoneyId
-                            , CASE WHEN MIReport.MovementDescId = zc_Movement_Service() THEN MovementItem.ObjectId ELSE MovementLinkObject_Partner.ObjectId END AS PartnerId
-                            , COALESCE (MovementLinkObject_Unit.ObjectId, 0) AS UnitId
-                            , MovementItem.Id AS MovementItemId
-                            , MovementItem.MovementId
-                            , MovementItem.ObjectId AS GoodsId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                            , SUM (CASE WHEN (tmpListContainer.AccountKindId = zc_Enum_AccountKind_Active() AND inDescId = zc_Movement_Sale())
-                                              OR (tmpListContainer.AccountKindId = zc_Enum_AccountKind_Passive() AND inDescId = zc_Movement_ReturnIn())
-                                             THEN -1
-                                        ELSE 1
-                                   END * MIReport.Amount) AS SummPartner
-                            , SUM (CASE WHEN tmpListContainer.ProfitLossDirectionId <> zc_Enum_ProfitLossDirection_10200()
-                                             THEN 0
-                                        WHEN (tmpListContainer.AccountKindId = zc_Enum_AccountKind_Active() AND inDescId = zc_Movement_Sale())
-                                              OR (tmpListContainer.AccountKindId = zc_Enum_AccountKind_Passive() AND inDescId = zc_Movement_ReturnIn())
-                                             THEN 1
-                                        ELSE -1
-                                   END * MIReport.Amount) AS SummPartner_10200
-                            , SUM (CASE WHEN tmpListContainer.ProfitLossDirectionId <> zc_Enum_ProfitLossDirection_10300()
-                                             THEN 0
-                                        WHEN (tmpListContainer.AccountKindId = zc_Enum_AccountKind_Active() AND inDescId = zc_Movement_Sale())
-                                              OR (tmpListContainer.AccountKindId = zc_Enum_AccountKind_Passive() AND inDescId = zc_Movement_ReturnIn())
-                                             THEN 1
-                                        ELSE -1
-                                   END * MIReport.Amount) AS SummPartner_10300
+                      (SELECT ContainerLO_Juridical.ObjectId         AS JuridicalId
+                            , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
+                            , MIContainer.ObjectExtId_analyzer       AS PartnerId
+                            , MIContainer.WhereObjectId_analyzer     AS UnitId
+                            , MIContainer.MovementItemId
+                            , MIContainer.MovementId
+                            , MIContainer.ObjectId_analyzer          AS GoodsId
+                            , MIContainer.ObjectIntId_analyzer       AS GoodsKindId
+                               -- 1.3. Сумма, без AnalyzerId (на самом деле для OperCount_Partner)
+                            , (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() THEN  1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
+                                    WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() THEN -1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
+                                    ELSE 0
+                               END) AS SummPartner
+                             -- 5.3.2. Сумма у покупателя Разница с оптовыми ценами + Скидка Акция
+                           , (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10200(), zc_Enum_AnalyzerId_SaleSumm_10250()) THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
+                                   WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
+                                   ELSE 0
+                              END) AS SummPartner_10200
+                              -- 5.3.4. Сумма у покупателя Скидка / Наценка дополнительная
+                            , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()     THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
+                                    WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
+                                    ELSE 0
+                               END) AS SummPartner_10300
 
                             , COALESCE (MIFloat_Price.ValueData, 0)
                               -- так переводится факт цена в валюту zc_Enum_Currency_Basis
@@ -159,110 +155,100 @@ BEGIN
                               AS Price
                             , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
 
+                               -- 1.1. Кол-во, без AnalyzerId
+                            , (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount
+                                    WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Count() THEN  1 * MIContainer.Amount
+                                    ELSE 0
+                               END) AS Amount
+
+                              -- 2.1.1. Кол-во - со Скидкой за вес
+                            , (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId NOT IN (zc_Enum_AnalyzerId_SaleCount_10500()) THEN -1 * MIContainer.Amount
+                                    WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Count() THEN  1 * MIContainer.Amount
+                                    ELSE 0
+                               END) AS AmountChangePercent
+                              -- 2.1.2. Кол-во - Скидка за вес
+                            , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500() THEN -1 * MIContainer.Amount
+                                    ELSE 0
+                               END) AS Amount_10500
+
+                              -- 3.1. Кол-во Разница в весе
+                            , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200()     THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
+                                    WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() THEN 1 * MIContainer.Amount -- !!! для возврата со знаком - наоборот, т.к. приход!!!
+                                    ELSE 0
+                               END) AS Amount_40200
+
+                              -- 5.1. Кол-во у покупателя
+                            , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount
+                                    WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount
+                                    ELSE 0
+                               END) AS AmountPartner
+
+
+                              -- 5.3.1. Сумма у покупателя По прайсу
+                            , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10100()     THEN  1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
+                                    WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10700() THEN -1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
+                                    ELSE 0
+                               END) AS SummPartner_calc
+
                             , MovementBoolean_PriceWithVAT.ValueData               AS PriceWithVAT
                             , COALESCE (MovementFloat_VATPercent.ValueData, 0)     AS VATPercent
                             , COALESCE (MovementFloat_ChangePercent.ValueData, 0)  AS ChangePercent
                             , _tmpGoods.MeasureId
                             , _tmpGoods.Weight
-                       FROM (SELECT tmpProfitLoss.ProfitLossDirectionId
-                                  , ContainerLO_Juridical.ObjectId AS JuridicalId
-                                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
-                                  , ReportContainerLink.ReportContainerId
-                                  , ReportContainerLink.AccountKindId
-                                  , tmpProfitLoss.MLO_DescId
-                                  , tmpProfitLoss.MLO_Partner_DescId
-                             FROM (SELECT ProfitLossId, ProfitLossDirectionId, zc_MovementLinkObject_From() AS MLO_DescId, zc_MovementLinkObject_To() AS MLO_Partner_DescId FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = TRUE AND isCost = FALSE AND inDescId = zc_Movement_Sale()
-                                  UNION ALL
-                                   SELECT ProfitLossId, ProfitLossDirectionId, zc_MovementLinkObject_To() AS MLO_DescId, zc_MovementLinkObject_From() AS MLO_Partner_DescId FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = FALSE AND isCost = FALSE AND inDescId = zc_Movement_ReturnIn()
-                                  ) AS tmpProfitLoss
-                                  INNER JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
-                                                                 ON ContainerLO_ProfitLoss.ObjectId = tmpProfitLoss.ProfitLossId
-                                                                AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                                  INNER JOIN Container ON Container.Id = ContainerLO_ProfitLoss.ContainerId
-                                                      AND Container.ObjectId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                                      AND Container.DescId = zc_Container_Summ()
-                                  INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = ContainerLO_ProfitLoss.ContainerId
-                                  INNER JOIN ReportContainerLink AS ReportContainerLink_child ON ReportContainerLink_child.ReportContainerId = ReportContainerLink.ReportContainerId
-                                                                                             AND ReportContainerLink_child.ContainerId <> ReportContainerLink.ContainerId
-                                  INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                                                 ON ContainerLO_Juridical.ContainerId = ReportContainerLink_child.ContainerId
-                                                                AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                                                AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
-                                  INNER JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                                                 ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink_child.ContainerId
-                                                                AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                                AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
-                                  INNER JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
-                                                                 ON ContainerLinkObject_PaidKind.ContainerId = ReportContainerLink_child.ContainerId
-                                                                AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                                                AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
-                             ) AS tmpListContainer
-                             INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpListContainer.ReportContainerId
-                                                                      AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                          ON MovementLinkObject_Unit.MovementId = MIReport.MovementId
-                                                         AND MovementLinkObject_Unit.DescId = tmpListContainer.MLO_DescId
-                             LEFT JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                       FROM (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
+                             FROM Constant_ProfitLoss_AnalyzerId_View
+                             WHERE (isSale = TRUE  AND isCost = FALSE AND inDescId = zc_Movement_Sale())
+                                OR (isSale = FALSE AND isCost = FALSE AND inDescId = zc_Movement_ReturnIn())
+                             ) AS tmpAnalyzer
+                             INNER JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
+                                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                             LEFT JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
 
-                             INNER JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
-                                                    AND MovementItem.DescId = zc_MI_Master()
-                             LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
+                                                           ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_analyzer
+                                                          AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                                           ON ContainerLinkObject_InfoMoney.ContainerId = MIContainer.ContainerId_analyzer
+                                                          AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
+                                                           ON ContainerLinkObject_PaidKind.ContainerId = MIContainer.ContainerId_analyzer
+                                                          AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+
+                             LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
            
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                                          ON MovementLinkObject_Partner.MovementId = MIReport.MovementId
-                                                         AND MovementLinkObject_Partner.DescId = CASE WHEN MIReport.MovementDescId = zc_Movement_PriceCorrective() THEN zc_MovementLinkObject_Partner() ELSE tmpListContainer.MLO_Partner_DescId END
-
-                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                         ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                         ON MIFloat_CountForPrice.MovementItemId = MIContainer.MovementItemId
                                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
                              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                       ON MovementBoolean_PriceWithVAT.MovementId =  MIReport.MovementId
+                                                       ON MovementBoolean_PriceWithVAT.MovementId =  MIContainer.MovementId
                                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
                              LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                                     ON MovementFloat_VATPercent.MovementId =  MIReport.MovementId
+                                                     ON MovementFloat_VATPercent.MovementId =  MIContainer.MovementId
                                                     AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
                              LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                                     ON MovementFloat_ChangePercent.MovementId = MIReport.MovementId
+                                                     ON MovementFloat_ChangePercent.MovementId = MIContainer.MovementId
                                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
                              LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                                     ON MovementFloat_CurrencyValue.MovementId =  MIReport.MovementId
+                                                     ON MovementFloat_CurrencyValue.MovementId =  MIContainer.MovementId
                                                     AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
                              LEFT JOIN MovementFloat AS MovementFloat_ParValue
-                                                     ON MovementFloat_ParValue.MovementId = MIReport.MovementId
+                                                     ON MovementFloat_ParValue.MovementId = MIContainer.MovementId
                                                     AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                                          ON MovementLinkObject_CurrencyDocument.MovementId = MIReport.MovementId
+                                                          ON MovementLinkObject_CurrencyDocument.MovementId = MIContainer.MovementId
                                                          AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
 
-                       WHERE (_tmpUnit.UnitId > 0 OR vbIsUnit = FALSE)
+                       WHERE (_tmpUnit.UnitId   > 0 OR vbIsUnit = FALSE)
                          AND (_tmpGoods.GoodsId > 0 OR vbIsGoods = FALSE)
-                       GROUP BY tmpListContainer.JuridicalId
-                              , tmpListContainer.InfoMoneyId
-                              , CASE WHEN MIReport.MovementDescId = zc_Movement_Service() THEN MovementItem.ObjectId ELSE MovementLinkObject_Partner.ObjectId END
-                              , MovementLinkObject_Unit.ObjectId
-                              , MovementItem.Id
-                              , MovementItem.MovementId
-                              , MovementItem.ObjectId
-                              , MILinkObject_GoodsKind.ObjectId
-                              , MIFloat_Price.ValueData
-                              , MIFloat_CountForPrice.ValueData
-                              , MovementBoolean_PriceWithVAT.ValueData
-                              , MovementFloat_VATPercent.ValueData
-                              , MovementFloat_ChangePercent.ValueData
-                              , MovementLinkObject_CurrencyDocument.ObjectId
-                              , MovementFloat_CurrencyValue.ValueData
-                              , MovementFloat_ParValue.ValueData
-                              , _tmpGoods.MeasureId
-                              , _tmpGoods.Weight
+                         AND (ContainerLinkObject_PaidKind.ObjectId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
+                         AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+                         AND (ContainerLO_Juridical.ObjectId         = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                       )
        , tmpOperationGroup_all AS
                 (SELECT tmpListContainerSumm.MovementId
@@ -292,6 +278,7 @@ BEGIN
                       , SUM (tmpListContainerSumm.SummPartner_calc)    AS SummPartner_calc
                       , SUM (tmpListContainerSumm.SummPartner_10200)   AS SummPartner_10200
                       , SUM (tmpListContainerSumm.SummPartner_10300)   AS SummPartner_10300
+
                  FROM (SELECT tmpListContainerSumm.MovementId
                             , tmpListContainerSumm.JuridicalId
                             , tmpListContainerSumm.PartnerId
@@ -301,104 +288,29 @@ BEGIN
                             , tmpListContainerSumm.GoodsKindId
                             , tmpListContainerSumm.MeasureId
                             , tmpListContainerSumm.Price
-                            , SUM (tmpListContainerSumm.SummPartner)       AS SummPartner
-                            , SUM (tmpListContainerSumm.SummPartner_10200) AS SummPartner_10200
-                            , SUM (tmpListContainerSumm.SummPartner_10300) AS SummPartner_10300
-                            , 0 AS Amount
-                            , 0 AS Amount_Sh
-                            , 0 AS AmountChangePercent
-                            , 0 AS AmountChangePercent_Sh
-                            , 0 AS AmountPartner
-                            , 0 AS AmountPartner_Sh
-                            , 0 AS Amount_10500
-                            , 0 AS Amount_10500_Sh
-                            , 0 AS Amount_40200
-                            , 0 AS Amount_40200_Sh
-                            , 0 AS SummPartner_calc
+                            , (tmpListContainerSumm.SummPartner)       AS SummPartner
+                            , (tmpListContainerSumm.SummPartner_10200) AS SummPartner_10200
+                            , (tmpListContainerSumm.SummPartner_10300) AS SummPartner_10300
+
+                            , (tmpListContainerSumm.Amount * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS Amount
+                            , (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Amount ELSE 0 END) AS Amount_Sh
+
+                            , (tmpListContainerSumm.AmountChangePercent * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS AmountChangePercent
+                            , (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.AmountChangePercent ELSE 0 END) AS AmountChangePercent_Sh
+
+                            , (tmpListContainerSumm.Amount_10500 * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS Amount_10500
+                            , (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Amount_10500 ELSE 0 END) AS Amount_10500_Sh
+
+                            , (tmpListContainerSumm.Amount_40200 * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS Amount_40200
+                            , (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Amount_40200 ELSE 0 END) AS Amount_40200_Sh
+
+                            , (tmpListContainerSumm.AmountPartner * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS AmountPartner
+                            , (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.AmountPartner ELSE 0 END) AS AmountPartner_Sh
+
+                            , tmpListContainerSumm.SummPartner_calc
+
                        FROM tmpListContainerSumm
-                       GROUP BY tmpListContainerSumm.MovementId
-                              , tmpListContainerSumm.JuridicalId
-                              , tmpListContainerSumm.PartnerId
-                              , tmpListContainerSumm.InfoMoneyId
-                              , tmpListContainerSumm.UnitId
-                              , tmpListContainerSumm.GoodsId
-                              , tmpListContainerSumm.GoodsKindId
-                              , tmpListContainerSumm.MeasureId
-                              , tmpListContainerSumm.Price
-                      UNION ALL
-                       SELECT tmpListContainerSumm.MovementId
-                            , tmpListContainerSumm.JuridicalId
-                            , tmpListContainerSumm.PartnerId
-                            , tmpListContainerSumm.InfoMoneyId
-                            , tmpListContainerSumm.UnitId
-                            , tmpListContainerSumm.GoodsId
-                            , tmpListContainerSumm.GoodsKindId
-                            , tmpListContainerSumm.MeasureId
-                            , tmpListContainerSumm.Price
-                            , 0 AS SummPartner
-                            , 0 AS SummPartner_10200
-                            , 0 AS SummPartner_10300
-                            , SUM (MIContainer.Amount * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS Amount
-                            , SUM (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END) AS Amount_Sh
-
-                            , SUM (CASE WHEN                                                      MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800(), zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS AmountChangePercent
-                            , SUM (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800(), zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END) AS AmountChangePercent_Sh
-
-                            , SUM (CASE WHEN                                                      MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS AmountPartner
-                            , SUM (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END) AS AmountPartner_Sh
-
-                            , SUM (CASE WHEN                                                      MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10500()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END  * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS Amount_10500
-                            , SUM (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10500()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END) AS Amount_10500_Sh
-
-                            , SUM (CASE WHEN                                                      MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS Amount_40200
-                            , SUM (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END) AS Amount_40200_Sh
-
-                            , SUM (CASE WHEN tmpListContainerSumm.PriceWithVAT = TRUE OR tmpListContainerSumm.VATPercent = 0
-                                                  -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки для Суммы округленной до 2-х знаков
-                                             THEN CASE WHEN tmpListContainerSumm.ChangePercent < 0 THEN CAST ( (1 + tmpListContainerSumm.ChangePercent / 100) * CAST (tmpListContainerSumm.Price / tmpListContainerSumm.CountForPrice
-                                                          -- * CASE WHEN COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN 1 ELSE CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_CurrencyValue.ValueData / MovementFloat_ParValue.ValueData ELSE 0 END END
-                                                          * CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800(), zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END
-                                                            AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                                                       WHEN tmpListContainerSumm.ChangePercent > 0 THEN CAST ( (1 + tmpListContainerSumm.ChangePercent / 100) * CAST (tmpListContainerSumm.Price / tmpListContainerSumm.CountForPrice
-                                                          -- * CASE WHEN COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN 1 ELSE CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_CurrencyValue.ValueData / MovementFloat_ParValue.ValueData ELSE 0 END END
-                                                          * CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800(), zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END
-                                                            AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                                                       ELSE CAST (tmpListContainerSumm.Price / tmpListContainerSumm.CountForPrice
-                                                          -- * CASE WHEN COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN 1 ELSE CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_CurrencyValue.ValueData / MovementFloat_ParValue.ValueData ELSE 0 END END
-                                                          * CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800(), zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END
-                                                            AS NUMERIC (16, 2))
-                                                  END
-                                             -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но скидка/наценка учитывается в цене!!!
-                                        ELSE CASE WHEN tmpListContainerSumm.ChangePercent < 0 THEN CAST ( (1 + tmpListContainerSumm.ChangePercent / 100) * CAST ((1 + tmpListContainerSumm.VATPercent / 100) * CAST (tmpListContainerSumm.Price / tmpListContainerSumm.CountForPrice
-                                                          -- * CASE WHEN COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN 1 ELSE CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_CurrencyValue.ValueData / MovementFloat_ParValue.ValueData ELSE 0 END END
-                                                          * CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800(), zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END
-                                                            AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                                                  WHEN tmpListContainerSumm.ChangePercent > 0 THEN CAST ( (1 + tmpListContainerSumm.ChangePercent / 100) * CAST ((1 + tmpListContainerSumm.VATPercent / 100) * CAST (tmpListContainerSumm.Price / tmpListContainerSumm.CountForPrice
-                                                          -- * CASE WHEN COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN 1 ELSE CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_CurrencyValue.ValueData / MovementFloat_ParValue.ValueData ELSE 0 END END
-                                                          * CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800(), zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END
-                                                            AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                                                  ELSE CAST ((1 + tmpListContainerSumm.VATPercent / 100) * CAST (tmpListContainerSumm.Price / tmpListContainerSumm.CountForPrice
-                                                          -- * CASE WHEN COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN 1 ELSE CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_CurrencyValue.ValueData / MovementFloat_ParValue.ValueData ELSE 0 END END
-                                                          * CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800(), zc_Enum_AnalyzerId_SaleCount_40200(), zc_Enum_AnalyzerId_ReturnInCount_40200()) THEN MIContainer.Amount ELSE 0 END * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END
-                                                            AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                                             END
-                                             -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС округленной до 2-х знаков, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но скидка/наценка учитывается в цене!!!
-                                             -- ...
-                                   END) AS SummPartner_calc
-                       FROM tmpListContainerSumm
-                            LEFT JOIN MovementItemContainer AS MIContainer
-                                                            ON MIContainer.MovementItemId = tmpListContainerSumm.MovementItemId
-                                                           AND MIContainer.DescId = zc_MIContainer_Count()
-                       GROUP BY tmpListContainerSumm.MovementId
-                              , tmpListContainerSumm.JuridicalId
-                              , tmpListContainerSumm.PartnerId
-                              , tmpListContainerSumm.InfoMoneyId
-                              , tmpListContainerSumm.UnitId
-                              , tmpListContainerSumm.GoodsId
-                              , tmpListContainerSumm.GoodsKindId
-                              , tmpListContainerSumm.MeasureId
-                              , tmpListContainerSumm.Price
-                        ) AS tmpListContainerSumm
+                       ) AS tmpListContainerSumm
                  GROUP BY tmpListContainerSumm.MovementId
                         , tmpListContainerSumm.JuridicalId
                         , tmpListContainerSumm.PartnerId
@@ -435,7 +347,7 @@ BEGIN
                       , SUM (tmpListContainerSumm.SummPartner)         AS SummPartner
                       , SUM (tmpListContainerSumm.SummPartner_10200)   AS SummPartner_10200
                       , SUM (tmpListContainerSumm.SummPartner_10300)   AS SummPartner_10300
-                      , SUM (CASE WHEN tmpListContainerSumm.AmountChangePercent = tmpListContainerSumm.AmountPartner THEN tmpListContainerSumm.SummPartner ELSE tmpListContainerSumm.SummPartner_calc END) AS SummPartner_calc
+                      , SUM (tmpListContainerSumm.SummPartner_calc) AS SummPartner_calc
                  FROM tmpOperationGroup_all AS tmpListContainerSumm
                       LEFT JOIN Movement ON Movement.Id = tmpListContainerSumm.MovementId
                       LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -541,4 +453,4 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
--- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin());
+-- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin());
