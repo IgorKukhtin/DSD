@@ -261,7 +261,6 @@ uses
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Kind\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
   MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm},
-  JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   JuridicalDetailsTest in '..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas',
   WorkTimeKind_Object in '..\..\Forms\Kind\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
   Calendar in '..\..\Forms\Guides\Calendar.pas' {CalendarForm: TParentForm},
@@ -809,7 +808,8 @@ uses
   EmailKind in '..\..\Forms\Kind\EmailKind.pas' {EmailKindForm: TParentForm},
   EmailKindEdit in '..\..\Forms\Kind\EmailKindEdit.pas' {EmailKindEditForm: TParentForm},
   ExportJuridical in '..\..\Forms\Guides\ExportJuridical.pas' {ExportJuridicalForm: TParentForm},
-  ExportJuridicalEdit in '..\..\Forms\Guides\ExportJuridicalEdit.pas' {ExportJuridicalEditForm: TParentForm};
+  ExportJuridicalEdit in '..\..\Forms\Guides\ExportJuridicalEdit.pas' {ExportJuridicalEditForm: TParentForm},
+  JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

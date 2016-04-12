@@ -7,7 +7,8 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, dsdAddOn, dsdGuides, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxMaskEdit, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls,
-  cxButtons, cxLabel, Vcl.Controls, cxTextEdit, cxCheckBox;
+  cxButtons, cxLabel, Vcl.Controls, cxTextEdit, cxCheckBox, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TGoodsEditForm = class(TAncestorEditDialogForm)
@@ -36,6 +37,8 @@ type
     cbIsTop: TcxCheckBox;
     cxLabel9: TcxLabel;
     ceSalePrice: TcxCurrencyEdit;
+    cbIsFirst: TcxCheckBox;
+    cbIsSecond: TcxCheckBox;
   private
     { Private declarations }
   public

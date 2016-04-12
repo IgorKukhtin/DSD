@@ -42,6 +42,7 @@ type
     clColor_calc: TcxGridDBColumn;
     RetailCode: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
+    spUpdate_Goods_isSecond: TdsdStoredProc;
   private
     { Private declarations }
   public

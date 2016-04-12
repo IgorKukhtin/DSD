@@ -263,7 +263,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAllRetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
-exit;
+//exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
@@ -273,7 +273,7 @@ exit;
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMainEditForm');
-
+              exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsLiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsLiteForm');
 

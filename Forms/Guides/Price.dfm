@@ -3,7 +3,7 @@ inherited PriceForm: TPriceForm
   ClientHeight = 385
   ClientWidth = 826
   ExplicitWidth = 842
-  ExplicitHeight = 420
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -161,6 +161,16 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
+            Width = 60
+          end
+          object clisSecond: TcxGridDBColumn
+            Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isSecond'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
           end
           object StartDate: TcxGridDBColumn
             Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089

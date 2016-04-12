@@ -176,6 +176,8 @@ type
     lblBayer: TLabel;
     chbNotMCS: TcxCheckBox;
     mainColor_calc: TcxGridDBColumn;
+    MaincolisFirst: TcxGridDBColumn;
+    MaincolisSecond: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

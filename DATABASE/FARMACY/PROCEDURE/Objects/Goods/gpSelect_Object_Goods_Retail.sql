@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , MeasureId Integer, MeasureName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , NDS TFloat, MinimumLot TFloat, isClose Boolean
-             , isTOP Boolean, isFirst Boolean
+             , isTOP Boolean, isFirst Boolean, isSecond Boolean
              , PercentMarkup TFloat, Price TFloat
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
@@ -49,10 +49,11 @@ BEGIN
            , Object_Goods_View.MinimumLot
            , Object_Goods_View.isClose
            , Object_Goods_View.isTOP          
-           , Object_Goods_View.isFirst
+           , Object_Goods_View.isFirst 
+           , Object_Goods_View.isSecond
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
+           , CASE WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() WHEN Object_Goods_View.isSecond = TRUE THEN 10965163 ELSE zc_Color_White() END AS Color_calc  --16380671 
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
     FROM Object AS Object_Retail
@@ -81,9 +82,10 @@ BEGIN
            , Object_Goods_View.isClose
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst
+           , Object_Goods_View.isSecond
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
+           , CASE WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() WHEN Object_Goods_View.isSecond = TRUE THEN 10965163 ELSE zc_Color_White() END AS Color_calc
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
     FROM Object_Goods_View
@@ -101,6 +103,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.04.16         *
  25.03.16                                        *
  16.02.15                         * 
  13.11.14                         * Add MinimumLot

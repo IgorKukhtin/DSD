@@ -223,9 +223,22 @@
           TabOrder = 4
           Width = 193
         end
+        object edInvNumberBranch: TcxDBTextEdit
+          Left = 18
+          Top = 248
+          DataBinding.DataField = 'InvNumberBranch'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 9
+          Width = 193
+        end
+        object cxLabel23: TcxLabel
+          Left = 18
+          Top = 229
+          Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
+        end
         object edBankAccount: TcxDBTextEdit
           Left = 248
-          Top = 249
+          Top = 248
           DataBinding.DataField = 'BankAccount'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 7
@@ -262,8 +275,8 @@
           Caption = #1060#1048#1054' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1072
         end
         object edBank: TcxDBButtonEdit
-          Left = 16
-          Top = 202
+          Left = 18
+          Top = 200
           DataBinding.DataField = 'BankName'
           DataBinding.DataSource = JuridicalDetailsDS
           Properties.Buttons = <
@@ -709,7 +722,7 @@
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    TabOrder = 31
+    TabOrder = 30
     Width = 167
   end
   object cxLabel21: TcxLabel [30]
@@ -721,21 +734,8 @@
     Left = 8
     Top = 131
     Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1074' '#1085#1072#1082#1083'.'
-    TabOrder = 35
+    TabOrder = 31
     Width = 225
-  end
-  object edInvNumberBranch: TcxDBTextEdit [32]
-    Left = 302
-    Top = 273
-    DataBinding.DataField = 'InvNumberBranch'
-    DataBinding.DataSource = JuridicalDetailsDS
-    TabOrder = 36
-    Width = 193
-  end
-  object cxLabel23: TcxLabel [33]
-    Left = 302
-    Top = 251
-    Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
