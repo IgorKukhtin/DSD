@@ -22,7 +22,7 @@ BEGIN
   
    IF inisSecond = TRUE 
    THEN
-      outColor = 10965163  ; --zc_Color_Red();  --16380671
+      outColor = 16440317  ; --zc_Color_Red();  --16380671
    ELSE 
       IF (select COALESCE(ObjectBoolean.ValueData, False) FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Goods_First() AND ObjectBoolean.ObjectId = inId) = True
       THEN

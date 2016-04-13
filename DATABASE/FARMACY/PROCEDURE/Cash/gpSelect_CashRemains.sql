@@ -95,7 +95,7 @@ BEGIN
             ObjectFloat_NDSKind_NDS.ValueData AS NDS,
             COALESCE(ObjectBoolean_First.ValueData, False)          AS isFirst,
             COALESCE(ObjectBoolean_Second.ValueData, False)         AS isSecond,
-            CASE WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 10965163  ELSE zc_Color_White() END AS Color_calc
+            CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
         FROM
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
