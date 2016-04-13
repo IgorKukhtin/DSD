@@ -142,6 +142,7 @@ type
     function Get_RXXXXG001: IXMLRXXXXTypeList;  //
 
     function Get_R01G7: UnicodeString;
+    function Get_R01G8: UnicodeString; //
     function Get_R01G9: UnicodeString;
     function Get_R01G11: UnicodeString;
     function Get_R001G03: UnicodeString; // ***1
@@ -189,6 +190,7 @@ type
     procedure Set_H10G1D(Value: UnicodeString);
     procedure Set_H10G2S(Value: UnicodeString);
     procedure Set_R01G7(Value: UnicodeString);
+    procedure Set_R01G8(Value: UnicodeString);       //
     procedure Set_R01G9(Value: UnicodeString);
     procedure Set_R01G11(Value: UnicodeString);
     procedure Set_R02G9(Value: UnicodeString);
@@ -254,6 +256,7 @@ type
     property RXXXXG001: IXMLRXXXXTypeList read Get_RXXXXG001; //
 
     property R01G7: UnicodeString read Get_R01G7 write Set_R01G7;
+    property R01G8: UnicodeString read Get_R01G8 write Set_R01G8;
     property R01G9: UnicodeString read Get_R01G9 write Set_R01G9;
     property R01G11: UnicodeString read Get_R01G11 write Set_R01G11;
     property R02G9: UnicodeString read Get_R02G9 write Set_R02G9;
@@ -423,6 +426,7 @@ type
     function Get_RXXXXG001: IXMLRXXXXTypeList; //
 
     function Get_R01G7: UnicodeString;
+    function Get_R01G8: UnicodeString;        //
     function Get_R01G9: UnicodeString;
     function Get_R01G11: UnicodeString;
     function Get_R02G9: UnicodeString;
@@ -470,6 +474,7 @@ type
     procedure Set_H10G1D(Value: UnicodeString);
     procedure Set_H10G2S(Value: UnicodeString);
     procedure Set_R01G7(Value: UnicodeString);
+    procedure Set_R01G8(Value: UnicodeString);
     procedure Set_R01G9(Value: UnicodeString);
     procedure Set_R01G11(Value: UnicodeString);
     procedure Set_R02G9(Value: UnicodeString);
@@ -1195,6 +1200,11 @@ begin
   Result := ChildNodes['R01G7'].Text;
 end;
 
+function TXMLDECLARBODYType.Get_R01G8: UnicodeString;
+begin
+  Result := ChildNodes['R01G8'].Text;
+end;
+
 function TXMLDECLARBODYType.Get_R01G9: UnicodeString;
 begin
   Result := ChildNodes['R01G9'].Text;
@@ -1208,6 +1218,11 @@ end;
 procedure TXMLDECLARBODYType.Set_R01G7(Value: UnicodeString);
 begin
   ChildNodes['R01G7'].NodeValue := Value;
+end;
+
+procedure TXMLDECLARBODYType.Set_R01G8(Value: UnicodeString);
+begin
+  ChildNodes['R01G8'].NodeValue := Value;
 end;
 
 procedure TXMLDECLARBODYType.Set_R01G9(Value: UnicodeString);

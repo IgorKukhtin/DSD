@@ -74,6 +74,7 @@ BEGIN
            , COALESCE(tmpMI.NDS, tmpGoods.NDS)                       AS NDS
            , COALESCE(tmpMI.isClose, tmpGoods.isClose)               AS isClose
            , COALESCE(tmpMI.isFirst, tmpGoods.isFirst)               AS isFirst
+           , COALESCE(tmpMI.isSecond, tmpGoods.isSecond)             AS isSecond
            , CASE 
                WHEN COALESCE(tmpMI.isTOP, tmpGoods.isTOP) THEN 12615935
                ELSE 0
@@ -106,7 +107,7 @@ BEGIN
            , NULLIF(tmpMI.AmountAll,0)                              AS AmountAll
            , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
            , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
-           , tmpCheck.Amount  ::tfloat                                                 AS CheckAmount
+           , tmpCheck.Amount  ::tfloat                                       AS CheckAmount
            , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
@@ -120,6 +121,7 @@ BEGIN
                   , Object_Goods.NDS                             AS NDS
                   , Object_Goods.isClose                         AS isClose
                   , Object_Goods.isFirst                         AS isFirst
+                  , Object_Goods.isSecond                        AS isSecond
              FROM Object_Goods_View AS Object_Goods
              WHERE Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
                    AND inShowAll = true       
@@ -140,7 +142,8 @@ BEGIN
                             , Object_Goods.NDSKindName                                         AS NDSKindName
                             , Object_Goods.NDS                                                 AS NDS
                             , Object_Goods.isClose                                             AS isClose
-                            , Object_Goods.isFirst                                             AS isFirst
+                            , Object_Goods.isFirst                                             AS isFirst 
+                            , Object_Goods.isSecond                                            AS isSecond
                             , MIString_Comment.ValueData                                       AS Comment
                             , COALESCE(PriceList.MakerName, MinPrice.MakerName)                AS MakerName
                             , MIBoolean_Calculated.ValueData                                   AS isCalculated
@@ -287,6 +290,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.04.16         *
  23.03.16         *
  03.02.16         *
  23.03.15                         * 

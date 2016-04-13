@@ -1197,6 +1197,14 @@ begin
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
     .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
+    If HeaderDataSet.FieldByName('VATPercent').AsFloat = 901
+    then DECLAR.DECLARBODY.R01G9 :=
+                StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11')
+                .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+    If HeaderDataSet.FieldByName('VATPercent').AsFloat = 902
+    then DECLAR.DECLARBODY.R01G8 :=
+                StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11')
+                .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
   i := 1;
   ItemsDataSet.First;

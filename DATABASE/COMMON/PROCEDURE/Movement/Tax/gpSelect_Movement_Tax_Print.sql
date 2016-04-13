@@ -161,10 +161,11 @@ BEGIN
            ,  CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
 
            , vbPriceWithVAT                             AS PriceWithVAT
-           , CASE WHEN  COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN 902 ELSE vbVATPercent END          AS VATPercent
+           , CASE WHEN COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN 902 WHEN (vbCurrencyPartnerId <> zc_Enum_Currency_Basis() AND COALESCE (ObjectBoolean_Vat.ValueData, False) = False) THEN 901 ElSE vbVATPercent END  AS VATPercent
 
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN MovementFloat_TotalSummMVAT.ValueData ELSE 0 END AS TotalSummMVAT
-           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() OR COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
+          --, CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() OR COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
+           , MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) ELSE 0 END AS SummVAT
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
 

@@ -387,8 +387,16 @@ begin
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_7', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
   //Розділ А Усього обсяги постачання при експорті товарів за ставкою 0% (код ставки 901)
   //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_9', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
-  //Розділ А Усього обсяги постачання на митній території України за ставкою 0% (код ставки 902)
-  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_8', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
+
+   if HeaderDataSet.FieldByName('VatPercent').AsFloat = 901 then begin
+     //Розділ А Усього обсяги постачання на митній території України за ставкою 0% (код ставки 902)
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_9', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
+   end;
+   if HeaderDataSet.FieldByName('VatPercent').AsFloat = 902 then begin
+     //Розділ А Усього обсяги постачання на митній території України за ставкою 0% (код ставки 902)
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_8', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
+   end;
+
   //Загальна сума податку на додану вартість за основною ставкою
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A6_7', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
   //Загальна сума податку на додану вартість, у тому числі:
