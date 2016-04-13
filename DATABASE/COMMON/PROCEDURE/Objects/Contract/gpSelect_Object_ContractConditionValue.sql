@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              
              , PaidKindId Integer, PaidKindName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -76,6 +77,9 @@ BEGIN
 
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
+
+       , Object_Currency.Id         AS CurrencyId 
+       , Object_Currency.ValueData  AS CurrencyName 
 
        , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -201,6 +205,11 @@ BEGIN
                             AND ObjectLink_Contract_Bank.DescId = zc_ObjectLink_Contract_Bank()
         LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Contract_Bank.ChildObjectId   
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                             ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
         LEFT JOIN (SELECT Object_ContractCondition.Id AS ContractConditionId
@@ -269,6 +278,7 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.04.16         *
  02.03.16         *
  23.05.14         * add zc_ObjectBoolean_Contract_Personal
                         zc_ObjectBoolean_Contract_Unique

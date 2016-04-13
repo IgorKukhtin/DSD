@@ -2,12 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginCategory (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginCategory (Integer, Integer, TVarChar, Tfloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginCategory (Integer, Integer, TVarChar, Tfloat, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginCategory(
     IN ioId             Integer,       -- Ключ объекта <Виды форм оплаты>
     IN inCode           Integer,       -- свойство <Код Вида формы оплаты>
     IN inName           TVarChar,      -- свойство <Наименование Вида формы оплаты>
     IN inPersent        Tfloat,        -- % наценки "общий"
+    IN inisSite         Boolean,       -- для сайта
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE(Id INTEGER, Code Integer ) AS
@@ -34,7 +37,8 @@ BEGIN
    
    -- сохранили свойство <% наценки "общий">
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategory_Percent(), ioId, inPersent);
-
+   -- сохранили свойство <для сайта>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_MarginCategory_Site(), ioId, inisSite);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
@@ -51,6 +55,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.04.16         *
  05.04.16         *
  09.04.15                          *
 

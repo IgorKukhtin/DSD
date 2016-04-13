@@ -1,24 +1,26 @@
 inherited MarginCategoryForm: TMarginCategoryForm
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1086#1082
-  ClientHeight = 318
-  ClientWidth = 439
-  ExplicitWidth = 455
-  ExplicitHeight = 356
+  ClientHeight = 338
+  ClientWidth = 480
+  ExplicitWidth = 496
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 439
-    Height = 292
-    ExplicitWidth = 360
-    ClientRectBottom = 292
-    ClientRectRight = 439
+    Width = 480
+    Height = 312
+    ExplicitWidth = 439
+    ExplicitHeight = 292
+    ClientRectBottom = 312
+    ClientRectRight = 480
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 360
-      ExplicitHeight = 282
+      ExplicitWidth = 439
+      ExplicitHeight = 292
       inherited cxGrid: TcxGrid
-        Width = 439
-        Height = 292
-        ExplicitWidth = 360
+        Width = 480
+        Height = 312
+        ExplicitWidth = 439
+        ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -45,6 +47,13 @@ inherited MarginCategoryForm: TMarginCategoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
+          end
+          object colisSite: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'isSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
         end
       end
@@ -151,6 +160,14 @@ inherited MarginCategoryForm: TMarginCategoryForm
         Component = MasterCDS
         ComponentItem = 'Percent'
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisSite'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSite'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1

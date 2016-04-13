@@ -9,16 +9,18 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
   inherited PageControl: TcxPageControl
     Width = 800
     Height = 315
-    ExplicitWidth = 453
+    ExplicitWidth = 800
+    ExplicitHeight = 315
     ClientRectBottom = 315
     ClientRectRight = 800
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 453
-      ExplicitHeight = 282
+      ExplicitWidth = 800
+      ExplicitHeight = 315
       inherited cxGrid: TcxGrid
         Width = 800
         Height = 315
-        ExplicitWidth = 453
+        ExplicitWidth = 800
+        ExplicitHeight = 315
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -42,6 +44,14 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             Properties.DisplayFormat = ',0.##'
             HeaderAlignmentVert = vaCenter
             Width = 265
+          end
+          object colisSite: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'isSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'

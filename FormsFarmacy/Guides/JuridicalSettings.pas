@@ -27,6 +27,7 @@ type
     colName: TcxGridDBColumn;
     colPriceLimit: TcxGridDBColumn;
     col—onditionalPercent: TcxGridDBColumn;
+    colisSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

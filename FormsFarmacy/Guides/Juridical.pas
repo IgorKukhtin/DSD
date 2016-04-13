@@ -11,7 +11,7 @@ uses
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCurrencyEdit;
 
 type
   TJuridicalForm = class(TAncestorGuidesForm)
@@ -21,6 +21,7 @@ type
     clRetailName: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
     colPayOrder: TcxGridDBColumn;
+    colPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

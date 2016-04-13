@@ -106,6 +106,13 @@
             HeaderHint = #1044#1086#1087'. '#1091#1089#1083#1086#1074#1080#1103' '#1087#1086' '#1087#1088#1072#1081#1089#1091', %'
             Width = 65
           end
+          object colisSite: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'isSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
         end
       end
     end
@@ -191,6 +198,14 @@
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isPriceClose'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisSite'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSite'
         DataType = ftBoolean
         ParamType = ptInput
       end

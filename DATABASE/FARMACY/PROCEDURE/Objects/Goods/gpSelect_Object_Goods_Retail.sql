@@ -53,7 +53,7 @@ BEGIN
            , Object_Goods_View.isSecond
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() WHEN Object_Goods_View.isSecond = TRUE THEN 10965163 ELSE zc_Color_White() END AS Color_calc  --16380671 
+           , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
     FROM Object AS Object_Retail
@@ -85,7 +85,7 @@ BEGIN
            , Object_Goods_View.isSecond
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() WHEN Object_Goods_View.isSecond = TRUE THEN 10965163 ELSE zc_Color_White() END AS Color_calc
+           , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
     FROM Object_Goods_View

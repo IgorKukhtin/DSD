@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
 
@@ -44,7 +45,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inAreaContractId      Integer  ,     -- Регион
     IN inContractArticleId   Integer  ,     -- Предмет договора
     IN inContractStateKindId Integer  ,     -- Состояние договора
-    IN inContractTermKindId  Integer  ,     -- Типы пролонгаций договоров
+    IN inContractTermKindId  Integer  ,     -- Типы пролонгаций договоров 
+    IN inCurrencyId          Integer  ,     -- Валюта
     IN inBankId              Integer  ,     -- Банк (исх.платеж)
     IN inisDefault           Boolean  ,     -- по умолчанию
     IN inisStandart          Boolean  ,     -- Типовой
@@ -326,6 +328,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractStateKind(), ioId, inContractStateKindId);   
    -- сохранили связь с <Типы пролонгаций договоров>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractTermKind(), ioId, inContractTermKindId);
+
+   -- сохранили связь с <валюта>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Currency(), ioId, inCurrencyId);
+
    -- сохранили связь с <Банк>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Bank(), ioId, inBankId);
    
@@ -361,6 +367,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.04.16         *
  29.01.16         *
  20.01.16         *
 -- 05.05.15         * add   GoodsProperty

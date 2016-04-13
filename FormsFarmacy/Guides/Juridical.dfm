@@ -1,13 +1,17 @@
 inherited JuridicalForm: TJuridicalForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
+  ClientWidth = 761
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 591
+  ExplicitWidth = 777
   ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Width = 761
+    ClientRectRight = 761
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
+        Width = 761
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -27,27 +31,43 @@ inherited JuridicalForm: TJuridicalForm
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
+            HeaderAlignmentVert = vaCenter
             Width = 221
           end
           object clisCorporate: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'isCorporate'
+            HeaderAlignmentVert = vaCenter
             Width = 98
           end
           object clRetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentVert = vaCenter
             Width = 133
-          end
-          object clisErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            Width = 51
           end
           object colPayOrder: TcxGridDBColumn
             Caption = #1054#1095#1077#1088#1077#1076#1100' '#1087#1083#1072#1090#1077#1078#1072
             DataBinding.FieldName = 'PayOrder'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
+          end
+          object colPercent: TcxGridDBColumn
+            Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'Percent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object clisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 51
           end
         end
       end

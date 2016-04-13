@@ -1,8 +1,7 @@
 inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1086#1082
   ClientWidth = 507
-  ExplicitWidth = 515
-  ExplicitHeight = 335
+  ExplicitWidth = 523
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -36,6 +35,14 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
+          object colisSite: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'isSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -59,6 +66,9 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             Width = 133
           end
         end

@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
-               isPriceClose Boolean, Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
+               isPriceClose Boolean, isSite Boolean,
+               Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar, isErased boolean,
                StartDate TDateTime, EndDate TDateTime) AS
@@ -26,7 +27,8 @@ BEGIN
            , Object_JuridicalSettings.ValueData AS Name 
            , Object_Juridical.Id
            , Object_Juridical.ValueData
-           , COALESCE(JuridicalSettings.isPriceClose, FALSE)
+           , COALESCE(JuridicalSettings.isPriceClose, FALSE) AS isPriceClose
+           , COALESCE(JuridicalSettings.isSite, FALSE)       AS isSite 
            , JuridicalSettings.Bonus
            , JuridicalSettings.PriceLimit :: TFloat AS PriceLimit
            , COALESCE(ObjectFloat_ConditionalPercent.ValueData, 0) :: TFloat AS ConditionalPercent
@@ -51,6 +53,7 @@ BEGIN
                       , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId AS MainJuridicalId
                       , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
                       , COALESCE(ObjectBoolean_isPriceClose.ValueData, false) AS isPriceClose 
+                      , COALESCE(ObjectBoolean_Site.ValueData, FALSE)         AS isSite
                       , ObjectFloat_Bonus.ValueData AS Bonus 
                       , COALESCE(ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
                       , ObjectLink_JuridicalSettings_Retail.ObjectId AS JuridicalSettingsId
@@ -83,6 +86,10 @@ BEGIN
                  LEFT JOIN ObjectFloat AS ObjectFloat_PriceLimit 
                                        ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                       AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
+          
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
+                                         ON ObjectBoolean_Site.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                        AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_JuridicalSettings_Site()
 
                  LEFT JOIN ObjectDate AS ObjectDate_StartDate 
                                       ON ObjectDate_StartDate.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId

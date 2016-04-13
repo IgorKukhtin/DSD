@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RetailId Integer, RetailName TVarChar,
-               isCorporate boolean, PayOrder TFloat,
+               isCorporate boolean,
+               Percent TFloat, PayOrder TFloat,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -25,11 +26,17 @@ BEGIN
            , Object_Retail.ValueData             AS RetailName 
 
            , ObjectBoolean_isCorporate.ValueData AS isCorporate
+           , ObjectFloat_Percent.ValueData       AS Percent
            , ObjectFloat_PayOrder.ValueData      AS PayOrder
            
            , Object_Juridical.isErased           AS isErased
            
        FROM Object AS Object_Juridical
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Percent
+                                 ON ObjectFloat_Percent.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()

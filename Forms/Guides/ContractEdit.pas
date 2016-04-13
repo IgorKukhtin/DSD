@@ -165,6 +165,9 @@ type
     PersonalSigningGuides: TdsdGuides;
     colContractSendName: TcxGridDBColumn;
     actContractSendChoiceForm: TOpenChoiceForm;
+    cxLabel32: TcxLabel;
+    ceCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public
