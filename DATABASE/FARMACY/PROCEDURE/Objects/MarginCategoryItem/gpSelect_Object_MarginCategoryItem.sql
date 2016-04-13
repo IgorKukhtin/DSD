@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategoryItem(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, MarginPercent TFloat, MinPrice TFloat
+             , isSite Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime) AS
 $BODY$BEGIN
@@ -19,6 +20,8 @@ $BODY$BEGIN
          Object_MarginCategoryItem.Id            AS Id 
        , Object_MarginCategoryItem.MarginPercent AS MarginPercent
        , Object_MarginCategoryItem.MinPrice      AS MinPrice
+      
+       , COALESCE(ObjectBoolean_Site.ValueData, FALSE)   AS isSite
 
        , Object_Insert.ValueData              AS InsertName
        , ObjectDate_Protocol_Insert.ValueData AS InsertDate
@@ -42,7 +45,11 @@ $BODY$BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Update
                                ON ObjectLink_Update.ObjectId = Object_MarginCategoryItem.Id
                               AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId  
+ 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
+                                  ON ObjectBoolean_Site.ObjectId = inMarginCategoryId
+                                 AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_MarginCategory_Site() 
 
    WHERE Object_MarginCategoryItem.MarginCategoryId = inMarginCategoryId
 

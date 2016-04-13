@@ -1,19 +1,21 @@
-п»ї--Function: gpSelect_Object_MarginCategoryItem(TVarChar)
+--Function: gpSelect_Object_MarginCategoryItem(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_MarginCategoryLink(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategoryLink(
-    IN inSession          TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession          TVarChar       -- сессия пользователя
 )
 
 RETURNS TABLE (Id Integer, MarginCategoryId Integer, MarginCategoryName TVarChar
-             , UnitId Integer, UnitName TVarChar, JuridicalId Integer, JuridicalName TVarChar) AS
+             , UnitId Integer, UnitName TVarChar, JuridicalId Integer, JuridicalName TVarChar
+             , isSite Boolean
+) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_MarginCategory());
 
-   RETURN QUERY 
+   RETURN QUERY  
    SELECT 
         Object_MarginCategoryLink.Id, 
         Object_MarginCategoryLink.MarginCategoryId, 
@@ -21,8 +23,14 @@ $BODY$BEGIN
         Object_MarginCategoryLink.UnitId, 
         Object_MarginCategoryLink.UnitName, 
         Object_MarginCategoryLink.JuridicalId, 
-        Object_MarginCategoryLink.JuridicalName
-    FROM Object_MarginCategoryLink_View AS Object_MarginCategoryLink;
+        Object_MarginCategoryLink.JuridicalName,
+        COALESCE(ObjectBoolean_Site.ValueData, FALSE)   AS isSite
+    FROM Object_MarginCategoryLink_View AS Object_MarginCategoryLink
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
+                                  ON ObjectBoolean_Site.ObjectId = Object_MarginCategoryLink.MarginCategoryId
+                                 AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_MarginCategory_Site()
+
+;
   
 END;$BODY$
 
@@ -33,11 +41,12 @@ ALTER FUNCTION gpSelect_Object_MarginCategoryLink(TVarChar)
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.04.16         *
  09.04.15                         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_MarginCategoryLink('2')

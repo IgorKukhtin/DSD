@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, Integer
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
+
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
@@ -13,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
     IN inMainJuridicalId         Integer   ,    -- Юр. лицо
     IN inContractId              Integer   ,    -- Договор
     IN inisPriceClose            Boolean   ,    -- Закрыт прайс
+    IN inisSite                  Boolean   ,    -- для сайта
     IN inBonus                   TFloat    ,    -- % бонусирования
     IN inPriceLimit              TFloat    ,    -- Цена до
     IN inConditionalPercent      TFloat    ,    -- Доп.условия по прайсу, %
@@ -56,6 +59,10 @@ BEGIN
    -- Доп.условия по прайсу, %
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_ConditionalPercent(), inJuridicalId, inConditionalPercent);
 
+   -- сохранили свойство <для сайта>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_JuridicalSettings_Site(), ioId, inisSite);
+
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);
    -- сохранили свойство <>
@@ -73,6 +80,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.04.16         *
  18.02.16         *
  11.02.16
  26.01.16         *                

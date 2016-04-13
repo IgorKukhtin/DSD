@@ -20,6 +20,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
     colPercent: TcxGridDBColumn;
+    colisSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

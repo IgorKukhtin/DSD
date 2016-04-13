@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategory(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Percent TFloat
+             , isSite Boolean
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -18,11 +19,15 @@ $BODY$BEGIN
         , Object_MarginCategory.ObjectCode AS Code
         , Object_MarginCategory.ValueData  AS Name
         , ObjectFloat_Percent.ValueData    AS Percent
+        , COALESCE(ObjectBoolean_Site.ValueData, FALSE)   AS isSite
         , Object_MarginCategory.isErased   AS isErased
    FROM Object AS Object_MarginCategory
         LEFT JOIN ObjectFloat AS ObjectFloat_Percent 	
                               ON ObjectFloat_Percent.ObjectId = Object_MarginCategory.Id
                              AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()  
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
+                                ON ObjectBoolean_Site.ObjectId = Object_MarginCategory.Id
+                               AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_MarginCategory_Site()  
    WHERE Object_MarginCategory.DescId = zc_Object_MarginCategory();
   
 END;$BODY$
@@ -36,6 +41,7 @@ ALTER FUNCTION gpSelect_Object_MarginCategory(TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.04.16         *
  05.04.16         *
  09.04.15                         *
 
