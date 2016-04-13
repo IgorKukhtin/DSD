@@ -799,6 +799,27 @@ BEGIN
 
 
 
+        -- !!!ВРЕМЕННО!!!
+        UPDATE HistoryCost SET Price          = 100.1234 * CASE WHEN Price < 0 THEN -1 ELSE 1 END
+                             , Price_external = 100.1234 * CASE WHEN Price < 0 THEN -1 ELSE 1 END
+        FROM Container
+             INNER JOIN ContainerLinkObject AS ContainerLO_Goods
+                                            ON ContainerLO_Goods.ContainerId = Container.Id
+                                           AND ContainerLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+             INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                   ON ObjectLink_Goods_InfoMoney.ObjectId = ContainerLO_Goods.ObjectId
+                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+             INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                               AND (View_InfoMoney.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                                                                 OR View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна 
+                                                                                                            , zc_Enum_InfoMoneyDestination_21000() -- Чапли
+                                                                                                            , zc_Enum_InfoMoneyDestination_21100() -- Дворкин
+                                                                                                             )
+                                                                   )
+        WHERE HistoryCost.StartDate = inStartDate
+          AND ABS (HistoryCost.Price) >  1000
+          AND HistoryCost.ContainerId = Container.Id
+       ;        
 
         -- !!!ВРЕМЕННО-1!!!
         /*UPDATE MovementItemContainer SET ContainerIntId_analyzer = ContainerId

@@ -271,6 +271,7 @@ end;
                     ParamByName('inDocKind').Value := DocKind;
                     Execute;
                   end;
+
                   if FspUpdate_IsElectronFromMedoc.ParamByName('outId').AsString <> '0' then begin
                      MovementId := FspUpdate_IsElectronFromMedoc.ParamByName('outId').Value;
                      LineDataSet := MedocDocument.DataSets('TAB1', 0);
