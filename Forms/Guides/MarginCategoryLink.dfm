@@ -40,6 +40,7 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
             DataBinding.FieldName = 'isSite'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colUnitName: TcxGridDBColumn
