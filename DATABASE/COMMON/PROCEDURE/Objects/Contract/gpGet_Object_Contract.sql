@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindName TVarChar
              , ContractTermKindId Integer, ContractTermKindName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
 
              , BankId Integer, BankName TVarChar
              , isDefault Boolean
@@ -114,7 +115,11 @@ BEGIN
            , 0 :: Integer   AS ContractStateKindId
            , '' :: TVarChar AS ContractStateKindName 
            , 0 :: Integer   AS ContractTermKindId
-           , '' :: TVarChar AS ContractTermKindName         
+           , '' :: TVarChar AS ContractTermKindName    
+
+           , Object_CurrencyBasis.Id         AS CurrencyId 
+           , Object_CurrencyBasis.ValueData  AS CurrencyName 
+     
 
            , 0 :: Integer   AS BankId
            , '' :: TVarChar AS BankName
@@ -138,6 +143,7 @@ BEGIN
 
        FROM Object AS Object_PaidKind
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399 -- ŒŒŒ ¿À¿Õ
+            LEFT JOIN Object AS Object_CurrencyBasis ON Object_CurrencyBasis.Id = zc_Enum_Currency_Basis()
        WHERE Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
        ;
    ELSE
@@ -204,6 +210,10 @@ BEGIN
 
            , Object_ContractTermKind.Id          AS ContractTermKindId
            , Object_ContractTermKind.ValueData   AS ContractTermKindName
+
+           , COALESCE (Object_Currency.Id, Object_CurrencyBasis.Id)                AS CurrencyId 
+           , COALESCE (Object_Currency.ValueData, Object_CurrencyBasis.ValueData)  AS CurrencyName 
+
 
            , Object_Bank.Id          AS BankId
            , Object_Bank.ValueData   AS BankName
@@ -347,10 +357,16 @@ BEGIN
                                 AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
             LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Contract_PriceListPromo.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                                 ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
+            LEFT JOIN Object AS Object_CurrencyBasis ON Object_CurrencyBasis.Id = zc_Enum_Currency_Basis()
 
        WHERE Object_Contract_View.ContractId = inId;
 

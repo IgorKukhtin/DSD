@@ -81,7 +81,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object edSigningDate: TcxDateEdit [10]
     Left = 16
-    Top = 119
+    Top = 117
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -89,7 +89,7 @@ inherited ContractEditForm: TContractEditForm
     Width = 104
   end
   object cxLabel1: TcxLabel [11]
-    Left = 16
+    Left = 17
     Top = 101
     Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103
   end
@@ -763,7 +763,7 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsProperty: TcxButtonEdit [64]
-    Left = 17
+    Left = 16
     Top = 607
     Properties.Buttons = <
       item
@@ -773,7 +773,7 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 64
-    Width = 327
+    Width = 328
   end
   object edTerm: TcxCurrencyEdit [65]
     Left = 16
@@ -787,7 +787,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel29: TcxLabel [66]
     Left = 18
-    Top = 142
+    Top = 144
     Caption = #1055#1077#1088#1080#1086#1076' '#1087#1088#1086#1083#1086#1085#1075'.'
   end
   object cxLabel30: TcxLabel [67]
@@ -805,7 +805,7 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 69
-    Width = 217
+    Width = 125
   end
   object cxLabel31: TcxLabel [69]
     Left = 17
@@ -823,6 +823,23 @@ inherited ContractEditForm: TContractEditForm
     Properties.ReadOnly = True
     TabOrder = 74
     Width = 162
+  end
+  object cxLabel32: TcxLabel [71]
+    Left = 264
+    Top = 144
+    Caption = #1042#1072#1083#1102#1090#1072
+  end
+  object ceCurrency: TcxButtonEdit [72]
+    Left = 264
+    Top = 161
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 76
+    Width = 80
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1366,6 +1383,13 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inBankId'
         Value = ''
         Component = BankGuides
@@ -1781,6 +1805,19 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractTermKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 632
     Top = 395
@@ -1809,8 +1846,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 245
-    Top = 169
+    Left = 213
+    Top = 185
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -2801,8 +2838,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 192
-    Top = 146
+    Left = 160
+    Top = 154
   end
   object PersonalSigningGuides: TdsdGuides
     KeyField = 'Id'
@@ -2830,5 +2867,29 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 80
     Top = 443
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrencyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 280
+    Top = 146
   end
 end

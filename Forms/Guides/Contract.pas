@@ -206,6 +206,7 @@ type
     actUpdateVat: TdsdExecStoredProc;
     bbCustom: TdxBarButton;
     clisVat: TcxGridDBColumn;
+    clCurrencyName: TcxGridDBColumn;
 
   private
     { Private declarations }

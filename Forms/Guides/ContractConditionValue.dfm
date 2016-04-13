@@ -171,6 +171,14 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 30
       end
+      object clCurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object clContractKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractKindName'

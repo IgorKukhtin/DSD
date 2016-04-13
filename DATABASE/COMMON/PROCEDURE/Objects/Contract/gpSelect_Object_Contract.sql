@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindCode Integer
              , ContractTermKindId Integer, ContractTermKindName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
              
              , OKPO TVarChar
              , BankId Integer, BankName TVarChar
@@ -201,6 +202,9 @@ BEGIN
 
        , Object_ContractTermKind.Id          AS ContractTermKindId
        , Object_ContractTermKind.ValueData   AS ContractTermKindName
+
+       , Object_Currency.Id         AS CurrencyId 
+       , Object_Currency.ValueData  AS CurrencyName 
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -379,14 +383,21 @@ BEGIN
                              ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
-        /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
+ 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                             ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
+
+       /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
                              ON ObjectLink_Contract_PriceListPromo.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
         LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Contract_PriceListPromo.ChildObjectId*/
 
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
-
+ 
    WHERE ((inIsPeriod = TRUE AND Object_Contract_View.EndDate_Term BETWEEN inStartDate AND inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
           ) OR inIsPeriod = FALSE)
      AND ((inIsEndDate = TRUE AND Object_Contract_View.EndDate_Term <= inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
@@ -410,6 +421,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.04.16         * Currency
  05.05.15         * add GoodsProperty
  12.02.15         * add StartPromo, EndPromo,
                         PriceList, PriceListPromo

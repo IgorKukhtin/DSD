@@ -120,6 +120,7 @@ type
     clIsUnique: TcxGridDBColumn;
     clIsPersonal: TcxGridDBColumn;
     colContractSendName: TcxGridDBColumn;
+    clCurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -329,14 +329,14 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 273
   end
   object cePercent: TcxCurrencyEdit [10]
     Left = 112
     Top = 161
     Properties.DisplayFormat = ',0.##'
-    TabOrder = 14
+    TabOrder = 13
     Width = 166
   end
   object cxLabel2: TcxLabel [11]
@@ -679,8 +679,8 @@
         DataType = ftFloat
       end>
     PackSize = 1
-    Left = 240
-    Top = 144
+    Left = 224
+    Top = 160
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -876,7 +876,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = JuridicalDetailsCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
