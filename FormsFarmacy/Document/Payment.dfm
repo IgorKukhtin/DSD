@@ -4,7 +4,7 @@ inherited PaymentForm: TPaymentForm
   ClientWidth = 1005
   AddOnFormData.AddOnFormRefresh.ParentList = 'Payment'
   ExplicitWidth = 1021
-  ExplicitHeight = 551
+  ExplicitHeight = 548
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -634,7 +634,15 @@ inherited PaymentForm: TPaymentForm
     end
     object actSelectAllAndRefresh: TMultiAction
       Category = 'DSDLib'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'ShowAll'
+          ToParam.DataType = ftBoolean
+        end>
       ActionList = <
         item
           Action = actGet_Payment_Detail
@@ -846,7 +854,17 @@ inherited PaymentForm: TPaymentForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
+    inherited bbStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -1251,8 +1269,7 @@ inherited PaymentForm: TPaymentForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 480
-    Top = 16
+    Left = 504
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Payment_Print'

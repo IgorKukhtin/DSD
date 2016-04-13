@@ -386,7 +386,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-// exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
+ exit;
 
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));

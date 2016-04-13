@@ -15,7 +15,7 @@ uses
   cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, cxPivotGridChartConnection,
   cxCustomPivotGrid, cxDBPivotGrid, cxGridChartView, cxGridDBChartView,
   cxSplitter, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, cxGridBandedTableView, cxGridDBBandedTableView;
+  dxSkinsdxBarPainter, cxGridBandedTableView, cxGridDBBandedTableView,DataModul;
 
 type
   TReport_PriceInterventionForm = class(TAncestorReportForm)

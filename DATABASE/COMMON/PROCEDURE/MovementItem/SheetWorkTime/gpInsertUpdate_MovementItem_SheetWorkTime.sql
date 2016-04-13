@@ -120,9 +120,16 @@ BEGIN
     ioValue := zfGet_ViewWorkHour (vbValue, ioTypeId);
                          
 
-    -- пересчитываем итого рабочее время
-    CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
-        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inOperDate), DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpmicontainer_insert')
+     THEN
+         DELETE FROM tmpOperDate;
+         INSERT INTO tmpOperDate (OperDate)
+             SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inOperDate), DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
+     ELSE
+         -- пересчитываем итого рабочее время
+         CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
+             SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inOperDate), DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
+     END IF;
 
     OutAmountHours := (SELECT  SUM(MI_SheetWorkTime.Amount) as  AmountHours
                        FROM tmpOperDate

@@ -4,8 +4,9 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -439
   ExplicitWidth = 1228
-  ExplicitHeight = 469
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -20,7 +21,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     ClientRectRight = 1212
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
-      Caption = #1056#1077#1079#1091#1083#1100#1090#1080#1088#1091#1102#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
+      Caption = #1048#1090#1086#1075#1080
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1212
@@ -530,6 +531,9 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsCustomize.ColumnVertSizing = False
+          OptionsCustomize.NestedBands = False
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -540,6 +544,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.HeaderFilterButtonShowMode = fbmButton
           OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
           Bands = <
             item
               Caption = #1048#1085#1092#1086
@@ -2386,6 +2391,36 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = cePrice1
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice2
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice3
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice4
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice5
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice6
+        Properties.Strings = (
+          'Value')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -2398,13 +2433,8 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       item
         Component = MarginReportGuides
         Properties.Strings = (
-          'key'
+          'Key'
           'TextValue')
-      end
-      item
-        Component = cePrice2
-        Properties.Strings = (
-          'Date')
       end>
   end
   inherited ActionList: TActionList

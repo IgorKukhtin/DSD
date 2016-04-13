@@ -800,8 +800,8 @@ BEGIN
 
 
         -- !!!бпелеммн!!!
-        UPDATE HistoryCost SET Price          = 100.1234 * CASE WHEN Price < 0 THEN -1 ELSE 1 END
-                             , Price_external = 100.1234 * CASE WHEN Price < 0 THEN -1 ELSE 1 END
+        UPDATE HistoryCost SET Price          = 100.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
+                             , Price_external = 100.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
         FROM Container
              INNER JOIN ContainerLinkObject AS ContainerLO_Goods
                                             ON ContainerLO_Goods.ContainerId = Container.Id

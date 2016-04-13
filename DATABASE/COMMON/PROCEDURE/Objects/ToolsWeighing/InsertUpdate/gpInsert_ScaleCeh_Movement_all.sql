@@ -77,7 +77,7 @@ BEGIN
 
 
      -- определили <Партия товара>
-     vbPartionGoods:= (SELECT MIString_PartionGoods.ValueData
+     vbPartionGoods:= (SELECT DISTINCT MIString_PartionGoods.ValueData
                        FROM MovementItem
                             INNER JOIN MovementItemString AS MIString_PartionGoods
                                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -86,7 +86,6 @@ BEGIN
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.isErased = FALSE
                          AND vbMovementDescId = zc_Movement_ProductionSeparate()
-                       GROUP BY MIString_PartionGoods.ValueData
                       );
 
      -- для zc_Movement_ProductionUnion + если Обвалка
@@ -131,6 +130,89 @@ BEGIN
 
            -- определили <Приход или Расход>, нужен только для zc_Movement_ProductionSeparate
            vbIsProductionIn:= (SELECT MB_isIncome.ValueData FROM MovementBoolean AS MB_isIncome WHERE MB_isIncome.MovementId = inMovementId AND MB_isIncome.DescId = zc_MovementBoolean_isIncome());
+
+           -- Проверка
+           IF 1 <              (SELECT COUNT (*)
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
+                                     INNER JOIN MovementString AS MovementString_PartionGoods
+                                                               ON MovementString_PartionGoods.MovementId = Movement.Id
+                                                              AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+                                                              AND MovementString_PartionGoods.ValueData = vbPartionGoods
+                                WHERE Movement.DescId = zc_Movement_ProductionSeparate()
+                                  AND Movement.OperDate = inOperDate
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()))
+           THEN
+               RAISE EXCEPTION 'Ошибка.Для партии <%> найдены два документа № <%> и № <%> за <%>. А должен быть только один.'
+                             , vbPartionGoods
+                             , (SELECT Movement.InvNumber
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
+                                     INNER JOIN MovementString AS MovementString_PartionGoods
+                                                               ON MovementString_PartionGoods.MovementId = Movement.Id
+                                                              AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+                                                              AND MovementString_PartionGoods.ValueData = vbPartionGoods
+                                WHERE Movement.DescId = zc_Movement_ProductionSeparate()
+                                  AND Movement.OperDate = inOperDate
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                ORDER BY Movement.Id ASC
+                                LIMIT 1
+                               )
+                             , (SELECT Movement.InvNumber
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
+                                     INNER JOIN MovementString AS MovementString_PartionGoods
+                                                               ON MovementString_PartionGoods.MovementId = Movement.Id
+                                                              AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+                                                              AND MovementString_PartionGoods.ValueData = vbPartionGoods
+                                WHERE Movement.DescId = zc_Movement_ProductionSeparate()
+                                  AND Movement.OperDate = inOperDate
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                ORDER BY Movement.Id DESC
+                                LIMIT 1
+                               )
+                             , DATE (inOperDate)
+                              ;
+           END IF;
 
            -- поиск существующего документа <Производство> по ВСЕМ параметрам + партия
            vbMovementId_find:= (SELECT Movement.Id

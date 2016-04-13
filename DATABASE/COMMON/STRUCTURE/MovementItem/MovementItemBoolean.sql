@@ -21,6 +21,8 @@ CREATE TABLE MovementItemBoolean(
 
 
 CREATE UNIQUE INDEX idx_MovementItemBoolean_MovementItemId_DescId_ValueData ON MovementItemBoolean (MovementItemId, DescId, ValueData);
+CREATE INDEX idx_MovementItemBoolean_ValueData_DescId ON MovementItemBoolean (ValueData, DescId);
+
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
