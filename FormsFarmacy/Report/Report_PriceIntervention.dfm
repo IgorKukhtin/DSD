@@ -4,9 +4,8 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -439
   ExplicitWidth = 1228
-  ExplicitHeight = 466
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2283,8 +2282,8 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       ExplicitWidth = 8
     end
     object cxLabel3: TcxLabel
-      Left = 875
-      Top = 7
+      Left = 868
+      Top = 13
       Caption = #1042#1080#1088#1090#1091#1072#1083#1100#1085#1072#1103' '#1082#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
     end
     object ceMarginReport: TcxButtonEdit
@@ -3135,7 +3134,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 816
-    Top = 232
+    Left = 840
+    Top = 224
   end
 end

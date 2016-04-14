@@ -246,6 +246,8 @@ type
     N41: TMenuItem;
     actReportMovementIncomeFarmForm: TdsdOpenForm;
     N51: TMenuItem;
+    actReport_PriceIntervention2: TdsdOpenForm;
+    N59: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
