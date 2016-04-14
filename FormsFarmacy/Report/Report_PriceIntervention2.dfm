@@ -5,7 +5,7 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1289
-  ExplicitHeight = 632
+  ExplicitHeight = 629
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -98,12 +98,11 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
       ExplicitWidth = 1273
       ExplicitHeight = 503
       inherited cxGrid: TcxGrid
-        Left = 323
-        Width = 950
+        Left = 318
+        Width = 955
         Height = 503
         TabOrder = 1
-        ExplicitLeft = 320
-        ExplicitTop = 3
+        ExplicitLeft = 323
         ExplicitWidth = 950
         ExplicitHeight = 503
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -610,7 +609,6 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsView.GroupByBox = True
           OptionsView.HeaderAutoHeight = False
           OptionsView.HeaderHeight = 60
           Styles.Content = nil
@@ -2044,7 +2042,6 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
         ParentFont = False
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 3
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -2478,8 +2475,8 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderHeight = 60
           OptionsView.Indicator = True
@@ -2491,7 +2488,7 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 89
+            Width = 150
           end
           object cxGridDBColumn2: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -2500,7 +2497,7 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 163
+            Width = 200
           end
           object cxGridDBColumn3: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080' ('#1080#1085#1092'.)'
@@ -2628,10 +2625,9 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
       object cxSplitter: TcxSplitter
         Left = 315
         Top = 0
-        Width = 8
+        Width = 3
         Height = 503
         Control = cxGrid1
-        ExplicitLeft = 417
       end
     end
   end
@@ -2686,6 +2682,68 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
     Properties.DisplayFormat = ',0.####'
     TabOrder = 13
     Width = 80
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = cePrice1
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice2
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice3
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice4
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice5
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePrice6
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cxSplitter
+        Properties.Strings = (
+          'Left')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = MarginReportGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
   end
   inherited ActionList: TActionList
     object actisVipCheck: TdsdDataSetRefresh [0]
@@ -2976,11 +3034,11 @@ inherited Report_PriceIntervention2Form: TReport_PriceIntervention2Form
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bb'
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbExecuteDialog: TdxBarButton

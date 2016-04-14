@@ -5,7 +5,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1228
-  ExplicitHeight = 469
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2434,6 +2434,14 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
       end>
   end
   inherited ActionList: TActionList
@@ -2722,11 +2730,11 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbMarginReportItem'
         end
         item
           Visible = True
-          ItemName = 'bbMarginReportItem'
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
