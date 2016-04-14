@@ -41,10 +41,16 @@ BEGIN
 
 
     OPEN Cursor2 FOR
+    
         SELECT
             MI_ReturnOut.GoodsName
           , MI_ReturnOut.Amount
           , Object_Measure.ValueData AS MeasureName
+          
+          , MIDate_ExpirationDate.ValueData            AS ExpirationDate
+          , MIString_PartionGoods.ValueData            AS PartionGoods
+          , ObjectString_Goods_Maker.ValueData         AS MakerName
+          
           , CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE 
                 THEN MI_ReturnOut.Price
                 ELSE ROUND(MI_ReturnOut.Price*(1+(ObjectFloat_NDSKind_NDS.ValueData/100)),2)
@@ -61,6 +67,7 @@ BEGIN
                 THEN MI_ReturnOut.AmountSumm
                 ELSE ROUND(MI_ReturnOut.AmountSumm/(1+(ObjectFloat_NDSKind_NDS.ValueData/100)),2)
             END AS Summa  
+
         FROM
             MovementItem_ReturnOut_View AS MI_ReturnOut
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -78,6 +85,22 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+ 
+            -- данные из прихода 
+            LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                       ON MIDate_ExpirationDate.MovementItemId = MI_ReturnOut.ParentId
+                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
+            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                         ON MIString_PartionGoods.MovementItemId = MI_ReturnOut.ParentId
+                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()  
+                                        
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                             ON MILinkObject_Goods.MovementItemId = MI_ReturnOut.ParentId
+                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                                  ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
+                                 AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
         WHERE
             MI_ReturnOut.MovementId = inMovementId
             AND
@@ -92,6 +115,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut_Print (Integer,TVarChar) OWNER TO pos
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А
+ 14.04.16         *
  25.12.15                                                                       *
 */
 

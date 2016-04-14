@@ -17,6 +17,9 @@ RETURNS TABLE (Id Integer, ParentId integer
              , AmountInIncome TFloat
              , Remains TFloat
              , WarningColor Integer
+             , ExpirationDate TDateTime
+             , PartionGoods TVarChar
+             , MakerName TVarChar
               )
 AS
 $BODY$
@@ -37,6 +40,7 @@ BEGIN
         Movement
     WHERE 
         Movement.Id = inMovementId;
+
     --Результат    
     IF inShowAll THEN
 
@@ -105,9 +109,26 @@ BEGIN
                        MovementItem_ReturnOut.Amount > COALESCE(MovementItem_Income.AmountRemains,0)
                     THEN zc_Color_Warning_Red()
                 END                                                                       AS WarningColor
+             , MIDate_ExpirationDate.ValueData            AS ExpirationDate
+             , MIString_PartionGoods.ValueData            AS PartionGoods
+             , ObjectString_Goods_Maker.ValueData         AS MakerName
         FROM Income AS MovementItem_Income
             FULL JOIN ReturnOut AS MovementItem_ReturnOut 
-                                ON MovementItem_ReturnOut.ParentId = MovementItem_Income.Id;
+                                ON MovementItem_ReturnOut.ParentId = MovementItem_Income.Id
+                                            LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                       ON MIDate_ExpirationDate.MovementItemId = MovementItem_Income.Id
+                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
+            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                         ON MIString_PartionGoods.MovementItemId = MovementItem_Income.Id
+                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()  
+                                        
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                             ON MILinkObject_Goods.MovementItemId = MovementItem_Income.Id
+                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                                  ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
+                                 AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker() ;
 
     ELSE
         RETURN QUERY
@@ -173,10 +194,31 @@ BEGIN
                        MovementItem.Amount > COALESCE(MovementItem_Income.AmountRemains,0)
                     THEN zc_Color_Warning_Red()
                 END AS WarningColor
+             , MIDate_ExpirationDate.ValueData            AS ExpirationDate
+             , MIString_PartionGoods.ValueData            AS PartionGoods
+             , ObjectString_Goods_Maker.ValueData         AS MakerName
         FROM 
             ReturnOut AS MovementItem
             LEFT OUTER JOIN Income AS MovementItem_Income
-                                   ON MovementItem.ParentId = MovementItem_Income.Id;
+                                   ON MovementItem.ParentId = MovementItem_Income.Id
+
+            LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                       ON MIDate_ExpirationDate.MovementItemId = MovementItem_Income.Id
+                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
+            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                         ON MIString_PartionGoods.MovementItemId = MovementItem_Income.Id
+                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()  
+                                        
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                             ON MILinkObject_Goods.MovementItemId = MovementItem_Income.Id
+                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                                  ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
+                                 AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
+            
+
+;
     END IF;
 END;
 $BODY$
@@ -185,6 +227,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.04.16         *
  10.02.15                         *
  
 */
@@ -192,3 +235,4 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarC
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+--select * from gpSelect_MovementItem_ReturnOut(inMovementId := 885245 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
