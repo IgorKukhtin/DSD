@@ -388,6 +388,9 @@ procedure TLoadFormTest.LoadReportFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
+  //Отчет Ценовая интервенция2
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceIntervention2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceIntervention2Form');
  exit;
 
   //Отчет Приход на точку
