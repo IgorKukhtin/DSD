@@ -7,6 +7,7 @@ inherited MainCashForm: TMainCashForm
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = ParentFormKeyDown
+  OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 781
@@ -942,6 +943,9 @@ inherited MainCashForm: TMainCashForm
           Action = actSelectCheck
         end
         item
+          Action = actSelectLocalVIPCheck
+        end
+        item
           Action = actRefreshLite
         end
         item
@@ -1044,6 +1048,14 @@ inherited MainCashForm: TMainCashForm
           StoredProc = spSelectCheck
         end>
       Caption = 'actSelectCheck'
+    end
+    object actSelectLocalVIPCheck: TAction
+      Caption = 'actSelectLocalVIPCheck'
+      OnExecute = actSelectLocalVIPCheckExecute
+    end
+    object actCheckConnection: TAction
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1089#1077#1088#1074#1077#1088#1086#1084
+      OnExecute = actCheckConnectionExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -1178,9 +1190,6 @@ inherited MainCashForm: TMainCashForm
     object N3: TMenuItem
       Action = actCashWork
     end
-    object N2: TMenuItem
-      Action = actDeferrent
-    end
     object VIP1: TMenuItem
       Action = actSetVIP
     end
@@ -1197,6 +1206,12 @@ inherited MainCashForm: TMainCashForm
     end
     object N10: TMenuItem
       Action = actRefreshRemains
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object N11: TMenuItem
+      Action = actCheckConnection
     end
   end
   object FormParams: TdsdFormParams
@@ -1242,6 +1257,11 @@ inherited MainCashForm: TMainCashForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManagerName'
+        Value = Null
+        DataType = ftString
       end>
     Left = 32
     Top = 72

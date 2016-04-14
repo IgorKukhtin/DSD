@@ -26,7 +26,8 @@ type
     ///	<param name="pExecOnServer">
     ///	  если true, то процедуры выполняются в цикле на среднем уровне
     ///	</param>
-    function ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
+    function ExecuteProc(pData: String; pExecOnServer: boolean = false;
+      AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
     property Connection: String read GetConnection;
   end;
 
@@ -48,7 +49,7 @@ implementation
 
 uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants,
      UtilConvert, MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge,
-     Forms, Log, IdStack, IdExceptionCore, SyncObjS;
+     Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData;
 
 const
 
@@ -75,7 +76,8 @@ type
     // критичесая секция нужна из-за таймера
     FCriticalSection: TCriticalSection;
     function PrepareStr: AnsiString;
-    function ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
+    function ExecuteProc(pData: String; pExecOnServer: boolean = false;
+      AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
     procedure ProcessErrorCode(pData: String; ProcedureParam: String);
     function ProcessMultiDataSet: Variant;
     function GetConnection: string;
@@ -266,7 +268,8 @@ begin
   end;
 end;
 
-function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
+function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false;
+  AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
   function GetAddConnectString(pExecOnServer: boolean): String;
   begin
     if pExecOnServer then
@@ -286,11 +289,11 @@ var
   End;
   function LastAttempt: Boolean;
   Begin
-    Result := (AttemptCount = 10) AND (NextActiveConnection = StartActiveConnection);
+    Result := (AttemptCount >= AMaxAtempt) AND (NextActiveConnection = StartActiveConnection);
   End;
   function Midle: Boolean;
   Begin
-    Result := (AttemptCount = 5);
+    Result := (AttemptCount = (AMaxAtempt div 2));
   End;
 begin
   FCriticalSection.Enter;
@@ -307,7 +310,7 @@ begin
     StartActiveConnection := FActiveConnection;
     try
       repeat
-        for AttemptCount := 1 to 10 do
+        for AttemptCount := 1 to AMaxAtempt do
         Begin
           try
             idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
@@ -318,16 +321,25 @@ begin
             Begin
               if LastAttempt then
               Begin
-                case E.LastError of
-                  10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
-                  10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
-                  10060: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                  11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                  10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                  10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
-                else
-                  raise E;
-                end;
+                if ANeedShowException then
+                Begin
+                  if gc_allowLocalConnection AND not gc_User.Local then
+                  Begin
+                    gc_User.Local := True;
+                    ShowMessage('Программа переведена в режим автономной работы.'+#13+
+                                'Перезайдите в программу после восстановления связи с сервером.')
+                  end;
+                  case E.LastError of
+                    10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+                    10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
+                    10060: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                    11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                    10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                    10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
+                  else
+                    raise E;
+                  end;
+                End;
               End
               else
               Begin
@@ -359,8 +371,10 @@ begin
             idHTTP.Disconnect;
           except
           end;
-        end;
-      until ok or LastAttempt;
+        end
+        else
+          Break;
+      until ok;
       (*
       for AttemptCount := 1 to 10 do
         try
@@ -395,21 +409,24 @@ begin
   //  if pExecOnServer then
 
     // Определяем тип возвращаемого результата
-    ResultType := trim(Copy(FReceiveStream.DataString, 1, ResultTypeLenght));
-    isArchive := trim(lowercase(Copy(FReceiveStream.DataString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
-    Str := Copy(FReceiveStream.DataString, ResultTypeLenght + IsArchiveLenght + 1, maxint);
-    if ResultType = gcMultiDataSet then begin
-       Result := ProcessMultiDataSet;
-       exit;
-    end;
-    if ResultType = gcError then
-       ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData));
-    if ResultType = gcResult then
-       Result := PrepareStr;
-    if ResultType = gcDataSet then
-       Result := PrepareStr;
+    if Ok then
+    Begin
+      ResultType := trim(Copy(FReceiveStream.DataString, 1, ResultTypeLenght));
+      isArchive := trim(lowercase(Copy(FReceiveStream.DataString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
+      Str := Copy(FReceiveStream.DataString, ResultTypeLenght + IsArchiveLenght + 1, maxint);
+      if ResultType = gcMultiDataSet then begin
+         Result := ProcessMultiDataSet;
+         exit;
+      end;
+      if ResultType = gcError then
+         ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData));
+      if ResultType = gcResult then
+         Result := PrepareStr;
+      if ResultType = gcDataSet then
+         Result := PrepareStr;
 
-    Logger.AddToLog(Result);
+      Logger.AddToLog(Result);
+    End;
   finally
     // Выход из критической секции
     FCriticalSection.Leave;
