@@ -162,7 +162,9 @@ BEGIN
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_Transport()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                              AND (MI.ParentId IS NULL OR MI.Amount <> 0 OR MIFloat_StartAmountFuel.ValueData <> 0)
+                              AND (MI.ParentId IS NULL OR MI.Amount <> 0 OR MIFloat_StartAmountFuel.ValueData <> 0
+                                OR MIFloat_Weight.ValueData <> 0 OR MIFloat_WeightTransport.ValueData <> 0
+                                  )
                            )
 
         SELECT zfConvert_StringToNumber (tmpFuel.InvNumber) AS InvNumberTransport
@@ -206,7 +208,7 @@ BEGIN
                    , tmpAll.OperDate
                    , tmpAll.CarId
                    , tmpAll.PersonalDriverId
-                   , MAX (tmpAll.RouteId)         AS RouteId
+                   ,  (tmpAll.RouteId)         AS RouteId
                    , MAX (tmpAll.RouteKindId)     AS RouteKindId
                    , MAX (tmpAll.RateFuelKindId)  AS RateFuelKindId
                    , (tmpAll.FuelId)              AS FuelId

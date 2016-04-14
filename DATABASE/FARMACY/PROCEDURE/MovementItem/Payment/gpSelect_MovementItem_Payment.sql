@@ -75,7 +75,7 @@ BEGIN
                    , Object_Contract.ValueData                  AS ContractName
                    , MovementFloat_TotalSumm.ValueData          AS TotalSumm
                    , Container.Amount                           AS PaySumm
-                   , COALESCE(NULLIF(ObjectFloat_Juridical_PayOrder.ValueData,0),999999)::TFloat AS PayOrder
+                   , COALESCE (NULLIF (ObjectFloat_Juridical_PayOrder.ValueData, 0), 999999) :: TFloat AS PayOrder
               FROM Movement 
                     LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -127,8 +127,8 @@ BEGIN
                            
               WHERE Movement.DescId = zc_Movement_Income()
                 AND MovementLinkObject_Juridical.ObjectId = vbJuridicalId
-                -- AND COALESCE (MovementDate_Payment.ValueData, Movement.OperDate) BETWEEN inDateStart AND inDateEnd
-                AND MovementDate_Payment.ValueData BETWEEN inDateStart AND inDateEnd
+                AND COALESCE (MovementDate_Payment.ValueData, Movement.OperDate) BETWEEN inDateStart AND inDateEnd
+                -- AND MovementDate_Payment.ValueData BETWEEN inDateStart AND inDateEnd
                 AND Container.Amount  > 0
             ),
             MI_SavedPayment AS 
@@ -496,5 +496,5 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 */
 
 -- SELECT * FROM Movement_Payment_View where id = 992827
--- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1831122 , inShowAll:= TRUE , inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
--- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1831122 , inShowAll:= FALSE, inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
+-- SELECT * FROM gpSelect_MovementItem_Payment (inMovementId := 1831122 , inShowAll:= TRUE , inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
+-- SELECT * FROM gpSelect_MovementItem_Payment (inMovementId := 1831122 , inShowAll:= FALSE, inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');

@@ -2,8 +2,9 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 904
+  ExplicitLeft = -114
   ExplicitWidth = 920
-  ExplicitHeight = 564
+  ExplicitHeight = 561
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -179,15 +180,6 @@
             Options.Editing = False
             Width = 100
           end
-          object JuridicalPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' c/c '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'JuridicalPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderHint = #1062#1077#1085#1072' c/c '#1089' '#1053#1044#1057
-            Options.Editing = False
-            Width = 70
-          end
           object JuridicalPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' c/c '#1089' '#1053#1044#1057' '#1073#1077#1079' % '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'JuridicalPriceWithVAT'
@@ -195,6 +187,16 @@
             Properties.DisplayFormat = ',0.00'
             Visible = False
             HeaderHint = #1062#1077#1085#1072' c/c '#1089' '#1053#1044#1057' '#1073#1077#1079' % '#1082#1086#1088#1088'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object JuridicalPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' c/c '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'JuridicalPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Visible = False
+            HeaderHint = #1062#1077#1085#1072' c/c '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end

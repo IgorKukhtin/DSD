@@ -120,7 +120,7 @@ BEGIN
     ioValue := zfGet_ViewWorkHour (vbValue, ioTypeId);
                          
 
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpmicontainer_insert')
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = 'tmpoperdate')
      THEN
          DELETE FROM tmpOperDate;
          INSERT INTO tmpOperDate (OperDate)

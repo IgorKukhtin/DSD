@@ -1,11 +1,11 @@
--- Function: lpSelectMinPrice_AllGoods()
+-- Function: lpSelectMinPrice_List()
 
-DROP FUNCTION IF EXISTS lpSelectMinPrice_AllGoods (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpSelectMinPrice_List (Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpSelectMinPrice_AllGoods(
+CREATE OR REPLACE FUNCTION lpSelectMinPrice_List(
     IN inUnitId      Integer      , -- ключ Аптеки
     IN inObjectId    Integer      , 
-    IN inUserId      Integer        -- сессия пользователя
+    IN inUserId      Integer        -- пользователь
 )
 
 RETURNS TABLE (
@@ -227,7 +227,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpSelectMinPrice_List (Integer, Integer, Integer) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -237,4 +237,4 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM lpSelectMinPrice_AllGoods (183293, 4, 3)
+-- SELECT * FROM lpSelectMinPrice_List (183293, 4, 3)

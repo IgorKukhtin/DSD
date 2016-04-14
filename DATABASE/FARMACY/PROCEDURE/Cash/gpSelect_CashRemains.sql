@@ -89,7 +89,7 @@ BEGIN
             Goods.ObjectCode,
             CashSessionSnapShot.Remains,
             CashSessionSnapShot.Price,
-            CashSessionSnapShot.Reserved,
+            NULLIF (CashSessionSnapShot.Reserved, 0) :: TFloat AS Reserved,
             CashSessionSnapShot.MCSValue,
             Link_Goods_AlternativeGroup.ChildObjectId as AlternativeGroupId,
             ObjectFloat_NDSKind_NDS.ValueData AS NDS,

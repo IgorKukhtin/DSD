@@ -83,6 +83,7 @@ type
     clContractNumber: TcxGridDBColumn;
     clContractStartDate: TcxGridDBColumn;
     clContractEndDate: TcxGridDBColumn;
+    actRefreshLite: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
