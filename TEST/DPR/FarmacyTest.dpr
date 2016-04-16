@@ -258,7 +258,6 @@ uses
   LossDebtJournal in '..\..\FormsFarmacy\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
   Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm: TParentForm},
-  ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   ReturnOutJournal in '..\..\FormsFarmacy\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
   ReturnOutTest in '..\SOURCE\Movement\All\Farmacy\ReturnOutTest.pas',
   IncomeJournalChoice in '..\..\FormsFarmacy\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
@@ -411,7 +410,8 @@ uses
   MarginReportItem in '..\..\FormsFarmacy\Guides\MarginReportItem.pas' {MarginReportItemForm: TParentForm},
   Report_MovementIncomeFarmDialog in '..\..\FormsFarmacy\Report\Report_MovementIncomeFarmDialog.pas' {Report_MovementIncomeFarmDialogForm: TParentForm},
   Report_MovementIncomeFarm in '..\..\FormsFarmacy\Report\Report_MovementIncomeFarm.pas' {Report_MovementIncomeFarmForm: TParentForm},
-  Report_PriceIntervention2 in '..\..\FormsFarmacy\Report\Report_PriceIntervention2.pas' {Report_PriceIntervention2Form: TParentForm};
+  Report_PriceIntervention2 in '..\..\FormsFarmacy\Report\Report_PriceIntervention2.pas' {Report_PriceIntervention2Form: TParentForm},
+  ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

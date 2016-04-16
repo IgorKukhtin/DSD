@@ -112,6 +112,7 @@ inherited ReturnOutForm: TReturnOutForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
@@ -119,8 +120,31 @@ inherited ReturnOutForm: TReturnOutForm
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 222
+          end
+          object colPartitionGoods: TcxGridDBColumn
+            Caption = #1057#1077#1088#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -129,6 +153,7 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object colPrice: TcxGridDBColumn
@@ -138,6 +163,7 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
@@ -148,6 +174,7 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
@@ -155,6 +182,7 @@ inherited ReturnOutForm: TReturnOutForm
             AlternateCaption = #1042' '#1087#1088#1080#1093#1086#1076#1077
             Caption = #1042' '#1087#1088#1080#1093#1086#1076#1077
             DataBinding.FieldName = 'AmountInIncome'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
           end
@@ -162,6 +190,8 @@ inherited ReturnOutForm: TReturnOutForm
             AlternateCaption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'Remains'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 74
           end
@@ -1464,7 +1494,7 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 560
+    Left = 512
     Top = 8
   end
   object GuidesTo: TdsdGuides
@@ -1542,8 +1572,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 687
-    Top = 144
+    Left = 671
+    Top = 184
   end
   object spIncome_GoodsId: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_GoodsId'

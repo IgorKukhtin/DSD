@@ -737,10 +737,6 @@
 				<Form>Report_BalanceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnOut.pas">
-				<Form>ReturnOutForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnOutJournal.pas">
 				<Form>ReturnOutJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1270,6 +1266,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceIntervention2.pas">
 				<Form>Report_PriceIntervention2Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnOut.pas">
+				<Form>ReturnOutForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
