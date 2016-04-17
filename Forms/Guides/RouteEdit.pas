@@ -52,6 +52,10 @@ type
     cxLabel5: TcxLabel;
     ceRouteGroup: TcxButtonEdit;
     RouteGroupGuides: TdsdGuides;
+    cxLabel29: TcxLabel;
+    edRateSumma: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    edRatePrice: TcxCurrencyEdit;
 
   private
     { Private declarations }

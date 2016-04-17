@@ -636,11 +636,10 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
-          Value = #1075#1088#1085
         end>
       isShowModal = False
     end
@@ -714,11 +713,10 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
-          Value = #1075#1088#1085
         end>
       isShowModal = False
     end
@@ -935,7 +933,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
@@ -963,11 +961,10 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
-          Value = #1075#1088#1085
           DataType = ftString
         end>
       isShowModal = False
@@ -992,11 +989,10 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
-          Value = #1075#1088#1085
         end>
       isShowModal = False
     end
@@ -1020,11 +1016,10 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
-          Value = #1075#1088#1085
         end>
       isShowModal = False
     end
@@ -1070,11 +1065,10 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
-          Value = #1075#1088#1085
         end>
       isShowModal = False
     end
@@ -1098,11 +1092,10 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
-          Value = #1075#1088#1085
         end>
       isShowModal = False
     end
@@ -1154,11 +1147,10 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '14461'
+          Value = '0'
         end
         item
           Name = 'CurrencyName'
-          Value = #1075#1088#1085
         end>
       isShowModal = False
     end

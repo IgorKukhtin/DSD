@@ -36,6 +36,9 @@ BEGIN
             , MIFloat_WeightTransport.ValueData         AS WeightTransport
             , MIFloat_StartOdometre.ValueData           AS StartOdometre
             , MIFloat_EndOdometre.ValueData             AS EndOdometre
+            , MIFloat_RateSumma.ValueData               AS RateSumma
+            , MIFloat_RatePrice.ValueData               AS RatePrice
+            , MIFloat_Taxi.ValueData                    AS Taxi
            
             , Object_Freight.Id           AS FreightId
             , Object_Freight.ValueData    AS FreightName
@@ -54,6 +57,18 @@ BEGIN
                               AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementItem.ObjectId
              
+             LEFT JOIN MovementItemFloat AS MIFloat_RateSumma
+                                         ON MIFloat_RateSumma.MovementItemId =  MovementItem.Id
+                                        AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
+                                         ON MIFloat_RatePrice.MovementItemId =  MovementItem.Id
+                                        AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_Taxi
+                                         ON MIFloat_Taxi.ObjectId =  MovementItem.Id
+                                        AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
+
              LEFT JOIN MovementItemFloat AS MIFloat_DistanceWeightTransport
                                          ON MIFloat_DistanceWeightTransport.MovementItemId = MovementItem.Id
                                         AND MIFloat_DistanceWeightTransport.DescId = zc_MIFloat_DistanceWeightTransport()
@@ -398,6 +413,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.04.16         *
  10.12.13         * add WeightTransport, DistanceWeightTransport              
  02.12.13         * add Comment
  26.10.13                                        * add zc_MILinkObject_RouteKindFreight

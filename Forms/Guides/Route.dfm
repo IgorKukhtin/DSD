@@ -3,7 +3,7 @@ object RouteForm: TRouteForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1096#1088#1091#1090#1099'>'
   ClientHeight = 395
-  ClientWidth = 823
+  ClientWidth = 967
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object RouteForm: TRouteForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 823
+    Width = 967
     Height = 369
     Align = alClient
     TabOrder = 0
@@ -53,31 +53,31 @@ object RouteForm: TRouteForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 61
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 176
+        Width = 202
       end
       object clBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
-        Width = 127
+        Width = 144
       end
       object clUnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
-        Width = 141
+        Width = 163
       end
       object clRouteKind: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteKindName'
         HeaderAlignmentVert = vaCenter
-        Width = 91
+        Width = 104
       end
       object clFreight: TcxGridDBColumn
         Caption = #1043#1088#1091#1079
@@ -91,7 +91,31 @@ object RouteForm: TRouteForm
         DataBinding.FieldName = 'RouteGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 103
+      end
+      object clRateSumma: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076'.'
+        DataBinding.FieldName = 'RateSumma'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
+        Options.Editing = False
+        Width = 85
+      end
+      object clRatePrice: TcxGridDBColumn
+        Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
+        DataBinding.FieldName = 'RatePrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+        Options.Editing = False
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

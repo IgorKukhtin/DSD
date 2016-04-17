@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Route (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Route(
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
+             , RateSumma Tfloat, RatePrice  Tfloat
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
@@ -30,6 +31,9 @@ BEGIN
        , Object_Route.ObjectCode AS Code
        , Object_Route.ValueData  AS Name
               
+       , ObjectFloat_RateSumma.ValueData AS RateSumma
+       , ObjectFloat_RatePrice.ValueData AS RatePrice
+
        , Object_Unit.Id         AS UnitId 
        , Object_Unit.ObjectCode AS UnitCode
        , Object_Unit.ValueData  AS UnitName
@@ -54,6 +58,14 @@ BEGIN
        
    FROM Object AS Object_Route
         LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Route.AccessKeyId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_RateSumma
+                              ON ObjectFloat_RateSumma.ObjectId = Object_Route.Id
+                             AND ObjectFloat_RateSumma.DescId = zc_ObjectFloat_Route_RateSumma()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_RatePrice
+                              ON ObjectFloat_RatePrice.ObjectId = Object_Route.Id
+                             AND ObjectFloat_RatePrice.DescId = zc_ObjectFloat_Route_RatePrice()
         
         LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                      AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
@@ -84,6 +96,9 @@ BEGIN
            , NULL :: Integer AS Code
            , 'УДАЛИТЬ' :: TVarChar AS Name
 
+           , 0 :: Tfloat AS RateSumma
+           , 0 :: Tfloat AS RatePrice
+       
            , 0 AS UnitId 
            , 0 AS UnitCode
            , '' :: TVarChar AS UnitName
@@ -116,6 +131,7 @@ ALTER FUNCTION gpSelect_Object_Route (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.04.16         * 
  20.04.15         * RouteGroup             
  14.12.13                                        * add vbAccessKeyAll
  13.12.13         * add Branch             
@@ -129,3 +145,4 @@ UPDATE Object SET AccessKeyId = Object2.AccessKeyId  from ObjectLink  left join 
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_Route (zfCalc_UserAdmin())
+

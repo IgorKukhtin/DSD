@@ -270,49 +270,63 @@ inherited CashJournalUserForm: TCashJournalUserForm
           object clAmountCurrency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
             DataBinding.FieldName = 'AmountCurrency'
+            Visible = False
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 60
           end
           object clAmountSumm: TcxGridDBColumn
             Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
             DataBinding.FieldName = 'AmountSumm'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 60
           end
           object clCurrencyName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072
             DataBinding.FieldName = 'CurrencyName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 60
           end
           object clCurrencyPartnerValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyPartnerValue'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 60
           end
           object clParPartnerValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083
             DataBinding.FieldName = 'ParPartnerValue'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 60
           end
           object clCurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089' '#1059#1055
             DataBinding.FieldName = 'CurrencyValue'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 60
           end
           object clParValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1091#1088#1089' '#1059#1055
             DataBinding.FieldName = 'ParValue'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 60
           end
         end
@@ -359,6 +373,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Left = 677
     Top = 7
     Caption = #1042#1072#1083#1102#1090#1072':'
+    Visible = False
   end
   object ceCurrency: TcxButtonEdit [3]
     Left = 726
@@ -372,6 +387,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Properties.ReadOnly = True
     ShowHint = False
     TabOrder = 7
+    Visible = False
     Width = 65
   end
   inherited ActionList: TActionList

@@ -356,6 +356,16 @@
               Format = ',0.00'
               Kind = skSum
               Column = colDistanceWeightTransport
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRateSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTaxi
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -391,6 +401,16 @@
               Format = ',0.00'
               Kind = skSum
               Column = colDistanceWeightTransport
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRateSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTaxi
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -532,6 +552,41 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 67
+          end
+          object clRateSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076'.'
+            DataBinding.FieldName = 'RateSumma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
+            Options.Editing = False
+            Width = 85
+          end
+          object clRatePrice: TcxGridDBColumn
+            Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
+            DataBinding.FieldName = 'RatePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+            Options.Editing = False
+            Width = 100
+          end
+          object clTaxi: TcxGridDBColumn
+            Caption = ' '#1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080
+            DataBinding.FieldName = 'Taxi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+            Width = 100
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -869,6 +924,9 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1183,6 +1241,9 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1808,6 +1869,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1087#1083#1080#1074#1086'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1087#1083#1080#1074#1086'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
