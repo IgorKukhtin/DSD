@@ -66,8 +66,19 @@ BEGIN
     -- проверка
     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
     THEN
-        RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+        RAISE EXCEPTION 'Ошибка.Неверный формат даты документа <%>.', inOperDate;
     END IF;
+    -- проверка
+    IF inStartSale <> DATE_TRUNC ('DAY', inStartSale)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Неверный формат начала отгрузки по акционной цене <%>.', inStartSale;
+    END IF;
+    -- проверка
+    IF inEndSale <> DATE_TRUNC ('DAY', inEndSale)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Неверный формат окончания отгрузки по акционной цене <%>.', inEndSale;
+    END IF;
+
     
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;

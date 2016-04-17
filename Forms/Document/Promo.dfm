@@ -794,6 +794,8 @@ inherited PromoForm: TPromoForm
     inherited edOperDate: TcxDateEdit
       Left = 89
       Top = 18
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 1
       ExplicitLeft = 89
       ExplicitTop = 18
@@ -862,6 +864,8 @@ inherited PromoForm: TPromoForm
       Left = 195
       Top = 18
       EditValue = 42132d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 2
       Width = 81
     end
@@ -874,6 +878,8 @@ inherited PromoForm: TPromoForm
       Left = 278
       Top = 18
       EditValue = 42132d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 3
       Width = 81
     end
@@ -886,6 +892,8 @@ inherited PromoForm: TPromoForm
       Left = 195
       Top = 54
       EditValue = 42132d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 7
       Width = 81
     end
@@ -898,6 +906,8 @@ inherited PromoForm: TPromoForm
       Left = 278
       Top = 54
       EditValue = 42132d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 8
       Width = 83
     end
@@ -910,6 +920,8 @@ inherited PromoForm: TPromoForm
       Left = 380
       Top = 54
       EditValue = 42132d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 9
       Width = 87
     end
@@ -922,6 +934,8 @@ inherited PromoForm: TPromoForm
       Left = 471
       Top = 54
       EditValue = 42132d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 10
       Width = 87
     end
@@ -1946,7 +1960,7 @@ inherited PromoForm: TPromoForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2003,37 +2017,37 @@ inherited PromoForm: TPromoForm
       end
       item
         Name = 'StartPromo'
-        Value = Null
+        Value = 'NULL'
         Component = deStartPromo
         DataType = ftDateTime
       end
       item
         Name = 'EndPromo'
-        Value = Null
+        Value = 'NULL'
         Component = deEndPromo
         DataType = ftDateTime
       end
       item
         Name = 'StartSale'
-        Value = Null
+        Value = 'NULL'
         Component = deStartSale
         DataType = ftDateTime
       end
       item
         Name = 'EndSale'
-        Value = Null
+        Value = 'NULL'
         Component = deEndSale
         DataType = ftDateTime
       end
       item
         Name = 'OperDateStart'
-        Value = Null
+        Value = 'NULL'
         Component = deOperDateStart
         DataType = ftDateTime
       end
       item
         Name = 'OperDateEnd'
-        Value = Null
+        Value = 'NULL'
         Component = deOperDateEnd
         DataType = ftDateTime
       end
@@ -2146,42 +2160,42 @@ inherited PromoForm: TPromoForm
       end
       item
         Name = 'inStartPromo'
-        Value = Null
+        Value = 'NULL'
         Component = deStartPromo
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndPromo'
-        Value = Null
+        Value = 'NULL'
         Component = deEndPromo
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inStartSale'
-        Value = Null
+        Value = 'NULL'
         Component = deStartSale
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndSale'
-        Value = Null
+        Value = 'NULL'
         Component = deEndSale
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inOperDateStart'
-        Value = Null
+        Value = 'NULL'
         Component = deOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inOperDateEnd'
-        Value = Null
+        Value = 'NULL'
         Component = deOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput

@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS lpSelectMinPrice_AllGoods (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelectMinPrice_AllGoods(
-    IN inUnitId      Integer      , -- ключ Аптеки
-    IN inObjectId    Integer      , 
+    IN inUnitId      Integer      , -- Аптека
+    IN inObjectId    Integer      , -- Торговая сеть
     IN inUserId      Integer        -- сессия пользователя
 )
 
@@ -20,6 +20,7 @@ RETURNS TABLE (
     Partner_GoodsCode  TVarChar,
     Partner_GoodsName  TVarChar,
     MakerName          TVarChar,
+    ContractId         Integer,
     JuridicalId        Integer,
     JuridicalName      TVarChar,
     Price              TFloat, 
@@ -103,6 +104,7 @@ BEGIN
       , ddd.Partner_GoodsCode
       , ddd.Partner_GoodsName
       , ddd.MakerName
+      , ddd.ContractId
       , ddd.JuridicalId
       , ddd.JuridicalName 
       , ddd.Deferment
@@ -127,7 +129,7 @@ BEGIN
           , GoodsList.MidPriceSale             AS MidPriceSale
             -- просто цена поставщика
           , PriceList.Amount                   AS Price
-            -- минимальная цена поставщика
+            -- минимальная цена поставщика - для товара "сети"
           , MIN (PriceList.Amount) OVER (PARTITION BY GoodsList.ObjectId) AS MinPrice
           , PriceList.Id                       AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
@@ -143,12 +145,13 @@ BEGIN
           , Object_JuridicalGoods.GoodsCode    AS Partner_GoodsCode
           , Object_JuridicalGoods.GoodsName    AS Partner_GoodsName
           , Object_JuridicalGoods.MakerName    AS MakerName
+          , LastPriceList_View.ContractId      AS ContractId
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
           , Goods.isTOP
         
-        FROM -- Остатки
+        FROM -- Остатки + коды ...
              GoodsList 
              -- товары в прайс-листе (поставщика)
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
@@ -168,7 +171,7 @@ BEGIN
             LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LastPriceList_View.JuridicalId 
                                        AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId
                                        AND JuridicalSettings.ContractId      = LastPriceList_View.ContractId 
-            -- товар "поставщика", если он есть в прайсах
+            -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
             LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
             -- товар "сети"
             LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = GoodsList.ObjectId
@@ -214,6 +217,7 @@ BEGIN
         MinPriceList.Partner_GoodsCode,
         MinPriceList.Partner_GoodsName,
         MinPriceList.MakerName,
+        MinPriceList.ContractId,
         MinPriceList.JuridicalId,
         MinPriceList.JuridicalName,
         MinPriceList.Price,
@@ -237,4 +241,4 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM lpSelectMinPrice_AllGoods (183293, 4, 3)
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 4797

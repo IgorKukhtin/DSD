@@ -484,6 +484,7 @@ BEGIN
                       , tmpMI.OperSumm_Phone
 
                   FROM (SELECT Movement.DescId AS MovementDescId
+                             , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END AS MovementItemId
                              , MovementItem.DescId
                              , MovementItem.ObjectId AS GoodsId
                              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
@@ -608,6 +609,7 @@ BEGIN
                                                         AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
                         WHERE Movement.Id = inMovementId
                         GROUP BY Movement.DescId
+                               , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END
                                , MovementItem.DescId
                                , MovementItem.ObjectId
                                , MILinkObject_GoodsKind.ObjectId

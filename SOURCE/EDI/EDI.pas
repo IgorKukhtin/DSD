@@ -1330,8 +1330,11 @@ begin
   end;
   P7SFileName := XMLFileName; //StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
+//  ShowMessage ('start подписать - SignFile : ' + XMLFileName);
     // подписать
     SignFile(XMLFileName, stDeclar, DebugMode);
+//  ShowMessage ('end подписать - SignFile : ' + XMLFileName);
+
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -2704,12 +2707,14 @@ begin
              raise Exception.Create('ComSigner.SignFilesByDigitalStamp(FileName) ' + Error);
       end;
       if SignType = stDeclar then begin
-         // O=Фізична особа ;OU=Фізична особа;Title=підписувач;CN=Алієв Арсен Шакірович;SN=Алієв;GivenName=Арсен Шакірович;Serial=1497059;C=UA;L=Крюківщина;ST=Київська
-         // O=Державна фіскальна служба України;OU=Державна фіскальна служба України;Title=електронна печатка;CN=Державна фіскальна служба України. ОТРИМАНО;Serial=1671693;C=UA;L=Київ
+//         !!!если изменился - обязтельно выполнить это под отладкой, что б узнать значение строки (и захаркодить её), при этом выбрать нужный сертификат!!!
 //         EUTaxService_СертификатExite := ComSigner.SelectServerCert;
-//         EUTaxService_СертификатМДС := ComSigner.SelectServerCert;
-         EUTaxService_СертификатExite := 'O=Фізична особа ;OU=Фізична особа;Title=підписувач;CN=Алієв Арсен Шакірович;SN=Алієв;GivenName=Арсен Шакірович;Serial=1497059;C=UA;L=Крюківщина;ST=Київська';
-         EUTaxService_СертификатМДС := 'O=Державна фіскальна служба України;OU=Державна фіскальна служба України;Title=електронна печатка;CN=Державна фіскальна служба України. ОТРИМАНО;Serial=1671693;C=UA;L=Київ';
+//         !!!если изменился - обязтельно выполнить это под отладкой, что б узнать значение строки (и захаркодить её), при этом выбрать нужный сертификат!!!
+//         EUTaxService_СертификатМДС   := ComSigner.SelectServerCert;
+
+         EUTaxService_СертификатExite := 'O=ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "Е-КОМ";PostalCode=01042;CN=ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "Е-КОМ";Serial=34241719;C=UA;L=місто КИЇВ;StreetAddress=провулок Новопечерський, буд. 19/3, корпус 1, к. 6';
+         EUTaxService_СертификатМДС   := 'O=Державна фіскальна служба України;OU=Державна фіскальна служба України;Title=електронна печатка;CN=Державна фіскальна служба України. ОТРИМАНО;Serial=1671693;C=UA;L=Київ';
+
          ddd := VarArrayCreate([0, 1], varOleStr);
          ddd[0] := EUTaxService_СертификатМДС;
          ddd[1] := EUTaxService_СертификатExite;
