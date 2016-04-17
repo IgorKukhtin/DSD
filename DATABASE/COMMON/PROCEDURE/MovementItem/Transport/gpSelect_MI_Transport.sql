@@ -66,7 +66,7 @@ BEGIN
                                         AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
 
              LEFT JOIN MovementItemFloat AS MIFloat_Taxi
-                                         ON MIFloat_Taxi.ObjectId =  MovementItem.Id
+                                         ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
                                         AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
 
              LEFT JOIN MovementItemFloat AS MIFloat_DistanceWeightTransport
