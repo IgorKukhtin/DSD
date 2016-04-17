@@ -156,7 +156,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Taxi(), ioId, inTaxi);
    
-   outRatePrice_Calc:= inRatePrice * inAmount;
+   outRatePrice_Calc:= COALESCE (inRatePrice,0) * (COALESCE (inAmount,0) + COALESCE (inDistanceFuelChild,0));
    
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
