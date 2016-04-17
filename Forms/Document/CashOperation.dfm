@@ -5,7 +5,7 @@
   ClientWidth = 563
   AddOnFormData.isSingle = False
   ExplicitWidth = 569
-  ExplicitHeight = 335
+  ExplicitHeight = 338
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -85,6 +85,7 @@
   object ceOperDate: TcxDateEdit [10]
     Left = 130
     Top = 25
+    EditValue = 42475d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
@@ -249,20 +250,21 @@
     Width = 47
   end
   object cxLabel15: TcxLabel [32]
-    Left = 384
-    Top = 52
+    Left = 382
+    Top = 50
     Caption = #1042#1072#1083#1102#1090#1072
   end
   object ceCurrency: TcxButtonEdit [33]
-    Left = 384
+    Left = 382
     Top = 70
+    ParentShowHint = False
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    ShowHint = False
     TabOrder = 33
     Width = 63
   end
@@ -468,7 +470,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -982,9 +984,9 @@
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCurrency
-    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.Value = 'TCurrencyValue_ForCashForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCurrencyForm'
+    FormName = 'TCurrencyValue_ForCashForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -999,9 +1001,30 @@
         Component = CurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = ceOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = ceParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = ceCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
       end>
-    Left = 416
-    Top = 50
+    Left = 389
+    Top = 64
   end
   object SaleChoiceGuides: TdsdGuides
     KeyField = 'Id'

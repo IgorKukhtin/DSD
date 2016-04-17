@@ -276,8 +276,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
- //TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
- // TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
+ TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalForm');
@@ -381,7 +381,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyValue_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyValue_ObjectForm');
-
+  // для документа кассы
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyValue_ForCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyValue_ForCashForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyMovementFormTest;

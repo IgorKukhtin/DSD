@@ -100,12 +100,18 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
                       
-           , CASE WHEN MovementItem.Amount > 0 THEN
+--           , CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 0 END::TFloat AS AmountIn
+--           , CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END::TFloat AS AmountOut
+           , CASE WHEN MILinkObject_Currency.ObjectId <> zc_Enum_Currency_Basis() AND MovementFloat_AmountCurrency.ValueData > 0 THEN
+                       MovementFloat_AmountCurrency.ValueData
+                  WHEN MovementItem.Amount > 0 THEN
                        MovementItem.Amount
                   ELSE
                       0
                   END::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN
+           , CASE WHEN MILinkObject_Currency.ObjectId <> zc_Enum_Currency_Basis() AND MovementFloat_AmountCurrency.ValueData < 0 THEN
+                       -1 * MovementFloat_AmountCurrency.ValueData
+                  WHEN MovementItem.Amount < 0 THEN
                        -1 * MovementItem.Amount
                   ELSE
                       0
@@ -215,6 +221,10 @@ BEGIN
                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
 
        WHERE Movement.Id =  inMovementId;
 

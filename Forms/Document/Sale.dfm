@@ -1,26 +1,26 @@
 ﻿inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 645
-  ClientWidth = 1261
+  ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1277
-  ExplicitHeight = 680
+  ExplicitWidth = 1314
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1261
+    Width = 1298
     Height = 479
     ExplicitTop = 166
     ExplicitWidth = 1261
     ExplicitHeight = 479
     ClientRectBottom = 479
-    ClientRectRight = 1261
+    ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1261
       ExplicitHeight = 455
       inherited cxGrid: TcxGrid
-        Width = 1261
+        Width = 1298
         Height = 455
         ExplicitWidth = 1261
         ExplicitHeight = 455
@@ -482,7 +482,7 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1261
+    Width = 1298
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1261
@@ -3889,7 +3889,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1114
+    Left = 1082
+    Top = 16
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'

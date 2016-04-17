@@ -3,7 +3,7 @@
   ClientHeight = 315
   ClientWidth = 581
   ExplicitWidth = 587
-  ExplicitHeight = 340
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -42,8 +42,8 @@
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object ceBankAccount: TcxButtonEdit [6]
-    Left = 280
-    Top = 25
+    Left = 284
+    Top = 28
     Properties.Buttons = <
       item
         Default = True
@@ -187,7 +187,7 @@
     Caption = #1053#1086#1084#1080#1085#1072#1083
   end
   object ceParPartnerValue: TcxCurrencyEdit [25]
-    Left = 358
+    Left = 362
     Top = 80
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 0
@@ -397,7 +397,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -613,12 +613,12 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = ceOperDate
         DataType = ftDateTime
       end>
-    Left = 316
-    Top = 5
+    Left = 324
+    Top = 21
   end
   object ObjectlGuides: TdsdGuides
     KeyField = 'Id'
@@ -784,7 +784,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 424
+    Left = 432
     Top = 66
   end
   object BankGuides: TdsdGuides
