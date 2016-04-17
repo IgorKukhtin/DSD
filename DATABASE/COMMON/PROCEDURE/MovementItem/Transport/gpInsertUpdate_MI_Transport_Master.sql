@@ -23,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inRateSumma                 TFloat    , -- Сумма коммандировочных
     IN inRatePrice                 TFloat    , -- Ставка грн/км (дальнобойные)
     IN inTaxi                      TFloat    , -- Сумма на такси
+   OUT outRatePrice_Calc           TFloat    , -- Сумма грн (дальнобойные)
     IN inFreightId                 Integer   , -- Название груза
     IN inRouteKindId_Freight       Integer   , -- Типы маршрутов(груз)
     IN inRouteKindId               Integer   , -- Типы маршрутов
@@ -155,6 +156,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Taxi(), ioId, inTaxi);
    
+   outRatePrice_Calc:= inRatePrice * inAmount;
+   
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
 
@@ -173,6 +176,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.04.16         * 
  03.06.15         * add UnitID
  10.12.13         * add DistanceWeightTransport
  09.12.13         * add WeightTransport

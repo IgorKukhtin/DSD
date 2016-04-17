@@ -366,6 +366,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = clTaxi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRatePrice_Calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -411,6 +416,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = clTaxi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRatePrice_Calc
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -577,15 +587,27 @@
             Options.Editing = False
             Width = 100
           end
+          object clRatePrice_Calc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072',  '#1075#1088#1085' ('#1076#1072#1083#1100#1085#1086#1073'.)'
+            DataBinding.FieldName = 'RatePrice_Calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1091#1084#1084#1072',  '#1075#1088#1085' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+            Options.Editing = False
+            Width = 100
+          end
           object clTaxi: TcxGridDBColumn
-            Caption = ' '#1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080
             DataBinding.FieldName = 'Taxi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+            HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080
             Width = 100
           end
           object clComment: TcxGridDBColumn
@@ -2662,6 +2684,13 @@
         ComponentItem = 'Taxi'
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'outRatePrice_Calc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RatePrice_Calc'
+        DataType = ftFloat
       end
       item
         Name = 'inFreightId'
