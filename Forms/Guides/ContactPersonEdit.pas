@@ -57,6 +57,9 @@ type
     cxLabel8: TcxLabel;
     ceContactPersonKind: TcxButtonEdit;
     ContactPersonKindGuides: TdsdGuides;
+    ceUnit: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

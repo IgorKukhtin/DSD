@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContactId Integer, ContacttName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , isErased boolean
              ) AS
@@ -44,6 +45,9 @@ BEGIN
     
            , CAST (0 as Integer)    AS ContractId
            , CAST ('' as TVarChar)  AS ContractName
+
+           , CAST (0 as Integer)    AS UnitId
+           , CAST ('' as TVarChar)  AS UnitName
 
            , inContactPersonKindId                           AS ContactPersonKindId
            , lfGet_Object_ValueData (inContactPersonKindId)  AS ContactPersonKindName
@@ -90,6 +94,15 @@ BEGIN
                  ELSE ''::TVarChar
              END                                 AS ContractName
 
+           , CASE ContactPerson_Object.DescId
+                 WHEN zc_Object_Unit() THEN ContactPerson_Object.Id                   
+                 ELSE 0
+             END                                 AS UnitId
+           , CASE ContactPerson_Object.DescId
+                 WHEN zc_Object_Unit() THEN ContactPerson_Object.ValueData                   
+                 ELSE ''::TVarChar
+             END                                 AS UnitName
+
            , Object_ContactPersonKind.Id         AS ContactPersonKindId
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
           
@@ -129,6 +142,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.04.16         *
  31.05.14         *         
 */
 

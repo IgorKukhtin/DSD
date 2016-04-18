@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
  INOUT ioId                       Integer   ,    -- ключ объекта < Улица/проспект> 
@@ -14,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
     IN inObjectId_Partner         Integer   ,    --   
     IN inObjectId_Juridical       Integer   ,    --   
     IN inObjectId_Contract        Integer   ,    --   
+    IN inObjectId_Unit            Integer   ,    -- 
     IN inContactPersonKindId      Integer   ,    --
     IN inSession                  TVarChar       -- сессия пользователя
 )
@@ -40,20 +43,26 @@ BEGIN
    -- проверка прав уникальности для свойства <Код > + <Object> 
 --   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContactPerson(), vbCode_calc);
 
-   IF COALESCE (inObjectId_Partner, 0) <> 0 AND (COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0) 
+   IF COALESCE (inObjectId_Partner, 0) <> 0 AND (COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0 AND COALESCE (inObjectId_Unit, 0) = 0) 
    THEN
 	vbObjectId = COALESCE (inObjectId_Partner, 0);
    END IF;
 
-   IF COALESCE (inObjectId_Juridical, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0) 
+   IF COALESCE (inObjectId_Juridical, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0 AND COALESCE (inObjectId_Unit, 0) = 0) 
    THEN
 	vbObjectId = COALESCE (inObjectId_Juridical, 0);
    END IF;
 
-   IF COALESCE (inObjectId_Contract, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0)=0 AND COALESCE (inObjectId_Juridical, 0)=0) 
+   IF COALESCE (inObjectId_Contract, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0)=0 AND COALESCE (inObjectId_Juridical, 0)=0 AND COALESCE (inObjectId_Unit, 0) = 0) 
    THEN
 	vbObjectId = COALESCE (inObjectId_Contract, 0);
    END IF;
+
+   IF COALESCE (inObjectId_Unit, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0)=0 AND COALESCE (inObjectId_Juridical, 0)=0 AND COALESCE (inObjectId_Contract, 0) = 0) 
+   THEN
+	vbObjectId = COALESCE (inObjectId_Unit, 0);
+   END IF;
+
 
    IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION 'Ошибка.Должен быть выбран один <Объект контакта>: <Юридическое лицо> или <Договор> или <Контрагент>.'; END IF;
    
@@ -83,6 +92,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.04.16         *
  21.10.14         *
  19.06.14                        *
 */

@@ -38,15 +38,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             VisibleForCustomization = False
             Width = 60
           end
-          object colUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            PropertiesClassName = 'TcxTextEditProperties'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
+          object c0lPhone: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085
+            DataBinding.FieldName = 'Phone'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 244
+            Width = 109
           end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -101,6 +100,16 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 98
+          end
+          object colUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 244
           end
         end
       end

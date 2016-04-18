@@ -7,8 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsSearchRemains(
   , IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
+             , NDSkindName TVarChar
              , GoodsGroupName TVarChar
-             , UnitName TVarChar
+             , UnitName TVarChar, Phone TVarChar
              , Amount TFloat
              , PriceSale  TFloat
              , SummaSale TFloat
@@ -36,6 +37,7 @@ BEGIN
                      FROM Object 
                      WHERE Object.DescId = zc_Object_Goods()
                        AND upper(Object.ValueData) LIKE UPPER('%'||inGoodsSearch||'%')
+                       AND inGoodsSearch <> ''
                      )
            , containerCount AS (SELECT Container.Id                AS ContainerId
                                      , Container.Amount
@@ -67,11 +69,13 @@ BEGIN
         SELECT Object_Goods_View.Id                         as Id
              , Object_Goods_View.GoodsCodeInt ::Integer     as GoodsCode
              , Object_Goods_View.GoodsName                  as GoodsName
+             , Object_Goods_View.NDSkindName                as NDSkindName
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
              , Object_Unit.ValueData                        AS UnitName
-            , tmpData.Amount :: TFloat                      AS Amount
-            , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                 :: TFloat AS PriceSale
-            , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) :: TFloat AS SummaSale
+             , ObjectString_Phone.ValueData                 AS Phone
+             , tmpData.Amount :: TFloat                     AS Amount
+             , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                    :: TFloat AS PriceSale
+             , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) :: TFloat AS SummaSale
               
         FROM tmpData
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
@@ -90,8 +94,15 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                          ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                         AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
-         
-          order by Object_Unit.ValueData 
+
+            LEFT JOIN ObjectLink AS ContactPerson_ContactPerson_Object
+                                 ON ContactPerson_ContactPerson_Object.ChildObjectId = Object_Unit.Id
+                                AND ContactPerson_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
+            LEFT JOIN ObjectString AS ObjectString_Phone
+                                   ON ObjectString_Phone.ObjectId = ContactPerson_ContactPerson_Object.ObjectId
+                                  AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
+    
+          ORDER BY Object_Unit.ValueData 
                  , Object_Goods_View.GoodsGroupName
                  , Object_Goods_View.GoodsName 
            ;
@@ -107,5 +118,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsSearchRemains ('глюкоз%200', inSession := '3');
-
+-- SELECT * FROM gpSelect_GoodsSearchRemains ('', inSession := '3');

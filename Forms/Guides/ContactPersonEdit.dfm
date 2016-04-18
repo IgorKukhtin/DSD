@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 423
+  ClientHeight = 487
   ClientWidth = 377
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 40
-    Top = 71
+    Left = 41
+    Top = 73
     TabOrder = 0
     Width = 294
   end
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 87
-    Top = 382
+    Top = 430
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 237
-    Top = 382
+    Top = 430
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -54,7 +54,7 @@
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 40
+    Left = 41
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -78,8 +78,8 @@
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
-    Left = 39
-    Top = 206
+    Left = 41
+    Top = 207
     Properties.Buttons = <
       item
         Default = True
@@ -87,10 +87,10 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 298
+    Width = 294
   end
   object ceContract: TcxButtonEdit
-    Left = 39
+    Left = 41
     Top = 247
     Properties.Buttons = <
       item
@@ -99,7 +99,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 296
+    Width = 294
   end
   object cxLabel5: TcxLabel
     Left = 41
@@ -116,7 +116,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 12
-    Width = 296
+    Width = 294
   end
   object cxLabel6: TcxLabel
     Left = 41
@@ -132,27 +132,27 @@
     Left = 175
     Top = 114
     TabOrder = 15
-    Width = 159
+    Width = 160
   end
   object edComment: TcxTextEdit
     Left = 41
-    Top = 340
+    Top = 388
     TabOrder = 16
-    Width = 296
+    Width = 294
   end
   object cxLabel7: TcxLabel
     Left = 41
-    Top = 320
+    Top = 368
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxLabel8: TcxLabel
     Left = 42
-    Top = 274
+    Top = 322
     Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
   end
   object ceContactPersonKind: TcxButtonEdit
-    Left = 40
-    Top = 293
+    Left = 41
+    Top = 342
     Properties.Buttons = <
       item
         Default = True
@@ -160,7 +160,24 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 296
+    Width = 294
+  end
+  object ceUnit: TcxButtonEdit
+    Left = 41
+    Top = 295
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 294
+  end
+  object cxLabel9: TcxLabel
+    Left = 42
+    Top = 276
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ActionList: TActionList
     Left = 272
@@ -181,6 +198,7 @@
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -191,6 +209,7 @@
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -261,6 +280,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inObjectId_Unit'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inContactPersonKindId'
         Value = ''
         Component = ContactPersonKindGuides
@@ -291,7 +317,7 @@
         ComponentItem = 'Key'
       end>
     Left = 32
-    Top = 356
+    Top = 404
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ContactPerson'
@@ -397,6 +423,19 @@
         Name = 'ContactPersonKindName'
         Value = ''
         Component = ContactPersonKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -525,6 +564,32 @@
         ParamType = ptInput
       end>
     Left = 255
-    Top = 288
+    Top = 336
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 175
+    Top = 294
   end
 end
