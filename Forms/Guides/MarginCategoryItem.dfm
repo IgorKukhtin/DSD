@@ -3,7 +3,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
   ClientHeight = 341
   ClientWidth = 800
   ExplicitWidth = 816
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,6 +34,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             DataBinding.FieldName = 'MinPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
@@ -42,16 +43,17 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             DataBinding.FieldName = 'MarginPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 265
+            Width = 55
           end
           object colisSite: TcxGridDBColumn
-            Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+            Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072' '#1087#1086' '#1059#1082#1088#1072#1080#1085#1077
             DataBinding.FieldName = 'isSite'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 100
           end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -59,7 +61,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 150
           end
           object clUpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
@@ -67,7 +69,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 150
           end
           object clInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -166,6 +168,10 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -178,10 +184,6 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -191,6 +193,18 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         item
           Visible = True
           ItemName = 'bbGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbLabel: TdxBarControlContainerItem

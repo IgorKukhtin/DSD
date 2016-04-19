@@ -1,26 +1,26 @@
 inherited MarginCategoryForm: TMarginCategoryForm
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1086#1082
   ClientHeight = 338
-  ClientWidth = 480
-  ExplicitWidth = 496
-  ExplicitHeight = 376
+  ClientWidth = 579
+  ExplicitWidth = 595
+  ExplicitHeight = 373
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 480
+    Width = 579
     Height = 312
-    ExplicitWidth = 439
-    ExplicitHeight = 292
+    ExplicitWidth = 480
+    ExplicitHeight = 312
     ClientRectBottom = 312
-    ClientRectRight = 480
+    ClientRectRight = 579
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 439
-      ExplicitHeight = 292
+      ExplicitWidth = 480
+      ExplicitHeight = 312
       inherited cxGrid: TcxGrid
-        Width = 480
+        Width = 579
         Height = 312
-        ExplicitWidth = 439
-        ExplicitHeight = 292
+        ExplicitWidth = 480
+        ExplicitHeight = 312
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -49,11 +49,11 @@ inherited MarginCategoryForm: TMarginCategoryForm
             Width = 74
           end
           object colisSite: TcxGridDBColumn
-            Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+            Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072' '#1087#1086' '#1059#1082#1088#1072#1080#1085#1077
             DataBinding.FieldName = 'isSite'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 100
           end
         end
       end
@@ -95,10 +95,6 @@ inherited MarginCategoryForm: TMarginCategoryForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbChoice'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -111,7 +107,19 @@ inherited MarginCategoryForm: TMarginCategoryForm
         end
         item
           Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
   end

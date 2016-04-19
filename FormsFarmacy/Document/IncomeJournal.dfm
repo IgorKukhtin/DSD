@@ -4,7 +4,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientWidth = 831
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 847
-  ExplicitHeight = 518
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -409,6 +409,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
           DataType = ftDateTime
         end>
     end
+    inherited MovementProtocolOpenForm: TdsdOpenForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+    end
     object actisDocument: TdsdExecStoredProc [23]
       Category = 'DSDLib'
       MoveParams = <>
@@ -726,15 +730,27 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbNewSend'
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbTax: TdxBarButton
