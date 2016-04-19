@@ -810,7 +810,8 @@ uses
   ExportJuridical in '..\..\Forms\Guides\ExportJuridical.pas' {ExportJuridicalForm: TParentForm},
   ExportJuridicalEdit in '..\..\Forms\Guides\ExportJuridicalEdit.pas' {ExportJuridicalEditForm: TParentForm},
   JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
-  CurrencyValue_ForCash in '..\..\Forms\Guides\CurrencyValue_ForCash.pas' {CurrencyValue_ForCashForm: TParentForm};
+  CurrencyValue_ForCash in '..\..\Forms\Guides\CurrencyValue_ForCash.pas' {CurrencyValue_ForCashForm: TParentForm},
+  Juridical_Container in '..\..\Forms\Guides\Juridical_Container.pas' {Juridical_ContainerForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

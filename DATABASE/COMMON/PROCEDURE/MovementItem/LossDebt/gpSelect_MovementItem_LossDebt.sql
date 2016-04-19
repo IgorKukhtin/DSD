@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer
              , UnitId Integer, UnitName TVarChar
              , AmountDebet TFloat, AmountKredit TFloat
              , SummDebet TFloat, SummKredit TFloat
+             , ContainerId TFloat
              , isCalculated Boolean
              , isErased Boolean
               )
@@ -69,9 +70,10 @@ BEGIN
            , 0 :: TFloat AS SummDebet
            , 0 :: TFloat AS SummKredit
 
-            , TRUE AS isCalculated
+           , 0 ::TFloat AS ContainerId
 
-            , FALSE  AS isErased
+           , TRUE AS isCalculated
+           , FALSE  AS isErased
                   
        FROM Object AS Object_Juridical
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
@@ -161,6 +163,8 @@ BEGIN
                   ELSE 0
              END::TFloat AS SummKredit
 
+            , MIFloat_ContainerId.ValueData ::TFloat AS ContainerId
+
             , MIBoolean_Calculated.ValueData AS isCalculated
 
             , MovementItem.isErased       AS isErased
@@ -181,6 +185,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Summ 
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId 
+                                        ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                           ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
@@ -268,8 +275,9 @@ BEGIN
                   ELSE 0
              END::TFloat AS SummKredit
 
-            , MIBoolean_Calculated.ValueData AS isCalculated
+            , MIFloat_ContainerId.ValueData ::TFloat AS ContainerId
 
+            , MIBoolean_Calculated.ValueData AS isCalculated
             , MovementItem.isErased       AS isErased
                   
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -278,6 +286,9 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
 
+            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId 
+                                        ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                              ON MILinkObject_Partner.MovementItemId = MovementItem.Id
@@ -340,6 +351,7 @@ ALTER FUNCTION gpSelect_MovementItem_LossDebt (Integer, Boolean, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 19.14.16         *
  07.09.14                                        * add Branch...
  27.08.14                                        * add Partner...
  25.08.14                                        * add JuridicalGroupName

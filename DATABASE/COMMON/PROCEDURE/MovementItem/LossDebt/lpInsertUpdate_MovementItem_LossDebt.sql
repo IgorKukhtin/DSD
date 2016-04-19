@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_LossDebt ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_LossDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_LossDebt(
     IN inJuridicalId         Integer   , -- Юр.лицо
     IN inPartnerId           Integer   , -- Контрагент
     IN inBranchId            Integer   , -- Филиал
+    IN inContainerId         TFloat    , -- ContainerId
     IN inAmount              TFloat    , -- Сумма
     IN inSumm                TFloat    , -- Сумма остатка (долг)
     IN inIsCalculated        Boolean   , -- Сумма рассчитывается по остатку (да/нет)
@@ -81,6 +84,9 @@ BEGIN
      -- сохранили свойство <Сумма рассчитывается по остатку (да/нет)>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), ioId, inIsCalculated);
 
+     -- сохранили свойство <ContainerId)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), ioId, inContainerId);
+
      -- сохранили свойство <Сумма остатка (долг)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
@@ -115,6 +121,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.04.16         *
  07.09.14                                        * add inBranchId
  27.08.14                                        * add inPartnerId
  16.05.14                                        * add lpInsert_MovementItemProtocol

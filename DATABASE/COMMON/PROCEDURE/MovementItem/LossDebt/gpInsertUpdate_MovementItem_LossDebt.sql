@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_LossDebt ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossDebt(
     IN inJuridicalId         Integer   , -- Юр.лицо
     IN inPartnerId           Integer   , -- Контрагент
     IN inBranchId            Integer   , -- Филиал
+    IN inContainerId         TFloat    , -- ContainerId
  INOUT ioAmountDebet         TFloat    , -- Сумма
  INOUT ioAmountKredit        TFloat    , -- Сумма
  INOUT ioSummDebet           TFloat    , -- Сумма остатка (долг)
@@ -62,6 +65,7 @@ BEGIN
                                                  , inJuridicalId        := inJuridicalId
                                                  , inPartnerId          := inPartnerId
                                                  , inBranchId           := inBranchId
+                                                 , inContainerId        := inContainerId
                                                  , inAmount             := vbAmount
                                                  , inSumm               := vbSumm
                                                  , inIsCalculated       := ioIsCalculated
