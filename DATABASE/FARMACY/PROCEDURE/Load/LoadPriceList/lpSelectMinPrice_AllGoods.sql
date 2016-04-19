@@ -53,7 +53,7 @@ BEGIN
             Container.ObjectId, -- здесь товар "сети"
             SUM(Container.Amount)::TFloat                      AS Amount,
             MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate, -- Срок годности
-            AVG(COALESCE (MIFloat_PriceSale.ValueData, 0))     AS MidPriceSale -- !!!Цена реал. с НДС!!!
+            SUM( Container.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)) / SUM(Container.Amount)      AS MidPriceSale -- !!! средняя Цена реал. с НДС!!!
         FROM 
             Container
             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
