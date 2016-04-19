@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , isErased boolean
              ) AS
@@ -62,6 +63,15 @@ BEGIN
                  ELSE ''::TVarChar
              END                                 AS ContractName
 
+           , CASE ContactPerson_Object.DescId
+                 WHEN zc_Object_Unit() THEN ContactPerson_Object.Id                   
+                 ELSE 0
+             END                                 AS UnitId
+           , CASE ContactPerson_Object.DescId
+                 WHEN zc_Object_Unit() THEN ContactPerson_Object.ValueData                   
+                 ELSE ''::TVarChar
+             END                                 AS UnitName
+
            , Object_ContactPersonKind.Id         AS ContactPersonKindId
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
 
@@ -103,7 +113,8 @@ ALTER FUNCTION gpSelect_Object_ContactPerson(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 31.05.14          * 
+ 18.14.16         *
+ 31.05.14         * 
         
 */
 

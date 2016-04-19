@@ -5,6 +5,9 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, In
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
  INOUT ioId                        Integer   , -- Ключ объекта <Элемент документа>
@@ -14,9 +17,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inDistanceFuelChild         TFloat    , -- Пробег, км (дополнительный вид топлива)
     IN inDistanceWeightTransport   TFloat    , -- Пробег, км (с грузом,перевезено)
     IN inWeight	                   TFloat    , -- Вес груза, кг (разгрузка)
-    IN inWeightTransport	       TFloat    , -- Вес груза, кг (перевезено)
+    IN inWeightTransport           TFloat    , -- Вес груза, кг (перевезено)
     IN inStartOdometre             TFloat    , -- Спидометр начальное показание, км
     IN inEndOdometre               TFloat    , -- Спидометр конечное показание, км
+    IN inRateSumma                 TFloat    , -- Сумма коммандировочных
+    IN inRatePrice                 TFloat    , -- Ставка грн/км (дальнобойные)
+    IN inTaxi                      TFloat    , -- Сумма на такси
+   OUT outRatePrice_Calc           TFloat    , -- Сумма грн (дальнобойные)
     IN inFreightId                 Integer   , -- Название груза
     IN inRouteKindId_Freight       Integer   , -- Типы маршрутов(груз)
     IN inRouteKindId               Integer   , -- Типы маршрутов
@@ -141,6 +148,15 @@ BEGIN
 
    -- сохранили свойство <Спидометр конечное показание, км>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_EndOdometre(), ioId, inEndOdometre);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), ioId, inRateSumma);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RatePrice(), ioId, inRatePrice);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Taxi(), ioId, inTaxi);
+   
+   outRatePrice_Calc:= COALESCE (inRatePrice,0) * (COALESCE (inAmount,0) + COALESCE (inDistanceFuelChild,0));
    
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
@@ -160,6 +176,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.04.16         * 
  03.06.15         * add UnitID
  10.12.13         * add DistanceWeightTransport
  09.12.13         * add WeightTransport

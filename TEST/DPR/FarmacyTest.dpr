@@ -411,7 +411,8 @@ uses
   Report_MovementIncomeFarmDialog in '..\..\FormsFarmacy\Report\Report_MovementIncomeFarmDialog.pas' {Report_MovementIncomeFarmDialogForm: TParentForm},
   Report_MovementIncomeFarm in '..\..\FormsFarmacy\Report\Report_MovementIncomeFarm.pas' {Report_MovementIncomeFarmForm: TParentForm},
   Report_PriceIntervention2 in '..\..\FormsFarmacy\Report\Report_PriceIntervention2.pas' {Report_PriceIntervention2Form: TParentForm},
-  ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm};
+  ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
+  ChoiceGoodsFromRemains in '..\..\FormsFarmacy\System\ChoiceGoodsFromRemains.pas' {ChoiceGoodsFromRemainsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

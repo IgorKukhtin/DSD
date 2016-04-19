@@ -40,6 +40,9 @@ type
     ExecuteDialog: TExecuteDialog;
     PersonalServiceListCode: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;
+    cxLabel15: TcxLabel;
+    ceCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public

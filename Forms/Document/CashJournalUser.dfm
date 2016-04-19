@@ -3,8 +3,6 @@ inherited CashJournalUserForm: TCashJournalUserForm
   ClientWidth = 982
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -209
-  ExplicitTop = -129
   ExplicitWidth = 998
   PixelsPerInch = 96
   TextHeight = 13
@@ -269,6 +267,68 @@ inherited CashJournalUserForm: TCashJournalUserForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object clAmountCurrency: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+            DataBinding.FieldName = 'AmountCurrency'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object clAmountSumm: TcxGridDBColumn
+            Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
+            DataBinding.FieldName = 'AmountSumm'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object clCurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object clCurrencyPartnerValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089
+            DataBinding.FieldName = 'CurrencyPartnerValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object clParPartnerValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParPartnerValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object clCurrencyValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1059#1055
+            DataBinding.FieldName = 'CurrencyValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object clParValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1091#1088#1089' '#1059#1055
+            DataBinding.FieldName = 'ParValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 60
+          end
         end
       end
     end
@@ -308,6 +368,27 @@ inherited CashJournalUserForm: TCashJournalUserForm
       Top = 7
       Caption = #1050#1072#1089#1089#1072':'
     end
+  end
+  object cxLabel15: TcxLabel [2]
+    Left = 677
+    Top = 7
+    Caption = #1042#1072#1083#1102#1090#1072':'
+    Visible = False
+  end
+  object ceCurrency: TcxButtonEdit [3]
+    Left = 726
+    Top = 5
+    ParentShowHint = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    ShowHint = False
+    TabOrder = 7
+    Visible = False
+    Width = 65
   end
   inherited ActionList: TActionList
     Left = 135
@@ -464,6 +545,13 @@ inherited CashJournalUserForm: TCashJournalUserForm
         ParamType = ptInput
       end
       item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -574,6 +662,9 @@ inherited CashJournalUserForm: TCashJournalUserForm
       end
       item
         Component = CashGuides
+      end
+      item
+        Component = CurrencyGuides
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -618,6 +709,21 @@ inherited CashJournalUserForm: TCashJournalUserForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -647,6 +753,37 @@ inherited CashJournalUserForm: TCashJournalUserForm
         DataType = ftString
       end>
     Left = 552
-    Top = 13
+    Top = 65533
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrency
+    FormNameParam.Value = 'TCurrencyValue_ForCashForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrencyValue_ForCashForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42005d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 744
+    Top = 65532
   end
 end

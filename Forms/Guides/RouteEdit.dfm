@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
-  ClientHeight = 397
-  ClientWidth = 354
+  ClientHeight = 453
+  ClientWidth = 361
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 360
+    Left = 70
+    Top = 416
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 360
+    Left = 214
+    Top = 416
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -146,6 +146,37 @@
     TabOrder = 15
     Width = 273
   end
+  object cxLabel29: TcxLabel
+    Left = 32
+    Top = 353
+    Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088'.'
+  end
+  object edRateSumma: TcxCurrencyEdit
+    Left = 32
+    Top = 376
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 17
+    Width = 120
+  end
+  object cxLabel6: TcxLabel
+    Left = 170
+    Top = 353
+    Hint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+    Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
+  end
+  object edRatePrice: TcxCurrencyEdit
+    Left = 170
+    Top = 376
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 19
+    Width = 135
+  end
   object ActionList: TActionList
     Left = 328
     Top = 10
@@ -201,6 +232,20 @@
         Value = ''
         Component = edRouteName
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRateSumma'
+        Value = Null
+        Component = edRateSumma
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRatePrice'
+        Value = Null
+        Component = edRatePrice
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
@@ -335,6 +380,18 @@
         Component = RouteGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'RateSumma'
+        Value = Null
+        Component = edRateSumma
+        DataType = ftFloat
+      end
+      item
+        Name = 'RatePrice'
+        Value = Null
+        Component = edRatePrice
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 328

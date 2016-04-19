@@ -31,6 +31,8 @@ RETURNS record as--Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
+   DECLARE vbAmountIn TFloat;
+   DECLARE vbAmountOut TFloat;
    DECLARE vbAmountCurrency TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -64,13 +66,17 @@ BEGIN
         IF inCurrencyId <> zc_Enum_Currency_Basis()
         THEN vbAmountCurrency:= inAmountIn;
              vbAmount := CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2));
+             vbAmountIn := vbAmount;
         ELSE vbAmount := inAmountIn;
+             vbAmountIn := inAmountIn;
         END IF;
      ELSE
         IF inCurrencyId <> zc_Enum_Currency_Basis()
         THEN vbAmountCurrency:= -1 * inAmountOut;
              vbAmount := CAST (-1 * inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2));
+             vbAmountOut := -1 * vbAmount;
         ELSE vbAmount := -1 * inAmountOut;
+             vbAmountOut := inAmountOut;
         END IF;
      END IF;
 
@@ -86,8 +92,8 @@ BEGIN
                                          , inInvNumber   := inInvNumber
                                          , inOperDate    := inOperDate
                                          , inServiceDate := inServiceDate
-                                         , inAmountIn    := inAmountIn
-                                         , inAmountOut   := inAmountOut
+                                         , inAmountIn    := vbAmountIn
+                                         , inAmountOut   := vbAmountOut
                                          , inAmountSumm  := inAmountSumm
                                          , inAmountCurrency := vbAmountCurrency
                                          , inComment     := inComment

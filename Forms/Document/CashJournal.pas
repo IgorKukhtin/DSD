@@ -48,6 +48,9 @@ type
     PersonalServiceListCode: TcxGridDBColumn;
     clPartionMovementName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    cxLabel15: TcxLabel;
+    ceCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public

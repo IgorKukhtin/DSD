@@ -3,11 +3,14 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
  INOUT ioId             Integer   , -- Ключ объекта <маршрут>
     IN inCode           Integer   , -- свойство <Код маршрута>
     IN inName           TVarChar  , -- свойство <Наименование маршрута>
+    IN inRateSumma      Tfloat    , -- Сумма коммандировочных
+    IN inRatePrice      Tfloat    , -- Ставка грн/км (дальнобойные)
     IN inUnitId         Integer   , -- ссылка на Подразделение
     IN inBranchId       Integer   , -- ссылка на Филиал
     IN inRouteKindId    Integer   , -- ссылка на Типы маршрутов
@@ -52,18 +55,24 @@ BEGIN
    -- сохранили связь с <Группой>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_RouteGroup(), ioId, inRouteGroupId);   
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RateSumma(), ioId, inRateSumma);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RatePrice(), ioId, inRatePrice);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.04.16         *
  20.04.15         * RouteGroup                
  13.12.13         * add inBranchId              
  08.12.13                                        * add inAccessKeyId

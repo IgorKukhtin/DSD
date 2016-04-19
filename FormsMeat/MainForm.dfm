@@ -633,6 +633,13 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088' '#1041#1053
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
         end>
       isShowModal = False
     end
@@ -703,6 +710,13 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1050#1080#1077#1074
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
         end>
       isShowModal = False
     end
@@ -916,6 +930,14 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1050#1088#1080#1074#1086#1081' '#1056#1086#1075
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = #1075#1088#1085
         end>
       isShowModal = False
     end
@@ -935,6 +957,14 @@ inherited MainForm: TMainForm
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1053#1080#1082#1086#1083#1072#1077#1074
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
           DataType = ftString
         end>
       isShowModal = False
@@ -956,6 +986,13 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1061#1072#1088#1100#1082#1086#1074
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
         end>
       isShowModal = False
     end
@@ -976,6 +1013,13 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1063#1077#1088#1082#1072#1089#1089#1099
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
         end>
       isShowModal = False
     end
@@ -1018,6 +1062,13 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1047#1072#1087#1086#1088#1086#1078#1100#1077
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
         end>
       isShowModal = False
     end
@@ -1038,6 +1089,13 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1054#1076#1077#1089#1089#1072
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
         end>
       isShowModal = False
     end
@@ -1058,6 +1116,14 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' Integer'
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '14461'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = #1075#1088#1085
         end>
       isShowModal = False
     end
@@ -1078,6 +1144,13 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1041#1053
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+        end
+        item
+          Name = 'CurrencyName'
         end>
       isShowModal = False
     end
@@ -1236,6 +1309,14 @@ inherited MainForm: TMainForm
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088
           DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '14461'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = #1075#1088#1085
         end>
       isShowModal = False
     end

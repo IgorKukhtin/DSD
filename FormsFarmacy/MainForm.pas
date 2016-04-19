@@ -248,6 +248,8 @@ type
     N51: TMenuItem;
     actReport_PriceIntervention2: TdsdOpenForm;
     N59: TMenuItem;
+    actChoiceGoodsFromRemains: TdsdOpenForm;
+    N60: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

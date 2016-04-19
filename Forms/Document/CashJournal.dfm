@@ -22,6 +22,8 @@ inherited CashJournalForm: TCashJournalForm
       inherited cxGrid: TcxGrid
         Width = 959
         Height = 494
+        ExplicitLeft = 107
+        ExplicitTop = -20
         ExplicitWidth = 959
         ExplicitHeight = 494
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -431,6 +433,25 @@ inherited CashJournalForm: TCashJournalForm
       Caption = #1050#1072#1089#1089#1072':'
     end
   end
+  object cxLabel15: TcxLabel [2]
+    Left = 677
+    Top = 7
+    Caption = #1042#1072#1083#1102#1090#1072':'
+  end
+  object ceCurrency: TcxButtonEdit [3]
+    Left = 726
+    Top = 5
+    ParentShowHint = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    ShowHint = False
+    TabOrder = 7
+    Width = 65
+  end
   inherited ActionList: TActionList
     Left = 135
     Top = 90
@@ -589,6 +610,13 @@ inherited CashJournalForm: TCashJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -703,10 +731,15 @@ inherited CashJournalForm: TCashJournalForm
       end
       item
         Component = CashGuides
+      end
+      item
+        Component = CurrencyGuides
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Cash'
+    Left = 424
+    Top = 152
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Cash'
@@ -747,6 +780,21 @@ inherited CashJournalForm: TCashJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -774,8 +822,52 @@ inherited CashJournalForm: TCashJournalForm
         Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 552
     Top = 5
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrency
+    FormNameParam.Value = 'TCurrencyValue_ForCashForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrencyValue_ForCashForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42475d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 744
+    Top = 65532
   end
 end

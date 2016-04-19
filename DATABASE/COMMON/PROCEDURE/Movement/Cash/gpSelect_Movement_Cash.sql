@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inCashId      Integer , --
+    IN inCurrencyId  Integer , --
     IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
@@ -190,9 +192,10 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
-                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+            INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+                                             AND (MILinkObject_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
@@ -218,11 +221,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.04.16         * add inCurrencyid 
  27.04.15         * add InvNumber_Sale
  06.03.15         * add Currency... 
  30.08.14                                        * all

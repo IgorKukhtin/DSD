@@ -809,7 +809,8 @@ uses
   EmailKindEdit in '..\..\Forms\Kind\EmailKindEdit.pas' {EmailKindEditForm: TParentForm},
   ExportJuridical in '..\..\Forms\Guides\ExportJuridical.pas' {ExportJuridicalForm: TParentForm},
   ExportJuridicalEdit in '..\..\Forms\Guides\ExportJuridicalEdit.pas' {ExportJuridicalEditForm: TParentForm},
-  JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm};
+  JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
+  CurrencyValue_ForCash in '..\..\Forms\Guides\CurrencyValue_ForCash.pas' {CurrencyValue_ForCashForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

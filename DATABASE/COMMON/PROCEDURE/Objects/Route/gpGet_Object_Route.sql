@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Route(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , RateSumma Tfloat, RatePrice Tfloat
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
@@ -26,6 +27,9 @@ $BODY$BEGIN
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Route()) AS Code
            , CAST ('' as TVarChar)  AS Name
+
+           , CAST (0 as TFloat)   AS RateSumma
+           , CAST (0 as TFloat)   AS RatePrice
                       
            , CAST (0 as Integer)   AS UnitId 
            , CAST (0 as Integer)   AS UnitCode
@@ -56,6 +60,9 @@ $BODY$BEGIN
              Object_Route.Id         AS Id
            , Object_Route.ObjectCode AS Code
            , Object_Route.ValueData  AS NAME
+
+           , ObjectFloat_RateSumma.ValueData AS RateSumma
+           , ObjectFloat_RatePrice.ValueData AS RatePrice
                       
            , Object_Unit.Id         AS UnitId 
            , Object_Unit.ObjectCode AS UnitCode
@@ -80,6 +87,14 @@ $BODY$BEGIN
            , Object_Route.isErased   AS isErased
            
        FROM Object AS Object_Route
+            LEFT JOIN ObjectFloat AS ObjectFloat_RateSumma
+                                  ON ObjectFloat_RateSumma.ObjectId = Object_Route.Id
+                                 AND ObjectFloat_RateSumma.DescId = zc_ObjectFloat_Route_RateSumma()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_RatePrice
+                                  ON ObjectFloat_RatePrice.ObjectId = Object_Route.Id
+                                 AND ObjectFloat_RatePrice.DescId = zc_ObjectFloat_Route_RatePrice()
+
             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                          AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Route_Unit.ChildObjectId

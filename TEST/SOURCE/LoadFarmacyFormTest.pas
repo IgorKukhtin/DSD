@@ -367,6 +367,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromPriceListForm');
+  // отчет поиск товара по всей сети
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemainsForm');
+
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;
