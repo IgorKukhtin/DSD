@@ -19,6 +19,7 @@ $BODY$
    DECLARE vbMovementDescId Integer;
 
    DECLARE vbId_tmp Integer;
+   DECLARE vbGoodsId_ReWork Integer;
    DECLARE vbPartionGoods   TVarChar;
    DECLARE vbPartionGoods_partner TVarChar;
    DECLARE vbIsProductionIn Boolean;
@@ -40,9 +41,26 @@ BEGIN
 
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     -- определили <ПЕРЕРАБОТКА>
+     vbGoodsId_ReWork:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
+                         FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                               , inLevel2      := 'Movement'
+                                                               , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                               , inItemName    := 'GoodsId_ReWork'
+                                                               , inDefaultValue:= '0'
+                                                               , inSession     := inSession
+                                                                ) AS RetV
+                               FROM MovementFloat
+                               WHERE MovementFloat.MovementId = inMovementId
+                                 AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                 AND MovementFloat.ValueData > 0
+                              ) AS tmp
+                        );
+
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
-     IF vbMovementDescId = zc_Movement_Send() AND -- если такие "От кого"
+     IF vbMovementDescId = zc_Movement_Send() AND (vbGoodsId_ReWork > 0 
+                                                OR (-- если такие "От кого"
                                                   (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                   IN (SELECT 8451 -- Цех Упаковки
                                                      UNION
@@ -65,7 +83,7 @@ BEGIN
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
                                                      AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
-                                                  )
+                                                  )))
      THEN
          vbMovementDescId:= zc_Movement_ProductionUnion();
          vbIsReWork:= TRUE;
@@ -536,7 +554,7 @@ BEGIN
                 FROM (-- элементы взвешивания
                       SELECT 0 AS MovementItemId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
-                                       THEN zc_Goods_ReWork()
+                                       THEN CASE WHEN vbGoodsId_ReWork > 0 THEN vbGoodsId_ReWork ELSE zc_Goods_ReWork() END
                                   WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
                                        THEN _tmpScale_receipt.GoodsId_to
                                   ELSE MovementItem.ObjectId

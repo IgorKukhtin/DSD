@@ -584,9 +584,11 @@ BEGIN
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
 
+     -- !!!Проводки для отчета больше не нужны!!!
+     IF 1=0 THEN
      -- !!!не всегда Проводки для отчета!!!
-     IF vbIsHistoryCost = TRUE
-     THEN
+     IF vbIsHistoryCost = TRUE THEN
+
 
      -- 2. формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
      INSERT INTO _tmpMIReport_insert (Id, MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
@@ -634,6 +636,7 @@ BEGIN
        ;
 
      END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
+     END IF; -- if 1=0 -- !!!Проводки для отчета больше не нужны!!!
 
 
      -- !!!формируется свойство <Цена>!!!

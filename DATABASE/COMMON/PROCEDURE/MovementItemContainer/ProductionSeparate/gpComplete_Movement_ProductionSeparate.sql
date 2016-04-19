@@ -815,6 +815,10 @@ BEGIN
      -- RETURN QUERY SELECT _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From, _tmpItemSummChild.MovementItemId, _tmpItemSummChild.MIContainerId_To, _tmpItemSummChild.ContainerId_To, _tmpItemSummChild.AccountId_To, _tmpItemSummChild.OperSumm FROM _tmpItemSummChild;
      -- RETURN;
 
+
+     -- !!!Проводки для отчета больше не нужны!!!
+     IF 1=0 THEN
+
      -- формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
      INSERT INTO _tmpMIReport_insert (Id, MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
         SELECT 0, vbMovementDescId, inMovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
@@ -888,6 +892,8 @@ BEGIN
                              AND tmpMIReport.OperSumm         = _tmpItemSummChild.OperSumm
              ) AS tmpMIReport
        ;
+
+     END IF; -- if 1=0 -- !!!Проводки для отчета больше не нужны!!!
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

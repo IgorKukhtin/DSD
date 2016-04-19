@@ -100,6 +100,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                     ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
 
             LEFT JOIN ObjectHistory AS ObjectHistory_JuridicalDetails 
                    ON ObjectHistory_JuridicalDetails.ObjectId = MovementLinkObject_To.ObjectId
@@ -122,7 +125,7 @@ BEGIN
                                                                                   END*/
 
       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-        AND (MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg
+        AND ((MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg AND MovementString_InvNumberRegistered.ValueData <> '')
           OR Movement.DescId = zc_Movement_Tax()
           OR inStartDateReg > inEndDateReg
             )

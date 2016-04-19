@@ -10,11 +10,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc(
 )
 RETURNS TABLE (Number             Integer
              , MovementDescId     Integer
-             , FromId             Integer, FromCode         Integer, FromName      TVarChar
-             , ToId               Integer, ToCode           Integer, ToName        TVarChar
+             , FromId             Integer, FromCode         Integer, FromName         TVarChar
+             , ToId               Integer, ToCode           Integer, ToName           TVarChar
              , PaidKindId         Integer, PaidKindName     TVarChar
-             , InfoMoneyId        Integer, InfoMoneyCode    Integer, InfoMoneyName TVarChar
-             , PriceListId        Integer, PriceListCode    Integer, PriceListName TVarChar
+             , InfoMoneyId        Integer, InfoMoneyCode    Integer, InfoMoneyName    TVarChar
+             , PriceListId        Integer, PriceListCode    Integer, PriceListName    TVarChar
+             , GoodsId_ReWork     Integer, GoodsCode_ReWork Integer, GoodsName_ReWork TVarChar
              , GoodsKindWeighingGroupId Integer
              , ColorGridValue     Integer
              , MovementDescName        TVarChar
@@ -55,6 +56,7 @@ BEGIN
                                        , ToId                     Integer
                                        , PaidKindId               Integer
                                        , InfoMoneyId              Integer
+                                       , GoodsId_ReWork           Integer
                                        , GoodsKindWeighingGroupId Integer
                                        , ColorGridValue           Integer
                                        , OrderById                Integer
@@ -64,35 +66,38 @@ BEGIN
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isTransport_link, ItemName)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isTransport_link, ItemName)
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
             , CASE WHEN TRIM (tmp.FromId)                   <> '' THEN TRIM (tmp.FromId)                   ELSE '0' END :: Integer AS FromId
             , CASE WHEN TRIM (tmp.ToId)                     <> '' THEN TRIM (tmp.ToId)                     ELSE '0' END :: Integer AS ToId
             , CASE WHEN TRIM (tmp.PaidKindId)               <> '' THEN TRIM (tmp.PaidKindId)               ELSE '0' END :: Integer AS PaidKindId
             , CASE WHEN TRIM (tmp.InfoMoneyId)              <> '' THEN TRIM (tmp.InfoMoneyId)              ELSE '0' END :: Integer AS InfoMoneyId
+            , CASE WHEN TRIM (tmp.GoodsId_ReWork)           <> '' THEN TRIM (tmp.GoodsId_ReWork)           ELSE '0' END :: Integer AS GoodsId_ReWork
             , CASE WHEN TRIM (tmp.GoodsKindWeighingGroupId) <> '' THEN TRIM (tmp.GoodsKindWeighingGroupId) ELSE '0' END :: Integer AS GoodsKindWeighingGroupId
             , CASE WHEN TRIM (tmp.ColorGridValue)           <> '' THEN TRIM (tmp.ColorGridValue)           ELSE '0' END :: Integer AS ColorGridValue
             , CASE WHEN tmp.MovementDescId = zc_Movement_Income() :: TVarChar
-                        THEN 1
-                   WHEN tmp.MovementDescId = zc_Movement_ReturnOut() :: TVarChar
-                        THEN 2
-                   WHEN tmp.MovementDescId = zc_Movement_Sale() :: TVarChar
-                        THEN 3
-                   WHEN tmp.MovementDescId = zc_Movement_ReturnIn() :: TVarChar
-                        THEN 4
-                   WHEN tmp.MovementDescId = zc_Movement_Send() :: TVarChar
-                        THEN 5
-                   WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() :: TVarChar
-                        THEN 0 -- можно расчитать здесь, но не хочется его нагромождать, и резервируется 6,7
-                   WHEN tmp.MovementDescId = zc_Movement_Loss() :: TVarChar
-                        THEN 8
-                   WHEN tmp.MovementDescId = zc_Movement_ProductionSeparate() :: TVarChar
-                        THEN 9
-                   WHEN tmp.MovementDescId = zc_Movement_ProductionUnion() :: TVarChar
                         THEN 10
+                   WHEN tmp.MovementDescId = zc_Movement_ReturnOut() :: TVarChar
+                        THEN 20
+                   WHEN tmp.MovementDescId = zc_Movement_Sale() :: TVarChar
+                        THEN 30
+                   WHEN tmp.MovementDescId = zc_Movement_ReturnIn() :: TVarChar
+                        THEN 40
+                   WHEN tmp.MovementDescId = zc_Movement_Send() :: TVarChar AND TRIM (tmp.GoodsId_ReWork) IN ('', '0')
+                        THEN 50
+                   WHEN tmp.MovementDescId = zc_Movement_Send() :: TVarChar
+                        THEN 51
+                   WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() :: TVarChar
+                        THEN 0 -- можно расчитать здесь, но не хочется его нагромождать, и резервируется 60,70
+                   WHEN tmp.MovementDescId = zc_Movement_Loss() :: TVarChar
+                        THEN 80
+                   WHEN tmp.MovementDescId = zc_Movement_ProductionSeparate() :: TVarChar
+                        THEN 90
+                   WHEN tmp.MovementDescId = zc_Movement_ProductionUnion() :: TVarChar
+                        THEN 100
                    WHEN tmp.MovementDescId = zc_Movement_Inventory() :: TVarChar
-                        THEN 11
+                        THEN 110
                    ELSE 0
               END * 1000 AS OrderById
             , CASE WHEN inIsCeh = TRUE
@@ -121,6 +126,7 @@ BEGIN
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    ,               '0',      inSession) AS FromId
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      ,               '0',      inSession) AS ToId
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' ,               '0',      inSession) AS ColorGridValue
+                  , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsId_ReWork' ,          '0',      inSession) AS GoodsId_ReWork
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '345238', inSession) AS GoodsKindWeighingGroupId -- Продажа
                   , CASE WHEN inIsCeh = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'PaidKindId',         '0',                                   inSession) END AS PaidKindId
                   , CASE WHEN inIsCeh = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'InfoMoneyId',        zc_Enum_InfoMoney_30101() :: TVarChar, inSession) END AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
@@ -142,12 +148,12 @@ BEGIN
 
     -- можно расчитать и в пред. запросе, но не хочется его нагромождать
     UPDATE _tmpToolsWeighing SET OrderById = 1000 * CASE WHEN vbBranchId = zc_Branch_Basis() AND _tmpToolsWeighing.isSendOnPriceIn = FALSE
-                                                              THEN 6 -- для главного - расход с него, будет в списке раньше
+                                                              THEN 60 -- для главного - расход с него, будет в списке раньше
                                                          WHEN vbBranchId = zc_Branch_Basis()
-                                                              THEN 7 -- для главного - приход на него, будет в списке позже
+                                                              THEN 70 -- для главного - приход на него, будет в списке позже
                                                          WHEN _tmpToolsWeighing.isSendOnPriceIn = TRUE
-                                                              THEN 6 -- для филиала - приход на него, будет в списке раньше
-                                                         ELSE 7 -- для филиала - расход с него, будет в списке позже
+                                                              THEN 60 -- для филиала - приход на него, будет в списке раньше
+                                                         ELSE 70 -- для филиала - расход с него, будет в списке позже
                                                     END
                                , ItemName = CASE WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
                                                   AND _tmpToolsWeighing.isSendOnPriceIn = FALSE
@@ -184,6 +190,11 @@ BEGIN
            , Object_PriceList.Id                             AS PriceListId
            , Object_PriceList.ObjectCode                     AS PriceListCode
            , Object_PriceList.ValueData                      AS PriceListName
+
+           , _tmpToolsWeighing.GoodsId_ReWork                AS GoodsId_ReWork
+           , Object_GoodsReWork.ObjectCode                   AS GoodsCode_ReWork
+           , Object_GoodsReWork.ValueData                    AS GoodsName_ReWork
+
            , Object_GoodsKindWeighingGroup.Id                AS GoodsKindWeighingGroupId
            , _tmpToolsWeighing.ColorGridValue                AS ColorGridValue
 
@@ -199,13 +210,25 @@ BEGIN
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Loss())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || CASE WHEN Object_To.Id > 0 THEN ' ' || COALESCE (Object_To.ValueData, '') ELSE '' END
 
+                  WHEN _tmpToolsWeighing.GoodsId_ReWork > 0
+                       THEN '(' || Object_GoodsReWork.ObjectCode :: TVarChar || ')' || Object_GoodsReWork.ValueData
+
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-                       THEN CASE WHEN _tmpToolsWeighing.isSendOnPriceIn = TRUE THEN 'ПРИХОД' ELSE 'РАCХОД' END
+                       THEN CASE WHEN _tmpToolsWeighing.GoodsId_ReWork > 0
+                                      THEN '(' || Object_GoodsReWork.ObjectCode :: TVarChar || ')' || Object_GoodsReWork.ValueData
+                                 WHEN _tmpToolsWeighing.isSendOnPriceIn = TRUE
+                                      THEN 'ПРИХОД'
+                                 ELSE 'РАCХОД'
+                            END
                   || ' ' || COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
 
                   ELSE TRIM (COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, ''))
-              END) :: TVarChar AS MovementDescName
-
+              END
+           || CASE WHEN _tmpToolsWeighing.GoodsId_ReWork > 0
+                        THEN ' = > (' || Object_GoodsReWork.ObjectCode :: TVarChar || ')' || Object_GoodsReWork.ValueData
+                   ELSE ''
+              END
+             ) :: TVarChar AS MovementDescName -- в гриде
 
            , ('(' || _tmpToolsWeighing.Number :: TVarChar ||') '
           || _tmpToolsWeighing.ItemName -- MovementDesc.ItemName
@@ -222,11 +245,19 @@ BEGIN
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || CASE WHEN Object_To.Id > 0 THEN ' ' || COALESCE (Object_To.ValueData, '') ELSE '' END
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-                       THEN CASE WHEN _tmpToolsWeighing.isSendOnPriceIn = TRUE THEN 'ПРИХОД' ELSE 'РАCХОД' END
+                       THEN CASE WHEN _tmpToolsWeighing.isSendOnPriceIn = TRUE
+                                      THEN 'ПРИХОД'
+                                 ELSE 'РАCХОД'
+                            END
                   || ' ' || COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
 
                   ELSE TRIM (COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, ''))
-             END) :: TVarChar AS MovementDescName_master
+             END
+          || CASE WHEN _tmpToolsWeighing.GoodsId_ReWork > 0
+                       THEN ' = > (' || Object_GoodsReWork.ObjectCode :: TVarChar || ')' || Object_GoodsReWork.ValueData
+                  ELSE ''
+             END
+            ) :: TVarChar AS MovementDescName_master
 
            , (_tmpToolsWeighing.OrderById + _tmpToolsWeighing.Number) :: Integer AS OrderById
            , _tmpToolsWeighing.isSendOnPriceIn
@@ -239,6 +270,7 @@ BEGIN
             LEFT JOIN Object AS Object_To                     ON Object_To.Id                     = _tmpToolsWeighing.ToId
             LEFT JOIN Object AS Object_PaidKind               ON Object_PaidKind.Id               = _tmpToolsWeighing.PaidKindId
             LEFT JOIN Object AS Object_InfoMoney              ON Object_InfoMoney.Id              = _tmpToolsWeighing.InfoMoneyId
+            LEFT JOIN Object AS Object_GoodsReWork            ON Object_GoodsReWork.Id            = _tmpToolsWeighing.GoodsId_ReWork
             LEFT JOIN Object AS Object_GoodsKindWeighingGroup ON Object_GoodsKindWeighingGroup.Id = _tmpToolsWeighing.GoodsKindWeighingGroupId
             -- LEFT JOIN MovementDesc ON MovementDesc.Id = _tmpToolsWeighing.MovementDescId
        WHERE _tmpToolsWeighing.MovementDescId > 0
@@ -260,9 +292,14 @@ BEGIN
             , 0                                   AS PriceListId
             , 0                                   AS PriceListCode
             , '' :: TVarChar                      AS PriceListName
+            , 0                                   AS GoodsId_ReWork
+            , 0                                   AS GoodsCode_ReWork
+            , '' :: TVarChar                      AS GoodsName_ReWork
             , 0                                   AS GoodsKindWeighingGroupId
             , 0                                   AS ColorGridValue
-            , CASE WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
+            , CASE WHEN tmp.isReWork        = TRUE
+                        THEN 'ПЕРЕРАБОТКА'
+                   WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
                     AND tmp.isSendOnPriceIn = FALSE
                     AND vbBranchId = zc_Branch_Basis()
                         THEN 'Расход на филиал'
@@ -281,7 +318,15 @@ BEGIN
             , tmp.isSendOnPriceIn
             , FALSE AS isPartionGoodsDate
             , FALSE AS isTransport_link
-       FROM (SELECT _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById, CASE WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice() THEN _tmpToolsWeighing.isSendOnPriceIn ELSE FALSE END AS isSendOnPriceIn, _tmpToolsWeighing.ItemName FROM _tmpToolsWeighing WHERE _tmpToolsWeighing.MovementDescId > 0 GROUP BY _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById, CASE WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice() THEN _tmpToolsWeighing.isSendOnPriceIn ELSE FALSE END, _tmpToolsWeighing.ItemName) AS tmp
+       FROM (SELECT DISTINCT
+                    _tmpToolsWeighing.MovementDescId
+                  , _tmpToolsWeighing.OrderById
+                  , CASE WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice() OR _tmpToolsWeighing.GoodsId_ReWork > 0 THEN _tmpToolsWeighing.isSendOnPriceIn ELSE FALSE END AS isSendOnPriceIn
+                  , CASE WHEN _tmpToolsWeighing.GoodsId_ReWork > 0 THEN TRUE ELSE FALSE END AS isReWork
+                  , _tmpToolsWeighing.ItemName
+             FROM _tmpToolsWeighing
+             WHERE _tmpToolsWeighing.MovementDescId > 0
+            ) AS tmp
             -- LEFT JOIN MovementDesc ON MovementDesc.Id = tmp.MovementDescId
       ORDER BY OrderById;
 

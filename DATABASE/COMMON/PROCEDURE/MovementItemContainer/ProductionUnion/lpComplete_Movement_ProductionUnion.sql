@@ -863,9 +863,12 @@ BEGIN
        WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
 
+
+     -- !!!Проводки для отчета больше не нужны!!!
+     IF 1=0 THEN
      -- !!!не всегда Проводки для отчета!!!
-     IF vbIsHistoryCost = TRUE
-     THEN
+     IF vbIsHistoryCost = TRUE THEN
+
 
      -- формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
      INSERT INTO _tmpMIReport_insert (Id, MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
@@ -913,6 +916,7 @@ BEGIN
        ;
 
      END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
+     END IF; -- if 1=0 -- !!!Проводки для отчета больше не нужны!!!
 
 
      -- !!!5.0. формируются свойства в элементах документа - <Рецептуры>, если не ПФ-ГП и не пересортица!!!
@@ -941,7 +945,9 @@ BEGIN
                                          AND tmpReceipt.GoodsKindId = _tmpItem.GoodsKindId
                 WHERE _tmpItem.GoodsKindId <> zc_GoodsKind_WorkProgress()
                ) AS tmp;
-     END IF;
+
+     END IF; -- if vbIsPeresort = FALSE
+
      -- !!!5.0.2. формируются свойства "по рецептуре" в элементах документа, если ПФ-ГП и не пересортица!!!
      IF vbIsPeresort = FALSE AND 1=0
      THEN
@@ -980,7 +986,8 @@ BEGIN
                                          AND tmpMI.GoodsId = MovementItem.ObjectId
                 WHERE _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress()
                ) AS tmp;
-     END IF;
+
+     END IF; -- if vbIsPeresort = FALSE AND 1=0
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

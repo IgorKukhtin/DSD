@@ -29,6 +29,7 @@ $BODY$
    DECLARE vbOperDatePartner_order TDateTime;
    DECLARE vbOperDate_order TDateTime;
    DECLARE vbId_tmp Integer;
+   DECLARE vbGoodsId_ReWork Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
@@ -93,6 +94,22 @@ BEGIN
                   END;
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     -- определили <ПЕРЕРАБОТКА>
+     vbGoodsId_ReWork:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
+                         FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                               , inLevel2      := 'Movement'
+                                                               , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                               , inItemName    := 'GoodsId_ReWork'
+                                                               , inDefaultValue:= '0'
+                                                               , inSession     := inSession
+                                                                ) AS RetV
+                               FROM MovementFloat
+                               WHERE MovementFloat.MovementId = inMovementId
+                                 AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                 AND MovementFloat.ValueData > 0
+                              ) AS tmp
+                        );
+
 
      -- !!!заменили параметр!!! : Продажа -> Перемещение по цене
      IF vbMovementDescId = zc_Movement_Sale() AND EXISTS (SELECT MLM_Order.MovementChildId
@@ -106,7 +123,8 @@ BEGIN
      END IF;
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
-     IF vbMovementDescId = zc_Movement_Send() AND -- если такие "От кого"
+     IF vbMovementDescId = zc_Movement_Send() AND (vbGoodsId_ReWork > 0 
+                                                OR (-- если такие "От кого"
                                                   (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                   IN (SELECT 8451 -- Цех Упаковки
                                                      UNION
@@ -129,7 +147,7 @@ BEGIN
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
                                                      AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
-                                                  )
+                                                  )))
      THEN
          vbMovementDescId:= zc_Movement_ProductionUnion();
          vbIsProductionIn:= FALSE;
@@ -792,7 +810,7 @@ BEGIN
                      , tmp.UnitId_to
                 FROM (-- элементы взвешивания
                       SELECT 0 AS MovementItemId
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN zc_Goods_ReWork() ELSE MovementItem.ObjectId             END AS GoodsId
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN CASE WHEN vbGoodsId_ReWork > 0 THEN vbGoodsId_ReWork ELSE zc_Goods_ReWork() END ELSE MovementItem.ObjectId             END AS GoodsId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  END AS GoodsKindId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MILinkObject_Box.ObjectId, 0)        END AS BoxId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE MIDate_PartionGoods.ValueData                  END AS PartionGoodsDate

@@ -7,6 +7,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MIReport_byTable(
   RETURNS void AS
 $BODY$
 BEGIN
+     -- !!!Выход, т.к. больше не нужны!!!
+     RETURN;
+
+
      -- Проверка
      IF EXISTS (SELECT Amount FROM _tmpMIReport_insert WHERE Amount < 0)
      THEN

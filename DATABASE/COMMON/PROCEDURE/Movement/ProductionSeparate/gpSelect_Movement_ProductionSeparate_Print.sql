@@ -123,27 +123,28 @@ BEGIN
                                                         AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                         WHERE tmpMIContainer.DescId = zc_MIContainer_Count()
                        )
-     -- список ContainerId (кол. и сумм.) для PartionGoodsId
-   , tmpContainer AS (SELECT CLO_PartionGoods.ContainerId
-                           , CLO_PartionGoods.ObjectId AS PartionGoodsId
-                           , Container.DescId
-                      FROM (SELECT CLO_PartionGoods.ObjectId AS PartionGoodsId
+       -- список 
+     , tmpContainer_all AS (SELECT DISTINCT
+                                   CLO_PartionGoods.ObjectId AS PartionGoodsId
                             FROM tmpMIContainer
                                  INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                 ON CLO_PartionGoods.ContainerId = tmpMIContainer.ContainerId
                                                                AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                                                                AND CLO_PartionGoods.ObjectId <> vbPartionGoodsId_null
                             WHERE tmpMIContainer.DescId = zc_MIContainer_Count()
-                            GROUP BY CLO_PartionGoods.ObjectId
-                           ) AS tmp
-                           INNER JOIN ContainerLinkObject AS CLO_PartionGoods  
+                           )
+     -- список ContainerId (кол. и сумм.) для PartionGoodsId
+   , tmpContainer AS (SELECT DISTINCT
+                             CLO_PartionGoods.ContainerId
+                           , CLO_PartionGoods.ObjectId AS PartionGoodsId
+                           , Container.DescId
+                      FROM tmpContainer_all AS tmp
+                           INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                           ON CLO_PartionGoods.ObjectId = tmp.PartionGoodsId
                                                          AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                            LEFT JOIN Container ON Container.Id =  CLO_PartionGoods.ContainerId
-                      GROUP BY CLO_PartionGoods.ContainerId, CLO_PartionGoods.ObjectId, Container.DescId
                      )
-   
-                 
+
         -- приход от поставщика : кол. и сумм.
       , tmpIncome AS (-- находим по партиям из проводкок
                       SELECT tmpContainer.DescId
@@ -399,4 +400,4 @@ ALTER FUNCTION gpSelect_Movement_ProductionSeparate_Print (Integer,TVarChar) OWN
  03.04.15         *
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionSeparate_Print (inMovementId := 597300, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_ProductionSeparate_Print (inMovementId := 3519400, inSession:= zfCalc_UserAdmin());

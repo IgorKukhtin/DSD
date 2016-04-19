@@ -27,7 +27,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Поиск элемента документа EDI
-     vbMovementItemId:= (SELECT MovementItem.Id
+     vbMovementItemId:= (SELECT MAX (MovementItem.Id)
                          FROM MovementItemString 
                               INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
                                                      AND MovementItem.MovementId = inMovementId

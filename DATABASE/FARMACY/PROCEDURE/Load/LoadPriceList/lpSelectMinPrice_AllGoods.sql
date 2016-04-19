@@ -134,7 +134,7 @@ BEGIN
           , PriceList.Id                       AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
-          , CASE -- если ТОП-позиция или Цена поставщика > PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+          , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
                  WHEN Goods.isTOP = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
                  -- иначе учитывается бонус
