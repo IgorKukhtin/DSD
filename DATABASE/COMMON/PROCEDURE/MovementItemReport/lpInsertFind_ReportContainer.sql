@@ -16,6 +16,9 @@ $BODY$
    DECLARE vbMasterKeyValue BigInt;
    DECLARE vbChildKeyValue BigInt;
 BEGIN
+     -- !!!Выход, т.к. больше не нужны!!!
+     RETURN 0;
+
 
      -- Проверка
      IF  COALESCE (inActiveContainerId, 0) = 0 OR COALESCE (inPassiveContainerId, 0) = 0

@@ -54,16 +54,24 @@ BEGIN
     PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar)
                      )
     -- Установки для юр. лиц (для поставщика определяется договор и т.п)
-  , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
-                                   , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId, tmp.MainJuridicalId ORDER BY tmp.JuridicalId, tmp.MainJuridicalId, CASE WHEN tmp.isSite = TRUE THEN 0 ELSE 1 END, tmp.ContractId) AS Ord
+  , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus, tmp.isPriceClose, tmp.isSite
                               FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
+                              WHERE tmp.MainJuridicalId = vbMainJuridicalId
+                             )
+  , JuridicalSettings_close AS (SELECT DISTINCT tmp.JuridicalId, tmp.ContractId
+                                FROM JuridicalSettings_all AS tmp
+                                WHERE tmp.isPriceClose = TRUE
+                               )
+  , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
+                                   , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId ORDER BY tmp.JuridicalId, CASE WHEN tmp.isSite = TRUE THEN 0 ELSE 1 END, tmp.ContractId) AS Ord
+                              FROM JuridicalSettings_all AS tmp
                               -- уже здесь ограничения
                               WHERE tmp.isPriceClose    = FALSE
-                                AND tmp.MainJuridicalId = vbMainJuridicalId
-                         )
+                             )
     -- Выбираем в первую очередь тот что для сайта
   , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
-                          FROM JuridicalSettings_all AS tmp
+                          FROM JuridicalSettings_new AS tmp
+                          -- !!!Временно откл.!!!
                           WHERE tmp.Ord = 1
                          )
     -- Список товаров + коды ...
@@ -121,11 +129,15 @@ BEGIN
        ) AS tmp
         WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
        ) AS tmp
+        -- !!!INNER!!!
         LEFT JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
                    FROM JuridicalSettings
                   ) AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
+        LEFT JOIN JuridicalSettings_close ON JuridicalSettings_close.JuridicalId = tmp.JuridicalId
+                                         AND JuridicalSettings_close.ContractId  = tmp.ContractId 
 
         WHERE COALESCE (JuridicalSettings.ContractId, tmp.ContractId) = tmp.ContractId -- т.е. если есть юр лицо в JuridicalSettings, тогда Movement с !!!таким же!!! ContractId, иначе - !!!ВСЕ!! Movement
+          AND JuridicalSettings_close.JuridicalId IS NULL -- !!!т.е. НЕ закрыт!!!
        )
     -- Последние цены (поставщика) по "нужным" товарам из GoodsList
   , MI_PriceList AS
@@ -189,7 +201,7 @@ BEGIN
           , MI_PriceList.MovementItemId AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
-          , CASE -- если ТОП-позиция или Цена поставщика > PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+          , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
                  WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE OR COALESCE (MI_PriceList.PriceLimit, 0) <= MI_PriceList.Price
                     THEN MI_PriceList.Price
                  -- иначе учитывается бонус
@@ -283,5 +295,14 @@ ALTER FUNCTION lpSelectMinPrice_List (Integer, Integer, Integer) OWNER TO postgr
  15.04.16                                        *
 */
 
+/*
+SELECT 1, GoodsId            ,    GoodsCode          ,    GoodsName          ,    PartionGoodsDate   ,    Partner_GoodsId    ,      Partner_GoodsCode  ,    Partner_GoodsName  
+  ,    MakerName          ,    ContractId         ,    JuridicalId        ,    JuridicalName, Price              ,    SuperFinalPrice, isTop,    isOneJuridical
+from lpSelectMinPrice_AllGoods (183292, 4, 3) as a
+where GoodsId = 376
+union all
+ select 2, * from lpSelectMinPrice_List (183292, 4, 3) as b where GoodsId = 376
+*/
 -- тест
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) as a join lpSelectMinPrice_List (183292, 4, 3)  as b on b.GoodsId = a.GoodsId WHERE a.Price <> b.Price
 -- SELECT * FROM lpSelectMinPrice_List (183292, 4, 3) WHERE GoodsCode = 4797

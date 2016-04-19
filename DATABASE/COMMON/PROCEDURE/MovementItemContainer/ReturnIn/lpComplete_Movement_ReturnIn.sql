@@ -2033,9 +2033,12 @@ BEGIN
        WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
        ;
 
+
+     -- !!!Проводки для отчета больше не нужны!!!
+     IF 1=0 THEN
      -- !!!не всегда Проводки для отчета!!!
-     IF vbIsHistoryCost = TRUE
-     THEN
+     IF vbIsHistoryCost = TRUE THEN
+
 
      -- 5.1.1. формируются Проводки для отчета (Счета: Товар(с/с) <-> ОПиУ(Себестоимость возврата-только разнице в весе))
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
@@ -2251,6 +2254,7 @@ BEGIN
      ;
 
      END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
+     END IF; -- if 1=0 -- !!!Проводки для отчета больше не нужны!!!
 
 
      /*-- убрал, т.к. св-во пишется теперь в ОПиУ

@@ -2,9 +2,9 @@
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains_ForSite (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains_ForSite(
-    IN inUnitId           Integer  ,  -- РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
-    IN inRemainsDate      TDateTime,  -- Р”Р°С‚Р° РѕСЃС‚Р°С‚РєР°
-    IN inSession          TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inUnitId           Integer  ,  -- Подразделение
+    IN inRemainsDate      TDateTime,  -- Дата остатка
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar
              , OperAmount TFloat, Price TFloat, NDSKindName TVarChar
@@ -16,13 +16,13 @@ $BODY$
    DECLARE vbObjectId Integer;
 BEGIN
 
-    -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+    -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
-    -- РћРіСЂР°РЅРёС‡РµРЅРёРµ РЅР° РїСЂРѕСЃРјРѕС‚СЂ С‚РѕРІР°СЂРЅРѕРіРѕ СЃРїСЂР°РІРѕС‡РЅРёРєР°
+    -- Ограничение на просмотр товарного справочника
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
-    -- Р РµР·СѓР»СЊС‚Р°С‚
+    -- Результат
     RETURN QUERY
         WITH containerCount AS (SELECT 
                                     container.Id
@@ -135,12 +135,12 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForSite (Integer, TDateTime, TVarChar
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  28.01.16         *
  02.06.15                        *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 --select * from gpSelect_GoodsOnUnitRemains_ForSite(inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');

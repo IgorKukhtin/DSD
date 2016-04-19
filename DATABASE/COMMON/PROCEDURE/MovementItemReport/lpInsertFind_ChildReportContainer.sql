@@ -32,6 +32,9 @@ $BODY$
    DECLARE vbMasterKeyValue BigInt;
    DECLARE vbChildKeyValue BigInt;
 BEGIN
+     -- !!!Выход, т.к. больше не нужны!!!
+     RETURN 0;
+
 
      inActiveContainerId  := COALESCE (inActiveContainerId, 0);
      inPassiveContainerId := COALESCE (inPassiveContainerId, 0);

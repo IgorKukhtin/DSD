@@ -19,6 +19,13 @@ CREATE TABLE Container(
    CONSTRAINT fk_Container_ParentId_Container FOREIGN KEY(ParentId) REFERENCES Container(Id)
 );
 
+/*                                  »Ì‰ÂÍÒ˚                                      */
+
+CREATE INDEX idx_Container_MasterKeyValue_ChildKeyValue ON Container (masterkeyvalue, childkeyvalue);
+CREATE INDEX idx_Container_WhereObjectId_Amount ON Container (whereobjectid, descid, amount, objectid);
+CREATE INDEX idx_Container_ObjectId_DescId ON Container (ObjectId, DescId);
+
+
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

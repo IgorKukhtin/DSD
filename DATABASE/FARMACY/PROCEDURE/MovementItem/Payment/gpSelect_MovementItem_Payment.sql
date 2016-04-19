@@ -63,16 +63,17 @@ BEGIN
         -- Результат такой
         RETURN QUERY
         WITH tmpContainer AS
-                         (SELECT Object_Movement.ObjectCode AS MovementId
+                         (SELECT Object_Movement.ObjectCode AS MovementId, Container.Amount, Container.KeyValue
                           FROM Container
-                               INNER JOIN ContainerLinkObject AS CLO_JuridicalBasis
+                               /*INNER JOIN ContainerLinkObject AS CLO_JuridicalBasis
                                                               ON CLO_JuridicalBasis.ContainerId = Container.Id
                                                              AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
-                                                             AND CLO_JuridicalBasis.ObjectId =  vbJuridicalId
+                                                             AND CLO_JuridicalBasis.ObjectId =  vbJuridicalId*/
                                LEFT JOIN Object AS Object_Movement ON Object_Movement.Id = Container.ObjectId
                                                                   AND Object_Movement.DescId = zc_Object_PartionMovement()
                           WHERE Container.DescId = zc_Container_SummIncomeMovementPayment()
                             AND Container.Amount  > 0
+                            -- AND Container.KeyValue LIKE '%,' || vbJuridicalId || ';%'
                          )
           , Income AS 
              (SELECT Movement.Id                                AS Id
@@ -87,9 +88,11 @@ BEGIN
                    , Object_NDSKind.ValueData                   AS NDSKindName
                    , Object_Contract.ValueData                  AS ContractName
                    , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-                   , Container.Amount                           AS PaySumm
+                   , tmpContainer.Amount                        AS PaySumm
                    , COALESCE (NULLIF (ObjectFloat_Juridical_PayOrder.ValueData, 0), 999999) :: TFloat AS PayOrder
+                   , tmpContainer.KeyValue LIKE '%,' || ObjectLink_Unit_Juridical.ChildObjectId || ';%' AS tmpFind
               FROM tmpContainer
+
                     INNER JOIN MovementDate AS MovementDate_Payment
                                             ON MovementDate_Payment.MovementId = tmpContainer.MovementId
                                            AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
@@ -137,12 +140,13 @@ BEGIN
                                           ON ObjectFloat_Juridical_PayOrder.ObjectId = MovementLinkObject_From.ObjectId
                                          AND ObjectFloat_Juridical_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
                     -- Партия накладной
-                    LEFT JOIN Object AS Object_Movement
+                    /*LEFT JOIN Object AS Object_Movement
                                      ON Object_Movement.ObjectCode = Movement.Id 
                                     AND Object_Movement.DescId = zc_Object_PartionMovement()
                     LEFT JOIN Container ON Container.ObjectId = Object_Movement.Id
                                        AND Container.DescId = zc_Container_SummIncomeMovementPayment()
-                                       AND Container.KeyValue LIKE '%,' || ObjectLink_Unit_Juridical.ChildObjectId || ';%'
+                                       -- AND Container.KeyValue LIKE '%,' || ObjectLink_Unit_Juridical.ChildObjectId || ';%'
+                   */
             ),
             MI_SavedPayment AS 
             (   SELECT MIFloat_IncomeId.ValueData :: Integer AS IncomeId
@@ -297,8 +301,8 @@ BEGIN
             FROM Income
                 LEFT OUTER JOIN MI_SavedPayment ON Income.Id = MI_SavedPayment.IncomeId
                 LEFT JOIN tmpJuridicalSettings ON tmpJuridicalSettings.JuridicalId = Income.FromId 
-            WHERE
-                MI_SavedPayment.IncomeId IS NULL
+            WHERE Income.tmpFind = TRUE
+              AND MI_SavedPayment.IncomeId IS NULL
 
            UNION ALL
             SELECT
@@ -512,3 +516,4 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 -- SELECT * FROM gpSelect_MovementItem_Payment (inMovementId := 1831122 , inShowAll:= TRUE , inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
 -- SELECT * FROM gpSelect_MovementItem_Payment (inMovementId := 1831122 , inShowAll:= FALSE, inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
 -- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1848680 , inShowAll := 'True' , inIsErased := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('13.04.2016')::TDateTime ,  inSession := '3');
+-- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1870498 , inShowAll := 'True' , inIsErased := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('13.04.2016')::TDateTime ,  inSession := '3');
