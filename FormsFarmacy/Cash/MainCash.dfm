@@ -414,6 +414,15 @@ inherited MainCashForm: TMainCashForm
         OnClick = actSpecExecute
         Width = 57
       end
+      object cxButton1: TcxButton
+        Left = 517
+        Top = 6
+        Width = 34
+        Height = 20
+        Action = actChoiceGoodsFromRemains
+        LookAndFeel.Kind = lfStandard
+        TabOrder = 11
+      end
     end
   end
   object pnlVIP: TPanel [3]
@@ -571,6 +580,17 @@ inherited MainCashForm: TMainCashForm
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1095#1077#1082' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1084
       ShortCut = 119
       Visible = False
+    end
+    object actChoiceGoodsFromRemains: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1058#1057
+      FormName = 'TChoiceGoodsFromRemainsForm'
+      FormNameParam.Value = 'TChoiceGoodsFromRemainsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = True
     end
     object actOpenCheckVIP: TOpenChoiceForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
