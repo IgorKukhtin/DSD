@@ -558,6 +558,7 @@ inherited PaymentForm: TPaymentForm
         end>
       Caption = 'actRefreshLite'
       Hint = 'actRefreshLite'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actMISetErased: TdsdUpdateErased
@@ -664,7 +665,7 @@ inherited PaymentForm: TPaymentForm
           Action = actInsertUpdate_MovementFloat_TotalSummPayment
         end
         item
-          Action = actRefreshLite
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099'?'
       Caption = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099
