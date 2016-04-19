@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_Movement_LossDebt()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LossDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -10,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LossDebt(
     IN inJuridicalBasisId    Integer   , -- Главное юр. лицо
     IN inAccountId           Integer   , -- Счет
     IN inPaidKindId          Integer   , -- Виды форм оплаты
+    IN inisList              Boolean   , 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -43,6 +47,9 @@ BEGIN
      -- сохранили связь с <Счет>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Account(), ioId, inAccountId);
 
+     -- сохранили свойство <только для списка (да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), ioId, inisList);
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
@@ -53,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.04.16         *
  13.09.14                                        * add lpInsert_MovementProtocol
  25.03.14         * add PaidKind                   
  06.03.14         * add Account               

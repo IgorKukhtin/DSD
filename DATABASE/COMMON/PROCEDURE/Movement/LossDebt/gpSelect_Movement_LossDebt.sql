@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , BusinessName TVarChar
              , AccountName TVarChar
              , PaidKindName TVarChar
+             , isList Boolean
               )
 AS
 $BODY$
@@ -38,13 +39,18 @@ BEGIN
            , Object_Business.ValueData       AS BusinessName
            , View_Account.AccountName_all    AS AccountName
            , Object_PaidKind.ValueData       AS PaidKindName
+           , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
        FROM Movement
             -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_JuridicalBasis
                                          ON MovementLinkObject_JuridicalBasis.MovementId = Movement.Id
@@ -77,6 +83,7 @@ ALTER FUNCTION gpSelect_Movement_LossDebt (TDateTime, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.04.16         *
  24.03.14                                        * add Object_Account_View
  06.03.14         * add Account
  14.01.14                                        *

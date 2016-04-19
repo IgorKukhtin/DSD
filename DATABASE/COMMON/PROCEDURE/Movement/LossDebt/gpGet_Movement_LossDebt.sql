@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , BusinessId Integer, BusinessName TVarChar
              , AccountId Integer, AccountName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , isList Boolean
               )
 AS
 $BODY$
@@ -44,7 +45,7 @@ BEGIN
           
            , 0             AS PaidKindId
            , ''::TVarChar  AS PaidKindName
-           
+           , False         AS isList
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
                LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399
                LEFT JOIN Object AS Object_Business ON Object_Business.Id = 0
@@ -68,9 +69,14 @@ BEGIN
 
            , Object_PaidKind.Id              AS PaidKindId
            , Object_PaidKind.ValueData       AS PaidKindName
+           , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
              
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_JuridicalBasis
                                          ON MovementLinkObject_JuridicalBasis.MovementId = Movement.Id

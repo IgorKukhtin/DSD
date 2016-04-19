@@ -22,12 +22,13 @@ object LossDebtForm: TLossDebtForm
     Left = 0
     Top = 0
     Width = 1049
-    Height = 57
+    Height = 90
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = -8
     object edInvNumber: TcxTextEdit
-      Left = 170
+      Left = 8
       Top = 23
       Enabled = False
       Properties.ReadOnly = True
@@ -36,12 +37,12 @@ object LossDebtForm: TLossDebtForm
       Width = 90
     end
     object cxLabel1: TcxLabel
-      Left = 170
+      Left = 8
       Top = 5
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 270
+      Left = 108
       Top = 23
       EditValue = 41640d
       Properties.SaveTime = False
@@ -50,12 +51,12 @@ object LossDebtForm: TLossDebtForm
       Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 270
+      Left = 108
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 380
+      Left = 222
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -65,21 +66,21 @@ object LossDebtForm: TLossDebtForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 180
+      Width = 191
     end
     object cxLabel3: TcxLabel
-      Left = 380
+      Left = 222
       Top = 5
       Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
     end
     object cxLabel4: TcxLabel
       Left = 8
-      Top = 5
+      Top = 43
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
       Left = 8
-      Top = 23
+      Top = 61
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -97,15 +98,15 @@ object LossDebtForm: TLossDebtForm
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 152
+      Width = 200
     end
     object cxLabel5: TcxLabel
-      Left = 570
+      Left = 422
       Top = 5
       Caption = #1041#1080#1079#1085#1077#1089
     end
     object edBusiness: TcxButtonEdit
-      Left = 570
+      Left = 422
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -115,15 +116,15 @@ object LossDebtForm: TLossDebtForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 150
+      Width = 155
     end
     object cxLabel6: TcxLabel
-      Left = 730
+      Left = 587
       Top = 5
       Caption = #1057#1095#1077#1090
     end
     object edAccount: TcxButtonEdit
-      Left = 731
+      Left = 587
       Top = 23
       Properties.Buttons = <
         item
@@ -131,15 +132,15 @@ object LossDebtForm: TLossDebtForm
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 191
+      Width = 201
     end
     object cxLabel7: TcxLabel
-      Left = 928
+      Left = 799
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 928
+      Left = 799
       Top = 23
       Properties.Buttons = <
         item
@@ -147,19 +148,19 @@ object LossDebtForm: TLossDebtForm
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 113
+      Width = 88
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 83
+    Top = 116
     Width = 1049
-    Height = 322
+    Height = 289
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 322
+    ClientRectBottom = 289
     ClientRectRight = 1049
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -169,7 +170,7 @@ object LossDebtForm: TLossDebtForm
         Left = 0
         Top = 0
         Width = 1049
-        Height = 298
+        Height = 265
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -448,6 +449,21 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object clContainerId: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1076#1086#1083#1075#1072
+            DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContainerChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object clIsCalculated: TcxGridDBColumn
             Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
             DataBinding.FieldName = 'isCalculated'
@@ -514,6 +530,13 @@ object LossDebtForm: TLossDebtForm
         end
       end
     end
+  end
+  object cbisList: TcxCheckBox
+    Left = 222
+    Top = 61
+    Caption = #1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 6
+    Width = 166
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -939,6 +962,166 @@ object LossDebtForm: TLossDebtForm
         end>
       isShowModal = True
     end
+    object ContainerChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Juridical_ContainerForm'
+      FormName = 'TJuridical_ContainerForm'
+      FormNameParam.Value = 'TJuridical_ContainerForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'MasterAccountId'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'MasterAccountName'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ContainerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContainerId'
+        end
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyCode'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'AmountDebet'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountDebet'
+          DataType = ftFloat
+        end
+        item
+          Name = 'AmountKredit'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountKredit'
+          DataType = ftFloat
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end
+        item
+          Name = 'PartnerCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerCode'
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'ContractNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractCode'
+        end
+        item
+          Name = 'OKPO'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OKPO'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1208,8 +1391,8 @@ object LossDebtForm: TLossDebtForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 440
-    Top = 16
+    Left = 304
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1257,6 +1440,13 @@ object LossDebtForm: TLossDebtForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'BranchId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContainerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContainerId'
         ParamType = ptInput
       end
       item
@@ -1404,6 +1594,13 @@ object LossDebtForm: TLossDebtForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inisList'
+        Value = Null
+        Component = cbisList
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 451
@@ -1536,10 +1733,16 @@ object LossDebtForm: TLossDebtForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'isList'
+        Value = Null
+        Component = cbisList
+        DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 552
-    Top = 48
+    Left = 440
+    Top = 112
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'LossDebtJournalForm'
@@ -1615,8 +1818,8 @@ object LossDebtForm: TLossDebtForm
     FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 60
-    Top = 16
+    Left = 44
+    Top = 56
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_LossDebt'
@@ -1638,8 +1841,8 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 92
-    Top = 16
+    Left = 76
+    Top = 56
   end
   object GuidesBusiness: TdsdGuides
     KeyField = 'Id'
@@ -1665,8 +1868,8 @@ object LossDebtForm: TLossDebtForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 632
-    Top = 24
+    Left = 488
+    Top = 8
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
@@ -1691,8 +1894,8 @@ object LossDebtForm: TLossDebtForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 792
-    Top = 16
+    Left = 648
+    Top = 8
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1717,7 +1920,7 @@ object LossDebtForm: TLossDebtForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 952
-    Top = 16
+    Left = 824
+    Top = 8
   end
 end

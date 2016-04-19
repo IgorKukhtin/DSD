@@ -124,6 +124,9 @@ type
     clContractCode: TcxGridDBColumn;
     ContractChoiceForm: TOpenChoiceForm;
     clPartnerCode: TcxGridDBColumn;
+    cbisList: TcxCheckBox;
+    clContainerId: TcxGridDBColumn;
+    ContainerChoiceForm: TOpenChoiceForm;
   private
   public
   end;
