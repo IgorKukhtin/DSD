@@ -43,7 +43,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определяется <Торговая сеть>
-     vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
     
 
      -- Поиск

@@ -31,7 +31,7 @@ RETURNS TABLE (Id                Integer
              , ContractId        Integer
              , ContractName      TVarChar
              , Manufacturer      TVarChar
-             , MinExpirationDate TDateTime
+             , ExpirationDate    TDateTime
              , Price_unit        TFloat
              , Price_minO        TFloat
              , Price_min         TFloat
@@ -55,8 +55,8 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
-    -- Ограничение на просмотр товарного справочника
-    vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+    -- определяется <Торговая сеть>
+    vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
 
     -- поиск категории
@@ -202,7 +202,7 @@ BEGIN
              , MinPrice_List.ContractId
              , Object_Contract.ValueData       AS ContractName
              , MinPrice_List.MakerName         AS Manufacturer
-             , MinPrice_List.PartionGoodsDate
+             , MinPrice_List.PartionGoodsDate  AS ExpirationDate
 
              , Price_Unit.Price    AS Price_unit
              , MinPrice_List.Price AS Price_minO
@@ -275,4 +275,6 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (Integer, TVarChar, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId:= 377613, inGoodsId_list:= '376', inSession:= '3');
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId:= 377613, inGoodsId_list:= '331,951,16876,40618', inSession:= '3') ORDER BY 1;
+
+
