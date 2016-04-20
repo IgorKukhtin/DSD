@@ -247,6 +247,12 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
    END IF;
 
+   -- проверка
+   IF COALESCE (inCurrencyId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.<Валюта> не выбрана.';
+   END IF;
+
 
    -- определили <Признак>
    vbIsUpdate:= COALESCE (ioId, 0) > 0;

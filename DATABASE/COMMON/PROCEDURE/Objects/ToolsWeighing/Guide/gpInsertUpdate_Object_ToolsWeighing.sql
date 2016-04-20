@@ -63,7 +63,21 @@ BEGIN
    -- сохранили свойство <название>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ToolsWeighing_Name(), ioId, inName);
    -- сохранили свойство <Ќазвание дл€ пользовател€>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ToolsWeighing_NameUser(), ioId, inNameUser);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ToolsWeighing_NameUser(), ioId
+                                      , COALESCE ((SELECT OS_ToolsWeighing_NameUser.ValueData
+                                                   FROM ObjectString AS OS_ToolsWeighing_Name
+                                                        INNER JOIN ObjectString AS OS_ToolsWeighing_NameUser
+                                                                                ON OS_ToolsWeighing_NameUser.ObjectId  = OS_ToolsWeighing_Name.ObjectId
+                                                                               AND OS_ToolsWeighing_NameUser.DescId    = zc_ObjectString_ToolsWeighing_NameUser()
+                                                                               AND OS_ToolsWeighing_NameUser.ValueData <> ''
+                                                   WHERE OS_ToolsWeighing_Name.ValueData = inName
+                                                     AND OS_ToolsWeighing_Name.Id        <> ioId
+                                                     AND OS_ToolsWeighing_Name.DescId    = zc_ObjectString_ToolsWeighing_Name()
+                                                   ORDER BY OS_ToolsWeighing_NameUser.ValueData DESC
+                                                   LIMIT 1
+                                                  )
+                                                , inNameUser)
+                                      );
 
    -- ”становить свойство лист\папка у себ€
    IF TRIM (inNameFull) <> ''

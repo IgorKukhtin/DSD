@@ -46,6 +46,8 @@ BEGIN
              AND Container.Amount <> 0;
      END IF;
 
+    -- !!!Оптимизация!!!
+    ANALYZE _tmpGoodsMinPrice_List;
 
     -- Результат
     RETURN QUERY
@@ -198,7 +200,7 @@ BEGIN
           , MI_PriceList.Price
             -- минимальная цена поставщика - для товара "сети"
           , MIN (MI_PriceList.Price) OVER (PARTITION BY MI_PriceList.GoodsId) AS MinPrice
-          , MI_PriceList.MovementItemId AS PriceListMovementItemId
+          , MI_PriceList.MovementItemId        AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
           , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)

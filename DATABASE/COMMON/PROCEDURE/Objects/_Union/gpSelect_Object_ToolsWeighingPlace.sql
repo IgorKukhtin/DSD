@@ -65,6 +65,18 @@ BEGIN
         OR Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()) -- Общефирменные + Ирна
 
     UNION ALL
+     SELECT Object_Goods.Id
+          , Object_Goods.ObjectCode AS Code     
+          , Object_Goods.ValueData  AS Name
+          , ObjectDesc.ItemName
+          , Object_Goods.isErased
+     FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
+     WHERE ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
+       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+
+    UNION ALL
      SELECT MovementDesc.Id
           , MovementDesc.Id       AS Code     
           , MovementDesc.ItemName AS Name
