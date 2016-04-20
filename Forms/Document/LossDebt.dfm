@@ -26,7 +26,6 @@ object LossDebtForm: TLossDebtForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = -8
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -1629,6 +1628,9 @@ object LossDebtForm: TLossDebtForm
       end
       item
         Control = edPaidKind
+      end
+      item
+        Control = cbisList
       end>
     GetStoredProc = spGet
     Left = 306

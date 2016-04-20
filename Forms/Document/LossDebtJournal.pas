@@ -84,6 +84,7 @@ type
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    colisList: TcxGridDBColumn;
   private
   public
   end;

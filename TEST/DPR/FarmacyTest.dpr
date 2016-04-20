@@ -413,7 +413,8 @@ uses
   Report_PriceIntervention2 in '..\..\FormsFarmacy\Report\Report_PriceIntervention2.pas' {Report_PriceIntervention2Form: TParentForm},
   ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   ChoiceGoodsFromRemains in '..\..\FormsFarmacy\System\ChoiceGoodsFromRemains.pas' {ChoiceGoodsFromRemainsForm: TParentForm},
-  Report_GoodsOnUnit_ForSite in '..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSite.pas' {Report_GoodsOnUnit_ForSiteForm: TParentForm};
+  Report_GoodsOnUnit_ForSite in '..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSite.pas' {Report_GoodsOnUnit_ForSiteForm: TParentForm},
+  Report_GoodsOnUnit_ForSiteDialog in '..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSiteDialog.pas' {Report_GoodsOnUnit_ForSiteDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

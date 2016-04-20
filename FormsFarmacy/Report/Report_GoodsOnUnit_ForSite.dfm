@@ -2,6 +2,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
   Caption = #1058#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1089#1072#1081#1090#1072
   ClientHeight = 364
   ClientWidth = 930
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 946
   ExplicitHeight = 402
   PixelsPerInch = 96
@@ -314,12 +315,12 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
       ExplicitTop = 33
     end
     object cxLabel4: TcxLabel
-      Left = 190
+      Left = 54
       Top = 7
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 280
+      Left = 144
       Top = 5
       Properties.Buttons = <
         item
@@ -327,7 +328,23 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 345
+      Width = 337
+    end
+    object cxLabel3: TcxLabel
+      Left = 502
+      Top = 6
+      Caption = #1058#1086#1074#1072#1088':'
+    end
+    object edGoods: TcxButtonEdit
+      Left = 542
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 7
+      Width = 325
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -354,8 +371,8 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_GoodsRemainsDialogForm'
-      FormNameParam.Value = ''
+      FormName = 'TReport_GoodsOnUnit_ForSiteDialogForm'
+      FormNameParam.Value = 'TReport_GoodsOnUnit_ForSiteDialogForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -369,6 +386,21 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
           Name = 'UnitName'
           Value = ''
           Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GoodsGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -399,6 +431,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
       item
         Name = 'inGoodsId_list'
         Value = ''
+        Component = edGoods
         DataType = ftString
         ParamType = ptInput
       end>
@@ -499,5 +532,30 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
         ParamType = ptInput
       end>
     Left = 376
+  end
+  object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 616
   end
 end

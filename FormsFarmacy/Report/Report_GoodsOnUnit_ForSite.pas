@@ -29,6 +29,9 @@ type
     bbExecuteDialog: TdxBarButton;
     MarginCategoryName: TcxGridDBColumn;
     MarginCategoryName_site: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
   private
     { Private declarations }
   public

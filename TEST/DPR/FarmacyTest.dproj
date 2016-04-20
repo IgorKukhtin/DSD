@@ -1280,6 +1280,10 @@
 				<Form>Report_GoodsOnUnit_ForSiteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSiteDialog.pas">
+				<Form>Report_GoodsOnUnit_ForSiteDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
