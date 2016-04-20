@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , MemberId Integer, MemberName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
-             , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
+             , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , SummTransportAdd TFloat, SummTransport TFloat, SummPhone TFloat
              , Comment TVarChar
              , isErased Boolean
@@ -153,6 +153,7 @@ BEGIN
             , MIFloat_SummCardRecalc.ValueData AS SummCardRecalc        
             , MIFloat_SummMinus.ValueData      AS SummMinus
             , MIFloat_SummAdd.ValueData        AS SummAdd
+            , MIFloat_SummHoliday.ValueData    AS SummHoliday
             , MIFloat_SummSocialIn.ValueData   AS SummSocialIn
             , MIFloat_SummSocialAdd.ValueData  AS SummSocialAdd
             , MIFloat_SummChild.ValueData      AS SummChild
@@ -189,6 +190,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                        ON MIFloat_SummHoliday.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
 
             LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                         ON MIFloat_SummSocialIn.MovementItemId = tmpAll.MovementItemId
@@ -243,6 +248,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.04.16         * add SummHoliday
  25.03.16         * add Card
  07.05.15         * add PersonalServiceList
  01.10.14         * add redmine 30.09

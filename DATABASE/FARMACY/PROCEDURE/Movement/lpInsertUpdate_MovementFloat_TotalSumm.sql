@@ -28,6 +28,7 @@ $BODY$
   DECLARE vbTotalSummCard    TFloat;
   DECLARE vbTotalSummMinus   TFloat;
   DECLARE vbTotalSummAdd     TFloat;
+  DECLARE vbTotalSummHoliday    TFloat;
   DECLARE vbTotalSummCardRecalc TFloat;
   DECLARE vbTotalSummSocialIn   TFloat;
   DECLARE vbTotalSummSocialAdd  TFloat;
@@ -161,6 +162,7 @@ BEGIN
           , OperSumm_Card
           , OperSumm_Minus
           , OperSumm_Add
+          , OperSumm_Holiday
           , OperSumm_CardRecalc
           , OperSumm_SocialIn
           , OperSumm_SocialAdd
@@ -168,7 +170,7 @@ BEGIN
 
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
-               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummCardRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild
+               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummHoliday, vbTotalSummCardRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild
      FROM 
           (SELECT SUM (tmpMI.OperCount_Master)  AS OperCount_Master
                 , SUM (tmpMI.OperCount_Child)   AS OperCount_Child
@@ -205,6 +207,7 @@ BEGIN
                  , SUM (tmpMI.OperSumm_Card)       AS OperSumm_Card
                  , SUM (tmpMI.OperSumm_Minus)      AS OperSumm_Minus
                  , SUM (tmpMI.OperSumm_Add)        AS OperSumm_Add
+                 , SUM (tmpMI.OperSumm_Holiday)    AS OperSumm_Holiday
                  , SUM (tmpMI.OperSumm_CardRecalc) AS OperSumm_CardRecalc
                  , SUM (tmpMI.OperSumm_SocialIn)   AS OperSumm_SocialIn
                  , SUM (tmpMI.OperSumm_SocialAdd)  AS OperSumm_SocialAdd
@@ -269,6 +272,7 @@ BEGIN
                       , tmpMI.OperSumm_Card
                       , tmpMI.OperSumm_Minus
                       , tmpMI.OperSumm_Add
+                      , tmpMI.OperSumm_Holiday
                       , tmpMI.OperSumm_CardRecalc
                       , tmpMI.OperSumm_SocialIn
                       , tmpMI.OperSumm_SocialAdd
@@ -306,6 +310,7 @@ BEGIN
                              , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))   AS OperSumm_Minus
                              , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))     AS OperSumm_Add
 
+                             , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))    AS OperSumm_Holiday
                              , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0)) AS OperSumm_CardRecalc
                              , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))   AS OperSumm_SocialIn
                              , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))  AS OperSumm_SocialAdd
@@ -359,6 +364,11 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                          ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                                         ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
                              LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                                          ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
@@ -423,6 +433,8 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMinus(), inMovementId, vbTotalSummMinus);
          -- Сохранили свойство <Итого Сумма премия>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAdd(), inMovementId, vbTotalSummAdd);
+         -- Сохранили свойство <Итого Сумма отпускные>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummHoliday(), inMovementId, vbTotalSummHoliday);
          -- Сохранили свойство <Итого Сумма на карточку (БН) для распределения>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCardRecalc(), inMovementId, vbTotalSummCardRecalc);
          -- Сохранили свойство <Итого Сумма соц выплаты (из зарплаты)>
@@ -465,6 +477,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.04.16         * add vbTotalSummHoliday
  19.10.14                                        * add vbOperCount_Second
  09.08.14                                        * add zc_Movement_SendOnPrice
  19.07.14                                        * add zc_Movement_EDI

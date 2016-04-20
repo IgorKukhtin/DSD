@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalService_item()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,7 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
-    
+
+    IN inSummHoliday         TFloat    , -- Сумма отпускные    
     IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
     IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
     IN inSummChild           TFloat    , -- Сумма алименты (удержание)
@@ -38,6 +41,7 @@ BEGIN
                                                      , inSummCardRecalc     := inSummCardRecalc
                                                      , inSummMinus          := inSummMinus
                                                      , inSummAdd            := inSummAdd
+                                                     , inSummHoliday        := inSummHoliday
                                                      , inSummSocialIn       := inSummSocialIn
                                                      , inSummSocialAdd      := inSummSocialAdd
                                                      , inSummChild          := inSummChild
@@ -56,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.04.16         * add inSummHoliday
  22.05.15                                        *
 */
 

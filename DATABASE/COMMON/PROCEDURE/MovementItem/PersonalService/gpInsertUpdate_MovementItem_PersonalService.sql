@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения    
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
+    IN inSummHoliday         TFloat    , -- Сумма отпускные
     IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
     IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
     IN inSummChild           TFloat    , -- Сумма алименты (удержание)    
@@ -49,6 +51,7 @@ BEGIN
                                                      , inSummCardRecalc     := inSummCardRecalc
                                                      , inSummMinus          := inSummMinus
                                                      , inSummAdd            := inSummAdd
+                                                     , inSummHoliday        := inSummHoliday
                                                      , inSummSocialIn       := inSummSocialIn
                                                      , inSummSocialAdd      := inSummSocialAdd
                                                      , inSummChild          := inSummChild
@@ -67,6 +70,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.04.16         * inSummHoliday
  08.05.15         * add PersonalServiceList
  14.09.14                                        * add outAmountToPay
  02.10.14                                        * del inSummCard

@@ -49,7 +49,7 @@ BEGIN
                       
            , Object_Juridical.Id                        AS JuridicalId
            , Object_Juridical.ValueData                 AS JuridicalName
-           , (COALESCE (MovementFloat_TotalSummService.ValueData, 0) + COALESCE (MovementFloat_TotalSummAdd.ValueData, 0) /*+ COALESCE (MovementFloat_TotalSummSocialAdd.ValueData, 0)*/) :: TFloat AS TotalSummService
+           , (COALESCE (MovementFloat_TotalSummService.ValueData, 0) + COALESCE (MovementFloat_TotalSummAdd.ValueData, 0)  + COALESCE (MovementFloat_TotalSummHoliday.ValueData, 0) /*+ COALESCE (MovementFloat_TotalSummSocialAdd.ValueData, 0)*/) :: TFloat AS TotalSummService
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummCash
@@ -107,6 +107,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
                                     ON MovementFloat_TotalSummAdd.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHoliday
+                                    ON MovementFloat_TotalSummHoliday.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummHoliday.DescId = zc_MovementFloat_TotalSummHoliday()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChild
                                     ON MovementFloat_TotalSummChild.MovementId =  Movement.Id
@@ -215,7 +218,7 @@ BEGIN
 --            , tmpAll.Amount :: TFloat          AS Amount
 --            , MIFloat_SummToPay.ValueData      AS AmountToPay
             , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
-            , (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummAdd.ValueData, 0)) :: TFloat AS SummService
+            , (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummAdd.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0)) :: TFloat AS SummService   
             , MIFloat_SummCard.ValueData       AS SummCard
 --            , MIFloat_SummCardRecalc.ValueData AS SummCardRecalc        
             , MIFloat_SummMinus.ValueData      AS SummMinus
@@ -251,7 +254,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
-
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                        ON MIFloat_SummHoliday.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
             LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
                                         ON MIFloat_SummTransportAdd.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
@@ -301,6 +306,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalService_Print (Integer,TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.04.16         * Holiday
  16.12.15         * add Member...
  25.05.15         *
 
