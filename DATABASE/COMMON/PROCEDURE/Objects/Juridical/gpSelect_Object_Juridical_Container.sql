@@ -1,21 +1,20 @@
 -- Function: gpSelect_Object_Juridical_Container (Integer, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Juridical_Container (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical_Container (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical_Container(
     IN inJuridicalId    Integer,       --
     IN inAccountId      Integer,       --
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , BranchCode Integer, BranchName TVarChar
-             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar 
-             , PaidKindId Integer, PaidKindName TVarChar
-             , PartionMovementId Integer, PartionOperDate, PartionInvNumber
-             , Amount TFloat
-
-             , isErased Boolean) AS
+RETURNS TABLE (containerid tfloat, juridicalid integer, juridicalcode integer, juridicalname tvarchar
+             , okpo tvarchar, infomoneyid integer, infomoneycode integer, infomoneyname tvarchar, infomoneyname_all tvarchar
+             , branchid integer, branchcode integer, branchname tvarchar
+             , partnerid integer, partnercode integer, partnername tvarchar
+             , contractid integer, contractcode integer, contractnumber tvarchar
+             , paidkindid integer, paidkindname tvarchar
+             , partionmovementid integer, partionoperdate tdatetime, partioninvnumber tvarchar
+             , amountdebet tfloat, amountkredit tfloat) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId_Constraint Integer;
@@ -120,4 +119,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical_Container (0, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Juridical_Container (0, 0, zfCalc_UserAdmin())
