@@ -21,7 +21,7 @@ type
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    colGoodsCode: TcxGridDBColumn;
+    Name_Site: TcxGridDBColumn;
     Name: TcxGridDBColumn;
     bbGoodsPartyReport: TdxBarButton;
     foto: TcxGridDBColumn;
@@ -32,6 +32,10 @@ type
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
+    Id: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
+    Price_minNoNds: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -162,7 +162,16 @@ BEGIN
              PERFORM gpComplete_Movement_SendDebt (inMovementId     := inMovementId
                                                  , inSession        := zfCalc_UserAdmin());
      ELSE
-     -- !!!12. - Service!!!
+     -- !!!12.1. - PersonalReport!!!
+     IF vbMovementDescId = zc_Movement_PersonalReport() AND 1=0
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             -- PERFORM lpComplete_Movement_Finance_CreateTemp();
+             -- !!! проводим - Service !!!
+             PERFORM gpComplete_Movement_PersonalReport (inMovementId     := inMovementId
+                                                       , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
+     ELSE
+     -- !!!12.2. - Service!!!
      IF vbMovementDescId = zc_Movement_Service() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
@@ -244,6 +253,7 @@ BEGIN
                                                   , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
      ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
      END IF;
      END IF;
      END IF;

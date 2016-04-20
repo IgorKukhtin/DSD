@@ -132,4 +132,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical_Container (0, 0, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Juridical_Container (0, 0, TRUE, zfCalc_UserAdmin())

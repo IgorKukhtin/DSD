@@ -71,7 +71,7 @@ BEGIN
                                                                                AND OS_ToolsWeighing_NameUser.DescId    = zc_ObjectString_ToolsWeighing_NameUser()
                                                                                AND OS_ToolsWeighing_NameUser.ValueData <> ''
                                                    WHERE OS_ToolsWeighing_Name.ValueData = inName
-                                                     AND OS_ToolsWeighing_Name.Id        <> ioId
+                                                     AND OS_ToolsWeighing_Name.ObjectId <> ioId
                                                      AND OS_ToolsWeighing_Name.DescId    = zc_ObjectString_ToolsWeighing_Name()
                                                    ORDER BY OS_ToolsWeighing_NameUser.ValueData DESC
                                                    LIMIT 1

@@ -1,9 +1,10 @@
 -- Function: gpSelect_GoodsOnUnit_ForSite()
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSite(
-    IN inUnitId           Integer  ,  -- Подразделение
+    IN inUnitId_list      TVarChar ,  -- Подразделение
     IN inGoodsId_list     TVarChar ,  -- Список товаров, через зпт
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -33,19 +34,25 @@ RETURNS TABLE (Id                Integer
              , Manufacturer      TVarChar
              , ExpirationDate    TDateTime -- срок годности (по которому найдена миним цена)
              , Price_unit        TFloat -- цена аптеки
-             , Price_minO        TFloat -- Original - цена миним (без наценок, информативная)
-             , Price_min         TFloat -- цена миним поставщика
-             , Price_minD        TFloat -- Delivery - цена миним по Украине
+             , Price_minNoNds    TFloat -- Original - цена миним без НДС (без наценок, информативная)
+             , Price_minO        TFloat -- Original - цена миним с НДС (без наценок, информативная)
+             , Price_min         TFloat -- цена миним поставщика с НДС с наценкой
+             , Price_minD        TFloat -- Delivery - цена миним с НДС с наценкой - доставка
 
              , MarginPercent           TFloat  -- наценка (информативная)
-             , MarginPercent_site      TFloat  -- наценка по Украине (информативная)
+             , MarginPercent_site      TFloat  -- наценка - доставка (информативная)
              , MarginCategoryName      TVarChar -- наценка название (информативная)
-             , MarginCategoryName_site TVarChar -- наценка название по Украине (информативная)
+             , MarginCategoryName_site TVarChar -- наценка название - доставка (информативная)
+
+             , NDS         TFloat
+             , NDSKindName TVarChar
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+
+   DECLARE inUnitId Integer;
 
    DECLARE vbIndex Integer;
    DECLARE vbMarginCategoryId Integer;
@@ -57,6 +64,54 @@ BEGIN
 
     -- определяется <Торговая сеть>
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+
+
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
+    THEN
+        -- таблица
+        CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer) ON COMMIT DROP;
+    ELSE
+        DELETE FROM _tmpGoodsMinPrice_List;
+    END IF;
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpunitminprice_list')
+    THEN
+        -- таблица
+        CREATE TEMP TABLE _tmpUnitMinPrice_List (UnitId Integer) ON COMMIT DROP;
+    ELSE
+        DELETE FROM _tmpUnitMinPrice_List;
+    END IF;
+
+    -- парсим подразделения
+    vbIndex := 1;
+    WHILE SPLIT_PART (inUnitId_list, ',', vbIndex) <> '' LOOP
+        -- добавляем то что нашли
+        INSERT INTO _tmpUnitMinPrice_List (UnitId) SELECT SPLIT_PART (inUnitId_list, ',', vbIndex) :: Integer;
+        -- теперь следуюющий
+        vbIndex := vbIndex + 1;
+    END LOOP;
+    -- !!!Временно!!!
+    inUnitId:= (SELECT _tmpUnitMinPrice_List.UnitId FROM _tmpUnitMinPrice_List LIMIT 1);
+
+    -- парсим товары
+    vbIndex := 1;
+    WHILE SPLIT_PART (inGoodsId_list, ',', vbIndex) <> '' LOOP
+        -- добавляем то что нашли
+        INSERT INTO _tmpGoodsMinPrice_List (GoodsId) SELECT SPLIT_PART (inGoodsId_list, ',', vbIndex) :: Integer;
+        -- теперь следуюющий
+        vbIndex := vbIndex + 1;
+    END LOOP;
+
+    -- если нет товаров
+    IF NOT EXISTS (SELECT 1 FROM _tmpGoodsMinPrice_List WHERE GoodsId <> 0)
+    THEN
+         -- все остатки
+         INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
+           SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
+           FROM Container
+           WHERE Container.DescId = zc_Container_Count()
+             AND Container.WhereObjectId = inUnitId
+             AND Container.Amount <> 0;
+    END IF;
 
 
     -- поиск категории
@@ -81,34 +136,6 @@ BEGIN
                                LIMIT 1
                               );
 
-    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
-    THEN
-        -- таблица
-        CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer);
-    ELSE
-        DELETE FROM _tmpGoodsMinPrice_List;
-    END IF;
-
-    -- парсим типы документов
-    vbIndex := 1;
-    WHILE SPLIT_PART (inGoodsId_list, ',', vbIndex) <> '' LOOP
-        -- добавляем то что нашли
-        INSERT INTO _tmpGoodsMinPrice_List (GoodsId) SELECT SPLIT_PART (inGoodsId_list, ',', vbIndex) :: Integer;
-        -- теперь следуюющий
-        vbIndex := vbIndex + 1;
-    END LOOP;
-
-    -- если нет товаров
-    IF NOT EXISTS (SELECT 1 FROM _tmpGoodsMinPrice_List)
-    THEN
-         -- все остатки
-         INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
-           SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
-           FROM Container
-           WHERE Container.DescId = zc_Container_Count()
-             AND Container.WhereObjectId = inUnitId
-             AND Container.Amount <> 0;
-    END IF;
 
     -- Результат
     RETURN QUERY
@@ -205,14 +232,18 @@ BEGIN
              , MinPrice_List.PartionGoodsDate  AS ExpirationDate
 
              , Price_Unit.Price    AS Price_unit
-             , MinPrice_List.Price AS Price_minO
-             , ROUND (MinPrice_List.Price * (1 + COALESCE (MarginCategory.MarginPercent, 0)      / 100), 2) :: TFloat  AS Price_min
-             , ROUND (MinPrice_List.Price * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS Price_minD
+             , MinPrice_List.Price AS Price_minNoNds
+             , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) :: TFloat  AS Price_minO
+             , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0)      / 100), 2) :: TFloat  AS Price_min
+             , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS Price_minD
 
              , MarginCategory.MarginPercent         AS MarginPercent
              , MarginCategory_site.MarginPercent    AS MarginPercent_site
              , Object_MarginCategory.ValueData      AS MarginCategoryName
              , Object_MarginCategory_site.ValueData AS MarginCategoryName_site
+
+             , ObjectFloat_NDSKind_NDS.ValueData    AS NDS
+             , Object_NDSKind.ValueData             AS NDSKindName
 
         FROM _tmpGoodsMinPrice_List
              LEFT JOIN Price_Unit     ON Price_Unit.GoodsId     = _tmpGoodsMinPrice_List.GoodsId
@@ -222,6 +253,15 @@ BEGIN
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = inUnitId
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpGoodsMinPrice_List.GoodsId
              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MinPrice_List.ContractId
+
+                            
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                  ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
 
              /*LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                     ON ObjectString_Goods_Maker.ObjectId = Object_Goods.Id
@@ -266,7 +306,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -275,9 +315,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (Integer, TVarChar, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId:= 377613, inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
-
-
-[12:10:55] Константин: Александр, вы в фармаси под каким логином подключаетесь ?
-[12:11:39] Константин: т.е. вся эта инфа "Товары для сайта" - можно будет посмотреть в программе, за одно и проверить, что касается цен и наценок
-[12:12:29] Константин: и наценки по Украине тоже надо будет ввести эту инфу в фармаси
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;

@@ -37,7 +37,7 @@ BEGIN
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
      THEN
          -- таблица
-         CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer);
+         CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer) ON COMMIT DROP;
          INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
            SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
            FROM Container
@@ -45,9 +45,15 @@ BEGIN
              AND Container.WhereObjectId = inUnitId
              AND Container.Amount <> 0;
      END IF;
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpunitminprice_list')
+     THEN
+        -- таблица
+        CREATE TEMP TABLE _tmpUnitMinPrice_List (UnitId Integer) ON COMMIT DROP;
+     END IF;
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpGoodsMinPrice_List;
+    ANALYZE _tmpUnitMinPrice_List;
 
     -- Результат
     RETURN QUERY

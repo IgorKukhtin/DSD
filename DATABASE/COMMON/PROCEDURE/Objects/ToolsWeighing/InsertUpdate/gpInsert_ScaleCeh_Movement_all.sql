@@ -60,7 +60,7 @@ BEGIN
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
      IF vbMovementDescId = zc_Movement_Send() AND (vbGoodsId_ReWork > 0 
-                                                OR (-- если такие "От кого"
+                                                /*OR (-- если такие "От кого"
                                                   (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                   IN (SELECT 8451 -- Цех Упаковки
                                                      UNION
@@ -83,7 +83,7 @@ BEGIN
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
                                                      AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
-                                                  )))
+                                                  ))*/)
      THEN
          vbMovementDescId:= zc_Movement_ProductionUnion();
          vbIsReWork:= TRUE;

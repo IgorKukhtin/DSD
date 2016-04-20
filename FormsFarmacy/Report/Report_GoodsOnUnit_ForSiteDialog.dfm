@@ -65,6 +65,7 @@ object Report_GoodsOnUnit_ForSiteDialogForm: TReport_GoodsOnUnit_ForSiteDialogFo
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 305
   end
