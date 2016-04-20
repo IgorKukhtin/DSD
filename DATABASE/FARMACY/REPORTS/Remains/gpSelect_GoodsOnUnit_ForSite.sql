@@ -20,27 +20,27 @@ RETURNS TABLE (Id                Integer
              , Name_category     TVarChar
              , published         Integer
              , deleted           Integer
-             , ObjectId          Integer
-             , ObjectName        TVarChar
-             , UnitId            Integer
-             , UnitName          TVarChar
-             , Remains           TFloat
+             , ObjectId          Integer   -- Торговая сеть (информативно)
+             , ObjectName        TVarChar  -- Торговая сеть (информативно)
+             , UnitId            Integer   -- Аптека (информативно)
+             , UnitName          TVarChar  -- Аптека (информативно)
+             , Remains           TFloat    -- Остаток
 
-             , JuridicalId       Integer
-             , JuridicalName     TVarChar
-             , ContractId        Integer
-             , ContractName      TVarChar
+             , JuridicalId       Integer    -- Поставщик (по которому найдена миним цена)
+             , JuridicalName     TVarChar   -- Поставщик (по которому найдена миним цена)
+             , ContractId        Integer    -- Договор (по которому найдена миним цена)
+             , ContractName      TVarChar   -- Договор (по которому найдена миним цена)
              , Manufacturer      TVarChar
-             , ExpirationDate    TDateTime
-             , Price_unit        TFloat
-             , Price_minO        TFloat
-             , Price_min         TFloat
-             , Price_minD        TFloat
+             , ExpirationDate    TDateTime -- срок годности (по которому найдена миним цена)
+             , Price_unit        TFloat -- цена аптеки
+             , Price_minO        TFloat -- Original - цена миним (без наценок, информативная)
+             , Price_min         TFloat -- цена миним поставщика
+             , Price_minD        TFloat -- Delivery - цена миним по Украине
 
-             , MarginPercent           TFloat
-             , MarginPercent_site      TFloat
-             , MarginCategoryName      TVarChar
-             , MarginCategoryName_site TVarChar
+             , MarginPercent           TFloat  -- наценка (информативная)
+             , MarginPercent_site      TFloat  -- наценка по Украине (информативная)
+             , MarginCategoryName      TVarChar -- наценка название (информативная)
+             , MarginCategoryName_site TVarChar -- наценка название по Украине (информативная)
               )
 AS
 $BODY$
@@ -275,6 +275,9 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (Integer, TVarChar, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId:= 377613, inGoodsId_list:= '331,951,16876,40618', inSession:= '3') ORDER BY 1;
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId:= 377613, inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
 
 
+[12:10:55] Константин: Александр, вы в фармаси под каким логином подключаетесь ?
+[12:11:39] Константин: т.е. вся эта инфа "Товары для сайта" - можно будет посмотреть в программе, за одно и проверить, что касается цен и наценок
+[12:12:29] Константин: и наценки по Украине тоже надо будет ввести эту инфу в фармаси
