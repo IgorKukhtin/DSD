@@ -2,7 +2,7 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1087#1072#1088#1090#1080#1080')>'
-  ClientHeight = 544
+  ClientHeight = 456
   ClientWidth = 1042
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
     Left = 0
     Top = 26
     Width = 1042
-    Height = 518
+    Height = 430
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -101,6 +101,14 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object AccountName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'AccountName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 199
       end
       object ContainerId: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1072#1088#1090#1080#1080
@@ -224,7 +232,7 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 5
+    TabOrder = 3
     Width = 261
   end
   object cxLabel1: TcxLabel
@@ -308,6 +316,10 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -588,7 +600,7 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1085#1091#1083#1077#1074#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -614,6 +626,13 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
         Name = 'inAccountId'
         Value = False
         Component = GuidesAccount
+        ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1

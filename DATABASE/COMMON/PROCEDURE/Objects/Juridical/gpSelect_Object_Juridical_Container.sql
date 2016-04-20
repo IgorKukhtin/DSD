@@ -1,14 +1,20 @@
 -- Function: gpSelect_Object_Juridical_Container (Integer, Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Juridical_Container (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical_Container (Integer, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical_Container(
     IN inJuridicalId    Integer,       --
     IN inAccountId      Integer,       --
+    IN inShowAll        Boolean,       -- 
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (containerid tfloat, juridicalid integer, juridicalcode integer, juridicalname tvarchar
-             , okpo tvarchar, infomoneyid integer, infomoneycode integer, infomoneyname tvarchar, infomoneyname_all tvarchar
+RETURNS TABLE (containerid tfloat
+             , juridicalid integer, juridicalcode integer, juridicalname tvarchar
+             , okpo tvarchar
+             , Accountid integer, Accountcode integer, Accountname tvarchar             
+             , infomoneyid integer, infomoneycode integer, infomoneyname tvarchar, infomoneyname_all tvarchar
              , branchid integer, branchcode integer, branchname tvarchar
              , partnerid integer, partnercode integer, partnername tvarchar
              , contractid integer, contractcode integer, contractnumber tvarchar
@@ -32,8 +38,9 @@ BEGIN
     tmpContainer AS (select Container.Id                 AS ContainerId
                           , Container.ObjectId
                           , Container.Amount
+                          , Container.ObjectId           AS AccountId
                           , CLO_Juridical.ObjectId       AS JuridicalId
-                          , CLO_Partner.ObjectId       AS PartnerId
+                          , CLO_Partner.ObjectId         AS PartnerId
                           , CLO_InfoMoney.ObjectId       AS InfoMoneyId
                           , CLO_PaidKind.ObjectId        AS PaidKindId
                           , CLO_Contract.ObjectId        AS ContractId
@@ -65,7 +72,7 @@ BEGIN
                                                     AND CLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
                      WHERE Container.DescId = zc_Container_Summ()
                        AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
-                       AND Container.Amount <> 0
+                       AND ((Container.Amount <> 0 AND inShowAll = False) OR inShowAll = true)
                    )
 
        -- Результат
@@ -74,6 +81,11 @@ BEGIN
             , Object_Juridical.ObjectCode AS JuridicalCode
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO 
+
+            , View_Account.AccountId    AS AccountId
+            , View_Account.AccountCode  AS AccountCode
+            , View_Account.AccountName  AS AccountName
+
             , View_InfoMoney.InfoMoneyId
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
@@ -99,6 +111,7 @@ BEGIN
 
        FROM tmpContainer
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpContainer.JuridicalId
+            LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpContainer.AccountId 
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpContainer.PartnerId
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpContainer.BranchId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpContainer.InfoMoneyId
