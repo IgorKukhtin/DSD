@@ -74,6 +74,7 @@ type
     procedure LoadReasonDifferencesFormTest;
     procedure LoadReportSoldParamsFormTest;
     procedure LoadReportFormTest;
+    procedure LoadReportForSiteTest;
     procedure LoadReportUploadFormTest;
     procedure LoadRepriceFormTest;
     procedure LoadRetailFormTest;
@@ -465,6 +466,11 @@ begin
 
 end;
 
+procedure TLoadFormTest.LoadReportForSiteTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsOnUnit_ForSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnit_ForSiteForm');
+end;
 
 procedure TLoadFormTest.LoadReportSoldParamsFormTest;
 begin

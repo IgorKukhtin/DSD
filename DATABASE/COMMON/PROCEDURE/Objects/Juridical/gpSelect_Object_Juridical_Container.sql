@@ -34,6 +34,7 @@ BEGIN
                           , Container.ObjectId
                           , Container.Amount
                           , CLO_Juridical.ObjectId       AS JuridicalId
+                          , CLO_Partner.ObjectId       AS PartnerId
                           , CLO_InfoMoney.ObjectId       AS InfoMoneyId
                           , CLO_PaidKind.ObjectId        AS PaidKindId
                           , CLO_Contract.ObjectId        AS ContractId
@@ -51,6 +52,9 @@ BEGIN
                        LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                      ON CLO_Branch.ContainerId = Container.Id
                                                     AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                       LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                                     ON CLO_Partner.ContainerId = Container.Id
+                                                    AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()                                                    
                        LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                                      ON CLO_PaidKind.ContainerId = Container.Id
                                                     AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
@@ -62,18 +66,25 @@ BEGIN
                                                     AND CLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
                      WHERE Container.DescId = zc_Container_Summ()
                        AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
-
+                       AND Container.Amount <> 0
+                   )
 
        -- Результат
-       SELECT Object_Juridical.Id         AS JuridicalId
+       SELECT tmpContainer.ContainerId ::TFloat
+            , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ObjectCode AS JuridicalCode
             , Object_Juridical.ValueData  AS JuridicalName
+            , ObjectHistory_JuridicalDetails_View.OKPO 
             , View_InfoMoney.InfoMoneyId
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
             , View_InfoMoney.InfoMoneyName_all
+            , Object_Branch.Id                 AS BranchId
             , Object_Branch.ObjectCode         AS BranchCode
             , Object_Branch.ValueData          AS BranchName
+            , Object_Partner.Id                AS PartnerId
+            , Object_Partner.ObjectCode        AS PartnerCode
+            , Object_Partner.ValueData         AS PartnerName
             , View_Contract.ContractId
             , View_Contract.ContractCode
             , View_Contract.InvNumber          AS ContractNumber
@@ -84,17 +95,20 @@ BEGIN
             , Movement.OperDate   AS PartionOperDate
             , Movement.InvNumber  AS PartionInvNumber
 
-            , tmpContainer.Amount ::TFloat AS Amount
+            , CASE WHEN tmpContainer.Amount > 0 THEN tmpContainer.Amount ELSE 0 END ::TFloat AS AmountDebet
+            , CASE WHEN tmpContainer.Amount < 0 THEN -1 * tmpContainer.Amount ELSE 0 END ::TFloat AS AmountKredit
+
        FROM tmpContainer
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpContainer.JuridicalId
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpContainer.PartnerId
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpContainer.BranchId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpContainer.InfoMoneyId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpContainer.PaidKindId
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = tmpContainer.ContractId
             LEFT JOIN Movement ON Movement.Id = tmpContainer.PartionMovementId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
             
 ;
-  
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
