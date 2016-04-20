@@ -27,8 +27,8 @@ BEGIN
   
    IF COALESCE (inId, 0) = 0
    THEN
-       -- поиск <Торговой сети>
-       vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+       -- определяется <Торговая сеть>
+       vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
        -- Результат
        RETURN QUERY
