@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
@@ -19,7 +20,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
-    
+
+    IN inSummHoliday         TFloat    , -- Сумма отпускные    
     IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
     IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
     IN inSummChild           TFloat    , -- Сумма алименты (удержание)
@@ -119,9 +121,9 @@ BEGIN
 
 
      -- рассчитываем сумму (затраты)
-     outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0); -- - COALESCE (inSummSocialIn, 0);
+     outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0); -- - COALESCE (inSummSocialIn, 0);
      -- рассчитываем сумму к выплате
-     outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummSocialAdd, 0)
+     outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummSocialAdd, 0) + COALESCE (inSummHoliday, 0)
                     + COALESCE (outSummTransportAdd, 0) - COALESCE (outSummTransport, 0) + COALESCE (outSummPhone, 0)
                      ;
      -- рассчитываем сумму к выплате из кассы
@@ -143,6 +145,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinus(), ioId, inSummMinus);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd (), ioId, inSummAdd );
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHoliday (), ioId, inSummHoliday );
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialIn(), ioId, inSummSocialIn);
      -- сохранили свойство <>
@@ -186,6 +190,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.04.16         * inSummHoliday
  07.05.15         * add PersonalServiceList
  02.10.14                                        * del inSummCard
  01.10.14         * add redmine 30.09

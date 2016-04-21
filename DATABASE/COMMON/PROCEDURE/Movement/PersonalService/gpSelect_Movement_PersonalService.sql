@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
-             , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
+             , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
              , TotalSummCardRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
              , TotalSummTransportAdd TFloat, TotalSummTransport TFloat, TotalSummPhone TFloat
              , Comment TVarChar
@@ -75,6 +75,7 @@ BEGIN
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummAdd.ValueData       AS TotalSummAdd
 
+           , MovementFloat_TotalSummHoliday.ValueData     AS TotalSummHoliday
            , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
            , MovementFloat_TotalSummSocialIn.ValueData    AS TotalSummSocialIn
            , MovementFloat_TotalSummSocialAdd.ValueData   AS TotalSummSocialAdd
@@ -131,7 +132,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
                                     ON MovementFloat_TotalSummAdd.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
-           
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHoliday
+                                    ON MovementFloat_TotalSummHoliday.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummHoliday.DescId = zc_MovementFloat_TotalSummHoliday()           
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardRecalc
                                     ON MovementFloat_TotalSummCardRecalc.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummCardRecalc.DescId = zc_MovementFloat_TotalSummCardRecalc()
@@ -178,6 +183,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.04.16         *
  05.04.15                                        * all
  01.10.14         * add Juridical
  11.09.14         *
@@ -185,3 +191,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean,
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2014', inEndDate:= '01.02.2015', inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
+
+
+
+

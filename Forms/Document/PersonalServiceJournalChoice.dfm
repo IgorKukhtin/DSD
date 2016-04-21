@@ -5,7 +5,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 929
-  ExplicitHeight = 569
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -58,6 +58,11 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = colTotalSummHoliday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = colTotalSummCash
             end>
           DataController.Summary.FooterSummaryItems = <
@@ -85,6 +90,11 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummHoliday
             end
             item
               Format = ',0.####'
@@ -191,6 +201,17 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           object colTotalSummAdd: TcxGridDBColumn
             Caption = #1055#1088#1077#1084#1080#1103
             DataBinding.FieldName = 'TotalSummAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colTotalSummHoliday: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
+            DataBinding.FieldName = 'TotalSummHoliday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -376,7 +397,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         end
         item
           Name = 'ServiceDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'ServiceDate'
           DataType = ftDateTime

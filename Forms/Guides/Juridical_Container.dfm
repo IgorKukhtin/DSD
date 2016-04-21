@@ -79,6 +79,37 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object JuridicalBasisName: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalBasisName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 141
+      end
+      object BranchCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1092'.'
+        DataBinding.FieldName = 'BranchCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 126
+      end
+      object BusinessName: TcxGridDBColumn
+        Caption = #1041#1080#1079#1085#1077#1089
+        DataBinding.FieldName = 'BusinessName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 146
+      end
       object JuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'JuridicalCode'
@@ -156,21 +187,6 @@ object Juridical_ContainerForm: TJuridical_ContainerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
-      end
-      object BranchCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1092'.'
-        DataBinding.FieldName = 'BranchCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 126
       end
       object ContractCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072

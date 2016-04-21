@@ -2,10 +2,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 438
   ClientWidth = 1070
-  ExplicitLeft = -297
-  ExplicitTop = -16
   ExplicitWidth = 1086
-  ExplicitHeight = 473
+  ExplicitHeight = 476
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +11,17 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Height = 381
     TabOrder = 3
     ExplicitWidth = 1070
-    ExplicitHeight = 477
+    ExplicitHeight = 381
     ClientRectBottom = 381
     ClientRectRight = 1070
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1070
-      ExplicitHeight = 477
+      ExplicitHeight = 381
       inherited cxGrid: TcxGrid
         Width = 1070
         Height = 381
         ExplicitWidth = 1070
-        ExplicitHeight = 477
+        ExplicitHeight = 381
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -99,6 +97,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummTransportAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummHoliday
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -170,6 +173,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummTransportAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummHoliday
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -295,6 +303,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           object colTotalSummAdd: TcxGridDBColumn
             Caption = #1055#1088#1077#1084#1080#1103
             DataBinding.FieldName = 'TotalSummAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colTotalSummHoliday: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
+            DataBinding.FieldName = 'TotalSummHoliday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
