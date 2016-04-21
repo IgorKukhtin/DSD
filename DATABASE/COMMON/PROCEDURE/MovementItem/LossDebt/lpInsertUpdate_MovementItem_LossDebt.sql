@@ -50,9 +50,9 @@ BEGIN
                                                 AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                                 AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
                      JOIN MovementItemLinkObject AS MILinkObject_Contract
-                                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                     AND MILinkObject_Contract.ObjectId = inContractId
+                                                 ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                                AND MILinkObject_Contract.ObjectId = inContractId
                      JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                                  ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
@@ -74,6 +74,50 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%>% <%> <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END, lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId), CASE WHEN inBranchId <> 0 THEN ' <' || lfGet_Object_ValueData (inBranchId) || '>' ELSE '' END, inJuridicalId, inPartnerId, inBranchId;
      END IF;
+
+     -- проверка
+     IF inContainerId <> 0
+     THEN
+         IF NOT EXISTS (SELECT 1
+                        FROM Container
+                             INNER JOIN ContainerLinkObject AS CLO_Juridical
+                                                            ON CLO_Juridical.ContainerId = Container.Id
+                                                           AND CLO_Juridical.DescId      = zc_ContainerLinkObject_Juridical()
+                                                           AND CLO_Juridical.ObjectId    = inJuridicalId
+                             INNER JOIN ContainerLinkObject AS CLO_InfoMoney 
+                                                            ON CLO_InfoMoney.ContainerId = Container.Id
+                                                           AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                           AND CLO_InfoMoney.ObjectId    = inInfoMoneyId
+                             INNER JOIN ContainerLinkObject AS CLO_PaidKind
+                                                            ON CLO_PaidKind.ContainerId = Container.Id
+                                                           AND CLO_PaidKind.DescId      = zc_ContainerLinkObject_PaidKind()
+                                                           AND CLO_PaidKind.ObjectId    = inPaidKindId
+                             LEFT JOIN ContainerLinkObject AS CLO_Contract
+                                                           ON CLO_Contract.ContainerId = Container.Id
+                                                          AND CLO_Contract.DescId      = zc_ContainerLinkObject_Contract()
+                             LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                                           ON CLO_Partner.ContainerId = Container.Id
+                                                          AND CLO_Partner.DescId      = zc_ContainerLinkObject_Partner()
+                             LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                           ON CLO_Branch.ContainerId = Container.Id
+                                                          AND CLO_Branch.DescId      = zc_ContainerLinkObject_Branch()
+                        WHERE Container.Id = inContainerId :: Integer
+                          AND COALESCE (CLO_Partner.ObjectId, 0)         = COALESCE (inPartnerId, 0)
+                          AND COALESCE (CLO_Branch.ObjectId, 0)          = COALESCE (inBranchId, 0)
+                          AND COALESCE (CLO_Contract.ObjectId, 0)        = COALESCE (inContractId, 0)
+                       )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Параметры <%> + <%> + <%> + <%> + <%> + <%> не соответствуют партии № <%>', lfGet_Object_ValueData (inJuridicalId)
+                                                                                                               , lfGet_Object_ValueData (inPartnerId)
+                                                                                                               , lfGet_Object_ValueData (inInfoMoneyId)
+                                                                                                               , lfGet_Object_ValueData (inPaidKindId)
+                                                                                                               , lfGet_Object_ValueData (inContractId)
+                                                                                                               , lfGet_Object_ValueData (inBranchId)
+                                                                                                               , inContainerId :: Integer
+                                                                                                                ;
+         END IF;
+     END IF;
+
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

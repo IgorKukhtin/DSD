@@ -41,6 +41,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Дебет долг на дату> или <Кредит долг на дату>.';
      END IF;
 
+
      -- расчет
      IF ioAmountDebet <> 0 THEN
         vbAmount := ioAmountDebet;
