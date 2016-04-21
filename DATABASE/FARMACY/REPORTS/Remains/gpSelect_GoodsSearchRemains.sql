@@ -38,9 +38,8 @@ BEGIN
         tmpGoods AS (SELECT Object.Id
                      FROM Object 
                      WHERE Object.DescId = zc_Object_Goods()
-                       AND upper(CAST(Object.ObjectCode AS TVarChar)) LIKE UPPER(inCodeSearch)
-                       AND upper(Object.ValueData) LIKE UPPER('%'||inGoodsSearch||'%')
-                       AND (inGoodsSearch <> '' OR inCodeSearch <> '')
+                       AND (upper(CAST(Object.ObjectCode AS TVarChar)) LIKE UPPER(inCodeSearch) AND inCodeSearch <> '')
+                       OR (upper(Object.ValueData) LIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
                      )
 
            , containerCount AS (SELECT Container.Id                AS ContainerId
@@ -151,4 +150,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_GoodsSearchRemains ('4142', '', inSession := '3');
+-- SELECT * FROM gpSelect_GoodsSearchRemains ('', '', inSession := '3');
