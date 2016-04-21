@@ -16,11 +16,14 @@ RETURNS TABLE (containerid tfloat
              , Accountid integer, Accountcode integer, Accountname tvarchar             
              , infomoneyid integer, infomoneycode integer, infomoneyname tvarchar, infomoneyname_all tvarchar
              , branchid integer, branchcode integer, branchname tvarchar
+             , Businessid integer, Businessname tvarchar
+             , juridicalBasisid integer, juridicalBasiscode integer, juridicalBasisname tvarchar
              , partnerid integer, partnercode integer, partnername tvarchar
              , contractid integer, contractcode integer, contractnumber tvarchar
              , paidkindid integer, paidkindname tvarchar
              , partionmovementid integer, partionoperdate tdatetime, partioninvnumber tvarchar
              , amountdebet tfloat, amountkredit tfloat) AS
+--zc_ContainerLinkObject_Business - бизнес 2)zc_ContainerLinkObject_JuridicalBasis
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId_Constraint Integer;
@@ -45,6 +48,8 @@ BEGIN
                           , CLO_PaidKind.ObjectId        AS PaidKindId
                           , CLO_Contract.ObjectId        AS ContractId
                           , CLO_Branch.ObjectId          AS BranchId
+                          , CLO_Business.ObjectId        AS BusinessId
+                          , CLO_JuridicalBasis.ObjectId  AS JuridicalBasisId
                           , CLO_PartionMovement.ObjectId AS PartionMovementId
                      FROM Container
                        INNER JOIN ContainerLinkObject AS CLO_Juridical
@@ -53,11 +58,20 @@ BEGIN
                                                      AND (CLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
                        LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
                                                      ON CLO_InfoMoney.ContainerId = Container.Id 
-                                                     AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                    AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                        
                        LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                      ON CLO_Branch.ContainerId = Container.Id
                                                     AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+
+                       LEFT JOIN ContainerLinkObject AS CLO_Business 
+                                                     ON CLO_Business.ContainerId = Container.Id 
+                                                    AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
+
+                       LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis 
+                                                     ON CLO_JuridicalBasis.ContainerId = Container.Id 
+                                                    AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+
                        LEFT JOIN ContainerLinkObject AS CLO_Partner
                                                      ON CLO_Partner.ContainerId = Container.Id
                                                     AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()                                                    
@@ -67,6 +81,7 @@ BEGIN
                        LEFT JOIN ContainerLinkObject AS CLO_Contract
                                                      ON CLO_Contract.ContainerId = Container.Id
                                                     AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+
                        LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
                                                      ON CLO_PartionMovement.ContainerId = Container.Id
                                                     AND CLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
@@ -93,6 +108,14 @@ BEGIN
             , Object_Branch.Id                 AS BranchId
             , Object_Branch.ObjectCode         AS BranchCode
             , Object_Branch.ValueData          AS BranchName
+
+            , Object_Business.Id               AS BusinessId
+            , Object_Business.ValueData        AS BusinessName
+
+            , Object_JuridicalBasis.Id         AS JuridicalBasisId
+            , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
+            , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
+
             , Object_Partner.Id                AS PartnerId
             , Object_Partner.ObjectCode        AS PartnerCode
             , Object_Partner.ValueData         AS PartnerName
@@ -111,6 +134,8 @@ BEGIN
 
        FROM tmpContainer
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpContainer.JuridicalId
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpContainer.JuridicalBasisId
+            LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpContainer.BusinessId
             LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpContainer.AccountId 
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpContainer.PartnerId
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpContainer.BranchId
@@ -133,3 +158,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Juridical_Container (0, 0, TRUE, zfCalc_UserAdmin())
+--select * from gpSelect_Object_Juridical_Container(inJuridicalId := 345687 , inAccountId := 0 , inShowAll := 'False' ,  inSession := zfCalc_UserAdmin());
