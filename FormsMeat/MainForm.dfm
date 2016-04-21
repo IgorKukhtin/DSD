@@ -640,6 +640,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyName'
+          Value = Null
         end>
       isShowModal = False
     end
@@ -717,6 +718,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyName'
+          Value = Null
         end>
       isShowModal = False
     end
@@ -965,6 +967,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyName'
+          Value = Null
           DataType = ftString
         end>
       isShowModal = False
@@ -993,6 +996,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyName'
+          Value = Null
         end>
       isShowModal = False
     end
@@ -1020,6 +1024,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyName'
+          Value = Null
         end>
       isShowModal = False
     end
@@ -1069,6 +1074,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyName'
+          Value = Null
         end>
       isShowModal = False
     end
@@ -1096,6 +1102,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyName'
+          Value = Null
         end>
       isShowModal = False
     end
@@ -1151,6 +1158,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyName'
+          Value = Null
         end>
       isShowModal = False
     end

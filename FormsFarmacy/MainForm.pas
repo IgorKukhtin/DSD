@@ -252,6 +252,8 @@ type
     N60: TMenuItem;
     actGoodsOnUnit_ForSite: TdsdOpenForm;
     N61: TMenuItem;
+    actReportMovementCheckMiddleForm: TdsdOpenForm;
+    N63: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
