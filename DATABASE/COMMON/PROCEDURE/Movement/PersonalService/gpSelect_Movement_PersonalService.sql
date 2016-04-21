@@ -190,7 +190,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean,
 */
 
 -- тест
- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2014', inEndDate:= '01.02.2015', inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2014', inEndDate:= '01.02.2015', inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
 
 
 
