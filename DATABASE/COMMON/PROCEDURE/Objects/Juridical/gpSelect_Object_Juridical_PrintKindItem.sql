@@ -1,9 +1,7 @@
 -- Function: gpSelect_Object_Juridical_PrintKindItem()
 
-
 DROP FUNCTION IF EXISTS gpSelect_Object_Juridical_PrintKindItem (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Juridical_PrintKindItem (Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical_PrintKindItem(
     IN inBranchId       Integer,       --
@@ -265,22 +263,18 @@ BEGIN
          AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE)
-
-   ;
+      ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Object_Juridical_PrintKindItem (TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  19.01.16         * add кол-во накладных
  21.05.15         *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical_PrintKindItem ('2')
+-- SELECT * FROM gpSelect_Object_Juridical_PrintKindItem (0, '2')

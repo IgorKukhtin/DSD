@@ -1061,20 +1061,6 @@ object LossDebtForm: TLossDebtForm
           DataType = ftString
         end
         item
-          Name = 'AmountDebet'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'AmountDebet'
-          DataType = ftFloat
-        end
-        item
-          Name = 'AmountKredit'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'AmountKredit'
-          DataType = ftFloat
-        end
-        item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS

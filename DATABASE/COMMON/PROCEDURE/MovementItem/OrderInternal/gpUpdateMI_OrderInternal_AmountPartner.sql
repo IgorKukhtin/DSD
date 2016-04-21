@@ -58,7 +58,7 @@ BEGIN
                                        , COALESCE (tmpOrder.AmountPartnerPrior, 0)        AS AmountPartnerPrior
                                  FROM (SELECT MovementItem.ObjectId                                                    AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
-                                            , SUM (CASE WHEN Movement.OperDate = inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartner
+                                            , SUM (CASE WHEN Movement.OperDate >= inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartner
                                             , SUM (CASE WHEN Movement.OperDate = (inOperDate - INTERVAL '1 DAY')
                                                          AND MovementDate_OperDatePartner.ValueData = inOperDate
                                                              THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
@@ -84,12 +84,12 @@ BEGIN
                                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '1 DAY') AND inOperDate
+                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '1 DAY') AND inOperDate + INTERVAL '3 DAY'
                                          AND Movement.DescId = zc_Movement_OrderExternal()
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
                                        GROUP BY MovementItem.ObjectId
                                               , MILinkObject_GoodsKind.ObjectId
-                                       HAVING SUM (CASE WHEN Movement.OperDate = inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) <> 0
+                                       HAVING SUM (CASE WHEN Movement.OperDate >= inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) <> 0
                                            OR SUM (CASE WHEN Movement.OperDate = (inOperDate - INTERVAL '1 DAY')
                                                          AND MovementDate_OperDatePartner.ValueData = inOperDate
                                                              THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
