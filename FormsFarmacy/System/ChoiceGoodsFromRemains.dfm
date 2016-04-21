@@ -336,6 +336,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
           ToParam.Component = edCodeSearch
           ToParam.DataType = ftString
           ToParam.ParamType = ptInput
+        end
+        item
+          FromParam.Value = ''
+          FromParam.DataType = ftString
+          ToParam.Value = Null
+          ToParam.Component = edGoodsSearch
+          ToParam.DataType = ftString
+          ToParam.ParamType = ptInput
         end>
       ActionList = <
         item
