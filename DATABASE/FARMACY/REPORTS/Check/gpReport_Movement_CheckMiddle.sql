@@ -34,7 +34,7 @@ BEGIN
           WITH tmpMI AS (SELECT MovementLinkObject_Unit.ObjectId AS UnitId
                               , Movement_Check.Id
                               , date_trunc('day', Movement_Check.OperDate)   AS OperDate
-                              , SUM (COALESCE (MI_Check.Amount,0) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
+                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
                          FROM Movement AS Movement_Check
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
@@ -47,14 +47,16 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                           ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
+                              LEFT JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.MovementItemId = MI_Check.Id
+                                                             AND MIContainer.DescId = zc_MIContainer_Count() 
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND date_trunc('day', Movement_Check.OperDate) BETWEEN inDateStart AND inDateEnd
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                          GROUP BY Movement_Check.Id
                                 , MovementLinkObject_Unit.ObjectId
                                 , date_trunc('day', Movement_Check.OperDate)
-                         HAVING SUM (COALESCE (MI_Check.Amount,0)) <> 0
+                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
                         )
 
 
