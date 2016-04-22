@@ -320,7 +320,7 @@ uses
   SendMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas',
   CreateOrderFromMCS in '..\..\FormsFarmacy\Document\CreateOrderFromMCS.pas' {CreateOrderFromMCSForm: TParentForm},
   CheckJournalUser in '..\..\Forms\Document\CheckJournalUser.pas' {CheckJournalUserForm: TParentForm},
-  ReportMovementCheck in '..\..\FormsFarmacy\Report\ReportMovementCheck.pas' {ReportMovementCheckForm: TParentForm},
+  ReportMovementCheckMiddle in '..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas' {ReportMovementCheckMiddleForm: TParentForm},
   MCS in '..\..\Forms\Guides\MCS.pas' {MCSForm: TParentForm},
   PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   Report_GoodsPartionHistory in '..\..\FormsFarmacy\Report\Report_GoodsPartionHistory.pas' {Report_GoodsPartionHistoryForm: TParentForm},
@@ -414,7 +414,9 @@ uses
   ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   ChoiceGoodsFromRemains in '..\..\FormsFarmacy\System\ChoiceGoodsFromRemains.pas' {ChoiceGoodsFromRemainsForm: TParentForm},
   Report_GoodsOnUnit_ForSite in '..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSite.pas' {Report_GoodsOnUnit_ForSiteForm: TParentForm},
-  Report_GoodsOnUnit_ForSiteDialog in '..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSiteDialog.pas' {Report_GoodsOnUnit_ForSiteDialogForm: TParentForm};
+  Report_GoodsOnUnit_ForSiteDialog in '..\..\FormsFarmacy\Report\Report_GoodsOnUnit_ForSiteDialog.pas' {Report_GoodsOnUnit_ForSiteDialogForm: TParentForm},
+  Report_MovementCheckMiddleDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckMiddleDialog.pas' {Report_MovementCheckMiddleDialogForm: TParentForm},
+  ReportMovementCheck in '..\..\FormsFarmacy\Report\ReportMovementCheck.pas' {ReportMovementCheckForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

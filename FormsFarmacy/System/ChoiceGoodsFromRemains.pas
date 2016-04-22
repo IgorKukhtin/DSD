@@ -17,9 +17,8 @@ uses
 
 type
   TChoiceGoodsFromRemainsForm = class(TAncestorEnumForm)
-    edGoodsSearch: TcxTextEdit;
+    edCodeSearch: TcxTextEdit;
     cxLabel1: TcxLabel;
-    colCommonCode: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
     colPriceSale: TcxGridDBColumn;
@@ -37,6 +36,9 @@ type
     cxLabel3: TcxLabel;
     actClearFilter: TMultiAction;
     btnClearFilter: TcxButton;
+    cxLabel2: TcxLabel;
+    edGoodsSearch: TcxTextEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

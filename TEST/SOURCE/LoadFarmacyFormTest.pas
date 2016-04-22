@@ -391,12 +391,18 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  // средний чек
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
+ exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
   //Отчет Ценовая интервенция2
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceIntervention2Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceIntervention2Form');
- exit;
+
 
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));

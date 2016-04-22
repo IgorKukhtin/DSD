@@ -1,9 +1,10 @@
 inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
-  ActiveControl = edGoodsSearch
+  ActiveControl = edCodeSearch
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
   ClientWidth = 832
   ShowHint = True
   ExplicitWidth = 848
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -26,18 +27,6 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCommonCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1052#1072#1088#1080#1086#1085#1072
-            DataBinding.FieldName = 'CommonCode'
-            PropertiesClassName = 'TcxTextEditProperties'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 60
-          end
           object c0lPhone: TcxGridDBColumn
             Caption = #1058#1077#1083#1077#1092#1086#1085
             DataBinding.FieldName = 'Phone'
@@ -101,6 +90,30 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             Options.Editing = False
             Width = 98
           end
+          object colAmountIncome: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080
+            DataBinding.FieldName = 'AmountIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080' ('#1087#1088#1080#1093#1086#1076' '#1089#1077#1075#1086#1076#1085#1103') '
+            Options.Editing = False
+            Width = 98
+          end
+          object colAmountAll: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089' '#1091#1095'. '#1090#1086#1074'. '#1074' '#1087#1091#1090#1080
+            DataBinding.FieldName = 'AmountAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1090#1086#1074#1072#1088#1072' '#1074' '#1087#1091#1090#1080') '
+            Options.Editing = False
+            Width = 98
+          end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -121,20 +134,20 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        object edGoodsSearch: TcxTextEdit
-          Left = 83
+        object edCodeSearch: TcxTextEdit
+          Left = 94
           Top = 3
           Hint = #1053#1072#1078#1084#1080#1090#1077' Enter '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
           TabOrder = 1
-          Width = 279
+          Width = 101
         end
         object cxLabel1: TcxLabel
-          Left = 3
+          Left = 258
           Top = 4
           Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1072
         end
         object cxLabel3: TcxLabel
-          Left = 368
+          Left = 201
           Top = 4
           Caption = 'Enter'
           Style.TextColor = 6118749
@@ -149,6 +162,24 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         end
       end
     end
+  end
+  object cxLabel2: TcxLabel [1]
+    Left = 12
+    Top = 30
+    Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1082#1086#1076#1091
+  end
+  object edGoodsSearch: TcxTextEdit [2]
+    Left = 334
+    Top = 29
+    Hint = #1053#1072#1078#1084#1080#1090#1077' Ctrl+Enter '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
+    TabOrder = 6
+    Width = 224
+  end
+  object cxLabel4: TcxLabel [3]
+    Left = 559
+    Top = 30
+    Caption = 'Ctrl+Enter'
+    Style.TextColor = 6118749
   end
   inherited ActionList: TActionList
     object mactGoodsLinkDelete: TMultiAction
@@ -257,7 +288,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
     end
     object actRefreshSearch: TdsdExecStoredProc
       Category = 'DSDLib'
-      ActiveControl = edGoodsSearch
+      ActiveControl = edCodeSearch
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spSelect
@@ -302,6 +333,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
           FromParam.Value = ''
           FromParam.DataType = ftString
           ToParam.Value = Null
+          ToParam.Component = edCodeSearch
+          ToParam.DataType = ftString
+          ToParam.ParamType = ptInput
+        end
+        item
+          FromParam.Value = ''
+          FromParam.DataType = ftString
+          ToParam.Value = Null
           ToParam.Component = edGoodsSearch
           ToParam.DataType = ftString
           ToParam.ParamType = ptInput
@@ -326,6 +365,13 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_GoodsSearchRemains'
     Params = <
+      item
+        Name = 'inCodeSearch'
+        Value = Null
+        Component = edCodeSearch
+        DataType = ftString
+        ParamType = ptInput
+      end
       item
         Name = 'inGoodsSearch'
         Value = Null
