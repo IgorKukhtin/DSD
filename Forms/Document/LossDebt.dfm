@@ -257,7 +257,6 @@ object LossDebtForm: TLossDebtForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -276,7 +275,7 @@ object LossDebtForm: TLossDebtForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object clJuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -290,6 +289,7 @@ object LossDebtForm: TLossDebtForm
           object clJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'JuridicalCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -307,7 +307,7 @@ object LossDebtForm: TLossDebtForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 101
+            Width = 150
           end
           object clPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088'.'
@@ -330,7 +330,7 @@ object LossDebtForm: TLossDebtForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 150
           end
           object clOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
@@ -342,6 +342,7 @@ object LossDebtForm: TLossDebtForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -359,7 +360,71 @@ object LossDebtForm: TLossDebtForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 55
+          end
+          object clContainerId: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1076#1086#1083#1075#1072
+            DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContainerChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clIsCalculated: TcxGridDBColumn
+            Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clSummDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
+            DataBinding.FieldName = 'SummDebet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clSummKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
+            DataBinding.FieldName = 'SummKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clAmountDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountDebet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.UseDisplayFormatWhenEditing = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clAmountKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object clContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -447,72 +512,6 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object clContainerId: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1076#1086#1083#1075#1072
-            DataBinding.FieldName = 'ContainerId'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = ContainerChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clIsCalculated: TcxGridDBColumn
-            Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
-            DataBinding.FieldName = 'isCalculated'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object clSummDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
-            DataBinding.FieldName = 'SummDebet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clSummKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
-            DataBinding.FieldName = 'SummKredit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountDebet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.UseDisplayFormatWhenEditing = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountKredit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
           end
           object clIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'

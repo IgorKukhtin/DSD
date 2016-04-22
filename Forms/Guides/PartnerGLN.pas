@@ -100,6 +100,7 @@ type
     clGLNCodeCorporate_property: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    RoomNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

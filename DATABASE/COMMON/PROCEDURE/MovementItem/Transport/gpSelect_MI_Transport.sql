@@ -38,7 +38,7 @@ BEGIN
             , MIFloat_EndOdometre.ValueData             AS EndOdometre
             , MIFloat_RateSumma.ValueData               AS RateSumma
             , MIFloat_RatePrice.ValueData               AS RatePrice
-            , COALESCE(MIFloat_RatePrice.ValueData,0)* (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))  AS RatePrice_Calc
+            , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS RatePrice_Calc
             , MIFloat_Taxi.ValueData                    AS Taxi
            
             , Object_Freight.Id           AS FreightId

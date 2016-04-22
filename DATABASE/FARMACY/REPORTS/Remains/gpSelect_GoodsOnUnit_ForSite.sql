@@ -52,10 +52,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
 
-   DECLARE inUnitId Integer;
+   -- DECLARE inUnitId Integer;
 
    DECLARE vbIndex Integer;
-   DECLARE vbMarginCategoryId Integer;
+   -- DECLARE vbMarginCategoryId Integer;
    DECLARE vbMarginCategoryId_site Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -90,7 +90,7 @@ BEGIN
         vbIndex := vbIndex + 1;
     END LOOP;
     -- !!!Временно!!!
-    inUnitId:= (SELECT _tmpUnitMinPrice_List.UnitId FROM _tmpUnitMinPrice_List LIMIT 1);
+    -- inUnitId:= (SELECT _tmpUnitMinPrice_List.UnitId FROM _tmpUnitMinPrice_List LIMIT 1);
 
     -- парсим товары
     vbIndex := 1;
@@ -107,27 +107,14 @@ BEGIN
          -- все остатки
          INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
            SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
-           FROM Container
-           WHERE Container.DescId = zc_Container_Count()
-             AND Container.WhereObjectId = inUnitId
-             AND Container.Amount <> 0;
+           FROM _tmpUnitMinPrice_List
+                INNER JOIN Container ON Container.WhereObjectId = _tmpUnitMinPrice_List.UnitId
+                                    AND Container.DescId = zc_Container_Count()
+                                    AND Container.Amount <> 0
+          ;
     END IF;
 
 
-    -- поиск категории
-    vbMarginCategoryId:= (SELECT ObjectLink_MarginCategory.ChildObjectId
-                          FROM ObjectLink AS ObjectLink_MarginCategoryLink_Unit
-                               LEFT JOIN ObjectLink AS ObjectLink_MarginCategory
-                                                    ON ObjectLink_MarginCategory.ObjectId = ObjectLink_MarginCategoryLink_Unit.ObjectId
-                                                   AND ObjectLink_MarginCategory.DescId   = zc_ObjectLink_MarginCategoryLink_MarginCategory()
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent
-                                                     ON ObjectFloat_Percent.ObjectId = ObjectLink_MarginCategory.ChildObjectId
-                                                    AND ObjectFloat_Percent.DescId   = zc_ObjectFloat_MarginCategory_Percent()
-                          WHERE ObjectLink_MarginCategoryLink_Unit.ChildObjectId = inUnitId
-                            AND ObjectLink_MarginCategoryLink_Unit.DescId        = zc_ObjectLink_MarginCategoryLink_Unit()
-                            AND COALESCE (ObjectFloat_Percent.ValueData, 0) = 0 -- !!!вот так криво!!!
-                          LIMIT 1
-                         );
     -- поиск категории для сайта
     vbMarginCategoryId_site:= (SELECT ObjectBoolean.ObjectId
                                FROM ObjectBoolean
@@ -137,28 +124,57 @@ BEGIN
                               );
 
 
+    -- !!!Оптимизация!!!
+    ANALYZE _tmpGoodsMinPrice_List;
+    -- !!!Оптимизация!!!
+    ANALYZE _tmpUnitMinPrice_List;
+
+
     -- Результат
     RETURN QUERY
-       WITH ContainerCount AS
-               (SELECT Container.ObjectId     AS GoodsId
-                     , SUM (Container.Amount) AS Amount
+       WITH MarginCategory_Unit AS
+               (SELECT tmp.UnitId
+                     , tmp.MarginCategoryId
+                FROM (SELECT _tmpUnitMinPrice_List.UnitId
+                           , ObjectLink_MarginCategory.ChildObjectId AS MarginCategoryId
+                           , ROW_NUMBER() OVER (PARTITION BY _tmpUnitMinPrice_List.UnitId, ObjectLink_MarginCategory.ChildObjectId ORDER BY _tmpUnitMinPrice_List.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
+                      FROM _tmpUnitMinPrice_List
+                           INNER JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Unit
+                                                 ON ObjectLink_MarginCategoryLink_Unit.ChildObjectId = _tmpUnitMinPrice_List.UnitId
+                                                AND ObjectLink_MarginCategoryLink_Unit.DescId        = zc_ObjectLink_MarginCategoryLink_Unit()
+                           LEFT JOIN ObjectLink AS ObjectLink_MarginCategory
+                                                ON ObjectLink_MarginCategory.ObjectId = ObjectLink_MarginCategoryLink_Unit.ObjectId
+                                               AND ObjectLink_MarginCategory.DescId   = zc_ObjectLink_MarginCategoryLink_MarginCategory()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Percent
+                                                 ON ObjectFloat_Percent.ObjectId = ObjectLink_MarginCategory.ChildObjectId
+                                                AND ObjectFloat_Percent.DescId   = zc_ObjectFloat_MarginCategory_Percent()
+                      WHERE COALESCE (ObjectFloat_Percent.ValueData, 0) = 0 -- !!!вот так криво!!!
+                     ) AS tmp
+                WHERE tmp.Ord = 1 -- !!!только одна категория!!!
+               )
+          , ContainerCount AS
+               (SELECT Container.WhereObjectId AS UnitId
+                     , Container.ObjectId      AS GoodsId
+                     , SUM (Container.Amount)  AS Amount
                 FROM _tmpGoodsMinPrice_List
                      INNER JOIN Container ON Container.ObjectId = _tmpGoodsMinPrice_List.GoodsId
-                                         AND Container.WhereObjectId = inUnitId
-                                         AND Container.DescId        = zc_Container_Count()
-                                         AND Container.Amount <> 0
-                GROUP BY Container.ObjectId
+                                         AND Container.DescId   = zc_Container_Count()
+                                         AND Container.Amount   <> 0
+                     INNER JOIN _tmpUnitMinPrice_List ON _tmpUnitMinPrice_List.UnitId = Container.WhereObjectId
+                GROUP BY Container.WhereObjectId
+                       , Container.ObjectId
                 HAVING SUM (Container.Amount) > 0
                )
           , MinPrice_List AS
                (SELECT tmp.*
-                FROM lpSelectMinPrice_List (inUnitId  := inUnitId
+                FROM lpSelectMinPrice_List (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
                                           , inObjectId:= vbObjectId
                                           , inUserId  := vbUserId
                                            ) AS tmp
                )
           , Price_Unit AS
-               (SELECT _tmpGoodsMinPrice_List.GoodsId
+               (SELECT _tmpUnitMinPrice_List.UnitId
+                     , _tmpGoodsMinPrice_List.GoodsId
                      , ROUND (ObjectFloat_Price_Value.ValueData, 2) :: TFloat AS Price
                 FROM _tmpGoodsMinPrice_List
                      INNER JOIN ObjectLink AS ObjectLink_Price_Goods
@@ -166,30 +182,37 @@ BEGIN
                                           AND ObjectLink_Price_Goods.DescId        = zc_ObjectLink_Price_Goods()
                      INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                            ON ObjectLink_Price_Unit.ObjectId      = ObjectLink_Price_Goods.ObjectId
-                                          AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                                           AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                     INNER JOIN _tmpUnitMinPrice_List ON _tmpUnitMinPrice_List.UnitId = ObjectLink_Price_Unit.ChildObjectId
                      LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
                                            ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Price_Goods.ObjectId
                                           AND ObjectFloat_Price_Value.DescId = zc_ObjectFloat_Price_Value()
                )
           , MarginCategory_all AS
                (SELECT DISTINCT 
-                       Object_MarginCategoryItem_View.MarginPercent
-                     , Object_MarginCategoryItem_View.MinPrice
+                       tmp.UnitId
                      , Object_MarginCategoryItem_View.MarginCategoryId
-                     , ROW_NUMBER() OVER (PARTITION BY Object_MarginCategoryItem_View.MarginCategoryId ORDER BY Object_MarginCategoryItem_View.MinPrice) AS ORD
-                FROM Object_MarginCategoryItem_View
-                WHERE MarginCategoryId IN (vbMarginCategoryId, vbMarginCategoryId_site)
+                     , Object_MarginCategoryItem_View.MarginPercent
+                     , Object_MarginCategoryItem_View.MinPrice
+                     , ROW_NUMBER() OVER (PARTITION BY tmp.UnitId, Object_MarginCategoryItem_View.MarginCategoryId ORDER BY tmp.UnitId, Object_MarginCategoryItem_View.MarginCategoryId, Object_MarginCategoryItem_View.MinPrice) AS ORD
+                FROM (SELECT MarginCategory_Unit.UnitId, MarginCategory_Unit.MarginCategoryId FROM MarginCategory_Unit
+                     UNION
+                      SELECT 0 AS UnitId, vbMarginCategoryId_site AS MarginCategoryId
+                     ) AS tmp
+                     INNER JOIN Object_MarginCategoryItem_View ON Object_MarginCategoryItem_View.MarginCategoryId = tmp.MarginCategoryId
                )
           , MarginCategory AS
                (SELECT DISTINCT 
-                       MarginCategory_all.MarginPercent
+                       MarginCategory_all.UnitId
+                     , MarginCategory_all.MarginCategoryId
+                     , MarginCategory_all.MarginPercent
                      , MarginCategory_all.MinPrice
                      , COALESCE (MarginCategory_all_next.MinPrice, 1000000) AS MaxPrice 
                 FROM MarginCategory_all
-                     LEFT JOIN MarginCategory_all AS MarginCategory_all_next ON MarginCategory_all_next.MarginCategoryId = MarginCategory_all.MarginCategoryId
+                     LEFT JOIN MarginCategory_all AS MarginCategory_all_next ON MarginCategory_all_next.UnitId           = MarginCategory_all.UnitId
+                                                                            AND MarginCategory_all_next.MarginCategoryId = MarginCategory_all.MarginCategoryId
                                                                             AND MarginCategory_all_next.ORD = MarginCategory_all.ORD + 1
-                WHERE MarginCategory_all.MarginCategoryId = vbMarginCategoryId
+                WHERE MarginCategory_all.MarginCategoryId <> vbMarginCategoryId_site
                )
           , MarginCategory_site AS
                (SELECT DISTINCT 
@@ -246,11 +269,15 @@ BEGIN
              , Object_NDSKind.ValueData             AS NDSKindName
 
         FROM _tmpGoodsMinPrice_List
+             LEFT JOIN _tmpUnitMinPrice_List ON 1=1
+
              LEFT JOIN Price_Unit     ON Price_Unit.GoodsId     = _tmpGoodsMinPrice_List.GoodsId
+                                     AND Price_Unit.UnitId      = _tmpUnitMinPrice_List.UnitId
              LEFT JOIN ContainerCount ON ContainerCount.GoodsId = _tmpGoodsMinPrice_List.GoodsId
+                                     AND ContainerCount.UnitId  = _tmpUnitMinPrice_List.UnitId
              LEFT JOIN MinPrice_List  ON MinPrice_List.GoodsId  = _tmpGoodsMinPrice_List.GoodsId
 
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = inUnitId
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmpUnitMinPrice_List.UnitId
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpGoodsMinPrice_List.GoodsId
              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MinPrice_List.ContractId
 
@@ -298,8 +325,9 @@ BEGIN
                                  AND ObjectLink_Goods_Appointment.DescId = zc_ObjectLink_Goods_Appointment()
 
              LEFT JOIN MarginCategory      ON MinPrice_List.Price >= MarginCategory.MinPrice      AND MinPrice_List.Price < MarginCategory.MaxPrice
+                                          AND MarginCategory.UnitId = _tmpUnitMinPrice_List.UnitId
              LEFT JOIN MarginCategory_site ON MinPrice_List.Price >= MarginCategory_site.MinPrice AND MinPrice_List.Price < MarginCategory_site.MaxPrice
-             LEFT JOIN Object AS Object_MarginCategory      ON Object_MarginCategory.Id      = vbMarginCategoryId
+             LEFT JOIN Object AS Object_MarginCategory      ON Object_MarginCategory.Id      = MarginCategory.MarginCategoryId
              LEFT JOIN Object AS Object_MarginCategory_site ON Object_MarginCategory_site.Id = vbMarginCategoryId_site
        ;
 
@@ -315,4 +343,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;

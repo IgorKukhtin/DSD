@@ -30,7 +30,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_LossDebt());
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
      IF inShowAll THEN 
 
@@ -299,7 +299,7 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
 
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId AND (ObjectLink_Partner_Juridical.ChildObjectId = MovementItem.ObjectId OR MILinkObject_Partner.ObjectId IS NULL)
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId AND (ObjectLink_Partner_Juridical.ChildObjectId = MovementItem.ObjectId OR MILinkObject_Partner.ObjectId IS NULL OR MIFloat_ContainerId.ValueData > 0)
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup

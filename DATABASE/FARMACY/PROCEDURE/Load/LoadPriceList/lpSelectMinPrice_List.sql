@@ -28,11 +28,11 @@ RETURNS TABLE (
 
 AS
 $BODY$
-  DECLARE vbMainJuridicalId Integer;
+  -- DECLARE vbMainJuridicalId Integer;
 BEGIN
 
     -- Нашли у Аптеки "Главное юр лицо"
-    SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
+    -- SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
 
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
      THEN
@@ -45,15 +45,9 @@ BEGIN
              AND Container.WhereObjectId = inUnitId
              AND Container.Amount <> 0;
      END IF;
-     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpunitminprice_list')
-     THEN
-        -- таблица
-        CREATE TEMP TABLE _tmpUnitMinPrice_List (UnitId Integer) ON COMMIT DROP;
-     END IF;
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpGoodsMinPrice_List;
-    ANALYZE _tmpUnitMinPrice_List;
 
     -- Результат
     RETURN QUERY
@@ -61,10 +55,10 @@ BEGIN
     -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
     PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar)
                      )
-    -- Установки для юр. лиц (для поставщика определяется договор и т.п)
+    -- Установки для юр. лиц (для поставщика определяется договор и т.п) !!!для всех MainJuridicalId!!!
   , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus, tmp.isPriceClose, tmp.isSite
                               FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
-                              WHERE tmp.MainJuridicalId = vbMainJuridicalId
+                              -- WHERE tmp.MainJuridicalId = vbMainJuridicalId
                              )
   , JuridicalSettings_close AS (SELECT DISTINCT tmp.JuridicalId, tmp.ContractId
                                 FROM JuridicalSettings_all AS tmp
@@ -74,12 +68,12 @@ BEGIN
                                    , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId ORDER BY tmp.JuridicalId, CASE WHEN tmp.isSite = TRUE THEN 0 ELSE 1 END, tmp.ContractId) AS Ord
                               FROM JuridicalSettings_all AS tmp
                               -- уже здесь ограничения
-                              WHERE tmp.isPriceClose    = FALSE
+                              WHERE tmp.isPriceClose = FALSE
                              )
     -- Выбираем в первую очередь тот что для сайта
   , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
                           FROM JuridicalSettings_new AS tmp
-                          -- !!!Временно откл.!!!
+                          -- !!!если Временно откл. - тогда будет для всех договоров!!!
                           WHERE tmp.Ord = 1
                          )
     -- Список товаров + коды ...

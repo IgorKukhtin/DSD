@@ -572,7 +572,6 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
-            Options.Editing = False
             Width = 85
           end
           object clRatePrice: TcxGridDBColumn
@@ -584,7 +583,6 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
-            Options.Editing = False
             Width = 100
           end
           object clRatePrice_Calc: TcxGridDBColumn

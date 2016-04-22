@@ -303,18 +303,6 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
-      end
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'ContactPersonKindId'
-        Value = ''
-        Component = ContactPersonKindGuides
-        ComponentItem = 'Key'
       end>
     Left = 32
     Top = 404
@@ -329,7 +317,7 @@
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inPartnerId'

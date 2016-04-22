@@ -366,7 +366,171 @@ BEGIN
           AND MIFloat_AmountPartner.ValueData <> 0
        ;
 
+     ELSE
+     -- !!!3.Формат CSV - zc_Enum_ExportKind_Brusn34604386!!!
 
+     IF vbExportKindId = zc_Enum_ExportKind_Brusn34604386()
+     THEN
+
+
+     -- первая строчка CSV  - Шапка
+     INSERT INTO _Result(RowData)
+        SELECT 'KOD'       -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом) 
+            || ';KOL'      -- количество 
+            || ';CEN'      -- цена с НДС (Ваша) 
+            || ';NAM'      -- имя товара на всяк случай если забыли сообщить штрихкод 
+            || ';KLN'      -- клиент (константа, код поставщика в нашей базе )  - 9990057 
+            || ';MAG'      -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
+            || ';NAM_TT'   -- название адрес ТТ
+            || ';DAT'      -- дата дока
+            || ';NAK'      -- номер накладной (мало знаков - расширяйте на свое усмотрение)
+       ;
+
+     -- Строчная часть
+     INSERT INTO _Result(RowData)
+        WITH tmpMovement AS
+                (SELECT Movement.Id                                      AS MovementId
+                      , Movement.InvNumber                               AS InvNumber
+                      , MovementDate_OperDatePartner.ValueData           AS OperDatePartner
+                      , MovementLinkObject_To.ObjectId                   AS PartnerId
+                      , COALESCE (Object_To.ValueData, '')               AS PartnerName
+                      , COALESCE (ObjectString_GLNCode.ValueData, '')    AS GLNCode
+                      , COALESCE (ObjectString_RoomNumber.ValueData, '') AS RoomNumber
+                 FROM Movement
+                      LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                      LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                      LEFT JOIN ObjectString AS ObjectString_GLNCode
+                                             ON ObjectString_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
+                                            AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+                      LEFT JOIN ObjectString AS ObjectString_RoomNumber
+                                             ON ObjectString_RoomNumber.ObjectId = MovementLinkObject_To.ObjectId
+                                            AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
+                 WHERE Movement.Id = inMovementId
+                )
+           , tmpObject_GoodsPropertyValue AS
+                (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                      , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                      , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                      , ObjectString_BarCode.ValueData       AS BarCode
+                 FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                      ) AS tmpGoodsProperty
+                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                            ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                      LEFT JOIN ObjectString AS ObjectString_BarCode
+                                             ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                )
+           , tmpObject_GoodsPropertyValueGroup AS
+                (SELECT tmpObject_GoodsPropertyValue.GoodsId
+                      , tmpObject_GoodsPropertyValue.BarCode
+                 FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE BarCode <> '' GROUP BY GoodsId
+                      ) AS tmpGoodsProperty_find
+                      LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+                )
+           , tmpObject_GoodsPropertyValue_basis AS
+                (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                      , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                      , ObjectString_BarCode.ValueData       AS BarCode
+                 FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+                      ) AS tmpGoodsProperty
+                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                            ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                      LEFT JOIN ObjectString AS ObjectString_BarCode
+                                             ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                )
+           , tmpGoodsByGoodsKind AS
+                (SELECT DISTINCT
+                        ObjectLink_GoodsByGoodsKind_Goods.ObjectId                        AS ObjectId
+                      , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
+                      , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                 FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                           ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                          AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                 WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                )
+        -- результат
+        SELECT -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом) 
+               COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
+               -- количество
+     || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
+               -- цена с НДС (Ваша) 
+     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar 
+               -- имя товара на всяк случай если забыли сообщить штрихкод
+     || ';' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+               -- клиент (константа, код поставщика в нашей базе )  - 9990057
+            || ';9990057'
+               -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
+     || ';' || tmpMovement.PartnerId -- tmpMovement.RoomNumber
+               -- название адрес ТТ
+     || ';' || tmpMovement.PartnerName
+               -- дата дока
+     || ';' || zfConvert_DateToString (tmpMovement.OperDatePartner)
+               -- номер накладной (мало знаков - расширяйте на свое усмотрение)
+     || ';' || tmpMovement.InvNumber
+
+        FROM MovementItem
+             LEFT JOIN tmpMovement ON tmpMovement.MovementId = MovementItem.MovementId
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+             LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = MovementItem.ObjectId
+                                          AND tmpGoodsByGoodsKind.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
+                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                   AND tmpObject_GoodsPropertyValue.BarCode <> ''
+             LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = MovementItem.ObjectId
+                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
+             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
+                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = MovementItem.ObjectId
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+             LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = ObjectLink_Goods_Measure.ChildObjectId
+
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId = zc_MI_Master()
+          AND MovementItem.isErased = FALSE
+          AND MIFloat_AmountPartner.ValueData <> 0
+       ;
+
+
+     END IF;
      END IF;
      END IF;
 
@@ -389,3 +553,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
+-- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
