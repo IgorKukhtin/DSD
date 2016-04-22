@@ -73,6 +73,14 @@ object PartnerGLNForm: TPartnerGLNForm
         Options.Editing = False
         Width = 100
       end
+      object RoomNumber: TcxGridDBColumn
+        Caption = #8470' '#1090#1086#1095#1082#1080' '#1076#1083#1103' Email ('#8470' '#1082#1074'.)'
+        DataBinding.FieldName = 'RoomNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object clGLNCode: TcxGridDBColumn
         Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
         DataBinding.FieldName = 'GLNCode'

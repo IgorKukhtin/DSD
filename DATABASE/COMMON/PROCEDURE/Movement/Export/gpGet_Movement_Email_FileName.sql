@@ -30,21 +30,24 @@ BEGIN
                  || '_' || REPLACE (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '')
                  || '_' || Movement.InvNumber
                  -- || '.xml'
-                 WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Vez37171990()
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
                       THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
                  || '_' || Movement.InvNumber
-                 || '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
+                 || '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
+                                                                                                    THEN MovementLinkObject_To.ObjectId :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
+                                                                                               ELSE COALESCE (ObjectString_RoomNumber.ValueData, '0')
+                                                                                          END
                  || '_' || zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData)
                  -- || '.csv'
             END AS outFileName
           , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Mida35273055()
                       THEN 'xml'
-                 WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Vez37171990()
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
                       THEN 'csv'
             END AS outDefaultFileExt
           , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Mida35273055()
                       THEN FALSE
-                 WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Vez37171990()
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
                       THEN TRUE
             END AS outEncodingANSI
      FROM Movement
@@ -102,3 +105,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
+-- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
