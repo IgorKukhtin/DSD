@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean, isDocument Boolean 
              , PayColor Integer
              , DateLastPay TDateTime
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
              )
 
 AS
@@ -118,10 +120,33 @@ BEGIN
           , Movement_Income.isDocument
           , Movement_Income.PayColor
           , MAX(MovementItemContainer.OperDate)::TDateTime AS LastDatePay
+
+          , Object_Insert.ValueData              AS InsertName
+          , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+          , Object_Update.ValueData              AS UpdateName
+          , ObjectDate_Protocol_Update.ValueData AS UpdateDate
+
+
         FROM
             Movement_Income
             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
                                                  AND MovementItemContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
+
+            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                                 ON ObjectDate_Protocol_Insert.ObjectId = Movement_Income.Id
+                                AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+            LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                 ON ObjectLink_Insert.ObjectId = Movement_Income.Id
+                                AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId  
+
+            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                                 ON ObjectDate_Protocol_Update.ObjectId = Movement_Income.Id
+                                AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+            LEFT JOIN ObjectLink AS ObjectLink_Update
+                                 ON ObjectLink_Update.ObjectId = Movement_Income.Id
+                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId  
         GROUP BY
             Movement_Income.Id
           , Movement_Income.InvNumber
@@ -149,7 +174,12 @@ BEGIN
           , Movement_Income.BranchDate
           , Movement_Income.Checked
           , Movement_Income.isDocument
-          , Movement_Income.PayColor;
+          , Movement_Income.PayColor
+          , Object_Insert.ValueData
+          , ObjectDate_Protocol_Insert.ValueData
+          , Object_Update.ValueData
+          , ObjectDate_Protocol_Update.ValueData
+;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -159,6 +189,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 22.04.16         * 
  30.01.16         * 
  21.12.15                                                                        *
  10.12.15                                                                        *
@@ -172,4 +203,4 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+--SELECT * FROM gpSelect_Movement_Income (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')

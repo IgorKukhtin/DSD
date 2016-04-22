@@ -65,6 +65,25 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
+
+    -- !!!протокол через свойства конкретного объекта!!!
+     IF vbIsInsert = FALSE
+     THEN
+         -- сохранили свойство <Дата корректировки>
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (корректировка)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, inUserId);
+     ELSE
+         IF vbIsInsert = TRUE
+         THEN
+             -- сохранили свойство <Дата создания>
+             PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
+             -- сохранили свойство <Пользователь (создание)>
+             PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, inUserId);
+         END IF;
+     END IF;
+
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
@@ -76,6 +95,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 22.04.16         *
  21.12.15                                                                       *
  07.12.15                                                                       *
  24.12.14                         *

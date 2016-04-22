@@ -11,12 +11,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomePharmacy(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar, JuridicalName TVarChar
+             , ToId Integer, ToName TVarChar, JuridicalName TVarChar, ContractName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , SaleSumm TFloat
              , InvNumberBranch TVarChar, BranchDate TDateTime
              , Checked Boolean 
              , isDocument Boolean
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 
 AS
@@ -60,6 +62,7 @@ BEGIN
            , Movement_Income_View.ToId
            , Movement_Income_View.ToName
            , Movement_Income_View.JuridicalName
+           , Movement_Income_View.ContractName
            , Movement_Income_View.NDSKindId
            , Movement_Income_View.NDSKindName
            , Movement_Income_View.SaleSumm
@@ -67,10 +70,33 @@ BEGIN
            , Movement_Income_View.BranchDate
            , Movement_Income_View.Checked
            , Movement_Income_View.isDocument
+
+           , Object_Insert.ValueData              AS InsertName
+           , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+           , Object_Update.ValueData              AS UpdateName
+           , ObjectDate_Protocol_Update.ValueData AS UpdateDate
        FROM Movement_Income_View 
-             JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
-             WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate 
-               AND Movement_Income_View.ToId = vbUnitId;
+            JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
+
+            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                                 ON ObjectDate_Protocol_Insert.ObjectId = Movement_Income_View.Id
+                                AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+            LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                 ON ObjectLink_Insert.ObjectId = Movement_Income_View.Id
+                                AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId  
+
+            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                                 ON ObjectDate_Protocol_Update.ObjectId = Movement_Income_View.Id
+                                AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+            LEFT JOIN ObjectLink AS ObjectLink_Update
+                                 ON ObjectLink_Update.ObjectId = Movement_Income_View.Id
+                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId  
+
+       WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate 
+       --  AND Movement_Income_View.ToId = vbUnitId
+       ;
 
 
 END;
@@ -82,6 +108,7 @@ ALTER FUNCTION gpSelect_Movement_IncomePharmacy (TDateTime, TDateTime, Boolean, 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.04.16         *
  28.04.15                        *
  11.02.15                        *
  23.12.14                        *
@@ -91,4 +118,4 @@ ALTER FUNCTION gpSelect_Movement_IncomePharmacy (TDateTime, TDateTime, Boolean, 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+ --SELECT * FROM gpSelect_Movement_IncomePharmacy (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
