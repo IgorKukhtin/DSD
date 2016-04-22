@@ -95,7 +95,7 @@ BEGIN
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId  
 
        WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate 
-       --  AND Movement_Income_View.ToId = vbUnitId
+         AND Movement_Income_View.ToId = vbUnitId
        ;
 
 
