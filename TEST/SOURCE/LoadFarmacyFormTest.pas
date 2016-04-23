@@ -686,6 +686,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadInfoMoneyGroupFormTest;

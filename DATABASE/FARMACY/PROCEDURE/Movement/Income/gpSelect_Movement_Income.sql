@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean, isDocument Boolean 
              , PayColor Integer
              , DateLastPay TDateTime
+             , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              )
@@ -78,6 +79,7 @@ BEGIN
                                    , Movement_Income_View.isDocument
                                    , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
                                    , Movement_Income_View.PaymentContainerId
+                                   , MLM_Order.MovementChildId          AS Movement_OrderId
                                FROM Movement_Income_View 
                                      JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
 
@@ -88,6 +90,10 @@ BEGIN
                                      LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
                                                                    ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_Juridical.Id
                                                                   AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+
+                                     LEFT JOIN MovementLinkMovement AS MLM_Order
+                                                                    ON MLM_Order.MovementId = Movement_Income_View.Id
+                                                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
 
                                WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate
                               )
@@ -121,6 +127,10 @@ BEGIN
           , Movement_Income.PayColor
           , MAX(MovementItemContainer.OperDate)::TDateTime AS LastDatePay
 
+          , Movement_Order.Id                    AS Movement_OrderId
+          , Movement_Order.InvNumber             AS Movement_OrderInvNumber
+          , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
+
           , Object_Insert.ValueData              AS InsertName
           , ObjectDate_Protocol_Insert.ValueData AS InsertDate
           , Object_Update.ValueData              AS UpdateName
@@ -129,6 +139,8 @@ BEGIN
 
         FROM
             Movement_Income
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
+
             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
                                                  AND MovementItemContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
 
@@ -175,6 +187,8 @@ BEGIN
           , Movement_Income.Checked
           , Movement_Income.isDocument
           , Movement_Income.PayColor
+          , Movement_Order.InvNumber
+          , Movement_Order.Id 
           , Object_Insert.ValueData
           , ObjectDate_Protocol_Insert.ValueData
           , Object_Update.ValueData
@@ -203,4 +217,5 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_Income (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
+--SELECT * FROM gpSelect_Movement_Income (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
+--where Movement_OrderId<>0

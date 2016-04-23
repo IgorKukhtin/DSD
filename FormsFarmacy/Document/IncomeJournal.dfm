@@ -317,6 +317,15 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
+          object colMovement_OrderInvNumber_full: TcxGridDBColumn
+            Caption = #1047#1072#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            DataBinding.FieldName = 'Movement_OrderInvNumber_full'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'

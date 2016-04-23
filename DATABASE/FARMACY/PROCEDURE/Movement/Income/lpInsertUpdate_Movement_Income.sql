@@ -17,6 +17,9 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
     (Integer, TVarChar, TDateTime, Boolean, 
      Integer, Integer, Integer, Integer, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
+    (Integer, TVarChar, TDateTime, Boolean, 
+     Integer, Integer, Integer, Integer, Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -27,6 +30,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inToId                Integer   , -- Кому
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inContractId          Integer   , -- Договор
+    IN inOrderId             Integer   , -- Сcылка на заявку поставщику 
     IN inPaymentDate         TDateTime , -- Дата платежа
     IN inJuridicalId         Integer   , -- Юрлицо покупатель
     IN inUserId              Integer     -- сессия пользователя
@@ -62,6 +66,9 @@ BEGIN
      -- сохранили связь с <Юрлицо покупатель>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
      
+     -- сохранили связь с <документом заявка поставщику>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inOrderId);
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
