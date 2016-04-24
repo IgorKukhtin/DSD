@@ -220,14 +220,6 @@
 				<Form>AboutBox</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Load\dbLoadTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
-				<Form>MakerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MakerEdit.pas">
-				<Form>MakerEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Country.pas">
 				<Form>CountryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1294,6 +1286,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\Income.pas">
 				<Form>IncomeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
+				<Form>MakerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MakerEdit.pas">
+				<Form>MakerEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Promo.pas">
+				<Form>PromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PromoJournal.pas">
+				<Form>PromoJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

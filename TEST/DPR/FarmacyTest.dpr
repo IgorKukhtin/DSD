@@ -76,8 +76,6 @@ uses
   AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   dbLoadTest in '..\SOURCE\Load\dbLoadTest.pas',
-  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
-  MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
   CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
   MovementLoad in '..\..\FormsFarmacy\Load\MovementLoad.pas' {MovementLoadForm: TParentForm},
@@ -417,7 +415,11 @@ uses
   Report_MovementCheckMiddleDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckMiddleDialog.pas' {Report_MovementCheckMiddleDialogForm: TParentForm},
   ReportMovementCheck in '..\..\FormsFarmacy\Report\ReportMovementCheck.pas' {ReportMovementCheckForm: TParentForm},
   OrderExternalJournalChoice in '..\..\FormsFarmacy\Document\OrderExternalJournalChoice.pas' {OrderExternalJournalChoiceForm: TParentForm},
-  Income in '..\..\FormsFarmacy\Document\Income.pas' {IncomeForm: TParentForm};
+  Income in '..\..\FormsFarmacy\Document\Income.pas' {IncomeForm: TParentForm},
+  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
+  MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
+  Promo in '..\..\FormsFarmacy\Document\Promo.pas' {PromoForm: TParentForm},
+  PromoJournal in '..\..\FormsFarmacy\Document\PromoJournal.pas' {PromoJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

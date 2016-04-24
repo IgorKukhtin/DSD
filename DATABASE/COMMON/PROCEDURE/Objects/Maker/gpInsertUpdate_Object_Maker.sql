@@ -1,38 +1,38 @@
-п»ї-- Function: gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, TFloat,TVarChar)
+-- Function: gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, TFloat,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
- INOUT ioId              Integer   ,    -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РџСЂРѕРёР·РІРѕРґРёС‚РµР»СЊ>
-    IN inCode            Integer   ,    -- РљРѕРґ РѕР±СЉРµРєС‚Р° <>
-    IN inName            TVarChar  ,    -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <>
-    IN inCountryId       Integer   ,    -- РЎС‚СЂР°РЅР°
-    IN inSession         TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId              Integer   ,    -- ключ объекта <Производитель>
+    IN inCode            Integer   ,    -- Код объекта <>
+    IN inName            TVarChar  ,    -- Название объекта <>
+    IN inCountryId       Integer   ,    -- Страна
+    IN inSession         TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
+   DECLARE vbCode_calc Integer;    
 BEGIN
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Maker());
    vbUserId := inSession; 
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Maker()); 
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ>
+   -- проверка прав уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Maker(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ>
+   -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Maker(), vbCode_calc);
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Maker(), vbCode_calc, inName);
 
-    -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <>
+    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Maker_Country(), ioId, inCountryId);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
@@ -41,11 +41,11 @@ ALTER FUNCTION gpInsertUpdate_Object_Maker(Integer,Integer,TVarChar, Integer, TV
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.02.14         *  
  
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_Maker()

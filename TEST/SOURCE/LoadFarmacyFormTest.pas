@@ -52,6 +52,7 @@ type
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
+    procedure LoadMakerReport;
     procedure LoadMargineCategory;
     procedure LoadMarginReport;
     procedure LoadMeasureFormTest;
@@ -71,6 +72,7 @@ type
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossGroupFormTest;
     procedure LoadProfitLossDirectionFormTest;
+    procedure LoadPromoFormTest;
     procedure LoadReasonDifferencesFormTest;
     procedure LoadReportSoldParamsFormTest;
     procedure LoadReportFormTest;
@@ -305,6 +307,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadMakerReport;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryEditForm');
 end;
 
 procedure TLoadFormTest.LoadMargineCategory;
@@ -627,6 +642,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProfitLoss_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossEditForm');
+end;
+
+procedure TLoadFormTest.LoadPromoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
 end;
 
 procedure TLoadFormTest.MainFormTest;
