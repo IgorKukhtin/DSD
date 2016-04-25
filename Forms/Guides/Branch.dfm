@@ -372,6 +372,7 @@ object BranchForm: TBranchForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -501,6 +502,12 @@ object BranchForm: TBranchForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
         end
         item
           Name = 'TextValue'

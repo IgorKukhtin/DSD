@@ -39,8 +39,8 @@ RETURNS TABLE (Id                Integer
              , Price_min         TFloat -- цена миним поставщика с НДС с наценкой
              , Price_minD        TFloat -- Delivery - цена миним с НДС с наценкой - доставка
 
-             , MarginPercent           TFloat  -- наценка (информативная)
-             , MarginPercent_site      TFloat  -- наценка - доставка (информативная)
+             , MarginPercent           TFloat  -- % наценка (информативная)
+             , MarginPercent_site      TFloat  -- % наценка - доставка (информативная)
              , MarginCategoryName      TVarChar -- наценка название (информативная)
              , MarginCategoryName_site TVarChar -- наценка название - доставка (информативная)
 
@@ -343,4 +343,5 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar) OWNER
 */
 
 -- тест
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '183292', inGoodsId_list:= '951', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;

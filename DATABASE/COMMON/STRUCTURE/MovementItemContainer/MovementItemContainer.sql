@@ -23,6 +23,7 @@ CREATE TABLE MovementItemContainer(
    ObjectId_analyzer integer,
    WhereObjectId_analyzer integer,
    ContainerId_analyzer integer,
+   AccountId_analyzer integer,
 
    ContainerIntId_analyzer integer,
 

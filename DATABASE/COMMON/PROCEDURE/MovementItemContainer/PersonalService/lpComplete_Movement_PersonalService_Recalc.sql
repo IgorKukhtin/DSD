@@ -202,6 +202,7 @@ BEGIN
                                                                   , inSummCardRecalc     := 0
                                                                   , inSummMinus          := 0
                                                                   , inSummAdd            := 0
+                                                                  , inSummHoliday        := 0
                                                                   , inSummSocialIn       := 0
                                                                   , inSummSocialAdd      := 0
                                                                   , inSummChild          := 0

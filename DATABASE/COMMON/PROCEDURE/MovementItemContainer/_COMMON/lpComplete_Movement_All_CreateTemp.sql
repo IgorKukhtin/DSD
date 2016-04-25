@@ -15,7 +15,7 @@ BEGIN
          -- таблица - Проводки
          CREATE TEMP TABLE _tmpMIContainer_insert (Id BigInt, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId BigInt
                                                  , AccountId Integer, AnalyzerId Integer
-                                                 , ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer
+                                                 , ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer, AccountId_Analyzer Integer
                                                  , ObjectIntId_Analyzer Integer, ObjectExtId_Analyzer Integer, ContainerIntId_Analyzer Integer
                                                  , Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
          -- таблица - 

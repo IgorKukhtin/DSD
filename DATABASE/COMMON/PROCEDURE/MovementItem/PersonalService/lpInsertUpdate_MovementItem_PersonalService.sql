@@ -13,8 +13,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
    OUT outAmount             TFloat    , -- ***Сумма (затраты)
    OUT outAmountToPay        TFloat    , -- ***Сумма к выплате (итог)
    OUT outAmountCash         TFloat    , -- ***Сумма к выплате из кассы
+   OUT outSummTransport      TFloat    , -- ***Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
    OUT outSummTransportAdd   TFloat    , -- ***Сумма командировочные (доплата)
-   OUT outSummTransport      TFloat    , -- ***Сумма ГСМ (удержание)
+   OUT outSummTransportAddLong TFloat  , -- ***Сумма дальнобойные (доплата, тоже командировочные)
+   OUT outSummTransportTaxi  TFloat    , -- ***Сумма на такси (доплата)
    OUT outSummPhone          TFloat    , -- ***Сумма Моб.связь (удержание)
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
@@ -85,11 +87,18 @@ BEGIN
 
      -- Поиск
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
-     -- Поиск <Сумма ГСМ (удержание)> + <Сумма Моб.связь (удержание)> + <Сумма командировочные (доплата)>
-     SELECT 0 AS SummTransportAdd
-          , SUM (MIContainer.Amount) AS SummTransport
+     -- Поиск
+     SELECT -- Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
+            SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS SummTransport
+            -- Сумма командировочные (доплата)
+          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN MIContainer.Amount ELSE 0 END) AS SummTransportAdd
+            -- Сумма дальнобойные (доплата, тоже командировочные)
+          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN MIContainer.Amount ELSE 0 END) AS SummTransportAddLong
+            -- Сумма на такси (доплата)
+          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN MIContainer.Amount ELSE 0 END) AS SummTransportTaxi
+            -- Сумма Моб.связь (удержание)
           , 0 AS SummPhone
-            INTO outSummTransportAdd, outSummTransport, outSummPhone
+            INTO outSummTransport, outSummTransportAdd, outSummTransportAddLong, outSummTransportTaxi, outSummPhone
      FROM ContainerLinkObject AS CLO_ServiceDate
           INNER JOIN ContainerLinkObject AS CLO_Personal
                                          ON CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
@@ -115,7 +124,7 @@ BEGIN
                                        AND MLO.ObjectId = CLO_PersonalServiceList.ObjectId
                                        AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()
           INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = CLO_Personal.ContainerId
-                                                         AND MIContainer.MovementDescId = zc_Movement_Income()
+                                                         -- AND MIContainer.MovementDescId = zc_Movement_Income()
      WHERE CLO_ServiceDate.ObjectId = vbServiceDateId
        AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate();
 
@@ -124,7 +133,8 @@ BEGIN
      outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0); -- - COALESCE (inSummSocialIn, 0);
      -- рассчитываем сумму к выплате
      outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummSocialAdd, 0) + COALESCE (inSummHoliday, 0)
-                    + COALESCE (outSummTransportAdd, 0) - COALESCE (outSummTransport, 0) + COALESCE (outSummPhone, 0)
+                    - COALESCE (outSummTransport, 0) + COALESCE (outSummTransportAdd, 0) + COALESCE (outSummTransportAddLong, 0) + COALESCE (outSummTransportTaxi, 0)
+                    - COALESCE (outSummPhone, 0)
                      ;
      -- рассчитываем сумму к выплате из кассы
      outAmountCash:= outAmountToPay - COALESCE (inSummChild, 0); -- - COALESCE (inSummCard, 0) 
@@ -156,10 +166,14 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChild(), ioId, inSummChild);
 
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAdd(), ioId, COALESCE (outSummTransportAdd, 0));
-     -- сохранили свойство <>
+     -- сохранили свойство <Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport(), ioId, COALESCE (outSummTransport, 0));
+     -- сохранили свойство <Сумма командировочные (доплата)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAdd(), ioId, COALESCE (outSummTransportAdd, 0));
+     -- сохранили свойство <Сумма дальнобойные (доплата, тоже командировочные)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAddLong(), ioId, COALESCE (outSummTransportAddLong, 0));
+     -- сохранили свойство <Сумма на такси (доплата)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportTaxi(), ioId, COALESCE (outSummTransportTaxi, 0));
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone(), ioId, COALESCE (outSummPhone, 0));
 

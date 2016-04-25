@@ -83,6 +83,9 @@ type
     One_KM: TcxGridDBColumn;
     One_KG: TcxGridDBColumn;
     WeightSale: TcxGridDBColumn;
+    SumAmount_TransportAdd: TcxGridDBColumn;
+    SumAmount_TransportAddLong: TcxGridDBColumn;
+    SumAmount_TransportTaxi: TcxGridDBColumn;
   private
   public
   end;

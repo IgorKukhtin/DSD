@@ -15,7 +15,8 @@ uses
 
 type
   TPaidKindForm = class(TAncestorEnumForm)
-    clName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
   private
     { Private declarations }
   public

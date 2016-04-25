@@ -413,6 +413,7 @@ object RoleForm: TRoleForm
           ItemName = 'bbEdit'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbSetErased'
         end
@@ -421,13 +422,25 @@ object RoleForm: TRoleForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -436,11 +449,6 @@ object RoleForm: TRoleForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -477,6 +485,7 @@ object RoleForm: TRoleForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
@@ -634,6 +643,12 @@ object RoleForm: TRoleForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
         end
         item
           Name = 'TextValue'

@@ -53,9 +53,12 @@ BEGIN
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummCash
-           , MovementFloat_TotalSummTransportAdd.ValueData AS TotalSummTransportAdd
-           , MovementFloat_TotalSummTransport.ValueData    AS TotalSummTransport
-           , MovementFloat_TotalSummPhone.ValueData        AS TotalSummPhone
+
+           , MovementFloat_TotalSummTransport.ValueData        AS TotalSummTransport
+           , MovementFloat_TotalSummTransportAdd.ValueData     AS TotalSummTransportAdd
+           , MovementFloat_TotalSummTransportAddLong.ValueData AS TotalSummTransportAddLong
+           , MovementFloat_TotalSummTransportTaxi.ValueData    AS TotalSummTransportTaxi
+           , MovementFloat_TotalSummPhone.ValueData            AS TotalSummPhone
 
        FROM Movement
             LEFT JOIN MovementDate AS MovementDate_ServiceDate
@@ -115,12 +118,18 @@ BEGIN
                                     ON MovementFloat_TotalSummChild.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportAdd
-                                    ON MovementFloat_TotalSummTransportAdd.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummTransportAdd.DescId = zc_MovementFloat_TotalSummTransportAdd()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransport
                                     ON MovementFloat_TotalSummTransport.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummTransport.DescId = zc_MovementFloat_TotalSummTransport()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportAdd
+                                    ON MovementFloat_TotalSummTransportAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummTransportAdd.DescId = zc_MovementFloat_TotalSummTransportAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportAddLong
+                                    ON MovementFloat_TotalSummTransportAddLong.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummTransportAddLong.DescId = zc_MovementFloat_TotalSummTransportAddLong()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportTaxi
+                                    ON MovementFloat_TotalSummTransportTaxi.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummTransportTaxi.DescId = zc_MovementFloat_TotalSummTransportTaxi()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPhone
                                     ON MovementFloat_TotalSummPhone.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPhone.DescId = zc_MovementFloat_TotalSummPhone()
@@ -309,7 +318,6 @@ ALTER FUNCTION gpSelect_Movement_PersonalService_Print (Integer,TVarChar) OWNER 
  20.04.16         * Holiday
  16.12.15         * add Member...
  25.05.15         *
-
 */
 
 -- тест

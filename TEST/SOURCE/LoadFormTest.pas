@@ -265,6 +265,7 @@ end;
 
 procedure TLoadFormTest.LoadCashFormTest;
 begin
+//exit;
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashForm');
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));

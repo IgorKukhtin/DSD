@@ -2217,7 +2217,8 @@ BEGIN
                                      AND _tmpItem_SummDriver.AccountId_Transit <> 0
       ;
 
-
+     -- !!!Проводки для отчета больше не нужны!!!
+     IF 1=0 THEN
      -- 5.1.1. формируются Проводки для отчета (Счета: Товар(с/с) <-> долг Поставщику или Физ.лицу (подотчетные лица)) !!!связь по MovementItemId!!! -- !!!связь по InfoMoneyId_Detail + GoodsId!!!
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
                                               , inMovementId         := inMovementId
@@ -2473,6 +2474,8 @@ BEGIN
                                                                                                                     AND COALESCE (_tmpItem_SummDriver.AccountId_Transit, 0) <> 0)
            WHERE _tmpItem.OperSumm_Partner <> 0
           ) AS tmpMIReport;
+
+     END IF; -- if 1=0 -- !!!Проводки для отчета больше не нужны!!!
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

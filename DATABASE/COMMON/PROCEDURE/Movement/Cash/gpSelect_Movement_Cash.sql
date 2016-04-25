@@ -192,10 +192,10 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                               ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
-                                             AND (MILinkObject_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
+                                             -- AND (MILinkObject_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
@@ -238,5 +238,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2015', inEndDate:= '30.01.2015', inCashId:= 14462, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2016', inEndDate:= '30.01.2016', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -24,6 +24,7 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , ColdHour TFloat, ColdDistance TFloat
              , AmountFuel TFloat, AmountColdHour TFloat, AmountColdDistance TFloat
              , Amount_Distance_calc TFloat, Amount_ColdHour_calc TFloat, Amount_ColdDistance_calc TFloat
+             , SumTransportAdd TFloat, SumTransportAddLong TFloat, SumTransportTaxi TFloat
               )
 AS
 $BODY$
@@ -48,6 +49,10 @@ BEGIN
                                  , MILinkObject_RouteKind.ObjectId AS RouteKindId
                                  , MIFloat_Weight.ValueData          AS Weight
                                  , MIFloat_WeightTransport.ValueData AS WeightTransport
+
+                                 , COALESCE (MIFloat_RateSumma.ValueData, 0) AS SumTransportAdd
+                                 , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS SumTransportAddLong
+                                 , COALESCE (MIFloat_Taxi.ValueData, 0)      AS SumTransportTaxi
 
                                  , COALESCE (MIFloat_StartOdometre.ValueData, 0) AS StartOdometre
                                  , COALESCE (MIFloat_EndOdometre.ValueData, 0)   AS EndOdometre
@@ -103,6 +108,16 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
                                                              ON MIFloat_EndOdometre.MovementItemId = MovementItem.Id
                                                             AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RateSumma
+                                                             ON MIFloat_RateSumma.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
+                                                             ON MIFloat_RatePrice.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Taxi
+                                                             ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
 
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
                                                                   ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id
@@ -202,6 +217,10 @@ BEGIN
              , SUM (tmpFuel.Amount_ColdHour_calc)     :: TFloat AS Amount_ColdHour_calc
              , SUM (tmpFuel.Amount_ColdDistance_calc) :: TFloat AS Amount_ColdDistance_calc
 
+             , MAX (tmpFuel.SumTransportAdd)          :: TFloat AS SumTransportAdd
+             , MAX (tmpFuel.SumTransportAddLong)      :: TFloat AS SumTransportAddLong
+             , MAX (tmpFuel.SumTransportTaxi)         :: TFloat AS SumTransportTaxi
+
               -- группировка по всем
         FROM (SELECT tmpAll.MovementId
                    , tmpAll.InvNumber
@@ -236,6 +255,10 @@ BEGIN
                    , SUM (tmpAll.Amount_Distance_calc)     AS Amount_Distance_calc
                    , SUM (tmpAll.Amount_ColdHour_calc)     AS Amount_ColdHour_calc
                    , SUM (tmpAll.Amount_ColdDistance_calc) AS Amount_ColdDistance_calc
+
+                   , MAX (tmpAll.SumTransportAdd)          AS SumTransportAdd
+                   , MAX (tmpAll.SumTransportAddLong)      AS SumTransportAddLong
+                   , MAX (tmpAll.SumTransportTaxi)         AS SumTransportTaxi
               FROM
               -- 1. Маршруты
              (/*SELECT tmpTransport.MovementId
@@ -310,6 +333,11 @@ BEGIN
                    , tmpTransport.Amount_Distance_calc
                    , tmpTransport.Amount_ColdHour_calc
                    , tmpTransport.Amount_ColdDistance_calc
+
+                   , tmpTransport.SumTransportAdd
+                   , tmpTransport.SumTransportAddLong
+                   , tmpTransport.SumTransportTaxi
+
               FROM tmpTransport
              UNION ALL
               -- 2.2. Приход топлива
@@ -344,6 +372,11 @@ BEGIN
                    , 0 AS Amount_Distance_calc
                    , 0 AS Amount_ColdHour_calc
                    , 0 AS Amount_ColdDistance_calc
+
+                   , 0 AS SumTransportAdd
+                   , 0 AS SumTransportAddLong
+                   , 0 AS SumTransportTaxi
+
               FROM Container
                    -- так ограничили приходы только на Автомобиль
                    JOIN ContainerLinkObject AS ContainerLO_Car

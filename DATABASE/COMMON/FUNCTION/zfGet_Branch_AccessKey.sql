@@ -8,30 +8,83 @@ AS
 $BODY$
  DECLARE vbBranchId Integer;
 BEGIN
-     vbBranchId:= CASE WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentBread()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+     vbBranchId:= CASE -- просто - ХЛЕБ
+                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentBread()
 
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                            
+                       -- филиал - "ГЛАВНЫЙ"
+                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
+                                            , zc_Enum_Process_AccessKey_CashDnepr()
+                                            --, zc_Enum_Process_AccessKey_PersonalService...()
+                                            , zc_Enum_Process_AccessKey_ServiceDnepr()
+                                            , zc_Enum_Process_AccessKey_TrasportDnepr()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                       -- филиал - Kiev
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentKiev()
+                                            , zc_Enum_Process_AccessKey_CashKiev()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceKiev()
+                                            , zc_Enum_Process_AccessKey_ServiceKiev()
+                                            , zc_Enum_Process_AccessKey_TrasportKiev()
+                                             )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
 
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
+                       -- филиал - Odessa
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentOdessa()
+                                            , zc_Enum_Process_AccessKey_CashOdessa()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceOdessa()
+                                            , zc_Enum_Process_AccessKey_TrasportOdessa()
+                                             )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
+
+                       -- филиал - Zaporozhye
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentZaporozhye()
+                                            , zc_Enum_Process_AccessKey_CashZaporozhye()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceZaporozhye()
+                                            , zc_Enum_Process_AccessKey_TrasportZaporozhye()
+                                             )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
 
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentKrRog()
+                       -- филиал - KrRog
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentKrRog()
+                                            , zc_Enum_Process_AccessKey_CashKrRog()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceKrRog()
+                                            , zc_Enum_Process_AccessKey_TrasportKrRog()
+                                             )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
 
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentNikolaev()
+                       -- филиал - Nikolaev
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentNikolaev()
+                                            , zc_Enum_Process_AccessKey_CashNikolaev()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceNikolaev()
+                                            , zc_Enum_Process_AccessKey_TrasportNikolaev()
+                                             )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
 
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentKharkov()
+                       -- филиал - Kharkov
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentKharkov()
+                                            , zc_Enum_Process_AccessKey_CashKharkov()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceKharkov()
+                                            , zc_Enum_Process_AccessKey_TrasportKharkov()
+                                             )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
 
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentCherkassi()
+                       -- филиал - Cherkassi
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentCherkassi()
+                                            , zc_Enum_Process_AccessKey_CashCherkassi()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceCherkassi()
+                                            , zc_Enum_Process_AccessKey_TrasportCherkassi()
+                                             )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
+
+                       -- филиал - Doneck
+                       /*WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentDoneck()
+                                            , zc_Enum_Process_AccessKey_CashDoneck()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceDoneck()
+                                            , zc_Enum_Process_AccessKey_TrasportDoneck()
+                                             )
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDoneck())
+                       */
                   END;
      -- проверка
      IF COALESCE (vbBranchId, 0) = 0

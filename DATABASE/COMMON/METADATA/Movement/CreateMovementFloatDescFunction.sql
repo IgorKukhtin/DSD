@@ -149,13 +149,21 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummChild', 'Итого Сумма алименты (удержание)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummChild'); 
 
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTransport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummTransport', 'Итого Сумма ГСМ (удержание)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransport'); 
+
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTransportAdd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransportAdd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummTransportAdd', 'Итого Сумма командировочные (доплата)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransportAdd'); 
 
-CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTransport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTransportAddLong() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransportAddLong'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_TotalSummTransport', 'Итого Сумма ГСМ (удержание)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransport'); 
+  SELECT 'zc_MovementFloat_TotalSummTransportAddLong', 'Итого Сумма дальнобойные (доплата, тоже командировочные)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransportAddLong'); 
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTransportTaxi() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransportTaxi'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummTransportTaxi', 'Итого Сумма на такси (доплата)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTransportTaxi'); 
 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPhone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPhone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)

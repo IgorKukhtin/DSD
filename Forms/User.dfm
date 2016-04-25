@@ -143,8 +143,6 @@ object UserForm: TUserForm
       TabOrder = 1
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 4
-      ExplicitTop = -2
       object RoleGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RoleDS
@@ -190,8 +188,6 @@ object UserForm: TUserForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 4
-      ExplicitTop = 183
       object PeriodCloseGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = PeriodCloseDS
@@ -413,6 +409,7 @@ object UserForm: TUserForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
@@ -537,6 +534,12 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
         end
         item
           Name = 'TextValue'

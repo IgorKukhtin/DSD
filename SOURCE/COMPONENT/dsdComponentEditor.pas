@@ -43,7 +43,8 @@ implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxMemo, cxCurrencyEdit, cxCheckBox,
      cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
-     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI, ExternalSave, Medoc, Vcl.ActnList;
+     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI, ExternalSave, Medoc, Vcl.ActnList,
+     cxGridTableView, cxGridDBTableView;
 
 procedure Register;
 begin
@@ -87,6 +88,8 @@ begin
   // и примерно такой же для Pivot
   Designer.GetComponentNames(GetTypeData(TypeInfo(TPivotAddOn)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TCustomAction)), Proc);
+  // для мультиселекта
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxGridDBTableView)), Proc);
 end;
 
 { TComponentItemTextProperty }
@@ -100,7 +103,7 @@ begin
             if (Component is TDataSet) or (Component is TdsdFormParams)
                or (Component is TDocument) or (Component is TdsdGuides)
                or (Component is TDefaultKey) or (Component is TCrossDBViewAddOn)
-               or (Component is TCustomAction) then
+               or (Component is TCustomAction) or (Component is TcxGridDBTableView) then
                Result := Result + [paValueList] - [paReadOnly];
 end;
 
@@ -158,6 +161,12 @@ begin
             Begin
               Proc('Enabled');
             End;
+            if (Component is TcxGridDBTableView) then
+            begin
+              with Component as TcxGridDBTableView do
+                for i := 0 to ColumnCount - 1 do
+                  Proc(Columns[i].Name);
+            end;
          end
 end;
 

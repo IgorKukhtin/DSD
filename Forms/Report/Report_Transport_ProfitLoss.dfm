@@ -69,6 +69,21 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Format = ',0.####'
           Kind = skSum
           Column = WeightSale
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_TransportAdd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_TransportAddLong
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_TransportTaxi
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -110,6 +125,21 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Format = ',0.####'
           Kind = skSum
           Column = WeightSale
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_TransportAdd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_TransportAddLong
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_TransportTaxi
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -190,6 +220,36 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object SumAmount_TransportAdd: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085'. ('#1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077')'
+        DataBinding.FieldName = 'SumAmount_TransportAdd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object SumAmount_TransportAddLong: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085'. ('#1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+        DataBinding.FieldName = 'SumAmount_TransportAddLong'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object SumAmount_TransportTaxi: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085'. ('#1058#1072#1082#1089#1080')'
+        DataBinding.FieldName = 'SumAmount_TransportTaxi'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
       end
       object SumAmount_TransportService: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'

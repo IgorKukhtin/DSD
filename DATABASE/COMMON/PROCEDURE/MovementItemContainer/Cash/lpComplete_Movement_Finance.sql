@@ -637,7 +637,7 @@ BEGIN
 
      -- 3. формируются Проводки + !!!есть MovementItemId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это "обычные" проводки
        SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
@@ -645,28 +645,41 @@ BEGIN
             , _tmpItem.AccountId                  AS AccountId
             , _tmpItem.AnalyzerId                 AS AnalyzerId
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
+
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
                        THEN _tmpItem.ObjectIntId_Analyzer
                    ELSE _tmpItem.UnitId
               END AS WhereObjectId_Analyzer -- !!!замена!!!
-            , COALESCE (tmpProfitLoss.ContainerId, tmpFind.ContainerId) AS ContainerId_Analyzer -- статья ОПиУ или Контейнер - корреспондент
+
+            , COALESCE (tmpProfitLoss.ContainerId, tmpFind.ContainerId) AS ContainerId_Analyzer -- Контейнер ОПиУ или Контейнер - корреспондент
+            , COALESCE (tmpProfitLoss.AccountId,   tmpFind.AccountId)   AS AccountId_Analyzer   -- Счет ОПиУ или Счет - корреспондент
+
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
                        THEN _tmpItem.UnitId
                    ELSE _tmpItem.ObjectIntId_Analyzer
               END AS ObjectIntId_Analyzer -- !!!замена!!!
+
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
+
             , 0                                   AS ParentId
             , _tmpItem.OperSumm + COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) AS OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive
        FROM _tmpItem
-            LEFT JOIN (SELECT _tmpItem.MovementItemId, MAX (_tmpItem.ContainerId) AS ContainerId FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() GROUP BY _tmpItem.MovementItemId
+            LEFT JOIN (SELECT _tmpItem.MovementItemId, _tmpItem.AccountId, MAX (_tmpItem.ContainerId) AS ContainerId FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() GROUP BY _tmpItem.MovementItemId, _tmpItem.AccountId
                       ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem.MovementItemId
                                         AND _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
-            LEFT JOIN (SELECT _tmpItem.MovementItemId, NOT _tmpItem.IsActive AS IsActive, MAX (_tmpItem.ContainerId) AS ContainerId FROM _tmpItem WHERE _tmpItem.AccountId <> zc_Enum_Account_100301() GROUP BY _tmpItem.MovementItemId, _tmpItem.IsActive
+            LEFT JOIN (SELECT tmp.MovementItemId, tmp.IsActive, tmp.ContainerId, tmp.AccountId
+                       FROM (SELECT _tmpItem.MovementItemId, NOT _tmpItem.IsActive AS IsActive, _tmpItem.ContainerId, _tmpItem.AccountId
+                                  , ROW_NUMBER() OVER (PARTITION BY _tmpItem.MovementItemId, _tmpItem.IsActive ORDER BY _tmpItem.ContainerId DESC) AS Ord
+                             FROM _tmpItem
+                             WHERE _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
+                            ) AS tmp
+                       WHERE tmp.Ord = 1
                       ) AS tmpFind ON tmpFind.MovementItemId = _tmpItem.MovementItemId
                                   AND tmpFind.IsActive       = _tmpItem.IsActive
                                   AND _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
+
             LEFT JOIN _tmpItem AS _tmpItem_Diff ON _tmpItem_Diff.ContainerId_Diff <> 0 AND _tmpItem_Diff.MovementItemId = _tmpItem.MovementItemId
                                                AND _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                AND _tmpItem.ContainerId_Diff = 0
@@ -677,16 +690,22 @@ BEGIN
             , _tmpItem.AccountId                  AS AccountId
             , zc_Enum_AnalyzerId_ProfitLoss()     AS AnalyzerId -- то что относится к ОПиУ, кроме проводок с товарами
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
+
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
                        THEN _tmpItem.ObjectIntId_Analyzer
                    ELSE _tmpItem.UnitId
               END AS WhereObjectId_Analyzer  -- !!!замена!!!
-            , _tmpItem_Diff.ContainerId_Diff -- Контейнер - корреспондент (статья ОПиУ)
+
+            , _tmpItem_Diff.ContainerId_Diff AS ContainerId_Analyzer -- Контейнер - корреспондент (статья ОПиУ)
+            , zc_Enum_Account_100301()       AS AccountId_Analyzer   -- Счет - корреспондент (ОПиУ) - прибыль текущего периода
+
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
                        THEN _tmpItem.UnitId
                    ELSE _tmpItem.ObjectIntId_Analyzer
               END AS ObjectIntId_Analyzer -- !!!замена!!!
+
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
+
             , 0                                   AS ParentId
             , -1 * COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) AS OperSumm
             , _tmpItem.OperDate
@@ -700,6 +719,7 @@ BEGIN
                                   AND tmpFind.IsActive       = _tmpItem.IsActive
                                   AND _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
             INNER JOIN _tmpItem AS _tmpItem_Diff ON _tmpItem_Diff.ContainerId_Diff <> 0 AND _tmpItem_Diff.MovementItemId = _tmpItem.MovementItemId
+
        WHERE _tmpItem.ObjectDescId = zc_Object_BankAccount()
          AND _tmpItem.ContainerId_Diff = 0
 
@@ -711,7 +731,10 @@ BEGIN
             , 0                                   AS AnalyzerId
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
             , _tmpItem.UnitId                     AS WhereObjectId_Analyzer
-            , _tmpItem_BankAccount.ContainerId    AS ContainerId_Analyzer -- корреспондент
+
+            , _tmpItem_BankAccount.ContainerId    AS ContainerId_Analyzer -- Контейнер - корреспондент
+            , _tmpItem_BankAccount.AccountId      AS AccountId_Analyzer   -- Счет - корреспондент
+
             , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
             , 0                                   AS ParentId
@@ -731,7 +754,10 @@ BEGIN
             , 0                                   AS AnalyzerId
             , 0                                   AS ObjectId_Analyzer
             , 0                                   AS WhereObjectId_Analyzer
+
             , _tmpItem.ContainerId_Currency       AS ContainerId_Analyzer
+            , 0                                   AS AccountId_Analyzer   -- !!!нет, т.к. это забалансовый счет!!!
+
             , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
             , 0                                   AS ParentId
@@ -742,6 +768,9 @@ BEGIN
        WHERE _tmpItem.ContainerId_Currency <> 0
     ;
 
+
+     -- !!!Проводки для отчета больше не нужны!!!
+     IF 1=0 THEN
 
      -- 4. формируются Проводки для отчета
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := _tmpItem.MovementDescId
@@ -825,6 +854,9 @@ BEGIN
            WHERE _tmpItem_BankAccount.ObjectDescId = zc_Object_BankAccount() AND _tmpItem_BankAccount.ContainerId_Diff = 0
           ) AS _tmpItem
     ;
+
+     END IF; -- if 1=0 -- !!!Проводки для отчета больше не нужны!!!
+
      
      -- убрал, т.к. св-во пишется теперь в ОПиУ, !!!но это свойство надо для zc_Movement_LossDebt() а может и других!!!
      -- DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);

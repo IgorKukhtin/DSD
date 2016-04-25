@@ -99,6 +99,12 @@ CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SendSumm_10500() RETURNS integer A
 -- Сумма с/с, перемещение по цене or перемещение, Разница в весе
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SendSumm_40200() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SendSumm_40200' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- из Путевой лист - Сумма командировочные
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_Transport_Add()     RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_Transport_Add'     AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- из Путевой лист - Сумма дальнобойные (тоже командировочные)
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_Transport_AddLong() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_Transport_AddLong' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- из Путевой лист - Сумма на такси
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_Transport_Taxi()    RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_Transport_Taxi'    AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- Кол-во, возвратная тара
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_TareReturning()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_TareReturning' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

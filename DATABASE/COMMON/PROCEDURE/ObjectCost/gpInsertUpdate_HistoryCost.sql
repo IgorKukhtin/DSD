@@ -1042,9 +1042,10 @@ LANGUAGE PLPGSQL VOLATILE;
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 0, inItearationCount:= 30, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
-
+/*
 SELECT * 
 FROM HistoryCost WHERE ('01.04.2016' BETWEEN StartDate AND EndDate)
 and abs (Price) = 100.1234
 and CalcSumm > 1000000
 order by Price desc
+*/

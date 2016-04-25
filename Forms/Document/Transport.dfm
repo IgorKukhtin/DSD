@@ -564,7 +564,7 @@
             Width = 67
           end
           object clRateSumma: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076'.'
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077', '#1075#1088#1085'.'
             DataBinding.FieldName = 'RateSumma'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -575,7 +575,7 @@
             Width = 85
           end
           object clRatePrice: TcxGridDBColumn
-            Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
+            Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
             DataBinding.FieldName = 'RatePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -586,7 +586,7 @@
             Width = 100
           end
           object clRatePrice_Calc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072',  '#1075#1088#1085' ('#1076#1072#1083#1100#1085#1086#1073'.)'
+            Caption = #1057#1091#1084#1084#1072' '#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077',  '#1075#1088#1085
             DataBinding.FieldName = 'RatePrice_Calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -598,7 +598,7 @@
             Width = 100
           end
           object clTaxi: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080', '#1075#1088#1085'.'
             DataBinding.FieldName = 'Taxi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -611,6 +611,7 @@
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 194
           end

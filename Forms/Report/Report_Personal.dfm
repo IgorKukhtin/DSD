@@ -3,9 +3,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientHeight = 555
   ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -193
+  ExplicitLeft = -255
   ExplicitWidth = 1044
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -82,6 +82,26 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = colIncomeSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummTransportAdd
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummTransportAddLong
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummTransportTaxi
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummPhone
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -138,6 +158,26 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = colIncomeSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummTransportAdd
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummTransportAddLong
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummTransportTaxi
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummPhone
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -331,6 +371,50 @@ inherited Report_PersonalForm: TReport_PersonalForm
           object colIncomeSumm: TcxGridDBColumn
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1043#1057#1052
             DataBinding.FieldName = 'IncomeSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object SummTransportAdd: TcxGridDBColumn
+            Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object SummTransportAddLong: TcxGridDBColumn
+            Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportAddLong'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object SummTransportTaxi: TcxGridDBColumn
+            Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportTaxi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object SummPhone: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
+            DataBinding.FieldName = 'SummPhone'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -1866,7 +1950,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end
         item
           Name = 'inDateService'
-          Value = Null
+          Value = 'NULL'
           Component = deServiceDate
           DataType = ftDateTime
           ParamType = ptInput

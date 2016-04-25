@@ -84,6 +84,9 @@ type
     clWeightTransport: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     dxBarStatic: TdxBarStatic;
+    SumTransportAdd: TcxGridDBColumn;
+    SumTransportAddLong: TcxGridDBColumn;
+    SumTransportTaxi: TcxGridDBColumn;
   private
   public
   end;

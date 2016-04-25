@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
-             , SummTransportAdd TFloat, SummTransport TFloat, SummPhone TFloat
+             , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Comment TVarChar
              , isErased Boolean
               )
@@ -158,9 +158,11 @@ BEGIN
             , MIFloat_SummSocialAdd.ValueData  AS SummSocialAdd
             , MIFloat_SummChild.ValueData      AS SummChild
 
-            , MIFloat_SummTransportAdd.ValueData AS SummTransportAdd
-            , MIFloat_SummTransport.ValueData    AS SummTransport
-            , MIFloat_SummPhone.ValueData        AS SummPhone
+            , MIFloat_SummTransport.ValueData        AS SummTransport
+            , MIFloat_SummTransportAdd.ValueData     AS SummTransportAdd
+            , MIFloat_SummTransportAddLong.ValueData AS SummTransportAddLong
+            , MIFloat_SummTransportTaxi.ValueData    AS SummTransportTaxi
+            , MIFloat_SummPhone.ValueData            AS SummPhone
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
@@ -205,12 +207,18 @@ BEGIN
                                         ON MIFloat_SummChild.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
-                                        ON MIFloat_SummTransportAdd.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
             LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
                                         ON MIFloat_SummTransport.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
+                                        ON MIFloat_SummTransportAdd.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAddLong
+                                        ON MIFloat_SummTransportAddLong.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummTransportAddLong.DescId = zc_MIFloat_SummTransportAddLong()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummTransportTaxi
+                                        ON MIFloat_SummTransportTaxi.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummTransportTaxi.DescId = zc_MIFloat_SummTransportTaxi()
             LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
                                         ON MIFloat_SummPhone.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()

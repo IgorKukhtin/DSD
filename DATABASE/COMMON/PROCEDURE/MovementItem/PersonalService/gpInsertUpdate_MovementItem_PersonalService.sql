@@ -14,8 +14,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
    OUT outAmount             TFloat    , -- ***Сумма (затраты)
    OUT outAmountToPay        TFloat    , -- ***Сумма к выплате (итог)
    OUT outAmountCash         TFloat    , -- ***Сумма к выплате из кассы
+   OUT outSummTransport      TFloat    , -- ***Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
    OUT outSummTransportAdd   TFloat    , -- ***Сумма командировочные (доплата)
-   OUT outSummTransport      TFloat    , -- ***Сумма ГСМ (удержание)
+   OUT outSummTransportAddLong TFloat  , -- ***Сумма дальнобойные (доплата, тоже командировочные)
+   OUT outSummTransportTaxi  TFloat    , -- ***Сумма на такси (доплата)
    OUT outSummPhone          TFloat    , -- ***Сумма Моб.связь (удержание)
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения    
@@ -41,8 +43,10 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
 
      -- сохранили
-     SELECT tmp.ioId, tmp.outAmount, tmp.outAmountToPay, tmp.outAmountCash, tmp.outSummTransportAdd, tmp.outSummTransport, tmp.outSummPhone
-        INTO ioId, outAmount, outAmountToPay, outAmountCash, outSummTransportAdd, outSummTransport, outSummPhone
+     SELECT tmp.ioId, tmp.outAmount, tmp.outAmountToPay, tmp.outAmountCash
+          , tmp.outSummTransport, tmp.outSummTransportAdd, tmp.outSummTransportAddLong, tmp.outSummTransportTaxi, tmp.outSummPhone
+            INTO ioId, outAmount, outAmountToPay, outAmountCash
+               , outSummTransport, outSummTransportAdd, outSummTransportAddLong, outSummTransportTaxi, outSummPhone
      FROM lpInsertUpdate_MovementItem_PersonalService (ioId                 := ioId
                                                      , inMovementId         := inMovementId
                                                      , inPersonalId         := inPersonalId

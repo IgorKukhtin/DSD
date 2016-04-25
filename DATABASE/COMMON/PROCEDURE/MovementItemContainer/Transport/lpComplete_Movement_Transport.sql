@@ -247,6 +247,128 @@ BEGIN
              ) AS _tmp
         ;
 
+     -- заполняем таблицу - элементы по Сотруднику (ЗП) + затраты "командировочные" + "дальнобойные" + "такси", со всеми свойствами для формирования Аналитик в проводках, здесь по !!!MovementItemId!!!
+     INSERT INTO _tmpItem_SummPersonal (MovementItemId, OperSumm_Add, OperSumm_AddLong, OperSumm_Taxi
+                                      , ContainerId, AccountId, InfoMoneyDestinationId, InfoMoneyId
+                                      , PersonalId, BranchId, UnitId, PositionId, ServiceDateId, PersonalServiceListId
+                                      , BusinessId_ProfitLoss, BranchId_ProfitLoss, UnitId_ProfitLoss
+                                      , ContainerId_ProfitLoss
+                                       )
+        SELECT _tmpItem.MovementItemId_parent            AS MovementItemId
+             , MIFloat_RateSumma.ValueData               AS OperSumm_Add
+             , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS OperSumm_AddLong
+             , MIFloat_Taxi.ValueData                    AS OperSumm_Taxi
+
+               -- для Сотрудника (ЗП)
+             , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                     , inParentId          := NULL
+                                     , inObjectId          := lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000()          -- Кредиторы
+                                                                                         , inAccountDirectionId     := zc_Enum_AccountDirection_70500()      -- Кредиторы + Сотрудники
+                                                                                         , inInfoMoneyDestinationId := View_InfoMoney.InfoMoneyDestinationId
+                                                                                         , inInfoMoneyId            := NULL
+                                                                                         , inUserId                 := inUserId
+                                                                                          )
+                                     , inJuridicalId_basis := vbJuridicalId_Basis
+                                     , inBusinessId        := NULL
+                                     , inObjectCostDescId  := NULL
+                                     , inObjectCostId      := NULL
+                                     , inDescId_1          := zc_ContainerLinkObject_Personal()
+                                     , inObjectId_1        := MovementLinkObject_PersonalDriver.ObjectId
+                                     , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                     , inObjectId_2        := View_InfoMoney.InfoMoneyId
+                                     , inDescId_3          := zc_ContainerLinkObject_Branch()
+                                     , inObjectId_3        := COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                                     , inDescId_4          := zc_ContainerLinkObject_Unit()
+                                     , inObjectId_4        := ObjectLink_Personal_Unit.ChildObjectId
+                                     , inDescId_5          := zc_ContainerLinkObject_Position()
+                                     , inObjectId_5        := ObjectLink_Personal_Position.ChildObjectId
+                                     , inDescId_6          := zc_ContainerLinkObject_ServiceDate()
+                                     , inObjectId_6        := lpInsertFind_Object_ServiceDate (inOperDate:= vbOperDate)
+                                     , inDescId_7          := zc_ContainerLinkObject_PersonalServiceList()
+                                     , inObjectId_7        := ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                                      ) AS ContainerId
+               -- для Сотрудника (ЗП)
+             , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000()          -- Кредиторы
+                                          , inAccountDirectionId     := zc_Enum_AccountDirection_70500()      -- Кредиторы + Сотрудники
+                                          , inInfoMoneyDestinationId := View_InfoMoney.InfoMoneyDestinationId
+                                          , inInfoMoneyId            := NULL
+                                          , inUserId                 := inUserId
+                                           ) AS AccountId
+
+             , View_InfoMoney.InfoMoneyDestinationId
+             , View_InfoMoney.InfoMoneyId
+             , MovementLinkObject_PersonalDriver.ObjectId                         AS PersonalId
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
+             , ObjectLink_Personal_Unit.ChildObjectId                             AS UnitId
+             , ObjectLink_Personal_Position.ChildObjectId                         AS PositionId
+             , lpInsertFind_Object_ServiceDate (inOperDate:= vbOperDate)          AS ServiceDateId
+             , ObjectLink_Personal_PersonalServiceList.ChildObjectId              AS PersonalServiceListId
+
+             , _tmpItem.BusinessId_Route    AS BusinessId_ProfitLoss -- !!!т.е. затраты из маршрута!!!
+             , _tmpItem.BranchId_ProfitLoss AS BranchId_ProfitLoss   -- !!!т.е. затраты могут не соответствовать Сотруднику (ЗП)!!!
+             , _tmpItem.UnitId_ProfitLoss   AS UnitId_ProfitLoss     -- !!!т.е. затраты могут не соответствовать Сотруднику (ЗП)!!!
+
+               -- для ОПиУ
+             , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                     , inParentId          := NULL
+                                     , inObjectId          := zc_Enum_Account_100301()  -- прибыль текущего периода
+                                     , inJuridicalId_basis := vbJuridicalId_Basis
+                                     , inBusinessId        := _tmpItem.BusinessId_Route -- !!!т.е. затраты из маршрута!!!
+                                     , inObjectCostDescId  := NULL
+                                     , inObjectCostId      := NULL
+                                     , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                     , inObjectId_1        := lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem.ProfitLossGroupId
+                                                                                            , inProfitLossDirectionId  := _tmpItem.ProfitLossDirectionId
+                                                                                            , inInfoMoneyDestinationId := View_InfoMoney.InfoMoneyDestinationId -- ???Заработная плата
+                                                                                            , inInfoMoneyId            := NULL
+                                                                                            , inUserId                 := inUserId
+                                                                                             )
+                                     , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                     , inObjectId_2        := _tmpItem.BranchId_ProfitLoss -- !!!т.е. затраты могут не соответствовать Сотруднику (ЗП)!!!
+                                      ) AS ContainerId_ProfitLoss
+
+        FROM (SELECT DISTINCT _tmpItem_Transport.MovementItemId_parent
+                            , _tmpItem_Transport.BusinessId_Route
+                            , _tmpItem_Transport.BranchId_ProfitLoss
+                            , _tmpItem_Transport.UnitId_ProfitLoss
+                            , _tmpItem_Transport.ProfitLossGroupId
+                            , _tmpItem_Transport.ProfitLossDirectionId
+              FROM _tmpItem_Transport
+             ) AS _tmpItem
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                          ON MovementLinkObject_PersonalDriver.MovementId = inMovementId
+                                         AND MovementLinkObject_PersonalDriver.DescId     = zc_MovementLinkObject_PersonalDriver()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
+
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                  ON ObjectLink_Personal_Unit.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
+                                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                  ON ObjectLink_Personal_Position.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
+                                 AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                  ON ObjectLink_Personal_PersonalServiceList.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
+                                 AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                  ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_RateSumma
+                                         ON MIFloat_RateSumma.MovementItemId = _tmpItem.MovementItemId_parent
+                                        AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
+             LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
+                                         ON MIFloat_RatePrice.MovementItemId = _tmpItem.MovementItemId_parent
+                                        AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
+             LEFT JOIN MovementItemFloat AS MIFloat_Taxi
+                                         ON MIFloat_Taxi.MovementItemId = _tmpItem.MovementItemId_parent
+                                        AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
+
+        WHERE MIFloat_RateSumma.ValueData <> 0
+           OR MIFloat_RatePrice.ValueData <> 0
+           OR MIFloat_Taxi.ValueData      <> 0
+       ;
+
+
      -- !!!формируются расчитанные свойства в Подчиненых элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartAmountFuel(), tmp.MovementItemId, tmp.StartAmountFuel)
      FROM (SELECT _tmpItem_Transport.MovementItemId, COALESCE (_tmpPropertyRemains.Amount, 0) AS StartAmountFuel
@@ -455,6 +577,71 @@ BEGIN
             JOIN _tmpItem_Transport ON _tmpItem_Transport.MovementItemId = _tmpItem_Summ.MovementItemId
        ;
 
+     -- 2.4. формируются Проводки - долг Сотруднику (ЗП) AND ОПиУ + !!!добавлен MovementItemId!!!
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
+                                       , ParentId, Amount, OperDate, IsActive)
+       WITH _tmpItem AS (SELECT _tmpItem_SummPersonal.MovementItemId
+                              , zc_Enum_AnalyzerId_Transport_Add()     AS AnalyzerId -- Сумма командировочные
+                              , _tmpItem_SummPersonal.OperSumm_Add     AS OperSumm
+                         FROM _tmpItem_SummPersonal
+                         WHERE _tmpItem_SummPersonal.OperSumm_Add <> 0 -- !!!надо ограничивать!!!
+                        UNION ALL
+                         SELECT _tmpItem_SummPersonal.MovementItemId
+                              , zc_Enum_AnalyzerId_Transport_AddLong() AS AnalyzerId -- Сумма дальнобойные (тоже командировочные)
+                              , _tmpItem_SummPersonal.OperSumm_AddLong AS OperSumm
+                         FROM _tmpItem_SummPersonal
+                         WHERE _tmpItem_SummPersonal.OperSumm_AddLong <> 0 -- !!!надо ограничивать!!!
+                        UNION ALL
+                         SELECT _tmpItem_SummPersonal.MovementItemId
+                              , zc_Enum_AnalyzerId_Transport_Taxi()    AS AnalyzerId -- Сумма на такси
+                              , _tmpItem_SummPersonal.OperSumm_Taxi    AS OperSumm
+                         FROM _tmpItem_SummPersonal
+                         WHERE _tmpItem_SummPersonal.OperSumm_Taxi <> 0 -- !!!надо ограничивать!!!
+                        )
+       -- долг Сотруднику (ЗП)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPersonal.MovementItemId
+            , _tmpItem_SummPersonal.ContainerId
+            , _tmpItem_SummPersonal.AccountId         AS AccountId                -- счет есть всегда
+            , _tmpItem.AnalyzerId                     AS AnalyzerId               -- есть аналитика, т.е. деление ...
+            , _tmpItem_SummPersonal.PersonalId        AS ObjectId_Analyzer        -- Сотрудник (ЗП)
+            , vbMemberDriverId                        AS WhereObjectId_Analyzer   -- Физ.лицо (ЗП)
+            , _tmpItem_SummPersonal.ContainerId_ProfitLoss AS ContainerId_Analyzer -- Контейнер - ОПиУ (корреспондент)
+            , zc_Enum_Account_100301()                AS AccountId_Analyzer       -- Счет - ОПиУ (корреспондент) - прибыль текущего периода
+            , _tmpItem_SummPersonal.UnitId            AS ObjectIntId_Analyzer     -- !!!добавил Подразделение (ЗП)!!!
+            , _tmpItem_SummPersonal.BranchId          AS ObjectExtId_Analyzer     -- Филиал (ЗП)
+            , 0                                       AS ContainerIntId_Analyzer  -- вроде не нужен
+            , 0                                       AS ParentId
+            , 1 * (_tmpItem.OperSumm)
+            , vbOperDate                              AS OperDate
+            , TRUE                                    AS isActive
+       FROM _tmpItem
+            INNER JOIN _tmpItem_SummPersonal ON _tmpItem_SummPersonal.MovementItemId = _tmpItem.MovementItemId
+      UNION ALL
+       -- Прибыль
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPersonal.MovementItemId
+            , _tmpItem_SummPersonal.ContainerId_ProfitLoss
+            , zc_Enum_Account_100301()                AS AccountId                -- прибыль текущего периода
+            , _tmpItem.AnalyzerId                     AS AnalyzerId               -- есть аналитика, т.е. деление ... !!!хотя в других проводках ОПиУ этого не делалось!!!
+            , _tmpItem_SummPersonal.PersonalId        AS ObjectId_Analyzer        -- Сотрудник (ЗП)
+            , vbMemberDriverId                        AS WhereObjectId_Analyzer   -- Физ.лицо (ЗП)
+            , _tmpItem_SummPersonal.ContainerId       AS ContainerId_Analyzer     -- Контейнер - корреспондент
+            , _tmpItem_SummPersonal.AccountId         AS AccountId_Analyzer       -- Счет - корреспондент
+            , _tmpItem_SummPersonal.UnitId_ProfitLoss AS ObjectIntId_Analyzer     -- Подразделение (ОПиУ)
+            , _tmpItem_SummPersonal.BranchId_ProfitLoss AS ObjectExtId_Analyzer   -- Филиал (ОПиУ), а может было б лучше BusinessId_ProfitLoss
+            , 0                                       AS ContainerIntId_Analyzer  -- вроде не нужен
+            , 0                                       AS ParentId
+            , -1 * (_tmpItem.OperSumm)
+            , vbOperDate                              AS OperDate
+            , FALSE                                   AS isActive               -- !!!ОПиУ всегда по Кредиту!!!
+       FROM _tmpItem
+            INNER JOIN _tmpItem_SummPersonal ON _tmpItem_SummPersonal.MovementItemId = _tmpItem.MovementItemId
+      ;
+
+
+     -- !!!Проводки для отчета больше не нужны!!!
+     IF 1=0 THEN
+
      -- 3. формируются Проводки для отчета (Аналитики: Товар и Прибыль)
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
                                               , inMovementId         := inMovementId
@@ -482,6 +669,8 @@ BEGIN
      FROM _tmpItem_TransportSumm_Transport
           LEFT JOIN _tmpItem_Transport ON _tmpItem_Transport.MovementItemId = _tmpItem_TransportSumm_Transport.MovementItemId
      WHERE _tmpItem_TransportSumm_Transport.OperSumm <> 0;
+
+     END IF; -- if 1=0 -- !!!Проводки для отчета больше не нужны!!!
 
 
      -- !!!4. формируются свойства в элементах документа из данных для проводок!!!
