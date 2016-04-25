@@ -1257,10 +1257,33 @@ BEGIN
 END $$;
 
 
+DO $$
+    DECLARE vbKey TVarChar;
+    DECLARE vbDefaultKeyId Integer;
+    DECLARE vbImportSetting_Inventory Integer;
+    DECLARE vbId Integer;
+BEGIN
+    vbKey := 'TPromoForm;zc_Object_ImportSetting_Promo';
+
+    -- Добавляем ключ дефолта
+    SELECT Id INTO vbDefaultKeyId FROM DefaultKeys WHERE Key = vbKey; 
+
+    IF COALESCE(vbDefaultKeyId, 0) = 0 THEN 
+        INSERT INTO DefaultKeys(Key, KeyData) VALUES(vbKey, '{"FormClassName":"TPromoForm","DescName":"zc_Object_ImportSettings"}') RETURNING Id INTO vbDefaultKeyId;
+    END IF;
+    SELECT ID INTO vbId
+    FROM DefaultValue 
+    WHERE DefaultKeyId = vbDefaultKeyId AND UserKeyId is NULL;
+        
+    PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_Promo()::TBlob, inSession := ''::TVarChar);
+END $$;
+
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.
+ 25.04.16         * 
  18.02.16         * Загрузчик признака <Товар под спецусловия>
  15.08.15                                                                       *Загрузчик минимального округления
  28.07.15                                                                       *Загрузчики НТЗ / Цен / переучета
