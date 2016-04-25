@@ -678,7 +678,7 @@ object IncomeForm: TIncomeForm
     Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
     Properties.ReadOnly = False
     State = cbsChecked
-    TabOrder = 3
+    TabOrder = 4
     Width = 220
   end
   object cxLabel25: TcxLabel
@@ -704,7 +704,6 @@ object IncomeForm: TIncomeForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -712,7 +711,6 @@ object IncomeForm: TIncomeForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
       end>
     Left = 262
     Top = 375
@@ -731,7 +729,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -740,7 +737,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -748,7 +744,6 @@ object IncomeForm: TIncomeForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -1070,7 +1065,6 @@ object IncomeForm: TIncomeForm
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
-          MultiSelectSeparator = ','
         end
         item
           Name = 'From'
@@ -1079,7 +1073,6 @@ object IncomeForm: TIncomeForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
-          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -1087,12 +1080,10 @@ object IncomeForm: TIncomeForm
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
-          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Income'
       ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1206,7 +1197,6 @@ object IncomeForm: TIncomeForm
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1214,7 +1204,6 @@ object IncomeForm: TIncomeForm
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1227,7 +1216,6 @@ object IncomeForm: TIncomeForm
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
       FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1235,7 +1223,6 @@ object IncomeForm: TIncomeForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
-          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -1244,7 +1231,6 @@ object IncomeForm: TIncomeForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1256,14 +1242,12 @@ object IncomeForm: TIncomeForm
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
-          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1271,7 +1255,6 @@ object IncomeForm: TIncomeForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1299,14 +1282,12 @@ object IncomeForm: TIncomeForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1314,14 +1295,12 @@ object IncomeForm: TIncomeForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
-          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsCode'
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1342,27 +1321,24 @@ object IncomeForm: TIncomeForm
     LookupControl = edTo
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'KeyList'
+        Name = 'Key'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValueList'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 520
   end
@@ -1385,7 +1361,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1393,7 +1368,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1401,7 +1375,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmount'
@@ -1410,7 +1383,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountPartner'
@@ -1419,7 +1391,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountPacker'
@@ -1427,7 +1398,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'AmountPacker'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsCalcAmountPartner'
@@ -1435,7 +1405,6 @@ object IncomeForm: TIncomeForm
         Component = cbCalcAmountPartner
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1444,7 +1413,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -1453,7 +1421,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
@@ -1461,7 +1428,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inLiveWeight'
@@ -1470,7 +1436,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'LiveWeight'
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
@@ -1479,7 +1444,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -1488,7 +1452,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1496,7 +1459,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inAssetId'
@@ -1504,7 +1466,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 150
@@ -1530,7 +1491,6 @@ object IncomeForm: TIncomeForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
     Left = 347
@@ -1551,7 +1511,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1559,7 +1518,6 @@ object IncomeForm: TIncomeForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1567,7 +1525,6 @@ object IncomeForm: TIncomeForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDatePartner'
@@ -1575,7 +1532,6 @@ object IncomeForm: TIncomeForm
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberPartner'
@@ -1583,7 +1539,6 @@ object IncomeForm: TIncomeForm
         Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceWithVAT'
@@ -1591,7 +1546,6 @@ object IncomeForm: TIncomeForm
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inVATPercent'
@@ -1599,7 +1553,6 @@ object IncomeForm: TIncomeForm
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inChangePercent'
@@ -1607,7 +1560,6 @@ object IncomeForm: TIncomeForm
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1615,7 +1567,6 @@ object IncomeForm: TIncomeForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -1623,7 +1574,6 @@ object IncomeForm: TIncomeForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1631,7 +1581,6 @@ object IncomeForm: TIncomeForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1639,7 +1588,6 @@ object IncomeForm: TIncomeForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalPackerId'
@@ -1647,7 +1595,6 @@ object IncomeForm: TIncomeForm
         Component = PackerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyDocumentId'
@@ -1655,7 +1602,6 @@ object IncomeForm: TIncomeForm
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyPartnerId'
@@ -1663,14 +1609,12 @@ object IncomeForm: TIncomeForm
         Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'outCurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
         DataType = ftFloat
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1678,7 +1622,6 @@ object IncomeForm: TIncomeForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 402
@@ -1688,7 +1631,6 @@ object IncomeForm: TIncomeForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -1754,7 +1696,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1763,40 +1704,34 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
-        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
-        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner'
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
-        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
-        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -1804,14 +1739,12 @@ object IncomeForm: TIncomeForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -1819,7 +1752,6 @@ object IncomeForm: TIncomeForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ToParentId'
@@ -1827,42 +1759,36 @@ object IncomeForm: TIncomeForm
         Component = GuidesTo
         ComponentItem = 'ParentId'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
-        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
-        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
         DataType = ftFloat
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -1870,14 +1796,12 @@ object IncomeForm: TIncomeForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -1885,14 +1809,12 @@ object IncomeForm: TIncomeForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalPackerId'
         Value = ''
         Component = PackerGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalPackerName'
@@ -1900,14 +1822,12 @@ object IncomeForm: TIncomeForm
         Component = PackerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentId'
         Value = ''
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentName'
@@ -1915,14 +1835,12 @@ object IncomeForm: TIncomeForm
         Component = CurrencyDocumentGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyPartnerId'
         Value = ''
         Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyPartnerName'
@@ -1930,14 +1848,12 @@ object IncomeForm: TIncomeForm
         Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1945,21 +1861,18 @@ object IncomeForm: TIncomeForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         Component = ceComment
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Transport'
         Value = Null
         Component = TransportChoiceGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Transport'
@@ -1967,7 +1880,6 @@ object IncomeForm: TIncomeForm
         Component = TransportChoiceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
@@ -1985,7 +1897,6 @@ object IncomeForm: TIncomeForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = GuidesFrom
@@ -2005,7 +1916,6 @@ object IncomeForm: TIncomeForm
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2016,7 +1926,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2025,7 +1934,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 728
     Top = 8
@@ -2035,7 +1943,6 @@ object IncomeForm: TIncomeForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2046,7 +1953,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2055,7 +1961,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 624
   end
@@ -2064,7 +1969,6 @@ object IncomeForm: TIncomeForm
     LookupControl = edPacker
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2075,7 +1979,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2084,7 +1987,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 680
     Top = 80
@@ -2100,7 +2002,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -2108,7 +2009,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 630
@@ -2125,7 +2025,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -2133,7 +2032,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 638
@@ -2144,7 +2042,6 @@ object IncomeForm: TIncomeForm
     LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 39
@@ -2161,7 +2058,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inStatusCode'
@@ -2169,7 +2065,6 @@ object IncomeForm: TIncomeForm
         Component = StatusGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 76
@@ -2180,7 +2075,6 @@ object IncomeForm: TIncomeForm
     LookupControl = edFrom
     FormNameParam.Value = 'TContractChoicePartnerForm'
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoicePartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2189,7 +2083,6 @@ object IncomeForm: TIncomeForm
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -2197,14 +2090,12 @@ object IncomeForm: TIncomeForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -2212,14 +2103,12 @@ object IncomeForm: TIncomeForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2227,14 +2116,12 @@ object IncomeForm: TIncomeForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 8
@@ -2250,7 +2137,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
@@ -2258,7 +2144,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'TotalSumm'
         DataType = ftString
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 500
@@ -2269,7 +2154,6 @@ object IncomeForm: TIncomeForm
     LookupControl = edCurrencyDocument
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrency_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2279,7 +2163,6 @@ object IncomeForm: TIncomeForm
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2288,7 +2171,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 824
     Top = 56
@@ -2298,7 +2180,6 @@ object IncomeForm: TIncomeForm
     LookupControl = edCurrencyPartner
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrency_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2309,7 +2190,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2318,7 +2198,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 840
   end
@@ -2352,7 +2231,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 471
@@ -2367,7 +2245,6 @@ object IncomeForm: TIncomeForm
         Name = 'ioId'
         Value = 0
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -2375,7 +2252,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -2383,27 +2259,23 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmount'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountPartner'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountPacker'
         Value = 0.000000000000000000
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsCalcAmountPartner'
@@ -2411,7 +2283,6 @@ object IncomeForm: TIncomeForm
         Component = cbCalcAmountPartner
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -2420,7 +2291,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -2429,7 +2299,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
@@ -2437,21 +2306,18 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inLiveWeight'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -2460,7 +2326,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -2468,7 +2333,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inAssetId'
@@ -2476,7 +2340,6 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 150
@@ -2488,7 +2351,6 @@ object IncomeForm: TIncomeForm
     Key = '0'
     FormNameParam.Value = 'TTransportJournalChoiceForm'
     FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TTransportJournalChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2499,7 +2361,6 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Full'
@@ -2508,14 +2369,12 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -2523,7 +2382,6 @@ object IncomeForm: TIncomeForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
       end>
     Left = 340
     Top = 88
@@ -2532,7 +2390,6 @@ object IncomeForm: TIncomeForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement_Params
     ControlList = <
       item
@@ -2553,7 +2410,6 @@ object IncomeForm: TIncomeForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Transport'
@@ -2561,7 +2417,6 @@ object IncomeForm: TIncomeForm
         Component = TransportChoiceGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 153
