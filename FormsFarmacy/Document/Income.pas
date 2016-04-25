@@ -106,6 +106,9 @@ type
     bbisDocument: TdxBarButton;
     JuridicalPrice: TcxGridDBColumn;
     JuridicalPriceWithVAT: TcxGridDBColumn;
+    edInvNumberOrder: TcxButtonEdit;
+    cxLabel25: TcxLabel;
+    OrderExternalChoiceGuides: TdsdGuides;
   private
     { Private declarations }
   public

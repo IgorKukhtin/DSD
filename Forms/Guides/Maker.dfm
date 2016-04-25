@@ -19,16 +19,14 @@ object MakerForm: TMakerForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 598
-    Height = 254
+    Height = 256
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 26
-    ExplicitHeight = 256
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -69,7 +67,7 @@ object MakerForm: TMakerForm
         DataBinding.FieldName = 'CountryName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 163
+        Width = 147
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -77,7 +75,7 @@ object MakerForm: TMakerForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 37
+        Width = 53
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -132,7 +130,7 @@ object MakerForm: TMakerForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -273,6 +271,7 @@ object MakerForm: TMakerForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -320,12 +319,14 @@ object MakerForm: TMakerForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
         end>
@@ -352,6 +353,7 @@ object MakerForm: TMakerForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 40
     Top = 208
   end
@@ -366,10 +368,12 @@ object MakerForm: TMakerForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end

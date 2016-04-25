@@ -1,29 +1,28 @@
 ﻿inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
-  ClientHeight = 526
-  ClientWidth = 904
-  ExplicitLeft = -114
-  ExplicitWidth = 920
-  ExplicitHeight = 561
+  ClientHeight = 516
+  ClientWidth = 946
+  ExplicitWidth = 962
+  ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 132
-    Width = 904
-    Height = 394
-    ExplicitTop = 132
-    ExplicitWidth = 904
-    ExplicitHeight = 394
-    ClientRectBottom = 394
-    ClientRectRight = 904
+    Top = 134
+    Width = 946
+    Height = 382
+    ExplicitTop = 134
+    ExplicitWidth = 946
+    ExplicitHeight = 382
+    ClientRectBottom = 382
+    ClientRectRight = 946
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 904
-      ExplicitHeight = 370
+      ExplicitWidth = 946
+      ExplicitHeight = 358
       inherited cxGrid: TcxGrid
-        Width = 904
-        Height = 370
-        ExplicitWidth = 904
-        ExplicitHeight = 370
+        Width = 946
+        Height = 358
+        ExplicitWidth = 946
+        ExplicitHeight = 358
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -323,16 +322,67 @@
             Options.Editing = False
             Width = 123
           end
+          object colOrderAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1077
+            DataBinding.FieldName = 'OrderAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object colOrderPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074' '#1079#1072#1103#1074#1082#1077
+            DataBinding.FieldName = 'OrderPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colOrderSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1079#1072#1103#1074#1082#1077
+            DataBinding.FieldName = 'OrderSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colisAmountDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1082#1086#1083'-'#1074#1091
+            DataBinding.FieldName = 'isAmountDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083'. '#1087#1086' '#1082#1086#1083'-'#1074#1091' '#1086#1090' '#1079#1072#1103#1074#1082#1080
+            Options.Editing = False
+            Width = 67
+          end
+          object colisSummDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1089#1091#1084#1084#1077
+            DataBinding.FieldName = 'isSummDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083'. '#1087#1086' '#1089#1091#1084#1084#1077' '#1086#1090' '#1079#1072#1103#1074#1082#1080
+            Options.Editing = False
+            Width = 66
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 904
-    Height = 106
+    Width = 946
+    Height = 108
     TabOrder = 3
-    ExplicitWidth = 904
-    ExplicitHeight = 106
+    ExplicitWidth = 946
+    ExplicitHeight = 108
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Properties.ReadOnly = False
@@ -455,7 +505,7 @@
     end
     object ceTotalSummMVAT: TcxCurrencyEdit
       Left = 756
-      Top = 50
+      Top = 45
       EditValue = 1111111.000000000000000000
       Enabled = False
       ParentFont = False
@@ -476,7 +526,7 @@
     end
     object ceTotalSummPVAT: TcxCurrencyEdit
       Left = 756
-      Top = 69
+      Top = 64
       EditValue = 1111111.000000000000000000
       Enabled = False
       ParentFont = False
@@ -497,7 +547,7 @@
     end
     object cxLabel7: TcxLabel
       Left = 659
-      Top = 51
+      Top = 46
       Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -509,7 +559,7 @@
     end
     object cxLabel8: TcxLabel
       Left = 673
-      Top = 70
+      Top = 65
       Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -612,6 +662,23 @@
       TabOrder = 32
       Width = 154
     end
+  end
+  object edInvNumberOrder: TcxButtonEdit [2]
+    Left = 673
+    Top = 87
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 224
+  end
+  object cxLabel25: TcxLabel [3]
+    Left = 558
+    Top = 88
+    Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -1321,6 +1388,19 @@
         Value = 'NULL'
         Component = вуDateLastPay
         DataType = ftDateTime
+      end
+      item
+        Name = 'Movement_OrderId'
+        Value = Null
+        Component = OrderExternalChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'Movement_OrderInvNumber_full'
+        Value = Null
+        Component = OrderExternalChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1385,6 +1465,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inOrderExternalId'
+        Value = ''
+        Component = OrderExternalChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inPaymentDate'
         Value = ''
         Component = edPaymentDate
@@ -1418,10 +1505,6 @@
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -1472,6 +1555,7 @@
         Control = edJuridical
       end
       item
+        Control = edInvNumberOrder
       end
       item
       end
@@ -1790,8 +1874,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 648
-    Top = 88
+    Left = 576
+    Top = 32
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1976,5 +2060,52 @@
     PackSize = 1
     Left = 752
     Top = 203
+  end
+  object OrderExternalChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberOrder
+    Key = '0'
+    FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TOrderExternalJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = OrderExternalChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_full'
+        Value = Null
+        Component = OrderExternalChoiceGuides
+        ComponentItem = 'TextValue'
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_full'
+        Value = ''
+        Component = OrderExternalChoiceGuides
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 732
+    Top = 88
   end
 end

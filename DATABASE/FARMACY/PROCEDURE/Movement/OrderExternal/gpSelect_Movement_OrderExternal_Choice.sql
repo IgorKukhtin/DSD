@@ -1,0 +1,73 @@
+-- Function: gpSelect_Movement_OrderExternal_Choice()
+
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal_Choice (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal_Choice(
+    IN inStartDate     TDateTime , --
+    IN inEndDate       TDateTime , --
+    IN inIsErased      Boolean ,
+    IN inJuridicalId   Integer,
+    IN inSession       TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , TotalCount TFloat, TotalSumm TFloat
+             , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar, JuridicalName TVarChar
+             , ContractId Integer, ContractName TVarChar
+              )
+
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
+--     vbUserId:= lpGetUserBySession (inSession);
+
+     RETURN QUERY
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                       )
+        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+
+       SELECT
+             Movement_OrderExternal_View.Id
+           , Movement_OrderExternal_View.InvNumber
+           , ('№ ' || Movement_OrderExternal_View.InvNumber ||' от '||TO_CHAR(Movement_OrderExternal_View.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS InvNumber_full
+           , Movement_OrderExternal_View.OperDate
+           , Movement_OrderExternal_View.StatusCode
+           , Movement_OrderExternal_View.StatusName
+           , Movement_OrderExternal_View.TotalCount
+           , Movement_OrderExternal_View.TotalSum
+           , Movement_OrderExternal_View.FromId
+           , Movement_OrderExternal_View.FromName
+           , Movement_OrderExternal_View.ToId
+           , Movement_OrderExternal_View.ToName
+           , Movement_OrderExternal_View.JuridicalName
+           , Movement_OrderExternal_View.ContractId
+           , Movement_OrderExternal_View.ContractName
+
+       FROM Movement_OrderExternal_View 
+             JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
+       WHERE Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
+         AND (Movement_OrderExternal_View.FromId = inJuridicalId OR inJuridicalId = 0)
+    ;
+
+END;
+$BODY$
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.04.16         *
+*/
+
+
+-- тест
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.02.2016', inEndDate:= '08.02.2016', inIsErased := FALSE, inJuridicalId:= 0, inSession:= '3')
+-- select * from gpSelect_Movement_OrderExternal_Choice(instartdate := ('01.02.2016')::TDateTime , inenddate := ('28.02.2016')::TDateTime , inIsErased := 'False' , inJuridicalId := 183353 ,  inSession := '3');
