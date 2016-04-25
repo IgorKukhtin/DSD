@@ -22,7 +22,6 @@ type
     RouteSortingName: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
-    Id: TcxGridDBColumn;
   private
     { Private declarations }
   public
