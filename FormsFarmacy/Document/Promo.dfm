@@ -384,12 +384,14 @@ inherited PromoForm: TPromoForm
       ImportSettingsId.Value = '0'
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
           Name = 'inMovementId'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -418,12 +420,14 @@ inherited PromoForm: TPromoForm
       FormName = 'TJuridicalForm'
       FormNameParam.Value = 'TJuridicalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = DetailDCS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -431,10 +435,11 @@ inherited PromoForm: TPromoForm
           Component = DetailDCS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
-    object actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc
+    object actInsertUpdate_MovementItem_Promo_Set_Zero: TdsdExecStoredProc
       Category = 'Load'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -443,7 +448,7 @@ inherited PromoForm: TPromoForm
         item
           StoredProc = spInsertUpdate_MovementItem_Promo_Set_Zero
         end>
-      Caption = 'actInsertUpdate_MovementItem_Inventory_Set_Zero'
+      Caption = 'actInsertUpdate_MovementItem_Promo_Set_Zero'
     end
     object actGetImportSettingId: TdsdExecStoredProc
       Category = 'Load'
@@ -464,7 +469,7 @@ inherited PromoForm: TPromoForm
           Action = actGetImportSettingId
         end
         item
-          Action = actInsertUpdate_MovementItem_Inventory_Set_Zero
+          Action = actInsertUpdate_MovementItem_Promo_Set_Zero
         end
         item
           Action = actDoLoad
@@ -596,12 +601,14 @@ inherited PromoForm: TPromoForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -609,23 +616,32 @@ inherited PromoForm: TPromoForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
         Value = Null
         Component = edTotalCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         Component = edTotalSumm
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSummPrimeCost'
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Value = Null
         DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 312
@@ -644,6 +660,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -652,22 +669,26 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -675,24 +696,28 @@ inherited PromoForm: TPromoForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
         Value = Null
         Component = edTotalCount
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         Component = edTotalSumm
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MakerId'
         Value = Null
         Component = GuidesMaker
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MakerName'
@@ -700,12 +725,14 @@ inherited PromoForm: TPromoForm
         Component = GuidesMaker
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalId'
         Value = Null
         Component = GuidesPersonal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalName'
@@ -713,24 +740,28 @@ inherited PromoForm: TPromoForm
         Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartPromo'
         Value = 'NULL'
         Component = edStartPromo
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndPromo'
         Value = 'NULL'
         Component = edEndPromo
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -744,6 +775,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -751,6 +783,7 @@ inherited PromoForm: TPromoForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -758,6 +791,7 @@ inherited PromoForm: TPromoForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartPromo'
@@ -765,6 +799,7 @@ inherited PromoForm: TPromoForm
         Component = edStartPromo
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndPromo'
@@ -772,6 +807,7 @@ inherited PromoForm: TPromoForm
         Component = edEndPromo
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMakerId'
@@ -779,6 +815,7 @@ inherited PromoForm: TPromoForm
         Component = GuidesMaker
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -786,6 +823,7 @@ inherited PromoForm: TPromoForm
         Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -793,6 +831,7 @@ inherited PromoForm: TPromoForm
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -860,6 +899,7 @@ inherited PromoForm: TPromoForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -867,6 +907,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -874,6 +915,7 @@ inherited PromoForm: TPromoForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -882,6 +924,7 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -890,6 +933,7 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSumm'
@@ -897,6 +941,7 @@ inherited PromoForm: TPromoForm
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
@@ -916,6 +961,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
@@ -923,6 +969,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'TotalCount'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
@@ -930,6 +977,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'TotalSumm'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPrimeCost'
@@ -937,6 +985,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'TotalSummPrimeCost'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 628
     Top = 172
@@ -946,6 +995,7 @@ inherited PromoForm: TPromoForm
     LookupControl = edMaker
     FormNameParam.Value = 'TMakerForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMakerForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -955,6 +1005,7 @@ inherited PromoForm: TPromoForm
         Component = GuidesMaker
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -963,6 +1014,7 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 296
     Top = 8
@@ -972,6 +1024,7 @@ inherited PromoForm: TPromoForm
     LookupControl = edPersonal
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -981,6 +1034,7 @@ inherited PromoForm: TPromoForm
         Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -989,6 +1043,7 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 512
     Top = 16
@@ -1011,6 +1066,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 367
@@ -1054,6 +1110,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1061,6 +1118,7 @@ inherited PromoForm: TPromoForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1082,6 +1140,7 @@ inherited PromoForm: TPromoForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
@@ -1099,6 +1158,7 @@ inherited PromoForm: TPromoForm
         Component = DetailDCS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1106,6 +1166,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1113,6 +1174,7 @@ inherited PromoForm: TPromoForm
         Component = DetailDCS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1121,6 +1183,7 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
@@ -1139,6 +1202,7 @@ inherited PromoForm: TPromoForm
         Component = DetailDCS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1146,6 +1210,7 @@ inherited PromoForm: TPromoForm
         Component = DetailDCS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 566
@@ -1162,6 +1227,7 @@ inherited PromoForm: TPromoForm
         Component = DetailDCS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1169,6 +1235,7 @@ inherited PromoForm: TPromoForm
         Component = DetailDCS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 686
@@ -1185,6 +1252,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
@@ -1200,14 +1268,16 @@ inherited PromoForm: TPromoForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TInventoryForm;zc_Object_ImportSetting_Inventory'
+        Value = 'TPromoForm;zc_Object_ImportSetting_Promo'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserKeyId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_DefaultValue'
@@ -1215,6 +1285,7 @@ inherited PromoForm: TPromoForm
         Component = FormParams
         ComponentItem = 'ImportSettingId'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 784

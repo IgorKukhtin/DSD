@@ -11,7 +11,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
+     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
+     vbUserId := inSession;
 	 
      -- Обнулили все позиции
     PERFORM lpInsertUpdate_MovementItem_Promo (ioId                 := MovementItem.Id
