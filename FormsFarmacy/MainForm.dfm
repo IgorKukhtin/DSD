@@ -32,7 +32,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actPromo: TdsdOpenForm [2]
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
       FormName = 'TPromoJournalForm'
@@ -1418,6 +1418,12 @@ inherited MainForm: TMainForm
       object N72: TMenuItem
         Action = actRepriceJournal
       end
+      object N70: TMenuItem
+        Caption = '-'
+      end
+      object N65: TMenuItem
+        Action = actPromo
+      end
       object N33: TMenuItem
         Caption = '-'
       end
@@ -1471,12 +1477,6 @@ inherited MainForm: TMainForm
       end
       object N73: TMenuItem
         Action = actChangeIncomePaymentJournal
-      end
-      object N70: TMenuItem
-        Caption = '-'
-      end
-      object N65: TMenuItem
-        Action = actPromo
       end
     end
     object miReports: TMenuItem [5]

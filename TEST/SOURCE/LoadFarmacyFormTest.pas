@@ -52,7 +52,7 @@ type
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
-    procedure LoadMakerReport;
+    procedure LoadMakerFormTest;
     procedure LoadMargineCategory;
     procedure LoadMarginReport;
     procedure LoadMeasureFormTest;
@@ -309,7 +309,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
 end;
 
-procedure TLoadFormTest.LoadMakerReport;
+procedure TLoadFormTest.LoadMakerFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerForm');

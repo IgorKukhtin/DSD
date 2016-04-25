@@ -3,11 +3,11 @@ inherited PromoJournalForm: TPromoJournalForm
   ClientHeight = 491
   ClientWidth = 769
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  AddOnFormData.AddOnFormRefresh.SelfList = 'Sale'
+  AddOnFormData.AddOnFormRefresh.SelfList = 'Promo'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
-  AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Sale
+  AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Promo
   ExplicitWidth = 785
   ExplicitHeight = 529
   PixelsPerInch = 96
@@ -16,18 +16,16 @@ inherited PromoJournalForm: TPromoJournalForm
     Width = 769
     Height = 434
     TabOrder = 3
-    ExplicitWidth = 663
+    ExplicitWidth = 769
     ExplicitHeight = 434
     ClientRectBottom = 434
     ClientRectRight = 769
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 663
+      ExplicitWidth = 769
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 769
         Height = 434
-        ExplicitLeft = 10
-        ExplicitTop = 3
         ExplicitWidth = 769
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -133,7 +131,7 @@ inherited PromoJournalForm: TPromoJournalForm
   end
   inherited Panel: TPanel
     Width = 769
-    ExplicitWidth = 663
+    ExplicitWidth = 769
   end
   inherited ActionList: TActionList
     Left = 55
@@ -223,7 +221,7 @@ inherited PromoJournalForm: TPromoJournalForm
     Left = 384
     Top = 120
   end
-  object spGet_Movement_Sale: TdsdStoredProc
+  object spGet_Movement_Promo: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Promo'
     DataSets = <>
     OutputType = otResult
@@ -274,20 +272,6 @@ inherited PromoJournalForm: TPromoJournalForm
         DataType = ftFloat
       end
       item
-        Name = 'TotalSummPrimeCost'
-        Value = Null
-        DataType = ftFloat
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        DataType = ftString
-      end
-      item
         Name = 'JuridicalId'
         Value = Null
       end
@@ -297,21 +281,12 @@ inherited PromoJournalForm: TPromoJournalForm
         DataType = ftString
       end
       item
-        Name = 'PaidKindId'
-        Value = Null
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        DataType = ftString
-      end
-      item
         Name = 'Comment'
         Value = Null
         DataType = ftString
       end>
     PackSize = 1
-    Left = 168
-    Top = 99
+    Left = 240
+    Top = 267
   end
 end

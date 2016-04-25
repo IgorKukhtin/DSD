@@ -17,7 +17,7 @@ uses
 
 type
   TPromoJournalForm = class(TAncestorJournalForm)
-    spGet_Movement_Sale: TdsdStoredProc;
+    spGet_Movement_Promo: TdsdStoredProc;
     colMakerName: TcxGridDBColumn;
     colPersonalName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
