@@ -18,6 +18,7 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , UnitName TVarChar, BranchName TVarChar,  BusinessName TVarChar
              , ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar, ProfitLossName_all TVarChar
              , SumCount_Transport TFloat, SumAmount_Transport TFloat, PriceFuel TFloat
+             , SumAmount_TransportAdd TFloat, SumAmount_TransportAddLong TFloat, SumAmount_TransportTaxi TFloat
              , SumAmount_TransportService TFloat, SumAmount_PersonalSendCash TFloat
              , SumTotal TFloat
              , Distance TFloat
@@ -40,6 +41,9 @@ BEGIN
                                 , tmpContainer.FuelId
                                 , tmpContainer.SumCount_Transport
                                 , tmpContainer.SumAmount_Transport
+                                , tmpContainer.SumAmount_TransportAdd
+                                , tmpContainer.SumAmount_TransportAddLong
+                                , tmpContainer.SumAmount_TransportTaxi
                                 , tmpContainer.SumAmount_TransportService
                                 , tmpContainer.SumAmount_PersonalSendCash
                                 , tmpContainer.CarId
@@ -59,10 +63,13 @@ BEGIN
                                   SELECT MIContainer.MovementId               AS MovementId
                                        , MIContainer.MovementDescId           AS MovementDescId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS FuelId
-                                       , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Transport()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumCount_Transport
-                                       , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_Transport
-                                       , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportService
-                                       , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_PersonalSendCash()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_PersonalSendCash
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Transport() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumCount_Transport
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) = 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_Transport
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAdd
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAddLong
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportTaxi
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportService
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_PersonalSendCash()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_PersonalSendCash
                                        , MIContainer.WhereObjectId_Analyzer          AS CarId
                                        , MIContainer.ObjectIntId_Analyzer            AS UnitId
                                        , MIContainer.ObjectExtId_Analyzer            AS BranchId
@@ -119,6 +126,9 @@ BEGIN
                                        , tmpContainer.FuelId
                                        , tmpContainer.SumCount_Transport
                                        , tmpContainer.SumAmount_Transport
+                                       , tmpContainer.SumAmount_TransportAdd
+                                       , tmpContainer.SumAmount_TransportAddLong
+                                       , tmpContainer.SumAmount_TransportTaxi
                                        , tmpContainer.SumAmount_TransportService
                                        , tmpContainer.SumAmount_PersonalSendCash
                                        , tmpContainer.CarId
@@ -134,16 +144,16 @@ BEGIN
                                , MLO_Route.ObjectId                             AS RouteId
                                , MLO_Car.ObjectId                               AS CarId
                                , MLO_PersonalDriver.ObjectId                    AS PersonalDriverId
-                               , SUM (MovementFloat_TotalCountKg.ValueData)     AS TotalCountKg
+                               , SUM (MovemenTFloat_TotalCountKg.ValueData)     AS TotalCountKg
                           FROM MovementLinkMovement AS MLM_Transport
                           
                                JOIN Movement ON Movement.Id = MLM_Transport.MovementId 
                                             AND Movement.DescId in (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                                             AND Movement.StatusId = zc_Enum_Status_Complete()
 
-                               LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                                       ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
-                                                      AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+                               LEFT JOIN MovemenTFloat AS MovemenTFloat_TotalCountKg
+                                                       ON MovemenTFloat_TotalCountKg.MovementId =  Movement.Id
+                                                      AND MovemenTFloat_TotalCountKg.DescId = zc_MovemenTFloat_TotalCountKg()
 
                                LEFT JOIN MovementLinkMovement AS MLM_Order						-- из документа заявки получаем маршрут
                                                               ON MLM_Order.MovementId = Movement.Id
@@ -200,6 +210,9 @@ BEGIN
                      , SUM(tmpAll.WeightSale)                 AS WeightSale
                      , SUM(tmpAll.SumCount_Transport)         AS SumCount_Transport
                      , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_Transport
+                     , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_TransportAdd
+                     , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_TransportAddLong
+                     , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_TransportTaxi
                      , SUM(tmpAll.SumAmount_TransportService) AS SumAmount_TransportService
                      , SUM(tmpAll.SumAmount_PersonalSendCash) AS SumAmount_PersonalSendCash
                      , SUM(tmpAll.Distance)        AS Distance
@@ -217,6 +230,9 @@ BEGIN
                             , 0           AS WeightSale
                             , tmpContainer.SumCount_Transport
                             , tmpContainer.SumAmount_Transport
+                            , tmpContainer.SumAmount_TransportAdd
+                            , tmpContainer.SumAmount_TransportAddLong
+                            , tmpContainer.SumAmount_TransportTaxi
                             , tmpContainer.SumAmount_TransportService
                             , tmpContainer.SumAmount_PersonalSendCash
                             , tmpContainer.Distance
@@ -236,6 +252,9 @@ BEGIN
                             , tmpWeight_All.TotalCountKg AS WeightSale
                             , 0 AS SumCount_Transport
                             , 0 AS SumAmount_Transport
+                            , 0 AS SumAmount_TransportAdd
+                            , 0 AS SumAmount_TransportAddLong
+                            , 0 AS SumAmount_TransportTaxi
                             , 0 AS SumAmount_TransportService
                             , 0 AS SumAmount_PersonalSendCash
                             , 0 AS Distance
@@ -273,21 +292,24 @@ BEGIN
             , View_ProfitLoss.ProfitLossName
             , View_ProfitLoss.ProfitLossName_all
                         
-            , SUM (tmpUnion.SumCount_Transport) :: Tfloat  AS SumCount_Transport 
-            , SUM (tmpUnion.SumAmount_Transport):: Tfloat  AS SumAmount_Transport
-            , CASE WHEN SUM (tmpUnion.SumCount_Transport)<>0 THEN CAST (SUM (tmpUnion.SumAmount_Transport)/SUM (tmpUnion.SumCount_Transport) AS NUMERIC (16, 4)) ELSE 0 END :: Tfloat  AS PriceFuel
-            , SUM (tmpUnion.SumAmount_TransportService):: Tfloat  AS SumAmount_TransportService
-            , SUM (tmpUnion.SumAmount_PersonalSendCash):: Tfloat  AS SumAmount_PersonalSendCash
-            , SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_PersonalSendCash) :: Tfloat  AS SumTotal
+            , SUM (tmpUnion.SumCount_Transport)         :: TFloat  AS SumCount_Transport 
+            , SUM (tmpUnion.SumAmount_Transport)        :: TFloat  AS SumAmount_Transport
+            , CASE WHEN SUM (tmpUnion.SumCount_Transport)<>0 THEN CAST (SUM (tmpUnion.SumAmount_Transport)/SUM (tmpUnion.SumCount_Transport) AS NUMERIC (16, 4)) ELSE 0 END :: TFloat AS PriceFuel
+            , SUM (tmpUnion.SumAmount_TransportAdd)     :: TFloat AS SumAmount_TransportAdd
+            , SUM (tmpUnion.SumAmount_TransportAddLong) :: TFloat AS SumAmount_TransportAddLong
+            , SUM (tmpUnion.SumAmount_TransportTaxi)    :: TFloat AS SumAmount_TransportTaxi
+            , SUM (tmpUnion.SumAmount_TransportService) :: TFloat AS SumAmount_TransportService
+            , SUM (tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumAmount_PersonalSendCash
+            , SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportAdd + tmpUnion.SumAmount_TransportAddLong + tmpUnion.SumAmount_TransportTaxi + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumTotal
 
-            , SUM (tmpUnion.Distance):: Tfloat         AS Distance
-            , SUM (tmpUnion.WeightTransport):: Tfloat  AS WeightTransport
-            , SUM (tmpUnion.WeightSale):: Tfloat       AS WeightSale
-            , CAST (CASE WHEN SUM (tmpUnion.Distance) <> 0 THEN  SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_PersonalSendCash)/SUM (tmpUnion.Distance) 
+            , SUM (tmpUnion.Distance):: TFloat         AS Distance
+            , SUM (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
+            , SUM (tmpUnion.WeightSale):: TFloat       AS WeightSale
+            , CAST (CASE WHEN SUM (tmpUnion.Distance) <> 0 THEN  SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportAdd + tmpUnion.SumAmount_TransportAddLong + tmpUnion.SumAmount_TransportTaxi + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_PersonalSendCash) / SUM (tmpUnion.Distance) 
 
-                         ELSE 0 END  AS Tfloat)  AS One_KM
-            , CAST (CASE WHEN SUM (tmpUnion.WeightTransport) <> 0 THEN  SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_PersonalSendCash)/SUM (tmpUnion.WeightTransport)
-                         ELSE 0 END AS Tfloat)  AS One_KG
+                         ELSE 0 END  AS TFloat)  AS One_KM
+            , CAST (CASE WHEN SUM (tmpUnion.WeightTransport) <> 0 THEN  SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportAdd + tmpUnion.SumAmount_TransportAddLong + tmpUnion.SumAmount_TransportTaxi + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_PersonalSendCash)/SUM (tmpUnion.WeightTransport)
+                         ELSE 0 END AS TFloat)  AS One_KG
        FROM tmpUnion
                  LEFT JOIN Object AS Object_Route on Object_Route.Id = tmpUnion.RouteId
                  LEFT JOIN Object_Unit_View  on Object_Unit_View.Id = tmpUnion.UnitId
@@ -348,8 +370,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  18.09.15         * 
- 
 */
 
 -- тест
---SELECT * FROM gpReport_Transport_ProfitLoss (inStartDate:= '31.07.2015', inEndDate:= '13.08.2015', inBusinessId:= 0, inBranchId:= 0, inUnitId:= 0, inCarId:= 0, inIsMovement:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_Transport_ProfitLoss (inStartDate:= '31.07.2015', inEndDate:= '13.08.2015', inBusinessId:= 0, inBranchId:= 0, inUnitId:= 0, inCarId:= 0, inIsMovement:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации

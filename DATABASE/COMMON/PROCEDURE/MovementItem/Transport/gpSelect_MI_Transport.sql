@@ -57,15 +57,13 @@ BEGIN
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementItem.ObjectId
-             
+
              LEFT JOIN MovementItemFloat AS MIFloat_RateSumma
                                          ON MIFloat_RateSumma.MovementItemId =  MovementItem.Id
                                         AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
-
              LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
                                          ON MIFloat_RatePrice.MovementItemId =  MovementItem.Id
                                         AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
-
              LEFT JOIN MovementItemFloat AS MIFloat_Taxi
                                          ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
                                         AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()

@@ -15,8 +15,9 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
-             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummMinus TFloat, SummAdd TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
-             , SummTransportAdd TFloat, SummTransport TFloat, SummPhone TFloat
+             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummMinus TFloat, SummAdd TFloat, SummHoliday TFloat
+             , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
+             , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
              , SummRemains TFloat
              , Comment TVarChar
@@ -79,12 +80,15 @@ BEGIN
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
                                    , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))          AS SummAdd
+                                   , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))      AS SummHoliday
                                    , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS SummSocialIn
                                    , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS SummSocialAdd
                                    , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))        AS SummChild
-                                   , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0)) AS SummTransportAdd
-                                   , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))    AS SummTransport
-                                   , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))        AS SummPhone
+                                   , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))        AS SummTransport
+                                   , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0))     AS SummTransportAdd
+                                   , SUM (COALESCE (MIFloat_SummTransportAddLong.ValueData, 0)) AS SummTransportAddLong
+                                   , SUM (COALESCE (MIFloat_SummTransportTaxi.ValueData, 0))    AS SummTransportTaxi
+                                   , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))            AS SummPhone
                                    , MovementItem.ObjectId                                  AS PersonalId
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
@@ -123,6 +127,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                                ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                                               ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
 
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                                                ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
@@ -134,12 +141,18 @@ BEGIN
                                                                ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
 
-                                   LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
-                                                               ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
                                                                ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
+                                                               ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAddLong
+                                                               ON MIFloat_SummTransportAddLong.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummTransportAddLong.DescId = zc_MIFloat_SummTransportAddLong()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummTransportTaxi
+                                                               ON MIFloat_SummTransportTaxi.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummTransportTaxi.DescId = zc_MIFloat_SummTransportTaxi()
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
                                                                ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
@@ -224,11 +237,14 @@ BEGIN
                                    , tmpParent.SummCard
                                    , tmpParent.SummMinus
                                    , tmpParent.SummAdd
+                                   , tmpParent.SummHoliday
                                    , tmpParent.SummSocialIn
                                    , tmpParent.SummSocialAdd
                                    , tmpParent.SummChild
-                                   , tmpParent.SummTransportAdd
                                    , tmpParent.SummTransport
+                                   , tmpParent.SummTransportAdd
+                                   , tmpParent.SummTransportAddLong
+                                   , tmpParent.SummTransportTaxi
                                    , tmpParent.SummPhone
                                    , tmpMIContainer.Amount_current
                                    , tmpMIContainer.Amount_avance
@@ -247,11 +263,14 @@ BEGIN
                                    , tmpService.SummCard
                                    , tmpService.SummMinus
                                    , tmpService.SummAdd
+                                   , tmpService.SummHoliday
                                    , tmpService.SummSocialIn
                                    , tmpService.SummSocialAdd
                                    , tmpService.SummChild
-                                   , tmpService.SummTransportAdd
                                    , tmpService.SummTransport
+                                   , tmpService.SummTransportAdd
+                                   , tmpService.SummTransportAddLong
+                                   , tmpService.SummTransportTaxi
                                    , tmpService.SummPhone
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
@@ -293,12 +312,15 @@ BEGIN
             , tmpData.SummCard         :: TFloat AS SummCard
             , tmpData.SummMinus        :: TFloat AS SummMinus
             , tmpData.SummAdd          :: TFloat AS SummAdd
+            , tmpData.SummHoliday      :: TFloat AS SummHoliday
             , tmpData.SummSocialIn     :: TFloat AS SummSocialIn
             , tmpData.SummSocialAdd    :: TFloat AS SummSocialAdd
             , tmpData.SummChild        :: TFloat AS SummChild
-            , tmpData.SummTransportAdd :: TFloat AS SummTransportAdd
-            , tmpData.SummTransport    :: TFloat AS SummTransport
-            , tmpData.SummPhone        :: TFloat AS SummPhone
+            , tmpData.SummTransport        :: TFloat AS SummTransport
+            , tmpData.SummTransportAdd     :: TFloat AS SummTransportAdd
+            , tmpData.SummTransportAddLong :: TFloat AS SummTransportAddLong
+            , tmpData.SummTransportTaxi    :: TFloat AS SummTransportTaxi
+            , tmpData.SummPhone            :: TFloat AS SummPhone
 
             , tmpData.Amount_current :: TFloat AS Amount_current
             , tmpData.Amount_avance  :: TFloat AS Amount_avance

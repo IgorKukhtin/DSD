@@ -15,16 +15,33 @@ uses
 
 type
   TPeriodCloseForm = class(TAncestorDBGridForm)
-    colRoleName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colUserName: TcxGridDBColumn;
-    colCloseDate: TcxGridDBColumn;
-    colPeriod: TcxGridDBColumn;
-    actUserForm: TOpenChoiceForm;
+    RoleName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    CloseDate: TcxGridDBColumn;
+    Period: TcxGridDBColumn;
+    actUserForm_excl: TOpenChoiceForm;
     actRoleForm: TOpenChoiceForm;
-    actUnitForm: TOpenChoiceForm;
+    actBranchForm: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     UpdateDataSet: TdsdUpdateDataSet;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    RoleCode: TcxGridDBColumn;
+    UserName_list: TcxGridDBColumn;
+    isUserName: TcxGridDBColumn;
+    UserCode_excl: TcxGridDBColumn;
+    UserName_excl: TcxGridDBColumn;
+    CloseDate_excl: TcxGridDBColumn;
+    DescId: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
+    DescId_excl: TcxGridDBColumn;
+    DescName_excl: TcxGridDBColumn;
+    PaidKindCode: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    BranchCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    actPaidKindForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

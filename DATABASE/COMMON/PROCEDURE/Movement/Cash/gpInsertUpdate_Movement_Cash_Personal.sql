@@ -42,7 +42,7 @@ BEGIN
                                                          , inInfoMoneyId := (SELECT MovementItemLinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id AND MovementItemLinkObject.DescId = zc_MILinkObject_InfoMoney() WHERE MovementItem.MovementId = inParentId AND MovementItem.isErased = FALSE AND MovementItem.DescId = zc_MI_Master() GROUP BY MovementItemLinkObject.ObjectId)
                                                          , inMemberId    := inMemberId
                                                          , inUnitId      := NULL
-                                                         , inCurrencyId          := NULL
+                                                         , inCurrencyId          := zc_Enum_Currency_Basis()
                                                          , inCurrencyValue       := NULL
                                                          , inParValue            := NULL
                                                          , inCurrencyPartnerValue:= NULL

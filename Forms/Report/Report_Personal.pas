@@ -80,6 +80,10 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     colIncomeSumm: TcxGridDBColumn;
+    SummTransportAdd: TcxGridDBColumn;
+    SummTransportAddLong: TcxGridDBColumn;
+    SummTransportTaxi: TcxGridDBColumn;
+    SummPhone: TcxGridDBColumn;
   private
     { Private declarations }
   public

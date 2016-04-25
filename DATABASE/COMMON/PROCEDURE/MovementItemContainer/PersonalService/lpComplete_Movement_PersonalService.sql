@@ -399,24 +399,35 @@ BEGIN
      -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты)
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm
                                                                                                  + COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
-                                                                                                 + tmpMovement.SummTransportAdd
                                                                                                  - tmpMovement.SummTransport
+                                                                                                 + tmpMovement.SummTransportAdd
+                                                                                                 + tmpMovement.SummTransportAddLong
+                                                                                                 + tmpMovement.SummTransportTaxi
                                                                                                  - tmpMovement.SummPhone
                                               )
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAdd(), tmpMovement.MovementItemId, tmpMovement.SummTransportAdd)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport(), tmpMovement.MovementItemId, tmpMovement.SummTransport)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone(), tmpMovement.MovementItemId, tmpMovement.SummPhone)
+             -- Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport()       , tmpMovement.MovementItemId, tmpMovement.SummTransport)
+             -- Сумма командировочные (доплата)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAdd()    , tmpMovement.MovementItemId, tmpMovement.SummTransportAdd)
+             -- Сумма дальнобойные (доплата, тоже командировочные)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAddLong(), tmpMovement.MovementItemId, tmpMovement.SummTransportAddLong)
+             -- Сумма на такси (доплата)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportTaxi()   , tmpMovement.MovementItemId, tmpMovement.SummTransportTaxi)
+             -- Сумма Моб.связь (удержание)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone()           , tmpMovement.MovementItemId, tmpMovement.SummPhone)
      FROM (SELECT _tmpItem.MovementItemId
                 , _tmpItem.OperSumm
-                , 0 AS SummTransportAdd
-                , COALESCE (SUM (MIContainer.Amount), 0) AS SummTransport
+                , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransport
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
                 , 0 AS SummPhone
            FROM _tmpItem
-                LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpItem.ContainerId
-                                                              AND MIContainer.MovementDescId = zc_Movement_Income()
+                LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId    = _tmpItem.ContainerId
+                                                              -- AND MIContainer.MovementDescId = zc_Movement_Income()
            WHERE _tmpItem.IsMaster = TRUE
            GROUP BY _tmpItem.MovementItemId
-                , _tmpItem.OperSumm
+                  , _tmpItem.OperSumm
           ) AS tmpMovement
           LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                       ON MIFloat_SummSocialAdd.MovementItemId = tmpMovement.MovementItemId

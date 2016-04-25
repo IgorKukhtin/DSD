@@ -34,9 +34,11 @@ $BODY$
   DECLARE vbTotalSummSocialIn   TFloat;
   DECLARE vbTotalSummSocialAdd  TFloat;
   DECLARE vbTotalSummChild      TFloat;
-  DECLARE vbTotalSummTransportAdd TFloat;
-  DECLARE vbTotalSummTransport    TFloat;
-  DECLARE vbTotalSummPhone        TFloat;
+  DECLARE vbTotalSummTransport        TFloat;
+  DECLARE vbTotalSummTransportAdd     TFloat;
+  DECLARE vbTotalSummTransportAddLong TFloat;
+  DECLARE vbTotalSummTransportTaxi    TFloat;
+  DECLARE vbTotalSummPhone            TFloat;
 
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
@@ -208,14 +210,16 @@ BEGIN
           , OperSumm_SocialIn
           , OperSumm_SocialAdd
           , OperSumm_Child
-          , OperSumm_TransportAdd
           , OperSumm_Transport
+          , OperSumm_TransportAdd
+          , OperSumm_TransportAddLong
+          , OperSumm_TransportTaxi
           , OperSumm_Phone
 
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_Partner, vbOperSumm_Currency
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
-               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummCardRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild, vbTotalSummTransportAdd, vbTotalSummTransport, vbTotalSummPhone
+               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummCardRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild, vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
      FROM 
      -- Расчет Итоговых суммы
     (SELECT 
@@ -343,8 +347,10 @@ BEGIN
           , OperSumm_SocialIn
           , OperSumm_SocialAdd
           , OperSumm_Child
-          , OperSumm_TransportAdd
           , OperSumm_Transport
+          , OperSumm_TransportAdd
+          , OperSumm_TransportAddLong
+          , OperSumm_TransportTaxi
           , OperSumm_Phone
      FROM 
            -- получили 1 запись + !!! перевели в валюту если надо!!!
@@ -400,9 +406,11 @@ BEGIN
                  , SUM (tmpMI.OperSumm_SocialIn)   AS OperSumm_SocialIn
                  , SUM (tmpMI.OperSumm_SocialAdd)  AS OperSumm_SocialAdd
                  , SUM (tmpMI.OperSumm_Child)      AS OperSumm_Child
-                 , SUM (tmpMI.OperSumm_TransportAdd) AS OperSumm_TransportAdd
-                 , SUM (tmpMI.OperSumm_Transport)    AS OperSumm_Transport
-                 , SUM (tmpMI.OperSumm_Phone)        AS OperSumm_Phone
+                 , SUM (tmpMI.OperSumm_Transport)        AS OperSumm_Transport
+                 , SUM (tmpMI.OperSumm_TransportAdd)     AS OperSumm_TransportAdd
+                 , SUM (tmpMI.OperSumm_TransportAddLong) AS OperSumm_TransportAddLong
+                 , SUM (tmpMI.OperSumm_TransportTaxi)    AS OperSumm_TransportTaxi
+                 , SUM (tmpMI.OperSumm_Phone)            AS OperSumm_Phone
             FROM (SELECT tmpMI.GoodsId
                        , tmpMI.GoodsKindId
                        , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
@@ -479,8 +487,10 @@ BEGIN
                       , tmpMI.OperSumm_SocialIn
                       , tmpMI.OperSumm_SocialAdd
                       , tmpMI.OperSumm_Child
-                      , tmpMI.OperSumm_TransportAdd
                       , tmpMI.OperSumm_Transport
+                      , tmpMI.OperSumm_TransportAdd
+                      , tmpMI.OperSumm_TransportAddLong
+                      , tmpMI.OperSumm_TransportTaxi
                       , tmpMI.OperSumm_Phone
 
                   FROM (SELECT Movement.DescId AS MovementDescId
@@ -526,9 +536,12 @@ BEGIN
                              , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS OperSumm_SocialIn
                              , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS OperSumm_SocialAdd
                              , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))        AS OperSumm_Child
-                             , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0)) AS OperSumm_TransportAdd
-                             , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))    AS OperSumm_Transport
-                             , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))        AS OperSumm_Phone
+
+                             , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))        AS OperSumm_Transport
+                             , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0))     AS OperSumm_TransportAdd
+                             , SUM (COALESCE (MIFloat_SummTransportAddLong.ValueData, 0)) AS OperSumm_TransportAddLong
+                             , SUM (COALESCE (MIFloat_SummTransportTaxi.ValueData, 0))    AS OperSumm_TransportTaxi
+                             , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))            AS OperSumm_Phone
                         FROM Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.isErased = FALSE
@@ -598,12 +611,19 @@ BEGIN
                                                          ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
-                                                         ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+
                              LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
                                                          ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
+                                                         ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAddLong
+                                                         ON MIFloat_SummTransportAddLong.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummTransportAddLong.DescId = zc_MIFloat_SummTransportAddLong()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummTransportTaxi
+                                                         ON MIFloat_SummTransportTaxi.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummTransportTaxi.DescId = zc_MIFloat_SummTransportTaxi()
                              LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
                                                          ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
@@ -675,10 +695,16 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSocialAdd(), inMovementId, vbTotalSummSocialAdd);
          -- Сохранили свойство <Итого Сумма алименты (удержание)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChild(), inMovementId, vbTotalSummChild);
+
+         -- Сохранили свойство <Итого Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTransport(), inMovementId, vbTotalSummTransport);
          -- Сохранили свойство <Итого Сумма командировочные (доплата)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTransportAdd(), inMovementId, vbTotalSummTransportAdd);
-         -- Сохранили свойство <Итого Сумма ГСМ (удержание)>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTransport(), inMovementId, vbTotalSummTransport);
+         -- Сохранили свойство <Итого Сумма дальнобойные (доплата, тоже командировочные)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTransportAddLong(), inMovementId, vbTotalSummTransportAddLong);
+         -- Сохранили свойство <Итого Сумма на такси (доплата)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTransportTaxi(), inMovementId, vbTotalSummTransportTaxi);
+
          -- Сохранили свойство <Итого Сумма Моб.связь (удержание))>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPhone(), inMovementId, vbTotalSummPhone);
      ELSE

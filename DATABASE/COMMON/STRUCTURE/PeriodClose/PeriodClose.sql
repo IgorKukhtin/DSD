@@ -8,11 +8,20 @@
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE PeriodClose(
    Id                    SERIAL NOT NULL PRIMARY KEY, 
+   OperDate              TDateTime,
    UserId                INTEGER,
    RoleId                INTEGER,
    UnitId                INTEGER,
    Period                Interval,
    CloseDate             TDateTime,
+   Name                  TVarChar,
+   Code                  INTEGER,
+   DescId                INTEGER,
+   DescId_excl           INTEGER,
+   BranchId              INTEGER,
+   PaidKindId            INTEGER,
+   UserId_excl           INTEGER,
+   CloseDate_excl        TDateTime,
 
    CONSTRAINT fk_PeriodClose_UserId FOREIGN KEY(UserId) REFERENCES Object(Id),
    CONSTRAINT fk_PeriodClose_RoleId FOREIGN KEY(RoleId) REFERENCES Object(Id),

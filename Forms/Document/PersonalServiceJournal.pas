@@ -57,6 +57,8 @@ type
     TotalSummTransportAdd: TcxGridDBColumn;
     TotalSummTransport: TcxGridDBColumn;
     TotalSummPhone: TcxGridDBColumn;
+    TotalSummTransportAddLong: TcxGridDBColumn;
+    TotalSummTransportTaxi: TcxGridDBColumn;
   private
     { Private declarations }
   public

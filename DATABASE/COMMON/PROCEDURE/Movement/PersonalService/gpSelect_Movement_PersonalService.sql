@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ServiceDate TDateTime
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
              , TotalSummCardRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
-             , TotalSummTransportAdd TFloat, TotalSummTransport TFloat, TotalSummPhone TFloat
+             , TotalSummTransport TFloat, TotalSummTransportAdd TFloat, TotalSummTransportAddLong TFloat, TotalSummTransportTaxi TFloat, TotalSummPhone TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -81,9 +81,11 @@ BEGIN
            , MovementFloat_TotalSummSocialAdd.ValueData   AS TotalSummSocialAdd
            , MovementFloat_TotalSummChild.ValueData       AS TotalSummChild
 
-           , MovementFloat_TotalSummTransportAdd.ValueData AS TotalSummTransportAdd
-           , MovementFloat_TotalSummTransport.ValueData    AS TotalSummTransport
-           , MovementFloat_TotalSummPhone.ValueData        AS TotalSummPhone
+           , MovementFloat_TotalSummTransport.ValueData        AS TotalSummTransport
+           , MovementFloat_TotalSummTransportAdd.ValueData     AS TotalSummTransportAdd
+           , MovementFloat_TotalSummTransportAddLong.ValueData AS TotalSummTransportAddLong
+           , MovementFloat_TotalSummTransportTaxi.ValueData    AS TotalSummTransportTaxi
+           , MovementFloat_TotalSummPhone.ValueData            AS TotalSummPhone
 
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
@@ -115,49 +117,55 @@ BEGIN
                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummToPay
-                                    ON MovementFloat_TotalSummToPay.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummToPay.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummToPay.DescId = zc_MovementFloat_TotalSummToPay()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummService
-                                    ON MovementFloat_TotalSummService.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummService.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummService.DescId = zc_MovementFloat_TotalSummService()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
-                                    ON MovementFloat_TotalSummCard.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummCard.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinus
-                                    ON MovementFloat_TotalSummMinus.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummMinus.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummMinus.DescId = zc_MovementFloat_TotalSummMinus()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
-                                    ON MovementFloat_TotalSummAdd.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHoliday
-                                    ON MovementFloat_TotalSummHoliday.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummHoliday.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummHoliday.DescId = zc_MovementFloat_TotalSummHoliday()           
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardRecalc
-                                    ON MovementFloat_TotalSummCardRecalc.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummCardRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCardRecalc.DescId = zc_MovementFloat_TotalSummCardRecalc()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummSocialAdd
-                                    ON MovementFloat_TotalSummSocialAdd.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummSocialAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummSocialAdd.DescId = zc_MovementFloat_TotalSummSocialAdd()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummSocialIn
-                                    ON MovementFloat_TotalSummSocialIn.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummSocialIn.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummSocialIn.DescId = zc_MovementFloat_TotalSummSocialIn()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChild
-                                    ON MovementFloat_TotalSummChild.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummChild.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportAdd
-                                    ON MovementFloat_TotalSummTransportAdd.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummTransportAdd.DescId = zc_MovementFloat_TotalSummTransportAdd()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransport
-                                    ON MovementFloat_TotalSummTransport.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummTransport.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummTransport.DescId = zc_MovementFloat_TotalSummTransport()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportAdd
+                                    ON MovementFloat_TotalSummTransportAdd.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummTransportAdd.DescId = zc_MovementFloat_TotalSummTransportAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportAddLong
+                                    ON MovementFloat_TotalSummTransportAddLong.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummTransportAddLong.DescId = zc_MovementFloat_TotalSummTransportAddLong()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransportTaxi
+                                    ON MovementFloat_TotalSummTransportTaxi.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummTransportTaxi.DescId = zc_MovementFloat_TotalSummTransportTaxi()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPhone
-                                    ON MovementFloat_TotalSummPhone.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummPhone.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPhone.DescId = zc_MovementFloat_TotalSummPhone()
 
             LEFT JOIN MovementString AS MovementString_Comment 
@@ -191,7 +199,3 @@ ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean,
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2014', inEndDate:= '01.02.2015', inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
-
-
-
-

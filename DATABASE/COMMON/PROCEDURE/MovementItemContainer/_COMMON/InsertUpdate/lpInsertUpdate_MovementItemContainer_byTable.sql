@@ -64,19 +64,20 @@ BEGIN
 
      -- сохранили проводки
      INSERT INTO MovementItemContainer (DescId, MovementDescId, MovementId, MovementItemId, ParentId, ContainerId
-                                      , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
+                                      , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                       , Amount, OperDate, IsActive)
         SELECT DescId, MovementDescId, MovementId
-             , CASE WHEN MovementItemId = 0 THEN NULL ELSE MovementItemId END
-             , CASE WHEN ParentId = 0 THEN NULL ELSE ParentId END
+             , CASE WHEN MovementItemId = 0          THEN NULL ELSE MovementItemId END
+             , CASE WHEN ParentId = 0                THEN NULL ELSE ParentId END
              , ContainerId
-             , CASE WHEN AccountId = 0 THEN NULL ELSE AccountId END
-             , CASE WHEN AnalyzerId = 0 THEN NULL ELSE AnalyzerId END
-             , CASE WHEN ObjectId_Analyzer = 0 THEN NULL ELSE ObjectId_Analyzer END
-             , CASE WHEN WhereObjectId_Analyzer = 0 THEN NULL ELSE WhereObjectId_Analyzer END
-             , CASE WHEN ContainerId_Analyzer = 0 THEN NULL ELSE ContainerId_Analyzer END
-             , CASE WHEN ObjectIntId_Analyzer = 0 THEN NULL ELSE ObjectIntId_Analyzer END
-             , CASE WHEN ObjectExtId_Analyzer = 0 THEN NULL ELSE ObjectExtId_Analyzer END
+             , CASE WHEN AccountId = 0               THEN NULL ELSE AccountId END
+             , CASE WHEN AnalyzerId = 0              THEN NULL ELSE AnalyzerId END
+             , CASE WHEN ObjectId_Analyzer = 0       THEN NULL ELSE ObjectId_Analyzer END
+             , CASE WHEN WhereObjectId_Analyzer = 0  THEN NULL ELSE WhereObjectId_Analyzer END
+             , CASE WHEN ContainerId_Analyzer = 0    THEN NULL ELSE ContainerId_Analyzer END
+             , CASE WHEN AccountId_Analyzer = 0      THEN NULL ELSE AccountId_Analyzer END
+             , CASE WHEN ObjectIntId_Analyzer = 0    THEN NULL ELSE ObjectIntId_Analyzer END
+             , CASE WHEN ObjectExtId_Analyzer = 0    THEN NULL ELSE ObjectExtId_Analyzer END
              , CASE WHEN ContainerIntId_Analyzer = 0 THEN NULL ELSE ContainerIntId_Analyzer END
              , COALESCE (Amount, 0)
              , OperDate

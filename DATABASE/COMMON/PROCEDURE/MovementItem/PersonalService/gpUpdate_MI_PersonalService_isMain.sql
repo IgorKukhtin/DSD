@@ -16,7 +16,7 @@ BEGIN
      -- проверка
      IF COALESCE (inId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка! Не внесена сумма!';
+         RAISE EXCEPTION 'Ошибка.Не введена сумма.';
      END IF;
      
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());

@@ -143,10 +143,11 @@ BEGIN
                                   AND ObjectLink_StaffListSumm_StaffListSummKind.DescId = zc_ObjectLink_StaffListSumm_StaffListSummKind()
         LEFT OUTER JOIN Object AS Object_StaffListSummKind
                                ON Object_StaffListSummKind.Id = ObjectLink_StaffListSumm_StaffListSummKind.ChildObjectId
-                              AND Object_StaffListSummKind.isErased = FALSE
+                              -- AND Object_StaffListSummKind.isErased = FALSE
     WHERE Object_StaffList.DescId = zc_Object_StaffList()
-        AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
-        AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
+      AND Object_StaffList.isErased = FALSE
+      AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
+      AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
    ;
     
     -- результат

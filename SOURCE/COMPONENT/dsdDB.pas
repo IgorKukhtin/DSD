@@ -16,6 +16,7 @@ type
     FComponentItem: String;
     FParamType: TParamType;
     FonChange: TNotifyEvent;
+    FMultiSelectSeparator: String;
     function GetValue: Variant;
     procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
@@ -42,6 +43,7 @@ type
     property ComponentItem: String read FComponentItem write FComponentItem;
     property DataType: TFieldType read FDataType write FDataType default ftInteger;
     property ParamType: TParamType read FParamType write FParamType default ptOutput;
+    property MultiSelectSeparator: String read FMultiSelectSeparator write FMultiSelectSeparator;
   end;
 
   TdsdParams = class (TOwnedCollection)
@@ -721,6 +723,7 @@ begin
   FValue := Null;
   FParamType := ptOutput;
   FDataType := ftInteger;
+  FMultiSelectSeparator := ',';
 end;
 
 constructor TdsdParam.Create(Collection: TCollection);
@@ -729,6 +732,7 @@ begin
   FValue := Null;
   FParamType := ptOutput;
   FDataType := ftInteger;
+  FMultiSelectSeparator := ',';
 end;
 
 function TdsdParam.GetDisplayName: string;
@@ -784,6 +788,9 @@ function TdsdParam.GetValue: Variant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
 var DateTime: TDateTime;
+  i: Integer;
+  IDs: String;
+  Clmn: TcxGridDBColumn;
 begin
   if Assigned(FComponent) and (not Assigned(FComponent.Owner)
        or (Assigned(FComponent.Owner) and (not (csWriting in (FComponent.Owner).ComponentState)))) then begin
@@ -844,6 +851,27 @@ begin
         else
            result := TDefaultKey(Component).JSONKey;
      end;
+     if Component is TcxGridDBTableView then
+     Begin
+       IDs := '';
+       clmn := nil;
+       if (Component.Owner.FindComponent(ComponentItem) <> nil) AND
+          (Component.Owner.FindComponent(ComponentItem) is TcxGridDBColumn) then
+         clmn := TcxGridDBColumn(Component.Owner.FindComponent(ComponentItem));
+       if Clmn <> nil then
+       Begin
+         with TcxGridDBTableView(Component) do
+         Begin
+           for i := 0 to Controller.SelectedRecordCount - 1 do
+           Begin
+             if IDs <> '' then
+               IDs := IDs + FMultiSelectSeparator;
+             IDs := IDs + VarToStr(Controller.SelectedRecords[I].Values[Clmn.Index]);
+           End;
+         End;
+       end;
+       Result := IDs;
+     End;
   end
   else
   Begin

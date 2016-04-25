@@ -26,12 +26,21 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsSelection.InvertSelect = False
+          OptionsSelection.MultiSelect = True
+          OptionsSelection.CellMultiSelect = True
           OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object Id: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
           object ceParentName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'ParentName'
@@ -128,12 +137,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -141,12 +152,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Key_two'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue_two'
@@ -154,12 +167,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteName'
@@ -167,12 +182,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteSortingId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteSortingId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteSortingName'
@@ -180,6 +197,23 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Component = MasterCDS
           ComponentItem = 'RouteSortingName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KeyList'
+          Value = Null
+          Component = cxGridDBTableView
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValueList'
+          Value = Null
+          Component = cxGridDBTableView
+          ComponentItem = 'ceName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
   end

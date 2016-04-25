@@ -535,9 +535,16 @@ BEGIN
      END IF;
 
 
-     -- Результат
-     RETURN QUERY
-        SELECT _Result.RowData FROM _Result;
+     IF vbExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
+     THEN
+         -- Результат
+         RETURN QUERY
+            SELECT STRING_AGG (_Result.RowData, CHR(13)) :: TBlob FROM _Result;
+     ELSE
+         -- Результат
+         RETURN QUERY
+            SELECT _Result.RowData FROM _Result;
+     END IF;
 
 END;
 $BODY$
