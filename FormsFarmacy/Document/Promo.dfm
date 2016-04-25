@@ -11,19 +11,19 @@ inherited PromoForm: TPromoForm
     Top = 123
     Width = 865
     Height = 356
-    ExplicitTop = 141
+    ExplicitTop = 123
     ExplicitWidth = 865
-    ExplicitHeight = 338
+    ExplicitHeight = 356
     ClientRectBottom = 356
     ClientRectRight = 865
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 865
-      ExplicitHeight = 314
+      ExplicitHeight = 332
       inherited cxGrid: TcxGrid
         Width = 865
         Height = 176
         ExplicitWidth = 865
-        ExplicitHeight = 158
+        ExplicitHeight = 176
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -100,7 +100,6 @@ inherited PromoForm: TPromoForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 166
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -170,7 +169,6 @@ inherited PromoForm: TPromoForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 158
       end
     end
   end
@@ -380,6 +378,20 @@ inherited PromoForm: TPromoForm
       Caption = 'actUpdateChildDS'
       DataSource = DetailDS
     end
+    object actDoLoad: TExecuteImportSettingsAction [10]
+      Category = 'Load'
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -421,6 +433,49 @@ inherited PromoForm: TPromoForm
           DataType = ftString
         end>
       isShowModal = False
+    end
+    object actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MovementItem_Promo_Set_Zero
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MovementItem_Promo_Set_Zero
+        end>
+      Caption = 'actInsertUpdate_MovementItem_Inventory_Set_Zero'
+    end
+    object actGetImportSettingId: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSettingId'
+    end
+    object actStartLoad: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingId
+        end
+        item
+          Action = actInsertUpdate_MovementItem_Inventory_Set_Zero
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1090#1077#1082#1091#1097#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
+      ImageIndex = 41
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -485,6 +540,14 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbactStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -517,6 +580,10 @@ inherited PromoForm: TPromoForm
     end
     object bbMISetUnErasedChild: TdxBarButton
       Action = actMISetUnErasedChild
+      Category = 0
+    end
+    object bbactStartLoad: TdxBarButton
+      Action = actStartLoad
       Category = 0
     end
   end
@@ -1106,5 +1173,51 @@ inherited PromoForm: TPromoForm
     PackSize = 1
     Left = 686
     Top = 368
+  end
+  object spInsertUpdate_MovementItem_Promo_Set_Zero: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Promo_Set_Zero'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 730
+    Top = 208
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TInventoryForm;zc_Object_ImportSetting_Inventory'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 160
   end
 end

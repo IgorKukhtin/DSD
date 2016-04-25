@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad;
 
 type
   TPromoForm = class(TAncestorDocumentForm)
@@ -62,6 +62,13 @@ type
     bbMISetUnErasedChild: TdxBarButton;
     actUpdateChildDS: TdsdUpdateDataSet;
     JuridicalChoiceForm: TOpenChoiceForm;
+    actDoLoad: TExecuteImportSettingsAction;
+    actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc;
+    actGetImportSettingId: TdsdExecStoredProc;
+    actStartLoad: TMultiAction;
+    spInsertUpdate_MovementItem_Promo_Set_Zero: TdsdStoredProc;
+    spGetImportSettingId: TdsdStoredProc;
+    bbactStartLoad: TdxBarButton;
   private
     { Private declarations }
   public
