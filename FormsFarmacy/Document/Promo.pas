@@ -73,6 +73,8 @@ type
     edAmount: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
+    InsertRecordChild: TInsertRecord;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

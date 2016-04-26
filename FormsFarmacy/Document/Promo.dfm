@@ -12,17 +12,17 @@ inherited PromoForm: TPromoForm
     Width = 979
     Height = 356
     ExplicitTop = 123
-    ExplicitWidth = 865
+    ExplicitWidth = 979
     ExplicitHeight = 356
     ClientRectBottom = 356
     ClientRectRight = 979
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 865
+      ExplicitWidth = 979
       ExplicitHeight = 332
       inherited cxGrid: TcxGrid
         Width = 979
         Height = 176
-        ExplicitWidth = 865
+        ExplicitWidth = 979
         ExplicitHeight = 176
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -100,7 +100,6 @@ inherited PromoForm: TPromoForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 865
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -139,6 +138,7 @@ inherited PromoForm: TPromoForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 296
@@ -170,7 +170,6 @@ inherited PromoForm: TPromoForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 865
       end
     end
   end
@@ -178,7 +177,6 @@ inherited PromoForm: TPromoForm
     Width = 979
     Height = 97
     TabOrder = 3
-    ExplicitTop = 4
     ExplicitWidth = 979
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
@@ -383,6 +381,20 @@ inherited PromoForm: TPromoForm
       isSetErased = False
       DataSource = DetailDS
     end
+    object InsertRecordChild: TInsertRecord [8]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView1
+      Action = JuridicalChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
     inherited actShowAll: TBooleanStoredProcAction
       StoredProcList = <
         item
@@ -392,7 +404,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoChild
         end>
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [9]
+    object actUpdateChildDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -407,7 +419,7 @@ inherited PromoForm: TPromoForm
       Caption = 'actUpdateChildDS'
       DataSource = DetailDS
     end
-    object actDoLoad: TExecuteImportSettingsAction [10]
+    object actDoLoad: TExecuteImportSettingsAction [11]
       Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -554,6 +566,10 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
           ItemName = 'bbMISetErasedChild'
         end
         item
@@ -618,6 +634,10 @@ inherited PromoForm: TPromoForm
     end
     object bbactStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = InsertRecordChild
       Category = 0
     end
   end
@@ -1152,12 +1172,12 @@ inherited PromoForm: TPromoForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 88
-    Top = 432
+    Left = 32
+    Top = 408
   end
   object DetailDS: TDataSource
     DataSet = DetailDCS
-    Left = 144
+    Left = 80
     Top = 424
   end
   object spSelect_MovementItem_PromoChild: TdsdStoredProc
