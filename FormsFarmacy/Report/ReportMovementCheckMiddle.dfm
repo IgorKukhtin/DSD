@@ -1,30 +1,30 @@
 inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
   Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1077#1076#1085#1080#1081' '#1095#1077#1082'> '
-  ClientHeight = 480
+  ClientHeight = 739
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
-  ExplicitHeight = 518
+  ExplicitHeight = 777
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
     Width = 1251
-    Height = 389
+    Height = 648
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1251
-    ExplicitHeight = 389
-    ClientRectBottom = 389
+    ExplicitHeight = 648
+    ClientRectBottom = 648
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
-      ExplicitHeight = 389
+      ExplicitHeight = 648
       inherited cxGrid: TcxGrid
         Width = 1251
-        Height = 389
+        Height = 464
         ExplicitWidth = 1251
-        ExplicitHeight = 389
+        ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -571,6 +571,149 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             VisibleForCustomization = False
           end
         end
+      end
+      object grChart: TcxGrid
+        Left = 0
+        Top = 472
+        Width = 1251
+        Height = 176
+        Align = alBottom
+        TabOrder = 1
+        object grChartDBChartView1: TcxGridDBChartView
+          DataController.DataSource = MasterDS
+          DiagramColumn.Active = True
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object dgUnit: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'unitname'
+            DisplayText = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          end
+          object dgOperDate: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'OperDate'
+            DisplayText = #1044#1072#1090#1072
+          end
+          object serAmount: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Amount'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1076#1077#1085#1100
+          end
+          object serAmountPeriod: TcxGridDBChartSeries
+            DataBinding.FieldName = 'AmountPeriod'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+          end
+          object serSummaSale: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale'
+            DisplayText = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1076#1077#1085#1100
+          end
+          object serSummaSalePeriod: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSalePeriod'
+            DisplayText = #1057#1091#1084#1084#1072' '#1095#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+          end
+          object serSummaMiddle: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddle'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1079#1072' '#1076#1077#1085#1100
+          end
+          object serSummaMiddlePeriod: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddlePeriod'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'.'#1095#1077#1082#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+          end
+          object serAmount1: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Amount1'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1087#1077#1088#1080#1086#1076' 1'
+          end
+          object serSummaSale1: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale1'
+            DisplayText = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1080#1086#1076' 1'
+          end
+          object serSummaMiddle1: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddle1'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1087#1077#1088#1080#1086#1076' 1'
+          end
+          object serAmount2: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Amount2'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1087#1077#1088#1080#1086#1076' 2'
+          end
+          object serSummaSale2: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale2'
+            DisplayText = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1080#1086#1076' 2'
+          end
+          object serSummaMiddle2: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddle2'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1087#1077#1088#1080#1086#1076' 2'
+          end
+          object serAmount3: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Amount3'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1087#1077#1088#1080#1086#1076' 3'
+          end
+          object serSummaSale3: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale3'
+            DisplayText = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1080#1086#1076' 3'
+          end
+          object serSummaMiddle3: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddle3'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1087#1077#1088#1080#1086#1076' 3'
+          end
+          object serAmount4: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Amount4'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1087#1077#1088#1080#1086#1076' 4'
+          end
+          object serSummaSale4: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale4'
+            DisplayText = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1080#1086#1076' 4'
+          end
+          object serSummaMiddle4: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddle4'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1087#1077#1088#1080#1086#1076' 4'
+          end
+          object serAmount5: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Amount5'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1087#1077#1088#1080#1086#1076' 5'
+          end
+          object serSummaSale5: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale5'
+            DisplayText = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1080#1086#1076' 5'
+          end
+          object serSummaMiddle5: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddle5'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1087#1077#1088#1080#1086#1076' 5'
+          end
+          object serAmount6: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Amount6'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1087#1077#1088#1080#1086#1076' 6'
+          end
+          object serSummaSale6: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale6'
+            DisplayText = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1080#1086#1076' 6'
+          end
+          object serSummaMiddle6: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddle6'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1087#1077#1088#1080#1086#1076' 6'
+          end
+          object serAmount7: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Amount7'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1087#1077#1088#1080#1086#1076' 7'
+          end
+          object serSummaSale7: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale7'
+            DisplayText = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1080#1086#1076' 7'
+          end
+          object serSummaMiddle7: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddle7'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1087#1077#1088#1080#1086#1076' 7'
+          end
+        end
+        object grChartLevel1: TcxGridLevel
+          GridView = grChartDBChartView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 464
+        Width = 1251
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        AutoSnap = True
+        Control = grChart
       end
     end
   end
@@ -1151,22 +1294,23 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'Key'
+        Name = 'KeyList'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'TextValueList'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'

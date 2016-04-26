@@ -171,8 +171,8 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
     Top = 206
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 214
-    Top = 81
+    Left = 190
+    Top = 57
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -285,14 +285,14 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
     KeyField = 'Id'
     LookupControl = edUnit
     Key = '0'
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'Key'
+        Name = 'KeyList'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
@@ -301,7 +301,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'TextValueList'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
@@ -309,8 +309,8 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 86
-    Top = 105
+    Left = 62
+    Top = 65
   end
   object ActionList: TActionList
     Left = 155

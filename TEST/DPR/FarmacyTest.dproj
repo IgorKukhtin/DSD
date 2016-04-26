@@ -450,9 +450,6 @@
 				<Form>dmUnloadUploadData</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Unit_Object.pas">
-				<Form>Unit_ObjectForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\ContactPersonKind.pas">
 				<Form>ContactPersonKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1302,6 +1299,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas">
 				<Form>ReportMovementCheckMiddleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
