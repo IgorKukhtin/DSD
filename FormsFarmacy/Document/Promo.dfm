@@ -1,26 +1,26 @@
 inherited PromoForm: TPromoForm
   Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
   ClientHeight = 479
-  ClientWidth = 865
+  ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 881
+  ExplicitWidth = 995
   ExplicitHeight = 517
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 865
+    Width = 979
     Height = 356
     ExplicitTop = 123
     ExplicitWidth = 865
     ExplicitHeight = 356
     ClientRectBottom = 356
-    ClientRectRight = 865
+    ClientRectRight = 979
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 865
       ExplicitHeight = 332
       inherited cxGrid: TcxGrid
-        Width = 865
+        Width = 979
         Height = 176
         ExplicitWidth = 865
         ExplicitHeight = 176
@@ -95,11 +95,12 @@ inherited PromoForm: TPromoForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 184
-        Width = 865
+        Width = 979
         Height = 148
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 865
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -163,20 +164,22 @@ inherited PromoForm: TPromoForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 176
-        Width = 865
+        Width = 979
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 865
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 865
+    Width = 979
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 865
+    ExplicitTop = 4
+    ExplicitWidth = 979
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -235,15 +238,15 @@ inherited PromoForm: TPromoForm
           Kind = bkEllipsis
         end>
       TabOrder = 9
-      Width = 191
+      Width = 214
     end
     object cxLabel4: TcxLabel
-      Left = 735
+      Left = 758
       Top = 5
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
     end
     object edTotalSumm: TcxCurrencyEdit
-      Left = 735
+      Left = 758
       Top = 23
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
@@ -251,12 +254,12 @@ inherited PromoForm: TPromoForm
       Width = 74
     end
     object cxLabel5: TcxLabel
-      Left = 651
+      Left = 674
       Top = 5
       Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
     end
     object edTotalCount: TcxCurrencyEdit
-      Left = 651
+      Left = 674
       Top = 23
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
@@ -264,16 +267,16 @@ inherited PromoForm: TPromoForm
       Width = 71
     end
     object cxLabel7: TcxLabel
-      Left = 451
+      Left = 674
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 451
+      Left = 674
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 15
-      Width = 358
+      Width = 287
     end
   end
   object edStartPromo: TcxDateEdit [2]
@@ -299,6 +302,32 @@ inherited PromoForm: TPromoForm
     Left = 339
     Top = 45
     Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1082#1086#1085#1090#1088'.'
+  end
+  object cxLabel8: TcxLabel [6]
+    Left = 451
+    Top = 44
+    Caption = 'C'#1091#1084#1084#1072' '#1082#1086#1085#1090#1088#1072#1082#1090#1072
+  end
+  object edAmount: TcxCurrencyEdit [7]
+    Left = 451
+    Top = 62
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = False
+    TabOrder = 11
+    Width = 90
+  end
+  object cxLabel9: TcxLabel [8]
+    Left = 553
+    Top = 44
+    Caption = '% '#1073#1086#1085#1091#1089#1072' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080
+  end
+  object edChangePercent: TcxCurrencyEdit [9]
+    Left = 553
+    Top = 62
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = False
+    TabOrder = 13
+    Width = 112
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -762,6 +791,20 @@ inherited PromoForm: TPromoForm
         Component = edEndPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = edAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -810,6 +853,22 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmount'
+        Value = Null
+        Component = edAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMakerId'
         Value = Null
         Component = GuidesMaker
@@ -835,8 +894,8 @@ inherited PromoForm: TPromoForm
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
-    Left = 282
-    Top = 272
+    Left = 202
+    Top = 248
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -874,6 +933,12 @@ inherited PromoForm: TPromoForm
       end
       item
         Control = edStartPromo
+      end
+      item
+        Control = edAmount
+      end
+      item
+        Control = edChangePercent
       end>
     Left = 200
     Top = 177
@@ -1045,8 +1110,7 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 512
-    Top = 16
+    Left = 560
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleExactly_Print'

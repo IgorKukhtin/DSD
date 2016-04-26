@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , StartPromo TDateTime
              , EndPromo TDateTime
+             , ChangePercent TFloat
+             , Amount TFloat
              , TotalCount TFloat
              , TotalSumm TFloat
              , MakerId Integer
@@ -39,6 +41,8 @@ BEGIN
           , Object_Status.Name            	             AS StatusName
           , Null :: TDateTime                                AS StartPromo
           , Null :: TDateTime                                AS EndPromo 
+          , 0::TFloat                                        AS ChangePercent
+          , 0::TFloat                                        AS Amount
           , 0::TFloat                                        AS TotalCount
           , 0::TFloat                                        AS TotalSumm
           , NULL::Integer                                    AS MakerId
@@ -55,13 +59,14 @@ BEGIN
           , Movement.InvNumber
           , Movement.OperDate
           --, Movement.StatusId
-          , Object_Status.ObjectCode                             AS StatusCode
+          , Object_Status.ObjectCode                                       AS StatusCode
           , Object_Status.ValueData                                        AS StatusName
           , MovementDate_StartPromo.ValueData                              AS StartPromo
-          , MovementDate_EndPromo.ValueData                                AS EndPromo 
+          , MovementDate_EndPromo.ValueData                                AS EndPromo
+          , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat      AS ChangePercent
+          , COALESCE(MovementFloat_Amount.ValueData,0)::TFloat             AS Amount
           , COALESCE(MovementFloat_TotalCount.ValueData,0) ::TFloat        AS TotalCount
           , COALESCE(MovementFloat_TotalSumm.ValueData,0)  ::TFloat        AS TotalSumm
-
           , MovementLinkObject_Maker.ObjectId                              AS MakerId
           , Object_Maker.ValueData                                         AS MakerName
           , MovementLinkObject_Personal.ObjectId                           AS PersonalId  
@@ -69,6 +74,13 @@ BEGIN
           , MovementString_Comment.ValueData                               AS Comment
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+        LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                ON MovementFloat_Amount.MovementId =  Movement.Id
+                               AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId =  Movement.Id

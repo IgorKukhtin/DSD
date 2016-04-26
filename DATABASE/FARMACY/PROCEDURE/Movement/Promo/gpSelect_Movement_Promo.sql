@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , StartPromo TDateTime
              , EndPromo TDateTime
+             , ChangePercent TFloat
+             , Amount TFloat
              , TotalCount TFloat
              , TotalSumm TFloat
              , MakerId Integer
@@ -43,6 +45,9 @@ BEGIN
           , Object_Status.ValueData                                        AS StatusName
           , MovementDate_StartPromo.ValueData                              AS StartPromo
           , MovementDate_EndPromo.ValueData                                AS EndPromo 
+          , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat      AS ChangePercent
+          , COALESCE(MovementFloat_Amount.ValueData,0)::TFloat             AS Amount
+
           , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat         AS TotalCount
           , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat          AS TotalSumm
           , MovementLinkObject_Maker.ObjectId                              AS MakerId
@@ -53,6 +58,13 @@ BEGIN
      FROM Movement 
         INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+        LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                ON MovementFloat_Amount.MovementId =  Movement.Id
+                               AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -87,10 +99,8 @@ BEGIN
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
      ORDER BY InvNumber;
 
-
-
-
 END;
+
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 

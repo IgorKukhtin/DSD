@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_Promo()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Tfloat, Tfloat, Integer, Integer, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -8,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inOperDate              TDateTime  , -- Дата документа
     IN inStartPromo            TDateTime  , -- Дата начала контракта
     IN inEndPromo              TDateTime  , -- Дата окончания контракта
+    IN inAmount                Tfloat     , -- 
+    IN inChangePercent         Tfloat     , --
     IN inMakerId               Integer    , -- Производитель
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела
     IN inComment               TVarChar   , -- Примечание
@@ -21,15 +25,17 @@ BEGIN
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
     vbUserId := inSession;
     -- сохранили <Документ>
-    ioId := lpInsertUpdate_Movement_Promo (ioId          := ioId
-                                         , inInvNumber   := inInvNumber
-                                         , inOperDate    := inOperDate
-                                         , inStartPromo  := inStartPromo
-                                         , inEndPromo    := inEndPromo
-                                         , inMakerId     := inMakerId
-                                         , inPersonalId  := inPersonalId
-                                         , inComment     := inComment
-                                         , inUserId      := vbUserId
+    ioId := lpInsertUpdate_Movement_Promo (ioId            := ioId
+                                         , inInvNumber     := inInvNumber
+                                         , inOperDate      := inOperDate
+                                         , inStartPromo    := inStartPromo
+                                         , inEndPromo      := inEndPromo
+                                         , inAmount        := inAmount
+                                         , inChangePercent := inChangePercent
+                                         , inMakerId       := inMakerId
+                                         , inPersonalId    := inPersonalId
+                                         , inComment       := inComment
+                                         , inUserId        := vbUserId
                                          );
 
 END;

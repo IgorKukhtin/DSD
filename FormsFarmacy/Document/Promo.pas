@@ -69,6 +69,10 @@ type
     spInsertUpdate_MovementItem_Promo_Set_Zero: TdsdStoredProc;
     spGetImportSettingId: TdsdStoredProc;
     bbactStartLoad: TdxBarButton;
+    cxLabel8: TcxLabel;
+    edAmount: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
   private
     { Private declarations }
   public
