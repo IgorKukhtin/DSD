@@ -34,12 +34,12 @@ BEGIN
 
 
    -- Проверка
-   IF inDescId > 0 AND NOT EXISTS (SELECT 1 FROM lpSelect_PeriodClose_Desc (inSession:= inSession) AS tmp WHERE tmp.DescId = inDescId)
+   IF inDescId > 0 AND NOT EXISTS (SELECT 1 FROM lpSelect_PeriodClose_Desc (inUserId:= vbUserId) AS tmp WHERE tmp.DescId = inDescId)
    THEN
        RAISE EXCEPTION 'Ошибка.Вид Документа не найден.';
    END IF;
    -- Проверка
-   IF inDescId_excl > 0 AND NOT EXISTS (SELECT 1 FROM lpSelect_PeriodClose_Desc (inSession:= inSession) AS tmp WHERE tmp.DescId = inDescId_excl)
+   IF inDescId_excl > 0 AND NOT EXISTS (SELECT 1 FROM lpSelect_PeriodClose_Desc (inUserId:= vbUserId) AS tmp WHERE tmp.DescId = inDescId_excl)
    THEN
        RAISE EXCEPTION 'Ошибка.Вид Документа - Исключение не найден.';
    END IF;

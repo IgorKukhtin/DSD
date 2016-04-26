@@ -14,11 +14,12 @@ BEGIN
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
                             
                        -- филиал - "ГЛАВНЫЙ"
-                       WHEN inAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentDnepr()
                                             , zc_Enum_Process_AccessKey_CashDnepr()
                                             --, zc_Enum_Process_AccessKey_PersonalService...()
                                             , zc_Enum_Process_AccessKey_ServiceDnepr()
                                             , zc_Enum_Process_AccessKey_TrasportDnepr()
+                                             )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
                        -- филиал - Kiev
                        WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentKiev()

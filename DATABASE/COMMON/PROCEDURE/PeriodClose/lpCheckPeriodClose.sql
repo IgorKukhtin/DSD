@@ -1,57 +1,55 @@
 -- Проверка закрытия периода
--- Function: gpSelect_Object_Process()
+-- Function: lpCheckPeriodClose()
 
 DROP FUNCTION IF EXISTS lpCheckPeriodClose (TDateTime, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpCheckPeriodClose(
-    IN inOperDate        TDateTime
-    IN inMovementId      Integer
-    IN inMovementDescId  Integer
-    IN inAccessKeyId     Integer
-    IN inUserId          Integer      , -- пользователь
+    IN inOperDate        TDateTime , -- 
+    IN inMovementId      Integer   , -- 
+    IN inMovementDescId  Integer   , -- 
+    IN inAccessKeyId     Integer   , -- 
+    IN inUserId          Integer     -- пользователь
 )
 RETURNS VOID
 AS
 $BODY$  
-   DECLARE vbBranchId Integer;
+   DECLARE vbBranchId          Integer;
+   DECLARE vbPeriodCloseId     Integer;
+   DECLARE vbPeriodCloseId_two Integer;
+   DECLARE vbCloseDate         TDateTime;
 BEGIN
-     -- !!!Перепроведение с/с - НЕТ ограничений!!!
-     IF inUserId IN (zc_Enum_Process_Auto_PrimeCost()
-     THEN -- !!!выход!!!
-          RETURN;
+     -- !!!Перепроведение с/с - НЕТ ограничений!!! + !!!для Админа  - НЕТ ограничений!!!
+     IF inUserId IN (zc_Enum_Process_Auto_PrimeCost() /*, zfCalc_UserAdmin() :: Integer*/)
+        -- OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+          RETURN; -- !!!выход!!!
      END IF;
      -- по этим док-там !!!нет закрытия периода!!!
      IF inMovementDescId IN (zc_Movement_TransportGoods(), zc_Movement_QualityDoc())
-     THEN -- !!!выход!!!
-          RETURN;
-     END IF;
-     -- !!!для Админа  - НЕТ ограничений!!!
-     IF inUserId = 5 -- EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE inUserId = 5 AND ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
-     THEN -- !!!выход!!!
-          RETURN;
+     THEN
+          RETURN; -- !!!выход!!!
      END IF;
      -- если вообще нет, тогда сразу выход - !!!но для PeriodClose.Period не будет работать!!!
      IF NOT EXISTS (SELECT 1 FROM PeriodClose WHERE PeriodClose.CloseDate > inOperDate)
-     THEN -- !!!выход!!!
-          RETURN;
+     THEN
+          RETURN; -- !!!выход!!!
      END IF;
 
 
      -- Определился филиал
-     vbBranchId:= zfGet_Branch_AccessKey (inAccessKeyId);
+     vbBranchId:= zfGet_Branch_AccessKey22 (inAccessKeyId);
 
+     -- !!!только для теста!!!
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPeriodClose')) THEN DROP TABLE _tmpPeriodClose; END IF;
 
-     -- если нет - создаем, иначе - !!!пользуемся "старой" инфой!!!
-     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPeriodClose')
+     -- если нет - создаем, иначе - !!!т.е. пользуемся "старой" инфой!!!
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPeriodClose'))
      THEN
          -- таблица
-         CREATE TEMP TABLE _tmpPeriodClose (Id BigInt, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpPeriodClose (PeriodCloseId Integer, Code Integer, Name TVarChar, CloseDate TDateTime, UserId Integer, UserId_excl Integer, MovementDescId Integer, MovementDescId_excl Integer, BranchId Integer, PaidKindId Integer, CloseDate_excl TDateTime) ON COMMIT DROP;
          -- получили ВСЕ данные из PeriodClose
-         WITH tmpDesc AS (SELECT tmp.DescId
-                              , STRING_AGG (tmp.DescName, '; ') :: TVarChar AS DescName
-                         FROM lpSelect_PeriodClose_Desc (inSession:= inSession) AS tmp
-                         GROUP BY tmp.DescId
-                        )
+         WITH tmpDesc AS (SELECT tmp.DescId, tmp.MovementDescId FROM lpSelect_PeriodClose_Desc (inUserId:= inUserId) AS tmp
+                         )
             , tmpTable AS (SELECT tmp.*
                                 , CASE WHEN tmp.Date1 > tmp.Date2 THEN tmp.Date1 ELSE tmp.Date2 END AS CloseDate_calc
                                 , COALESCE (tmpDesc.MovementDescId, 0)      AS MovementDescId
@@ -77,69 +75,226 @@ BEGIN
                                                    AND ObjectLink_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
                           )
          -- Результат
-         INSERT INTO _tmpPeriodClose (CloseDate, UserId, UserId_excl, MovementDescId, MovementDescId_excl, BranchId, PaidKindId, CloseDate_excl)
-            SELECT tmpData.CloseDate_calc AS CloseDate
+         INSERT INTO _tmpPeriodClose (PeriodCloseId, Code, Name, CloseDate, UserId, UserId_excl, MovementDescId, MovementDescId_excl, BranchId, PaidKindId, CloseDate_excl)
+            SELECT tmpData.Id
+                 , tmpData.Code
+                 , tmpData.Name
+                 , tmpData.CloseDate_calc AS CloseDate
                  , tmpData.UserId_calc    AS UserId
                  , tmpData.UserId_excl
-                 , tmpData.DescId
-                 , tmpData.DescId_excl
-                 , tmpData.BranchId
-                 , tmpData.PaidKindId
+                 , tmpData.MovementDescId
+                 , tmpData.MovementDescId_excl
+                 , COALESCE (tmpData.BranchId, 0)
+                 , COALESCE (tmpData.PaidKindId, 0)
                  , tmpData.CloseDate_excl
-            FROM tmpData
+            FROM tmpData;
      END IF;
 
 
-     -- 1. Исключения
-
-     -- 1-ый для DescId
-     IF EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE MovementDescId = inMovementDescId AND UserId_excl = inUserId AND CloseDate_excl <= inOperDate)
-     THEN -- !!!разрешили!!!
-          RETURN;
-     END IF;
-     -- 2-ой для BranchId = 0
-     IF vbBranchId = zc_Branch_Basis()
+     -- 1.1. Поиск для "Индивидуальный"
+     SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
+            INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
+     FROM _tmpPeriodClose
+          LEFT JOIN (SELECT DISTINCT ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo())
+                    ) AS tmp1 ON tmp1.PaidKindId = _tmpPeriodClose.PaidKindId
+          LEFT JOIN (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                     FROM MovementItem
+                          JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                     AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.isErased = FALSE
+                    ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
+     WHERE _tmpPeriodClose.MovementDescId = inMovementDescId AND _tmpPeriodClose.UserId = inUserId
+       AND (_tmpPeriodClose.BranchId   = 0 OR _tmpPeriodClose.BranchId = vbBranchId)
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0);
+     -- Проверка
+     IF vbPeriodCloseId <> vbPeriodCloseId_two
      THEN
-         -- для "Главного" филиала - если этот пользователь исключен в филиале "для всех"
-         IF EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE MovementDescId = 0 AND MovementDescId_excl <> inMovementDescId AND UserId_excl = inUserId AND CloseDate_excl <= inOperDate AND BranchId = 0)
-         THEN -- !!!разрешили!!!
-              RETURN;
-         END IF;
-     ELSE
-         IF -- для "обычного" филиала - если этот пользователь исключен в филиале "для всех"
-            EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE MovementDescId = 0 AND MovementDescId_excl <> inMovementDescId AND UserId_excl = inUserId AND CloseDate_excl <= inOperDate AND BranchId = 0)
-         OR (-- для "обычного" филиала - если вид документа не закрыт в "Главном" филиале
-             EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE CloseDate <= inOperDate AND MovementDescId = 0 AND MovementDescId_excl <> inMovementDescId AND BranchId = 0)
-             -- для "обычного" филиала - если этот пользователь исключен в филиале vbBranchId
-         AND EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE MovementDescId = 0 AND MovementDescId_excl <> inMovementDescId AND UserId_excl = inUserId AND CloseDate_excl <= inOperDate AND BranchId = vbBranchId)
-            )
-         THEN -- !!!разрешили!!!
-              RETURN;
-         END IF;
+        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
+                      , lfGet_Object_ValueData(inUserId)
+                      , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
+                      , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                      , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId_two)
+                       ;
      END IF;
 
+     -- Проверка для "Индивидуальный"
+     IF vbPeriodCloseId > 0
+     THEN
+         -- 1.2. Исключения
+         IF EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE _tmpPeriodClose.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose.UserId_excl = inUserId AND _tmpPeriodClose.CloseDate_excl <= inOperDate)
+         THEN -- !!!разрешили!!!
+              RETURN;
+         END IF;
 
-     -- 1-ый поиск для 3-х параметров: inUserId + inMovementDescId + 
-     PeriodClose
+         -- 1.3. Проверка
+         IF inOperDate < vbCloseDate
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.'
+                           , (SELECT ItemName FROM MovementDesc WHERE Id = inMovementDescId)
+                           , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                           , DATE (inOperDate)
+                           , lfGet_Object_ValueData (inUserId)
+                           , DATE (vbCloseDate)
+                           , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                            ;
+         END IF;
 
+         -- 1.4. !!!Проверка прошла успешно!!!
+         RETURN;
+
+     END IF; -- Проверка для "Индивидуальный"
      
 
-  THEN
-     RAISE EXCEPTION 'Период закрыт';
-  END IF;  
-  
+     -- 2.1. Поиск для "Общий"
+     SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
+            INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
+     FROM _tmpPeriodClose
+          LEFT JOIN (SELECT DISTINCT ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo())
+                    ) AS tmp1 ON tmp1.PaidKindId = _tmpPeriodClose.PaidKindId
+          LEFT JOIN (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                     FROM MovementItem
+                          JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                     AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.isErased = FALSE
+                    ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
+     WHERE _tmpPeriodClose.MovementDescId = 0 AND _tmpPeriodClose.UserId = 0 AND _tmpPeriodClose.MovementDescId_excl <> inMovementDescId
+       AND (_tmpPeriodClose.BranchId   = 0)
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0);
+     -- Проверка - 1
+     IF vbPeriodCloseId <> vbPeriodCloseId_two
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
+                      , lfGet_Object_ValueData(inUserId)
+                      , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
+                      , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                      , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId_two)
+                       ;
+     END IF;
+     -- Проверка - 2
+     IF COALESCE (vbPeriodCloseId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не найдено закрытие периода.'
+                      , lfGet_Object_ValueData(inUserId)
+                      , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
+                       ;
+     END IF;
+
+     -- Проверка для "Общий"
+     IF vbPeriodCloseId > 0
+     THEN
+         -- 2.2. Исключения
+         IF EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE _tmpPeriodClose.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose.UserId_excl = inUserId AND _tmpPeriodClose.CloseDate_excl <= inOperDate)
+         THEN -- !!!разрешили!!!
+              RETURN;
+         END IF;
+
+         -- 2.3. Проверка
+         IF inOperDate < vbCloseDate
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.'
+                           , (SELECT ItemName FROM MovementDesc WHERE Id = inMovementDescId)
+                           , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                           , DATE (inOperDate)
+                           , lfGet_Object_ValueData (inUserId)
+                           , DATE (vbCloseDate)
+                           , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                            ;
+         END IF;
+
+         -- 2.4. !!!Проверка прошла успешно!!!
+         -- RETURN;
+
+     END IF; -- Проверка для "Общий"
+
+
+     -- !!!Выход, т.к. НЕ Филиал!!!
+     IF vbBranchId = zc_Branch_Basis()
+     THEN
+          RETURN; -- !!!выход!!!
+     END IF;
+
+
+     -- на всякий случай
+     vbPeriodCloseId:= 0; vbPeriodCloseId_two:= 0;
+
+     -- 3.1. Поиск для "Филиал"
+     SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
+            INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
+     FROM _tmpPeriodClose
+          LEFT JOIN (SELECT DISTINCT ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo())
+                    ) AS tmp1 ON tmp1.PaidKindId = _tmpPeriodClose.PaidKindId
+          LEFT JOIN (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                     FROM MovementItem
+                          JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                     AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.isErased = FALSE
+                    ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
+     WHERE _tmpPeriodClose.MovementDescId = 0 AND _tmpPeriodClose.UserId = 0 AND _tmpPeriodClose.MovementDescId_excl <> inMovementDescId
+       AND (_tmpPeriodClose.BranchId   = vbBranchId)
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0);
+     -- Проверка - 1
+     IF vbPeriodCloseId <> vbPeriodCloseId_two
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
+                      , lfGet_Object_ValueData(inUserId)
+                      , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
+                      , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                      , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId_two)
+                       ;
+     END IF;
+     -- Проверка - 2
+     IF COALESCE (vbPeriodCloseId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не найдено закрытие периода.'
+                      , lfGet_Object_ValueData(inUserId)
+                      , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
+                       ;
+     END IF;
+
+     -- Проверка для "Филиал"
+     IF vbPeriodCloseId > 0
+     THEN
+         -- 3.2. Исключения
+         IF EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE _tmpPeriodClose.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose.UserId_excl = inUserId AND _tmpPeriodClose.CloseDate_excl <= inOperDate)
+         THEN -- !!!разрешили!!!
+              RETURN;
+         END IF;
+
+         -- 3.3. Проверка
+         IF inOperDate < vbCloseDate
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.'
+                           , (SELECT ItemName FROM MovementDesc WHERE Id = inMovementDescId)
+                           , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                           , DATE (inOperDate)
+                           , lfGet_Object_ValueData (inUserId)
+                           , DATE (vbCloseDate)
+                           , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                            ;
+         END IF;
+
+         -- 3.4. !!!Проверка прошла успешно!!!
+         -- RETURN;
+
+     END IF; -- Проверка для "Филиал"
+
+ 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpCheckPeriodClose (Integer, Integer)  OWNER TO postgres;
+ALTER FUNCTION lpCheckPeriodClose (TDateTime, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 25.02.14                         *
+ 25.04.16                                        * ALL
+ 25.02.14                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Process('2')
-
+-- SELECT lpCheckPeriodClose (inOperDate:= OperDate, inMovementId:= Id, inMovementDescId:= DescId, inAccessKeyId:= AccessKeyId, inUserId:= 81241), Movement.* FROM Movement WHERE Id = 3091408 -- Бухгалтер ДНЕПР - Марухно А.В.
+-- SELECT lpCheckPeriodClose (inOperDate:= OperDate, inMovementId:= Id, inMovementDescId:= DescId, inAccessKeyId:= AccessKeyId, inUserId:= 81241), Movement.* FROM Movement WHERE Id = 3067578 -- Всем БН - Марухно А.В.

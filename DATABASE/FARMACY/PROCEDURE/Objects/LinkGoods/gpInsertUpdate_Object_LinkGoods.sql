@@ -17,6 +17,12 @@ BEGIN
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
    vbUserId := lpGetUserBySession(inSession);
 
+   -- !!!выход!!!
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (inGoodsMainId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+   THEN
+       RETURN;
+   END IF;
+
    -- проверка
    IF EXISTS(SELECT Object_LinkGoods_View.Id               
                FROM Object_LinkGoods_View

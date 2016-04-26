@@ -60,32 +60,86 @@ BEGIN
      END IF;
 
 
+     -- проверка + исправление <Договор>
      IF EXISTS (SELECT 1
                 FROM MovementLinkMovement AS MovementLinkMovement_Order
-                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                  ON MovementLinkObject_Contract.MovementId = inMovementId
-                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_find
                                                   ON MovementLinkObject_Contract_find.MovementId = MovementLinkMovement_Order.MovementChildId
                                                  AND MovementLinkObject_Contract_find.DescId = zc_MovementLinkObject_Contract()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = inMovementId
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                 WHERE MovementLinkMovement_Order.MovementId = inMovementId
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkObject_Contract.ObjectId <> MovementLinkObject_Contract_find.ObjectId)
      THEN 
-         -- сохранили связь с <Договора>
+         -- сохранили связь с <Договор>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, MovementLinkObject_Contract_find.ObjectId)
          FROM MovementLinkMovement AS MovementLinkMovement_Order
-                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                  ON MovementLinkObject_Contract.MovementId = inMovementId
-                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_find
                                                   ON MovementLinkObject_Contract_find.MovementId = MovementLinkMovement_Order.MovementChildId
                                                  AND MovementLinkObject_Contract_find.DescId = zc_MovementLinkObject_Contract()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = inMovementId
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                 WHERE MovementLinkMovement_Order.MovementId = inMovementId
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkObject_Contract.ObjectId <> MovementLinkObject_Contract_find.ObjectId;
      END IF;
 
+     -- проверка + исправление <От кого (Склад)>
+     IF EXISTS (SELECT 1
+                FROM MovementLinkMovement AS MovementLinkMovement_Order
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                  ON MovementLinkObject_To_find.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                 AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                  ON MovementLinkObject_From.MovementId = inMovementId
+                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                  AND MovementLinkObject_From.ObjectId <> MovementLinkObject_To_find.ObjectId)
+     THEN 
+         -- сохранили связь с <От кого (Склад)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), inMovementId, MovementLinkObject_To_find.ObjectId)
+         FROM MovementLinkMovement AS MovementLinkMovement_Order
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                  ON MovementLinkObject_To_find.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                 AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                  ON MovementLinkObject_From.MovementId = inMovementId
+                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                  AND MovementLinkObject_From.ObjectId <> MovementLinkObject_To_find.ObjectId;
+     END IF;
+
+     -- проверка + исправление <Кому (Покупатель)>
+     IF EXISTS (SELECT 1
+                FROM MovementLinkMovement AS MovementLinkMovement_Order
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                  ON MovementLinkObject_From_find.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                 AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                  ON MovementLinkObject_To.MovementId = inMovementId
+                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                  AND MovementLinkObject_To.ObjectId <> MovementLinkObject_From_find.ObjectId)
+     THEN 
+         -- сохранили связь с <Кому (Покупатель)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), inMovementId, MovementLinkObject_From_find.ObjectId)
+         FROM MovementLinkMovement AS MovementLinkMovement_Order
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                  ON MovementLinkObject_From_find.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                 AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                  ON MovementLinkObject_To.MovementId = inMovementId
+                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                  AND MovementLinkObject_To.ObjectId <> MovementLinkObject_From_find.ObjectId;
+     END IF;
 
 
      -- определили 

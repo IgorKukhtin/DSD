@@ -21,16 +21,17 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
               )
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+     -- lpCheckRight (inSession, zc_Enum_Process_...());
 
 
      -- Результат
      RETURN QUERY 
         WITH tmpDesc AS (SELECT tmp.DescId
                               , STRING_AGG (tmp.DescName, '; ') :: TVarChar AS DescName
-                         FROM lpSelect_PeriodClose_Desc (inSession:= inSession) AS tmp
+                         FROM lpSelect_PeriodClose_Desc (inUserId:= vbUserId) AS tmp
                          GROUP BY tmp.DescId
                         )
            , tmpUser_list AS (SELECT tmp.RoleId

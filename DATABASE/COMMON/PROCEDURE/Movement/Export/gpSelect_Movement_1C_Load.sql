@@ -94,12 +94,15 @@ BEGIN
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END :: TVarChar                                           AS OperCount
-           , (CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+           , (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()  
+                        THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                   WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()  
                         THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                    ELSE COALESCE (MIFloat_Price.ValueData, 0)
               END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
             * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
              ) :: TVarChar                                             AS OperPrice
+
            , '0' :: TVarChar                                           AS Tax
 
              -- Сумма без НДС
@@ -112,7 +115,9 @@ BEGIN
                        -- если цены c НДС
                        THEN 1 / (1 + MovementFloat_VATPercent.ValueData / 100)
              END 
-           * CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+           * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()  
+                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                  WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()  
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
@@ -129,7 +134,9 @@ BEGIN
              -- ***Сумма с НДС
              CAST ((
              CAST (
-             CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+             CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()
+                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                  WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
@@ -160,7 +167,9 @@ BEGIN
                        -- если цены c НДС
                        THEN 1 / (1 + MovementFloat_VATPercent.ValueData / 100)
              END 
-           * CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+           * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()
+                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                  WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
@@ -176,7 +185,9 @@ BEGIN
              -- Сумма с НДС
            , CAST ((
              CAST (
-             CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+             CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()
+                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                  WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
@@ -271,6 +282,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                   AND Movement.DescId <> zc_Movement_Sale()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -334,6 +346,11 @@ BEGIN
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = MILinkObject_GoodsKind.ObjectId
                                                   -- AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна AND Доходы + Продукция + Готовая продукция AND Доходы + Мясное сырье + Мясное сырье
   
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                        ON MIFloat_ChangePercent.MovementItemId = MIMaster.Id
+                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                       AND Movement.DescId = zc_Movement_Sale()
+
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MIMaster.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
