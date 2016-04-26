@@ -4,23 +4,23 @@
   ClientWidth = 1180
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1196
-  ExplicitHeight = 470
+  ExplicitHeight = 467
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1180
     Height = 406
-    ExplicitWidth = 1119
+    ExplicitWidth = 1180
     ExplicitHeight = 406
     ClientRectBottom = 406
     ClientRectRight = 1180
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1119
+      ExplicitWidth = 1180
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
         Width = 1180
         Height = 406
-        ExplicitWidth = 1119
+        ExplicitWidth = 1180
         ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -199,6 +199,7 @@
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingIsSpecConditionId'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
           Name = 'inObjectId'
@@ -206,6 +207,7 @@
           Component = FormParams
           ComponentItem = 'ObjectId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -231,6 +233,7 @@
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -238,12 +241,14 @@
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
     end
     object mactDelete: TMultiAction
@@ -266,9 +271,19 @@
       MoveParams = <
         item
           FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'GoodsId'
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'GoodsMainId'
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProc = spDeleteLink
@@ -318,24 +333,28 @@
       FormName = 'TGoodsMainLiteForm'
       FormNameParam.Value = 'TGoodsMainLiteForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsMainId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsMainCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsMainName'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -423,6 +442,7 @@
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
           Name = 'inObjectId'
@@ -430,6 +450,7 @@
           Component = FormParams
           ComponentItem = 'ObjectId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     object actStartLoadIsUpload: TMultiAction
@@ -481,6 +502,7 @@
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingIsUploadId'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
           Name = 'inObjectId'
@@ -488,6 +510,7 @@
           Component = FormParams
           ComponentItem = 'ObjectId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
   end
@@ -508,6 +531,7 @@
         Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 88
@@ -659,6 +683,7 @@
         Name = 'inObjectId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   object PartnerCodeGuides: TdsdGuides
@@ -667,6 +692,7 @@
     Key = '0'
     FormNameParam.Value = 'TPartnerCodeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartnerCodeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -676,6 +702,7 @@
         Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -684,12 +711,14 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 108
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -709,12 +738,14 @@
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsMainCode'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsMainCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsMainName'
@@ -722,6 +753,7 @@
         Component = MasterCDS
         ComponentItem = 'GoodsMainName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -738,6 +770,7 @@
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsMainId'
@@ -745,6 +778,7 @@
         Component = MasterCDS
         ComponentItem = 'GoodsMainId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -752,6 +786,7 @@
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -768,6 +803,7 @@
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMinimumLot'
@@ -776,6 +812,7 @@
         ComponentItem = 'MinimumLot'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outUpdateDate'
@@ -783,6 +820,7 @@
         Component = MasterCDS
         ComponentItem = 'UpdateDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outUpdateName'
@@ -790,6 +828,7 @@
         Component = MasterCDS
         ComponentItem = 'UpdateName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -806,6 +845,7 @@
         Component = FormParams
         ComponentItem = 'ObjectId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 520
@@ -823,11 +863,13 @@
         Value = 'TGoodsPartnerCodeForm;zc_Object_ImportSetting_Goods_MinimumLot'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserKeyId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_DefaultValue'
@@ -835,6 +877,7 @@
         Component = FormParams
         ComponentItem = 'ImportSettingId'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 520
@@ -847,18 +890,22 @@
         Value = Null
         Component = PartnerCodeGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ImportSettingId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ImportSettingIsUploadId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ImportSettingIsSpecConditionId'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 472
     Top = 104
@@ -874,6 +921,7 @@
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsUpload'
@@ -882,6 +930,7 @@
         ComponentItem = 'IsUpload'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -899,11 +948,13 @@
         Value = 'TGoodsPartnerCodeForm;zc_Object_ImportSetting_Goods_IsUpload'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserKeyId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_DefaultValue'
@@ -911,6 +962,7 @@
         Component = FormParams
         ComponentItem = 'ImportSettingIsUploadId'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 712
@@ -927,6 +979,7 @@
         Component = FormParams
         ComponentItem = 'ObjectId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 712
@@ -943,6 +996,7 @@
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPromo'
@@ -951,6 +1005,7 @@
         ComponentItem = 'IsPromo'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outUpdateDate'
@@ -958,6 +1013,7 @@
         Component = MasterCDS
         ComponentItem = 'UpdateDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outUpdateName'
@@ -965,6 +1021,7 @@
         Component = MasterCDS
         ComponentItem = 'UpdateName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -981,6 +1038,7 @@
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsSpecCondition'
@@ -989,6 +1047,7 @@
         ComponentItem = 'IsSpecCondition'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
@@ -1008,11 +1067,13 @@
           'ion'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserKeyId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_DefaultValue'
@@ -1020,6 +1081,7 @@
         Component = FormParams
         ComponentItem = 'ImportSettingIsSpecConditionId'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 824
@@ -1036,6 +1098,7 @@
         Component = FormParams
         ComponentItem = 'ObjectId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 824

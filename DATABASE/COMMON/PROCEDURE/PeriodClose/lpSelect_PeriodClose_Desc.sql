@@ -1,17 +1,15 @@
 -- Function: lpSelect_PeriodClose_Desc (TVarChar)
 
 DROP FUNCTION IF EXISTS lpSelect_PeriodClose_Desc (TVarChar);
+DROP FUNCTION IF EXISTS lpSelect_PeriodClose_Desc (Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_PeriodClose_Desc(
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inUserId  Integer -- пользователь
 )
 RETURNS TABLE (DescId Integer, MovementDescId Integer, DescName TVarChar)
 AS
 $BODY$
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
-
 
      -- Результат - Хардкодим, временно ? :)
      RETURN QUERY 
@@ -48,7 +46,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpSelect_PeriodClose_Desc (TVarChar) OWNER TO postgres;
+ALTER FUNCTION lpSelect_PeriodClose_Desc (Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -57,4 +55,4 @@ ALTER FUNCTION lpSelect_PeriodClose_Desc (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM lpSelect_PeriodClose_Desc (inSession:= zfCalc_UserAdmin()); 
+-- SELECT * FROM lpSelect_PeriodClose_Desc (inUserId:= zfCalc_UserAdmin() :: Integer); 

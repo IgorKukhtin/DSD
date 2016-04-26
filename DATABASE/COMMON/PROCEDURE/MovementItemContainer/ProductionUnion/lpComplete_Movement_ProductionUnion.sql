@@ -693,10 +693,11 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
+       WITH tmpGoods_ReWork AS (SELECT ObjectLink.ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.ChildObjectId = zc_Enum_InfoMoney_30301() AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney())
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId
             , _tmpItemChild.ContainerId_GoodsFrom
             , 0                                       AS AccountId              -- нет счета
-            , CASE WHEN _tmpItem.GoodsId = zc_Goods_ReWork() THEN zc_Enum_AnalyzerId_ReWork() ELSE vbWhereObjectId_Analyzer_To END AS AnalyzerId -- есть аналитика + для ускорения отчетов будет Подраделение "Кому" или...
+            , CASE WHEN tmpGoods_ReWork.GoodsId > 0 THEN zc_Enum_AnalyzerId_ReWork() ELSE vbWhereObjectId_Analyzer_To END AS AnalyzerId -- есть аналитика + для ускорения отчетов будет Подраделение "Кому" или...
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItem.ContainerId_GoodsTo            AS ContainerId_Analyzer   -- количественный Контейнер-Мастер (т.е. из прихода)
@@ -707,7 +708,9 @@ BEGIN
             , vbOperDate
             , FALSE
        FROM _tmpItemChild
-            JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemChild.MovementItemId_Parent;
+            JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemChild.MovementItemId_Parent
+            LEFT JOIN tmpGoods_ReWork ON tmpGoods_ReWork.GoodsId = _tmpItem.GoodsId
+      ;
 
 
      -- определяется Счет(справочника) для проводок по суммовому учету - Кому
@@ -842,10 +845,11 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
+       WITH tmpGoods_ReWork AS (SELECT ObjectLink.ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.ChildObjectId = zc_Enum_InfoMoney_30301() AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney())
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId
             , _tmpItemSummChild.ContainerId_From
             , _tmpItemSummChild.AccountId_From        AS AccountId              -- счет есть всегда
-            , CASE WHEN _tmpItem.GoodsId = zc_Goods_ReWork() THEN zc_Enum_AnalyzerId_ReWork() ELSE vbWhereObjectId_Analyzer_To END AS AnalyzerId -- есть аналитика + для ускорения отчетов будет Подраделение "Кому" или...
+            , CASE WHEN tmpGoods_ReWork.GoodsId > 0 THEN zc_Enum_AnalyzerId_ReWork() ELSE vbWhereObjectId_Analyzer_To END AS AnalyzerId -- есть аналитика + для ускорения отчетов будет Подраделение "Кому" или...
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItemSumm.ContainerId_To             AS ContainerId_Analyzer   -- суммовой Контейнер-Мастер (т.е. из прихода)
@@ -860,6 +864,7 @@ BEGIN
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId   = _tmpItemSummChild.MovementItemId_Parent
                              AND _tmpItemSumm.ContainerId_From = _tmpItemSummChild.ContainerId_From
             JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+            LEFT JOIN tmpGoods_ReWork ON tmpGoods_ReWork.GoodsId = _tmpItem.GoodsId
        WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
 

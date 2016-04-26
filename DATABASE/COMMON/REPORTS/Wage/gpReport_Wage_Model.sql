@@ -1,3 +1,6 @@
+-- По проводкам - кол-во - из Модели
+-- Function: gpSelect_Report_Wage_1 (Integer)
+
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage_1(
     TDateTime, --дата начала периода
     TDateTime, --дата окончания периода
@@ -213,9 +216,9 @@ BEGIN
         LEFT OUTER JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
                                    ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
                                   AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
-        LEFT OUTER JOIN Object AS Object_ModelService
-                               ON Object_ModelService.Id = ObjectLink_StaffListCost_ModelService.ChildObjectId
-                              AND Object_ModelService.isErased = FALSE
+        INNER JOIN Object AS Object_ModelService
+                          ON Object_ModelService.Id = ObjectLink_StaffListCost_ModelService.ChildObjectId
+                         AND Object_ModelService.isErased = FALSE
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelService_ModelServiceKind
                                    ON ObjectLink_ModelService_ModelServiceKind.ObjectId = Object_ModelService.Id
                                   AND ObjectLink_ModelService_ModelServiceKind.DescId = zc_ObjectLink_ModelService_ModelServiceKind()
@@ -225,8 +228,8 @@ BEGIN
                                   AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
         INNER JOIN Object AS Object_ModelServiceItemMaster
                           ON Object_ModelServiceItemMaster.Id       = ObjectLink_ModelServiceItemMaster_ModelService.ObjectId
+                         AND Object_ModelServiceItemMaster.DescId   = zc_Object_ModelServiceItemMaster()
                          AND Object_ModelServiceItemMaster.isErased = FALSE
-                         -- AND Object_ModelServiceItemMaster.DescId   = zc_Object_ModelServiceItemMaster()
         --Ftom  документы от кого
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_From
                                    ON ObjectLink_ModelServiceItemMaster_From.ObjectId = Object_ModelServiceItemMaster.Id
@@ -258,22 +261,22 @@ BEGIN
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
                                    ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId = Object_ModelServiceItemMaster.Id
                                   AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
-        LEFT OUTER JOIN Object AS Object_ModelServiceItemChild
-                               ON Object_ModelServiceItemChild.Id = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId
-                              AND Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
-                              AND Object_ModelServiceItemChild.isErased = FALSE
+        INNER JOIN Object AS Object_ModelServiceItemChild
+                          ON Object_ModelServiceItemChild.Id = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId
+                         AND Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
+                         AND Object_ModelServiceItemChild.isErased = FALSE
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_From
                                    ON ObjectLink_ModelServiceItemChild_From.ObjectId = Object_ModelServiceItemChild.Id
                                   AND ObjectLink_ModelServiceItemChild_From.DescId = zc_ObjectLink_ModelServiceItemChild_From()
         LEFT OUTER JOIN Object AS ModelServiceItemChild_From 
                                ON ModelServiceItemChild_From.Id = ObjectLink_ModelServiceItemChild_From.ChildObjectId
-                              AND ModelServiceItemChild_From.isErased = FALSE 
+                              -- AND ModelServiceItemChild_From.isErased = FALSE 
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_To
                                    ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
                                   AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
         LEFT JOIN Object AS ModelServiceItemChild_To
                          ON ModelServiceItemChild_To.Id = ObjectLink_ModelServiceItemChild_To.ChildObjectId
-                        AND ModelServiceItemChild_To.isErased = FALSE
+                        -- AND ModelServiceItemChild_To.isErased = FALSE
     WHERE Object_StaffList.DescId = zc_Object_StaffList()
         AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
         AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
@@ -286,6 +289,7 @@ BEGIN
          tmpMovement AS 
        (SELECT
             MovementItemContainer.OperDate
+           ,DATE_PART ('ISODOW', MovementItemContainer.OperDate)  AS OperDate_num
            ,MovementItemContainer.MovementDescId
            ,MovementItemContainer.IsActive
            ,CASE WHEN MovementItemContainer.IsActive = TRUE
@@ -385,6 +389,9 @@ BEGIN
                                              AND MovementItemContainer.OperDate BETWEEN inDateStart AND inDateFinal
              LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId_Analyzer
        ) AS tmpMI
+             /*INNER JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
+                                    AND MovementItem.isErased = FALSE
+                                    AND MovementItem.Amount <> 0*/
              INNER JOIN MovementItemFloat AS MIFloat_HeadCount
                                           ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
                                          AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -421,7 +428,11 @@ BEGIN
            ,Setting.ModelServiceItemChild_FromId
            ,Setting.ModelServiceItemChild_ToId
            , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate) AS OperDate
-           , SUM (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
+
+           , SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
+                        AND tmpMovement.OperDate_num <> 6 -- суббота
+                            THEN 0
+                       WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
                             THEN tmpMovement_HeadCount.Amount
                        WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
                             THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
@@ -432,7 +443,10 @@ BEGIN
                        ELSE tmpMovement.Amount
                   END) :: TFloat AS Gross  -- Общая база, кол-во
            , ROUND (Setting.Price * Setting.Ratio
-           * SUM (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
+           * SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
+                        AND tmpMovement.OperDate_num <> 6 -- суббота
+                            THEN 0
+                       WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
                             THEN tmpMovement_HeadCount.Amount
                        WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
                             THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
@@ -640,7 +654,7 @@ BEGIN
        , ServiceModelMovement.Gross
        , (ServiceModelMovement.Gross
         / NULLIF (
-          CASE WHEN (Movement_Sheet.AmountInDay = 0 OR Movement_Sheet.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
+          CASE WHEN (Movement_Sheet.AmountInDay = 0 OR Movement_Sheet.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням табель
                     THEN 0
                WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням + по часам табель
                     THEN Movement_Sheet.AmountInDay / NULLIF (Movement_Sheet.Amount, 0)
@@ -661,6 +675,7 @@ BEGIN
          LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                             AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
                                             AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за месяц табель
+
          LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                        AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
                                        AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate

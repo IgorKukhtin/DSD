@@ -260,13 +260,9 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsAllForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetailForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsAllRetailForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllJuridicalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
-//exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
+exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
@@ -276,7 +272,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMainEditForm');
-              exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsLiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsLiteForm');
 
