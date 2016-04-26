@@ -14,7 +14,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinsdxBarPainter, cxCheckBox, cxSplitter, cxGridChartView,
+  cxGridDBChartView;
 
 type
   TReportMovementCheckMiddleForm = class(TAncestorReportForm)
@@ -29,6 +30,26 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     bbPrint: TdxBarButton;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    cxLabel6: TcxLabel;
+    cxLabel12: TcxLabel;
+    cbisDay: TcxCheckBox;
+    actRefreshOnDay: TdsdDataSetRefresh;
+    grChart: TcxGrid;
+    grChartDBChartView1: TcxGridDBChartView;
+    dgUnit: TcxGridDBChartDataGroup;
+    dgOperDate: TcxGridDBChartDataGroup;
+    serSummaSale: TcxGridDBChartSeries;
+    serAmount: TcxGridDBChartSeries;
+    serAmountPeriod: TcxGridDBChartSeries;
+    serSummaSalePeriod: TcxGridDBChartSeries;
+    serSummaMiddle: TcxGridDBChartSeries;
+    grChartLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    serSummaMiddlePeriod: TcxGridDBChartSeries;
   private
     { Private declarations }
   public

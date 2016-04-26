@@ -9,7 +9,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList;
+  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList, cxCurrencyEdit;
 
 type
   TReport_MovementCheckMiddleDialogForm = class(TParentForm)
@@ -31,6 +31,19 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    ceValue1: TcxCurrencyEdit;
+    ceValue2: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    ceValue3: TcxCurrencyEdit;
+    ceValue4: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
+    cxLabel12: TcxLabel;
+    ceValue5: TcxCurrencyEdit;
+    ceValue6: TcxCurrencyEdit;
+    cbisDay: TcxCheckBox;
   private
     { Private declarations }
   public

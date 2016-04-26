@@ -30,9 +30,12 @@ type
   TOrderExternalJournalChoiceForm = class(TAncestorJournalForm)
     dsdChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
-    cxLabel6: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

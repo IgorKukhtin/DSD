@@ -63,7 +63,7 @@ type
     actUpdateChildDS: TdsdUpdateDataSet;
     JuridicalChoiceForm: TOpenChoiceForm;
     actDoLoad: TExecuteImportSettingsAction;
-    actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc;
+    actInsertUpdate_MovementItem_Promo_Set_Zero: TdsdExecStoredProc;
     actGetImportSettingId: TdsdExecStoredProc;
     actStartLoad: TMultiAction;
     spInsertUpdate_MovementItem_Promo_Set_Zero: TdsdStoredProc;

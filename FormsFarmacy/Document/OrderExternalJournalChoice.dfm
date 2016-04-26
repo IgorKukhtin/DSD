@@ -1,26 +1,26 @@
 inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 535
-  ClientWidth = 1020
+  ClientWidth = 1334
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
+  ExplicitWidth = 1350
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 1334
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1020
+    ClientRectRight = 1334
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1334
         Height = 478
         ExplicitWidth = 1020
         ExplicitHeight = 478
@@ -249,24 +249,40 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1334
     ExplicitWidth = 1020
-    object cxLabel6: TcxLabel
-      Left = 453
-      Top = 6
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
-    end
     object edJuridical: TcxButtonEdit
-      Left = 523
+      Left = 473
       Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 5
+      TabOrder = 4
       Width = 245
     end
+    object cxLabel4: TcxLabel
+      Left = 733
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object edUnit: TcxButtonEdit
+      Left = 822
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 6
+      Width = 245
+    end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 407
+    Top = 6
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -311,6 +327,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -318,6 +335,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber_full'
@@ -325,6 +343,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber_full'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -348,6 +367,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -355,6 +375,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -362,6 +383,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -369,6 +391,15 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 171
@@ -501,12 +532,14 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -520,6 +553,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -533,6 +567,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -543,24 +578,28 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -568,6 +607,22 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 288
@@ -577,6 +632,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -586,6 +642,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -594,7 +651,36 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 584
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 856
   end
 end

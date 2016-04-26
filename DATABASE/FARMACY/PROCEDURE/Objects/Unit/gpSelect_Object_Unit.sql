@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Unit(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, ParentName TVarChar
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
@@ -25,6 +25,7 @@ BEGIN
       , Object_Unit.ValueData                              AS Name
 
       , COALESCE(ObjectLink_Unit_Parent.ChildObjectId,0)   AS ParentId
+      , Object_Parent.ValueData                            AS ParentName
 
       , Object_Juridical.ValueData                         AS JuridicalName
       , Object_MarginCategory.ValueData                    AS MarginCategoryName
@@ -48,7 +49,8 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-      
+        LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+        
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                              ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
