@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpReport_Movement_CheckMiddle (Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Movement_CheckMiddle (Integer, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_CheckMiddle (TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_CheckMiddle(
-    IN inUnitId           Integer  ,  -- Подразделение
+    IN inUnitId           TVarChar,--Integer  ,  -- Подразделение
     IN inDateStart        TDateTime,  -- Дата начала
     IN inDateEnd          TDateTime,  -- Дата окончания
     IN inisDay            Boolean,    -- по дням
@@ -59,10 +61,26 @@ RETURNS TABLE (
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIndex Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- таблица
+    CREATE TEMP TABLE _tmpUnit_List (UnitId Integer) ON COMMIT DROP;
+    -- парсим подразделения
+    
+    vbIndex := 1;
+    WHILE SPLIT_PART (inUnitId, ',', vbIndex) <> '' LOOP
+        -- добавляем то что нашли
+        INSERT INTO _tmpUnit_List (UnitId) SELECT SPLIT_PART (inUnitId, ',', vbIndex) :: Integer;
+        -- теперь следуюющий
+        vbIndex := vbIndex + 1;
+    END LOOP;
+
+
 
     -- Результат
     RETURN QUERY
@@ -74,7 +92,8 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                           AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId=0)
+                                                           --AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId=0)
+                              INNER JOIN _tmpUnit_List ON (_tmpUnit_List.UnitId = MovementLinkObject_Unit.ObjectId OR COALESCE(inUnitId,'0') = '0')
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
                                                      AND MI_Check.DescId = zc_MI_Master()
@@ -208,3 +227,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Movement_CheckMiddle(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateEnd := ('29.02.2016')::TDateTime , inSession := '3');
+--select * from gpReport_Movement_CheckMiddle(inUnitId := '183294,375626,389328' , inDateStart := ('01.01.2016')::TDateTime , inDateFinal := ('27.01.2016')::TDateTime , inisDay := 'False' , inValue1 := 100 , inValue2 := 200 , inValue3 := 300 , inValue4 := 400 , inValue5 := 500 , inValue6 := 1000 ,  inSession := '3');

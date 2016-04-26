@@ -210,6 +210,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -289,7 +290,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'KeyList'

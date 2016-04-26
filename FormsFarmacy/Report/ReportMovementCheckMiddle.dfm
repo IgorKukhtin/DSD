@@ -1,28 +1,30 @@
 inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
   Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1077#1076#1085#1080#1081' '#1095#1077#1082'> '
-  ClientHeight = 739
+  ClientHeight = 569
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
-  ExplicitHeight = 777
+  ExplicitHeight = 607
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
     Width = 1251
-    Height = 648
+    Height = 478
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1251
     ExplicitHeight = 648
-    ClientRectBottom = 648
+    ClientRectBottom = 478
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
       ExplicitHeight = 648
       inherited cxGrid: TcxGrid
         Width = 1251
-        Height = 464
+        Height = 294
+        ExplicitLeft = -3
+        ExplicitTop = 2
         ExplicitWidth = 1251
         ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -574,11 +576,12 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       end
       object grChart: TcxGrid
         Left = 0
-        Top = 472
+        Top = 302
         Width = 1251
         Height = 176
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 472
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -707,13 +710,14 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 464
+        Top = 294
         Width = 1251
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         AutoSnap = True
         Control = grChart
+        ExplicitTop = 464
       end
     end
   end
@@ -960,6 +964,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
           Value = ''
           Component = UnitGuides
           ComponentItem = 'Key'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1062,6 +1067,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         Value = Null
         Component = UnitGuides
         ComponentItem = 'Key'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
