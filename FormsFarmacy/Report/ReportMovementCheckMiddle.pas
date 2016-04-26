@@ -29,6 +29,14 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     bbPrint: TdxBarButton;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    cxLabel6: TcxLabel;
+    cxLabel12: TcxLabel;
+    cbisDay: TcxCheckBox;
+    actRefreshOnDay: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

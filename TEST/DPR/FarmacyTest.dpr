@@ -317,7 +317,6 @@ uses
   SendMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas',
   CreateOrderFromMCS in '..\..\FormsFarmacy\Document\CreateOrderFromMCS.pas' {CreateOrderFromMCSForm: TParentForm},
   CheckJournalUser in '..\..\Forms\Document\CheckJournalUser.pas' {CheckJournalUserForm: TParentForm},
-  ReportMovementCheckMiddle in '..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas' {ReportMovementCheckMiddleForm: TParentForm},
   MCS in '..\..\Forms\Guides\MCS.pas' {MCSForm: TParentForm},
   PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   Report_GoodsPartionHistory in '..\..\FormsFarmacy\Report\Report_GoodsPartionHistory.pas' {Report_GoodsPartionHistoryForm: TParentForm},
@@ -419,7 +418,8 @@ uses
   Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
   MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   Promo in '..\..\FormsFarmacy\Document\Promo.pas' {PromoForm: TParentForm},
-  PromoJournal in '..\..\FormsFarmacy\Document\PromoJournal.pas' {PromoJournalForm: TParentForm};
+  PromoJournal in '..\..\FormsFarmacy\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
+  ReportMovementCheckMiddle in '..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas' {ReportMovementCheckMiddleForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

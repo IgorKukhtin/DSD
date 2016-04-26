@@ -917,10 +917,6 @@
 				<Form>CheckJournalUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas">
-				<Form>ReportMovementCheckMiddleForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MCS.pas">
 				<Form>MCSForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1302,6 +1298,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\PromoJournal.pas">
 				<Form>PromoJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas">
+				<Form>ReportMovementCheckMiddleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
