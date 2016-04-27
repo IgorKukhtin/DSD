@@ -109,6 +109,7 @@ type
     edInvNumberOrder: TcxButtonEdit;
     cxLabel25: TcxLabel;
     OrderExternalChoiceGuides: TdsdGuides;
+    colPersentDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

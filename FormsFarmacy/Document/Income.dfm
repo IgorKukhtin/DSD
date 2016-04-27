@@ -373,6 +373,17 @@
             Options.Editing = False
             Width = 66
           end
+          object colPersentDiff: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083#1086#1085'.'
+            DataBinding.FieldName = 'PersentDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
     end
