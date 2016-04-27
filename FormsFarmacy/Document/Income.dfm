@@ -349,7 +349,7 @@
             DataBinding.FieldName = 'OrderSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -369,7 +369,7 @@
             DataBinding.FieldName = 'isSummDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083'. '#1087#1086' '#1089#1091#1084#1084#1077' '#1086#1090' '#1079#1072#1103#1074#1082#1080
+            HeaderHint = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077' '#1086#1090' '#1079#1072#1103#1074#1082#1080
             Options.Editing = False
             Width = 66
           end
