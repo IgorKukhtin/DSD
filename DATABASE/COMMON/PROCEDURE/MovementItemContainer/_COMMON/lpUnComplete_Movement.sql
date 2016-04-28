@@ -31,6 +31,17 @@ BEGIN
   UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId
   RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
 
+  -- 1.3. !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
+  IF vbStatusId_old = zc_Enum_Status_Complete()
+  THEN PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
+                                 , inMovementId    := inMovementId
+                                 , inMovementDescId:= vbDescId
+                                 , inAccessKeyId   := vbAccessKeyId
+                                 , inUserId        := inUserId
+                                  );
+  END IF;
+
+
   -- для Админа  - Все Права
   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
   THEN 

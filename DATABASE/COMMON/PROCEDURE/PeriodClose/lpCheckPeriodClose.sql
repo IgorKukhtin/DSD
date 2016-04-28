@@ -18,8 +18,11 @@ $BODY$
    DECLARE vbPeriodCloseId_two Integer;
    DECLARE vbCloseDate         TDateTime;
 BEGIN
-     -- !!!Перепроведение с/с - НЕТ ограничений!!! + !!!для Админа  - НЕТ ограничений!!!
-     IF inUserId IN (zc_Enum_Process_Auto_PrimeCost() /*, zfCalc_UserAdmin() :: Integer*/)
+     -- !!!только Перепроведение с/с - НЕТ ограничений!!! + временно: !!!для Админа  - НЕТ ограничений!!!
+     IF inUserId IN (zc_Enum_Process_Auto_PrimeCost()
+                   /*, zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster(),zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose()*/
+                   /*, zfCalc_UserAdmin() :: Integer*/
+                    )
         -- OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
           RETURN; -- !!!выход!!!
@@ -37,10 +40,11 @@ BEGIN
 
 
      -- Определился филиал
-     vbBranchId:= zfGet_Branch_AccessKey22 (inAccessKeyId);
+     vbBranchId:= CASE WHEN inAccessKeyId > 0 THEN zfGet_Branch_AccessKey (inAccessKeyId) ELSE zc_Branch_Basis() END;
 
      -- !!!только для теста!!!
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPeriodClose')) THEN DROP TABLE _tmpPeriodClose; END IF;
+     -- IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPeriodClose')) THEN DROP TABLE _tmpPeriodClose; END IF;
+     -- !!!только для теста!!!
 
      -- если нет - создаем, иначе - !!!т.е. пользуемся "старой" инфой!!!
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPeriodClose'))
@@ -298,3 +302,5 @@ ALTER FUNCTION lpCheckPeriodClose (TDateTime, Integer, Integer, Integer, Integer
 -- тест
 -- SELECT lpCheckPeriodClose (inOperDate:= OperDate, inMovementId:= Id, inMovementDescId:= DescId, inAccessKeyId:= AccessKeyId, inUserId:= 81241), Movement.* FROM Movement WHERE Id = 3091408 -- Бухгалтер ДНЕПР - Марухно А.В.
 -- SELECT lpCheckPeriodClose (inOperDate:= OperDate, inMovementId:= Id, inMovementDescId:= DescId, inAccessKeyId:= AccessKeyId, inUserId:= 81241), Movement.* FROM Movement WHERE Id = 3067578 -- Всем БН - Марухно А.В.
+-- SELECT lpCheckPeriodClose (inOperDate:= OperDate, inMovementId:= Id, inMovementDescId:= DescId, inAccessKeyId:= AccessKeyId, inUserId:= 300547), Movement.* FROM Movement WHERE Id = 3424050 -- Всем БН - Комелева А.Л.
+-- SELECT lpCheckPeriodClose (inOperDate:= OperDate, inMovementId:= Id, inMovementDescId:= DescId, inAccessKeyId:= AccessKeyId, inUserId:= 76913), Movement.* FROM Movement WHERE Id = 2802779  -- Начисления маркетинг - Земляная Л.Н

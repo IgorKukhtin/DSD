@@ -24,7 +24,10 @@ BEGIN
                                    , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                    , BusinessId_From Integer, BusinessId_To Integer
                                    , isPartionCount Boolean, isPartionSumm Boolean
-                                   , PartionGoodsId_From Integer, PartionGoodsId_To Integer) ON COMMIT DROP;
+                                   , PartionGoodsId_From Integer, PartionGoodsId_To Integer
+                                   , UnitId_To Integer, MemberId_To Integer, BranchId_To Integer, AccountDirectionId_To Integer, IsPartionDate_UnitTo Boolean, JuridicalId_Basis_To Integer
+                                   , WhereObjectId_Analyzer_To Integer
+                                    ) ON COMMIT DROP;
      END IF;
 
 END;$BODY$

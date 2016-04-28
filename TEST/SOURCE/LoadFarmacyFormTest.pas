@@ -260,9 +260,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
-exit;
+//exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));

@@ -60,6 +60,49 @@ BEGIN
      END IF;
 
 
+     -- определили
+     vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
+                       ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
+                  END;
+     -- определили <Тип документа>
+     vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     -- определили <ПЕРЕРАБОТКА>
+     vbGoodsId_ReWork:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
+                         FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
+                                                               , inLevel2      := 'Movement'
+                                                               , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                               , inItemName    := 'GoodsId_ReWork'
+                                                               , inDefaultValue:= '0'
+                                                               , inSession     := inSession
+                                                                ) AS RetV
+                               FROM MovementFloat
+                               WHERE MovementFloat.MovementId = inMovementId
+                                 AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                 AND MovementFloat.ValueData > 0
+                              ) AS tmp
+                        );
+     -- !!!заменили параметр!!! : Продажа -> Перемещение по цене
+     IF vbMovementDescId = zc_Movement_Sale() AND EXISTS (SELECT MLM_Order.MovementChildId
+                                                          FROM MovementLinkMovement AS MLM_Order
+                                                               INNER JOIN MovementLinkObject AS MLO ON MLO.MovementId = MLM_Order.MovementChildId AND MLO.DescId = zc_MovementLinkObject_From()
+                                                               INNER JOIN Object ON Object.Id = MLO.ObjectId AND Object.DescId = zc_Object_Unit()
+                                                          WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                                                         )
+     THEN
+         vbMovementDescId:= zc_Movement_SendOnPrice();
+     END IF;
+
+     -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
+     IF vbMovementDescId = zc_Movement_Send() AND vbGoodsId_ReWork > 0
+     THEN
+         vbMovementDescId:= zc_Movement_ProductionUnion();
+         vbIsProductionIn:= FALSE;
+     ELSE
+         vbIsProductionIn:= NULL;
+     END IF;
+
+
+
      -- проверка + исправление <Договор>
      IF EXISTS (SELECT 1
                 FROM MovementLinkMovement AS MovementLinkMovement_Order
@@ -88,7 +131,8 @@ BEGIN
      END IF;
 
      -- проверка + исправление <От кого (Склад)>
-     IF EXISTS (SELECT 1
+     IF vbMovementDescId = zc_Movement_Sale()
+    AND EXISTS (SELECT 1
                 FROM MovementLinkMovement AS MovementLinkMovement_Order
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To_find
                                                   ON MovementLinkObject_To_find.MovementId = MovementLinkMovement_Order.MovementChildId
@@ -100,7 +144,7 @@ BEGIN
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkObject_From.ObjectId <> MovementLinkObject_To_find.ObjectId)
      THEN 
-         -- сохранили связь с <От кого (Склад)>
+          -- сохранили связь с <От кого (Склад)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), inMovementId, MovementLinkObject_To_find.ObjectId)
          FROM MovementLinkMovement AS MovementLinkMovement_Order
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To_find
@@ -115,7 +159,8 @@ BEGIN
      END IF;
 
      -- проверка + исправление <Кому (Покупатель)>
-     IF EXISTS (SELECT 1
+     IF vbMovementDescId = zc_Movement_Sale()
+    AND EXISTS (SELECT 1
                 FROM MovementLinkMovement AS MovementLinkMovement_Order
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From_find
                                                   ON MovementLinkObject_From_find.MovementId = MovementLinkMovement_Order.MovementChildId
@@ -142,72 +187,6 @@ BEGIN
      END IF;
 
 
-     -- определили 
-     vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
-                       ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
-                  END;
-     -- определили <Тип документа>
-     vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
-     -- определили <ПЕРЕРАБОТКА>
-     vbGoodsId_ReWork:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
-                         FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
-                                                               , inLevel2      := 'Movement'
-                                                               , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
-                                                               , inItemName    := 'GoodsId_ReWork'
-                                                               , inDefaultValue:= '0'
-                                                               , inSession     := inSession
-                                                                ) AS RetV
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId = inMovementId
-                                 AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
-                                 AND MovementFloat.ValueData > 0
-                              ) AS tmp
-                        );
-
-
-     -- !!!заменили параметр!!! : Продажа -> Перемещение по цене
-     IF vbMovementDescId = zc_Movement_Sale() AND EXISTS (SELECT MLM_Order.MovementChildId
-                                                          FROM MovementLinkMovement AS MLM_Order
-                                                               INNER JOIN MovementLinkObject AS MLO ON MLO.MovementId = MLM_Order.MovementChildId AND MLO.DescId = zc_MovementLinkObject_From()
-                                                               INNER JOIN Object ON Object.Id = MLO.ObjectId AND Object.DescId = zc_Object_Unit()
-                                                          WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-                                                         )
-     THEN
-         vbMovementDescId:= zc_Movement_SendOnPrice();
-     END IF;
-
-     -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
-     IF vbMovementDescId = zc_Movement_Send() AND (vbGoodsId_ReWork > 0 
-                                                /*OR (-- если такие "От кого"
-                                                  (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
-                                                  IN (SELECT 8451 -- Цех Упаковки
-                                                     UNION
-                                                      SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect -- Склады
-                                                     )
-                                              AND -- если такие "Кому"
-                                                  (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
-                                                  IN (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId <> 8450 -- ЦЕХ колбаса+дел-сы <> ЦЕХ копчения
-                                                     UNION
-                                                      SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS lfSelect -- Участок мясного сырья
-                                                     )
-                                              AND -- если это не перемещение переработки
-                                                  NOT EXISTS
-                                                  (SELECT MovementItem.MovementId
-                                                   FROM MovementItem
-                                                        LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                                   WHERE MovementItem.MovementId = inMovementId
-                                                     AND MovementItem.DescId     = zc_MI_Master()
-                                                     AND MovementItem.isErased   = FALSE
-                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
-                                                  ))*/)
-     THEN
-         vbMovementDescId:= zc_Movement_ProductionUnion();
-         vbIsProductionIn:= FALSE;
-     ELSE
-         vbIsProductionIn:= NULL;
-     END IF;
 
      -- !!!запомнили!!
      vbOperDate_scale:= inOperDate;
@@ -374,7 +353,7 @@ BEGIN
               IF  (COALESCE (vbMovementId_find, 0) = 0  AND vbIsSendOnPriceIn = TRUE)  -- т.е. вводят приход, а vbMovementId_find нет
                OR (COALESCE (vbMovementId_find, 0) <> 0 AND vbIsSendOnPriceIn = FALSE) -- т.е. вводят расход, а vbMovementId_find есть
               THEN
-                   RAISE EXCEPTION 'vbMovementId_find <%>', vbMovementId_find;
+                   RAISE EXCEPTION 'vbMovementId_find <%> <%> <%>', vbMovementId_find, vbIsSendOnPriceIn, inBranchCode;
               END IF;
           END IF;
 

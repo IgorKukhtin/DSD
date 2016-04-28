@@ -11,10 +11,12 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement(
 AS
 $BODY$
    DECLARE vbOperDate TDateTime;
+   DECLARE vbDescId Integer;
    DECLARE vbCloseDate TDateTime;
-   DECLARE vbRoleName TVarChar;
-
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbStatusId Integer;
+
+   DECLARE vbRoleName TVarChar;
 BEGIN
   -- проверка
   /*IF EXISTS (SELECT MovementId FROM MovementItemContainer WHERE MovementId = inMovementId)
@@ -29,8 +31,20 @@ BEGIN
   END IF;
 
   -- Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = inDescId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-  RETURNING OperDate, AccessKeyId INTO vbOperDate, vbAccessKeyId;
+  UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+  RETURNING OperDate, DescId, AccessKeyId, StatusId INTO vbOperDate, vbDescId, vbAccessKeyId, vbStatusId;
+
+
+  -- 1.1. Проверка
+  IF COALESCE (vbDescId, -1) <> COALESCE (inDescId, -2)
+  THEN
+      RAISE EXCEPTION 'Ошибка.Вид документа не определен.<%><%>', vbDescId, inDescId;
+  END IF;
+  -- 1.2. Проверка
+  /*IF COALESCE (vbStatusId, 0) NOT IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+  THEN
+      RAISE EXCEPTION 'Ошибка.Документа № <%> от <%> уже проведен.<%><%>', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), vbStatusId, inMovementId;
+  END IF;*/
 
 
   -- по этим док-там !!!нет закрытия периода!!!
@@ -93,6 +107,16 @@ BEGIN
   END IF;
 
 
+  -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
+  PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
+                            , inMovementId    := inMovementId
+                            , inMovementDescId:= inDescId
+                            , inAccessKeyId   := vbAccessKeyId
+                            , inUserId        := inUserId
+                             );
+
+  -- есть !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!, поэтому все что дальше - не надо
+  /*
   -- !!!временно!!!
   IF inUserId NOT IN (-1 -- 128491 -- Хохлова Е.Ю. !!!временно!!!
                     -- , 5
@@ -253,9 +277,11 @@ BEGIN
   END IF; -- !!!временно если БН начисления маркетинг!!!
   END IF; -- !!!временно если не НАЛ!!! ELSE !!!временно если ВСЕ НЕ НАЛ!!!
 
+  END IF; -- !!!временно!!!
+  */
+
   END IF; -- по этим док-там !!!нет закрытия периода!!!
 
-  END IF; -- !!!временно!!!
 
   -- сохранили протокол
   PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);

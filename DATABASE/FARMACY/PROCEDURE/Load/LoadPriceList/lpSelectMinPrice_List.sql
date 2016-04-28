@@ -70,6 +70,13 @@ BEGIN
                               -- уже здесь ограничения
                               WHERE tmp.isPriceClose = FALSE
                              )
+    -- Маркетинговый контракт
+  , GoodsPromo AS (SELECT tmp.JuridicalId
+                        , tmp.GoodsId        -- здесь товар "сети"
+                        , tmp.ChangePercent
+                   FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+                  )
+
     -- Выбираем в первую очередь тот что для сайта
   , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
                           FROM JuridicalSettings_new AS tmp
@@ -206,9 +213,13 @@ BEGIN
           , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
                  WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE OR COALESCE (MI_PriceList.PriceLimit, 0) <= MI_PriceList.Price
                     THEN MI_PriceList.Price
+                         -- И учитывается % бонуса из Маркетинговый контракт
+                       * (1 - GoodsPromo.ChangePercent / 100)
                  -- иначе учитывается бонус
-                 ELSE (MI_PriceList.Price * (100 - COALESCE (MI_PriceList.Bonus, 0)) / 100) :: TFloat 
-            END AS FinalPrice
+                 ELSE (MI_PriceList.Price * (100 - COALESCE (MI_PriceList.Bonus, 0)) / 100)
+                      -- И учитывается % бонуса из Маркетинговый контракт
+                    * (1 - GoodsPromo.ChangePercent / 100)
+            END :: TFloat AS FinalPrice
 
           , MI_PriceList.GoodsId_jur           AS Partner_GoodsId
           , ObjectString_Goods_Code.ValueData  AS Partner_GoodsCode
@@ -247,6 +258,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
                                   ON ObjectFloat_Deferment.ObjectId = MI_PriceList.ContractId
                                  AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+            -- % бонуса из Маркетинговый контракт
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = MI_PriceList.GoodsId
+                                AND GoodsPromo.JuridicalId = MI_PriceList.JuridicalId
        ) AS ddd
        -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту)
        LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice
