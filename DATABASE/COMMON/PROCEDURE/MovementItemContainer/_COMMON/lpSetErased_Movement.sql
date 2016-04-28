@@ -22,15 +22,24 @@ BEGIN
   END IF;
 
   -- 1.0.
-  vbStatusId_old:= (SELECT StatusId from Movement where id = inMovementId);
+  vbStatusId_old:= (SELECT StatusId FROM Movement WHERE Id = inMovementId);
 
-  -- 1.2. Проверки на "распроведение" / "удаление"
+  -- 1.1. Проверки на "распроведение" / "удаление"
   IF vbStatusId_old = zc_Enum_Status_Complete() THEN PERFORM lpCheck_Movement_Status (inMovementId, inUserId); END IF;
 
-  -- 1.1. Обязательно меняем статус документа
+  -- 1.2. Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId
   RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
 
+  -- 1.3. !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
+  IF vbStatusId_old = zc_Enum_Status_Complete()
+  THEN PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
+                                 , inMovementId    := inMovementId
+                                 , inMovementDescId:= vbDescId
+                                 , inAccessKeyId   := vbAccessKeyId
+                                 , inUserId        := inUserId
+                                  );
+  END IF;
 
 
   -- для Админа  - Все Права

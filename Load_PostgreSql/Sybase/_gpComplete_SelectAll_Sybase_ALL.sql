@@ -70,6 +70,10 @@ BEGIN
                     UNION SELECT 8425 AS UnitId, NULL AS isMain  -- Склад ГП ф.Харьков
                     UNION SELECT 409007 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Харьков*/
                    )
+     -- , tmp1 AS (SELECT DISTINCT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.04.2016' BETWEEN StartDate AND EndDate) AND ABS (Price) = 1.1234 AND CalcSumm > 1000000)
+     -- , tmp_err AS (SELECT DISTINCT MovementItemContainer.MovementId FROM tmp1 INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = tmp1.ContainerId AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate)
+
+     -- Результат
      SELECT tmp.MovementId
           , tmp.OperDate
           , tmp.InvNumber

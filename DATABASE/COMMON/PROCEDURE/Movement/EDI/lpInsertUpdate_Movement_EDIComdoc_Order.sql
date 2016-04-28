@@ -438,9 +438,12 @@ BEGIN
      -- сформировали связь <Заявки сторонние> с EDI
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), vbMovementId_Order, inMovementId);
 
-     -- ФИНИШ - Проводим <Заявки сторонние>
-     PERFORM gpComplete_Movement_OrderExternal (inMovementId     := vbMovementId_Order
-                                              , inSession        := inSession);
+     IF vbIsFind_InvNumberPartner = FALSE
+     THEN
+         -- ФИНИШ - Проводим <Заявки сторонние>
+         PERFORM gpComplete_Movement_OrderExternal (inMovementId     := vbMovementId_Order
+                                                  , inSession        := inSession);
+     END IF;
 
      -- сохранили <ОКПО>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO(), inMovementId, vbOKPO);

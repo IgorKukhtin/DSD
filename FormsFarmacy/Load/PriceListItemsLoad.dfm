@@ -28,7 +28,6 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -184,12 +183,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       FormName = 'TGoodsMainForm'
       FormNameParam.Value = 'TGoodsMainForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -197,6 +198,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
@@ -204,6 +206,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
           Component = MasterCDS
           ComponentItem = 'Code'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -224,23 +227,29 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       MoveParams = <
         item
           FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'GoodsId'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'Code'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'Name'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -272,6 +281,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 104
   end
@@ -320,6 +330,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 104
@@ -335,18 +346,21 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -354,6 +368,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
@@ -364,6 +379,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     LookupControl = edFrom
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -373,6 +389,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -381,6 +398,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 32
@@ -396,6 +414,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -403,6 +422,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 224

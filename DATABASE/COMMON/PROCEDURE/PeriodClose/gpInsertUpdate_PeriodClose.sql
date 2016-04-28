@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
  INOUT ioId	        Integer   ,     -- ключ объекта
-    IN inCode           Integer   ,     -- Роль
+    IN inCode           Integer   ,     -- 
     IN inName           TVarChar  ,     -- Описание
     IN inRoleId         Integer   ,     -- Роль
     IN inRoleCode       Integer   ,     -- Роль
@@ -32,6 +32,16 @@ BEGIN
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
    vbUserId:= lpGetUserBySession (inSession);
 
+
+   -- Проверка
+   IF COALESCE (inCode, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Код> не определено.';
+   END IF;
+   IF COALESCE (inName, '') = ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Описание> не определено.';
+   END IF;
 
    -- Проверка
    IF inDescId > 0 AND NOT EXISTS (SELECT 1 FROM lpSelect_PeriodClose_Desc (inUserId:= vbUserId) AS tmp WHERE tmp.DescId = inDescId)

@@ -47,6 +47,12 @@ BEGIN
     -- Установки для юр. лиц (для поставщика определяется договор и т.п)
   , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId)
                          )
+    -- Маркетинговый контракт
+  , GoodsPromo AS (SELECT tmp.JuridicalId
+                        , tmp.GoodsId        -- здесь товар "сети"
+                        , tmp.ChangePercent
+                   FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+                  )
     -- Остатки
   , Remains AS
        (SELECT
@@ -137,9 +143,13 @@ BEGIN
           , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
                  WHEN Goods.isTOP = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
+                         -- И учитывается % бонуса из Маркетинговый контракт
+                       * (1 - GoodsPromo.ChangePercent / 100)
                  -- иначе учитывается бонус
-                 ELSE (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100) :: TFloat 
-            END AS FinalPrice
+                 ELSE (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100)
+                       -- И учитывается % бонуса из Маркетинговый контракт
+                    * (1 - GoodsPromo.ChangePercent / 100)
+            END :: TFloat AS FinalPrice
 
           , MILinkObject_Goods.ObjectId        AS Partner_GoodsId
           , Object_JuridicalGoods.GoodsCode    AS Partner_GoodsCode
@@ -184,7 +194,10 @@ BEGIN
                                   ON ObjectFloat_Deferment.ObjectId = LastPriceList_View.ContractId
                                  AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
        
-             
+            -- % бонуса из Маркетинговый контракт
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = GoodsList.ObjectId
+                                AND GoodsPromo.JuridicalId = LastPriceList_View.JuridicalId
+
         WHERE  COALESCE (JuridicalSettings.isPriceClose, FALSE) <> TRUE 
 
        ) AS ddd

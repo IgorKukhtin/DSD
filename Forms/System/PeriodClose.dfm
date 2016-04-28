@@ -1,7 +1,6 @@
 inherited PeriodCloseForm: TPeriodCloseForm
   Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1083#1103' '#1040#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088#1072')'
   ClientWidth = 798
-  ExplicitLeft = -8
   ExplicitWidth = 814
   PixelsPerInch = 96
   TextHeight = 13
@@ -57,7 +56,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
             Width = 85
           end
           object isUserName: TcxGridDBColumn
-            Caption = #1044#1083#1103' '#1042#1057#1045#1061' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+            Caption = #1044#1083#1103' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
             DataBinding.FieldName = 'isUserName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -237,18 +236,21 @@ inherited PeriodCloseForm: TPeriodCloseForm
       FormName = 'TRoleForm'
       FormNameParam.Value = 'TRoleForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RoleId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RoleCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -256,6 +258,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
           Component = MasterCDS
           ComponentItem = 'RoleName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -267,18 +270,21 @@ inherited PeriodCloseForm: TPeriodCloseForm
       FormName = 'TUserForm'
       FormNameParam.Value = 'TUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UserId_excl'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UserCode_excl'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -286,6 +292,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
           Component = MasterCDS
           ComponentItem = 'UserName_excl'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -297,18 +304,21 @@ inherited PeriodCloseForm: TPeriodCloseForm
       FormName = 'TBranchForm'
       FormNameParam.Value = 'TBranchForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BranchCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -316,6 +326,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
           Component = MasterCDS
           ComponentItem = 'BranchName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -327,18 +338,21 @@ inherited PeriodCloseForm: TPeriodCloseForm
       FormName = 'TPaidKindForm'
       FormNameParam.Value = 'TPaidKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -346,6 +360,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -395,6 +410,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -402,6 +418,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -410,6 +427,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRoleId'
@@ -417,6 +435,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRoleCode'
@@ -424,6 +443,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'RoleCode'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserId_excl'
@@ -431,6 +451,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'UserId_excl'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserCode_excl'
@@ -438,6 +459,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'UserCode_excl'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescId'
@@ -445,6 +467,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'DescId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescId_excl'
@@ -452,6 +475,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'DescId_excl'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -459,6 +483,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'BranchId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchCode'
@@ -466,6 +491,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'BranchCode'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -473,6 +499,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'PaidKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindCode'
@@ -480,6 +507,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'PaidKindCode'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPeriod'
@@ -487,6 +515,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Component = MasterCDS
         ComponentItem = 'Period'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCloseDate'
@@ -495,6 +524,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         ComponentItem = 'CloseDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCloseDate_excl'
@@ -503,6 +533,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         ComponentItem = 'CloseDate_excl'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152

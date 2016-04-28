@@ -43,6 +43,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
+-- !!!ВРЕМЕННО!!!
+-- inItearationCount:=50;
+-- !!!ВРЕМЕННО!!!
 
      -- !!!если не филиал, тогда начальная дата всегда 1-ое число месяца!!!
      vbStartDate_zavod:= DATE_TRUNC ('MONTH', inStartDate);
@@ -800,8 +803,8 @@ BEGIN
 
 
         -- !!!ВРЕМЕННО!!!
-        UPDATE HistoryCost SET Price          = 100.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
-                             , Price_external = 100.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
+        UPDATE HistoryCost SET Price          = 1.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
+                             , Price_external = 1.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
         FROM Container
              INNER JOIN ContainerLinkObject AS ContainerLO_Goods
                                             ON ContainerLO_Goods.ContainerId = Container.Id
@@ -1043,9 +1046,16 @@ LANGUAGE PLPGSQL VOLATILE;
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 0, inItearationCount:= 30, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 /*
+select distinct Object.ObjectCode, Object.ValueData, Object2.ObjectCode, Object2.ValueData, Object3.ObjectCode, Object3.ValueData
+from Container 
+     left join ContainerLinkObject on ContainerLinkObject.ContainerId = Container.Id and ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit() left join Object on Object.Id = ContainerLinkObject.ObjectId
+     left join ContainerLinkObject as clo2 on clo2.ContainerId = Container.Id and clo2.DescId = zc_ContainerLinkObject_Goods()                      left join Object as Object2 on Object2.Id = clo2.ObjectId
+     left join ContainerLinkObject as clo3 on clo3.ContainerId = Container.Id and clo3.DescId = zc_ContainerLinkObject_GoodsKind()                  left join Object as Object3 on Object3.Id = clo3.ObjectId
+where  Container.Id in (SELECT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.04.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 and CalcSumm > 1000000)
+order by 3, 5
 SELECT * 
 FROM HistoryCost WHERE ('01.04.2016' BETWEEN StartDate AND EndDate)
-and abs (Price) = 100.1234
+and abs (Price) = 1.1234
 and CalcSumm > 1000000
 order by Price desc
 */
