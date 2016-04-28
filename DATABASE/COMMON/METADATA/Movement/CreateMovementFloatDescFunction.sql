@@ -266,6 +266,10 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_Distance() RETURNS Integer AS $BODY$
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_Distance', 'Пробег факт, км' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Distance');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_MovementId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_MovementId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_MovementId', '№ документа Затраты' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_MovementId');
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

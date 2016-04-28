@@ -23,7 +23,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
+  cxImageComboBox;
 
 type
   TIncomeForm = class(TParentForm)
@@ -160,6 +161,22 @@ type
     TransportChoiceGuides: TdsdGuides;
     HeaderSaver2: THeaderSaver;
     spInsertUpdateMovement_Params: TdsdStoredProc;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    clInvNumberCost: TcxGridDBColumn;
+    clOperDateCost: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ClientDataCost: TClientDataSet;
+    DataSourceCost: TDataSource;
+    spSelect_Movement_Cost: TdsdStoredProc;
+    InsertRecord1: TInsertRecord;
+    CostJournalChoiceForm: TOpenChoiceForm;
+    bbInsertRecord: TdxBarButton;
+    InvNumber_full: TcxGridDBColumn;
+    spInsertUpdate_Movement_Cost: TdsdStoredProc;
+    actUpdateClientDataCost: TdsdUpdateDataSet;
   private
   public
   end;

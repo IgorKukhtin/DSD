@@ -46,6 +46,7 @@ type
     procedure LoadContactPersonFormTest;
     procedure LoadContractTermKindFormTest;
     procedure LoadCorrespondentAccountFormTest;
+    procedure LoadCostFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadDefaultFormTest;
@@ -385,6 +386,13 @@ begin
   // для документа кассы
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyValue_ForCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyValue_ForCashForm');
+end;
+
+procedure TLoadFormTest.LoadCostFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoiceForm');
+
 end;
 
 procedure TLoadFormTest.LoadCurrencyMovementFormTest;
