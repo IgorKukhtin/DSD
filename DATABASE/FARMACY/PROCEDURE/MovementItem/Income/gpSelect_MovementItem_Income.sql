@@ -1,5 +1,6 @@
 -- Function: gpSelect_MovementItem_Income()
 
+
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
@@ -39,8 +40,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , OrderAmount TFloat
              , OrderPrice TFloat
              , OrderSumm TFloat
+             , PersentDiff Tfloat
              , isAmountDiff Boolean
              , isSummDiff Boolean
+
              )
 AS
 $BODY$
@@ -186,6 +189,7 @@ BEGIN
               , NULL::TFloat               AS OrderAmount
               , NULL::TFloat               AS OrderPrice
               , NULL::TFloat               AS OrderSumm
+              , NULL::TFloat               AS PersentDiff
               , FALSE                      AS isAmountDiff
               , FALSE                      AS isSummDiff
             FROM tmpGoods
@@ -237,8 +241,19 @@ BEGIN
               , COALESCE (tmpOrderMI.Amount,0)  ::TFloat   AS OrderAmount
               , COALESCE (tmpOrderMI.Price,0)   ::TFloat   AS OrderPrice
               , COALESCE (tmpOrderMI.Summ,0)    ::TFloat   AS OrderSumm
+
+              , CAST (COALESCE (tmpOrderMI.Price,0) / 
+                                              CASE WHEN vbPriceWithVAT = False THEN MovementItem.Price
+                                                                               ELSE (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)))
+                                              END * 100 - 100  AS NUMERIC (16, 2))  :: Tfloat  AS PersentDiff
+
               , CASE WHEN COALESCE (tmpOrderMI.Amount,0) <> MovementItem.Amount THEN TRUE ELSE FALSE END AS isAmountDiff
-              , CASE WHEN COALESCE (tmpOrderMI.Price,0) <> MovementItem.Price THEN TRUE ELSE FALSE END AS isSummDiff
+              , CASE WHEN vbPriceWithVAT = False 
+                     THEN 
+                         CASE WHEN COALESCE (tmpOrderMI.Price,0) <> MovementItem.Price THEN TRUE ELSE FALSE END
+                     ELSE 
+                         CASE WHEN COALESCE (tmpOrderMI.Price,0) <> CAST (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)) AS NUMERIC (16, 2)) THEN TRUE ELSE FALSE END
+                END  AS isSummDiff
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -356,8 +371,19 @@ BEGIN
               , COALESCE (tmpOrderMI.Amount,0)  ::TFloat   AS OrderAmount
               , COALESCE (tmpOrderMI.Price,0)   ::TFloat   AS OrderPrice
               , COALESCE (tmpOrderMI.Summ,0)    ::TFloat   AS OrderSumm
+              , CAST (COALESCE (tmpOrderMI.Price,0) / 
+                                              CASE WHEN vbPriceWithVAT = False THEN MovementItem.Price
+                                                                               ELSE (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)))
+                                              END * 100 - 100  AS NUMERIC (16, 2)) :: Tfloat AS PersentDiff
+                                                       
               , CASE WHEN COALESCE (tmpOrderMI.Amount,0) <> MovementItem.Amount THEN TRUE ELSE FALSE END AS isAmountDiff
-              , CASE WHEN COALESCE (tmpOrderMI.Price,0) <> MovementItem.Price THEN TRUE ELSE FALSE END AS isSummDiff
+--              , CASE WHEN COALESCE (tmpOrderMI.Price,0) <> MovementItem.Price THEN TRUE ELSE FALSE END AS isSummDiff
+              , CASE WHEN vbPriceWithVAT = False 
+                     THEN 
+                         CASE WHEN COALESCE (tmpOrderMI.Price,0) <> MovementItem.Price THEN TRUE ELSE FALSE END
+                     ELSE 
+                         CASE WHEN COALESCE (tmpOrderMI.Price,0) <> CAST (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)) AS NUMERIC (16, 2)) THEN TRUE ELSE FALSE END
+                END  AS isSummDiff
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -384,6 +410,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.   ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 27.04.16         *
  23.04.16         *
  01.10.15                                                                        *SertificatNumber,SertificatStart,SertificatEnd               
  09.04.15                         *

@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_Movement_Promo()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Tfloat, Tfloat, Integer, Integer, TVarChar, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -8,6 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inOperDate              TDateTime  , -- Дата документа
     IN inStartPromo            TDateTime  , -- Дата начала контракта
     IN inEndPromo              TDateTime  , -- Дата окончания контракта
+    IN inAmount                Tfloat     , -- 
+    IN inChangePercent         Tfloat     , --
     IN inMakerId               Integer    , -- Производитель
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела
     IN inComment               TVarChar   , -- Примечание
@@ -40,6 +44,10 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndPromo(), ioId, inEndPromo);
     
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
