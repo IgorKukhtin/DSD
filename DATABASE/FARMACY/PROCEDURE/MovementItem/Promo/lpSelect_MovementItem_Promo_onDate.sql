@@ -6,17 +6,19 @@ DROP FUNCTION IF EXISTS lpSelect_MovementItem_Promo_onDate (TDateTime);
 CREATE OR REPLACE FUNCTION lpSelect_MovementItem_Promo_onDate(
     IN inOperDate    TDateTime     -- 
 )
-RETURNS TABLE (JuridicalId Integer, GoodsId Integer, ChangePercent TFloat
+RETURNS TABLE (MovementId Integer, JuridicalId Integer, GoodsId Integer, ChangePercent TFloat
               )
 AS
 $BODY$
 BEGIN
            -- Результат
            RETURN QUERY
-                   SELECT tmp.JuridicalId
+                   SELECT tmp.MovementId
+                        , tmp.JuridicalId
                         , tmp.GoodsId        -- здесь товар "сети"
                         , tmp.ChangePercent :: TFloat AS ChangePercent
-                   FROM (SELECT MI_Juridical.ObjectId AS JuridicalId
+                   FROM (SELECT Movement.Id           AS MovementId
+                              , MI_Juridical.ObjectId AS JuridicalId
                               , MI_Goods.ObjectId     AS GoodsId
                               , COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
                               , ROW_NUMBER() OVER (PARTITION BY MI_Juridical.ObjectId, MI_Goods.ObjectId ORDER BY MI_Juridical.ObjectId, MI_Goods.ObjectId, MovementDate_EndPromo.ValueData DESC, Movement.Id DESC) AS Ord
