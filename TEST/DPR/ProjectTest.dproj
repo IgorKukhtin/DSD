@@ -2093,10 +2093,6 @@
 				<Form>IncomeJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Income.pas">
-				<Form>IncomeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\WeighingProductionItemJournal.pas">
 				<Form>WeighingProductionItemJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2591,6 +2587,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CostJournalChoice.pas">
 				<Form>CostJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Income.pas">
+				<Form>IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

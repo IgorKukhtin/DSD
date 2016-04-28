@@ -53,6 +53,11 @@ BEGIN
                                                 AND Movement.StatusId = tmpStatus.StatusId
                              LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                                           ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                                          AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+                                                          AND (MovementLinkObject_UnitForwarding.ObjectId = inUnitId OR inUnitId = 0)
+
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                                           ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                                          AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -60,13 +65,9 @@ BEGIN
                                                       ON MovementString_Comment.MovementId =  Movement.Id
                                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                                                          ON MovementLinkObject_Car.MovementId = Movement.Id
+                                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
 
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
-                                         ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
-                                        AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
-            
                              JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                               AND MovementItem.DescId     = zc_MI_Master()
                                               AND MovementItem.isErased = False
@@ -79,7 +80,7 @@ BEGIN
                                   , Movement.StatusId                             AS StatusId
                                   , MovementItem.ObjectId                         AS PersonalDriverId   -- юр.лицо
                                   , MIString_Comment.ValueData                    AS Comment
-                                  , 0               AS CarId  
+                                  , 0                         AS CarId  
                                   , 0                         AS RouteId
                                   , MILinkObject_Unit.ObjectId                    AS UnitId
                                   , MovementDesc.ItemName                         AS DescName
@@ -93,12 +94,15 @@ BEGIN
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased = False
+
+                                 INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                            AND (MILinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
+
                                  LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id 
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                             )
 
 

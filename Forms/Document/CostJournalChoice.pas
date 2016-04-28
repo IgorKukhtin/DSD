@@ -111,9 +111,9 @@ type
     bbChoice: TdxBarButton;
     edUnit: TcxButtonEdit;
     cxLabel4: TcxLabel;
-    GuidesUnit: TdsdGuides;
     FormParams: TdsdFormParams;
     UnitName: TcxGridDBColumn;
+    UnitGuides: TdsdGuides;
   private
   public
   end;
