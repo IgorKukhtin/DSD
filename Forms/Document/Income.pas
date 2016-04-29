@@ -177,6 +177,7 @@ type
     InvNumber_full: TcxGridDBColumn;
     spInsertUpdate_Movement_Cost: TdsdStoredProc;
     actUpdateClientDataCost: TdsdUpdateDataSet;
+    ItemName: TcxGridDBColumn;
   private
   public
   end;

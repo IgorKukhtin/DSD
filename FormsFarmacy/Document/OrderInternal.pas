@@ -96,6 +96,9 @@ type
     clCheckAmount: TcxGridDBColumn;
     colisOneJuridical: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    clisPromo: TcxGridDBColumn;
+    OperDatePromo: TcxGridDBColumn;
+    InvNumberPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

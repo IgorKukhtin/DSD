@@ -60,6 +60,15 @@ BEGIN
                         GROUP BY MI_Check.ObjectId 
                         HAVING SUM (MI_Check.Amount) <> 0 
                         )
+    -- Маркетинговый контракт
+  , GoodsPromo AS (SELECT tmp.JuridicalId
+                        , tmp.GoodsId        -- здесь товар "сети"
+                        , tmp.MovementId
+                        , tmp.ChangePercent
+                   FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp   --CURRENT_DATE
+                  )
+
+
        -- Результат 1
        SELECT
              tmpMI.Id                   AS Id
@@ -109,6 +118,11 @@ BEGIN
            , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
            , tmpCheck.Amount  ::tfloat                                       AS CheckAmount
            , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
+           
+           , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
+           , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
+           , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
+           
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
@@ -152,6 +166,7 @@ BEGIN
                             , COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate)  AS PartionGoodsDate
                             , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)                AS PartnerGoodsCode 
                             , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)                AS PartnerGoodsName
+                            , COALESCE(PriceList.JuridicalId, MinPrice.JuridicalId)            AS JuridicalId
                             , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName)        AS JuridicalName
                             , COALESCE(PriceList.ContractName, MinPrice.ContractName)          AS ContractName
                             , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
@@ -259,7 +274,9 @@ BEGIN
                         FROM _tmpMI
                         GROUP BY _tmpMI.MovementItemId
                        ) AS SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
-
+             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
+                                 AND GoodsPromo.GoodsId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
+             LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
            ;
      RETURN NEXT Cursor1;
 
@@ -290,6 +307,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.04.16         *
  12.04.16         *
  23.03.16         *
  03.02.16         *

@@ -12,17 +12,17 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
     Width = 1334
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1334
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1334
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1334
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1334
         Height = 478
-        ExplicitWidth = 1020
+        ExplicitWidth = 1334
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -250,7 +250,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   end
   inherited Panel: TPanel
     Width = 1334
-    ExplicitWidth = 1020
+    ExplicitWidth = 1334
     object edJuridical: TcxButtonEdit
       Left = 473
       Top = 5
@@ -658,10 +658,10 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridicalForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
