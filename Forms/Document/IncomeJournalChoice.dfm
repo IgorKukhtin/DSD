@@ -5,7 +5,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -158,6 +158,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsSelection.MultiSelect = True
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
           Styles.Content = nil
@@ -487,6 +488,12 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             VisibleForCustomization = False
             Width = 30
           end
+          object clId: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
+          end
         end
       end
     end
@@ -529,17 +536,20 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
@@ -564,6 +574,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -571,6 +582,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -578,6 +590,22 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KeyList'
+          Value = Null
+          Component = cxGridDBTableView
+          ComponentItem = 'clId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValuelist'
+          Value = Null
+          Component = cxGridDBTableView
+          ComponentItem = 'colInvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -601,6 +629,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -608,6 +637,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -615,15 +645,18 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 171
@@ -758,12 +791,14 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -776,6 +811,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -788,6 +824,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -799,21 +836,25 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
         Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 288

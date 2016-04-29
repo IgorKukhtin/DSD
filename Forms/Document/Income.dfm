@@ -699,13 +699,6 @@ object IncomeForm: TIncomeForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object ItemName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'ItemName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 99
-          end
           object clStatus: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
@@ -732,33 +725,58 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 56
           end
-          object clInvNumberCost: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' "'#1079#1072#1090#1088#1072#1090#1099'"'
-            DataBinding.FieldName = 'InvNumber'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = CostJournalChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Visible = False
+          object clComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 123
+            Width = 210
           end
-          object clOperDateCost: TcxGridDBColumn
+          object ItemName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 99
+          end
+          object CostStatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082'. '#1079#1072#1090#1088#1072#1090#1099
+            DataBinding.FieldName = 'CostStatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
+          end
+          object CostOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
+            DataBinding.FieldName = 'CostOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 79
           end
-          object InvNumber_full: TcxGridDBColumn
+          object CostInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' "'#1079#1072#1090#1088#1072#1090#1099'"'
-            DataBinding.FieldName = 'InvNumber_full'
+            DataBinding.FieldName = 'CostInvNumber'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -766,30 +784,41 @@ object IncomeForm: TIncomeForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 118
+            Width = 123
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 112
+            Options.Editing = False
+            Width = 80
           end
           object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 168
           end
-          object clComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
+          object CostComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1082'. '#1079#1072#1090#1088#1072#1090#1099
+            DataBinding.FieldName = 'CostComment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 274
+            Options.Editing = False
+            Width = 120
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1979,8 +2008,8 @@ object IncomeForm: TIncomeForm
         Control = ceComment
       end>
     GetStoredProc = spGet
-    Left = 264
-    Top = 201
+    Left = 248
+    Top = 241
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -2779,7 +2808,7 @@ object IncomeForm: TIncomeForm
       end>
     GetStoredProc = spGet
     Left = 328
-    Top = 201
+    Top = 225
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_Transport'
@@ -2856,24 +2885,6 @@ object IncomeForm: TIncomeForm
         Component = ClientDataCost
         ComponentItem = 'Id'
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumber'
-        Value = Null
-        Component = ClientDataCost
-        ComponentItem = 'InvNumber'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = ClientDataCost
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

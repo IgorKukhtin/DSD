@@ -7,8 +7,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost(
     IN inIsErased    Boolean   ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, movementid integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar, ItemName tvarchar, comment tvarchar
+RETURNS TABLE (Id Integer, CostMovementId integer, CostInvNumber Integer, CostOperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar, CostStatusCode Integer, CostStatusName TVarChar
+             , ItemName tvarchar, comment tvarchar, CostComment tvarchar
+             , JuridicalCode Integer, JuridicalName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
@@ -28,20 +30,28 @@ BEGIN
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
 
-          SELECT Movement.Id AS Id
-               , MovementFloat_MovementId.ValueData    ::Integer        AS MovementId
-               , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
-               , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
-               , Movement.OperDate
+         SELECT Movement.Id AS Id
+               ,  Movement_Cost.Id                             AS CostMovementId
+               , zfConvert_StringToNumber (Movement_Cost.InvNumber) AS CostInvNumber
+               , Movement_Cost.OperDate                         AS CostOperDate
                , Object_Status.ObjectCode                      AS StatusCode
                , Object_Status.ValueData                       AS StatusName
+               , Object_StatusCost.ObjectCode                  AS CostStatusCode
+               , Object_StatusCost.ValueData                   AS CostStatusName
+               
                , MovementDesc.ItemName
                , MovementString_Comment.ValueData              AS Comment
+               , MovementString_CommentCost.ValueData          AS CostComment
+               
+               , Object_Juridical.ObjectCode      AS JuridicalCode
+               , Object_Juridical.ValueData       AS JuridicalName
+           
                , Object_InfoMoney_View.InfoMoneyCode
                , Object_InfoMoney_View.InfoMoneyName
                , Object_InfoMoney_View.InfoMoneyName_all
-          FROM Movement
-                          
+          FROM Movement 
+             INNER JOIN  tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId                                         
              LEFT JOIN MovementString AS MovementString_Comment
                                       ON MovementString_Comment.MovementId = Movement.Id 
                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -52,18 +62,22 @@ BEGIN
 
              LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Cost.DescId
 
-             INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Cost.StatusId 
-             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Cost.StatusId                       
+             LEFT JOIN Object AS Object_StatusCost ON Object_StatusCost.Id = Movement_Cost.StatusId                       
 
              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement_Cost.Id
                                    AND MovementItem.DescId = zc_MI_Master()
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
-          WHERE Movement.ParentId  = inParentId
+             LEFT JOIN MovementString AS MovementString_CommentCost
+                                      ON MovementString_CommentCost.MovementId = Movement_Cost.Id 
+                                     AND MovementString_CommentCost.DescId = zc_MovementString_Comment()
+             
+          WHERE Movement.ParentId = inParentId
             AND Movement.DescId in (zc_Movement_CostService() , zc_Movement_CostTransport())
           
       ;

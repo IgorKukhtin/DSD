@@ -95,10 +95,10 @@ BEGIN
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased = False
 
-                                 INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                                            AND (MILinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
+                                            --AND (MILinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
 
                                  LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id 

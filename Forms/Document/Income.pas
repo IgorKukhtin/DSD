@@ -164,8 +164,8 @@ type
     cxTabSheet1: TcxTabSheet;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    clInvNumberCost: TcxGridDBColumn;
-    clOperDateCost: TcxGridDBColumn;
+    CostInvNumber: TcxGridDBColumn;
+    CostOperDate: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     ClientDataCost: TClientDataSet;
@@ -174,10 +174,12 @@ type
     InsertRecord1: TInsertRecord;
     CostJournalChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
-    InvNumber_full: TcxGridDBColumn;
     spInsertUpdate_Movement_Cost: TdsdStoredProc;
     actUpdateClientDataCost: TdsdUpdateDataSet;
     ItemName: TcxGridDBColumn;
+    CostStatusCode: TcxGridDBColumn;
+    CostComment: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
   private
   public
   end;

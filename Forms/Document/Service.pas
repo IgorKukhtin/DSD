@@ -45,6 +45,9 @@ type
     cePartner: TcxButtonEdit;
     cxLabel12: TcxLabel;
     PartnerGuides: TdsdGuides;
+    cxLabel13: TcxLabel;
+    ceIncomeCost: TcxButtonEdit;
+    IncomeCostGuides: TdsdGuides;
   private
     { Private declarations }
   public
