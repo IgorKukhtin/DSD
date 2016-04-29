@@ -5,15 +5,22 @@ inherited PeriodCloseForm: TPeriodCloseForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 58
     Width = 798
+    Height = 250
+    ExplicitTop = 58
     ExplicitWidth = 798
+    ExplicitHeight = 250
+    ClientRectBottom = 250
     ClientRectRight = 798
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
-      ExplicitHeight = 282
+      ExplicitHeight = 250
       inherited cxGrid: TcxGrid
         Width = 798
+        Height = 250
         ExplicitWidth = 798
+        ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsCustomize.DataRowSizing = False
           OptionsData.Appending = True
@@ -216,8 +223,38 @@ inherited PeriodCloseForm: TPeriodCloseForm
       end
     end
   end
+  object Panel: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 798
+    Height = 32
+    Align = alTop
+    TabOrder = 5
+    object deOperDate: TcxDateEdit
+      Left = 183
+      Top = 5
+      EditValue = 42370d
+      Properties.DateOnError = deToday
+      Properties.DisplayFormat = 'dd.mm.yyyy'
+      Properties.EditFormat = 'dd.mm.yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 0
+      Width = 90
+    end
+    object cxLabel1: TcxLabel
+      Left = 17
+      Top = 6
+      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086' :'
+    end
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deOperDate
+        Properties.Strings = (
+          'Date')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -376,6 +413,35 @@ inherited PeriodCloseForm: TPeriodCloseForm
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
     end
+    object actUpdate_CloseDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CloseDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CloseDate
+        end>
+      Caption = 'actUpdate_CloseDate'
+      Hint = 'actUpdate_CloseDate'
+    end
+    object mactUpdate_CloseDate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CloseDate
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1076#1072#1090#1099'?'
+      InfoAfterExecute = #1059#1088#1072'! '#1055#1077#1088#1080#1086#1076' '#1079#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1076#1072#1090#1099' '
+      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093
+      Hint = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093
+      ImageIndex = 38
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -395,8 +461,43 @@ inherited PeriodCloseForm: TPeriodCloseForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PeriodClose_all'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
     inherited dxBarStatic: TdxBarStatic
       ShowCaption = False
+    end
+    object bbUpdate_PeriodClose_all: TdxBarButton
+      Action = mactUpdate_CloseDate
+      Category = 0
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -538,5 +639,30 @@ inherited PeriodCloseForm: TPeriodCloseForm
     PackSize = 1
     Left = 152
     Top = 112
+  end
+  object spUpdate_CloseDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_PeriodClose_CloseDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCloseDate'
+        Value = 'NULL'
+        Component = deOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 184
   end
 end

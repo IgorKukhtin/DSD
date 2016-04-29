@@ -58,17 +58,18 @@ BEGIN
     -- Установки для юр. лиц (для поставщика определяется договор и т.п) !!!для всех MainJuridicalId!!!
   , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus, tmp.isPriceClose, tmp.isSite
                               FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
+                              WHERE tmp.isSite = TRUE -- мне нужно: я отметил какие участвуют в аукционе цены для показа на сайте, чтобы цены только этих договоров и участвовали
                               -- WHERE tmp.MainJuridicalId = vbMainJuridicalId
                              )
-  , JuridicalSettings_close AS (SELECT DISTINCT tmp.JuridicalId, tmp.ContractId
+  /*, JuridicalSettings_close AS (SELECT DISTINCT tmp.JuridicalId, tmp.ContractId
                                 FROM JuridicalSettings_all AS tmp
                                 WHERE tmp.isPriceClose = TRUE
-                               )
+                               )*/
   , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
                                    , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId ORDER BY tmp.JuridicalId, CASE WHEN tmp.isSite = TRUE THEN 0 ELSE 1 END, tmp.ContractId) AS Ord
                               FROM JuridicalSettings_all AS tmp
                               -- уже здесь ограничения
-                              WHERE tmp.isPriceClose = FALSE
+                              -- WHERE tmp.isPriceClose = FALSE -- ублал, т.к. tmp.isSite = TRUE
                              )
     -- Маркетинговый контракт
   , GoodsPromo AS (SELECT tmp.JuridicalId
@@ -139,14 +140,16 @@ BEGIN
         WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
        ) AS tmp
         -- !!!INNER!!!
-        LEFT JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
-                   FROM JuridicalSettings
-                  ) AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
-        LEFT JOIN JuridicalSettings_close ON JuridicalSettings_close.JuridicalId = tmp.JuridicalId
-                                         AND JuridicalSettings_close.ContractId  = tmp.ContractId 
+        INNER JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
+                    FROM JuridicalSettings
+                   ) AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
+                                         AND JuridicalSettings.ContractId  = tmp.ContractId
+        /*LEFT JOIN JuridicalSettings_close ON JuridicalSettings_close.JuridicalId = tmp.JuridicalId
+                                         AND JuridicalSettings_close.ContractId  = tmp.ContractId */
 
-        WHERE COALESCE (JuridicalSettings.ContractId, tmp.ContractId) = tmp.ContractId -- т.е. если есть юр лицо в JuridicalSettings, тогда Movement с !!!таким же!!! ContractId, иначе - !!!ВСЕ!! Movement
+        /*WHERE COALESCE (JuridicalSettings.ContractId, tmp.ContractId) = tmp.ContractId -- т.е. если есть юр лицо в JuridicalSettings, тогда Movement с !!!таким же!!! ContractId, иначе - !!!ВСЕ!! Movement
           AND JuridicalSettings_close.JuridicalId IS NULL -- !!!т.е. НЕ закрыт!!!
+        */
        )
     -- Последние цены (поставщика) по "нужным" товарам из GoodsList
   , MI_PriceList AS

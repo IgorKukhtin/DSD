@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TVarChar, TVarChar, TB
 DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, TBlob, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, Integer, TBlob, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_FromSite (Integer, Integer, TBlob, TVarChar, TVarChar, TBlob, TVarChar, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_FromSite(
     IN inGoodsCode           Integer   ,    -- ключ объекта <“овар>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Goods_FromSite(
     IN inAppointmentCode     Integer   ,    -- назначение препарата
     IN inAppointmentName     TVarChar  ,    -- назначение препарата
     IN inPublished           Boolean   ,    -- ќпубликован
+    IN inIsOnly              Boolean   ,    -- сохранить “олько 2 и 3 параметр
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS VOID
@@ -57,18 +59,23 @@ BEGIN
     THEN
         -- сохранили свойство < люч товара на сайте>
         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Site(), vbId, inId);
-        -- сохранили свойство <‘ото>
-        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Foto(), vbId, inPhoto);
-        -- сохранили свойство <ѕревью>
-        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Thumb(), vbId, inThumb);
         -- сохранили свойство <название на сайте>
         PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Site(), vbId, inName);
-        -- сохранили свойство <описание на сайте>
-        PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Description(), vbId, inDescription);
-        -- сохранили свойство <производитель>
-        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), vbId, inManufacturer);
-        -- сохранили свойство <ќпубликован>
-        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Published(), vbId, inPublished);
+
+            -- сохранили свойство <‘ото>
+            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Foto(), vbId, inPhoto);
+            -- сохранили свойство <ѕревью>
+            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Thumb(), vbId, inThumb);
+            -- сохранили свойство <ќпубликован>
+            PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Published(), vbId, inPublished);
+
+        IF COALESCE (inIsOnly, FALSE) = FALSE -- сохранить “олько 2 и 3 параметр
+        THEN
+            -- сохранили свойство <описание на сайте>
+            PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Description(), vbId, inDescription);
+            -- сохранили свойство <производитель>
+            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), vbId, inManufacturer);
+        END IF;
         
     END IF;
 
