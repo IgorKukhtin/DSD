@@ -164,8 +164,6 @@ type
     cxTabSheet1: TcxTabSheet;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    CostInvNumber: TcxGridDBColumn;
-    CostOperDate: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     ClientDataCost: TClientDataSet;
@@ -177,8 +175,8 @@ type
     spInsertUpdate_Movement_Cost: TdsdStoredProc;
     actUpdateClientDataCost: TdsdUpdateDataSet;
     ItemName: TcxGridDBColumn;
-    CostStatusCode: TcxGridDBColumn;
-    CostComment: TcxGridDBColumn;
+    MasterStatusCode: TcxGridDBColumn;
+    MasterComment: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     spMovementUnCompleteCost: TdsdStoredProc;
     spMovementCompleteCost: TdsdStoredProc;
@@ -189,6 +187,8 @@ type
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
+    actShowErasedCost: TBooleanStoredProcAction;
+    bbShowErasedCost: TdxBarButton;
   private
   public
   end;

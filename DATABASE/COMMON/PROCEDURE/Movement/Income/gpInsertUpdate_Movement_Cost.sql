@@ -15,7 +15,6 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbDescId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры

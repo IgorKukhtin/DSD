@@ -811,8 +811,8 @@ uses
   JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   CurrencyValue_ForCash in '..\..\Forms\Guides\CurrencyValue_ForCash.pas' {CurrencyValue_ForCashForm: TParentForm},
   Juridical_Container in '..\..\Forms\Guides\Juridical_Container.pas' {Juridical_ContainerForm: TParentForm},
-  Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm},
-  CostJournalChoice in '..\..\Forms\Document\CostJournalChoice.pas' {CostJournalChoiceForm: TParentForm};
+  CostJournalChoice in '..\..\Forms\Document\CostJournalChoice.pas' {CostJournalChoiceForm: TParentForm},
+  Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
