@@ -180,6 +180,15 @@ type
     CostStatusCode: TcxGridDBColumn;
     CostComment: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
+    spMovementUnCompleteCost: TdsdStoredProc;
+    spMovementCompleteCost: TdsdStoredProc;
+    spMovementSetErasedCost: TdsdStoredProc;
+    actCompleteCost: TdsdChangeMovementStatus;
+    actSetErasedCost: TdsdChangeMovementStatus;
+    actUnCompleteCost: TdsdChangeMovementStatus;
+    bbCompleteCost: TdxBarButton;
+    bbactUnCompleteCost: TdxBarButton;
+    bbactSetErasedCost: TdxBarButton;
   private
   public
   end;

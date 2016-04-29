@@ -988,6 +988,22 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbInsertRecord'
         end
         item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCompleteCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactUnCompleteCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactSetErasedCost'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -1096,6 +1112,19 @@ object IncomeForm: TIncomeForm
     end
     object bbInsertRecord: TdxBarButton
       Action = InsertRecord1
+      Category = 0
+    end
+    object bbCompleteCost: TdxBarButton
+      Action = actCompleteCost
+      Category = 0
+      Visible = ivNever
+    end
+    object bbactUnCompleteCost: TdxBarButton
+      Action = actUnCompleteCost
+      Category = 0
+    end
+    object bbactSetErasedCost: TdxBarButton
+      Action = actSetErasedCost
       Category = 0
     end
   end
@@ -1592,6 +1621,51 @@ object IncomeForm: TIncomeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       ShortCut = 45
       ImageIndex = 0
+    end
+    object actCompleteCost: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      StoredProc = spMovementCompleteCost
+      StoredProcList = <
+        item
+          StoredProc = spMovementCompleteCost
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      ImageIndex = 12
+      Status = mtComplete
+      DataSource = DataSourceCost
+    end
+    object actSetErasedCost: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      StoredProc = spMovementSetErasedCost
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErasedCost
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      ImageIndex = 13
+      Status = mtDelete
+      DataSource = DataSourceCost
+    end
+    object actUnCompleteCost: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      StoredProc = spMovementUnCompleteCost
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnCompleteCost
+        end>
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      ImageIndex = 11
+      Status = mtUncomplete
+      DataSource = DataSourceCost
     end
   end
   object MasterDS: TDataSource
@@ -2440,8 +2514,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 76
-    Top = 48
+    Left = 124
+    Top = 56
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2915,5 +2989,56 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 790
     Top = 271
+  end
+  object spMovementUnCompleteCost: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataCost
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 345
+  end
+  object spMovementCompleteCost: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataCost
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 361
+  end
+  object spMovementSetErasedCost: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataCost
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 305
   end
 end
