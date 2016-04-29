@@ -150,6 +150,9 @@ BEGIN
      END IF; -- Проверка для "Индивидуальный"
      
 
+     -- только НЕ Филиал
+     IF vbBranchId = zc_Branch_Basis()
+     THEN
      -- 2.1. Поиск для "Общий"
      SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
@@ -211,6 +214,8 @@ BEGIN
          -- RETURN;
 
      END IF; -- Проверка для "Общий"
+
+     END IF -- vbBranchId = zc_Branch_Basis() - только НЕ Филиал
 
 
      -- !!!Выход, т.к. НЕ Филиал!!!

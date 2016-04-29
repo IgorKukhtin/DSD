@@ -144,11 +144,11 @@ BEGIN
                  WHEN Goods.isTOP = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
                          -- И учитывается % бонуса из Маркетинговый контракт
-                       * (1 - GoodsPromo.ChangePercent / 100)
+                       * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
                  -- иначе учитывается бонус
                  ELSE (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100)
                        -- И учитывается % бонуса из Маркетинговый контракт
-                    * (1 - GoodsPromo.ChangePercent / 100)
+                    * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END :: TFloat AS FinalPrice
 
           , MILinkObject_Goods.ObjectId        AS Partner_GoodsId

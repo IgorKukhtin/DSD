@@ -11,7 +11,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, cxCalendar, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore,
+  cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, Vcl.ExtCtrls;
 
 type
   TPeriodCloseForm = class(TAncestorDBGridForm)
@@ -42,6 +43,13 @@ type
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     actPaidKindForm: TOpenChoiceForm;
+    Panel: TPanel;
+    deOperDate: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    actUpdate_CloseDate: TdsdExecStoredProc;
+    spUpdate_CloseDate: TdsdStoredProc;
+    bbUpdate_PeriodClose_all: TdxBarButton;
+    mactUpdate_CloseDate: TMultiAction;
   private
     { Private declarations }
   public
