@@ -33,6 +33,9 @@ type
     cxLabel6: TcxLabel;
     edPartner: TcxButtonEdit;
     UnitGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
   private
     { Private declarations }
   public

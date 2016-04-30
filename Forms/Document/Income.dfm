@@ -293,7 +293,7 @@ object IncomeForm: TIncomeForm
     Height = 326
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 326
     ClientRectRight = 956
@@ -674,6 +674,9 @@ object IncomeForm: TIncomeForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072#1090#1088#1072#1090
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1181,6 +1184,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelect_Movement_Cost
       StoredProcList = <
         item
@@ -1201,7 +1205,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1222,7 +1225,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1348,7 +1350,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1359,7 +1360,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1379,7 +1379,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1656,6 +1655,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompleteCost
       StoredProcList = <
         item
@@ -1671,6 +1671,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedCost
       StoredProcList = <
         item
@@ -1686,6 +1687,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompleteCost
       StoredProcList = <
         item

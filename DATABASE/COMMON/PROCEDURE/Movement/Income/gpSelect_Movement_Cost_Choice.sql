@@ -1,22 +1,26 @@
 -- Function: gpSelect_Movement_TransportChoice()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost_Choice(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inIsErased    Boolean   ,
     IN inUnitId      Integer   ,
+    IN inInfoMoneyId Integer   ,
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , CarId Integer, CarName TVarChar, CarModelName TVarChar, RouteName TVarChar
              , PersonalDriverName TVarChar
-             , UnitForwardingName TVarChar, UnitName TVarChar
+             --, UnitForwardingName TVarChar
+             , UnitName TVarChar
              , BranchName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
              , Comment TVarChar , DescName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -47,6 +51,7 @@ BEGIN
                               , MovementItem.ObjectId                         AS RouteId
                               , MovementLinkObject_UnitForwarding.ObjectId    AS UnitId
                               , MovementDesc.ItemName                         AS DescName
+                              , 0                                             AS InfoMoneyId
                          FROM tmpStatus
                              INNER JOIN Movement ON Movement.DescId = zc_Movement_Transport()
                                                 AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -84,6 +89,7 @@ BEGIN
                                   , 0                         AS RouteId
                                   , MILinkObject_Unit.ObjectId                    AS UnitId
                                   , MovementDesc.ItemName                         AS DescName
+                                  , MILinkObject_InfoMoney.ObjectId               AS InfoMoneyId
                                  
                              FROM tmpStatus
                                  INNER JOIN Movement ON Movement.DescId = zc_Movement_Service()
@@ -94,6 +100,11 @@ BEGIN
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased = False
+
+                                 INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                  ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                                 AND (MILinkObject_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
 
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -108,12 +119,12 @@ BEGIN
 
      , tmpList AS  (        SELECT tr1.MovementId, tr1.InvNumber, tr1.OperDate, tr1.PersonalDriverId, tr1.CarId, tr1.RouteId, tr1.Comment 
                                  , zfFormat_BarCode (zc_BarCodePref_Movement(), tr1.MovementId) AS IdBarCode
-                                 , tr1.StatusId, tr1.InvNumber_Full, tr1.UnitId, tr1.DescName
+                                 , tr1.StatusId, tr1.InvNumber_Full, tr1.UnitId, tr1.DescName, tr1.InfoMoneyId
                             FROM tmpTransport AS tr1
                            UNION ALL
                             SELECT tr2.MovementId, tr2.InvNumber, tr2.OperDate, tr2.PersonalDriverId, tr2.CarId, tr2.RouteId, tr2.Comment 
                                 , zfFormat_BarCode (zc_BarCodePref_Movement(), tr2.MovementId) AS IdBarCode
-                                , tr2.StatusId, tr2.InvNumber_Full, tr2.UnitId, tr2.DescName
+                                , tr2.StatusId, tr2.InvNumber_Full, tr2.UnitId, tr2.DescName, tr2.InfoMoneyId
                             FROM tmpService AS tr2
                             )
 
@@ -128,13 +139,17 @@ BEGIN
              , Object_CarModel.ValueData        AS CarModelName
              , Object_Route.ValueData           AS RouteName
              , Object_PersonalDriver.ValueData  AS PersonalDriverName
-             , Object_UnitForwarding.ValueData  AS UnitForwardingName
+            -- , Object_UnitForwarding.ValueData  AS UnitForwardingName
              , Object_Unit.ValueData            AS UnitName
              , View_Unit.BranchName
              , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
              , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
              , tmpList.Comment
              , tmpList.DescName
+               
+             , Object_InfoMoney_View.InfoMoneyCode
+             , Object_InfoMoney_View.InfoMoneyName
+             , Object_InfoMoney_View.InfoMoneyName_all
 
         FROM tmpList
             LEFT JOIN MovementDate AS MovementDate_StartRunPlan
@@ -144,11 +159,11 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_StartRun
                                    ON MovementDate_StartRun.MovementId = tmpList.MovementId
                                   AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = tmpList.MovementId
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
             LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
-           
+           */
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpList.CarId
             
             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
@@ -165,6 +180,7 @@ BEGIN
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpList.StatusId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpList.UnitId
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpList.InfoMoneyId
 
       ;
   
@@ -181,4 +197,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Movement_Cost_Choice (inStartDate:= '01.09.2015', inEndDate:= '01.09.2015', inIsErased:= FALSE, inUnitId:=0,  inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_Cost_Choice (inStartDate:= '01.09.2015', inEndDate:= '01.09.2015', inIsErased:= FALSE, inUnitId:=0,  inSession:= zfCalc_UserAdmin())
