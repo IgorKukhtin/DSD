@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , MeasureId Integer, MeasureName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , NDS TFloat, MinimumLot TFloat, isClose Boolean
-             , isTOP Boolean, isFirst Boolean, isSecond Boolean
+             , isTOP Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean
              , PercentMarkup TFloat, Price TFloat
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
@@ -51,6 +51,7 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst 
            , Object_Goods_View.isSecond
+           , Object_Goods_View.isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
            , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
@@ -83,6 +84,7 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst
            , Object_Goods_View.isSecond
+           , Object_Goods_View.isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
            , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
@@ -103,6 +105,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.04.16         *
  12.04.16         *
  25.03.16                                        *
  16.02.15                         * 
