@@ -44,7 +44,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
 -- !!!ВРЕМЕННО!!!
--- inItearationCount:=50;
+ inItearationCount:=50;
 -- !!!ВРЕМЕННО!!!
 
      -- !!!если не филиал, тогда начальная дата всегда 1-ое число месяца!!!
@@ -814,7 +814,8 @@ BEGIN
                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                                AND (View_InfoMoney.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
-                                                                 OR View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна 
+                                                                 OR View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                                                            , zc_Enum_InfoMoneyDestination_20900() -- Ирна 
                                                                                                             , zc_Enum_InfoMoneyDestination_21000() -- Чапли
                                                                                                             , zc_Enum_InfoMoneyDestination_21100() -- Дворкин
                                                                                                              )
@@ -1044,13 +1045,14 @@ LANGUAGE PLPGSQL VOLATILE;
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.04.2016', inEndDate:= '30.04.2016', inBranchId:= 0, inItearationCount:= 30, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') order by abs (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.04.2016', inEndDate:= '30.04.2016', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') order by abs (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
 /*
-select distinct Object.ObjectCode, Object.ValueData, Object2.ObjectCode, Object2.ValueData, Object3.ObjectCode, Object3.ValueData
+select distinct Object.ObjectCode, Object.ValueData, Object2.ObjectCode, Object2.ValueData, Object3.ObjectCode, Object3.ValueData, Object4.ValueData
 from Container 
      left join ContainerLinkObject on ContainerLinkObject.ContainerId = Container.Id and ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit() left join Object on Object.Id = ContainerLinkObject.ObjectId
      left join ContainerLinkObject as clo2 on clo2.ContainerId = Container.Id and clo2.DescId = zc_ContainerLinkObject_Goods()                      left join Object as Object2 on Object2.Id = clo2.ObjectId
      left join ContainerLinkObject as clo3 on clo3.ContainerId = Container.Id and clo3.DescId = zc_ContainerLinkObject_GoodsKind()                  left join Object as Object3 on Object3.Id = clo3.ObjectId
+     left join ContainerLinkObject as clo4 on clo4.ContainerId = Container.Id and clo4.DescId = zc_ContainerLinkObject_PartionGoods()               left join Object as Object4 on Object4.Id = clo4.ObjectId
 where  Container.Id in (SELECT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.04.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 and CalcSumm > 1000000)
 order by 3, 5
 SELECT * 

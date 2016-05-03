@@ -59,8 +59,6 @@ BEGIN
     THEN
         -- сохранили свойство <Ключ товара на сайте>
         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Site(), vbId, inId);
-        -- сохранили свойство <название на сайте>
-        PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Site(), vbId, inName);
 
             -- сохранили свойство <Фото>
             PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Foto(), vbId, inPhoto);
@@ -71,6 +69,9 @@ BEGIN
 
         IF COALESCE (inIsOnly, FALSE) = FALSE -- сохранить Только 2 и 3 параметр
         THEN
+        -- сохранили свойство <название на сайте>
+        PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Site(), vbId, inName);
+
             -- сохранили свойство <описание на сайте>
             PERFORM lpInsertUpdate_ObjectBlob (zc_objectBlob_Goods_Description(), vbId, inDescription);
             -- сохранили свойство <производитель>
