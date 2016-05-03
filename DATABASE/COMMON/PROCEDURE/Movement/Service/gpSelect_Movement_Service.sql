@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitName TVarChar
              , PaidKindName TVarChar
+             , CostMovementId TVarChar
              )
 AS
 $BODY$
@@ -73,7 +74,7 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName
            , Object_Unit.ValueData            AS UnitName
            , Object_PaidKind.ValueData        AS PaidKindName
-
+           , MovementString_MovementId.ValueData AS CostMovementId
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_Service()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -81,6 +82,10 @@ BEGIN
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MovementString_MovementId
+                                     ON MovementString_MovementId.MovementId =  Movement.Id
+                                    AND MovementString_MovementId.DescId = zc_MovementString_MovementId()
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId

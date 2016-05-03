@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , CostMovementId TVarChar
              )
 AS
 $BODY$
@@ -61,6 +62,7 @@ BEGIN
            , CAST ('' as TVarChar)            AS UnitName
            , 0                                AS PaidKindId
            , CAST ('' as TVarChar)            AS PaidKindName
+           , CAST ('' as TVarChar)            AS CostMovementId
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
   
@@ -107,6 +109,8 @@ BEGIN
            , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
 
+           , MovementString_MovementId.ValueData AS CostMovementId
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
             
@@ -117,6 +121,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementString AS MovementString_MovementId
+                                     ON MovementString_MovementId.MovementId =  Movement.Id
+                                    AND MovementString_MovementId.DescId = zc_MovementString_MovementId()
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 

@@ -164,8 +164,6 @@ type
     cxTabSheet1: TcxTabSheet;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    clInvNumberCost: TcxGridDBColumn;
-    clOperDateCost: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     ClientDataCost: TClientDataSet;
@@ -174,10 +172,23 @@ type
     InsertRecord1: TInsertRecord;
     CostJournalChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
-    InvNumber_full: TcxGridDBColumn;
     spInsertUpdate_Movement_Cost: TdsdStoredProc;
     actUpdateClientDataCost: TdsdUpdateDataSet;
     ItemName: TcxGridDBColumn;
+    MasterStatusCode: TcxGridDBColumn;
+    MasterComment: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    spMovementUnCompleteCost: TdsdStoredProc;
+    spMovementCompleteCost: TdsdStoredProc;
+    spMovementSetErasedCost: TdsdStoredProc;
+    actCompleteCost: TdsdChangeMovementStatus;
+    actSetErasedCost: TdsdChangeMovementStatus;
+    actUnCompleteCost: TdsdChangeMovementStatus;
+    bbCompleteCost: TdxBarButton;
+    bbactUnCompleteCost: TdxBarButton;
+    bbactSetErasedCost: TdxBarButton;
+    actShowErasedCost: TBooleanStoredProcAction;
+    bbShowErasedCost: TdxBarButton;
   private
   public
   end;

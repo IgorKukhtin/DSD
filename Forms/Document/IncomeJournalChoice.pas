@@ -46,6 +46,7 @@ type
     bbSelect: TdxBarButton;
     colContractCode: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    clId: TcxGridDBColumn;
   private
     { Private declarations }
   public

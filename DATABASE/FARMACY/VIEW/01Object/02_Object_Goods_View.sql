@@ -23,6 +23,7 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS isTOP
            , COALESCE(ObjectBoolean_First.ValueData, False)         AS isFirst
            , COALESCE(ObjectBoolean_Second.ValueData, False)        AS isSecond
+           , ObjectBoolean_Published.ValueData                      AS isPublished
            , ObjectFloat_Goods_PercentMarkup.ValueData        AS PercentMarkup
            , ObjectFloat_Goods_Price.ValueData                AS Price
            , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload 
@@ -72,6 +73,9 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
                                 ON ObjectBoolean_Second.ObjectId = ObjectLink_Goods_Object.ObjectId 
                                AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Published
+                                ON ObjectBoolean_Published.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                               AND ObjectBoolean_Published.DescId = zc_ObjectBoolean_Goods_Published()
 
         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
                                ON ObjectFloat_Goods_PercentMarkup.ObjectId = ObjectLink_Goods_Object.ObjectId 
@@ -99,6 +103,7 @@ ALTER TABLE Object_Goods_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.04.16         *
  12.04.16         * add isSecond
  10.06.15                         *
  16.02.15                         *

@@ -1,29 +1,31 @@
 inherited CostJournalChoiceForm: TCostJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' - '#1079#1072#1090#1088#1072#1090#1099'>'
-  ClientHeight = 535
-  ClientWidth = 1020
+  ClientHeight = 481
+  ClientWidth = 1078
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitWidth = 1094
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
-    Height = 478
+    Top = 83
+    Width = 1078
+    Height = 398
     TabOrder = 3
-    ExplicitWidth = 1020
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1020
+    ExplicitTop = 83
+    ExplicitWidth = 1078
+    ExplicitHeight = 398
+    ClientRectBottom = 398
+    ClientRectRight = 1078
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 478
+      ExplicitWidth = 1078
+      ExplicitHeight = 398
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 478
-        ExplicitWidth = 1020
-        ExplicitHeight = 478
+        Width = 1078
+        Height = 398
+        ExplicitWidth = 1078
+        ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -159,15 +161,37 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
-    ExplicitWidth = 1020
+    Width = 1078
+    Height = 57
+    ExplicitWidth = 1078
+    ExplicitHeight = 57
+    inherited deStart: TcxDateEdit
+      Left = 114
+      ExplicitLeft = 114
+    end
+    inherited deEnd: TcxDateEdit
+      Left = 114
+      Top = 31
+      ExplicitLeft = 114
+      ExplicitTop = 31
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 23
+      ExplicitLeft = 23
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 4
+      Top = 32
+      ExplicitLeft = 4
+      ExplicitTop = 32
+    end
     object cxLabel6: TcxLabel
-      Left = 433
+      Left = 210
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edPartner: TcxButtonEdit
-      Left = 523
+      Left = 300
       Top = 5
       Properties.Buttons = <
         item
@@ -177,6 +201,22 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
       TabOrder = 5
       Width = 283
     end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 238
+    Top = 32
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
+  end
+  object edInfoMoney: TcxButtonEdit [3]
+    Left = 300
+    Top = 31
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 7
+    Width = 283
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -316,6 +356,14 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 171
@@ -435,6 +483,9 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
       end
       item
         Component = UnitGuides
+      end
+      item
+        Component = InfoMoneyGuides
       end>
     Left = 408
     Top = 344
@@ -456,8 +507,8 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 392
+    Left = 144
+    Top = 312
   end
   inherited spMovementUnComplete: TdsdStoredProc
     Params = <
@@ -469,8 +520,8 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 384
+    Left = 72
+    Top = 336
   end
   inherited spMovementSetErased: TdsdStoredProc
     Params = <
@@ -482,8 +533,8 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 384
+    Left = 216
+    Top = 336
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -522,12 +573,12 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 304
-    Top = 288
+    Left = 296
+    Top = 304
   end
   inherited spMovementReComplete: TdsdStoredProc
-    Left = 200
-    Top = 376
+    Left = 256
+    Top = 272
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -555,7 +606,36 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 592
+    Left = 424
     Top = 65528
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 368
+    Top = 16
   end
 end

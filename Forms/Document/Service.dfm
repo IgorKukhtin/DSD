@@ -1,27 +1,31 @@
 ﻿inherited ServiceForm: TServiceForm
   ActiveControl = ceAmountDebet
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
-  ClientHeight = 276
-  ClientWidth = 605
+  ClientHeight = 319
+  ClientWidth = 612
   AddOnFormData.isSingle = False
-  ExplicitWidth = 611
-  ExplicitHeight = 301
+  ExplicitWidth = 618
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 167
-    Top = 235
+    Left = 170
+    Top = 285
+    Width = 74
     Height = 26
-    ExplicitLeft = 167
-    ExplicitTop = 235
+    ExplicitLeft = 170
+    ExplicitTop = 285
+    ExplicitWidth = 74
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 311
-    Top = 235
+    Left = 314
+    Top = 285
+    Width = 74
     Height = 26
-    ExplicitLeft = 311
-    ExplicitTop = 235
+    ExplicitLeft = 314
+    ExplicitTop = 285
+    ExplicitWidth = 74
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -40,7 +44,7 @@
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel4: TcxLabel [5]
-    Left = 9
+    Left = 8
     Top = 140
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
@@ -142,12 +146,12 @@
   end
   object cxLabel10: TcxLabel [17]
     Left = 8
-    Top = 179
+    Top = 224
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [18]
     Left = 8
-    Top = 197
+    Top = 243
     TabOrder = 10
     Width = 591
   end
@@ -213,17 +217,34 @@
     Top = 95
     Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
+  object cxLabel13: TcxLabel [28]
+    Left = 8
+    Top = 183
+    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074', '#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1087#1086#1087#1072#1076#1091#1090' "'#1079#1072#1090#1088#1072#1090#1099'"'
+  end
+  object ceIncomeCost: TcxButtonEdit [29]
+    Left = 8
+    Top = 202
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 29
+    Width = 591
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 11
-    Top = 228
+    Left = 14
+    Top = 278
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 104
-    Top = 228
+    Left = 107
+    Top = 278
   end
   inherited ActionList: TActionList
-    Left = 423
-    Top = 217
+    Left = 426
+    Top = 267
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -237,14 +258,16 @@
         Name = 'Id'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Value'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 228
+    Left = 59
+    Top = 278
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Service'
@@ -255,6 +278,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ininvnumber'
@@ -262,6 +286,7 @@
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inoperdate'
@@ -269,6 +294,7 @@
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDatePartner'
@@ -276,6 +302,7 @@
         Component = ceOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberPartner'
@@ -283,6 +310,7 @@
         Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inamountIn'
@@ -290,6 +318,7 @@
         Component = ceAmountDebet
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inamountOut'
@@ -297,6 +326,16 @@
         Component = ceAmountKredit
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_List'
+        Value = Null
+        Component = IncomeCostGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incomment'
@@ -304,11 +343,13 @@
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inbusinessid'
         Value = ''
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incontractid'
@@ -316,6 +357,7 @@
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ininfomoneyid'
@@ -323,6 +365,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'injuridicalid'
@@ -330,6 +373,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -337,11 +381,13 @@
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'injuridicalbasisid'
         Value = ''
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inpaidkindid'
@@ -349,6 +395,7 @@
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inunitid'
@@ -356,9 +403,10 @@
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 488
-    Top = 224
+    Left = 491
+    Top = 274
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Service'
@@ -369,6 +417,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Value'
@@ -376,91 +425,107 @@
         Component = FormParams
         ComponentItem = 'inMovementId_Value'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = '0'
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner'
         Value = 0d
         Component = ceOperDatePartner
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AmountIn'
         Value = 0.000000000000000000
         Component = ceAmountDebet
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountKredit
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisId'
         Value = ''
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessId'
         Value = ''
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
         Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -468,12 +533,14 @@
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -481,12 +548,14 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -494,18 +563,21 @@
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractInvNumber'
@@ -513,12 +585,14 @@
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = ''
         Component = PartnerGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -526,15 +600,33 @@
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CostMovementId'
+        Value = Null
+        Component = IncomeCostGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CostMovementId'
+        Value = Null
+        Component = IncomeCostGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 544
-    Top = 216
+    Left = 547
+    Top = 266
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -543,6 +635,7 @@
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -550,6 +643,7 @@
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 218
     Top = 48
@@ -559,6 +653,7 @@
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -567,6 +662,7 @@
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -574,6 +670,7 @@
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 145
@@ -583,6 +680,7 @@
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -591,6 +689,7 @@
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -598,6 +697,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 49
@@ -607,6 +707,7 @@
     LookupControl = ceJuridical
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -616,6 +717,7 @@
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -624,6 +726,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -631,6 +734,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -639,6 +743,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -646,6 +751,7 @@
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -654,6 +760,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -661,6 +768,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName_all'
@@ -669,6 +777,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -676,6 +785,7 @@
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -684,15 +794,18 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = 0
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 97
@@ -702,6 +815,7 @@
     IdParam.Value = '0'
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = JuridicalGuides
@@ -717,13 +831,14 @@
       end>
     ActionItemList = <>
     Left = 264
-    Top = 178
+    Top = 258
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -733,6 +848,7 @@
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -741,6 +857,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -748,6 +865,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -756,6 +874,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -763,6 +882,7 @@
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -771,6 +891,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -778,6 +899,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName_all'
@@ -786,6 +908,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -793,6 +916,7 @@
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -801,12 +925,14 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -814,6 +940,7 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 49
@@ -823,6 +950,7 @@
     LookupControl = cePartner
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -832,6 +960,7 @@
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -840,6 +969,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -847,6 +977,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -855,12 +986,14 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -868,8 +1001,37 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 97
+  end
+  object IncomeCostGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceIncomeCost
+    FormNameParam.Value = 'TIncomeJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TIncomeJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'KeyList'
+        Value = ''
+        Component = IncomeCostGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValueList'
+        Value = ''
+        Component = IncomeCostGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 272
+    Top = 185
   end
 end

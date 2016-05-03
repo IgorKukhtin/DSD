@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -10,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inOperDatePartner          TDateTime , -- Дата акта(контрагента)
     IN inInvNumberPartner         TVarChar  , -- Номер акта (контрагента)
     IN inAmountIn                 TFloat    , -- Сумма операции 
-    IN inAmountOut                TFloat    , -- Сумма операции 
+    IN inAmountOut                TFloat    , -- Сумма операции
+    IN inMovementId_List          TVarChar  , -- список Ид док для затрат 
     IN inComment                  TVarChar  , -- Комментарий
     IN inBusinessId               Integer   , -- Бизнес    
     IN inContractId               Integer   , -- Договор
@@ -20,7 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inJuridicalBasisId         Integer   , -- Главное юр. лицо	
     IN inPaidKindId               Integer   , -- Виды форм оплаты
     IN inUnitId                   Integer   , -- Подразделение
-
+   
     IN inSession                  TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -30,6 +33,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbIndex Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
@@ -78,6 +82,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
 
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_MovementId(), ioId, inMovementId_List);
+
+
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
@@ -101,6 +109,49 @@ BEGIN
      -- сохранили связь с <Типы условий договоров>
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
 
+
+     --- сохраняем связи в документах приход от поставщика 
+     -- таблица
+     CREATE TEMP TABLE tmp_List (MovementId Integer) ON COMMIT DROP;
+     -- парсим 
+     vbIndex := 1;
+     WHILE SPLIT_PART (inMovementId_List, ',', vbIndex) <> '' LOOP
+         -- добавляем то что нашли
+         INSERT INTO tmp_List (MovementId) SELECT SPLIT_PART (inMovementId_List, ',', vbIndex) :: Integer;
+         -- теперь следуюющий
+         vbIndex := vbIndex + 1;
+     END LOOP;
+
+     -- сохраняем <Документ Затрат>
+     PERFORM lpInsertUpdate_Movement_Cost ( ioId         := 0
+                                          , inParentId   := tmp_List.MovementId    --- док приход 
+                                          , inMovementId := ioId   ::Tfloat        --- док сервис
+                                          , inComment    := ''::TVarChar
+                                          , inUserId     := vbUserId
+                                          )
+     FROM tmp_List
+       Left Join (select Movement.Id, tmp_List.MovementId AS ParentId
+                  from tmp_List
+                     Inner Join Movement on tmp_List.MovementId = Movement.ParentId
+                     Inner JOIN MovementFloat AS MovementFloat_MovementId
+                                              ON MovementFloat_MovementId.MovementId = Movement.Id 
+                                             AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+                                             AND MovementFloat_MovementId.ValueData = ioId
+                  ) as tmp on tmp.ParentId =  tmp_List.MovementId
+     WHERE tmp.Id isnull;
+
+     -- метим на удаление док.затрат в  приходах не из списка  
+     PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId 
+                                 , inUserId     := vbUserId)
+     FROM (select Movement.ParentId, MovementFloat.MovementId
+           from MovementFloat
+              left Join Movement on Movement.id = MovementFloat.Movementid
+           where MovementFloat.DescId = zc_MovementFloat_MovementId()
+             AND MovementFloat.ValueData = ioId ) AS tmp 
+        LEFT JOIN tmp_List on tmp.ParentId = tmp_List.MovementId 
+     WHERE tmp_List.MovementId Isnull;
+
+
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
 
@@ -121,6 +172,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.04.16         *
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  24.09.14                                        * add inPartnerId
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...

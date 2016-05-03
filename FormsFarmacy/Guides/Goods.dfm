@@ -1,27 +1,27 @@
 inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
-  ClientHeight = 423
-  ClientWidth = 962
+  ClientHeight = 443
+  ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 978
-  ExplicitHeight = 461
+  ExplicitWidth = 899
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 962
-    Height = 397
-    ExplicitWidth = 962
-    ExplicitHeight = 397
-    ClientRectBottom = 397
-    ClientRectRight = 962
+    Width = 883
+    Height = 417
+    ExplicitWidth = 883
+    ExplicitHeight = 417
+    ClientRectBottom = 417
+    ClientRectRight = 883
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 962
-      ExplicitHeight = 397
+      ExplicitWidth = 883
+      ExplicitHeight = 417
       inherited cxGrid: TcxGrid
-        Width = 962
-        Height = 397
-        ExplicitWidth = 962
-        ExplicitHeight = 397
+        Width = 883
+        Height = 417
+        ExplicitWidth = 883
+        ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -115,6 +115,14 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object clisPublished: TcxGridDBColumn
+            Caption = #1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'isPublished'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+          end
           object cbPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
@@ -203,9 +211,11 @@ inherited GoodsForm: TGoodsForm
       MoveParams = <
         item
           FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
         end>
       FormName = 'TGoodsEditForm'
       FormNameParam.Value = 'TGoodsEditForm'
@@ -215,6 +225,7 @@ inherited GoodsForm: TGoodsForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       DataSetRefresh = mactAfterInsert
     end
@@ -230,6 +241,7 @@ inherited GoodsForm: TGoodsForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -237,12 +249,14 @@ inherited GoodsForm: TGoodsForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
     end
     object spRefreshOneRecord: TdsdDataSetRefresh
@@ -321,6 +335,44 @@ inherited GoodsForm: TGoodsForm
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
     end
+    object actPublished: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spPublished
+      StoredProcList = <
+        item
+          StoredProc = spPublished
+        end>
+      Caption = 'actPublished'
+    end
+    object actSimplePublishedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPublished
+        end>
+      View = cxGridDBTableView
+      Caption = #1057#1076#1077#1083#1072#1090#1100' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
+      Hint = #1057#1076#1077#1083#1072#1090#1100' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
+    end
+    object actPublishedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimplePublishedList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058'? '
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
+      Caption = #1057#1076#1077#1083#1072#1090#1100' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
+      Hint = #1057#1076#1077#1083#1072#1090#1100' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
+      ImageIndex = 58
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -384,6 +436,14 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbPublished'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -398,6 +458,10 @@ inherited GoodsForm: TGoodsForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbPublished: TdxBarButton
+      Action = actPublishedList
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -495,12 +559,14 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Code'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
@@ -508,12 +574,14 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupId'
         Value = ''
         Component = MasterCDS
         ComponentItem = 'GoodsGroupId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName'
@@ -521,12 +589,14 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'GoodsGroupName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MeasureId'
         Value = ''
         Component = MasterCDS
         ComponentItem = 'MeasureId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MeasureName'
@@ -534,12 +604,14 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'MeasureName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindId'
         Value = ''
         Component = MasterCDS
         ComponentItem = 'NdsKindId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindName'
@@ -547,6 +619,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'NDSKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MinimumLot'
@@ -554,6 +627,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'MinimumLot'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isClose'
@@ -561,6 +635,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'isClose'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isTop'
@@ -568,6 +643,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'isTop'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PercentMarkup'
@@ -575,6 +651,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'PercentMarkup'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -596,18 +673,21 @@ inherited GoodsForm: TGoodsForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
@@ -615,12 +695,14 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsGroupId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName'
@@ -628,12 +710,14 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'GoodsGroupName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MeasureId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MeasureId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MeasureName'
@@ -641,12 +725,14 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'MeasureName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'NdsKindId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindName'
@@ -654,6 +740,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'NDSKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -670,6 +757,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMinimumLot'
@@ -678,6 +766,7 @@ inherited GoodsForm: TGoodsForm
         ComponentItem = 'MinimumLot'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -694,6 +783,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisFirst'
@@ -702,12 +792,14 @@ inherited GoodsForm: TGoodsForm
         ComponentItem = 'isFirst'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outColor'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Color_calc'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 704
@@ -724,6 +816,7 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisSecond'
@@ -732,15 +825,43 @@ inherited GoodsForm: TGoodsForm
         ComponentItem = 'isSecond'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outColor'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Color_calc'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 712
     Top = 256
+  end
+  object spPublished: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Published'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPublished'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPublished'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 91
   end
 end
