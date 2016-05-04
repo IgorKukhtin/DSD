@@ -36,9 +36,19 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
               Kind = skSum
             end
             item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = RemainsAll
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountDeferred
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -58,9 +68,19 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
               Kind = skSum
             end
             item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = RemainsAll
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountDeferred
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -121,15 +141,35 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
             Width = 100
           end
           object Remains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
+            Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1089' '#1091#1095'. '#1088#1077#1079#1077#1088#1074')'
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 57
+            Width = 55
+          end
+          object AmountDeferred: TcxGridDBColumn
+            Caption = #1056#1077#1079#1077#1088#1074
+            DataBinding.FieldName = 'AmountDeferred'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object RemainsAll: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1073#1077#1079' '#1091#1095'. '#1088#1077#1079#1077#1088#1074')'
+            DataBinding.FieldName = 'RemainsAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object NDSKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1053#1044#1057
@@ -404,6 +444,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
       FormName = 'TReport_GoodsOnUnit_ForSiteDialogForm'
       FormNameParam.Value = 'TReport_GoodsOnUnit_ForSiteDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'UnitId'
@@ -411,6 +452,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
           Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -419,6 +461,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
@@ -426,6 +469,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
           Component = GoodsGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -434,6 +478,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -458,6 +503,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId_list'
@@ -466,6 +512,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 48
     Top = 152
@@ -546,6 +593,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -555,6 +603,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -563,6 +612,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 376
   end
@@ -571,6 +621,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -580,6 +631,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -588,6 +640,7 @@ inherited Report_GoodsOnUnit_ForSiteForm: TReport_GoodsOnUnit_ForSiteForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 616
   end
