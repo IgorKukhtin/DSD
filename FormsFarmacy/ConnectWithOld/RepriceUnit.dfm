@@ -430,6 +430,7 @@ object RepriceUnitForm: TRepriceUnitForm
         Name = 'inUnitId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMinPercent'
@@ -437,6 +438,7 @@ object RepriceUnitForm: TRepriceUnitForm
         Component = cePercentDifference
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inVAT20'
@@ -444,6 +446,7 @@ object RepriceUnitForm: TRepriceUnitForm
         Component = chbVAT20
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -466,12 +469,14 @@ object RepriceUnitForm: TRepriceUnitForm
         Name = 'UnitId'
         Value = ''
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 24
     Top = 464
@@ -768,63 +773,74 @@ object RepriceUnitForm: TRepriceUnitForm
         Name = 'ioID'
         Value = '0'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inExpirationDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMinExpirationDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceOld'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceNew'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridical_Price'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGUID'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 100
     Left = 664
