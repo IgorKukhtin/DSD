@@ -189,6 +189,22 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 45
           end
+          object isSecond_1: TcxGridDBColumn
+            Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090' '#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isSecond'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isPublished_1: TcxGridDBColumn
+            Caption = #1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'isPublished'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object isUpload_1: TcxGridDBColumn
             DataBinding.FieldName = 'isUpload'
             HeaderAlignmentHorz = taCenter
@@ -431,6 +447,22 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
           object isFirst_2: TcxGridDBColumn
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isSecond_2: TcxGridDBColumn
+            Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090' '#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isSecond'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isPublished_2: TcxGridDBColumn
+            Caption = #1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'isPublished'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -695,6 +727,22 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             Options.Editing = False
             Width = 45
           end
+          object isSecond_3: TcxGridDBColumn
+            Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090' '#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isSecond'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object isPublished_3: TcxGridDBColumn
+            Caption = #1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'isPublished'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object MinimumLot_3: TcxGridDBColumn
             Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'MinimumLot'
@@ -834,6 +882,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -841,12 +890,14 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
     end
     object actGoodsLinkRefresh: TdsdDataSetRefresh
@@ -1003,6 +1054,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
         Component = ChildCDS_1
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 776
     Top = 96
@@ -1062,6 +1114,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actGoodsLinkRefresh
     ComponentList = <
       item
@@ -1080,6 +1133,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
         Component = ChildCDS_1
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 856

@@ -36,6 +36,8 @@ type
     NDSKindName: TcxGridDBColumn;
     NDS: TcxGridDBColumn;
     Price_minNoNds: TcxGridDBColumn;
+    RemainsAll: TcxGridDBColumn;
+    AmountDeferred: TcxGridDBColumn;
   private
     { Private declarations }
   public

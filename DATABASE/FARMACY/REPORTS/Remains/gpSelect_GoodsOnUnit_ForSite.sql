@@ -25,7 +25,9 @@ RETURNS TABLE (Id                Integer
              , ObjectName        TVarChar  -- Торговая сеть (информативно)
              , UnitId            Integer   -- Аптека (информативно)
              , UnitName          TVarChar  -- Аптека (информативно)
-             , Remains           TFloat    -- Остаток
+             , Remains           TFloat    -- Остаток (с учетом резерва)
+             , RemainsAll        TFloat    -- Остаток (без учета резерва)
+             , AmountDeferred    TFloat    -- резерв
 
              , JuridicalId       Integer    -- Поставщик (по которому найдена миним цена)
              , JuridicalName     TVarChar   -- Поставщик (по которому найдена миним цена)
@@ -132,7 +134,28 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       WITH MarginCategory_Unit AS
+       WITH tmpMI_Deferred AS
+               (SELECT _tmpUnitMinPrice_List.UnitId
+                     , MovementItem.ObjectId     AS GoodsId
+                     , SUM (MovementItem.Amount) AS Amount
+                FROM _tmpUnitMinPrice_List
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                   ON MovementLinkObject_Unit.ObjectId = _tmpUnitMinPrice_List.UnitId
+                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                     INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                ON MovementBoolean_Deferred.MovementId = MovementLinkObject_Unit.MovementId
+                                               AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                               AND MovementBoolean_Deferred.ValueData = TRUE
+                     INNER JOIN Movement ON Movement.Id       = MovementLinkObject_Unit.MovementId
+                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                        AND Movement.DescId   = zc_Movement_Check()
+                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                            AND MovementItem.isErased   = FALSE
+                     INNER JOIN _tmpGoodsMinPrice_List ON _tmpGoodsMinPrice_List.GoodsId = MovementItem.ObjectId
+                GROUP BY _tmpUnitMinPrice_List.UnitId
+                       , MovementItem.ObjectId
+               )
+          , MarginCategory_Unit AS
                (SELECT tmp.UnitId
                      , tmp.MarginCategoryId
                 FROM (SELECT _tmpUnitMinPrice_List.UnitId
@@ -245,7 +268,9 @@ BEGIN
              , Object_Unit.Id                                          AS UnitId
              , Object_Unit.ValueData                                   AS UnitName
 
-             , ContainerCount.Amount                         :: TFloat AS Remains
+             , (ContainerCount.Amount - COALESCE (tmpMI_Deferred.Amount, 0)) :: TFloat AS Remains
+             , ContainerCount.Amount                                         :: TFloat AS RemainsAll
+             , tmpMI_Deferred.Amount                                         :: TFloat AS AmountDeferred
 
              , MinPrice_List.JuridicalId
              , MinPrice_List.JuridicalName
@@ -270,6 +295,9 @@ BEGIN
 
         FROM _tmpGoodsMinPrice_List
              LEFT JOIN _tmpUnitMinPrice_List ON 1=1
+
+             LEFT JOIN tmpMI_Deferred ON tmpMI_Deferred.GoodsId = _tmpGoodsMinPrice_List.GoodsId
+                                     AND tmpMI_Deferred.UnitId  = _tmpUnitMinPrice_List.UnitId
 
              LEFT JOIN Price_Unit     ON Price_Unit.GoodsId     = _tmpGoodsMinPrice_List.GoodsId
                                      AND Price_Unit.UnitId      = _tmpUnitMinPrice_List.UnitId
