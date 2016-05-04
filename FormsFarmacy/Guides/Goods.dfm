@@ -339,10 +339,10 @@ inherited GoodsForm: TGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spPublished
+      StoredProc = spUpdate_Goods_Published
       StoredProcList = <
         item
-          StoredProc = spPublished
+          StoredProc = spUpdate_Goods_Published
         end>
       Caption = 'actPublished'
     end
@@ -365,7 +365,6 @@ inherited GoodsForm: TGoodsForm
           Action = actSimplePublishedList
         end
         item
-          Action = actRefresh
         end>
       QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058'? '
       InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
@@ -838,7 +837,7 @@ inherited GoodsForm: TGoodsForm
     Left = 712
     Top = 256
   end
-  object spPublished: TdsdStoredProc
+  object spUpdate_Goods_Published: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_Published'
     DataSets = <>
     OutputType = otResult
@@ -852,16 +851,15 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPublished'
+        Name = 'outisPublished'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isPublished'
         DataType = ftBoolean
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 520
-    Top = 91
+    Left = 680
+    Top = 107
   end
 end
