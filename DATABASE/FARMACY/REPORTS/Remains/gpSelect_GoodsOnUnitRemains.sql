@@ -20,6 +20,8 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName
 
              , UnitName TVarChar, OurJuridicalName TVarChar
              , JuridicalCode  Integer, JuridicalName  TVarChar
+             , MP_JuridicalName TVarChar
+             , MinPriceOnDate TFloat, MP_Summa TFloat
              )
 AS
 $BODY$
@@ -140,7 +142,7 @@ BEGIN
              , Object_Goods_View.GoodsName                  as GoodsName
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
              , Object_NDSKind_Income.ValueData              AS NDSKindName
-    
+             
            , tmpData.Amount :: TFloat AS Amount
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
@@ -167,6 +169,9 @@ BEGIN
            , Object_From_Income.ObjectCode           AS JuridicalCode
            , Object_From_Income.ValueData            AS JuridicalName
 
+           , SelectMinPrice_AllGoods_onDate.JuridicalName AS MP_JuridicalName
+           , SelectMinPrice_AllGoods_onDate.Price         AS MinPriceOnDate
+           , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount) :: TFloat    AS MP_Summa
         FROM tmpData
             LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
             LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
@@ -198,6 +203,12 @@ BEGIN
                                                 inObjectId := vbObjectId, 
                                                 inUserId := vbUserId) AS SelectMinPrice_AllGoods
                                                                       ON SelectMinPrice_AllGoods.GoodsId = Object_Goods_View.Id
+            LEFT JOIN lpSelectMinPrice_AllGoods_onDate(inOperDate := inRemainsDate,
+                                                       inUnitId   := inUnitId,
+                                                       inObjectId := vbObjectId, 
+                                                       inUserId   := vbUserId) AS SelectMinPrice_AllGoods_onDate
+                                                                               ON SelectMinPrice_AllGoods_onDate.GoodsId = Object_Goods_View.Id
+                                                                         
            ;
 
 END;
@@ -207,6 +218,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 04.05.16         *
  27.03.16         *
  28.01.16         *
  02.06.15                        *

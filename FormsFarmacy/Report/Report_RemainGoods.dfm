@@ -4,7 +4,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   ClientWidth = 930
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 946
-  ExplicitHeight = 399
+  ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -193,7 +193,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 79
           end
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
@@ -297,6 +297,30 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object MP_JuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1084#1080#1085'.'#1094#1077#1085#1072')'
+            DataBinding.FieldName = 'MP_JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object MinPriceOnDate: TcxGridDBColumn
+            Caption = #1052#1080#1085'.'#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1076#1072#1090#1091
+            DataBinding.FieldName = 'MinPriceOnDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object MP_Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'MP_Summa'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
     end
@@ -309,7 +333,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     inherited deStart: TcxDateEdit
       Left = 131
       Top = 4
-      EditValue = 42370d
       ExplicitLeft = 131
       ExplicitTop = 4
     end
@@ -400,43 +423,51 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       FormName = 'TReport_GoodsPartionMoveForm'
       FormNameParam.Value = 'TReport_GoodsPartionMoveForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'UnitId'
           Value = Null
           Component = GuidesUnit
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
           Value = Null
           Component = GuidesUnit
           ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsName'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartyId'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartyName'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RemainsDate'
           Value = Null
           Component = deStart
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -475,6 +506,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       FormName = 'TReport_GoodsRemainsDialogForm'
       FormNameParam.Value = 'TReport_GoodsRemainsDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -482,6 +514,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -489,6 +522,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -497,6 +531,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inIsPartion'
@@ -504,6 +539,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Component = cbPartion
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inisPartionPrice'
@@ -511,6 +547,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Component = cbPartionPrice
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -534,6 +571,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRemainsDate'
@@ -541,6 +579,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartion'
@@ -548,6 +587,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Component = cbPartion
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisPartionPrice'
@@ -555,6 +595,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Component = cbPartionPrice
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 48
     Top = 152
@@ -606,11 +647,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited dxBarStatic: TdxBarStatic
-      Caption = ''
-      Hint = ''
-      ShowCaption = False
-    end
     object bbGoodsPartyReport: TdxBarButton
       Action = actOpenPartionReport
       Category = 0
@@ -644,6 +680,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -653,6 +690,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -661,6 +699,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 256
     Top = 8
