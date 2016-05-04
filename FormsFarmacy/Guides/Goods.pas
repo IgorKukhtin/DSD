@@ -43,7 +43,7 @@ type
     RetailCode: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     spUpdate_Goods_isSecond: TdsdStoredProc;
-    spPublished: TdsdStoredProc;
+    spUpdate_Goods_Published: TdsdStoredProc;
     actPublished: TdsdExecStoredProc;
     actSimplePublishedList: TMultiAction;
     actPublishedList: TMultiAction;

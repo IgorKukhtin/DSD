@@ -1,13 +1,15 @@
 -- Function: gpUpdate_Object_Goods_Published()
 
 DROP FUNCTION IF EXISTS gpUpdate_Goods_Published(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_Published(Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_Published(
     IN inId                  Integer   ,    -- ключ объекта <Товар>
-    IN inisPublished         Boolean   ,    -- опубликован на сайте
+   OUT outisPublished        Boolean   ,    -- опубликован на сайте
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS record AS
+RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -18,7 +20,9 @@ BEGIN
 
     vbUserId := lpGetUserBySession (inSession);
 
-    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Published(), inId, inisPublished);
+    outisPublished = False;
+    
+    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Published(), inId, False);
           
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -26,7 +30,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Goods_Published(Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpUpdate_Goods_Published(Integer, Boolean, TVarChar) OWNER TO postgres;
 
   
 /*
