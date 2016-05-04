@@ -15,16 +15,30 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Inventory());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     -- определяется <Торговая сеть>
+     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
+
+        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        )
+
        SELECT
              Movement.Id                                          AS Id
            , Movement.InvNumber                                   AS InvNumber
@@ -39,17 +53,25 @@ BEGIN
            , Object_Unit.ValueData                                AS UnitName
            , COALESCE(MovementBoolean_FullInvent.ValueData,False) AS FullInvent
        FROM (SELECT Movement.id
+                  , MovementLinkObject_Unit.ObjectId AS UnitId
              FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_Inventory() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                               AND Movement.DescId = zc_Movement_Inventory() AND Movement.StatusId = tmpStatus.StatusId
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                  INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
             ) AS tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovement.UnitId
+            
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+/*            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-
+*/
             LEFT OUTER JOIN MovementBoolean AS MovementBoolean_FullInvent
                                             ON MovementBoolean_FullInvent.MovementId = Movement.Id
                                            AND MovementBoolean_FullInvent.DescId = zc_MovementBoolean_FullInvent()

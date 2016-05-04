@@ -28,12 +28,29 @@ RETURNS TABLE (Id Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
+
+     vbUserId:= lpGetUserBySession (inSession);
+     -- определяется <Торговая сеть>
+     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+
+
+
     RETURN QUERY
         WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
+    , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                    FROM ObjectLink AS ObjectLink_Unit_Juridical
+                      INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                          AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                    WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                    )
+                                       
         SELECT
             Movement_Sale.Id
           , Movement_Sale.InvNumber
@@ -51,10 +68,11 @@ BEGIN
           , Movement_Sale.PaidKindName
           , Movement_Sale.Comment
         FROM
-            Movement_Sale_View AS Movement_Sale
+            tmpUnit
+            LEFT JOIN Movement_Sale_View AS Movement_Sale ON Movement_Sale.UnitId = tmpUnit.UnitId
+                                        AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
             INNER JOIN tmpStatus ON Movement_Sale.StatusId = tmpStatus.StatusId
-        WHERE
-            Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
+            
         ORDER BY InvNumber;
 
 END;
@@ -66,5 +84,6 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 04.05.16         * 
  13.10.15                                                                        *
 */

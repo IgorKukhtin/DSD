@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 
 AS
 $BODY$
+   DECLARE vbObjectId Integer;
    DECLARE vbUserId Integer;
 BEGIN
 
@@ -35,7 +36,10 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
---     vbUserId:= lpGetUserBySession (inSession);
+
+     vbUserId:= lpGetUserBySession (inSession);
+     -- определяется <Торговая сеть>
+     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -46,6 +50,14 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
+        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        )
         , Movement_Income AS (
                                SELECT
                                      Movement_Income_View.Id
@@ -80,7 +92,9 @@ BEGIN
                                    , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
                                    , Movement_Income_View.PaymentContainerId
                                    , MLM_Order.MovementChildId          AS Movement_OrderId
-                               FROM Movement_Income_View 
+                               FROM tmpUnit
+                                     LEFT JOIN Movement_Income_View ON Movement_Income_View.ToId = tmpUnit.UnitId
+                                                                   AND Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate
                                      JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
 
                                      LEFT OUTER JOIN ObjectHistory AS ObjectHistory_Juridical
@@ -94,9 +108,8 @@ BEGIN
                                      LEFT JOIN MovementLinkMovement AS MLM_Order
                                                                     ON MLM_Order.MovementId = Movement_Income_View.Id
                                                                    AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-
-                               WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate
                               )
+
         SELECT 
             Movement_Income.Id
           , Movement_Income.InvNumber
@@ -203,6 +216,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 04.05.16         *
  22.04.16         * 
  30.01.16         * 
  21.12.15                                                                        *

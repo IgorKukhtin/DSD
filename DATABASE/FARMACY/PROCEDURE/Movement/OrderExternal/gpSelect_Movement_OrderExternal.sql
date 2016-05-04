@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -25,7 +26,10 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
---     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);
+     -- определяется <Торговая сеть>
+     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -36,6 +40,14 @@ BEGIN
 --        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
   --                       UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
 --                              )
+        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        )
 
        SELECT
              Movement_OrderExternal_View.Id
@@ -54,9 +66,11 @@ BEGIN
            , Movement_OrderExternal_View.ContractId
            , Movement_OrderExternal_View.ContractName
 
-       FROM Movement_OrderExternal_View 
-             JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
-             WHERE Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate;
+       FROM tmpUnit
+          LEFT JOIN Movement_OrderExternal_View ON Movement_OrderExternal_View.ToId = tmpUnit.UnitId
+                                               AND Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
+          JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
+    ;
 
 END;
 $BODY$
