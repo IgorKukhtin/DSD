@@ -211,6 +211,13 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object clCostMovementInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'., '#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1087#1086#1087#1072#1076#1091#1090' "'#1079#1072#1090#1088#1072#1090#1099'"'
+            DataBinding.FieldName = 'CostMovementInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
         end
       end
     end
@@ -227,16 +234,19 @@ inherited ServiceJournalForm: TServiceJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
@@ -246,18 +256,21 @@ inherited ServiceJournalForm: TServiceJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -270,18 +283,21 @@ inherited ServiceJournalForm: TServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actReCompleteAll: TdsdExecStoredProc
@@ -308,6 +324,7 @@ inherited ServiceJournalForm: TServiceJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -315,6 +332,7 @@ inherited ServiceJournalForm: TServiceJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -322,6 +340,7 @@ inherited ServiceJournalForm: TServiceJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -473,6 +492,7 @@ inherited ServiceJournalForm: TServiceJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndtDate'
@@ -480,6 +500,7 @@ inherited ServiceJournalForm: TServiceJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 272

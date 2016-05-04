@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitName TVarChar
              , PaidKindName TVarChar
-             , CostMovementId TVarChar
+             , CostMovementId TVarChar, CostMovementInvNumber TVarChar
              )
 AS
 $BODY$
@@ -75,6 +75,7 @@ BEGIN
            , Object_Unit.ValueData            AS UnitName
            , Object_PaidKind.ValueData        AS PaidKindName
            , MovementString_MovementId.ValueData AS CostMovementId
+           , tmpCost.strInvNumber     ::TVarChar AS CostMovementInvNumber
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_Service()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -127,6 +128,17 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+ 
+
+            LEFT JOIN (SELECT MovementFloat.ValueData AS MovementServiceId
+                            , STRING_AGG ( 'π '|| Movement_Income.InvNumber || ' oÚ '|| TO_CHAR(Movement_Income.Operdate , 'DD.MM.YYYY')|| '. ' , ', ') AS strInvNumber
+                       FROM MovementFloat
+                          LEFT JOIN Movement AS Movement_Cost on Movement_Cost.id = MovementFloat.Movementid
+                                            AND Movement_Cost.StatusId <> zc_Enum_Status_Erased()
+                          LEFT JOIN Movement AS Movement_Income on Movement_Income.id = Movement_Cost.ParentId
+                       WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
+                       GROUP BY MovementFloat.ValueData) AS tmpCost ON tmpCost.MovementServiceId = Movement.Id 
+
       ;
   
 END;
@@ -137,6 +149,7 @@ ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarCha
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 30.04.16         *
  17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner
  14.01.14         * del ContractConditionKind
  31.01.14                                        * add inIsErased

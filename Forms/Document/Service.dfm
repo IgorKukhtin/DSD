@@ -611,10 +611,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CostMovementId'
+        Name = 'CostMovementInvNumber'
         Value = Null
         Component = IncomeCostGuides
-        ComponentItem = 'Key'
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

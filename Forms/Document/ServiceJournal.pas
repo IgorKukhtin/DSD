@@ -31,6 +31,7 @@ type
     clOperDatePartner: TcxGridDBColumn;
     clInvNumberPartner: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    clCostMovementInvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public
