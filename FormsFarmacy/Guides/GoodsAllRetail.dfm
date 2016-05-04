@@ -200,6 +200,7 @@ inherited GoodsAllRetailForm: TGoodsAllRetailForm
           object isPublished_1: TcxGridDBColumn
             Caption = #1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
             DataBinding.FieldName = 'isPublished'
+            PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

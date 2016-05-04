@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
                NDS TFloat, MinimumLot TFloat,
-               isClose Boolean, isTOP Boolean, isPromo Boolean, isFirst Boolean,
+               isClose Boolean, isTOP Boolean, isPromo Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean,
                isUpload Boolean, isSpecCondition Boolean,
                PercentMarkup TFloat, Price TFloat,
                ReferCode TFloat, ReferPrice TFloat,
@@ -52,6 +52,8 @@ BEGIN
            , ObjectBoolean_Goods_TOP.ValueData      AS isTOP    
            , ObjectBoolean_Goods_IsPromo.ValueData  AS IsPromo
            , ObjectBoolean_First.ValueData          AS isFirst
+           , ObjectBoolean_Second.ValueData         AS isSecond
+           , ObjectBoolean_Published.ValueData      AS isPublished
            , ObjectBoolean_Goods_IsUpload.ValueData       AS IsUpload 
            , ObjectBoolean_Goods_SpecCondition.ValueData  AS IsSpecCondition
 
@@ -146,6 +148,12 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_First
                                 ON ObjectBoolean_First.ObjectId = Object_Goods.Id
                                AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
+                                ON ObjectBoolean_Second.ObjectId = Object_Goods.Id
+                               AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Published
+                                ON ObjectBoolean_Published.ObjectId = Object_Goods.Id
+                               AND ObjectBoolean_Published.DescId = zc_ObjectBoolean_Goods_Published()
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUpload
                                   ON ObjectBoolean_Goods_IsUpload.ObjectId = Object_Goods.Id
