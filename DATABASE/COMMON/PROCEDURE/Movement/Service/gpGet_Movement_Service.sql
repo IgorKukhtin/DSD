@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , CostMovementId TVarChar
+             , CostMovementId TVarChar, CostMovementInvNumber TVarChar
              )
 AS
 $BODY$
@@ -63,6 +63,7 @@ BEGIN
            , 0                                AS PaidKindId
            , CAST ('' as TVarChar)            AS PaidKindName
            , CAST ('' as TVarChar)            AS CostMovementId
+           , CAST ('' as TVarChar)            AS CostMovementInvNumber
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
   
@@ -110,6 +111,7 @@ BEGIN
            , Object_PaidKind.ValueData        AS PaidKindName
 
            , MovementString_MovementId.ValueData AS CostMovementId
+           , tmpCost.strInvNumber    ::TVarChar  AS CostMovementInvNumber
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -159,6 +161,15 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+
+            LEFT JOIN (SELECT MovementFloat.ValueData AS MovementServiceId
+                            , STRING_AGG ('π ' ||CAST(Movement_Income.InvNumber AS TVarChar) || ' oÚ '|| TO_CHAR(Movement_Income.Operdate , 'DD.MM.YYYY')|| '.' , ', ')  AS strInvNumber
+                       FROM MovementFloat
+                          LEFT JOIN Movement AS Movement_Cost on Movement_Cost.id = MovementFloat.Movementid
+                                            AND Movement_Cost.StatusId <> zc_Enum_Status_Erased()
+                          LEFT JOIN Movement AS Movement_Income on Movement_Income.id = Movement_Cost.ParentId
+                       WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
+                       GROUP BY MovementFloat.ValueData) AS tmpCost ON tmpCost.MovementServiceId = Movement.Id 
             
        WHERE Movement.Id =  inMovementId_Value;
 
@@ -172,6 +183,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.04.16         *
  17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner              
  19.02.14         * del ContractConditionKind )))
  28.01.14         * add ContractConditionKind
