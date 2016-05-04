@@ -215,7 +215,7 @@ BEGIN
 
      END IF; -- Проверка для "Общий"
 
-     END IF -- vbBranchId = zc_Branch_Basis() - только НЕ Филиал
+     END IF; -- vbBranchId = zc_Branch_Basis() - только НЕ Филиал
 
 
      -- !!!Выход, т.к. НЕ Филиал!!!
