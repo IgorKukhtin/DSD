@@ -32,6 +32,9 @@ type
     cbPartionPrice: TcxCheckBox;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    MP_JuridicalName: TcxGridDBColumn;
+    MinPriceOnDate: TcxGridDBColumn;
+    MP_Summa: TcxGridDBColumn;
   private
     { Private declarations }
   public

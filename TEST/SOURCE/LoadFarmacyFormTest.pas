@@ -405,7 +405,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
- exit;
+// exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
   //Отчет Ценовая интервенция2
@@ -437,7 +437,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsDialogForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
 
