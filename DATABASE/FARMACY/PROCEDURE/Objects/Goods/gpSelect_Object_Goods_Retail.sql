@@ -51,7 +51,7 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst 
            , Object_Goods_View.isSecond
-           , Object_Goods_View.isPublished
+           , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
            , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
