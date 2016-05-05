@@ -98,6 +98,7 @@ ALTER FUNCTION gpSelect_Movement_Inventory (TDateTime, TDateTime, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.
+ 04.05.16         *
  16.09.15                                                                       * + FullInvent
  11.07.15                                                                       *
 */
