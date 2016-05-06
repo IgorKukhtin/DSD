@@ -20,8 +20,23 @@ RETURNS TABLE (Id Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+     -- определяется <Торговая сеть>
+     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+
+
     RETURN QUERY
+     WITH  tmpUnit AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        )
 
     SELECT       
         Movement.Id
@@ -41,8 +56,8 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-        LEFT JOIN Object AS Object_Unit 
-                         ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+        INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
         LEFT OUTER JOIN MovementString AS MovementString_GUID
                                        ON MovementString_GUID.MovementId = Movement.Id
                                       AND MovementString_GUID.DescId = zc_MovementString_Comment()

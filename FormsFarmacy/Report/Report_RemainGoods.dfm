@@ -306,7 +306,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Width = 90
           end
           object MinPriceOnDate: TcxGridDBColumn
-            Caption = #1052#1080#1085'.'#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1076#1072#1090#1091
+            Caption = #1052#1080#1085'.'#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1076#1072#1090#1091'  ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'MinPriceOnDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -314,7 +314,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Width = 90
           end
           object MP_Summa: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'  ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'MP_Summa'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

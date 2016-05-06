@@ -18,6 +18,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
+   DECLARE vbReteilId Integer;   
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -26,7 +28,20 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
-     
+
+     -- определяется <Торговая сеть>
+     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+
+     -- определяем Торговую сеть входящего подразделения
+     vbReteilId:= (SELECT ObjectLink_Juridical_Retail.ChildObjectId
+                   FROM ObjectLink AS ObjectLink_Unit_Juridical
+                      INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                            ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                   WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
+                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                   );
+
      RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
@@ -34,6 +49,7 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+
          SELECT       
              Movement_Check.Id
            , Movement_Check.InvNumber
@@ -51,7 +67,9 @@ BEGIN
         FROM Movement_Check_View AS Movement_Check 
                             JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
        WHERE Movement_Check.OperDate BETWEEN inStartDate AND inEndDate
-                                         AND (Movement_Check.UnitId = inUnitId);
+         AND (Movement_Check.UnitId = inUnitId)
+         AND (vbReteilId = vbObjectId)
+;
 
 END;
 $BODY$
@@ -62,6 +80,7 @@ ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 05.05.16         *
  07.08.15                                                                        *
  08.05.15                         * 
 

@@ -709,8 +709,8 @@
     Top = 432
   end
   inherited ActionList: TActionList
-    Left = 55
-    Top = 303
+    Left = 15
+    Top = 199
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -732,6 +732,7 @@
           StoredProc = spInsertUpdateMovement
         end
         item
+          StoredProc = spUpdateMovementIncome_OrderExt
         end>
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
@@ -1538,7 +1539,7 @@
         Value = ''
         Component = OrderExternalChoiceGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1896,8 +1897,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
-    Top = 208
+    Left = 335
+    Top = 200
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2046,8 +2047,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
-    Top = 160
+    Left = 336
+    Top = 152
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -2253,7 +2254,46 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 732
-    Top = 88
+    Left = 756
+    Top = 80
+  end
+  object spUpdateMovementIncome_OrderExt: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_OrderExternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderExternalId'
+        Value = '0'
+        Component = OrderExternalChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 90
+    Top = 280
+  end
+  object HeaderSaver1: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateMovementIncome_OrderExt
+    ControlList = <
+      item
+        Control = edInvNumberOrder
+      end>
+    GetStoredProc = spGet
+    Left = 232
+    Top = 145
   end
 end

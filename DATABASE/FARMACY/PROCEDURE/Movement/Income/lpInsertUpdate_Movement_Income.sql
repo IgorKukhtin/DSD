@@ -17,9 +17,9 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
     (Integer, TVarChar, TDateTime, Boolean, 
      Integer, Integer, Integer, Integer, TDateTime, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
-    (Integer, TVarChar, TDateTime, Boolean, 
-     Integer, Integer, Integer, Integer, Integer, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inToId                Integer   , -- Кому
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inContractId          Integer   , -- Договор
-    IN inOrderId             Integer   , -- Сcылка на заявку поставщику 
+ -- IN inOrderId             Integer   , -- Сcылка на заявку поставщику 
     IN inPaymentDate         TDateTime , -- Дата платежа
     IN inJuridicalId         Integer   , -- Юрлицо покупатель
     IN inUserId              Integer     -- сессия пользователя
@@ -67,7 +67,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
      
      -- сохранили связь с <документом заявка поставщику>
-     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inOrderId);
+     --PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inOrderId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -102,6 +102,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 06.05.16         * del inOrderId
  22.04.16         *
  21.12.15                                                                       *
  07.12.15                                                                       *

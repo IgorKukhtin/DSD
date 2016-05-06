@@ -6,7 +6,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateT
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -17,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inToId                Integer   , -- Кому
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inContractId          Integer   , -- Договор
-    IN inOrderId             Integer   , -- Сcылка на заявку поставщику 
+   -- IN inOrderId             Integer   , -- Сcылка на заявку поставщику 
     IN inPaymentDate         TDateTime , -- Дата платежа
     IN inInvNumberBranch     TVarChar  , -- Номер документа
     IN inOperDateBranch      TDateTime , -- Дата документа
@@ -66,7 +68,7 @@ BEGIN
     END IF;
     
     ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
-                                         , inFromId, inToId, inNDSKindId, inContractId, inOrderId
+                                         , inFromId, inToId, inNDSKindId, inContractId--, inOrderId
                                          , inPaymentDate, ioJuridicalId, vbUserId);
 
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), ioId, inInvNumberBranch);
@@ -82,6 +84,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 06.05.16         * del inOrderId
  22.04.16         *
  21.12.15                                                                       *
  07.12.15                                                                       *
