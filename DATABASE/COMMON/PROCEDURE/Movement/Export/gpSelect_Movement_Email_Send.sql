@@ -1,14 +1,11 @@
--- Function: gpSelect_Movement_Email_Send()
+-- Function: gpselect_movement_email_send(integer, tvarchar)
 
--- DROP FUNCTION IF EXISTS gpSelect_Movement_XML_Mida (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Email_Send (Integer, TVarChar);
+-- DROP FUNCTION gpselect_movement_email_send(integer, tvarchar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Email_Send(
-    IN inMovementId           Integer   ,
-    IN inSession              TVarChar    -- сессия пользователя
-)
-RETURNS TABLE (RowData TBlob)
-AS
+CREATE OR REPLACE FUNCTION gpselect_movement_email_send(
+    IN inmovementid integer,
+    IN insession tvarchar)
+  RETURNS TABLE(rowdata tblob) AS
 $BODY$
    DECLARE vbUserId Integer;
 
@@ -367,24 +364,30 @@ BEGIN
        ;
 
      ELSE
-     -- !!!3.Формат CSV - zc_Enum_ExportKind_Brusn34604386!!!
+     
+     -- !!!3.Формат XML - zc_Enum_ExportKind_Brusn34604386!!!
 
      IF vbExportKindId = zc_Enum_ExportKind_Brusn34604386()
      THEN
 
+     -- первые строчки XML
+     -- INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
+     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
+     INSERT INTO _Result(RowData) VALUES ('<root>');
+
 
      -- первая строчка CSV  - Шапка
-     INSERT INTO _Result(RowData)
-        SELECT 'KOD'       -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом) 
-            || ';KOL'      -- количество 
-            || ';CEN'      -- цена с НДС (Ваша) 
-            || ';NAM'      -- имя товара на всяк случай если забыли сообщить штрихкод 
-            || ';KLN'      -- клиент (константа, код поставщика в нашей базе )  - 9990057 
-            || ';MAG'      -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
-            || ';NAM_TT'   -- название адрес ТТ
-            || ';DAT'      -- дата дока
-            || ';NAK'      -- номер накладной (мало знаков - расширяйте на свое усмотрение)
-       ;
+--     INSERT INTO _Result(RowData)
+--        SELECT 'KOD'       -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом) 
+--            || ';KOL'      -- количество 
+--            || ';CEN'      -- цена с НДС (Ваша) 
+--            || ';NAM'      -- имя товара на всяк случай если забыли сообщить штрихкод 
+--            || ';KLN'      -- клиент (константа, код поставщика в нашей базе )  - 9990057 
+--            || ';MAG'      -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
+--            || ';NAM_TT'   -- название адрес ТТ
+--            || ';DAT'      -- дата дока
+--            || ';NAK'      -- номер накладной (мало знаков - расширяйте на свое усмотрение)
+--       ;
 
      -- Строчная часть
      INSERT INTO _Result(RowData)
@@ -471,24 +474,25 @@ BEGIN
                  WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                 )
         -- результат
-        SELECT -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом) 
-               COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
+        SELECT 
+        -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом)
+      '    <tov KOD="' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
                -- количество
-     || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
+     || '" KOL="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
                -- цена с НДС (Ваша) 
-     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar 
+     || '" CEN="' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar
                -- имя товара на всяк случай если забыли сообщить штрихкод
-     || ';' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+     || '" NAM="' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                -- клиент (константа, код поставщика в нашей базе )  - 9990057
-            || ';9990057'
+     || '" KLN="9990057"'
                -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
-     || ';' || tmpMovement.PartnerId -- tmpMovement.RoomNumber
+     || ' MAG="' || tmpMovement.PartnerId -- tmpMovement.RoomNumber
                -- название адрес ТТ
-     || ';' || tmpMovement.PartnerName
+     || '" NAM_TT="' || tmpMovement.PartnerName
                -- дата дока
-     || ';' || zfConvert_DateToString (tmpMovement.OperDatePartner)
+     || '" DAT="' || zfConvert_DateToString (tmpMovement.OperDatePartner)
                -- номер накладной (мало знаков - расширяйте на свое усмотрение)
-     || ';' || tmpMovement.InvNumber
+     || '" NAK="' || tmpMovement.InvNumber || '" />'
 
         FROM MovementItem
              LEFT JOIN tmpMovement ON tmpMovement.MovementId = MovementItem.MovementId
@@ -519,15 +523,19 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = MovementItem.ObjectId
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-             LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = ObjectLink_Goods_Measure.ChildObjectId
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId = zc_MI_Master()
           AND MovementItem.isErased = FALSE
           AND MIFloat_AmountPartner.ValueData <> 0
        ;
+       
+     -- послние строчки XML
+     --INSERT INTO _Result(RowData) VALUES ('</head>');
+     INSERT INTO _Result(RowData) VALUES ('</root>');
 
 
      END IF;
@@ -546,15 +554,22 @@ BEGIN
             SELECT _Result.RowData FROM _Result;
      END IF;
 
+
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION gpselect_movement_email_send(integer, tvarchar)
+  OWNER TO admin;
+
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  23.03.16                                        *
  25.02.16                                        *
+ 05.06.16 Допилена выгрузка для Шери - XML формат*
 */
 
 -- тест
