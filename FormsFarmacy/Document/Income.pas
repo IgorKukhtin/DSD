@@ -110,6 +110,8 @@ type
     cxLabel25: TcxLabel;
     OrderExternalChoiceGuides: TdsdGuides;
     colPersentDiff: TcxGridDBColumn;
+    spUpdateMovementIncome_OrderExt: TdsdStoredProc;
+    HeaderSaver1: THeaderSaver;
   private
     { Private declarations }
   public
