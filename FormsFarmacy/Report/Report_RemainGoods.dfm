@@ -305,6 +305,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 90
           end
+          object MP_ContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1084#1080#1085'.'#1094#1077#1085#1072')'
+            DataBinding.FieldName = 'MP_ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
           object MinPriceOnDate: TcxGridDBColumn
             Caption = #1052#1080#1085'.'#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1076#1072#1090#1091'  ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'MinPriceOnDate'

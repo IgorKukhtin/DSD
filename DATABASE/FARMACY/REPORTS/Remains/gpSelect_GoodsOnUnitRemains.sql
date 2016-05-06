@@ -21,6 +21,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName
              , UnitName TVarChar, OurJuridicalName TVarChar
              , JuridicalCode  Integer, JuridicalName  TVarChar
              , MP_JuridicalName TVarChar
+             , MP_ContractName TVarChar
              , MinPriceOnDate TFloat, MP_Summa TFloat
              )
 AS
@@ -170,6 +171,7 @@ BEGIN
            , Object_From_Income.ValueData            AS JuridicalName
 
            , SelectMinPrice_AllGoods_onDate.JuridicalName AS MP_JuridicalName
+           , Object_Contract.ValueData                    AS MP_ContractName
            , SelectMinPrice_AllGoods_onDate.Price         AS MinPriceOnDate
            , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount) :: TFloat    AS MP_Summa
         FROM tmpData
@@ -208,6 +210,7 @@ BEGIN
                                                        inObjectId := vbObjectId, 
                                                        inUserId   := vbUserId) AS SelectMinPrice_AllGoods_onDate
                                                                                ON SelectMinPrice_AllGoods_onDate.GoodsId = Object_Goods_View.Id
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods_onDate.ContractId
                                                                          
            ;
 
