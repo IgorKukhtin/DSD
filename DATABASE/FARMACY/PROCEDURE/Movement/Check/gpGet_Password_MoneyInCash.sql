@@ -17,7 +17,7 @@ BEGIN
   WHERE DefaultKeys.Key = 'zc_Password_MoneyInCash'
   LIMIT 1;
   if COALESCE(outPassword,'') = '' THEN
-    outPassword := 'qsxqsxw1';
+    outPassword := '0503202841'; -- 'qsxqsxw1';
   END IF;    
 END;
 $BODY$

@@ -27,7 +27,7 @@ BEGIN
            , Object_JuridicalSettings.ValueData AS Name 
            , Object_Juridical.Id
            , Object_Juridical.ValueData
-           , COALESCE(JuridicalSettings.isPriceClose, FALSE) AS isPriceClose
+           , COALESCE(JuridicalSettings.isPriceClose, TRUE)  AS isPriceClose
            , COALESCE(JuridicalSettings.isSite, FALSE)       AS isSite 
            , JuridicalSettings.Bonus
            , JuridicalSettings.PriceLimit :: TFloat AS PriceLimit
@@ -52,7 +52,7 @@ BEGIN
                 (SELECT ObjectLink_JuridicalSettings_Juridical.ChildObjectId     AS JuridicalId
                       , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId AS MainJuridicalId
                       , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
-                      , COALESCE(ObjectBoolean_isPriceClose.ValueData, false) AS isPriceClose 
+                      , COALESCE(ObjectBoolean_isPriceClose.ValueData, FALSE) AS isPriceClose 
                       , COALESCE(ObjectBoolean_Site.ValueData, FALSE)         AS isSite
                       , ObjectFloat_Bonus.ValueData AS Bonus 
                       , COALESCE(ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  

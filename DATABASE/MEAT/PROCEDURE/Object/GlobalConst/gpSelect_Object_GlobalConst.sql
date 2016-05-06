@@ -62,9 +62,61 @@ BEGIN
      END IF;
 
      RETURN QUERY 
+       WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+          , tmpProcess_All AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess)
+          , tmpProcess_Exp AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Scale%')
+          , tmpProcess_Inv AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Inventory%')
+          , tmpProcess_Rep1 AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+          , tmpProcess_Rep2 AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpReport_MotionGoods%')
+          , tmpProcess_Rep3 AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpReport_GoodsBalance%')
+          , tmpProcess_RepOth AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpReport%' AND query NOT LIKE '%gpReport_GoodsMI_SaleReturnIn%'
+                                                                                                        AND query NOT LIKE '%gpReport_MotionGoods%'
+                                                                                                        AND query NOT LIKE '%gpReport_GoodsBalance%'
+                                 )
+          , tmpProcess_Vacuum AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%VACUUM%')
+       -- Результат
        SELECT Object_GlobalConst.Id
-            , COALESCE (ActualBankStatement.ValueData, CURRENT_DATE) :: TDateTime AS OperDate
-            , Object_GlobalConst.ValueData AS ValueText
+            , CASE WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
+                        THEN CURRENT_TIMESTAMP -- CURRENT_TIME
+                   ELSE COALESCE (ActualBankStatement.ValueData, CURRENT_DATE)
+              END :: TDateTime AS OperDate
+            , CASE WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
+                        THEN 'Кол-во АП = <' || COALESCE ((SELECT Res FROM tmpProcess_All), '0') || '> из которых :'
+
+                          || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') <> '0'
+                                       THEN ' ВАКУУМ = <' || COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') || '>'
+                                  ELSE ''
+                             END
+
+                          || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Exp), '0') <> '0'
+                                       THEN ' Эксп. = <'   || COALESCE ((SELECT Res FROM tmpProcess_Exp), '0') || '>'
+                                  ELSE ''
+                             END
+
+                          || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Inv), '0') <> '0'
+                                       THEN ' Инвент. = <' || COALESCE ((SELECT Res FROM tmpProcess_Inv), '0') || '>'
+                                  ELSE ''
+                             END
+
+                          || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Rep1), '0') <> '0'
+                                       THEN ' О-Пр/Вз = <' || COALESCE ((SELECT Res FROM tmpProcess_Rep1), '0') || '>'
+                                  ELSE ''
+                             END
+
+                          || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Rep2), '0') <> '0'
+                                       THEN ' О-Двж = <'    || COALESCE ((SELECT Res FROM tmpProcess_Rep2), '0') || '>'
+                                  ELSE ''
+                             END
+
+                          || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Rep3), '0') <> '0'
+                                       THEN ' О-Ост = <'   || COALESCE ((SELECT Res FROM tmpProcess_Rep3), '0') || '>'
+                                  ELSE ''
+                             END
+
+                          || ' О-др. = <'   || COALESCE ((SELECT Res FROM tmpProcess_RepOth), '0') || '>'
+
+                   ELSE Object_GlobalConst.ValueData
+              END :: TVarChar AS ValueText
             , ObjectString.ValueData AS EnumName
        FROM Object AS Object_GlobalConst
             LEFT JOIN ObjectDate AS ActualBankStatement 

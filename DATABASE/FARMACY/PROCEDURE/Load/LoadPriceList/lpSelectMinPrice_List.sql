@@ -38,12 +38,18 @@ BEGIN
      THEN
          -- таблица
          CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer) ON COMMIT DROP;
+         IF inUnitId = -1
+         THEN
+             INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
+               select 21157 union all select 12940 union all select 16876 union all select 351328 union all select 15661 union all select 358 union all select 40180 union all select 337 union all select 343 union all select 349 union all select 352 union all select 355 union all select 331 union all select 328 union all select 46564 union all select 17533 union all select 361 union all select 37468 union all select 334 union all select 346 union all select 340 union all select 25420 union all select 351331 union all select 36076 union all select 21169 union all select 382 union all select 376 union all select 379 union all select 385 union all select 391;
+         ELSE
          INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
            SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
            FROM Container
            WHERE Container.DescId = zc_Container_Count()
              AND Container.WhereObjectId = inUnitId
              AND Container.Amount <> 0;
+         END IF;
      END IF;
 
     -- !!!Оптимизация!!!
