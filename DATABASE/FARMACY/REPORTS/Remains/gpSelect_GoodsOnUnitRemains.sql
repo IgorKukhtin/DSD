@@ -23,6 +23,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName
              , MP_JuridicalName TVarChar
              , MP_ContractName TVarChar
              , MinPriceOnDate TFloat, MP_Summa TFloat
+             , MinPriceOnDateVAT TFloat, MP_SummaVAT TFloat
              )
 AS
 $BODY$
@@ -174,6 +175,8 @@ BEGIN
            , Object_Contract.ValueData                    AS MP_ContractName
            , SelectMinPrice_AllGoods_onDate.Price         AS MinPriceOnDate
            , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount) :: TFloat    AS MP_Summa
+           , (SelectMinPrice_AllGoods_onDate.Price * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat                     AS MinPriceOnDateVAT
+           , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat    AS MP_SummaVAT
         FROM tmpData
             LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
             LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
@@ -187,6 +190,10 @@ BEGIN
             LEFT JOIN MovementDesc AS MovementDesc_Price ON MovementDesc_Price.Id = Movement_Price.DescId
         
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = tmpData.NDSKindId_Income
+                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price
                                               ON Object_Price.GoodsId = tmpData.GoodsId
@@ -228,4 +235,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnitRemains (inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');
+-- SELECT * FROM gpSelect_GoodsOnUnitRemains (inUnitId := 377613 , inRemainsDate := ('10.05.2016')::TDateTime, inIsPartion:= FALSE, inisPartionPrice:= FALSE, inSession := '3');

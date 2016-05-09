@@ -3,8 +3,9 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   ClientHeight = 364
   ClientWidth = 930
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -140
   ExplicitWidth = 946
-  ExplicitHeight = 402
+  ExplicitHeight = 399
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -55,6 +56,16 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
               Format = ',0.00'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = MP_Summa
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = MP_SummaVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -93,6 +104,16 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
               Format = ',0.00'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = MP_Summa
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = MP_SummaVAT
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -316,17 +337,39 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           object MinPriceOnDate: TcxGridDBColumn
             Caption = #1052#1080#1085'.'#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1076#1072#1090#1091'  ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'MinPriceOnDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
+          object MinPriceOnDateVAT: TcxGridDBColumn
+            Caption = #1052#1080#1085'.'#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1076#1072#1090#1091'  ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'MinPriceOnDateVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object MP_Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'  ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'MP_Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 90
+          end
+          object MP_SummaVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'  ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'MP_SummaVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
         end
