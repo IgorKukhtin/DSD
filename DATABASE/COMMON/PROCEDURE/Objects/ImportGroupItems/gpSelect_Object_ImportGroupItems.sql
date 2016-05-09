@@ -28,7 +28,8 @@ BEGIN
 
                  JOIN ObjectLink AS ObjectLink_ImportGroup_Object
                                  ON ObjectLink_ImportGroup_Object.DescId = zc_ObjectLink_ImportGroup_Object()
-                                AND (ObjectLink_ImportGroup_Object.ChildObjectId = vbObjectId OR vbObjectId = 0)
+                                -- !!!Временно!!!
+                                -- AND (ObjectLink_ImportGroup_Object.ChildObjectId = vbObjectId OR vbObjectId = 0)
 
                  JOIN ObjectLink AS ObjectLink_ImportGroupItems_ImportGroup
                                  ON ObjectLink_ImportGroupItems_ImportGroup.DescId = zc_ObjectLink_ImportGroupItems_ImportGroup()
@@ -37,7 +38,8 @@ BEGIN
                  JOIN ObjectLink AS ObjectLink_ImportGroupItems_ImportSettings
                                  ON ObjectLink_ImportGroupItems_ImportSettings.DescId = zc_ObjectLink_ImportGroupItems_ImportSettings()
                                 AND ObjectLink_ImportGroupItems_ImportSettings.ChildObjectId = Object_ImportSettings.Id
-                                AND ObjectLink_ImportGroupItems_ImportSettings.ObjectId = ObjectLink_ImportGroupItems_ImportGroup.ObjectId;
+                                AND ObjectLink_ImportGroupItems_ImportSettings.ObjectId = ObjectLink_ImportGroupItems_ImportGroup.ObjectId
+                ;
   
 END;
 $BODY$
@@ -50,7 +52,6 @@ ALTER FUNCTION gpSelect_Object_ImportGroupItems(TVarChar) OWNER TO postgres;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  30.09.14                        *
-
 */
 
 -- тест

@@ -20,7 +20,7 @@ $BODY$
 BEGIN
      -- !!!только Перепроведение с/с - НЕТ ограничений!!! + временно: !!!для Админа  - НЕТ ограничений!!!
      IF inUserId IN (zc_Enum_Process_Auto_PrimeCost()
-                   /*, zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster(),zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose()*/
+                   /*, zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose()*/
                    /*, zfCalc_UserAdmin() :: Integer*/
                     )
         -- OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
@@ -108,13 +108,18 @@ BEGIN
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.isErased = FALSE
                     ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
+          LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm() AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()
+                    UNION
+                     SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount()
+                    ) AS tmp3 ON tmp3.PaidKindId = _tmpPeriodClose.PaidKindId
+                             AND tmp1.PaidKindId IS NULL AND tmp2.PaidKindId IS NULL
      WHERE _tmpPeriodClose.MovementDescId = inMovementDescId AND _tmpPeriodClose.UserId = inUserId
        AND (_tmpPeriodClose.BranchId   = 0 OR _tmpPeriodClose.BranchId = vbBranchId)
-       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0);
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0 OR tmp3.PaidKindId > 0);
      -- Проверка
      IF vbPeriodCloseId <> vbPeriodCloseId_two
      THEN
-        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
+        RAISE EXCEPTION 'Ошибка1.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
                       , lfGet_Object_ValueData(inUserId)
                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
                       , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
@@ -166,13 +171,18 @@ BEGIN
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.isErased = FALSE
                     ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
+          LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm() AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()
+                    UNION
+                     SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount()
+                    ) AS tmp3 ON tmp3.PaidKindId = _tmpPeriodClose.PaidKindId
+                             AND tmp1.PaidKindId IS NULL AND tmp2.PaidKindId IS NULL
      WHERE _tmpPeriodClose.MovementDescId = 0 AND _tmpPeriodClose.UserId = 0 AND _tmpPeriodClose.MovementDescId_excl <> inMovementDescId
        AND (_tmpPeriodClose.BranchId   = 0)
-       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0);
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0 OR tmp3.PaidKindId > 0);
      -- Проверка - 1
      IF vbPeriodCloseId <> vbPeriodCloseId_two
      THEN
-        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
+        RAISE EXCEPTION 'Ошибка2.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
                       , lfGet_Object_ValueData(inUserId)
                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
                       , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
@@ -182,7 +192,7 @@ BEGIN
      -- Проверка - 2
      IF COALESCE (vbPeriodCloseId, 0) = 0
      THEN
-        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не найдено закрытие периода.'
+        RAISE EXCEPTION 'Ошибка2.Для пользователя <%> и вид документа <%> не найдено закрытие периода.'
                       , lfGet_Object_ValueData(inUserId)
                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
                        ;
@@ -241,13 +251,18 @@ BEGIN
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.isErased = FALSE
                     ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
+          LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm() AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()
+                    UNION
+                     SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount()
+                    ) AS tmp3 ON tmp3.PaidKindId = _tmpPeriodClose.PaidKindId
+                             AND tmp1.PaidKindId IS NULL AND tmp2.PaidKindId IS NULL
      WHERE _tmpPeriodClose.MovementDescId = 0 AND _tmpPeriodClose.UserId = 0 AND _tmpPeriodClose.MovementDescId_excl <> inMovementDescId
        AND (_tmpPeriodClose.BranchId   = vbBranchId)
-       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0);
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0 OR tmp3.PaidKindId > 0);
      -- Проверка - 1
      IF vbPeriodCloseId <> vbPeriodCloseId_two
      THEN
-        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
+        RAISE EXCEPTION 'Ошибка3.Для пользователя <%> и вид документа <%> не определено закрытие периода <%> или <%>.'
                       , lfGet_Object_ValueData(inUserId)
                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
                       , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
@@ -257,7 +272,7 @@ BEGIN
      -- Проверка - 2
      IF COALESCE (vbPeriodCloseId, 0) = 0
      THEN
-        RAISE EXCEPTION 'Ошибка.Для пользователя <%> и вид документа <%> не найдено закрытие периода.'
+        RAISE EXCEPTION 'Ошибка3.Для пользователя <%> и вид документа <%> не найдено закрытие периода.'
                       , lfGet_Object_ValueData(inUserId)
                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
                        ;

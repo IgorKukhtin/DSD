@@ -90,8 +90,9 @@ BEGIN
                           -- !!!если Временно откл. - тогда будет для всех договоров!!!
                           WHERE tmp.Ord = 1
                          )
+  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus FROM JuridicalSettings)
     -- Список товаров + коды ...
-  , GoodsList AS
+  , GoodsList_all AS
        (SELECT _tmpGoodsMinPrice_List.GoodsId               AS GoodsId      -- здесь товар "сети"
              , ObjectLink_LinkGoods_Main.ChildObjectId      AS GoodsId_main -- здесь "общий" товар
              , ObjectLink_LinkGoods_Child_jur.ChildObjectId AS GoodsId_jur  -- здесь товар "поставщика"
@@ -114,15 +115,24 @@ BEGIN
                                   ON ObjectLink_Goods_Object_jur.ObjectId = ObjectLink_LinkGoods_Child_jur.ChildObjectId
                                  AND ObjectLink_Goods_Object_jur.DescId = zc_ObjectLink_Goods_Object()
        )
+    -- Список товаров + коды ...
+  , GoodsList AS
+       (SELECT GoodsList_all.*
+        FROM GoodsList_all
+            INNER JOIN Object ON Object.Id = GoodsList_all.ObjectId
+                             AND Object.DescId = zc_Object_Juridical()
+       )
     -- Список Последних цен (поставщика) !!!по документам!!! (т.е. последний документ а не последняя найденная цена)
   , Movement_PriceList AS
-       (-- выбираются с "нужным" договором из JuridicalSettings
+       /*(-- выбираются с "нужным" договором из JuridicalSettings
         SELECT tmp.MovementId
              , tmp.JuridicalId
              , tmp.ContractId
-             , COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
-             , COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
-        FROM
+             --, COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
+             --, COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
+             , tmp.PriceLimit
+             , tmp.Bonus
+        FROM*/
        (-- выбираются с "макс" датой
         SELECT *
         FROM
@@ -132,6 +142,8 @@ BEGIN
              , Movement.Id                                        AS MovementId
              , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+             , COALESCE (JuridicalSettings_list.PriceLimit, 0)    AS PriceLimit
+             , COALESCE (JuridicalSettings_list.Bonus, 0)         AS Bonus
         FROM (SELECT DISTINCT ObjectId FROM GoodsList) AS tmp
              INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                            ON MovementLinkObject_Juridical.ObjectId = tmp.ObjectId
@@ -141,22 +153,22 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             INNER JOIN JuridicalSettings_list ON JuridicalSettings_list.JuridicalId = MovementLinkObject_Juridical.ObjectId
+                                              AND JuridicalSettings_list.ContractId = MovementLinkObject_Contract.ObjectId
         WHERE Movement.DescId = zc_Movement_PriceList()
        ) AS tmp
         WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
-       ) AS tmp
+       ) /*AS tmp*/
         -- !!!INNER!!!
-        INNER JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
-                    FROM JuridicalSettings
-                   ) AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
-                                         AND JuridicalSettings.ContractId  = tmp.ContractId
+        /*INNER JOIN JuridicalSettings_list AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
+                                         AND JuridicalSettings.ContractId  = tmp.ContractId*/
         /*LEFT JOIN JuridicalSettings_close ON JuridicalSettings_close.JuridicalId = tmp.JuridicalId
                                          AND JuridicalSettings_close.ContractId  = tmp.ContractId */
 
         /*WHERE COALESCE (JuridicalSettings.ContractId, tmp.ContractId) = tmp.ContractId -- т.е. если есть юр лицо в JuridicalSettings, тогда Movement с !!!таким же!!! ContractId, иначе - !!!ВСЕ!! Movement
           AND JuridicalSettings_close.JuridicalId IS NULL -- !!!т.е. НЕ закрыт!!!
         */
-       )
+       /*)*/
     -- Последние цены (поставщика) по "нужным" товарам из GoodsList
   , MI_PriceList AS
        (SELECT Movement_PriceList.MovementId

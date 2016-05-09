@@ -123,7 +123,7 @@ BEGIN
                                                )
      FROM Object AS Object_Retail
           LEFT JOIN (SELECT DISTINCT
-                          , COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id) AS GoodsId
+                            COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id) AS GoodsId
                           , ObjectLink_Goods_Object.ChildObjectId                                     AS RetailId
                      FROM Object AS Object_Goods
                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods

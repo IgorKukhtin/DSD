@@ -27,7 +27,9 @@ BEGIN
                  JOIN ObjectLink AS ObjectLink_ImportGroup_Object
                                  ON ObjectLink_ImportGroup_Object.ObjectId = Object_ImportGroup.Id
                                 AND ObjectLink_ImportGroup_Object.DescId = zc_ObjectLink_ImportGroup_Object()
-                                AND (ObjectLink_ImportGroup_Object.ChildObjectId = vbObjectId OR vbObjectId = 0);
+                                -- !!!Временно!!!
+                                -- AND (ObjectLink_ImportGroup_Object.ChildObjectId = vbObjectId OR vbObjectId = 0)
+      ;
   
 END;
 $BODY$
@@ -40,7 +42,6 @@ ALTER FUNCTION gpSelect_Object_ImportGroup(TVarChar) OWNER TO postgres;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  30.09.14                        *
-
 */
 
 -- тест

@@ -62,7 +62,7 @@ BEGIN
      END IF;
 
      RETURN QUERY 
-       WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+       WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state = 'active' /*and UseName = 'postgres'*/)
           , tmpProcess_All AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess)
           , tmpProcess_Exp AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Scale%')
           , tmpProcess_Inv AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Inventory%')
