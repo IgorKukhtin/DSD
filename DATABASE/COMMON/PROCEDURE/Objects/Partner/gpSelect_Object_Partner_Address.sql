@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar);
--- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Address(
@@ -54,6 +54,7 @@ BEGIN
        inStartDate:= NULL;
        inEndDate  := NULL;
    ELSE
+       inIsPeriod := FALSE;
        inStartDate:= NULL;
        inEndDate  := NULL;
    END IF;

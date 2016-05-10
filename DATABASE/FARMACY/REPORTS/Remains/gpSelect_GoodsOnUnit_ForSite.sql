@@ -268,7 +268,7 @@ BEGIN
                                         AND Movement.DescId   = zc_Movement_Check()
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.isErased   = FALSE
-                     INNER JOIN _tmpGoodsMinPrice_List ON _tmpGoodsMinPrice_List.GoodsId = MovementItem.ObjectId
+                     -- INNER JOIN _tmpGoodsMinPrice_List ON _tmpGoodsMinPrice_List.GoodsId = MovementItem.ObjectId
                 GROUP BY tmpList.UnitId
                        , MovementItem.ObjectId
                )
@@ -383,9 +383,9 @@ BEGIN
              , Object_Unit.Id                                          AS UnitId
              , Object_Unit.ValueData                                   AS UnitName
 
-             , (ContainerCount.Amount - COALESCE (tmpMI_Deferred.Amount, 0)) :: TFloat AS Remains
-             , ContainerCount.Amount                                         :: TFloat AS RemainsAll
-             , tmpMI_Deferred.Amount                                         :: TFloat AS AmountDeferred
+             , (tmpList.Amount /*ContainerCount.Amount*/ - COALESCE (tmpMI_Deferred.Amount, 0)) :: TFloat AS Remains
+             , tmpList.Amount /*ContainerCount.Amount*/                                         :: TFloat AS RemainsAll
+             , tmpMI_Deferred.Amount                                                            :: TFloat AS AmountDeferred
 
              , MinPrice_List.JuridicalId
              , MinPrice_List.JuridicalName
@@ -408,7 +408,7 @@ BEGIN
              , ObjectFloat_NDSKind_NDS.ValueData    AS NDS
              , Object_NDSKind.ValueData             AS NDSKindName
 
-        FROM _tmpList AS tmpList -- _tmpGoodsMinPrice_List
+        FROM _tmpContainerCount AS tmpList -- _tmpList AS tmpList -- _tmpGoodsMinPrice_List
              -- LEFT JOIN _tmpUnitMinPrice_List ON 1=1
 
              LEFT JOIN tmpMI_Deferred ON tmpMI_Deferred.GoodsId = tmpList.GoodsId
@@ -416,9 +416,9 @@ BEGIN
 
              LEFT JOIN Price_Unit     ON Price_Unit.GoodsId     = tmpList.GoodsId
                                      AND Price_Unit.UnitId      = tmpList.UnitId
-             LEFT JOIN _tmpContainerCount AS ContainerCount
+             /*LEFT JOIN _tmpContainerCount AS ContainerCount
                                           ON ContainerCount.GoodsId = tmpList.GoodsId
-                                         AND ContainerCount.UnitId  = tmpList.UnitId
+                                         AND ContainerCount.UnitId  = tmpList.UnitId*/
              LEFT JOIN _tmpMinPrice_List AS MinPrice_List  ON MinPrice_List.GoodsId  = tmpList.GoodsId
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpList.UnitId

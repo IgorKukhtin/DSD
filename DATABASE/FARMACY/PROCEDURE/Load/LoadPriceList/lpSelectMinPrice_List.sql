@@ -119,8 +119,8 @@ BEGIN
   , GoodsList AS
        (SELECT GoodsList_all.*
         FROM GoodsList_all
-            INNER JOIN Object ON Object.Id = GoodsList_all.ObjectId
-                             AND Object.DescId = zc_Object_Juridical()
+             INNER JOIN Object ON Object.Id = GoodsList_all.ObjectId
+                              AND Object.DescId = zc_Object_Juridical()
        )
     -- Список Последних цен (поставщика) !!!по документам!!! (т.е. последний документ а не последняя найденная цена)
   , Movement_PriceList AS
@@ -187,7 +187,8 @@ BEGIN
              INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                               AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
-             INNER JOIN GoodsList ON GoodsList.GoodsId_jur = MILinkObject_Goods.ObjectId -- товар "поставщика"
+                                              AND MILinkObject_Goods.ObjectId      IN (SELECT GoodsList.GoodsId_jur FROM GoodsList) -- товар "поставщика"
+             LEFT JOIN GoodsList ON GoodsList.GoodsId_jur = MILinkObject_Goods.ObjectId -- товар "поставщика"
        )
 
     -- почти финальный список

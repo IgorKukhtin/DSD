@@ -99,7 +99,7 @@ BEGIN
                , SUM (Operation_all.SummTransportAdd)      AS SummTransportAdd
                , SUM (Operation_all.SummTransportAddLong)  AS SummTransportAddLong
                , SUM (Operation_all.SummTransportTaxi)     AS SummTransportTaxi
-               , SUM (Operation_all.SummTransportTaxi)     AS SummPhone
+               , SUM (Operation_all.SummPhone)             AS SummPhone
                , SUM (Operation_all.EndAmount)   AS EndAmount
           FROM
           (SELECT tmpContainer.ContainerId

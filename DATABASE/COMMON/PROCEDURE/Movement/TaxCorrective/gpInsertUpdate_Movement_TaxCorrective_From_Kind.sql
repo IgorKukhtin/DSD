@@ -308,10 +308,10 @@ BEGIN
      DELETE FROM _tmp1_SubQuery;
      DELETE FROM _tmp2_SubQuery;
      -- данные для курсор2 - <Налоговые> отдельно !!!для оптимизации!!!
-     INSERT INTO _tmp1_SubQuery (MovementId, OperDate, isRegistered, Amount)
-                         SELECT Movement.Id AS MovementId
+           WITH tmp1 AS (SELECT Movement.Id AS MovementId
                               , Movement.OperDate
                               , COALESCE (MB_Registered.ValueData, FALSE) AS isRegistered
+                              , MIFloat_Price.ValueData   AS Price
                               , SUM (MovementItem.Amount) AS Amount
                          FROM MovementLinkObject AS MLO_Partner
                               INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
@@ -320,21 +320,21 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Master.MovementChildId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '12 MONTH' AND vbOperDate - INTERVAL '1 DAY'
+                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '6 MONTH' AND vbOperDate - INTERVAL '1 DAY'
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                            AND (MovementLinkObject_Contract.ObjectId = vbContractId
-                                                             OR (Movement.OperDate < '01.02.2016' AND vbBranchId = zc_Branch_Kiev())
+                                                             -- OR (Movement.OperDate < '01.02.2016' AND vbBranchId = zc_Branch_Kiev())
                                                                )
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.ObjectId = vbGoodsId
                                                      AND MovementItem.DescId = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
                                                      AND MovementItem.Amount <> 0
-                              INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.ValueData = vbOperPrice
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                          -- AND MIFloat_Price.ValueData = vbOperPrice
                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
                               LEFT JOIN MovementBoolean AS MB_Registered
                                                         ON MB_Registered.MovementId = Movement.Id
@@ -344,30 +344,28 @@ BEGIN
                          GROUP BY Movement.Id
                                 , Movement.OperDate
                                 , MB_Registered.ValueData
-                        UNION
+                                , MIFloat_Price.ValueData
+                        /*UNION
                          -- !!! для Киева по юр.р. лицу !!!
                          SELECT Movement.Id AS MovementId
                               , Movement.OperDate
                               , COALESCE (MB_Registered.ValueData, FALSE) AS isRegistered
+                              , MIFloat_Price.ValueData   AS Price
                               , SUM (MovementItem.Amount) AS Amount
                          FROM MovementLinkObject AS MLO_To
                               INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '12 MONTH' AND vbOperDate - INTERVAL '1 DAY'
-                              /*INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                           AND MovementLinkObject_Contract.ObjectId = vbContractId*/
+                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '6 MONTH' AND vbOperDate - INTERVAL '1 DAY'
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.ObjectId = vbGoodsId
                                                      AND MovementItem.DescId = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
                                                      AND MovementItem.Amount <> 0
-                              INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.ValueData = vbOperPrice
-                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                          -- AND MIFloat_Price.ValueData = vbOperPrice
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                               LEFT JOIN MovementBoolean AS MB_Registered
                                                         ON MB_Registered.MovementId = Movement.Id
                                                        AND MB_Registered.DescId = zc_MovementBoolean_Registered()
@@ -377,7 +375,11 @@ BEGIN
                            AND vbBranchId = zc_Branch_Kiev()
                          GROUP BY Movement.Id
                                 , Movement.OperDate
-                                , MB_Registered.ValueData;
+                                , MB_Registered.ValueData
+                                , MIFloat_Price.ValueData*/)
+     -- результат
+     INSERT INTO _tmp1_SubQuery (MovementId, OperDate, isRegistered, Amount)
+        SELECT tmp1.MovementId, tmp1.OperDate, tmp1.isRegistered, tmp1.Amount FROM tmp1 WHERE tmp1.Price = vbOperPrice;
                         
      -- данные для курсор2 - <Корректировки> к этим <Налоговым> отдельно !!!для оптимизации!!!
               WITH tmpMovement2 AS (SELECT Movement.Id
