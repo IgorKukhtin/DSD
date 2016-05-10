@@ -837,6 +837,9 @@ var
   ASortingImageSize: Integer;
   ASortingImageIndex: Integer;
 begin
+  // вот так останется "нужный" рисунок - 10.04.2016
+  if not AViewInfo.Column.HeaderGlyph.Empty then exit;
+
   ASortingImageSize := 0;
   if Assigned(SortImages) then
      ASortingImageSize := SortImages.Width;

@@ -22,7 +22,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_Retail(
 RETURNS Integer
 AS
 $BODY$
+   DECLARE vbObjectId Integer;
 BEGIN
+     -- определяется <Торговая сеть>
+     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', inUserId);
+
+
      -- сохранили <Товар Торговой сети>
      ioId:= lpInsertUpdate_Object_Goods (ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inObjectId, inUserId, 0, '');
 
@@ -30,14 +35,19 @@ BEGIN
      IF inMinimumLot = 0 THEN inMinimumLot := NULL; END IF;   	
 
      -- сохранили еще свойства для <Товар Торговой сети>
-     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(), ioId, inMinimumLot);
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferCode(), ioId, inReferCode);
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferPrice(), ioId, inReferPrice);
-     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Price(), ioId, inPrice);
 
-     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Close(), ioId, inIsClose);
-     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), ioId, inTOP);
-     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentMarkup(), ioId, inPercentMarkup);
+     -- !!!только для торговой сети vbObjectId!!!
+     IF vbObjectId = inObjectId
+     THEN
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(), ioId, inMinimumLot);
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentMarkup(), ioId, inPercentMarkup);
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Price(), ioId, inPrice);
+
+         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Close(), ioId, inIsClose);
+         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), ioId, inTOP);
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
@@ -54,4 +64,4 @@ ALTER FUNCTION lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, 
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Goods_Retail
+-- SELECT * FROM lpInsertUpdate_Object_Goods_Retail

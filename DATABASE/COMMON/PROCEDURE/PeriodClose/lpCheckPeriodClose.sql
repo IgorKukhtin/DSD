@@ -18,12 +18,13 @@ $BODY$
    DECLARE vbPeriodCloseId_two Integer;
    DECLARE vbCloseDate         TDateTime;
 BEGIN
-     -- !!!только Перепроведение с/с - НЕТ ограничений!!! + временно: !!!для Админа  - НЕТ ограничений!!!
+     -- !!!только Перепроведение с/с - НЕТ ограничений!!!
      IF inUserId IN (zc_Enum_Process_Auto_PrimeCost()
-                   /*, zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose()*/
-                   /*, zfCalc_UserAdmin() :: Integer*/
+                   , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose()
+                   -- , zc_Enum_Process_Auto_Defroster()
+                   -- , zfCalc_UserAdmin() :: Integer -- временно: !!!для Админа - НЕТ ограничений!!!
                     )
-        -- OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+        -- OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin()) -- временно: !!!для ВСЕХ Админов - НЕТ ограничений!!!
      THEN
           RETURN; -- !!!выход!!!
      END IF;
@@ -99,23 +100,22 @@ BEGIN
      SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
-          LEFT JOIN (SELECT DISTINCT ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo())
-                    ) AS tmp1 ON tmp1.PaidKindId = _tmpPeriodClose.PaidKindId
-          LEFT JOIN (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
-                     FROM MovementItem
-                          JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
-                                                     AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
-                     WHERE MovementItem.MovementId = inMovementId
-                       AND MovementItem.isErased = FALSE
-                    ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
-          LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm() AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()
-                    UNION
-                     SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount()
-                    ) AS tmp3 ON tmp3.PaidKindId = _tmpPeriodClose.PaidKindId
-                             AND tmp1.PaidKindId IS NULL AND tmp2.PaidKindId IS NULL
+          LEFT JOIN (WITH tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo()))
+                        , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                                   FROM MovementItem
+                                        JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
+                                   WHERE MovementItem.MovementId = inMovementId
+                                     AND MovementItem.isErased = FALSE)
+                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
+                                  UNION ALL
+                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount() AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
+                     -- подзапрос
+                     SELECT tmp1.PaidKindId FROM tmp1 UNION SELECT tmp2.PaidKindId FROM tmp2 UNION SELECT tmp3.PaidKindId FROM tmp3
+                    ) AS tmp ON tmp.PaidKindId = _tmpPeriodClose.PaidKindId
      WHERE _tmpPeriodClose.MovementDescId = inMovementDescId AND _tmpPeriodClose.UserId = inUserId
        AND (_tmpPeriodClose.BranchId   = 0 OR _tmpPeriodClose.BranchId = vbBranchId)
-       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0 OR tmp3.PaidKindId > 0);
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp.PaidKindId > 0);
      -- Проверка
      IF vbPeriodCloseId <> vbPeriodCloseId_two
      THEN
@@ -162,23 +162,22 @@ BEGIN
      SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
-          LEFT JOIN (SELECT DISTINCT ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo())
-                    ) AS tmp1 ON tmp1.PaidKindId = _tmpPeriodClose.PaidKindId
-          LEFT JOIN (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
-                     FROM MovementItem
-                          JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
-                                                     AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
-                     WHERE MovementItem.MovementId = inMovementId
-                       AND MovementItem.isErased = FALSE
-                    ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
-          LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm() AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()
-                    UNION
-                     SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount()
-                    ) AS tmp3 ON tmp3.PaidKindId = _tmpPeriodClose.PaidKindId
-                             AND tmp1.PaidKindId IS NULL AND tmp2.PaidKindId IS NULL
+          LEFT JOIN (WITH tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo()))
+                        , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                                   FROM MovementItem
+                                        JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
+                                   WHERE MovementItem.MovementId = inMovementId
+                                     AND MovementItem.isErased = FALSE)
+                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
+                                  UNION ALL
+                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount() AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
+                     -- подзапрос
+                     SELECT tmp1.PaidKindId FROM tmp1 UNION SELECT tmp2.PaidKindId FROM tmp2 UNION SELECT tmp3.PaidKindId FROM tmp3
+                    ) AS tmp ON tmp.PaidKindId = _tmpPeriodClose.PaidKindId
      WHERE _tmpPeriodClose.MovementDescId = 0 AND _tmpPeriodClose.UserId = 0 AND _tmpPeriodClose.MovementDescId_excl <> inMovementDescId
        AND (_tmpPeriodClose.BranchId   = 0)
-       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0 OR tmp3.PaidKindId > 0);
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp.PaidKindId > 0);
      -- Проверка - 1
      IF vbPeriodCloseId <> vbPeriodCloseId_two
      THEN
@@ -242,23 +241,22 @@ BEGIN
      SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
-          LEFT JOIN (SELECT DISTINCT ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo())
-                    ) AS tmp1 ON tmp1.PaidKindId = _tmpPeriodClose.PaidKindId
-          LEFT JOIN (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
-                     FROM MovementItem
-                          JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
-                                                     AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
-                     WHERE MovementItem.MovementId = inMovementId
-                       AND MovementItem.isErased = FALSE
-                    ) AS tmp2 ON tmp2.PaidKindId = _tmpPeriodClose.PaidKindId
-          LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm() AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()
-                    UNION
-                     SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount()
-                    ) AS tmp3 ON tmp3.PaidKindId = _tmpPeriodClose.PaidKindId
-                             AND tmp1.PaidKindId IS NULL AND tmp2.PaidKindId IS NULL
+          LEFT JOIN (WITH tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo()))
+                        , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                                   FROM MovementItem
+                                        JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
+                                   WHERE MovementItem.MovementId = inMovementId
+                                     AND MovementItem.isErased = FALSE)
+                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
+                                  UNION ALL
+                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount() AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
+                     -- подзапрос
+                     SELECT tmp1.PaidKindId FROM tmp1 UNION SELECT tmp2.PaidKindId FROM tmp2 UNION SELECT tmp3.PaidKindId FROM tmp3
+                    ) AS tmp ON tmp.PaidKindId = _tmpPeriodClose.PaidKindId
      WHERE _tmpPeriodClose.MovementDescId = 0 AND _tmpPeriodClose.UserId = 0 AND _tmpPeriodClose.MovementDescId_excl <> inMovementDescId
        AND (_tmpPeriodClose.BranchId   = vbBranchId)
-       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp1.PaidKindId > 0 OR tmp2.PaidKindId > 0 OR tmp3.PaidKindId > 0);
+       AND (_tmpPeriodClose.PaidKindId = 0 OR tmp.PaidKindId > 0);
      -- Проверка - 1
      IF vbPeriodCloseId <> vbPeriodCloseId_two
      THEN

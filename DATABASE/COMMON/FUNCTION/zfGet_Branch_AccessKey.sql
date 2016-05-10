@@ -16,9 +16,17 @@ BEGIN
                        -- филиал - "ГЛАВНЫЙ"
                        WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentDnepr()
                                             , zc_Enum_Process_AccessKey_CashDnepr()
-                                            --, zc_Enum_Process_AccessKey_PersonalService...()
                                             , zc_Enum_Process_AccessKey_ServiceDnepr()
                                             , zc_Enum_Process_AccessKey_TrasportDnepr()
+                                            --, zc_Enum_Process_AccessKey_PersonalService...()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceProduction()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceAdmin()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceSbit()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceMarketing()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceSB()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceFirstForm()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceSbitM()
+                                            , zc_Enum_Process_AccessKey_PersonalServicePav()
                                              )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
                        -- филиал - Kiev

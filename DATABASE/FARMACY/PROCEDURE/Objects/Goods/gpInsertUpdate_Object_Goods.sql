@@ -132,12 +132,14 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
                                                ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
                                               AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain_find
                                                ON ObjectLink_LinkGoods_GoodsMain_find.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
                                               AND ObjectLink_LinkGoods_GoodsMain_find.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods_find
                                                ON ObjectLink_LinkGoods_Goods_find.ObjectId = ObjectLink_LinkGoods_GoodsMain_find.ObjectId
                                               AND ObjectLink_LinkGoods_Goods_find.DescId = zc_ObjectLink_LinkGoods_Goods()
+
                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
                                                ON ObjectLink_Goods_Object.ObjectId = COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id)
                                               AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
