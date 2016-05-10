@@ -515,17 +515,20 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actChecked: TdsdExecStoredProc [6]
@@ -564,10 +567,12 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -588,10 +593,12 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -612,10 +619,12 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -636,10 +645,12 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -682,6 +693,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -690,6 +702,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.ComponentItem = 'ReportNameSaleTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintTax_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -721,6 +734,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -729,6 +743,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.ComponentItem = 'ReportNameSaleTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -757,6 +772,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -765,6 +781,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Bill: TdsdPrintAction
       Category = 'DSDLib'
@@ -793,6 +810,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1057#1095#1077#1090
@@ -801,6 +819,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.ComponentItem = 'ReportNameSaleBill'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actSPPrintSaleProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -843,10 +862,12 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -872,11 +893,13 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TransferDebtOut'
       ReportNameParam.Value = 'PrintMovement_TransferDebtOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TTN: TMultiAction
       Category = 'DSDLib'
@@ -886,10 +909,12 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -913,18 +938,21 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       FormName = 'TTransportGoodsForm'
       FormNameParam.Value = 'TTransportGoodsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId_TransportGoods'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MovementId_Sale'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -933,6 +961,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -973,11 +1002,13 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -988,6 +1019,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -995,6 +1027,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1002,6 +1035,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1024,6 +1058,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -1031,6 +1066,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1038,6 +1074,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -1255,30 +1292,35 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSale'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSaleTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1299,6 +1341,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -1306,6 +1349,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -1313,6 +1357,21 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outInvNumberPartner_Master'
@@ -1320,12 +1379,14 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner_Master'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -1333,6 +1394,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1368,6 +1430,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -1394,12 +1457,14 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 919
@@ -1426,12 +1491,14 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 919
@@ -1448,6 +1515,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportNameTax'
@@ -1455,6 +1523,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameSaleTax'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 920
@@ -1471,6 +1540,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportName'
@@ -1478,6 +1548,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameSale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 704
@@ -1494,6 +1565,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportNameBill'
@@ -1501,6 +1573,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameSaleBill'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 536
@@ -1517,6 +1590,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1527,6 +1601,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1535,6 +1610,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 912
   end
@@ -1549,6 +1625,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -1557,6 +1634,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -1573,6 +1651,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1581,12 +1660,14 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_TransportGoods'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_TransportGoods'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_TransportGoods'
@@ -1594,6 +1675,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumber_TransportGoods'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_TransportGoods'
@@ -1601,6 +1683,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208
@@ -1624,6 +1707,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 575

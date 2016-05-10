@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
+             , StartDateTax TDateTime, EndDateTax TDateTime
              , MovementId_Partion Integer, PartionMovementName TVarChar
              , Comment TVarChar
              , isPromo Boolean
@@ -77,6 +78,8 @@ BEGIN
              , Object_PriceList.ValueData               AS PriceListName
              , 0                     		        AS DocumentTaxKindId
              , CAST ('' as TVarChar) 		        AS DocumentTaxKindName
+             , (DATE_TRUNC('MONTH', inOperDate) - INTERVAL '3 MONTH') ::TDateTime AS StartDateTax
+             , inOperDate                               AS EndDateTax 
              , 0                     		        AS MovementId_Partion
              , CAST ('' as TVarChar) 		        AS PartionMovementName
              , CAST ('' as TVarChar) 		        AS Comment
@@ -169,6 +172,9 @@ BEGIN
 
            , Object_TaxKind.Id                	    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
+
+           , (DATE_TRUNC('MONTH', MovementDate_OperDatePartner.ValueData) - INTERVAL '3 MONTH') ::TDateTime AS StartDateTax
+           , MovementDate_OperDatePartner.ValueData                                           AS EndDateTax 
 
            , tmpMI.MovementId                       AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
@@ -282,9 +288,9 @@ BEGIN
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
-         LEFT JOIN Object as ObjectCurrencycyDocumentInf 
-                          on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
-                         AND ObjectCurrencycyDocumentInf.id = 14461
+            LEFT JOIN Object as ObjectCurrencycyDocumentInf 
+                             on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
+                            AND ObjectCurrencycyDocumentInf.id = 14461
 
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ReturnIn();
@@ -299,6 +305,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.05.16         * add StartDateTax, EndDateTax
  21.08.15         * add isPartner
  26.06.15         * add Comment, Parent
  24.07.14         * add zc_MovementFloat_CurrencyValue

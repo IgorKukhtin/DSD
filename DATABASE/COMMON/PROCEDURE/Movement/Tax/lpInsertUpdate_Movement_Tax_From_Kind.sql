@@ -1,11 +1,15 @@
 -- Function: lpInsertUpdate_Movement_Tax_From_Kind()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TDateTime, TDateTime, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (
     IN inMovementId                 Integer  , -- ключ Документа
     IN inDocumentTaxKindId          Integer  , -- Тип формирования налогового документа
     IN inDocumentTaxKindId_inf      Integer  , -- Тип формирования налогового документа
+    IN inStartDateTax               TDateTime, -- 
+    IN inEndDateTax                 TDateTime, -- 
    OUT outInvNumberPartner_Master   TVarChar , --
    OUT outDocumentTaxKindId         Integer  , --
    OUT outDocumentTaxKindName       TVarChar , --
@@ -1167,11 +1171,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, Integer) OWNER TO postgres;
+--ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, Integer) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.16         * add 
  09.07.14                                        * add zc_Movement_TransferDebtIn
  03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС
  16.05.14                                        * set lp

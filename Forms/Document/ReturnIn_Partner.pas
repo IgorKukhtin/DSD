@@ -156,6 +156,10 @@ type
     actOpenTax: TdsdOpenForm;
     bbOpenTax: TdxBarButton;
     actShowMessage: TShowMessageAction;
+    cxLabel22: TcxLabel;
+    edStartDateTax: TcxDateEdit;
+    cxLabel23: TcxLabel;
+    edEndDateTax: TcxDateEdit;
   private
     { Private declarations }
   public
