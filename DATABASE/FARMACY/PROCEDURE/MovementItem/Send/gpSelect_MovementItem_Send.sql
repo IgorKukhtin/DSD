@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountRemains TFloat, PriceIn TFloat, SumPriceIn TFloat
              , PriceUnitFrom TFloat, PriceUnitTo TFloat
+             , Price TFloat, Summa TFloat, PriceWithVAT TFloat, SummaWithVAT TFloat
              , isErased Boolean
               )
 AS
@@ -47,11 +48,11 @@ BEGIN
         -- Результат такой
         RETURN QUERY
             WITH 
-                tmpRemains AS(
-                                SELECT 
+                tmpRemains AS(  SELECT 
                                     Container.ObjectId                  AS GoodsId
                                   , SUM(Container.Amount)::TFloat       AS Amount
                                   , AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
+                                      
                                 FROM Container
                                     INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                                    ON Container.Id = ContainerLinkObject_Unit.ContainerId 
@@ -63,16 +64,15 @@ BEGIN
                                     INNER JOIN OBJECT AS Object_PartionMovementItem 
                                                       ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
                                     INNER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+
                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                                       ON MIFloat_Price.MovementItemId = MovementItem.ID
                                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                 WHERE Container.DescId = zc_Container_Count()
                                   AND Container.Amount <> 0
-                                GROUP BY 
-                                    Container.ObjectId
+                                GROUP BY Container.ObjectId
                              )
-               ,MovementItem_Send AS (
-                                        SELECT 
+               ,MovementItem_Send AS (  SELECT 
                                             MovementItem.Id
                                            ,MovementItem.ObjectId
                                            ,MovementItem.Amount
@@ -93,9 +93,15 @@ BEGIN
                         ,tmpRemains.PriceIn)::TFloat           AS PriceIn
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData))
                         ,(MovementItem_Send.Amount
-                         *tmpRemains.PriceIn))::TFloat         AS SumPriceIn
+                         *tmpRemains.PriceIn))::TFloat            AS SumPriceIn
               , Object_Price_From.Price                           AS PriceUnitFrom
               , Object_Price_To.Price                             AS PriceUnitTo
+
+              , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))/SUM(MIContainer_Count.Amount)),0) ::TFloat  AS Price
+              , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa
+              , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)   ::TFloat  AS PriceWithVAT
+              , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT
+
               , COALESCE(MovementItem_Send.IsErased,FALSE)        AS isErased
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
@@ -119,9 +125,18 @@ BEGIN
                 LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                   ON MIFloat_Price.MovementItemId = MovementItem.ID
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            WHERE 
-                Object_Goods.isErased = FALSE 
-             or MovementItem_Send.id is not null
+
+            -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
+            LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                        ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.ID
+                                       AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+            -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                        ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+            WHERE Object_Goods.isErased = FALSE 
+               or MovementItem_Send.id is not null
             GROUP BY
                 MovementItem_Send.Id
               , Object_Goods.Id
@@ -182,6 +197,12 @@ BEGIN
                          *tmpRemains.PriceIn))::TFloat         AS SumPriceIn
            , Object_Price_From.Price                           AS PriceUnitFrom
            , Object_Price_To.Price                             AS PriceUnitTo
+
+           , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))/SUM(MIContainer_Count.Amount)),0) ::TFloat  AS Price
+           , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa
+           , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)   ::TFloat  AS PriceWithVAT
+           , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT
+
            , MovementItem_Send.IsErased                        AS isErased
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
@@ -205,6 +226,16 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                               ON MIFloat_Price.MovementItemId = MovementItem.ID
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+            -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
+            LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                        ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.ID
+                                       AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+            -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                        ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
        GROUP BY
               MovementItem_Send.Id
            , Object_Goods.Id
@@ -228,6 +259,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.16         *
  15.10.14         * add Price, Storage_Partion
  04.08.14                                        * add Object_InfoMoney_View
  04.08.14         * add zc_MILinkObject_Unit
