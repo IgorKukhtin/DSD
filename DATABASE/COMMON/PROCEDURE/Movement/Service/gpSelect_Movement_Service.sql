@@ -39,6 +39,18 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+           , tmpCost AS (SELECT MovementFloat.ValueData :: Integer AS MovementServiceId
+                              , STRING_AGG ( '№ '|| Movement_Income.InvNumber || ' oт '|| TO_CHAR (Movement_Income.Operdate , 'DD.MM.YYYY')|| '. ' , ', ') AS strInvNumber
+                         FROM MovementFloat
+                              INNER JOIN Movement AS Movement_Cost
+                                                  ON Movement_Cost.Id = MovementFloat.MovementId :: Integer
+                                                 AND Movement_Cost.StatusId <> zc_Enum_Status_Erased()
+                              INNER JOIN Movement AS Movement_Income
+                                                  ON Movement_Income.Id = Movement_Cost.ParentId
+                                                 AND Movement_Income.DescId = zc_Movement_Income()
+                           WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
+                           GROUP BY MovementFloat.ValueData
+                         )
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -130,15 +142,7 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
  
 
-            LEFT JOIN (SELECT MovementFloat.ValueData AS MovementServiceId
-                            , STRING_AGG ( '№ '|| Movement_Income.InvNumber || ' oт '|| TO_CHAR(Movement_Income.Operdate , 'DD.MM.YYYY')|| '. ' , ', ') AS strInvNumber
-                       FROM MovementFloat
-                          LEFT JOIN Movement AS Movement_Cost on Movement_Cost.id = MovementFloat.Movementid
-                                            AND Movement_Cost.StatusId <> zc_Enum_Status_Erased()
-                          LEFT JOIN Movement AS Movement_Income on Movement_Income.id = Movement_Cost.ParentId
-                       WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
-                       GROUP BY MovementFloat.ValueData) AS tmpCost ON tmpCost.MovementServiceId = Movement.Id 
-
+            LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id 
       ;
   
 END;
@@ -162,4 +166,4 @@ ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarCha
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

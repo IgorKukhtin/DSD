@@ -3104,6 +3104,7 @@ BEGIN
      THEN PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
                                                        , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
                                                        , inDocumentTaxKindId_inf := NULL
+                                                       , inStartDateTax          := NULL
                                                        , inUserId                := inUserId
                                                         );
      END IF;

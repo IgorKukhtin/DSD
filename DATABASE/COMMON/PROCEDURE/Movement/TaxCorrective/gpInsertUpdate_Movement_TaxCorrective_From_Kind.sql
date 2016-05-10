@@ -1,14 +1,13 @@
 -- Function: gpInsertUpdate_Movement_TaxCorrective_From_Kind()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (
     IN inMovementId             Integer  , -- ключ Документа
     IN inDocumentTaxKindId      Integer  , -- Тип формирования налогового документа
     IN inDocumentTaxKindId_inf  Integer  , -- Тип формирования налогового документа в журнале
     IN inStartDateTax           TDateTime, -- 
-    IN inEndDateTax             TDateTime, -- 
     IN inIsTaxLink              Boolean  , -- Признак привязки к налоговым
    OUT outDocumentTaxKindId     Integer  , --
    OUT outDocumentTaxKindName   TVarChar , --
@@ -137,6 +136,8 @@ BEGIN
                               AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
      WHERE Movement.Id = inMovementId
     ;
+     -- !!!замена
+     IF inStartDateTax IS NULL THEN inStartDateTax:= DATE_TRUNC('MONTH', vbOperDate) - INTERVAL '4 MONTH'; END IF;
 
      -- проверка - проведенные/удаленные документы Изменять нельзя
      IF vbStatusId <> zc_Enum_Status_UnComplete() AND inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
@@ -324,7 +325,7 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Master.MovementChildId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '6 MONTH' AND vbOperDate - INTERVAL '1 DAY'
+                                                 AND Movement.OperDate BETWEEN inStartDateTax /*vbOperDate - INTERVAL '6 MONTH'*/ AND vbOperDate - INTERVAL '1 DAY'
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -360,7 +361,7 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '6 MONTH' AND vbOperDate - INTERVAL '1 DAY'
+                                                 AND Movement.OperDate BETWEEN inStartDateTax / *vbOperDate - INTERVAL '6 MONTH' * / AND vbOperDate - INTERVAL '1 DAY'
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.ObjectId = vbGoodsId
                                                      AND MovementItem.DescId = zc_MI_Master()
@@ -687,7 +688,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.05.16         * add inStartDateTax, inEndDateTax
+ 10.05.16         * add inStartDateTax
  31.07.14                                        * add outMovementId_Corrective
  06.06.14                                        * add проверка - проведенные/удаленные документы Изменять нельзя
  03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС

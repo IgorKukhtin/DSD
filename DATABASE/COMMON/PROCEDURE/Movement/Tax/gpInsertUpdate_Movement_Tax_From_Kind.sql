@@ -1,14 +1,13 @@
 -- Function: gpInsertUpdate_Movement_Tax_From_Kind()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (
     IN inMovementId                 Integer  , -- ключ Документа
     IN inDocumentTaxKindId          Integer  , -- Тип формирования налогового документа
     IN inDocumentTaxKindId_inf      Integer  , -- Тип формирования налогового документа
     IN inStartDateTax               TDateTime, -- 
-    IN inEndDateTax                 TDateTime, -- 
    OUT outInvNumberPartner_Master   TVarChar , --
    OUT outDocumentTaxKindId         Integer  , --
    OUT outDocumentTaxKindName       TVarChar , --
@@ -30,7 +29,6 @@ BEGIN
                                                , inDocumentTaxKindId     := inDocumentTaxKindId
                                                , inDocumentTaxKindId_inf := inDocumentTaxKindId_inf
                                                , inStartDateTax          := inStartDateTax
-                                               , inEndDateTax            := inEndDateTax
                                                , inUserId                := vbUserId
                                                 ) AS tmp;
 
@@ -45,7 +43,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.05.16         * add inStartDateTax, inEndDateTax
+ 10.05.16         * add inStartDateTax
  16.05.14                                        * add lpInsertUpdate_Movement_Tax_From_Kind
 */
 

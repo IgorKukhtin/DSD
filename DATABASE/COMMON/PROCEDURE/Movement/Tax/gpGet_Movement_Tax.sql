@@ -4,7 +4,6 @@ DROP FUNCTION IF EXISTS gpGet_Movement_Tax (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Tax (Integer, Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_Movement_Tax(
     IN inMovementId        Integer  , -- ключ Документа
     IN inMask              Boolean  ,
@@ -20,7 +19,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
-             , StartDateTax TDateTime, EndDateTax TDateTime
+             , StartDateTax TDateTime
              , InvNumberBranch TVarChar
              , Comment TVarChar
               )
@@ -73,8 +72,7 @@ BEGIN
              , CAST ('' as TVarChar) 			AS ContractTagName
              , 0                     			AS TaxKindId
              , CAST ('' as TVarChar) 			AS TaxKindName
-             , (DATE_TRUNC('MONTH', inOperDate) - INTERVAL '3 MONTH') ::TDateTime AS StartDateTax
-             , inOperDate                                           AS EndDateTax 
+             , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
              , tmpInvNumber.InvNumberBranch
              , CAST ('' as TVarChar) 		        AS Comment
 
@@ -143,8 +141,7 @@ BEGIN
            , Object_Contract.ContractTagName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
-           , (DATE_TRUNC('MONTH', Movement.OperDate) - INTERVAL '3 MONTH') ::TDateTime AS StartDateTax
-           , Movement.OperDate                                           AS EndDateTax 
+           , (DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
            , MovementString_InvNumberBranch.ValueData           AS InvNumberBranch
            , MovementString_Comment.ValueData                   AS Comment
 
@@ -242,7 +239,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.05.16         * add StartDateTax, EndDateTax
+ 10.05.16         * add StartDateTax
  26.01.15         * add Mask
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  24.04.14                                                        * add zc_MovementString_InvNumberBranch

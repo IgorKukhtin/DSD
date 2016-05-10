@@ -1,15 +1,13 @@
 -- Function: lpInsertUpdate_Movement_Tax_From_Kind()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TDateTime, TDateTime, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (
     IN inMovementId                 Integer  , -- ключ ƒокумента
     IN inDocumentTaxKindId          Integer  , -- “ип формировани€ налогового документа
     IN inDocumentTaxKindId_inf      Integer  , -- “ип формировани€ налогового документа
     IN inStartDateTax               TDateTime, -- 
-    IN inEndDateTax                 TDateTime, -- 
    OUT outInvNumberPartner_Master   TVarChar , --
    OUT outDocumentTaxKindId         Integer  , --
    OUT outDocumentTaxKindName       TVarChar , --
@@ -232,6 +230,9 @@ BEGIN
                                     ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement.MovementChildId
                                    AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
       WHERE Movement.Id = inMovementId;
+
+      -- !!!замена!!!
+      IF inStartDateTax IS NULL THEN inStartDateTax:= DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '4 MONTH'; END IF;
 
 
       -- если надо, находим существующий <Ќалоговый документ>
@@ -789,7 +790,7 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '4 MONTH' AND vbOperDate - INTERVAL '0 DAY' -- !!!об€зательно 0 DAY, что б попала текуща€ сводна€ <Ќалогова€>!!!
+                                                 AND Movement.OperDate BETWEEN inStartDateTax /*vbOperDate - INTERVAL '4 MONTH'*/ AND vbOperDate - INTERVAL '0 DAY' -- !!!об€зательно 0 DAY, что б попала текуща€ сводна€ <Ќалогова€>!!!
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -828,7 +829,7 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '4 MONTH' AND vbOperDate - INTERVAL '0 DAY' -- !!!об€зательно 0 DAY, что б попала текуща€ сводна€ <Ќалогова€>!!!
+                                                 AND Movement.OperDate BETWEEN inStartDateTax /*vbOperDate - INTERVAL '4 MONTH'*/ AND vbOperDate - INTERVAL '0 DAY' -- !!!об€зательно 0 DAY, что б попала текуща€ сводна€ <Ќалогова€>!!!
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()

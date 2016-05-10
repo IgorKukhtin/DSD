@@ -4,7 +4,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1122
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1464,13 +1464,6 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDateTax'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsTaxLink'
         Value = True
         DataType = ftBoolean
@@ -1633,13 +1626,6 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDateTax'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput

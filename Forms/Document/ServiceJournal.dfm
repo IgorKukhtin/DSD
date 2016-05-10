@@ -1,26 +1,27 @@
 inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
-  ClientHeight = 649
+  ClientHeight = 413
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -230
   ExplicitWidth = 1036
-  ExplicitHeight = 687
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 592
+    Height = 356
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 592
-    ClientRectBottom = 592
+    ClientRectBottom = 356
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 592
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 592
+        Height = 356
         ExplicitWidth = 1020
         ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -212,7 +213,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             Width = 55
           end
           object clCostMovementInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'., '#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1087#1086#1087#1072#1076#1091#1090' "'#1079#1072#1090#1088#1072#1090#1099'"'
+            Caption = #8470' '#1076#1086#1082'. - "'#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074'"'
             DataBinding.FieldName = 'CostMovementInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

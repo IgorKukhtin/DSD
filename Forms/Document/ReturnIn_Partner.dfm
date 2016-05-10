@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1145
   ExplicitWidth = 1161
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -795,7 +795,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
     object edPriceList: TcxButtonEdit
       Left = 788
-      Top = 63
+      Top = 103
       Properties.Buttons = <
         item
           Default = True
@@ -803,11 +803,11 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 23
-      Width = 100
+      Width = 98
     end
     object cxLabel11: TcxLabel
       Left = 788
-      Top = 45
+      Top = 85
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object cxLabel12: TcxLabel
@@ -887,8 +887,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
-    Left = 997
-    Top = 103
+    Left = 892
+    Top = 63
     Properties.Buttons = <
       item
         Default = True
@@ -896,11 +896,11 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 127
+    Width = 97
   end
   object cxLabel5: TcxLabel [3]
-    Left = 997
-    Top = 85
+    Left = 892
+    Top = 45
     Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
   end
   object cxLabel14: TcxLabel [4]
@@ -973,43 +973,28 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   end
   object cxLabel18: TcxLabel [12]
     Left = 892
-    Top = 45
+    Top = 85
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [13]
     Left = 892
-    Top = 63
+    Top = 103
     TabOrder = 17
-    Width = 97
+    Width = 232
   end
   object cxLabel22: TcxLabel [14]
     Left = 788
-    Top = 85
-    Caption = #1053#1072#1095'. '#1076#1072#1090#1072
+    Top = 45
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
   end
   object edStartDateTax: TcxDateEdit [15]
     Left = 788
-    Top = 103
+    Top = 63
     EditValue = 42181d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 19
     Width = 98
-  end
-  object cxLabel23: TcxLabel [16]
-    Left = 892
-    Top = 85
-    Caption = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072
-    DragKind = dkDock
-  end
-  object edEndDateTax: TcxDateEdit [17]
-    Left = 892
-    Top = 103
-    EditValue = 42181d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 21
-    Width = 97
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2366,13 +2351,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Component = edStartDateTax
         DataType = ftDateTime
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDateTax'
-        Value = 'NULL'
-        Component = edEndDateTax
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 248
@@ -2952,14 +2930,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDateTax'
-        Value = 'NULL'
-        Component = edEndDateTax
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsTaxLink'
         Value = False
         DataType = ftBoolean
@@ -3104,6 +3074,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        Component = edStartDateTax
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsTaxLink'
         Value = True
         DataType = ftBoolean
@@ -3163,8 +3141,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 824
-    Top = 11
+    Left = 840
+    Top = 65531
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -3364,8 +3342,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 696
-    Top = 12
+    Left = 728
+    Top = 4
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -3394,8 +3372,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1080
-    Top = 24
+    Left = 1104
+    Top = 32
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -3424,8 +3402,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1024
-    Top = 16
+    Left = 1072
   end
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>
@@ -3605,8 +3582,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 931
-    Top = 65532
+    Left = 947
+    Top = 65524
   end
   object spGetReportNameTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TaxCorrective_ReportName'

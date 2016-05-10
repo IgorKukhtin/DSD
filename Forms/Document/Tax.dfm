@@ -3,7 +3,7 @@ inherited TaxForm: TTaxForm
   ClientHeight = 668
   ClientWidth = 1067
   ExplicitWidth = 1083
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -251,12 +251,12 @@ inherited TaxForm: TTaxForm
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel6: TcxLabel
-      Left = 829
+      Left = 746
       Top = 85
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 829
+      Left = 746
       Top = 103
       Properties.Buttons = <
         item
@@ -264,7 +264,7 @@ inherited TaxForm: TTaxForm
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 154
+      Width = 237
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 427
@@ -377,31 +377,16 @@ inherited TaxForm: TTaxForm
   object cxLabel22: TcxLabel [2]
     Left = 617
     Top = 85
-    Caption = #1053#1072#1095'. '#1076#1072#1090#1072
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
   end
-  object cxLabel23: TcxLabel [3]
-    Left = 723
-    Top = 85
-    Caption = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072
-    DragKind = dkDock
-  end
-  object edEndDateTax: TcxDateEdit [4]
-    Left = 723
-    Top = 103
-    EditValue = 42181d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 8
-    Width = 100
-  end
-  object edStartDateTax: TcxDateEdit [5]
+  object edStartDateTax: TcxDateEdit [3]
     Left = 617
     Top = 103
     EditValue = 42181d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 9
-    Width = 101
+    TabOrder = 7
+    Width = 118
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1254,7 +1239,6 @@ inherited TaxForm: TTaxForm
       item
         Name = 'EndDateTax'
         Value = 'NULL'
-        Component = edEndDateTax
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
@@ -2054,14 +2038,6 @@ inherited TaxForm: TTaxForm
         Name = 'inStartDateTax'
         Value = 'NULL'
         Component = edStartDateTax
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDateTax'
-        Value = 'NULL'
-        Component = edEndDateTax
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
