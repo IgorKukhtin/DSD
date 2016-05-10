@@ -19,6 +19,10 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
            , Object_Contract.ValueData                          AS ContractName
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
            , MovementFloat_TotalSumm.ValueData                  AS TotalSum
+           , Movement_Master.Id                                 AS MasterId
+           , ('π '||Movement_Master.InvNumber || ' ÓÚ '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar   AS MasterInvNumber 
+           , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+           
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -31,6 +35,10 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                    
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -49,6 +57,10 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
 
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MLM_Master
+                                           ON MLM_Master.MovementId = Movement.Id
+                                          AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MLM_Master.MovementChildId
 
        WHERE Movement.DescId = zc_Movement_OrderExternal();
 
@@ -59,8 +71,9 @@ ALTER TABLE Movement_OrderExternal_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.05.16         *
  12.12.14                        * 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM Movement_OrderExternal_View where id = 805
+--SELECT * FROM Movement_OrderExternal_View where id = 2021037 

@@ -125,28 +125,30 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 99
+            Width = 87
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 90
+            Width = 79
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 99
+            Width = 88
           end
           object colFromName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
-            Width = 163
+            HeaderAlignmentVert = vaCenter
+            Width = 143
           end
           object colToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
-            Width = 160
+            HeaderAlignmentVert = vaCenter
+            Width = 141
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -155,7 +157,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 67
+            HeaderAlignmentVert = vaCenter
+            Width = 59
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
@@ -164,19 +167,36 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 89
+            Width = 78
           end
           object colContract: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
             DataBinding.FieldName = 'ContractName'
             Options.Editing = False
-            Width = 187
+            Width = 165
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1063#1055
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
-            Width = 105
+            HeaderAlignmentVert = vaCenter
+            Width = 92
+          end
+          object MasterInvNumber: TcxGridDBColumn
+            Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'MasterInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
       end
@@ -228,10 +248,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -257,12 +279,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Sale2'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = 'PrintMovement_Sale2'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -273,6 +297,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -280,6 +305,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -287,6 +313,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -309,6 +336,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -316,6 +344,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -323,11 +352,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -486,12 +517,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -505,6 +538,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -518,6 +552,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -528,30 +563,35 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameOrderExternal'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameOrderExternalTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -589,6 +629,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535

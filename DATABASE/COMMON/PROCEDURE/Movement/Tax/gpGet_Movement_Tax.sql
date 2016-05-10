@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
+             , StartDateTax TDateTime, EndDateTax TDateTime
              , InvNumberBranch TVarChar
              , Comment TVarChar
               )
@@ -63,17 +64,19 @@ BEGIN
              , lpInsertFind_Object_InvNumberTax (zc_Movement_Tax(), inOperDate, tmpInvNumber.InvNumberBranch) :: TVarChar AS InvNumberPartner
              , Object_Juridical_Basis.Id			AS FromId
              , Object_Juridical_Basis.ValueData		AS FromName
-             , 0                     				AS ToId
-             , CAST ('' as TVarChar) 				AS ToName
-             , 0                               		AS PartnerId
-             , CAST ('' as TVarChar)           		AS PartnerName
-             , 0                     				AS ContractId
-             , CAST ('' as TVarChar) 				AS ContractName
-             , CAST ('' as TVarChar) 				AS ContractTagName
-             , 0                     				AS TaxKindId
-             , CAST ('' as TVarChar) 				AS TaxKindName
+             , 0                     			AS ToId
+             , CAST ('' as TVarChar) 			AS ToName
+             , 0                               	        AS PartnerId
+             , CAST ('' as TVarChar)           	        AS PartnerName
+             , 0                     			AS ContractId
+             , CAST ('' as TVarChar) 			AS ContractName
+             , CAST ('' as TVarChar) 			AS ContractTagName
+             , 0                     			AS TaxKindId
+             , CAST ('' as TVarChar) 			AS TaxKindName
+             , (DATE_TRUNC('MONTH', inOperDate) - INTERVAL '3 MONTH') ::TDateTime AS StartDateTax
+             , inOperDate                                           AS EndDateTax 
              , tmpInvNumber.InvNumberBranch
-             , CAST ('' as TVarChar) 		                AS Comment
+             , CAST ('' as TVarChar) 		        AS Comment
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber
                      , CASE WHEN inOperDate >= '01.01.2016'
@@ -122,7 +125,7 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
            , COALESCE (MovementBoolean_Document.ValueData, FALSE)       AS Document
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)       AS isElectron
-           , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) AS TDateTime))AS DateRegistered
+           , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) AS TDateTime)) AS DateRegistered
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -140,6 +143,8 @@ BEGIN
            , Object_Contract.ContractTagName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
+           , (DATE_TRUNC('MONTH', Movement.OperDate) - INTERVAL '3 MONTH') ::TDateTime AS StartDateTax
+           , Movement.OperDate                                           AS EndDateTax 
            , MovementString_InvNumberBranch.ValueData           AS InvNumberBranch
            , MovementString_Comment.ValueData                   AS Comment
 
@@ -237,6 +242,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.16         * add StartDateTax, EndDateTax
  26.01.15         * add Mask
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  24.04.14                                                        * add zc_MovementString_InvNumberBranch

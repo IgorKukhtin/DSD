@@ -50,11 +50,12 @@ inherited MainCashForm: TMainCashForm
         object CheckGridColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
-          Width = 275
+          Width = 271
         end
         object CheckGridColAmount: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086
           DataBinding.FieldName = 'Amount'
+          Width = 60
         end
         object CheckGridColPrice: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
@@ -195,17 +196,22 @@ inherited MainCashForm: TMainCashForm
         OptionsData.Inserting = False
         OptionsView.GridLineColor = clBtnFace
         OptionsView.GroupByBox = False
+        OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object MainColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 423
+          Width = 355
         end
         object MainColCode: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'GoodsCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 73
         end
@@ -215,6 +221,8 @@ inherited MainCashForm: TMainCashForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
           Properties.DisplayFormat = ',0.###'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Styles.Content = dmMain.cxRemainsContentStyle
           Width = 58
@@ -224,6 +232,8 @@ inherited MainCashForm: TMainCashForm
           DataBinding.FieldName = 'Price'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 45
         end
@@ -231,6 +241,8 @@ inherited MainCashForm: TMainCashForm
           Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077
           DataBinding.FieldName = 'Reserved'
           OnGetDisplayText = MainColReservedGetDisplayText
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 58
         end
@@ -238,6 +250,8 @@ inherited MainCashForm: TMainCashForm
           Caption = #1053#1058#1047
           DataBinding.FieldName = 'MCSValue'
           OnGetDisplayText = MainColReservedGetDisplayText
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Width = 45
         end
         object mainColor_calc: TcxGridDBColumn
@@ -248,16 +262,144 @@ inherited MainCashForm: TMainCashForm
           Width = 40
         end
         object MaincolisFirst: TcxGridDBColumn
-          Caption = '1-'#1074#1099#1073#1086#1088
+          Caption = '1'
           DataBinding.FieldName = 'isFirst'
+          HeaderGlyph.Data = {
+            A2070000424DA207000000000000360000002800000019000000190000000100
+            1800000000006C070000C40E0000C40E00000000000000000000FFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBF1F1696F6F059B9B03EAEA01F9F901FB
+            FB01FBFB01F9F903E7E7059393727575FDF3F3FFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF65696904CFCF00FA
+            FA00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FAFA04C6C676
+            7474FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7E5
+            E51E878700F8F800FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00F8F8277D7DFFF4F4FFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFCE9E90E9C9C00FFFF00FFFF00FFFF00FFFF00EEEE00606000
+            2525001414001414002727006A6A00F3F300FFFF00FFFF00FFFF00FFFF179191
+            FFF7F7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF1D8E8E00FFFF00FFFF00FFFF00
+            E9E9002B2B004B4B00C0C000F0F000FFFF00FFFF00EDED00BBBB004444003737
+            00EFEF00FFFF00FFFF00FFFF298383FFFFFFFFFFFFFFFFFFFFFFFFFF61707000
+            F9F900FFFF00FFFF00C9C900181800DCDC00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00D2D2001B1B00D6D600FFFF00FFFF00F4F4797979FFFF
+            FFFFFFFFFFFEF3F304D1D100FFFF00FFFF00DEDE001A1A00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00F6F6001A1A00E9
+            EA00FFFF00FFFF07C5C5FFFDFDFFFFFFFF606D6D00FCFC00FFFF00FFFF001C1C
+            00F1F100FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+            FF00FFFF00FFFF00E3E300232300FFFF00FFFF00F9F9807C7CFFFFFFFF0A9B9B
+            00FFFF00FFFF00B0B000858500FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+            FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF006D6D00CECE00FFFF00
+            FFFF0A8787FFFEFBFB02EEEE00FFFF00FFFF00323200E2E200FFFF00FFFF00FF
+            FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00D6D600393900FFFF00FFFF04DDDDFFDCB7B700F8F800FFFF00FBFB0014
+            1400FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF001A1A00FCFC00FFFF02F9F9FF8261
+            6100FAFA00FFFF006C6C00030300787800FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF005757000202
+            00727200FFFF01FAFAFF82626200FAFA00FFFF00FFFF00FEFE00FEFE00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00FEFE00FFFF00FFFF01FAFAFFD7B2B200F8F800FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00272700A8A800FFFF00FFFF00FFFF
+            00FFFF00EBEB00000000F2F200FFFF00FFFF00FFFF00FFFF00FFFF00FFFF02F9
+            F9FFFEFBFB02EDED00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00CACA000000
+            00171700FFFF00FFFF00FFFF00FFFF003E3E00000000969600FFFF00FFFF00FF
+            FF00FFFF00FFFF00FFFF04DFDFFFFFFFFF0A9D9D00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00949400000000070700FFFF00FFFF00FFFF00FFFF0019190000
+            0000545500FFFF00FFFF00FFFF00FFFF00FFFF00FFFF0A8B8DFFFFFFFF5D6F6F
+            00FCFC00FFFF00FFFF00FFFF00FFFF00FFFF00838300000000030300FFFF00FF
+            FF00FFFF00FFFF00121200000000272800FFFF00FFFF00FFFF00FFFF00FFFF00
+            FAFA808080FFFFFFFFFDF1F104D7D700FFFF00FFFF00FFFF00FFFF00FFFF0089
+            8900000000030300FFFF00FFFF00FFFF00FFFF00151500000000383800FFFF00
+            FFFF00FFFF00FFFF00FFFF08C9C9FFFBFBFFFFFFFFFFFFFF5C6E6E00F9F900FF
+            FF00FFFF00FFFF00FFFF00ACAC000000000D0D00FFFF00FFFF00FFFF00FFFF00
+            1E1E000000006A6A00FFFF00FFFF00FFFF00FFFF00F5F5787878FFFFFFFFFFFF
+            FFFFFFFFFFFFFF1A8B8B00FFFF00FFFF00FFFF00FFFF00E7E700000000323200
+            FFFF00FFFF00FFFF00FFFF00818100000000C0C000FFFF00FFFF00FFFF00FFFF
+            267E7EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAE8E80C999900FFFF00FFFF00
+            FFFF00FFFF00C5C500FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00A1A100FFFF
+            00FFFF00FFFF00FFFF139191FFF6F6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFF8E4E41B898900F9F900FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00F8F8278282FFF0F0FFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF606C6C04D3D300FBFB00FFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FAFA04CCCC6F7272FFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFF8EDED647070079E9E03EAEA00F7F700F9F900F9F900F7F702E8E80799
+            996F7373FBF0F0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBDDBBBB8E6B
+            6B967373E1BEBEFFFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFF}
+          HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 60
+          Width = 66
         end
         object MaincolisSecond: TcxGridDBColumn
-          Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
+          Caption = '2'
           DataBinding.FieldName = 'isSecond'
+          HeaderGlyph.Data = {
+            A2070000424DA207000000000000360000002800000019000000190000000100
+            1800000000006C070000C40E0000C40E00000000000000000000FFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFECD8D898A0A347989923B5B717CACB09D7
+            DA08D6DA17C7C822B1B156999AA7AAABFCE6E6FFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF3F298A0A21D9A9A00D3
+            D400FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FBFB00CACB339496AD
+            A9ACFFFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF1DE
+            DE538F8F00CDCE00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00BBBD778E8FFEEEEFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFF1DEDE42919300EBEC00FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00D6D8608788
+            FEF0F0FFFFFFFFFFFFFFFFFFFFFFFFFFFFF1F1588C8C00EDED00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00DADB7C9395FFFDFDFFFFFFFFFFFFFFFFFFFF949C9E00
+            D5D500FFFF04E8E701A8AB01FCFC00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00FFFF00F0F001A9AD06F7F700FFFF05B7B9C0B3B4FFFF
+            FFFFFFFFFFE9D7D715A0A100FFFF05F1F106242407262801FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF04F5F50705060C42
+            4403FEFF00FFFF388F90FBECECFFFFFFFF8DA2A100E4E400FFFF088A8B0A0000
+            091315029B9D04FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+            FF03F4F50977780A0A0B0800000DB9BB00FFFF00C7C7BAB3B4FFFFECEC369D9F
+            00FFFF00FFFF069D9F0E797B11979709040505232300898908CDCE03F1F10CFB
+            FC0CFAFB03ECEE06C3C40572720411120618180BB6B807696D08C1C100FFFF00
+            F8F9619C9FFFD4ADAE0FBCBE00FFFF00FFFF00FFFF00FFFF00FFFF09E0E00675
+            75061C1C070305040B0D0E15170E131505080A08040506282B068B8D05F4F400
+            FFFF00FFFF00FFFF00FFFF00FFFF2EAAACFF90827E02D7D600FFFF00FFFF00FF
+            FF00FFFF00FFFF00FFFF00FFFF04FFFF04DADB03B4B500A2A200A3A303B8B909
+            E0E003FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF1BC1C2FF6A6D
+            7603E2E600FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF16CDCDFF6C6A7607E3E700FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF08D2D2FF837A7903DBDB00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF02F0F103DDDE01FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF05D7D805F9F900FFFF00FFFF00FFFF00FFFF00FFFF00FFFF14C8
+            CBFFBD9D9D0CC4C500FFFF00FFFF00FFFF00FFFF00FFFF05F5F5073132030808
+            04C9C900FFFF00FFFF00FFFF01FFFF05A6A603020306565802FFFF00FFFF00FF
+            FF00FFFF00FFFF00FFFF25B5B6FFFBDBDB28A7AA00FFFF00FFFF00FFFF00FFFF
+            00FFFF07AFB0010000000000065B5D01FFFF00FFFF00FFFF04FEFF0930310000
+            000500000BD7D700FFFF00FFFF00FFFF00FFFF00FFFF4DA2A3FFFFFFFF6A9D9D
+            00F3F300FFFF00FFFF00FFFF00FFFF028687000000000000023C3C01FFFF00FF
+            FF00FFFF0AF6F709161800000001000003B9B900FFFF00FFFF00FFFF00FFFF00
+            DADD9AA7A9FFFFFFFFD2C5C507B6B600FFFF00FFFF00FFFF00FFFF07A1A00100
+            00000000074D4E02FFFF00FFFF00FFFF02FDFD02262700000003000008CACA00
+            FFFF00FFFF00FFFF00FFFF22A2A4F0DDDEFFFFFFFFFFFBFB66939300EFEF00FF
+            FF00FFFF00FFFF08E6E7040B0C02000006A8A900FFFF00FFFF00FFFF01FFFF0A
+            7B7C010000062F3003F9F900FFFF00FFFF00FFFF00D8D997A1A1FFFFFFFFFFFF
+            FFFFFFFFEBD9D922959500FFFF00FFFF00FFFF00FFFF00CACA02A9AA03FFFF00
+            FFFF00FFFF00FFFF00FFFF05F9F904A4A406DFE100FFFF00FFFF00FFFF00F3F3
+            478B8BFEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFCABABA14979700FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00F7F82B9797E7D3D3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFC5B6B61E989A00F2F300FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00E3E43A8D8EE2D0D1FFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE1CECE528B8E00C1C300FAFB00FFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00F3F304B2B46E9093F3E0
+            E0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFF5F5B5B1B250909215AFB205DADA00F1F204F9FA02F9F900EFF004D5D51DAA
+            AA5E9494C9BBBEFFFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFCD7AEB07F7979335F5F1048
+            46154B4C3D60618C7F7FE6BFBEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFF}
+          HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 60
+          Width = 56
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -272,7 +414,7 @@ inherited MainCashForm: TMainCashForm
       Align = alBottom
       TabOrder = 1
       object ShapeState: TShape
-        Left = 758
+        Left = 636
         Top = 12
         Width = 10
         Height = 10
@@ -280,19 +422,19 @@ inherited MainCashForm: TMainCashForm
         Pen.Color = clWhite
       end
       object ceAmount: TcxCurrencyEdit
-        Left = 282
+        Left = 221
         Top = 7
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.###'
         TabOrder = 1
         OnExit = ceAmountExit
         OnKeyDown = ceAmountKeyDown
-        Width = 43
+        Width = 44
       end
       object cxLabel1: TcxLabel
-        Left = 224
+        Left = 185
         Top = 7
-        Caption = #1050#1086#1083'-'#1074#1086':'
+        Caption = #1050#1086#1083':'
         FocusControl = ceAmount
         ParentFont = False
         Style.BorderStyle = ebsNone
@@ -322,18 +464,26 @@ inherited MainCashForm: TMainCashForm
         OnEnter = lcNameEnter
         OnExit = lcNameExit
         OnKeyDown = lcNameKeyDown
-        Width = 210
+        Width = 172
       end
       object cbSpec: TcxCheckBox
-        Left = 554
+        Left = 400
         Top = 7
         Action = actSpec
+        Caption = #1063#1077#1082
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -11
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsStrikeOut]
+        Style.IsFontAssigned = True
         TabOrder = 3
-        Width = 22
+        Width = 44
       end
       object btnCheck: TcxButton
-        Left = 584
-        Top = 6
+        Left = 450
+        Top = 8
         Width = 34
         Height = 20
         Action = actCheck
@@ -341,7 +491,7 @@ inherited MainCashForm: TMainCashForm
         TabOrder = 4
       end
       object cxLabel2: TcxLabel
-        Left = 328
+        Left = 283
         Top = 7
         Caption = #1050' '#1054#1087#1083#1072#1090#1077':'
         FocusControl = ceAmount
@@ -358,7 +508,7 @@ inherited MainCashForm: TMainCashForm
         Style.IsFontAssigned = True
       end
       object lblTotalSumm: TcxLabel
-        Left = 404
+        Left = 356
         Top = 7
         Caption = '0.00'
         FocusControl = ceAmount
@@ -373,8 +523,8 @@ inherited MainCashForm: TMainCashForm
         Style.IsFontAssigned = True
       end
       object btnVIP: TcxButton
-        Left = 624
-        Top = 6
+        Left = 496
+        Top = 8
         Width = 34
         Height = 20
         Action = actExecuteLoadVIP
@@ -382,7 +532,7 @@ inherited MainCashForm: TMainCashForm
         TabOrder = 7
       end
       object lblMoneyInCash: TcxLabel
-        Left = 476
+        Left = 719
         Top = 7
         Caption = '0.00'
         FocusControl = ceAmount
@@ -397,8 +547,8 @@ inherited MainCashForm: TMainCashForm
         Style.IsFontAssigned = True
       end
       object btnOpenMCSForm: TcxButton
-        Left = 722
-        Top = 6
+        Left = 589
+        Top = 7
         Width = 34
         Height = 20
         Action = actOpenMCSForm
@@ -406,17 +556,24 @@ inherited MainCashForm: TMainCashForm
         TabOrder = 9
       end
       object chbNotMCS: TcxCheckBox
-        Left = 667
-        Top = 6
+        Left = 539
+        Top = 7
         Hint = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077' '#1091#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1088#1072#1089#1095#1077#1090#1077' '#1053#1058#1047
-        Caption = #1085#1077' '#1053#1058#1047
+        Caption = #1053#1058#1047
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -11
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsStrikeOut]
+        Style.IsFontAssigned = True
         TabOrder = 10
         OnClick = actSpecExecute
-        Width = 57
+        Width = 43
       end
       object cxButton1: TcxButton
-        Left = 517
-        Top = 6
+        Left = 664
+        Top = 7
         Width = 34
         Height = 20
         Action = actChoiceGoodsFromRemains
@@ -545,6 +702,7 @@ inherited MainCashForm: TMainCashForm
       FormName = 'TCheckJournalForm'
       FormNameParam.Value = 'TCheckJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -589,6 +747,7 @@ inherited MainCashForm: TMainCashForm
       FormName = 'TChoiceGoodsFromRemainsForm'
       FormNameParam.Value = 'TChoiceGoodsFromRemainsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = True
     end
@@ -600,6 +759,7 @@ inherited MainCashForm: TMainCashForm
       FormName = 'TCheckVIPForm'
       FormNameParam.Value = 'TCheckVIPForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -607,6 +767,7 @@ inherited MainCashForm: TMainCashForm
           Component = FormParams
           ComponentItem = 'CheckId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -615,6 +776,7 @@ inherited MainCashForm: TMainCashForm
           ComponentItem = 'BayerName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashMemberId'
@@ -622,6 +784,7 @@ inherited MainCashForm: TMainCashForm
           Component = FormParams
           ComponentItem = 'ManagerId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashMember'
@@ -630,6 +793,7 @@ inherited MainCashForm: TMainCashForm
           ComponentItem = 'CashMember'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -717,6 +881,7 @@ inherited MainCashForm: TMainCashForm
       FormName = 'TMCSForm'
       FormNameParam.Value = 'TMCSForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -818,6 +983,7 @@ inherited MainCashForm: TMainCashForm
         Component = FormParams
         ComponentItem = 'CheckId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashSessionId'
@@ -826,6 +992,7 @@ inherited MainCashForm: TMainCashForm
         ComponentItem = 'CashSessionId'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     AutoWidth = True
@@ -898,37 +1065,44 @@ inherited MainCashForm: TMainCashForm
       item
         Name = 'CheckId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashSessionId'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ClosedCheckId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ManagerId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BayerName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashMember'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 72
@@ -947,6 +1121,7 @@ inherited MainCashForm: TMainCashForm
         Component = FormParams
         ComponentItem = 'CheckId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     AutoWidth = True
@@ -1065,6 +1240,7 @@ inherited MainCashForm: TMainCashForm
         Component = FormParams
         ComponentItem = 'CheckId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     AutoWidth = True
@@ -1106,12 +1282,14 @@ inherited MainCashForm: TMainCashForm
         Name = 'outTotalSumm'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -1126,6 +1304,7 @@ inherited MainCashForm: TMainCashForm
         Name = 'outPassword'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -1140,6 +1319,7 @@ inherited MainCashForm: TMainCashForm
         Name = 'gpGet_User_IsAdmin'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 40
@@ -1161,6 +1341,7 @@ inherited MainCashForm: TMainCashForm
         ComponentItem = 'CashSessionId'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     AutoWidth = True
@@ -1191,6 +1372,7 @@ inherited MainCashForm: TMainCashForm
         Component = FormParams
         ComponentItem = 'CheckId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashSesionId'
@@ -1199,6 +1381,7 @@ inherited MainCashForm: TMainCashForm
         ComponentItem = 'CashSessionId'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     AutoWidth = True

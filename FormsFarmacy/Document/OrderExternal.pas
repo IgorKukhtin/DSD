@@ -60,6 +60,11 @@ type
     spGetExportParam: TdsdStoredProc;
     actExportToPartner: TExportGrid;
     colComment: TcxGridDBColumn;
+    edComment: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    cxLabel6: TcxLabel;
+    edOrderInternal: TcxButtonEdit;
+    OrderInternalGuides: TdsdGuides;
   private
     { Private declarations }
   public

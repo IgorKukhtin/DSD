@@ -1,16 +1,20 @@
 -- Function: gpInsertUpdate_Movement_TaxCorrective_From_Kind()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (
     IN inMovementId             Integer  , -- ключ Документа
     IN inDocumentTaxKindId      Integer  , -- Тип формирования налогового документа
     IN inDocumentTaxKindId_inf  Integer  , -- Тип формирования налогового документа в журнале
+    IN inStartDateTax           TDateTime, -- 
+    IN inEndDateTax             TDateTime, -- 
     IN inIsTaxLink              Boolean  , -- Признак привязки к налоговым
    OUT outDocumentTaxKindId     Integer  , --
    OUT outDocumentTaxKindName   TVarChar , --
    OUT outMovementId_Corrective Integer  , --
    OUT outMessageText           Text     ,
+
     IN inSession                TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
@@ -678,11 +682,12 @@ end if;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.16         * add inStartDateTax, inEndDateTax
  31.07.14                                        * add outMovementId_Corrective
  06.06.14                                        * add проверка - проведенные/удаленные документы Изменять нельзя
  03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС

@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , MasterId Integer, MasterInvNumber TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -31,12 +33,15 @@ BEGIN
              , inOperDate                                       AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-             , 0                     				            AS FromId
-             , CAST ('' AS TVarChar) 				            AS FromName
-             , 0                     				            AS ToId
-             , CAST ('' AS TVarChar) 				            AS ToName
-             , 0                     				            AS ContractId
-             , CAST ('' AS TVarChar) 				            AS ContractName
+             , 0                     		                AS FromId
+             , CAST ('' AS TVarChar) 		                AS FromName
+             , 0                     		                AS ToId
+             , CAST ('' AS TVarChar) 		                AS ToName
+             , 0                     			        AS ContractId
+             , CAST ('' AS TVarChar) 			        AS ContractName
+             , 0                     			        AS MasterId
+             , CAST ('' AS TVarChar) 			        AS MasterInvNumber
+             , CAST ('' AS TVarChar) 		                AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -55,9 +60,16 @@ BEGIN
            , Object_To.ValueData                                AS ToName
            , Object_Contract.Id                                 AS ContractId
            , Object_Contract.ValueData                          AS ContractName
+           , Movement_Master.Id                                 AS MasterId
+           , ('π '||Movement_Master.InvNumber || ' ÓÚ '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar    AS MasterInvNumber 
+           , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -77,6 +89,10 @@ BEGIN
 
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MLM_Master
+                                           ON MLM_Master.MovementId = Movement.Id
+                                          AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MLM_Master.MovementChildId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();
@@ -92,6 +108,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.05.16         *
  01.07.14                                                        *
 */
 

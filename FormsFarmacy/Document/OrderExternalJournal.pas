@@ -36,6 +36,8 @@ type
     colContract: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    Comment: TcxGridDBColumn;
+    MasterInvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

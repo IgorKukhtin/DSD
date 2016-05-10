@@ -4,7 +4,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -388,17 +388,20 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actCorrective: TdsdExecStoredProc [9]
@@ -453,10 +456,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -479,6 +484,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -487,6 +493,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrintReturnIn: TMultiAction
       Category = 'DSDLib'
@@ -496,10 +503,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -520,10 +529,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -562,6 +573,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -570,6 +582,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -597,6 +610,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
@@ -605,6 +619,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TaxCorrective_Client: TMultiAction
       Category = 'DSDLib'
@@ -614,10 +629,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -638,10 +655,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -674,6 +693,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -681,6 +701,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -688,6 +709,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -714,6 +736,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -721,6 +744,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -728,6 +752,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -909,36 +934,42 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSale'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSaleTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -972,12 +1003,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescName'
         Value = 'zc_Movement_PriceCorrective'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
@@ -985,6 +1018,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'ReportName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 496
@@ -1008,6 +1042,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 586
@@ -1018,6 +1053,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1028,6 +1064,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1036,6 +1073,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 912
   end
@@ -1050,6 +1088,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -1057,6 +1096,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -1064,18 +1104,35 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTaxLink'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -1083,6 +1140,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -1090,6 +1148,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1113,12 +1172,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 586
@@ -1142,12 +1203,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 586
@@ -1163,12 +1226,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Value = Null
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_TaxCorrective_ReportName'
         Value = Null
         ComponentItem = 'ReportNameTaxCorrective'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 424
@@ -1185,6 +1250,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -1192,6 +1258,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameTaxCorrective'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 424
@@ -1208,12 +1275,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescName'
         Value = 'zc_Movement_ReturnIn'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
@@ -1221,6 +1290,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'ReportName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 400

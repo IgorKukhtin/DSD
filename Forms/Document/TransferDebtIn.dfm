@@ -3,7 +3,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
   ClientHeight = 532
   ClientWidth = 1140
   ExplicitWidth = 1156
-  ExplicitHeight = 567
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -850,6 +850,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       FormName = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -857,17 +858,20 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Component = TaxCorrectiveCDS
           ComponentItem = 'DocumentChildId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inmask'
           Value = 'False'
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = 'False'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
@@ -876,6 +880,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -887,12 +892,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
       FormName = 'TTaxJournalChoiceForm'
       FormNameParam.Value = 'TTaxJournalChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'DocumentChildId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -900,6 +907,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Component = TaxCorrectiveCDS
           ComponentItem = 'InvNumberPartner_Child'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate_Tax'
@@ -907,6 +915,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
@@ -914,6 +923,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Component = TaxCorrectiveCDS
           ComponentItem = 'FromId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
@@ -921,6 +931,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Component = TaxCorrectiveCDS
           ComponentItem = 'PartnerId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -929,6 +940,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -937,6 +949,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           ComponentItem = 'FromName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -964,6 +977,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
@@ -1009,12 +1023,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1022,6 +1038,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1039,6 +1056,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1046,12 +1064,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Component = TaxCorrectiveCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inmask'
           Value = 'False'
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
@@ -1060,6 +1080,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1209,11 +1230,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
       ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1252,6 +1275,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -1260,6 +1284,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -1287,6 +1312,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
@@ -1295,6 +1321,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TaxCorrective_Client: TMultiAction
       Category = 'DSDLib'
@@ -1388,6 +1415,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId'
@@ -1395,6 +1423,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1402,6 +1431,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -1409,6 +1439,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1416,6 +1447,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -1627,6 +1659,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 2
       end>
     Left = 494
@@ -1648,12 +1681,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -1661,36 +1696,42 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSale'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSaleTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSaleBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportName'
         Value = 'PrintMovement_TaxCorrective'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMask'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 248
@@ -1713,6 +1754,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMask'
@@ -1721,6 +1763,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'inMask'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1729,12 +1772,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isMask'
@@ -1742,30 +1787,35 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'inMask'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberMark'
         Value = Null
         Component = edInvNumberMark
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1773,6 +1823,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1780,36 +1831,42 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Checked'
         Value = 'False'
         Component = edIsChecked
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -1817,12 +1874,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -1830,12 +1889,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractFromId'
         Value = ''
         Component = ContractFromGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractFromName'
@@ -1843,12 +1904,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ContractFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractToId'
         Value = ''
         Component = ContractToGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractToName'
@@ -1856,12 +1919,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ContractToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindFromId'
         Value = ''
         Component = PaidKindFromGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindFromName'
@@ -1869,12 +1934,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PaidKindFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindToId'
         Value = ''
         Component = PaidKindToGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindToName'
@@ -1882,12 +1949,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PaidKindToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListId'
         Value = ''
         Component = PriceListGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListName'
@@ -1895,12 +1964,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1908,12 +1979,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerFromId'
         Value = '0'
         Component = GuidesPartnerFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerFromName'
@@ -1921,12 +1994,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesPartnerFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentTaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentTaxKindName'
@@ -1934,12 +2009,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1953,6 +2030,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1960,6 +2038,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberPartner'
@@ -1967,6 +2046,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberMark'
@@ -1974,6 +2054,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edInvNumberMark
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1981,6 +2062,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -1988,6 +2070,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceWithVAT'
@@ -1995,6 +2078,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inVATPercent'
@@ -2002,6 +2086,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChangePercent'
@@ -2009,6 +2094,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -2016,6 +2102,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -2023,6 +2110,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractFromId'
@@ -2030,6 +2118,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ContractFromGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractToId'
@@ -2037,6 +2126,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ContractToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindFromId'
@@ -2044,6 +2134,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PaidKindFromGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindToId'
@@ -2051,6 +2142,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PaidKindToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -2058,6 +2150,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerFromId'
@@ -2065,6 +2158,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesPartnerFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -2072,6 +2166,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -2167,6 +2262,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -2174,6 +2270,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -2181,6 +2278,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -2189,6 +2287,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -2197,6 +2296,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -2205,6 +2305,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
@@ -2212,6 +2313,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -2219,6 +2321,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -2230,6 +2333,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Name = 'ioId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -2237,6 +2341,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -2244,12 +2349,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -2258,6 +2365,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -2266,6 +2374,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
@@ -2273,6 +2382,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -2280,6 +2390,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 328
@@ -2296,6 +2407,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -2321,6 +2433,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     LookupControl = edPaidKindFrom
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2331,6 +2444,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2339,6 +2453,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 64
@@ -2348,6 +2463,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     LookupControl = edContractFrom
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2358,6 +2474,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2366,6 +2483,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 512
     Top = 72
@@ -2388,6 +2506,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -2404,12 +2523,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
@@ -2417,6 +2538,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'ReportName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
@@ -2427,6 +2549,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     LookupControl = edFrom
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2436,6 +2559,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ContractFromGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2444,6 +2568,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -2452,6 +2577,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -2460,12 +2586,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindFromGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -2473,21 +2601,25 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PaidKindFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = 0
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 552
     Top = 8
@@ -2497,6 +2629,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     LookupControl = edTo
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2506,6 +2639,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ContractToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2514,6 +2648,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -2521,6 +2656,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -2529,15 +2665,18 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = 0
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 744
   end
@@ -2546,6 +2685,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     LookupControl = edPaidKindTo
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2555,6 +2695,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PaidKindToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2563,6 +2704,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 616
     Top = 56
@@ -2572,6 +2714,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     LookupControl = edContractTo
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2582,6 +2725,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2590,6 +2734,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 728
     Top = 64
@@ -2599,6 +2744,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2609,6 +2755,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2617,6 +2764,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 164
     Top = 96
@@ -2628,6 +2776,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     TextValue = ' '
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2637,6 +2786,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesPartnerFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2645,12 +2795,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -2658,6 +2810,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 16
@@ -2667,6 +2820,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2677,6 +2831,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2685,6 +2840,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 984
     Top = 72
@@ -2700,6 +2856,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -2707,6 +2864,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -2714,18 +2872,35 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTaxLink'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -2733,6 +2908,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -2740,6 +2916,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -2756,6 +2933,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -2763,6 +2941,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -2770,24 +2949,42 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTaxLink'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -2795,6 +2992,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -2818,12 +3016,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 666
@@ -2847,12 +3047,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 586
@@ -2883,6 +3085,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 930
@@ -2899,6 +3102,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = TaxCorrectiveCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 976
@@ -2915,12 +3119,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = TaxCorrectiveCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ouStatusCode'
         Value = Null
         Component = TaxCorrectiveCDS
         ComponentItem = 'StatusCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -2928,6 +3134,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 976
@@ -2944,6 +3151,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = TaxCorrectiveCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 976
@@ -2960,6 +3168,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = TaxCorrectiveCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -2968,6 +3177,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -2975,6 +3185,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovement_ChildId'
@@ -2982,6 +3193,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = TaxCorrectiveCDS
         ComponentItem = 'DocumentChildId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 1003
@@ -2998,6 +3210,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -3005,6 +3218,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'ReportNameTaxCorrective'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 424
@@ -3021,6 +3235,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 752
@@ -3033,6 +3248,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     TextValue = ' '
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -3042,6 +3258,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -3050,12 +3267,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -3063,6 +3282,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 920
     Top = 16
