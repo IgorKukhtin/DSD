@@ -170,6 +170,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 79
           end
           object colPriceUnitFrom: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103

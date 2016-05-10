@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inToId                Integer   , -- Кому
     IN inContractId          Integer   , -- Договор
     IN inInternalOrderId     Integer   , -- Сыылка на внутренний заказ 
+    IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -24,6 +27,9 @@ BEGIN
 
      ioId := lpInsertUpdate_Movement_OrderExternal(ioId, inInvNumber, inOperDate, inFromId, inToId, inContractId, inInternalOrderId, vbUserId);
 
+     -- сохранили <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -32,6 +38,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.16         *
  02.10.14                         *
  01.07.14                                                        *
 

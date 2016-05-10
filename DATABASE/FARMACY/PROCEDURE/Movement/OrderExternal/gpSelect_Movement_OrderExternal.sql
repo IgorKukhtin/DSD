@@ -13,6 +13,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , MasterId Integer, MasterInvNumber TVarChar
+             , Comment TVarChar
               )
 
 AS
@@ -65,6 +67,9 @@ BEGIN
            , Movement_OrderExternal_View.JuridicalName
            , Movement_OrderExternal_View.ContractId
            , Movement_OrderExternal_View.ContractName
+           , Movement_OrderExternal_View.MasterId
+           , Movement_OrderExternal_View.MasterInvNumber
+           , Movement_OrderExternal_View.Comment
 
        FROM tmpUnit
           LEFT JOIN Movement_OrderExternal_View ON Movement_OrderExternal_View.ToId = tmpUnit.UnitId
@@ -81,6 +86,7 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.16         *
  15.07.14                                                        *
  01.07.14                                                        *
 
