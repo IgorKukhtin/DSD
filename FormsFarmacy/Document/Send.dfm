@@ -12,17 +12,17 @@ inherited SendForm: TSendForm
     Height = 432
     ExplicitTop = 126
     ExplicitWidth = 780
-    ExplicitHeight = 491
+    ExplicitHeight = 432
     ClientRectBottom = 432
     ClientRectRight = 780
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 780
-      ExplicitHeight = 467
+      ExplicitHeight = 408
       inherited cxGrid: TcxGrid
         Width = 780
         Height = 408
         ExplicitWidth = 780
-        ExplicitHeight = 467
+        ExplicitHeight = 408
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -63,6 +63,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumPriceIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSumma
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -106,6 +116,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumPriceIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSumma
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -172,6 +192,26 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 79
           end
+          object colPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
           object colPriceUnitFrom: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             DataBinding.FieldName = 'PriceUnitFrom'
@@ -199,6 +239,26 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object colSummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object colSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
           end
         end
       end
