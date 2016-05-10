@@ -180,6 +180,7 @@ type
     MaincolisSecond: TcxGridDBColumn;
     cxButton1: TcxButton;
     actChoiceGoodsFromRemains: TOpenChoiceForm;
+    TimerMoneyInCash: TTimer;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -215,6 +216,7 @@ type
       ANewItemRecordFocusingChanged: Boolean);
     procedure TimerSaveAllTimer(Sender: TObject);
     procedure lcNameEnter(Sender: TObject);
+    procedure TimerMoneyInCashTimer(Sender: TObject);
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -397,10 +399,18 @@ end;
 procedure TMainCashForm.actGetMoneyInCashExecute(Sender: TObject);
 begin
   spGet_Password_MoneyInCash.Execute;
-  if InputBox('Пароль','Введите пароль:','') <> spGet_Password_MoneyInCash.ParamByName('outPassword').AsString then exit;
+  //временно будем без пароля
+  //if InputBox('Пароль','Введите пароль:','') <> spGet_Password_MoneyInCash.ParamByName('outPassword').AsString then exit;
   spGetMoneyInCash.ParamByName('inDate').Value := Date;
   spGetMoneyInCash.Execute;
   lblMoneyInCash.Caption := FormatFloat(',0.00',spGetMoneyInCash.ParamByName('outTotalSumm').AsFloat);
+  //
+  TimerMoneyInCash.Enabled:=True;
+end;
+procedure TMainCashForm.TimerMoneyInCashTimer(Sender: TObject);
+begin
+  lblMoneyInCash.Caption := '0.00';
+  TimerMoneyInCash.Enabled:=False;
 end;
 
 procedure TMainCashForm.actInsertUpdateCheckItemsExecute(Sender: TObject);
@@ -1369,6 +1379,7 @@ begin
 //              ThreadErrorMessage+#13#13+
 //              'Проверьте состояние чека и, при необходимости, проведите чек вручную.');
 end;
+
 
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
 begin
