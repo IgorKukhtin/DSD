@@ -125,30 +125,30 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 87
+            Width = 77
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 79
+            Width = 70
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 88
+            Width = 78
           end
           object colFromName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 143
+            Width = 127
           end
           object colToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 141
+            Width = 125
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -158,7 +158,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 59
+            Width = 52
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
@@ -167,24 +167,32 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 78
+            Width = 69
           end
           object colContract: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
             DataBinding.FieldName = 'ContractName'
             Options.Editing = False
-            Width = 165
+            Width = 146
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1063#1055
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 92
+            Width = 82
           end
           object MasterInvNumber: TcxGridDBColumn
             Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'MasterInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colOrderKind: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1081')'
+            DataBinding.FieldName = 'OrderKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -196,7 +204,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 63
           end
         end
       end

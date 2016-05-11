@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 668
   ClientWidth = 844
   ExplicitWidth = 860
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -299,16 +299,34 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 156
   end
   object edComment: TcxTextEdit [4]
-    Left = 400
+    Left = 543
     Top = 63
     Properties.ReadOnly = False
     TabOrder = 8
-    Width = 412
+    Width = 269
   end
   object cxLabel7: TcxLabel [5]
-    Left = 400
+    Left = 543
     Top = 45
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object cxLabel8: TcxLabel [6]
+    Left = 400
+    Top = 45
+    Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
+  end
+  object edOrderKind: TcxButtonEdit [7]
+    Left = 400
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 137
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -916,6 +934,14 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderKindName'
+        Value = Null
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1210,8 +1236,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 536
-    Top = 40
+    Left = 528
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1239,8 +1264,8 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 40
+    Left = 680
+    Top = 8
   end
   object spGetDocumentDataForEmail: TdsdStoredProc
     StoredProcName = 'gpGet_DocumentDataForEmail'
@@ -1409,5 +1434,34 @@ inherited OrderExternalForm: TOrderExternalForm
       end>
     Left = 296
     Top = 56
+  end
+  object GuidesOrderKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderKind
+    FormNameParam.Value = 'TOrderKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 456
+    Top = 48
   end
 end

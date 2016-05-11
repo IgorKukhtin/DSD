@@ -65,6 +65,9 @@ type
     cxLabel6: TcxLabel;
     edOrderInternal: TcxButtonEdit;
     OrderInternalGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edOrderKind: TcxButtonEdit;
+    GuidesOrderKind: TdsdGuides;
   private
     { Private declarations }
   public
