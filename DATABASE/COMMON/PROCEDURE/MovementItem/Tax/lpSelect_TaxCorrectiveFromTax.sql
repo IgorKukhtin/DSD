@@ -34,7 +34,7 @@ BEGIN
     RETURN QUERY
     WITH -- Строчная часть налоговой с № п/п
          tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax))
-         -- Строчная часть корерктировки
+         -- Строчная часть корректировки
        , tmpMICorrective AS
                     (SELECT MovementItem.ObjectId                         AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId

@@ -19,10 +19,14 @@ BEGIN
      tmpMITax AS (SELECT MovementItem.ObjectId                                          AS GoodsId
                        , MILinkObject_GoodsKind.ObjectId                                AS GoodsKindId
                        , MIFloat_Price.ValueData                                        AS Price
-                       , CAST (ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum
+                       , CASE WHEN Movement.OperDate < '01.03.2016' AND 1=1
+                                   THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                              ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData)
+                         END :: Integer AS LineNum
                        , COUNT(*) OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id, MIFloat_Price.ValueData)        AS LineCount1
                        , COUNT(*) OVER (PARTITION BY Object_Goods.Id, MIFloat_Price.ValueData)                             AS LineCount2
-                  FROM MovementItem 
+                  FROM MovementItem
+                     LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()

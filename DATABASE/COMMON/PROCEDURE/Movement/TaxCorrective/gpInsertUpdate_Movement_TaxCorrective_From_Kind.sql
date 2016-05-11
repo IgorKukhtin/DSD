@@ -136,8 +136,9 @@ BEGIN
                               AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
      WHERE Movement.Id = inMovementId
     ;
-     -- !!!замена
-     IF inStartDateTax IS NULL THEN inStartDateTax:= DATE_TRUNC('MONTH', vbOperDate) - INTERVAL '4 MONTH'; END IF;
+     -- !!!замена!!!
+     IF inStartDateTax IS NULL THEN inStartDateTax:= DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '4 MONTH'; END IF;
+
 
      -- проверка - проведенные/удаленные документы Изменять нельзя
      IF vbStatusId <> zc_Enum_Status_UnComplete() AND inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
