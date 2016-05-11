@@ -186,6 +186,11 @@ object RepriceUnitForm: TRepriceUnitForm
         Options.Editing = False
         Width = 103
       end
+      object colContractName: TcxGridDBColumn
+        Caption = #1044#1086#1075#1086#1074#1086#1088
+        DataBinding.FieldName = 'ContractName'
+        Width = 60
+      end
       object colJuridical_Price: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'Juridical_Price'
@@ -628,6 +633,11 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'MidPriceDiff'
         DataType = ftCurrency
+      end
+      item
+        Name = 'ContractName'
+        DataType = ftString
+        Size = 50
       end>
     IndexDefs = <>
     Params = <>
@@ -636,7 +646,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      4B0300009619E0BD01000000180000001C0000000000030000004B0302496404
+      6C0300009619E0BD01000000180000001D0000000000030000006C0302496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -662,7 +672,8 @@ object RepriceUnitForm: TRepriceUnitForm
       546F70020003000000000007697350726F6D6F02000300000000000C4D696450
       7269636553616C65080004000000010007535542545950450200490006004D6F
       6E6579000C4D6964507269636544696666080004000000010007535542545950
-      450200490006004D6F6E6579000000}
+      450200490006004D6F6E6579000C436F6E74726163744E616D65010049000000
+      01000557494454480200020032000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -756,6 +767,10 @@ object RepriceUnitForm: TRepriceUnitForm
     end
     object cdsResultMidPriceDiff: TCurrencyField
       FieldName = 'MidPriceDiff'
+    end
+    object cdsResultContractName: TStringField
+      FieldName = 'ContractName'
+      Size = 50
     end
   end
   object UnitsCDS: TClientDataSet
