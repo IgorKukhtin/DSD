@@ -3,26 +3,26 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 668
   ClientWidth = 844
   ExplicitWidth = 860
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 121
     Width = 844
     Height = 547
-    ExplicitTop = 73
+    ExplicitTop = 121
     ExplicitWidth = 844
-    ExplicitHeight = 595
+    ExplicitHeight = 547
     ClientRectBottom = 547
     ClientRectRight = 844
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 844
-      ExplicitHeight = 571
+      ExplicitHeight = 523
       inherited cxGrid: TcxGrid
         Width = 844
         Height = 523
         ExplicitWidth = 844
-        ExplicitHeight = 571
+        ExplicitHeight = 523
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1007,13 +1007,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
-      end
-      item
       end
       item
         Control = edFrom
@@ -1022,22 +1016,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edTo
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = edComment
       end>
     Left = 232
     Top = 193

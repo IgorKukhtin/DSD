@@ -89,9 +89,14 @@ BEGIN
 
        -- Ðåçóëüòàò
        RETURN QUERY
+       WITH tmpComment AS (SELECT MS_Comment.ValueData AS Comment FROM MovementString AS MS_Comment WHERE MS_Comment.MovementId = inId AND MS_Comment.DescId = zc_MovementString_Comment())
        SELECT
          vbSubject, 
-         (COALESCE(vbUnitSign, '')||'<br>'||COALESCE(vbUserMailSign, ''))::TBlob, 
+         (CASE WHEN (SELECT Comment FROM tmpComment) <> ''
+                    THEN 'ÏÐÈÌÅ×ÀÍÈÅ ÂÀÆÍÎ : ' || (SELECT Comment FROM tmpComment) || CHR (13) || CHR (13) || CHR (13) || CHR (13) || CHR (13)
+               ELSE ''
+         END
+      || COALESCE (vbUnitSign, '') || '<br>' || COALESCE (vbUserMailSign, '')) :: TBlob AS Body,
          zc_Mail_From(), --'zakaz_family-neboley@mail.ru'::TVarChar, 
          vbMail, 
          zc_Mail_Host(), --'smtp.mail.ru'::TVarChar, 
@@ -113,4 +118,4 @@ $BODY$
 */
 
 -- òåñò
--- select * FROM  gpGet_DocumentDataForEmail(inId := 12183,  inSession := '377790');
+-- SELECT * FROM gpGet_DocumentDataForEmail (inId:= 2057341, inSession:= '377790');
