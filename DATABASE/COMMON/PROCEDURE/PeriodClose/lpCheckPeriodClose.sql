@@ -81,7 +81,7 @@ BEGIN
                           )
          -- Результат
          INSERT INTO _tmpPeriodClose (PeriodCloseId, Code, Name, CloseDate, UserId, UserId_excl, MovementDescId, MovementDescId_excl, BranchId, PaidKindId, CloseDate_excl)
-            SELECT tmpData.Id
+            SELECT tmpData.Id             AS PeriodCloseId
                  , tmpData.Code
                  , tmpData.Name
                  , tmpData.CloseDate_calc AS CloseDate
@@ -89,8 +89,8 @@ BEGIN
                  , tmpData.UserId_excl
                  , tmpData.MovementDescId
                  , tmpData.MovementDescId_excl
-                 , COALESCE (tmpData.BranchId, 0)
-                 , COALESCE (tmpData.PaidKindId, 0)
+                 , COALESCE (tmpData.BranchId, 0)   AS BranchId
+                 , COALESCE (tmpData.PaidKindId, 0) AS PaidKindId
                  , tmpData.CloseDate_excl
             FROM tmpData;
      END IF;
@@ -113,7 +113,8 @@ BEGIN
                      -- подзапрос
                      SELECT tmp1.PaidKindId FROM tmp1 UNION SELECT tmp2.PaidKindId FROM tmp2 UNION SELECT tmp3.PaidKindId FROM tmp3
                     ) AS tmp ON tmp.PaidKindId = _tmpPeriodClose.PaidKindId
-     WHERE _tmpPeriodClose.MovementDescId = inMovementDescId AND _tmpPeriodClose.UserId = inUserId
+     WHERE _tmpPeriodClose.MovementDescId = inMovementDescId
+       AND (_tmpPeriodClose.UserId = inUserId OR _tmpPeriodClose.UserId = 0)
        AND (_tmpPeriodClose.BranchId   = 0 OR _tmpPeriodClose.BranchId = vbBranchId)
        AND (_tmpPeriodClose.PaidKindId = 0 OR tmp.PaidKindId > 0);
      -- Проверка

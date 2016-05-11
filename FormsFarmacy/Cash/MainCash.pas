@@ -761,14 +761,14 @@ begin
     SourceClientDataSet := RemainsCDS;
   if SoldRegim AND
      (ceAmount.Value > 0) and
-     (ceAmount.Value > SourceClientDataSet.FieldByName('Remains').asCurrency) then
+     (ceAmount.Value > SourceClientDataSet.FieldByName('Remains').asFloat) then
   begin
     ShowMessage('Не хватает количества для продажи!');
     exit;
   end;
   if not SoldRegim AND
      (ceAmount.Value < 0) and
-     (abs(ceAmount.Value) > abs(CheckCDS.FieldByName('Amount').asCurrency)) then
+     (abs(ceAmount.Value) > abs(CheckCDS.FieldByName('Amount').asFloat)) then
   begin
     ShowMessage('Не хватает количества для возврата!');
     exit;

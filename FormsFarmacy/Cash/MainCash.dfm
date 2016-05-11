@@ -327,6 +327,7 @@ inherited MainCashForm: TMainCashForm
             6B967373E1BEBEFFFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
             FFFFFFFFFFFF}
           HeaderGlyphAlignmentHorz = taCenter
+          HeaderHint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1074#1099#1073#1086#1088
           Options.Editing = False
           Width = 45
           IsCaptionAssigned = True
@@ -397,6 +398,7 @@ inherited MainCashForm: TMainCashForm
             46154B4C3D60618C7F7FE6BFBEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
             FFFFFFFFFFFF}
           HeaderGlyphAlignmentHorz = taCenter
+          HeaderHint = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090' '#1074#1099#1073#1086#1088
           Options.Editing = False
           Width = 45
           IsCaptionAssigned = True
