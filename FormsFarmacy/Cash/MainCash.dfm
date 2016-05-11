@@ -21,7 +21,6 @@ inherited MainCashForm: TMainCashForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 772
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -29,7 +28,6 @@ inherited MainCashForm: TMainCashForm
       Height = 196
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 518
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = CheckDS
@@ -81,7 +79,6 @@ inherited MainCashForm: TMainCashForm
       Height = 196
       Align = alRight
       TabOrder = 1
-      ExplicitLeft = 521
       object AlternativeGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = AlternativeDS
@@ -156,7 +153,6 @@ inherited MainCashForm: TMainCashForm
       Height = 196
       AlignSplitter = salRight
       Control = AlternativeGrid
-      ExplicitLeft = 518
     end
   end
   object cxSplitter2: TcxSplitter [1]
@@ -166,7 +162,6 @@ inherited MainCashForm: TMainCashForm
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitWidth = 772
   end
   object MainPanel: TPanel [2]
     Left = 0
@@ -176,7 +171,6 @@ inherited MainCashForm: TMainCashForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 772
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
@@ -184,7 +178,6 @@ inherited MainCashForm: TMainCashForm
       Height = 166
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 772
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -203,7 +196,7 @@ inherited MainCashForm: TMainCashForm
         OptionsData.Inserting = False
         OptionsView.GridLineColor = clBtnFace
         OptionsView.GroupByBox = False
-        OptionsView.HeaderAutoHeight = True
+        OptionsView.HeaderHeight = 30
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object MainColName: TcxGridDBColumn
@@ -245,7 +238,7 @@ inherited MainCashForm: TMainCashForm
           Width = 45
         end
         object MainColReserved: TcxGridDBColumn
-          Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077
+          Caption = 'VIP'
           DataBinding.FieldName = 'Reserved'
           OnGetDisplayText = MainColReservedGetDisplayText
           HeaderAlignmentHorz = taCenter
@@ -420,7 +413,6 @@ inherited MainCashForm: TMainCashForm
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitWidth = 772
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -477,9 +469,12 @@ inherited MainCashForm: TMainCashForm
       object cbSpec: TcxCheckBox
         Left = 398
         Top = 7
+        Hint = #1055#1086' '#1075#1072#1083#1086#1095#1082#1077
         Action = actSpec
         Caption = #1063#1077#1082
         ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
         Style.Font.Charset = DEFAULT_CHARSET
         Style.Font.Color = clWindowText
         Style.Font.Height = -12
@@ -495,8 +490,11 @@ inherited MainCashForm: TMainCashForm
         Top = 7
         Width = 35
         Height = 22
+        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1095#1077#1082#1086#1074
         Action = actCheck
         LookAndFeel.Kind = lfStandard
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 4
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -542,8 +540,11 @@ inherited MainCashForm: TMainCashForm
         Top = 7
         Width = 34
         Height = 22
+        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1083#1086#1078#1077#1085'. '#1095#1077#1082#1086#1074
         Action = actExecuteLoadVIP
         LookAndFeel.Kind = lfStandard
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 7
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -572,8 +573,11 @@ inherited MainCashForm: TMainCashForm
         Top = 7
         Width = 34
         Height = 22
+        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1053#1058#1047
         Action = actOpenMCSForm
         LookAndFeel.Kind = lfStandard
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 9
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -585,9 +589,11 @@ inherited MainCashForm: TMainCashForm
       object chbNotMCS: TcxCheckBox
         Left = 536
         Top = 7
-        Hint = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077' '#1091#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1088#1072#1089#1095#1077#1090#1077' '#1053#1058#1047
+        Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074'. '#1095#1077#1082' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1053#1058#1047
         Caption = #1053#1058#1047
         ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
         Style.Font.Charset = DEFAULT_CHARSET
         Style.Font.Color = clWindowText
         Style.Font.Height = -12
@@ -603,8 +609,11 @@ inherited MainCashForm: TMainCashForm
         Top = 7
         Width = 34
         Height = 22
+        Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1089#1077#1090#1080
         Action = actChoiceGoodsFromRemains
         LookAndFeel.Kind = lfStandard
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 11
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -625,7 +634,6 @@ inherited MainCashForm: TMainCashForm
     ParentBackground = False
     TabOrder = 3
     Visible = False
-    ExplicitWidth = 772
     object Label1: TLabel
       Left = 16
       Top = 0

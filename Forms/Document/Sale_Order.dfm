@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 408
   ClientWidth = 1261
   ExplicitWidth = 1277
-  ExplicitHeight = 446
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3439,13 +3439,6 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDateTax'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput

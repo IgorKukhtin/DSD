@@ -4,7 +4,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1108,13 +1108,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDateTax'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput

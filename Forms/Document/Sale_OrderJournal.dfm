@@ -5,7 +5,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1193
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2934,13 +2934,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDateTax'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput

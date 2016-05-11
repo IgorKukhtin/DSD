@@ -3,7 +3,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   ClientHeight = 668
   ClientWidth = 1268
   ExplicitWidth = 1284
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2630,15 +2630,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-            item
-        Name = 'inStartDateTax'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
-        Name = 'inEndDateTax'
+        Name = 'inStartDateTax'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput

@@ -3,7 +3,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 422
   ClientWidth = 1259
   ExplicitWidth = 1275
-  ExplicitHeight = 460
+  ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3058,13 +3058,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDateTax'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput

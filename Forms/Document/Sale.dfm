@@ -4,7 +4,7 @@
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1314
-  ExplicitHeight = 683
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3559,13 +3559,6 @@
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDateTax'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
