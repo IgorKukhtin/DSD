@@ -25,9 +25,12 @@ BEGIN
 
      -- inShowAll:= TRUE;
 
-     IF inShowAll THEN
 
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- определили
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+
+     IF inShowAll THEN
 
      RETURN QUERY
        SELECT
@@ -89,10 +92,9 @@ BEGIN
        SELECT
              MovementItem.Id                        AS Id
            , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
-                  THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
-                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData,MovementItem.Id)
+                       THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
              END :: Integer AS LineNum
-
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -145,10 +147,10 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id
-            , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
-                  THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
-                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
-             END :: Integer AS LineNum          
+           , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
+                       THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData)
+             END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -205,7 +207,6 @@ ALTER FUNCTION gpSelect_MovementItem_Tax (Integer, Boolean, Boolean, TVarChar) O
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 12.05.16         *
  25.03.16         * add LineNum
  31.03.15         * 
  08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100

@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_ImportSettings_Email (TVarChar)
+ -- Function: gpSelect_Object_ImportSettings_Email (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettings_Email (TVarChar);
 

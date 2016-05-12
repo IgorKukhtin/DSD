@@ -1,4 +1,4 @@
-п»ї-- Function: gpSelect_Object_PartionGoods()
+-- Function: gpSelect_Object_PartionGoods()
 
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Integer, Integer, Boolean, TVarChar);
@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
     IN inGoodsId      Integer   ,
     IN inUnitId       Integer   ,    
     IN inShowAll      Boolean,     
-    IN inSession      TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar 
              , OperDate TDateTime, Price TFloat
@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , isErased boolean
              ) AS
 $BODY$BEGIN
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
 
     RETURN QUERY 
@@ -52,7 +52,7 @@ $BODY$BEGIN
                 )
                 AND
                 (
-                    Container.Amount > 0 
+                    Container.Amount <> 0 
                     OR 
                     inShowAll = TRUE
                 )
@@ -78,20 +78,20 @@ $BODY$BEGIN
         FROM 
             tmpContainer_Count
             LEFT JOIN Object AS Object_PartionGoods  
-                              ON Object_PartionGoods.Id = tmpContainer_Count.PartionGoodsId            --РїР°СЂС‚РёСЏ
+                              ON Object_PartionGoods.Id = tmpContainer_Count.PartionGoodsId            --партия
 
-            LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionGoods.ObjectCode                 -- РґР°С‚Р°
-            LEFT JOIN Movement ON MovementItem.MovementId = Movement.Id                                -- РґР°С‚Р°
+            LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionGoods.ObjectCode                 -- дата
+            LEFT JOIN Movement ON MovementItem.MovementId = Movement.Id                                -- дата
                                                         
             LEFT JOIN MovementItemFloat AS MovementItemFloat_Price 
-                             ON MovementItemFloat_Price.MovementItemId = MovementItem.Id               -- С†РµРЅР°
+                             ON MovementItemFloat_Price.MovementItemId = MovementItem.Id               -- цена
                             AND MovementItemFloat_Price.DescId = zc_MIFloat_Price()    
 
             LEFT JOIN Object AS Object_Unit 
                         ON Object_Unit.Id = tmpContainer_Count.UnitId
                                     
             LEFT JOIN Object AS Object_Goods 
-                              ON Object_Goods.Id = tmpContainer_Count.GoodsId                          -- С‚РѕРІР°СЂ   
+                              ON Object_Goods.Id = tmpContainer_Count.GoodsId                          -- товар   
         ;
 END;
 $BODY$
@@ -101,11 +101,11 @@ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  09.10.14         *
 */
 
--- С‚РµСЃС‚
+-- тест
 --select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
 --select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False' ,  inSession := '5');
