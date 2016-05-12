@@ -11,7 +11,6 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
     Width = 1174
     Height = 284
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1174
     ExplicitHeight = 284
     ClientRectBottom = 284
@@ -243,6 +242,13 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object clLineNumTax: TcxGridDBColumn
+            Caption = #8470' '#1055'/'#1055' ('#1053#1053')'
+            DataBinding.FieldName = 'LineNumTax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
         end
       end
     end
@@ -305,6 +311,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
       FormName = 'TReport_GoodsTaxDialogForm'
       FormNameParam.Value = 'TReport_GoodsTaxDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -312,6 +319,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -319,6 +327,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
@@ -327,6 +336,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -335,6 +345,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -358,6 +369,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -365,6 +377,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -372,6 +385,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -443,6 +457,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -452,6 +467,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -460,6 +476,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 544
     Top = 3
