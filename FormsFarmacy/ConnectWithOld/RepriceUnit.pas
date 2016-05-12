@@ -110,6 +110,8 @@ type
     colMidPriceSale: TcxGridDBColumn;
     cdsResultMidPriceDiff: TCurrencyField;
     colMidPriceDiff: TcxGridDBColumn;
+    cdsResultContractName: TStringField;
+    colContractName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -361,6 +363,7 @@ begin
           cdsResult.FieldByName('Juridical_Price').AsCurrency := AllGoodsPriceCDS.FieldByName('Juridical_Price').AsCurrency;
           cdsResult.FieldByName('Juridical_GoodsName').AsString := AllGoodsPriceCDS.FieldByName('Juridical_GoodsName').AsString;
           cdsResult.FieldByName('ProducerName').AsString := AllGoodsPriceCDS.FieldByName('ProducerName').AsString;
+          cdsResult.FieldByName('ContractName').AsString := AllGoodsPriceCDS.FieldByName('ContractName').AsString;
           cdsResult.FieldByName('SumReprice').AsCurrency := AllGoodsPriceCDS.FieldByName('SumReprice').AsCurrency;
           cdsResult.FieldByName('MinExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('MinExpirationDate').AsDateTime;
           cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;

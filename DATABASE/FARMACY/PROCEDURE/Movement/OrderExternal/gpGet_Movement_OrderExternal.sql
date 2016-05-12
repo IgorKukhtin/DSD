@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , ContractId Integer, ContractName TVarChar
-             , MasterId Integer, MasterInvNumber TVarChar
+             , MasterId Integer, MasterInvNumber TVarChar, OrderKindName TVarChar
              , Comment TVarChar
               )
 AS
@@ -41,6 +41,7 @@ BEGIN
              , CAST ('' AS TVarChar) 			        AS ContractName
              , 0                     			        AS MasterId
              , CAST ('' AS TVarChar) 			        AS MasterInvNumber
+             , CAST ('' AS TVarChar) 			        AS OrderKindName
              , CAST ('' AS TVarChar) 		                AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -62,6 +63,7 @@ BEGIN
            , Object_Contract.ValueData                          AS ContractName
            , Movement_Master.Id                                 AS MasterId
            , ('№ '||Movement_Master.InvNumber || ' от '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar    AS MasterInvNumber 
+           , Object_OrderKind.ValueData                         AS OrderKindName
            , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
        FROM Movement
@@ -93,6 +95,11 @@ BEGIN
                                            ON MLM_Master.MovementId = Movement.Id
                                           AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MLM_Master.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderKind
+                                         ON MovementLinkObject_OrderKind.MovementId = Movement_Master.Id
+                                        AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
+            LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();
