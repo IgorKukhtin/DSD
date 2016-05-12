@@ -1,13 +1,19 @@
 inherited EmailKindForm: TEmailKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099'>'
+  ClientWidth = 393
+  ExplicitWidth = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Width = 393
+    ClientRectRight = 393
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 575
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
+        Width = 393
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -45,6 +51,40 @@ inherited EmailKindForm: TEmailKindForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 256

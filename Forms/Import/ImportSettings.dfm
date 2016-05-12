@@ -35,12 +35,14 @@ inherited ImportSettingsForm: TImportSettingsForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 34
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
@@ -54,6 +56,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
@@ -68,6 +71,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 67
           end
@@ -82,6 +86,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 61
           end
@@ -95,6 +100,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
@@ -109,12 +115,14 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
           object clStartRow: TcxGridDBColumn
             Caption = #8470' '#1089#1090#1088#1086#1082#1080' '#1076#1083#1103' Excel'
             DataBinding.FieldName = 'StartRow'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
@@ -123,11 +131,13 @@ inherited ImportSettingsForm: TImportSettingsForm
             DataBinding.FieldName = 'Query'
             PropertiesClassName = 'TcxBlobEditProperties'
             Properties.BlobPaintStyle = bpsText
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object clHDR: TcxGridDBColumn
             DataBinding.FieldName = 'HDR'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
@@ -137,6 +147,7 @@ inherited ImportSettingsForm: TImportSettingsForm
             PropertiesClassName = 'TcxTimeEditProperties'
             Properties.TimeFormat = tfHourMin
             Properties.UseLeftAlignmentOnEditing = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1090#1080#1074#1085#1086#1081' '#1087#1088#1086#1074#1077#1088#1082#1080
             Width = 77
@@ -146,6 +157,7 @@ inherited ImportSettingsForm: TImportSettingsForm
             DataBinding.FieldName = 'EndTime'
             PropertiesClassName = 'TcxTimeEditProperties'
             Properties.TimeFormat = tfHourMin
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1090#1080#1074#1085#1086#1081' '#1087#1088#1086#1074#1077#1088#1082#1080
             Width = 83
@@ -155,6 +167,7 @@ inherited ImportSettingsForm: TImportSettingsForm
             DataBinding.FieldName = 'CheckTime'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057' '#1082#1072#1082#1086#1081' '#1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100#1102' '#1087#1088#1086#1074#1077#1088#1103#1090#1100' '#1087#1086#1095#1090#1091' '#1074' '#1072#1082#1090#1080#1074#1085#1086#1084' '#1087#1077#1088#1080#1086#1076#1077', '#1084#1080#1085
             Width = 99
@@ -170,18 +183,38 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object clContactPersonMail: TcxGridDBColumn
             Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
             DataBinding.FieldName = 'ContactPersonMail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object clEmailKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1087#1086#1095#1090#1099
+            DataBinding.FieldName = 'EmailKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = EmailKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 53
           end
@@ -396,6 +429,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -403,6 +437,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -416,12 +451,14 @@ inherited ImportSettingsForm: TImportSettingsForm
       FormName = 'TFileTypeKindForm'
       FormNameParam.Value = 'TFileTypeKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FileTypeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -429,6 +466,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'FileTypeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -440,12 +478,14 @@ inherited ImportSettingsForm: TImportSettingsForm
       FormName = 'TContactPersonForm'
       FormNameParam.Value = 'TContactPersonForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContactPersonId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -453,6 +493,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'ContactPersonName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Mail'
@@ -460,6 +501,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'ContactPersonMail'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -471,12 +513,14 @@ inherited ImportSettingsForm: TImportSettingsForm
       FormName = 'TContractForm'
       FormNameParam.Value = 'TContractForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -484,6 +528,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -495,12 +540,14 @@ inherited ImportSettingsForm: TImportSettingsForm
       FormName = 'TLoadObjectForm'
       FormNameParam.Value = 'TLoadObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -508,6 +555,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -521,6 +569,7 @@ inherited ImportSettingsForm: TImportSettingsForm
       Param.Component = MasterCDS
       Param.ComponentItem = 'Directory'
       Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
     end
     object ImportType: TOpenChoiceForm
       Category = 'DSDLib'
@@ -530,12 +579,14 @@ inherited ImportSettingsForm: TImportSettingsForm
       FormName = 'TImportTypeForm'
       FormNameParam.Value = 'TImportTypeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ImportTypeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -543,6 +594,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'ImportTypeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -569,6 +621,7 @@ inherited ImportSettingsForm: TImportSettingsForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -576,6 +629,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -584,8 +638,36 @@ inherited ImportSettingsForm: TImportSettingsForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object EmailKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'EmailKindForm'
+      FormName = 'TEmailKindForm'
+      FormNameParam.Value = 'TEmailKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EmailKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EmailKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -715,6 +797,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -722,6 +805,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -730,6 +814,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -737,6 +822,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -744,6 +830,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFileTypeId'
@@ -751,6 +838,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'FileTypeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inImportTypeId'
@@ -758,6 +846,15 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'ImportTypeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmailKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EmailKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContactPersonId'
@@ -765,6 +862,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'ContactPersonId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartRow'
@@ -772,6 +870,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'StartRow'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHDR'
@@ -780,6 +879,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'HDR'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDirectory'
@@ -788,6 +888,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'Directory'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inQuery'
@@ -796,6 +897,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'Query'
         DataType = ftWideString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartTime'
@@ -804,6 +906,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'StartTime'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndTime'
@@ -812,6 +915,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'EndTime'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTime'
@@ -819,6 +923,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'CheckTime'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
@@ -849,6 +954,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 784
@@ -865,6 +971,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -873,6 +980,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'ParamValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inImportSettingsId'
@@ -880,6 +988,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inImportTypeItemsId'
@@ -887,6 +996,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = ChildCDS
         ComponentItem = 'ImportTypeItemsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDefaultValue'
@@ -895,6 +1005,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ComponentItem = 'DefaultValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 792
@@ -925,6 +1036,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
@@ -941,6 +1053,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 632

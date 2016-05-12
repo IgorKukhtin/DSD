@@ -1109,8 +1109,9 @@ BEGIN
 
 
       -- !!! Типы установок для почты
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_OutOrder(),inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая для заказов поставщикам'  , inEnumName:= 'zc_Enum_EmailKind_OutOrder');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_InPrice(), inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Входящая для прайс-листа поставщика', inEnumName:= 'zc_Enum_EmailKind_InPrice');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_OutOrder() , inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая для заказов поставщикам'     , inEnumName:= 'zc_Enum_EmailKind_OutOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_InPrice()  , inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Входящая для прайс-листа поставщика'   , inEnumName:= 'zc_Enum_EmailKind_InPrice');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_IncomeMMO(), inDescId:= zc_Object_EmailKind(), inCode:= 3, inName:= 'Входящая для ММО прихода от поставщика', inEnumName:= 'zc_Enum_EmailKind_IncomeMMO');
 
 END $$;
 

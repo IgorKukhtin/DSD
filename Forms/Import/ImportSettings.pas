@@ -72,6 +72,8 @@ type
     clContactPersonMail: TcxGridDBColumn;
     actProtocolMaster: TdsdOpenForm;
     bbProtocolMaster: TdxBarButton;
+    clEmailKindName: TcxGridDBColumn;
+    EmailKindChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

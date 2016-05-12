@@ -98,18 +98,7 @@ BEGIN
           , 'vas6ok'                 :: TVarChar AS Password
      FROM gpGet_Movement_XML_FileName (inMovementId, inSession) AS tmp;
 */
-/*
-     RETURN QUERY
-     SELECT tmp.outFileName          :: TVarChar AS Subject
-          , ''                       :: TBlob    AS Body
-          , 'ashtu777@gmail.com'     :: TVarChar AS AddressFrom
-          , 'ashtu@ua.fm'            :: TVarChar AS AddressTo
-          , 'smtp.gmail.com'         :: TVarChar AS Host
-          , 465                      :: Integer  AS Port
-          , 'ashtu777@gmail.com'     :: TVarChar AS UserName
-          , 'Fktrc123'               :: TVarChar AS Password
-     FROM gpGet_Movement_XML_FileName (inMovementId, inSession) AS tmp;
-*/
+
 
 END;
 $BODY$
