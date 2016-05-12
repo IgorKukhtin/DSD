@@ -1,3 +1,4 @@
+-- Function: gpSelect_GoodsOnUnitRemains_ForSite
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains_ForSite (Integer, TDateTime, TVarChar);
 

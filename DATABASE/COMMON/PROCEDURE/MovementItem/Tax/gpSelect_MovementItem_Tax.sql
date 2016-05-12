@@ -25,9 +25,12 @@ BEGIN
 
      -- inShowAll:= TRUE;
 
-     IF inShowAll THEN
 
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- определили
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+
+     IF inShowAll THEN
 
      RETURN QUERY
        SELECT
@@ -88,7 +91,10 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
-           , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum
+           , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
+                       THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
+             END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -141,7 +147,10 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id
-           , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum           
+           , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
+                       THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData)
+             END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName

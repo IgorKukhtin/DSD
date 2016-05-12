@@ -39,7 +39,7 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-        WITH containerCount AS (SELECT Container.Id                AS ContainerId
+        WITH ContainerCount AS (SELECT Container.Id                AS ContainerId
                                      , Container.Amount
                                      , Container.ObjectID          AS GoodsId
                                      , MI_Income.MovementId        AS MovementId_Income
@@ -47,13 +47,12 @@ BEGIN
                                      , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
                                      , COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
                               
-                                FROM 
-                                    container
+                                FROM Container
                                     -- партия
                                     LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                                        ON CLI_MI.ContainerId = container.Id
+                                                                        ON CLI_MI.ContainerId = Container.Id
                                                                        AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                    LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                    LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
                                     -- элемент прихода
                                     LEFT OUTER JOIN MovementItem AS MI_Income
                                                                  ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
@@ -64,7 +63,7 @@ BEGIN
                                                                AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                                     -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-                                WHERE Container.descid = zc_container_count()
+                                WHERE Container.DescId = zc_Container_count()
                                   AND Container.WhereObjectId = inUnitId)
 
            , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END AS MovementId_Income
@@ -81,7 +80,7 @@ BEGIN
                               , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END               AS ToId_Income
                               
                          FROM (
-                                 SELECT ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS Amount
+                                 SELECT ContainerCount.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
                                       , ContainerCount.GoodsId 
                                       , ContainerCount.MovementId_Income
                                       , ContainerCount.MovementId_find
@@ -91,7 +90,7 @@ BEGIN
                                       LEFT JOIN MovementItemContainer AS MIContainer 
                                                                       ON MIContainer.ContainerId = ContainerCount.ContainerId
                                                                      AND MIContainer.OperDate >= inRemainsDate
-                                 GROUP BY ContainerCount.ContainerId, containerCount.GoodsId, containerCount.Amount
+                                 GROUP BY ContainerCount.ContainerId, ContainerCount.GoodsId, ContainerCount.Amount
                                       , ContainerCount.MovementId_Income
                                       , ContainerCount.MovementId_find
                                       , ContainerCount.MovementId

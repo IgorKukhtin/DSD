@@ -102,7 +102,7 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
-           , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum    
+           , CAST (ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id) AS Integer) AS LineNum    
            , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
            , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax
 --           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNumTax
@@ -183,7 +183,7 @@ BEGIN
        -- Результат     
        SELECT
              MovementItem.Id
-           , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum    
+           , CAST (ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id) AS Integer) AS LineNum    
            , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
            , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax 
            , COALESCE (MIBoolean_isAuto.ValueData, True) ::Boolean    AS isAuto

@@ -89,4 +89,4 @@ ALTER TABLE Object_ImportSettings_View  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_Goods_View
+-- SELECT * FROM Object_ImportSettings_View
