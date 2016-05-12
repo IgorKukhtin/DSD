@@ -163,7 +163,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                         ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
-        WHERE MovementItem_Send.MovementId = 1997151  --2003224 -- inMovementId
+        WHERE MovementItem_Send.MovementId = inMovementId
           AND MovementItem_Send.DescId = zc_MI_Master()
           AND MovementItem_Send.isErased = FALSE;         
 
