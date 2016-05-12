@@ -88,7 +88,11 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
-           , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum
+           , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
+                  THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData,MovementItem.Id)
+             END :: Integer AS LineNum
+
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -141,7 +145,10 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id
-           , CAST (row_number() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS LineNum           
+            , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
+                  THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
+             END :: Integer AS LineNum          
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -198,6 +205,7 @@ ALTER FUNCTION gpSelect_MovementItem_Tax (Integer, Boolean, Boolean, TVarChar) O
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 12.05.16         *
  25.03.16         * add LineNum
  31.03.15         * 
  08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100

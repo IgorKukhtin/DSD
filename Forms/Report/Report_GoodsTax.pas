@@ -33,6 +33,7 @@ type
     clStatusName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    clLineNumTax: TcxGridDBColumn;
   private
     { Private declarations }
   public
