@@ -149,7 +149,7 @@ BEGIN
              MovementItem.Id
            , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
                        THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
-                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData)
+                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
              END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode

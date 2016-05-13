@@ -3,8 +3,9 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
   ClientHeight = 341
   ClientWidth = 1174
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -384
   ExplicitWidth = 1190
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -40,6 +41,16 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCorrective
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -57,6 +68,16 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCorrective
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -108,6 +129,34 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 87
+          end
+          object clLineNumTax: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1053#1053
+            DataBinding.FieldName = 'LineNumTax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
+          object InvNumber_Tax: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1053#1053
+            DataBinding.FieldName = 'InvNumber_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object InvNumberPartner_Tax: TcxGridDBColumn
+            Caption = #8470' '#1053#1053
+            DataBinding.FieldName = 'InvNumberPartner_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperDate_Tax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1053#1053
+            DataBinding.FieldName = 'OperDate_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
@@ -228,6 +277,26 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
+          object AmountTax: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'AmountTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountCorrective: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'AmountCorrective'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -241,13 +310,6 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
-          end
-          object clLineNumTax: TcxGridDBColumn
-            Caption = #8470' '#1055'/'#1055' ('#1053#1053')'
-            DataBinding.FieldName = 'LineNumTax'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 54
           end
         end
       end
