@@ -2,34 +2,34 @@ inherited MainCashForm: TMainCashForm
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 415
-  ClientWidth = 768
+  ClientWidth = 765
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 784
+  ExplicitWidth = 781
   ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
     Top = 219
-    Width = 768
+    Width = 765
     Height = 196
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 764
+    ExplicitWidth = 768
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 514
+      Width = 511
       Height = 196
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 510
+      ExplicitWidth = 514
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = CheckDS
@@ -75,13 +75,13 @@ inherited MainCashForm: TMainCashForm
       end
     end
     object AlternativeGrid: TcxGrid
-      Left = 517
+      Left = 514
       Top = 0
       Width = 251
       Height = 196
       Align = alRight
       TabOrder = 1
-      ExplicitLeft = 513
+      ExplicitLeft = 517
       object AlternativeGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = AlternativeDS
@@ -150,41 +150,41 @@ inherited MainCashForm: TMainCashForm
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 514
+      Left = 511
       Top = 0
       Width = 3
       Height = 196
       AlignSplitter = salRight
       Control = AlternativeGrid
-      ExplicitLeft = 510
+      ExplicitLeft = 514
     end
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
     Top = 216
-    Width = 768
+    Width = 765
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitWidth = 764
+    ExplicitWidth = 768
   end
   object MainPanel: TPanel [2]
     Left = 0
     Top = 17
-    Width = 768
+    Width = 765
     Height = 199
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 764
+    ExplicitWidth = 768
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 768
+      Width = 765
       Height = 166
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 764
+      ExplicitWidth = 768
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -499,11 +499,11 @@ inherited MainCashForm: TMainCashForm
     object SearchPanel: TPanel
       Left = 0
       Top = 166
-      Width = 768
+      Width = 765
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitWidth = 764
+      ExplicitWidth = 768
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -718,14 +718,14 @@ inherited MainCashForm: TMainCashForm
   object pnlVIP: TPanel [3]
     Left = 0
     Top = 0
-    Width = 768
+    Width = 765
     Height = 17
     Align = alTop
     Color = 15656679
     ParentBackground = False
     TabOrder = 3
     Visible = False
-    ExplicitWidth = 764
+    ExplicitWidth = 768
     object Label1: TLabel
       Left = 16
       Top = 0
@@ -1093,6 +1093,11 @@ inherited MainCashForm: TMainCashForm
       end
       item
         ColorColumn = MaincolisSecond
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = mainColisPromo
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end>
