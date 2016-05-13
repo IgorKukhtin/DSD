@@ -89,11 +89,11 @@ BEGIN
           LEFT JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailKindId  = gpGet_Host.EmailKindId AND gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
           LEFT JOIN tmpEmail AS gpGet_Directory ON gpGet_Directory.EmailKindId = gpGet_Host.EmailKindId AND gpGet_Directory.EmailToolsId = zc_Enum_EmailTools_Directory()
 
-          LEFT JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect
-                                                                           ON gpSelect.isErased = FALSE
-                                                                          AND gpSelect.ContactPersonMail <> ''
-                                                                          AND gpSelect.Directory <> ''
-                                                                          AND gpSelect.EmailKindId = gpGet_Host.EmailKindId
+          INNER JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect
+                                                                            ON gpSelect.isErased = FALSE
+                                                                           AND gpSelect.ContactPersonMail <> ''
+                                                                           AND gpSelect.Directory <> ''
+                                                                           AND gpSelect.EmailKindId = gpGet_Host.EmailKindId
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
           LEFT JOIN ObjectDate AS ObjectDate_StartTime 
                                ON ObjectDate_StartTime.ObjectId = gpSelect.Id
