@@ -9,8 +9,12 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Tax(
  RETURNS VOID
 AS
 $BODY$
+  DECLARE vbOperDate TDateTime;
   DECLARE vbObjectId Integer;
 BEGIN
+     -- определили
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
      -- поиск
      vbObjectId:= (SELECT MovementItem.ObjectId
                    FROM MovementItem
@@ -54,6 +58,27 @@ BEGIN
          AND MovementItem.isErased = FALSE
          AND MovementItem.DescId = zc_MI_Master()
     ;
+
+
+     -- № п/п НН
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP(), tmp.Id, tmp.LineNum)
+     FROM (SELECT MovementItem.Id
+                , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
+                            THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                       ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
+                  END AS LineNum
+           FROM MovementItem
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+           WHERE MovementItem.MovementId = inMovementId
+             AND MovementItem.DescId = zc_MI_Master()
+             AND MovementItem.isErased = FALSE
+          ) AS tmp
+    ;
+
 
      -- Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
