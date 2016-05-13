@@ -2,32 +2,34 @@ inherited MainCashForm: TMainCashForm
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 415
-  ClientWidth = 764
+  ClientWidth = 768
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 780
-  ExplicitHeight = 450
+  ExplicitWidth = 784
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
     Top = 219
-    Width = 764
+    Width = 768
     Height = 196
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 764
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 510
+      Width = 514
       Height = 196
       Align = alClient
       TabOrder = 0
+      ExplicitWidth = 510
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = CheckDS
@@ -73,12 +75,13 @@ inherited MainCashForm: TMainCashForm
       end
     end
     object AlternativeGrid: TcxGrid
-      Left = 513
+      Left = 517
       Top = 0
       Width = 251
       Height = 196
       Align = alRight
       TabOrder = 1
+      ExplicitLeft = 513
       object AlternativeGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = AlternativeDS
@@ -147,37 +150,41 @@ inherited MainCashForm: TMainCashForm
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 510
+      Left = 514
       Top = 0
       Width = 3
       Height = 196
       AlignSplitter = salRight
       Control = AlternativeGrid
+      ExplicitLeft = 510
     end
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
     Top = 216
-    Width = 764
+    Width = 768
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
+    ExplicitWidth = 764
   end
   object MainPanel: TPanel [2]
     Left = 0
     Top = 17
-    Width = 764
+    Width = 768
     Height = 199
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 764
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 764
+      Width = 768
       Height = 166
       Align = alClient
       TabOrder = 0
+      ExplicitWidth = 764
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -329,7 +336,7 @@ inherited MainCashForm: TMainCashForm
           HeaderGlyphAlignmentHorz = taCenter
           HeaderHint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1074#1099#1073#1086#1088
           Options.Editing = False
-          Width = 45
+          Width = 40
           IsCaptionAssigned = True
         end
         object MaincolisSecond: TcxGridDBColumn
@@ -400,7 +407,88 @@ inherited MainCashForm: TMainCashForm
           HeaderGlyphAlignmentHorz = taCenter
           HeaderHint = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090' '#1074#1099#1073#1086#1088
           Options.Editing = False
-          Width = 45
+          Width = 40
+          IsCaptionAssigned = True
+        end
+        object mainColisPromo: TcxGridDBColumn
+          DataBinding.FieldName = 'isPromo'
+          PropertiesClassName = 'TcxImageComboBoxProperties'
+          Properties.Images = dmMain.ImageList
+          Properties.Items = <
+            item
+              Value = False
+            end
+            item
+              ImageIndex = 7
+              Tag = 1
+              Value = True
+            end>
+          HeaderGlyph.Data = {
+            A2070000424DA207000000000000360000002800000019000000190000000100
+            1800000000006C070000C40E0000C40E00000000000000000000FFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFD1D1FFB2B2FFF5F5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFCFF8A8AFF1414FF6C6CFFDADA
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF1F1
+            FF4D4DFF0000FF0303FF3030FFB9B9FFFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFD4D4FF0E0EFF0000FF0000FF0000FF3D3DFFE1E1FFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFEFF6565FF0000FF0000FF00
+            00FF0000FF0404FF8F8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC2
+            C2FF0B0BFF0000FF0000FF0000FF0000FF0000FF1A1AFFE0E0FFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFF3F3FF3838FF0000FF0000FF0000FF2B2BFF0000FF0000FF
+            0000FF5252FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7F7FF8585FF0A0AFF0000FF0000FF
+            1111FFE2E2FF5454FF0101FF0000FF0A0AFFAEAEFFFEFEFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFAFF9C9CFF
+            1B1BFF0000FF0000FF0000FF5E5EFFFAFAFFC9C9FF2828FF0000FF0101FF4444
+            FFE0E0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFAFAFFF1414FF0000FF0000FF0000FF1818FFB8B8FFFEFEFFFAFA
+            FF9090FF0C0CFF0000FF0707FF8B8BFFFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFCFF6E6EFF0A0AFF0404FF0C0C
+            FF7777FFF8F8FFFFFFFFFFFFFFF5F5FF4E4EFF0000FF0000FF1717FFDDDDFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFF3F3FFAAAAFF7B7BFF9E9EFFF3F3FFFFFFFFFFFFFFFFFFFFFFFFFFDFDFFF2F
+            2FFF0000FF0000FF4242FFEBEBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFCACAFF2828FF0000FF0000FF7474FFF9F9FFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFEFFAEAEFF1515FF
+            0000FF1414FFA9A9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFAFAFF8C8CFF0D0DFF0000FF3232FFCFCFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6F6FF8585FF0B0BFF0000
+            FF4B4BFFEBEBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFF7F7FF8C8CFF0B0BFF0202FF5151FFF2F2FFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7F7FF8383FF0A0AFF0202FF68
+            68FFF6F6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFF3F3FF8383FF1010FF0C0CFF7E7EFFF3F3FFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7F7FFA3A3FF2020FF0E0EFF7777FF
+            F7F7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FDFDFFC0C0FF2929FF0606FF6363FFF4F4FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD0D0FF3B3BFF0D0DFF5F5FFFE0E0
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFE9E9FF8282FF2222FF4848FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9F9FFBBBBFF7070FFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFF}
+          HeaderHint = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
+          Options.Editing = False
+          Width = 30
           IsCaptionAssigned = True
         end
       end
@@ -411,10 +499,11 @@ inherited MainCashForm: TMainCashForm
     object SearchPanel: TPanel
       Left = 0
       Top = 166
-      Width = 764
+      Width = 768
       Height = 33
       Align = alBottom
       TabOrder = 1
+      ExplicitWidth = 764
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -629,13 +718,14 @@ inherited MainCashForm: TMainCashForm
   object pnlVIP: TPanel [3]
     Left = 0
     Top = 0
-    Width = 764
+    Width = 768
     Height = 17
     Align = alTop
     Color = 15656679
     ParentBackground = False
     TabOrder = 3
     Visible = False
+    ExplicitWidth = 764
     object Label1: TLabel
       Left = 16
       Top = 0
@@ -1351,8 +1441,8 @@ inherited MainCashForm: TMainCashForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 120
+    Left = 224
+    Top = 112
   end
   object spGet_User_IsAdmin: TdsdStoredProc
     StoredProcName = 'gpGet_User_IsAdmin'
@@ -1399,7 +1489,7 @@ inherited MainCashForm: TMainCashForm
     IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
-    Left = 184
+    Left = 232
     Top = 72
   end
   object spSelect_CashRemains_Diff: TdsdStoredProc
