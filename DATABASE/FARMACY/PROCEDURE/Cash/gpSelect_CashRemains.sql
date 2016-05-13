@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
 RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
                Remains TFloat, Price TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
-               isFirst boolean, isSecond boolean, Color_calc Integer
+               isFirst boolean, isSecond boolean, Color_calc Integer,
+               isPromo boolean
                )
 AS
 $BODY$
@@ -66,6 +67,9 @@ BEGIN
         Group By
             MovementItem_Reserve.GoodsId
     )   
+
+      
+
     --залили снапшот
     INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved)
     SELECT 
@@ -83,6 +87,11 @@ BEGIN
         LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId;
             
     RETURN QUERY
+      -- Маркетинговый контракт
+    WITH  GoodsPromo AS (SELECT DISTINCT tmp.GoodsId        -- здесь товар "сети"
+                         --   , tmp.ChangePercent
+                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                       )
         SELECT 
             Goods.Id,
             Goods.ValueData,
@@ -95,7 +104,9 @@ BEGIN
             ObjectFloat_NDSKind_NDS.ValueData AS NDS,
             COALESCE(ObjectBoolean_First.ValueData, False)          AS isFirst,
             COALESCE(ObjectBoolean_Second.ValueData, False)         AS isSecond,
-            CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
+            CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
+            CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+ 
         FROM
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -113,7 +124,9 @@ BEGIN
                                    AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
                                     ON ObjectBoolean_Second.ObjectId = Goods.Id
-                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()            
+                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()  
+
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id         
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -138,3 +151,5 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 
 -- тест
 -- SELECT * FROM gpSelect_CashRemains (inSession:= '308120')
+
+--select * from gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '3');

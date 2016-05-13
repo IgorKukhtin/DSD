@@ -181,6 +181,7 @@ type
     cxButton1: TcxButton;
     actChoiceGoodsFromRemains: TOpenChoiceForm;
     TimerMoneyInCash: TTimer;
+    mainColisPromo: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
