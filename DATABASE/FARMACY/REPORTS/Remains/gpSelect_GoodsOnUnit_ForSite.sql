@@ -110,7 +110,7 @@ BEGIN
          INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
            SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
            FROM _tmpUnitMinPrice_List
-                INNER JOIN Container ON Container.WhereObjectId = tmpList.UnitId
+                INNER JOIN Container ON Container.WhereObjectId = _tmpUnitMinPrice_List.UnitId
                                     AND Container.DescId = zc_Container_Count()
                                     AND Container.Amount <> 0
           ;
