@@ -67,6 +67,9 @@ BEGIN
         Group By
             MovementItem_Reserve.GoodsId
     )   
+
+      
+
     --залили снапшот
     INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved)
     SELECT 
@@ -84,15 +87,11 @@ BEGIN
         LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId;
             
     RETURN QUERY
-    WITH 
-        -- Маркетинговый контракт
-        GoodsPromo AS (SELECT tmp.JuridicalId
-                            , tmp.GoodsId        -- здесь товар "сети"
-                            , tmp.MovementId
-                            , tmp.ChangePercent
+      -- Маркетинговый контракт
+    WITH  GoodsPromo AS (SELECT DISTINCT tmp.GoodsId        -- здесь товар "сети"
+                         --   , tmp.ChangePercent
                        FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
                        )
-
         SELECT 
             Goods.Id,
             Goods.ValueData,
@@ -106,7 +105,7 @@ BEGIN
             COALESCE(ObjectBoolean_First.ValueData, False)          AS isFirst,
             COALESCE(ObjectBoolean_Second.ValueData, False)         AS isSecond,
             CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
-            CASE WHEN COALESCE(GoodsPromo.ChangePercent,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+            CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
  
         FROM
             CashSessionSnapShot
