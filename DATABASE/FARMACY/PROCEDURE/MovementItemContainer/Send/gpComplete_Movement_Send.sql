@@ -16,7 +16,10 @@ $BODY$
   DECLARE vbUnit_From Integer;
   DECLARE vbUnit_To   Integer;
   DECLARE vbOperDate  TDateTime;
-  
+
+  DECLARE vbTotalSummMVAT TFloat;
+  DECLARE vbTotalSummPVAT TFloat;
+
 BEGIN
     vbUserId:= inSession;
 
@@ -134,7 +137,40 @@ BEGIN
         AND
         MIContainer_Count.IsActive = True;
     
-                                   
+    --Рассчитываем и записываем суммы Сумма закупки с усред. ценах с уч. % кор-ки (с НДС)   TotalSummMVAT
+    --                                Сумма закупки с усред. ценах (с НДС)                  TotalSummPVAT
+       SELECT
+            COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa           --MVat
+           , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT   --PVat
+      INTO vbTotalSummMVAT, vbTotalSummPVAT
+
+       FROM MovementItem AS MovementItem_Send
+            LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
+                                                  ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
+                                                 AND MIContainer_Count.DescId = zc_Container_Count()
+                                                 AND MIContainer_Count.isActive = True
+            LEFT OUTER  JOIN ContainerLinkObject AS CLI_MI 
+                                                 ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
+                                                AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+            LEFT OUTER  JOIN OBJECT AS Object_PartionMovementItem 
+                                    ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+            LEFT OUTER  JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+            -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
+            LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                        ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.ID
+                                       AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+            -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                        ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+        WHERE MovementItem_Send.MovementId = inMovementId
+          AND MovementItem_Send.DescId = zc_MI_Master()
+          AND MovementItem_Send.isErased = FALSE;         
+
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbTotalSummMVAT);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbTotalSummPVAT);
+--                           
+
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
   WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 END;
@@ -144,6 +180,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 13.05.16         *
  29.07.15                                                         *
  */
 
