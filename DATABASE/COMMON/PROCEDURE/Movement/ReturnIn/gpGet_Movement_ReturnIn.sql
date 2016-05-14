@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , MovementId_Partion Integer, PartionMovementName TVarChar
              , Comment TVarChar
              , isPromo Boolean
+             , isList Boolean
              )
 AS
 $BODY$
@@ -83,6 +84,7 @@ BEGIN
              , CAST ('' as TVarChar) 		        AS PartionMovementName
              , CAST ('' as TVarChar) 		        AS Comment
              , CAST (FALSE AS Boolean)                  AS isPromo 
+             , CAST (FALSE AS Boolean)                  AS isList
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
@@ -179,6 +181,7 @@ BEGIN
            , MovementString_Comment.ValueData       AS Comment
 
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
 
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
@@ -212,6 +215,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId =  Movement.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -303,6 +310,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 14.05.16         *
  10.05.16         * add StartDateTax
  21.08.15         * add isPartner
  26.06.15         * add Comment, Parent

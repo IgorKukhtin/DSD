@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1145
   ExplicitWidth = 1161
-  ExplicitHeight = 672
+  ExplicitHeight = 675
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -268,9 +268,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -393,7 +390,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
               end>
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 56
+            Width = 78
           end
           object colIsError: TcxGridDBColumn
             Caption = #1054#1096#1080#1073#1082#1072
@@ -410,7 +407,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 70
           end
           object colTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
@@ -418,7 +415,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 63
           end
           object clincInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
@@ -426,7 +423,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 42
+            Width = 58
           end
           object clincInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1082#1086#1088#1088'.'
@@ -434,7 +431,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 37
+            Width = 52
           end
           object colInvNumberPartner_Child: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1083#1086#1075'.'
@@ -449,7 +446,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 46
+            Width = 64
           end
           object colOperDate_Child: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
@@ -457,7 +454,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 53
+            Width = 74
           end
           object colPartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -465,7 +462,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 84
+            Width = 118
           end
           object colOKPO_From: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
@@ -500,7 +497,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 69
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
@@ -508,7 +505,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 66
+            Width = 99
           end
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -570,7 +567,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 43
+            Width = 56
           end
           object colContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
@@ -578,7 +575,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 54
           end
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
@@ -586,7 +583,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 49
+            Width = 56
           end
           object colDocument: TcxGridDBColumn
             Caption = #1055#1086#1076#1087#1080#1089#1072#1085
@@ -594,7 +591,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 29
+            Width = 54
           end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'
@@ -602,7 +599,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 30
+            Width = 56
           end
           object colIsElectron: TcxGridDBColumn
             Caption = #1069#1083#1077#1082#1090#1088'.'
@@ -610,14 +607,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 30
+            Width = 54
           end
           object colIsMedoc: TcxGridDBColumn
             Caption = #1052#1077#1076#1086#1082
             DataBinding.FieldName = 'IsMedoc'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 56
           end
         end
         object cxGridTaxCorrectiveLevel: TcxGridLevel
@@ -851,7 +848,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Width = 97
     end
     object edInvNumberSale: TcxButtonEdit
-      Left = 344
+      Left = 342
       Top = 103
       Enabled = False
       Properties.Buttons = <
@@ -861,7 +858,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 30
-      Width = 313
+      Width = 131
     end
     object cxLabel19: TcxLabel
       Left = 342
@@ -884,6 +881,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Properties.ReadOnly = True
       TabOrder = 33
       Width = 100
+    end
+    object cbisList: TcxCheckBox
+      Left = 485
+      Top = 103
+      Caption = #1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 34
+      Width = 166
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -2351,6 +2355,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Component = edStartDateTax
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isList'
+        Value = Null
+        Component = cbisList
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 248
@@ -2434,6 +2445,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Name = 'inPriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisList'
+        Value = Null
+        Component = cbisList
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2810,8 +2829,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Top = 368
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 476
-    Top = 52
+    Left = 444
+    Top = 12
   end
   object RefreshDispatcher: TRefreshDispatcher
     CheckIdParam = True
@@ -2996,8 +3015,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 680
-    Top = 56
+    Left = 592
+    Top = 64
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -3041,8 +3060,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 724
-    Top = 48
+    Left = 628
+    Top = 40
   end
   object spTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'

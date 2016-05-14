@@ -1,25 +1,25 @@
 inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 535
-  ClientWidth = 1106
+  ClientWidth = 1114
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1122
-  ExplicitHeight = 570
+  ExplicitWidth = 1130
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1106
+    Width = 1114
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1106
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1106
+    ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1106
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1106
+        Width = 1114
         Height = 478
         ExplicitWidth = 1106
         ExplicitHeight = 478
@@ -481,12 +481,21 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colisList: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isList'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 58
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1106
+    Width = 1114
     ExplicitWidth = 1106
     inherited deStart: TcxDateEdit
       EditValue = 42370d

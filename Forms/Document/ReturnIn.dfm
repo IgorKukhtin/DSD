@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 650
   ClientWidth = 1244
   ExplicitWidth = 1260
-  ExplicitHeight = 685
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -290,14 +290,14 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      object cxGridTaxCorrective: TcxGrid
+      object l: TcxGrid
         Left = 0
         Top = 0
         Width = 1244
         Height = 460
         Align = alClient
         TabOrder = 0
-        object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
+        object lDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -639,8 +639,8 @@ inherited ReturnInForm: TReturnInForm
             Width = 45
           end
         end
-        object cxGridTaxCorrectiveLevel: TcxGridLevel
-          GridView = cxGridTaxCorrectiveDBTableView
+        object lLevel: TcxGridLevel
+          GridView = lDBTableView
         end
       end
     end
@@ -994,7 +994,7 @@ inherited ReturnInForm: TReturnInForm
   end
   object cbCalcAmountPartner: TcxCheckBox [10]
     Left = 497
-    Top = 103
+    Top = 95
     Caption = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
     Properties.ReadOnly = False
     State = cbsChecked
@@ -1022,6 +1022,13 @@ inherited ReturnInForm: TReturnInForm
     Left = 761
     Top = 45
     Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+  end
+  object cbisList: TcxCheckBox [14]
+    Left = 497
+    Top = 114
+    Caption = #1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 18
+    Width = 166
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2432,6 +2439,13 @@ inherited ReturnInForm: TReturnInForm
         Component = edStartDateTax
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isList'
+        Value = Null
+        Component = cbisList
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 248
@@ -2515,6 +2529,14 @@ inherited ReturnInForm: TReturnInForm
         Name = 'inPriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisList'
+        Value = Null
+        Component = cbisList
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3168,8 +3190,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 928
-    Top = 128
+    Left = 944
+    Top = 88
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -3715,7 +3737,7 @@ inherited ReturnInForm: TReturnInForm
   end
   object TaxCorrectiveViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridTaxCorrectiveDBTableView
+    View = lDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
