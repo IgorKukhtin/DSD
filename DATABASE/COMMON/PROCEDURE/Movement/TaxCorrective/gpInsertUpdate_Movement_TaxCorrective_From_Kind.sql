@@ -166,7 +166,7 @@ BEGIN
      THEN
          -- выбрали ВСЕ <Корректировка цены>
          INSERT INTO _tmpMovement_PriceCorrective (MovementId, MovementId_Corrective, MovementId_Tax)
-            SELECT Movement.Id AS MovementId, COALESCE (MLM_Master.MovementId, 0) AS MovementId_Corrective, COALESCE (MLM_Child.MovementChildId, 0) AS MovementId_Tax
+            SELECT Movement.Id AS MovementId, COALESCE (Movement_Corrective.Id, 0) AS MovementId_Corrective, COALESCE (MLM_Child.MovementChildId, 0) AS MovementId_Tax
             FROM Movement
                  INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -183,13 +183,14 @@ BEGIN
                                                 ON MLM_Master.MovementChildId = Movement.Id
                                                AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
                  LEFT JOIN Movement AS Movement_Corrective ON Movement_Corrective.Id = MLM_Master.MovementId
+                                                          AND COALESCE (Movement_Corrective.StatusId, 0) <> zc_Enum_Status_Erased()
                  LEFT JOIN MovementLinkMovement AS MLM_Child
                                                 ON MLM_Child.MovementId = MLM_Master.MovementId
                                                AND MLM_Child.DescId = zc_MovementLinkMovement_Child()
             WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
               AND Movement.DescId = zc_Movement_PriceCorrective()
               AND Movement.StatusId = zc_Enum_Status_Complete()
-              AND COALESCE (Movement_Corrective.StatusId, 0) <> zc_Enum_Status_Erased()
+              -- AND COALESCE (Movement_Corrective.StatusId, 0) <> zc_Enum_Status_Erased()
            ;
 
          -- проверка

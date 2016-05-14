@@ -23,6 +23,8 @@ $BODY$
 BEGIN
 
    RETURN QUERY
+   WITH tmpTaxLineReport AS (SELECT * FROM lpSelect_TaxFromTaxCorrectiveReport (inStartDate, inEndDate, inGoodsId))
+
    SELECT Movement.InvNumber
         , Movement.OperDate       AS OperDate
         , MovementDesc.ItemName   AS MovementDescName
@@ -73,9 +75,9 @@ BEGIN
                    , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                    , MovementItem.Amount
                    , COALESCE (MIFloat_Price.ValueData, 0) AS OperPrice
-                   , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() AND COALESCE(MIFloat_NPP.ValueData,0) = 0
-                          THEN COALESCE (tmpTaxLineReport.LineNum, 0) 
-                          ELSE COALESCE(MIFloat_NPP.ValueData,0) 
+                   , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() AND COALESCE (MIFloat_NPP.ValueData, 0) = 0
+                          THEN COALESCE (tmpTaxLineReport.LineNum, tmpTaxLineReport_two.LineNum)
+                          ELSE MIFloat_NPP.ValueData
                      END  :: Integer AS LineNumTax 
               FROM MovementItem
                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -93,14 +95,20 @@ BEGIN
                                                ON MIFloat_NPP.MovementItemId = MovementItem.Id
                                               AND MIFloat_NPP.DescId = zc_MIFloat_NPP()           
                                        
-                   LEFT JOIN lpSelect_TaxFromTaxCorrectiveReport(inStartDate,inEndDate,inGoodsId)
-                                            AS tmpTaxLineReport
-                                            ON tmpTaxLineReport.Kind = 1
-                                           AND tmpTaxLineReport.GoodsId = MovementItem.ObjectId 
-                                           AND tmpTaxLineReport.GoodsKindId = MILinkObject_GoodsKind.ObjectId
-                                           AND tmpTaxLineReport.Price = COALESCE (MIFloat_Price.ValueData, 0)
-                                           AND tmpTaxLineReport.TaxCorrectiveId = Movement.Id
-                                           AND Movement.DescId = zc_Movement_TaxCorrective()
+                   LEFT JOIN tmpTaxLineReport
+                                            ON tmpTaxLineReport.TaxCorrectiveId = Movement.Id
+                                           AND tmpTaxLineReport.GoodsId         = MovementItem.ObjectId 
+                                           AND tmpTaxLineReport.GoodsKindId     = MILinkObject_GoodsKind.ObjectId
+                                           AND tmpTaxLineReport.Price           = MIFloat_Price.ValueData
+                                           AND tmpTaxLineReport.Kind            = 1
+                                           AND Movement.DescId                  = zc_Movement_TaxCorrective()
+                   LEFT JOIN tmpTaxLineReport AS tmpTaxLineReport_two
+                                            ON tmpTaxLineReport_two.TaxCorrectiveId = Movement.Id
+                                           AND tmpTaxLineReport_two.GoodsId         = MovementItem.ObjectId 
+                                           AND tmpTaxLineReport_two.Price           = MIFloat_Price.ValueData
+                                           AND tmpTaxLineReport_two.Kind            = 2
+                                           AND tmpTaxLineReport.TaxCorrectiveId     IS NULL
+                                           AND Movement.DescId                      = zc_Movement_TaxCorrective()
                    
               WHERE MovementItem.ObjectId = inGoodsId
                 AND MovementItem.isErased   = FALSE
