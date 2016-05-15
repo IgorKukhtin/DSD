@@ -2,9 +2,8 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 650
   ClientWidth = 1244
-  ExplicitTop = -104
   ExplicitWidth = 1260
-  ExplicitHeight = 685
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +21,7 @@ inherited ReturnInForm: TReturnInForm
       inherited cxGrid: TcxGrid
         Width = 1244
         Height = 362
+        ExplicitTop = 2
         ExplicitWidth = 1244
         ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -49,6 +49,17 @@ inherited ReturnInForm: TReturnInForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSummVat
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountChildDiff
+              Sorted = True
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -78,6 +89,16 @@ inherited ReturnInForm: TReturnInForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSummVat
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountChildDiff
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -184,7 +205,29 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPrice: TcxGridDBColumn [9]
+          object colAmountChild: TcxGridDBColumn [9]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1074#1103#1079#1082#1072')'
+            DataBinding.FieldName = 'AmountChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object colAmountChildDiff: TcxGridDBColumn [10]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1079#1085#1080#1094#1072')'
+            DataBinding.FieldName = 'AmountChildDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object colPrice: TcxGridDBColumn [11]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -192,16 +235,16 @@ inherited ReturnInForm: TReturnInForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 63
           end
-          object colCountForPrice: TcxGridDBColumn [10]
+          object colCountForPrice: TcxGridDBColumn [12]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object Price_Pricelist: TcxGridDBColumn [11]
+          object Price_Pricelist: TcxGridDBColumn [13]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -212,7 +255,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 62
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [12]
+          object Price_Pricelist_vat: TcxGridDBColumn [14]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -223,7 +266,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn [13]
+          object isCheck_Pricelist: TcxGridDBColumn [15]
             Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1087#1088#1072#1081#1089#1072
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -231,7 +274,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 59
           end
-          object colAmountSumm: TcxGridDBColumn [14]
+          object colAmountSumm: TcxGridDBColumn [16]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -241,7 +284,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountSummVat: TcxGridDBColumn [15]
+          object colAmountSummVat: TcxGridDBColumn [17]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSummVat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -251,7 +294,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object clPartionMovementName: TcxGridDBColumn [16]
+          object clPartionMovementName: TcxGridDBColumn [18]
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -266,7 +309,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
-          object PricePromo: TcxGridDBColumn [17]
+          object PricePromo: TcxGridDBColumn [19]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -277,7 +320,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object MovementPromo: TcxGridDBColumn [18]
+          object MovementPromo: TcxGridDBColumn [20]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -1376,6 +1419,23 @@ inherited ReturnInForm: TReturnInForm
           Value = Null
           Component = ContractGuides
           ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2961,8 +3021,8 @@ inherited ReturnInForm: TReturnInForm
       item
         Guides = GuidesTo
       end>
-    Left = 200
-    Top = 200
+    Left = 264
+    Top = 264
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -3032,8 +3092,8 @@ inherited ReturnInForm: TReturnInForm
       item
         Control = cbList
       end>
-    Left = 264
-    Top = 209
+    Left = 376
+    Top = 305
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''

@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , MovementId_Partion Integer, PartionMovementName TVarChar
              , isErased Boolean
              , MovementPromo TVarChar, PricePromo TFloat
+             , AmountChild TFloat, AmountChildDiff TFloat
              )
 AS
 $BODY$
@@ -204,6 +205,15 @@ BEGIN
                      WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                         OR (vbIsB = TRUE AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                     )
+     , tmpMIChild AS (SELECT MovementItem.ParentId    AS MI_ParentId
+                           , SUM(MovementItem.Amount) AS Amount
+                      FROM MovementItem
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                      )
+
        SELECT
              0                          AS Id
            , 0 :: Integer               AS LineNum
@@ -307,7 +317,9 @@ BEGIN
            , tmpResult.isErased                AS isErased
            , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
-
+           
+           , tmpMIChild.Amount       :: TFloat   AS AmountChild
+           , (tmpResult.Amount - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
        FROM tmpResult
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpResult.MovementId_Promo                -- акция
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
@@ -335,6 +347,8 @@ BEGIN
                                   AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpResult.MovementId_Promo
+ 
+            LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = tmpResult.MovementItemId
            ;
      ELSE
 
@@ -448,6 +462,15 @@ BEGIN
                        , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
                   FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                  )
+     , tmpMIChild AS (SELECT MovementItem.ParentId    AS MI_ParentId
+                           , SUM(MovementItem.Amount) AS Amount
+                      FROM MovementItem
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                      )
+
        SELECT
              tmpResult.MovementItemId :: Integer AS Id
            , CASE WHEN tmpResult.MovementItemId <> 0 THEN CAST (row_number() OVER (ORDER BY tmpResult.MovementItemId) AS Integer) ELSE 0 END AS LineNum
@@ -498,6 +521,8 @@ BEGIN
            , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
 
+           , tmpMIChild.Amount       :: TFloat   AS AmountChild
+           , (tmpResult.Amount - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
        FROM tmpResult
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpResult.MovementId_Promo                -- акция
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
@@ -525,6 +550,8 @@ BEGIN
                                   AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpResult.MovementId_Promo
+
+            LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = tmpResult.MovementItemId
            ;
 
      END IF;
