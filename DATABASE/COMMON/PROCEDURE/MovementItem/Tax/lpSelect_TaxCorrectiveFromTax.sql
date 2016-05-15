@@ -102,9 +102,8 @@ BEGIN
                 , tmpResult.Price :: TFloat AS Price
                , ('Ошибка. Не определено значение <№ п/п НН>'
                || CASE WHEN tmpResult.LineNumTax < 0 THEN ' = <' || tmpResult.LineNumTax :: TvarChar|| '>' ELSE '' END
-   || CHR (13) || 'Для товара <' || lfGet_Object_ValueData (tmpResult.GoodsId)
-                                 || CASE WHEN tmpResult.GoodsKindId > 0 THEN ' ' || lfGet_Object_ValueData (tmpResult.GoodsKindId) ELSE '' END
-                                 || '>'
+   || CHR (13) || 'Для товара <' || lfGet_Object_ValueData (tmpResult.GoodsId)|| '>'
+               || CASE WHEN tmpResult.GoodsKindId > 0 THEN CHR (13) || 'вид <' || lfGet_Object_ValueData (tmpResult.GoodsKindId) || '>' ELSE '' END
    || CHR (13) || 'с ценой = <' || tmpResult.Price :: TVarChar || '>'
    || CHR (13) || 'Налоговая № <' || COALESCE (MovementString_InvNumberPartner_tax.ValueData, '') || '> от <' || COALESCE (DATE (Movement_tax.OperDate) :: TVarChar, '???') || '>'
    || CHR (13) || 'Корректировка № <' || COALESCE (MovementString_InvNumberPartner.ValueData, '') || '> от <' || COALESCE (DATE (Movement.OperDate) :: TVarChar, '???') || '> сформирована и'

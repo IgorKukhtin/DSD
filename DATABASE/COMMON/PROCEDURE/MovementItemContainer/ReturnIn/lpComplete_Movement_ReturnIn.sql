@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_ReturnIn (Integer, Integer, Boolean)
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnIn(
     IN inMovementId        Integer               , -- ключ Документа
+   OUT outMessageText      Text                  ,
     IN inUserId            Integer               , -- Пользователь
     IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
 )                              
@@ -593,6 +594,20 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не установлено значение <Договор>.Проведение невозможно.';
      END IF;
+
+
+     -- Проверка ошибки
+     outMessageText:= (SELECT tmp.MessageText FROM lpUpdate_Movement_ReturnIn_Auto (inStartDate := inStartDate
+                                                                                  , inEndDate   := inEndDate
+                                                                                  , inMovementId:= inMovementId
+                                                                                  , inUserId    := inUserId
+                                                                                   )AS tmp
+                      );
+     -- !!!Выход если ошибка!!!
+     IF outMessageText <> '' AND outMessageText <> '-1' THEN RETURN; END IF;
+
+     -- !!!с такой ошибкой - все равно будем проводить!!!
+     IF outMessageText = '-1' THEN outMessageText:= 'Важно.У пользователя <%> нет прав формировать привязку накладной <Возврат от покупателя> к накладной <Продажи>.', lfGet_Object_ValueData (inUserId); END IF;
 
 
      -- !!! только НЕ для Админа проверка что ParentId заполнен!!!
