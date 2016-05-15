@@ -158,7 +158,7 @@ type
     actShowMessage: TShowMessageAction;
     cxLabel22: TcxLabel;
     edStartDateTax: TcxDateEdit;
-    cbisList: TcxCheckBox;
+    cbList: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -2,8 +2,9 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 650
   ClientWidth = 1244
+  ExplicitTop = -104
   ExplicitWidth = 1260
-  ExplicitHeight = 688
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,7 +22,6 @@ inherited ReturnInForm: TReturnInForm
       inherited cxGrid: TcxGrid
         Width = 1244
         Height = 362
-        ExplicitTop = 2
         ExplicitWidth = 1244
         ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -303,9 +303,19 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = childAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = childAmountPartner
             end>
           DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = childAmount
+            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -319,7 +329,6 @@ inherited ReturnInForm: TReturnInForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -329,30 +338,21 @@ inherited ReturnInForm: TReturnInForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object childGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
           object childGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 209
-          end
-          object childAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'Remains'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 77
-          end
-          object childPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
           end
           object childGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -361,26 +361,51 @@ inherited ReturnInForm: TReturnInForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 85
+            Width = 150
           end
-          object childMeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
+          object childAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1074#1103#1079#1082#1072')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 100
+          end
+          object childAmountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object childPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object childInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 63
+            Width = 80
           end
           object childInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 89
@@ -388,16 +413,33 @@ inherited ReturnInForm: TReturnInForm
           object childOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'OperDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
           object childOperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 80
+          end
+          object childDocumentTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentTaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 160
+          end
+          object childInvNumber_Master: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber_Master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object childInvNumberPartner_Master: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1083#1086#1075'.'
@@ -407,19 +449,11 @@ inherited ReturnInForm: TReturnInForm
             Width = 86
           end
           object childOperDate_Master: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'OperDate_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 117
-          end
-          object childDocumentTaxKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
-            DataBinding.FieldName = 'DocumentTaxKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 160
+            Width = 80
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1172,12 +1206,12 @@ inherited ReturnInForm: TReturnInForm
     Top = 45
     Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
   end
-  object cbisList: TcxCheckBox [14]
+  object cbList: TcxCheckBox [14]
     Left = 497
     Top = 114
-    Caption = #1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+    Caption = #1087#1088#1080#1074#1103#1079#1082#1072' '#1082' '#1054#1089#1085#1086#1074'. '#8470' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 18
-    Width = 166
+    Width = 204
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -1229,6 +1263,9 @@ inherited ReturnInForm: TReturnInForm
           StoredProc = spSelect
         end
         item
+          StoredProc = spSelect_MI_Child
+        end
+        item
           StoredProc = spSelectTaxCorrective
         end>
       RefreshOnTabSetChanges = True
@@ -1243,8 +1280,8 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
       ImageIndex = 25
       FormName = 'TReport_Goods_SalebyReturnInForm'
       FormNameParam.Value = 'TReport_Goods_SalebyReturnInForm'
@@ -2187,6 +2224,10 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenTax'
         end
         item
@@ -2411,6 +2452,39 @@ inherited ReturnInForm: TReturnInForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        Component = edStartDateTax
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
     Left = 56
     Top = 184
   end
@@ -2706,7 +2780,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'isList'
         Value = Null
-        Component = cbisList
+        Component = cbList
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -2799,7 +2873,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inisList'
         Value = Null
-        Component = cbisList
+        Component = cbList
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2954,6 +3028,9 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = cbList
       end>
     Left = 264
     Top = 209
@@ -4276,7 +4353,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 536
     Top = 424
   end
-  object DetailDCS: TClientDataSet
+  object DetailCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'ParentId'
@@ -4284,20 +4361,20 @@ inherited ReturnInForm: TReturnInForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 936
-    Top = 400
+    Left = 72
+    Top = 592
   end
   object DetailDS: TDataSource
-    DataSet = DetailDCS
-    Left = 960
-    Top = 440
+    DataSet = DetailCDS
+    Left = 136
+    Top = 584
   end
-  object spSelect_MovementItem_SalePartion: TdsdStoredProc
+  object spSelect_MI_Child: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemChild_ReturnIn'
-    DataSet = DetailDCS
+    DataSet = DetailCDS
     DataSets = <
       item
-        DataSet = DetailDCS
+        DataSet = DetailCDS
       end>
     Params = <
       item
@@ -4317,8 +4394,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1008
-    Top = 376
+    Left = 232
+    Top = 592
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

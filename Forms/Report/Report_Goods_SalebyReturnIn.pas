@@ -17,7 +17,6 @@ uses
 
 type
   TReport_Goods_SalebyReturnInForm = class(TAncestorReportForm)
-    clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clAmount: TcxGridDBColumn;

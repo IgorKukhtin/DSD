@@ -3,8 +3,10 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -327
+  ExplicitTop = -106
   ExplicitWidth = 1122
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -480,7 +482,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Width = 60
           end
           object colisList: TcxGridDBColumn
-            Caption = #1044#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+            Caption = #1082' '#1054#1089#1085#1086#1074#1072#1085#1080#1102' '#8470' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isList'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1302,7 +1304,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     StoredProcName = 'gpComplete_Movement_ReturnIn'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -1310,7 +1312,22 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLastComplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
@@ -1398,13 +1415,29 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLastComplete'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Top = 80
+    Left = 320
+    Top = 144
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'

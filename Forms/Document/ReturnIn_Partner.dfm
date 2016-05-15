@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1145
   ExplicitWidth = 1161
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -848,7 +848,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Width = 97
     end
     object edInvNumberSale: TcxButtonEdit
-      Left = 342
+      Left = 339
       Top = 103
       Enabled = False
       Properties.Buttons = <
@@ -861,7 +861,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Width = 131
     end
     object cxLabel19: TcxLabel
-      Left = 342
+      Left = 339
       Top = 85
       Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1087#1088#1086#1076#1072#1078#1072')'
     end
@@ -872,7 +872,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
       Properties.ReadOnly = False
       TabOrder = 32
-      Width = 100
+      Width = 97
     end
     object cbPromo: TcxCheckBox
       Left = 664
@@ -882,12 +882,12 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       TabOrder = 33
       Width = 100
     end
-    object cbisList: TcxCheckBox
-      Left = 485
+    object cbList: TcxCheckBox
+      Left = 474
       Top = 103
-      Caption = #1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1087#1088#1080#1074#1103#1079#1082#1072' '#1082' '#1054#1089#1085#1086#1074'. '#8470' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 34
-      Width = 166
+      Width = 183
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -2079,6 +2079,39 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        Component = edStartDateTax
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
     Left = 40
     Top = 216
   end
@@ -2359,7 +2392,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       item
         Name = 'isList'
         Value = Null
-        Component = cbisList
+        Component = cbList
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -2452,7 +2485,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       item
         Name = 'inisList'
         Value = Null
-        Component = cbisList
+        Component = cbList
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2610,6 +2643,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = cbList
       end>
     Left = 224
     Top = 209

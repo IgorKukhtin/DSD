@@ -79,7 +79,7 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
   object cxLabel3: TcxLabel
     Left = 232
     Top = 4
-    Caption = #1058#1086#1095#1082#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
+    Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object cxLabel1: TcxLabel
     Left = 8
@@ -94,7 +94,7 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
   object cxLabel7: TcxLabel
     Left = 119
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1087#1086' :'
+    Caption = #1044#1072#1090#1072' '#1076#1086' :'
   end
   object cxLabel4: TcxLabel
     Left = 232
@@ -479,8 +479,8 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 164
+    Left = 392
+    Top = 108
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'

@@ -6,8 +6,8 @@ DROP FUNCTION IF EXISTS lpUpdate_Movement_ReturnIn_Auto (Integer, TDateTime, TDa
 
 CREATE OR REPLACE FUNCTION lpUpdate_Movement_ReturnIn_Auto(
     IN inMovementId          Integer   , -- ключ ƒокумента
-    IN inStartDate           TDateTime , --
-    IN inEndDate             TDateTime , --
+    IN inStartDateSale       TDateTime , --
+    IN inEndDateSale         TDateTime , --
    OUT outMessageText        Text      ,
     IN inUserId              Integer     -- ѕользователь
 )
@@ -237,13 +237,13 @@ BEGIN
          -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
          -- параметры из документа
-         SELECT CASE WHEN inStartDate >= COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - vbPeriod1 THEN inStartDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - vbPeriod1 END AS StartDate
+         SELECT CASE WHEN inStartDateSale >= COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - vbPeriod1 THEN inStartDateSale ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - vbPeriod1 END AS StartDate
               , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - INTERVAL '1 DAY' AS EndDate
-              , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - INTERVAL '1 DAY' AS inEndDate -- !!!замена!!!
+              , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - INTERVAL '1 DAY' AS inEndDateSale -- !!!замена!!!
               , MovementLinkObject_From.ObjectId     AS PartnerId
               , MovementLinkObject_PaidKind.ObjectId AS PaidKindId
               , MovementLinkObject_Contract.ObjectId AS ContractId
-                INTO vbStartDate, vbEndDate, inEndDate
+                INTO vbStartDate, vbEndDate, inEndDateSale
                    , vbPartnerId, vbPaidKindId, vbContractId
          FROM Movement
               LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -262,7 +262,7 @@ BEGIN
 
 
          -- ÷икл по периодам (так наверно быстрее)
-         WHILE vbStartDate >= inStartDate AND vbStartDate <= vbEndDate LOOP
+         WHILE vbStartDate >= inStartDateSale AND vbStartDate <= vbEndDate LOOP
 
             -- очистили
             DELETE FROM _tmpResult_Sale_Auto;
@@ -423,7 +423,7 @@ BEGIN
             vbStep:= vbStep + 1;
             vbEndDate:= vbStartDate - INTERVAL '1 DAY';
             vbStartDate:= (WITH tmp AS (SELECT CASE WHEN vbStep = 2 THEN vbStartDate - vbPeriod1 ELSE vbStartDate - vbPeriod2 END AS StartDate)
-                           SELECT CASE WHEN inStartDate >= tmp.StartDate THEN inStartDate ELSE tmp.StartDate END FROM tmp);
+                           SELECT CASE WHEN inStartDateSale >= tmp.StartDate THEN inStartDateSale ELSE tmp.StartDate END FROM tmp);
 
 
          END LOOP; -- ÷икл по периодам (так наверно быстрее)
@@ -466,7 +466,7 @@ BEGIN
                || CHR (13) || 'найдена продажа с кол-во = <' || COALESCE (tmpResult.Amount, 0) :: TVarChar || '>.'
                || CHR (13) || '“овар <' || lfGet_Object_ValueData (tmpReturn.GoodsId) || '>'
                            || CASE WHEN tmpReturn.GoodsKindId > 0 THEN CHR (13) || 'вид <' || lfGet_Object_ValueData (tmpReturn.GoodsKindId) || '>' ELSE '' END
-               || CHR (13) || 'за период с <' || DATE (inStartDate) :: TVarChar || '> по <' || DATE (inEndDate) :: TVarChar || '>'
+               || CHR (13) || 'за период с <' || DATE (inStartDateSale) :: TVarChar || '> по <' || DATE (inEndDateSale) :: TVarChar || '>'
                || CHR (13) || '(' || (vbStep - 1) :: TVarChar || ')'
                        FROM tmpReturn
                             LEFT JOIN tmpResult ON tmpResult.GoodsId         = tmpReturn.GoodsId
@@ -488,5 +488,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM MovementItem WHERE MovementId = 3662285 AND DescId = zc_MI_Child() -- SELECT * FROM MovementItemFloat WHERE MovementItemId IN (SELECT Id FROM MovementItem WHERE MovementId = 3662285 AND DescId = zc_MI_Child())
--- SELECT lpUpdate_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inStartDate:= Movement.OperDate - INTERVAL '15 DAY', inEndDate:= Movement.OperDate, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662285
--- SELECT lpUpdate_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inStartDate:= Movement.OperDate - INTERVAL '4 MONTH', inEndDate:= Movement.OperDate, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662285
+-- SELECT lpUpdate_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inStartDateSale:= Movement.OperDate - INTERVAL '15 DAY', inEndDateSale:= Movement.OperDate, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662285
+-- SELECT lpUpdate_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inStartDateSale:= Movement.OperDate - INTERVAL '4 MONTH', inEndDateSale:= Movement.OperDate, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662285

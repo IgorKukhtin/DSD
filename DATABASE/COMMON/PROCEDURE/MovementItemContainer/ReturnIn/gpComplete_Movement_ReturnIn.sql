@@ -1,13 +1,16 @@
 -- Function: gpComplete_Movement_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ReturnIn(
     IN inMovementId        Integer               , -- ключ ƒокумента
+    IN inStartDateSale     TDateTime             , --
+   OUT outMessageText      Text                  ,
     IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (дл€ прихода параметр !!!не обрабатываетс€!!!)
     IN inSession           TVarChar DEFAULT ''     -- сесси€ пользовател€
 )                              
-RETURNS VOID
+RETURNS Text
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -15,13 +18,14 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnIn());
 
-
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
      PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
      -- ѕроводим ƒокумент
-     PERFORM lpComplete_Movement_ReturnIn (inMovementId     := inMovementId
-                                         , inUserId         := vbUserId
-                                         , inIsLastComplete := inIsLastComplete);
+     outMessageText:= lpComplete_Movement_ReturnIn (inMovementId     := inMovementId
+                                                  , inStartDateSale  := inStartDateSale
+                                                  , inUserId         := vbUserId
+                                                  , inIsLastComplete := inIsLastComplete
+                                                   );
 
 END;
 $BODY$

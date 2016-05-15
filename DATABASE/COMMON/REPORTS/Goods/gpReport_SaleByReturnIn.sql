@@ -147,6 +147,7 @@ IF inBranchId <> 0
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()                                                   
                                        
               WHERE MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
               GROUP BY MIContainer.MovementId  
                    , MIContainer.MovementItemId
                    , MIContainer.ObjectExtId_analyzer     

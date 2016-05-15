@@ -1,31 +1,32 @@
 inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 382
-  ClientWidth = 1389
+  ClientWidth = 1085
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1405
-  ExplicitHeight = 420
+  ExplicitLeft = -289
+  ExplicitWidth = 1101
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1389
+    Width = 1085
     Height = 302
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1389
+    ExplicitWidth = 1366
     ExplicitHeight = 302
     ClientRectBottom = 302
-    ClientRectRight = 1389
+    ClientRectRight = 1085
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1389
+      ExplicitWidth = 1366
       ExplicitHeight = 302
       inherited cxGrid: TcxGrid
-        Width = 1389
+        Width = 1085
         Height = 302
-        ExplicitWidth = 1389
+        ExplicitWidth = 1366
         ExplicitHeight = 302
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -160,70 +161,26 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clInvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'InvNumberPartner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object clOperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'OperDatePartner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object clInvNumber_Master: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber_Master'
+          object clUnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'UnitCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 50
           end
-          object InvNumberPartner_Master: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'InvNumberPartner_Master'
+          object clUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clOperDate_Master: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'OperDate_Master'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colDocumentTaxKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
-            DataBinding.FieldName = 'DocumentTaxKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
+            Width = 120
           end
           object clJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
@@ -239,7 +196,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 150
           end
           object clPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
@@ -254,42 +211,12 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object clUnitCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
-            DataBinding.FieldName = 'UnitCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object clUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object clGoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'GoodsGroupNameFull'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object clGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 200
           end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
@@ -297,6 +224,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -306,14 +234,15 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 100
           end
           object clMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 35
+            Width = 55
           end
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -323,57 +252,115 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 55
           end
           object clAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 80
           end
           object clAmountReturn: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'AmountReturn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 80
           end
           object clAmountRem: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'AmountRem'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'OperDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object clOperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colDocumentTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentTaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clInvNumber_Master: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber_Master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object InvNumberPartner_Master: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clOperDate_Master: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'OperDate_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1389
+    Width = 1085
     Height = 54
-    ExplicitWidth = 1389
+    ExplicitWidth = 1366
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 59
-      EditValue = 41640d
       Properties.SaveTime = False
       ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit
       Left = 59
       Top = 30
-      EditValue = 41640d
       Properties.SaveTime = False
       ExplicitLeft = 59
       ExplicitTop = 30
@@ -387,10 +374,10 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
     inherited cxLabel2: TcxLabel
       Left = 5
       Top = 31
-      Caption = #1044#1072#1090#1072' '#1087#1086' :'
+      Caption = #1044#1072#1090#1072' '#1076#1086' :'
       ExplicitLeft = 5
       ExplicitTop = 31
-      ExplicitWidth = 52
+      ExplicitWidth = 53
     end
     object cxLabel4: TcxLabel
       Left = 478
@@ -446,7 +433,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
     object cxLabel7: TcxLabel
       Left = 163
       Top = 6
-      Caption = #1058#1086#1095#1082#1072' '#1076#1086#1089#1090#1072#1074#1082#1080':'
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
     end
     object cePartner: TcxButtonEdit
       Left = 254

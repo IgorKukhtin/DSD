@@ -168,21 +168,24 @@ type
     actShowMessage: TShowMessageAction;
     edStartDateTax: TcxDateEdit;
     cxLabel22: TcxLabel;
-    cbisList: TcxCheckBox;
+    cbList: TcxCheckBox;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
-    DetailDCS: TClientDataSet;
+    DetailCDS: TClientDataSet;
     DetailDS: TDataSource;
-    spSelect_MovementItem_SalePartion: TdsdStoredProc;
+    spSelect_MI_Child: TdsdStoredProc;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    childAmountPartner: TcxGridDBColumn;
+    childAmount: TcxGridDBColumn;
     childPrice: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     childGoodsKindName: TcxGridDBColumn;
     childGoodsName: TcxGridDBColumn;
+    childGoodsCode: TcxGridDBColumn;
+    childAmountPartner: TcxGridDBColumn;
+    childInvNumber_Master: TcxGridDBColumn;
   private
     { Private declarations }
   public

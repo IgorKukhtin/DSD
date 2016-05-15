@@ -3,25 +3,27 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientHeight = 535
   ClientWidth = 1114
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -335
+  ExplicitTop = -106
   ExplicitWidth = 1130
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1114
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1106
+    ExplicitWidth = 1114
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1106
+      ExplicitWidth = 1114
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1114
         Height = 478
-        ExplicitWidth = 1106
+        ExplicitWidth = 1114
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -482,7 +484,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Width = 60
           end
           object colisList: TcxGridDBColumn
-            Caption = #1044#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+            Caption = #1082' '#1054#1089#1085#1086#1074#1072#1085#1080#1102' '#8470' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isList'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -496,7 +498,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   end
   inherited Panel: TPanel
     Width = 1114
-    ExplicitWidth = 1106
+    ExplicitWidth = 1114
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -1306,7 +1308,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     StoredProcName = 'gpComplete_Movement_ReturnIn'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -1314,7 +1316,22 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLastComplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
@@ -1402,14 +1419,29 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLastComplete'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 112
+    Left = 312
+    Top = 144
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
