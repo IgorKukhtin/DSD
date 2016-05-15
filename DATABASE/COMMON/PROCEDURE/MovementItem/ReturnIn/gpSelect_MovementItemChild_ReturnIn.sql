@@ -26,6 +26,7 @@ BEGIN
     RETURN QUERY
        WITH tmpMI AS (SELECT MovementItem.Id                              AS MI_Id
                            , MovementItem.ParentId                        AS MI_ParentId
+                           , MovementItem.ObjectId                        AS GoodsId
                            , MovementItem.Amount                          AS Amount
                            , MIFloat_MovementId.ValueData      :: Integer AS MovementId_sale
                            , MIFloat_MovementItemId.ValueData  :: Integer AS MovementItemId_sale
@@ -70,7 +71,8 @@ BEGIN
 
           LEFT JOIN MovementItem AS MISale ON MISale.Id = tmpMI.MovementItemId_sale
              
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MISale.ObjectId
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+                                       -- AND MISale.ObjectId = tmpMI.GoodsId
 
           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                            ON MILinkObject_GoodsKind.MovementItemId = MISale.Id
@@ -111,7 +113,7 @@ ALTER FUNCTION gpSelect_MovementItemChild_ReturnIn (Integer, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
- 26.12.15                                                          *
+ 15.05.16                                        *
 */
 
--- SELECT * FROM gpSelect_MovementItemChild_ReturnIn (inMovementId := 2837111 ::Integer , inisErased := 'False'::Boolean , inSession := '5'::TVarChar);
+-- SELECT * FROM gpSelect_MovementItemChild_ReturnIn (inMovementId:= 3662505 ::Integer , inisErased := 'False'::Boolean , inSession := '5'::TVarChar);
