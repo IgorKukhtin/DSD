@@ -434,7 +434,7 @@ BEGIN
 
      -- !!!временно, кроме сохранение!!!
      /*IF zc_Enum_Status_Complete() = (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) THEN
-     update Movement set StatusId = zc_Enum_Status_UnComplete() WHERE Movement.Id = inMovementId;
+     update Movement set StatusId = zc_Enum_Status_UnComplete() WHERE Movement.Id = inMovementId;*/
      -- !!!сохранение!!!
      PERFORM lpInsertUpdate_MovementItem_ReturnIn_Child (ioId                  := MovementItem.Id
                                                        , inMovementId          := inMovementId
@@ -453,7 +453,7 @@ BEGIN
      WHERE MI_Master.MovementId = inMovementId
        AND MI_Master.DescId     = zc_MI_Master()
     ;
-     update Movement set StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId;
+     /*update Movement set StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId;
      END IF;*/
      -- !!!временно, кроме сохранение!!!
      
@@ -487,6 +487,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM MovementItem WHERE MovementId = 3662285 AND DescId = zc_MI_Child() -- SELECT * FROM MovementItemFloat WHERE MovementItemId IN (SELECT Id FROM MovementItem WHERE MovementId = 3662285 AND DescId = zc_MI_Child())
--- SELECT lpUpdate_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inStartDateSale:= Movement.OperDate - INTERVAL '15 DAY', inEndDateSale:= Movement.OperDate, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662285
--- SELECT lpUpdate_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inStartDateSale:= Movement.OperDate - INTERVAL '4 MONTH', inEndDateSale:= Movement.OperDate, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662285
+-- SELECT * FROM MovementItem WHERE MovementId = 3662505 AND DescId = zc_MI_Child() -- SELECT * FROM MovementItemFloat WHERE MovementItemId IN (SELECT Id FROM MovementItem WHERE MovementId = 3662505 AND DescId = zc_MI_Child())
+-- SELECT lpUpdate_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inStartDateSale:= Movement.OperDate - INTERVAL '15 DAY', inEndDateSale:= Movement.OperDate, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662505
+-- SELECT lpUpdate_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inStartDateSale:= Movement.OperDate - INTERVAL '4 MONTH', inEndDateSale:= Movement.OperDate, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662505
