@@ -168,6 +168,8 @@ type
     edStartDateTax: TcxDateEdit;
     cxLabel22: TcxLabel;
     cbisList: TcxCheckBox;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public
