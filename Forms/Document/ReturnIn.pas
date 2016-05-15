@@ -23,7 +23,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, cxImageComboBox;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, cxImageComboBox,
+  cxSplitter;
 
 type
   TReturnInForm = class(TAncestorDocumentForm)
@@ -167,6 +168,21 @@ type
     actShowMessage: TShowMessageAction;
     edStartDateTax: TcxDateEdit;
     cxLabel22: TcxLabel;
+    cbisList: TcxCheckBox;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    DetailDCS: TClientDataSet;
+    DetailDS: TDataSource;
+    spSelect_MovementItem_SalePartion: TdsdStoredProc;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    childAmountPartner: TcxGridDBColumn;
+    childPrice: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    childGoodsKindName: TcxGridDBColumn;
+    childGoodsName: TcxGridDBColumn;
   private
     { Private declarations }
   public
