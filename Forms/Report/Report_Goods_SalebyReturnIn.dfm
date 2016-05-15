@@ -5,28 +5,27 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -289
   ExplicitWidth = 1101
-  ExplicitHeight = 417
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 115
     Width = 1085
-    Height = 302
+    Height = 267
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1366
+    ExplicitWidth = 1085
     ExplicitHeight = 302
-    ClientRectBottom = 302
+    ClientRectBottom = 267
     ClientRectRight = 1085
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1366
+      ExplicitWidth = 1085
       ExplicitHeight = 302
       inherited cxGrid: TcxGrid
         Width = 1085
-        Height = 302
-        ExplicitWidth = 1366
+        Height = 267
+        ExplicitWidth = 1085
         ExplicitHeight = 302
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -350,9 +349,9 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
   end
   inherited Panel: TPanel
     Width = 1085
-    Height = 54
-    ExplicitWidth = 1366
-    ExplicitHeight = 54
+    Height = 89
+    ExplicitWidth = 1085
+    ExplicitHeight = 89
     inherited deStart: TcxDateEdit
       Left = 59
       Properties.SaveTime = False
@@ -380,13 +379,13 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
       ExplicitWidth = 53
     end
     object cxLabel4: TcxLabel
-      Left = 478
-      Top = 6
+      Left = 171
+      Top = 60
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
     end
     object edRetail: TcxButtonEdit
-      Left = 560
-      Top = 5
+      Left = 254
+      Top = 59
       Properties.Buttons = <
         item
           Default = True
@@ -394,15 +393,15 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 180
+      Width = 220
     end
     object cxLabel3: TcxLabel
-      Left = 863
+      Left = 488
       Top = 31
       Caption = #1060#1080#1083#1080#1072#1083':'
     end
     object edBranch: TcxButtonEdit
-      Left = 910
+      Left = 535
       Top = 30
       Properties.Buttons = <
         item
@@ -431,7 +430,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
       Width = 220
     end
     object cxLabel7: TcxLabel
-      Left = 163
+      Left = 184
       Top = 6
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
     end
@@ -448,13 +447,13 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
       Width = 220
     end
     object cxLabel5: TcxLabel
-      Left = 914
-      Top = 6
+      Left = 487
+      Top = 60
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 1001
-      Top = 3
+      Left = 574
+      Top = 57
       Properties.Buttons = <
         item
           Default = True
@@ -462,16 +461,16 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 68
+      Width = 120
     end
     object cxLabel8: TcxLabel
-      Left = 521
-      Top = 31
+      Left = 731
+      Top = 4
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 560
-      Top = 30
+      Left = 772
+      Top = 3
       Properties.Buttons = <
         item
           Default = True
@@ -479,30 +478,47 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 180
+      Width = 178
     end
     object cxLabel9: TcxLabel
-      Left = 759
-      Top = 31
+      Left = 735
+      Top = 58
       Caption = #1062#1077#1085#1072':'
     end
     object cePrice: TcxCurrencyEdit
-      Left = 794
-      Top = 30
+      Left = 772
+      Top = 57
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 17
-      Width = 63
+      Width = 70
+    end
+    object cxLabel11: TcxLabel
+      Left = 703
+      Top = 31
+      Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072':'
+    end
+    object edGoodsKind: TcxButtonEdit
+      Left = 772
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 178
     end
   end
   object cxLabel10: TcxLabel [2]
-    Left = 746
-    Top = 7
+    Left = 487
+    Top = 5
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object edContract: TcxButtonEdit [3]
-    Left = 794
-    Top = 5
+    Left = 535
+    Top = 3
     Properties.Buttons = <
       item
         Default = True
@@ -510,7 +526,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 115
+    Width = 159
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -703,6 +719,23 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = GoodsKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = GoodsKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -792,6 +825,8 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
       item
         Name = 'inGoodsKindId'
         Value = '0'
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -911,8 +946,8 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 640
-    Top = 65528
+    Left = 320
+    Top = 56
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1007,6 +1042,23 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindName'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 170
@@ -1035,8 +1087,8 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 5
+    Left = 368
+    Top = 65533
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1065,7 +1117,8 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1024
+    Left = 600
+    Top = 48
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1093,8 +1146,8 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 32
+    Left = 400
+    Top = 24
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1122,8 +1175,8 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 632
-    Top = 43
+    Left = 856
+    Top = 3
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
@@ -1152,8 +1205,8 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 952
-    Top = 34
+    Left = 616
+    Top = 18
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1182,7 +1235,36 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 833
-    Top = 1
+    Left = 574
+    Top = 65535
+  end
+  object GoodsKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsKind
+    FormNameParam.Value = 'TGoodsKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 888
+    Top = 19
   end
 end

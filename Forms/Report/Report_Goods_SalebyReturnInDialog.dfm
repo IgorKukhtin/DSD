@@ -3,8 +3,8 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1054#1090#1095#1077#1090#1072' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072'>'
-  ClientHeight = 283
-  ClientWidth = 450
+  ClientHeight = 298
+  ClientWidth = 451
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 98
-    Top = 239
+    Top = 264
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
   end
   object cxButton2: TcxButton
     Left = 272
-    Top = 239
+    Top = 264
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -82,7 +82,7 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
     Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object cxLabel1: TcxLabel
-    Left = 8
+    Left = 10
     Top = 108
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
   end
@@ -194,6 +194,23 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
     TabOrder = 21
     Width = 200
   end
+  object cxLabel11: TcxLabel
+    Left = 9
+    Top = 209
+    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072':'
+  end
+  object edGoodsKind: TcxButtonEdit
+    Left = 9
+    Top = 229
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 200
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -201,7 +218,7 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 32
-    Top = 231
+    Top = 256
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -214,7 +231,7 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 400
-    Top = 235
+    Top = 260
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -358,9 +375,26 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindId'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindName'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 200
-    Top = 231
+    Top = 256
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -570,5 +604,34 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
       end>
     Left = 321
     Top = 57
+  end
+  object GoodsKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsKind
+    FormNameParam.Value = 'TGoodsKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 219
   end
 end

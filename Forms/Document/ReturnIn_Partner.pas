@@ -23,7 +23,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, cxImageComboBox;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, cxImageComboBox,
+  cxSplitter;
 
 type
   TReturnIn_PartnerForm = class(TAncestorDocumentForm)
@@ -159,6 +160,30 @@ type
     cxLabel22: TcxLabel;
     edStartDateTax: TcxDateEdit;
     cbList: TcxCheckBox;
+    DetailCDS: TClientDataSet;
+    DetailDS: TDataSource;
+    spSelect_MI_Child: TdsdStoredProc;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    childGoodsCode: TcxGridDBColumn;
+    childGoodsName: TcxGridDBColumn;
+    childGoodsKindName: TcxGridDBColumn;
+    childAmount: TcxGridDBColumn;
+    childAmountPartner: TcxGridDBColumn;
+    childPrice: TcxGridDBColumn;
+    childInvNumber: TcxGridDBColumn;
+    childInvNumberPartner: TcxGridDBColumn;
+    childOperDate: TcxGridDBColumn;
+    childOperDatePartner: TcxGridDBColumn;
+    childDocumentTaxKindName: TcxGridDBColumn;
+    childInvNumber_Master: TcxGridDBColumn;
+    childInvNumberPartner_Master: TcxGridDBColumn;
+    childOperDate_Master: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

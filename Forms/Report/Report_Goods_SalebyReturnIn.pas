@@ -54,6 +54,9 @@ type
     cxLabel10: TcxLabel;
     edContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edGoodsKind: TcxButtonEdit;
+    GoodsKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
