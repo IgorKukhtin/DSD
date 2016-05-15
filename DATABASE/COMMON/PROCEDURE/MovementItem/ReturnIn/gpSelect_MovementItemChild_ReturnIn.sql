@@ -68,6 +68,7 @@ BEGIN
        FROM tmpMI
           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpMI.MovementId_sale 
           LEFT JOIN MovementDate AS MD_OperDatePartner ON MD_OperDatePartner.MovementId = Movement_Sale.Id
+                                                      AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
           LEFT JOIN MovementItem AS MISale ON MISale.Id = tmpMI.MovementItemId_sale
              
