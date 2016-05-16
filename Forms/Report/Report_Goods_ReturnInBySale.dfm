@@ -336,7 +336,6 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
   inherited Panel: TPanel
     Width = 1389
     Height = 54
-    ExplicitTop = -2
     ExplicitWidth = 1389
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
@@ -834,6 +833,7 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
       item
         Name = 'inPrice'
         Value = Null
+        Component = cePrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -877,6 +877,23 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindName'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
