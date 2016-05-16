@@ -436,22 +436,47 @@ BEGIN
      /*IF zc_Enum_Status_Complete() = (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) THEN
      update Movement set StatusId = zc_Enum_Status_UnComplete() WHERE Movement.Id = inMovementId;*/
      -- !!!сохранение!!!
-     PERFORM lpInsertUpdate_MovementItem_ReturnIn_Child (ioId                  := MovementItem.Id
+     PERFORM lpInsertUpdate_MovementItem_ReturnIn_Child (ioId                  := tmp.MovementItemId
                                                        , inMovementId          := inMovementId
-                                                       , inParentId            := MI_Master.Id
-                                                       , inGoodsId             := MI_Master.ObjectId
-                                                       , inAmount              := COALESCE (_tmpResult_ReturnIn_Auto.Amount, 0)
-                                                       , inMovementId_sale     := COALESCE (_tmpResult_ReturnIn_Auto.MovementId_sale, 0)
-                                                       , inMovementItemId_sale := COALESCE (_tmpResult_ReturnIn_Auto.MovementItemId_sale, 0)
+                                                       , inParentId            := tmp.ParentId
+                                                       , inGoodsId             := tmp.GoodsId
+                                                       , inAmount              := COALESCE (tmp.Amount, 0)
+                                                       , inMovementId_sale     := COALESCE (tmp.MovementId_sale, 0)
+                                                       , inMovementItemId_sale := COALESCE (tmp.MovementItemId_sale, 0)
                                                        , inUserId              := inUserId
                                                         )
-     FROM MovementItem AS MI_Master
-          LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+     FROM (WITH MI_Master AS (SELECT MovementItem.Id, MovementItem.ObjectId AS GoodsId
+                              FROM MovementItem
+                              WHERE MovementItem.MovementId = inMovementId
+                                AND MovementItem.DescId     = zc_MI_Master()
+                             )
+               , MI_Child AS (SELECT MovementItem.Id, MovementItem.ParentId, COALESCE (MIFloat_MovementItemId.ValueData, 0) :: Integer AS MovementItemId_sale
+                              FROM MovementItem
+                                   LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                               ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                              WHERE MovementItem.MovementId = inMovementId
                                 AND MovementItem.DescId     = zc_MI_Child()
-                                AND MovementItem.ParentId   = MI_Master.Id
-          LEFT JOIN _tmpResult_ReturnIn_Auto ON _tmpResult_ReturnIn_Auto.ParentId = MI_Master.Id
-     WHERE MI_Master.MovementId = inMovementId
-       AND MI_Master.DescId     = zc_MI_Master()
+                             )
+                 , MI_All AS (SELECT MI_Child.Id AS MovementItemId
+                                   , COALESCE (_tmpResult_ReturnIn_Auto.ParentId, MI_Child.ParentId) AS ParentId
+                                   , _tmpResult_ReturnIn_Auto.MovementId_sale
+                                   , _tmpResult_ReturnIn_Auto.MovementItemId_sale
+                                   , _tmpResult_ReturnIn_Auto.Amount
+                              FROM _tmpResult_ReturnIn_Auto
+                                   FULL JOIN MI_Child ON MI_Child.ParentId            = _tmpResult_ReturnIn_Auto.ParentId
+                                                     AND MI_Child.MovementItemId_sale = _tmpResult_ReturnIn_Auto.MovementItemId_sale
+                             )
+           -- результат
+           SELECT MI_Master.Id AS ParentId
+                , MI_Master.GoodsId
+                , MI_All.MovementItemId
+                , MI_All.MovementId_sale
+                , MI_All.MovementItemId_sale
+                , MI_All.Amount
+           FROM MI_Master
+                LEFT JOIN MI_All ON MI_All.ParentId = MI_Master.Id
+          ) AS tmp
     ;
      /*update Movement set StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId;
      END IF;*/

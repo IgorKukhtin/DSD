@@ -1,4 +1,5 @@
- -- Function: gpReport_SaleByReturnIn ()
+-- Function: gpReport_SaleByReturnIn ()
+
 DROP FUNCTION IF EXISTS gpReport_SaleByReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Tfloat, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SaleByReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Tfloat, TVarChar);
 
@@ -273,11 +274,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  15.05.15         * 
- 
 */
 
 -- тест
 -- SELECT * FROM gpReport_SaleByReturnIn (inStartDate:= '04.11.2015'::TDateTime, inEndDate:= '04.11.2015'::TDateTime,  inPartnerId:= 112464, inJuridicalId:=0, inRetailId:=0, inBranchId:=0, inContractId:= 0, inPaidKindId:= 0, inGoodsId:= 2507, inGoodsKindId:= 0, inPrice:= 0 :: Tfloat, inSession:= zfCalc_UserAdmin()); -- 
-
-
- --SELECT * FROM MovementItemContainer AS MIContainer where MIContainer.MovementDescId = zc_Movement_Sale() limit 100
