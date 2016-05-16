@@ -800,6 +800,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
+
+  //מעקוע
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_ReturnInBySaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_ReturnInBySaleForm');
+
 end;
 
 procedure TLoadFormTest.LoadTaxFormTest;

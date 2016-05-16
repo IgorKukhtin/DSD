@@ -4,7 +4,7 @@
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1314
-  ExplicitHeight = 680
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -663,8 +663,8 @@
       Width = 102
     end
     object cxLabel10: TcxLabel
-      Left = 255
-      Top = 45
+      Left = 252
+      Top = 40
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
@@ -1218,6 +1218,138 @@
         end>
       isShowModal = True
     end
+    object actOpenReportForm: TdsdOpenForm [15]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      ImageIndex = 25
+      FormName = 'TReport_Goods_ReturnInBySaleForm'
+      FormNameParam.Value = 'TReport_Goods_ReturnInBySaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractName'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -1255,7 +1387,7 @@
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Sale: TMultiAction [19]
+    object mactPrint_Sale: TMultiAction [20]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1272,7 +1404,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object mactPrint_Tax_Client: TMultiAction [20]
+    object mactPrint_Tax_Client: TMultiAction [21]
       Category = 'Print_Tax'
       MoveParams = <>
       ActionList = <
@@ -1286,7 +1418,7 @@
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object mactPrint_Account: TMultiAction [21]
+    object mactPrint_Account: TMultiAction [22]
       Category = 'Print_Account'
       MoveParams = <>
       ActionList = <
@@ -1300,7 +1432,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Client: TdsdPrintAction [22]
+    object actPrintTax_Client: TdsdPrintAction [23]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -1340,7 +1472,7 @@
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Account: TdsdPrintAction [23]
+    object actPrint_Account: TdsdPrintAction [24]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1377,7 +1509,7 @@
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpPack: TdsdPrintAction [24]
+    object actPrint_ExpPack: TdsdPrintAction [25]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpPack
@@ -1426,7 +1558,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [29]
+    object actGoodsKindChoice: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2049,6 +2181,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -2250,6 +2390,10 @@
       Action = mactPrint_Transport
       Category = 0
     end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
@@ -2289,7 +2433,7 @@
     Params = <
       item
         Name = 'Id'
-        Value = Null
+        Value = '0'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
