@@ -177,10 +177,10 @@ IF inBranchId <> 0
                              --, SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountReturn
                              , SUM (COALESCE (MI_Child.Amount, 0)) AS AmountReturn
                         FROM tmpMI
-                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem 
+                           inner JOIN MovementItemFloat AS MIFloat_MovementItem 
                                                        ON CAST (MIFloat_MovementItem.ValueData AS Integer) = tmpMI.MovementItemId
                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                           LEFT JOIN MovementItem AS MI_Child ON MI_Child.Id = MIFloat_MovementItem.MovementItemId
+                           inner JOIN MovementItem AS MI_Child ON MI_Child.Id = MIFloat_MovementItem.MovementItemId
                                                              AND MI_Child.DescId = zc_MI_Child()
 /*                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                        ON MIFloat_AmountPartner.MovementItemId = MIFloat_MovementItem.MovementItemId
@@ -280,4 +280,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_SaleByReturnIn (inStartDate:= '04.11.2015'::TDateTime, inEndDate:= '04.11.2015'::TDateTime,  inPartnerId:= 112464, inJuridicalId:=0, inRetailId:=0, inBranchId:=0, inContractId:= 0, inPaidKindId:= 0, inGoodsId:= 2507, inGoodsKindId:= 0, inPrice:= 0 :: Tfloat, inSession:= zfCalc_UserAdmin()); -- 
+--SELECT * FROM gpReport_SaleByReturnIn (inStartDate:= '04.11.2015'::TDateTime, inEndDate:= '04.11.2015'::TDateTime,  inPartnerId:= 112464, inJuridicalId:=0, inRetailId:=0, inBranchId:=0, inContractId:= 0, inPaidKindId:= 0, inGoodsId:= 2507, inGoodsKindId:= 0, inPrice:= 0 :: Tfloat, inSession:= zfCalc_UserAdmin()); -- 
+--select * from gpReport_SaleByReturnIn(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('10.05.2016')::TDateTime , inPartnerId := 17784 , inJuridicalId := 0 , inRetailId := 0 , inBranchId := 0 , inContractId := 16591 , inPaidKindId := 3 , inGoodsId := 2156 , inGoodsKindId := 0 , inPrice := 127.25 ,  inSession := '5');
