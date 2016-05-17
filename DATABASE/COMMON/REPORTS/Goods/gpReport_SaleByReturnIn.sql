@@ -181,7 +181,7 @@ IF inBranchId <> 0
                                                        ON CAST (MIFloat_MovementItem.ValueData AS Integer) = tmpMI.MovementItemId
                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                            LEFT JOIN MovementItem AS MI_Child ON MI_Child.Id = MIFloat_MovementItem.MovementItemId
-                                                             AND MI_Child.DescId = = zc_MI_Child()
+                                                             AND MI_Child.DescId = zc_MI_Child()
 /*                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                        ON MIFloat_AmountPartner.MovementItemId = MIFloat_MovementItem.MovementItemId
                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()    */
