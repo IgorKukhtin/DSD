@@ -423,6 +423,12 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inContactPersonId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inByDate'
         Value = 'NULL'
         DataType = ftDateTime

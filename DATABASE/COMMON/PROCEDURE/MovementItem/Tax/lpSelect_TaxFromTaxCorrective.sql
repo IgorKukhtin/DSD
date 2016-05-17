@@ -5,9 +5,11 @@ DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective (Integer);
 CREATE OR REPLACE FUNCTION lpSelect_TaxFromTaxCorrective(
     IN inMovementId          Integer    -- Ключ объекта <Документ> - Налоговая
 )
-RETURNS TABLE (Kind        Integer
+RETURNS TABLE (MovementId  Integer
+             , Kind        Integer
              , GoodsId     Integer
              , GoodsKindId Integer
+             , GoodsKindId_exists Integer
              , Price       TFloat
              , LineNum     Integer
               )
@@ -39,8 +41,9 @@ BEGIN
                   )
 
                   -- результат
-                  SELECT 1 :: Integer AS Kind
-                       , tmp.GoodsId, tmp.GoodsKindId, tmp.Price
+                  SELECT inMovementId AS MovementId
+                       , 1 :: Integer AS Kind
+                       , tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId, tmp.Price
                        , (CASE WHEN tmp.LineCount1 <> 1 THEN -1 ELSE 1 END * tmp.LineNum) :: Integer AS LineNum
                   FROM (SELECT tmpMITax.*
                              , ROW_NUMBER() OVER (PARTITION BY tmpMITax.GoodsId, tmpMITax.GoodsKindId, tmpMITax.Price ORDER BY tmpMITax.LineNum ASC) AS Ord
@@ -48,8 +51,9 @@ BEGIN
                        ) AS tmp
                   WHERE tmp.Ord = 1
                  UNION ALL
-                  SELECT 2 :: Integer AS Kind
-                       , tmp.GoodsId, 0 AS GoodsKindId, tmp.Price
+                  SELECT inMovementId AS MovementId
+                       , 2 :: Integer AS Kind
+                       , tmp.GoodsId, 0 AS GoodsKindId, tmp.GoodsKindId, tmp.Price
                        , (CASE WHEN tmp.LineCount2 <> 1 THEN -1 ELSE 1 END * tmp.LineNum) :: Integer AS LineNum
                   FROM (SELECT tmpMITax.*
                              , ROW_NUMBER() OVER (PARTITION BY tmpMITax.GoodsId, tmpMITax.Price ORDER BY tmpMITax.LineNum ASC) AS Ord
