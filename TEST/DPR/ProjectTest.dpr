@@ -814,7 +814,8 @@ uses
   CostJournalChoice in '..\..\Forms\Document\CostJournalChoice.pas' {CostJournalChoiceForm: TParentForm},
   Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm},
   Report_Goods_SalebyReturnIn in '..\..\Forms\Report\Report_Goods_SalebyReturnIn.pas' {Report_Goods_SalebyReturnInForm: TParentForm},
-  Report_Goods_SalebyReturnInDialog in '..\..\Forms\Report\Report_Goods_SalebyReturnInDialog.pas' {Report_Goods_SalebyReturnInDialogForm: TParentForm};
+  Report_Goods_SalebyReturnInDialog in '..\..\Forms\Report\Report_Goods_SalebyReturnInDialog.pas' {Report_Goods_SalebyReturnInDialogForm: TParentForm},
+  Report_Goods_ReturnInBySale in '..\..\Forms\Report\Report_Goods_ReturnInBySale.pas' {Report_Goods_ReturnInBySaleForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

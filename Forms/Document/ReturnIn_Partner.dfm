@@ -312,7 +312,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       ImageIndex = 2
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 447
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -320,7 +320,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Height = 349
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 447
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -1277,6 +1276,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_Child
         end
         item
           StoredProc = spSelectTaxCorrective
