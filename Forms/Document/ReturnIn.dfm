@@ -21,7 +21,6 @@ inherited ReturnInForm: TReturnInForm
       inherited cxGrid: TcxGrid
         Width = 1244
         Height = 362
-        ExplicitTop = 2
         ExplicitWidth = 1244
         ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1948,7 +1947,7 @@ inherited ReturnInForm: TReturnInForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Key'
+          Name = 'key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId_Partion'
