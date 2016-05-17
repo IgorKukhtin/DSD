@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_ExportSettings_Email (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, TDateTime, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ExportSettings_Email(
     IN inObjectId         Integer,       -- ключ объекта
+    IN inContactPersonId  Integer,       -- ключ объекта
     IN inByDate           TDateTime,     -- 
     IN inByMail           TVarChar,      -- 
     IN inByFileName       TVarChar,      -- 
@@ -34,11 +36,18 @@ BEGIN
           , gpGet_Mail.Value      AS MailFrom
           , CASE WHEN tmp.Num = 1 THEN 'ashtu777@ua.fm' WHEN tmp.Num = 2 THEN 'pravda_6@i.ua' ELSE 'price@neboley.dp.ua' END :: TVarChar AS MailTo
 
-          , ('Ошибка авто - загрузки прайса поставщика ' || '(' || COALESCE (Object_Juridical.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object_Juridical.ValueData, '') || ' - ' || TO_CHAR (CURRENT_TIMESTAMP, 'dd.mm.yyyy hh:mm:ss') ) :: TVarChar AS Subject
+          , CASE WHEN gpSelect.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
+                      THEN 'Ошибка авто - загрузки приход ММО ' || COALESCE (Object_ContactPerson.ValueData, '') || ' - ' || TO_CHAR (CURRENT_TIMESTAMP, 'dd.mm.yyyy hh:mm:ss')
+                 ELSE 'Ошибка авто - загрузки прайса поставщика ' || '(' || COALESCE (Object_Juridical.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object_Juridical.ValueData, '') || ' - ' || TO_CHAR (CURRENT_TIMESTAMP, 'dd.mm.yyyy hh:mm:ss')
+            END :: TVarChar AS Subject
           , CASE WHEN inByFileName = '-1'
                      THEN 'Ошибка сохранения данных в прайс поставщика "' || COALESCE (inByFileName, '') || '".'
                  WHEN inByFileName = '0'
-                     THEN 'Письмо получено "' || COALESCE (TO_CHAR (inByDate, 'dd.mm.yyyy hh:mm:ss'), '') || '" с электронного адреса "' || COALESCE (inByMail, '') || '". Не содержит файла *.xls для загрузки Прайса.Необходимо удалить письмо в ручном режиме.'
+                     THEN 'Письмо получено "' || COALESCE (TO_CHAR (inByDate, 'dd.mm.yyyy hh:mm:ss'), '') || '" с электронного адреса "' || COALESCE (inByMail, '') || '".'
+                       || CASE WHEN gpSelect.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
+                                    THEN 'Не содержит файла *.mmo для загрузки Прихода.Необходимо удалить письмо в ручном режиме.'
+                               ELSE 'Не содержит файла *.xls для загрузки Прайса.Необходимо удалить письмо в ручном режиме.'
+                          END
                  WHEN inByFileName = '4'
                      THEN 'Письмо получено "' || COALESCE (TO_CHAR (inByDate, 'dd.mm.yyyy hh:mm:ss'), '') || '" с электронного адреса "' || COALESCE (inByMail, '') || '". Содержит больше одно файла *.xls для загрузки.Необходимо удалить письмо и загрузить Прайс в ручном режиме.'
                  WHEN inByFileName = '2'
@@ -55,7 +64,9 @@ BEGIN
 
           LEFT JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect
                                                                            ON gpSelect.Id = inObjectId
-          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
+          LEFT JOIN Object AS Object_Juridical     ON Object_Juridical.Id     = gpSelect.JuridicalId
+          LEFT JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = inContactPersonId
+
      WHERE gpGet_Host.EmailToolsId = zc_Enum_EmailTools_Host()
     ;
   
@@ -70,4 +81,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 228283, inByDate:= CURRENT_TIMESTAMP, inByMail:= '', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3
+-- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 228283, inContactPersonId:= 2324911, inByDate:= CURRENT_TIMESTAMP, inByMail:= '', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3

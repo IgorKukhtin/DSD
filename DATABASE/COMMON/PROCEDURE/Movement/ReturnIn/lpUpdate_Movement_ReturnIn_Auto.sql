@@ -39,7 +39,7 @@ $BODY$
    DECLARE curMI_Sale refcursor;
 BEGIN
      -- инициализация, от этих параметров может зависеть скорость
-     vbPeriod1:= '15 DAY' :: INTERVAL;
+     vbPeriod1:= '15 DAY'  :: INTERVAL;
      vbPeriod2:= '1 MONTH' :: INTERVAL;
      --
      vbStep:= 1;
@@ -444,6 +444,7 @@ BEGIN
                                                        , inMovementId_sale     := COALESCE (tmp.MovementId_sale, 0)
                                                        , inMovementItemId_sale := COALESCE (tmp.MovementItemId_sale, 0)
                                                        , inUserId              := inUserId
+                                                       , inIsRightsAll         := FALSE
                                                         )
      FROM (WITH MI_Master AS (SELECT MovementItem.Id, MovementItem.ObjectId AS GoodsId
                               FROM MovementItem

@@ -251,6 +251,9 @@ BEGIN
            , CAST ('' AS TVarChar)      AS MovementPromo
            , CAST (NULL AS TFloat)      AS PricePromo
 
+           , 0 :: TFloat AS AmountChild
+           , 0 :: TFloat AS AmountChildDiff
+
        FROM tmpGoods
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                            AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
