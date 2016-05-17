@@ -121,7 +121,7 @@ IF inBranchId <> 0
                    , MIContainer.ObjectIntId_Analyzer     AS GoodsKindId       
             
                    , SUM (MIContainer.Amount * (-1))      AS Amount
-                   , MIFloat_Price.ValueData       AS Price
+                   , MIFloat_Price.ValueData              AS Price
           
                FROM MovementDate AS MD_OperDatePartner
                       INNER JOIN MovementItemContainer AS MIContainer
@@ -174,14 +174,17 @@ IF inBranchId <> 0
                         
   , tmpReturnAmount AS (SELECT tmpMI.MovementItemId 
                              --MIFloat_MovementItem.MovementItemId -- строка в док.возврате 
-                             , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountReturn
+                             --, SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountReturn
+                             , SUM (COALESCE (MI_Child.Amount, 0)) AS AmountReturn
                         FROM tmpMI
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem 
-                                                       ON MIFloat_MovementItem.ValueData = tmpMI.MovementItemId
+                                                       ON CAST (MIFloat_MovementItem.ValueData AS Integer) = tmpMI.MovementItemId
                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                           LEFT JOIN MovementItem AS MI_Child ON MI_Child.Id = MIFloat_MovementItem.MovementItemId
+                                                             AND MI_Child.DescId = = zc_MI_Child()
+/*                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                        ON MIFloat_AmountPartner.MovementItemId = MIFloat_MovementItem.MovementItemId
-                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()    
+                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()    */
                         GROUP BY tmpMI.MovementItemId
                        )
 
