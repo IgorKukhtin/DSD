@@ -14,19 +14,19 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
     Width = 1085
     Height = 267
     TabOrder = 3
-    ExplicitTop = 80
+    ExplicitTop = 115
     ExplicitWidth = 1085
-    ExplicitHeight = 302
+    ExplicitHeight = 267
     ClientRectBottom = 267
     ClientRectRight = 1085
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1085
-      ExplicitHeight = 302
+      ExplicitHeight = 267
       inherited cxGrid: TcxGrid
         Width = 1085
         Height = 267
         ExplicitWidth = 1085
-        ExplicitHeight = 302
+        ExplicitHeight = 267
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
