@@ -1,28 +1,28 @@
 inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
   Caption = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1055#1088#1086#1076#1072#1078#1077'>'
   ClientHeight = 382
-  ClientWidth = 1389
+  ClientWidth = 1360
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1405
+  ExplicitWidth = 1376
   ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1389
+    Width = 1360
     Height = 302
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1389
     ExplicitHeight = 302
     ClientRectBottom = 302
-    ClientRectRight = 1389
+    ClientRectRight = 1360
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1389
       ExplicitHeight = 302
       inherited cxGrid: TcxGrid
-        Width = 1389
+        Width = 1360
         Height = 302
         ExplicitWidth = 1389
         ExplicitHeight = 302
@@ -334,7 +334,7 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
     end
   end
   inherited Panel: TPanel
-    Width = 1389
+    Width = 1360
     Height = 54
     ExplicitWidth = 1389
     ExplicitHeight = 54
@@ -429,10 +429,11 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
     end
     object edSale: TcxButtonEdit
       Left = 18
-      Top = 30
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -658,6 +659,154 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      DataSource = MasterDS
+    end
+    object actUnComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 11
+      Status = mtUncomplete
+      DataSource = MasterDS
+    end
+    object spCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = 'spCompete'
+    end
+    object spReCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementReComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementReComplete
+        end>
+      Caption = 'spReCompete'
+    end
+    object spUncomplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = 'spUncomplete'
+    end
+    object actSimpleCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object actSimpleUncompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUncomplete
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object actSimpleReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spReCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object actCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 12
+    end
+    object actUnCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUncompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 11
+    end
+    object actReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleReCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 12
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -739,16 +888,49 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
     end
+    object bbComplete: TdxBarButton
+      Action = actComplete
+      Category = 0
+    end
+    object bbUnComplete: TdxBarButton
+      Action = actUnComplete
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
     Top = 232
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 136
+    Top = 256
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object N3: TMenuItem
+      Action = actCompleteList
+    end
+    object N4: TMenuItem
+      Action = actUnCompleteList
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 104
@@ -1086,7 +1268,102 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 204
+    Left = 60
     Top = 16
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLastComplete'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 192
+  end
+  object spMovementUnComplete: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 256
+  end
+  object spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLastComplete'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 216
   end
 end

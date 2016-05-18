@@ -14,7 +14,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImageComboBox,
-  MeDOC;
+  MeDOC, cxSplitter;
 
 type
   TTransferDebtInForm = class(TAncestorDocumentForm)
@@ -125,6 +125,30 @@ type
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     actShowMessage: TShowMessageAction;
+    DetailCDS: TClientDataSet;
+    DetailDS: TDataSource;
+    spSelect_MI_Child: TdsdStoredProc;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    cxSplitter1: TcxSplitter;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    childGoodsCode: TcxGridDBColumn;
+    childGoodsName: TcxGridDBColumn;
+    childGoodsKindName: TcxGridDBColumn;
+    childAmount: TcxGridDBColumn;
+    childAmountPartner: TcxGridDBColumn;
+    childPrice: TcxGridDBColumn;
+    childInvNumber: TcxGridDBColumn;
+    childInvNumberPartner: TcxGridDBColumn;
+    childOperDate: TcxGridDBColumn;
+    childOperDatePartner: TcxGridDBColumn;
+    childDocumentTaxKindName: TcxGridDBColumn;
+    childInvNumber_Master: TcxGridDBColumn;
+    childInvNumberPartner_Master: TcxGridDBColumn;
+    childOperDate_Master: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

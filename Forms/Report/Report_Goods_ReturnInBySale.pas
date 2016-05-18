@@ -50,6 +50,26 @@ type
     cxLabel9: TcxLabel;
     cePrice: TcxCurrencyEdit;
     clStatusCode: TcxGridDBColumn;
+    spMovementComplete: TdsdStoredProc;
+    spMovementUnComplete: TdsdStoredProc;
+    actComplete: TdsdChangeMovementStatus;
+    actUnComplete: TdsdChangeMovementStatus;
+    spCompete: TdsdExecStoredProc;
+    spUncomplete: TdsdExecStoredProc;
+    actSimpleCompleteList: TMultiAction;
+    actSimpleUncompleteList: TMultiAction;
+    spReCompete: TdsdExecStoredProc;
+    spMovementReComplete: TdsdStoredProc;
+    actSimpleReCompleteList: TMultiAction;
+    actCompleteList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    actReCompleteList: TMultiAction;
+    actShowMessage: TShowMessageAction;
+    bbComplete: TdxBarButton;
+    bbUnComplete: TdxBarButton;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
   private
     { Private declarations }
   public

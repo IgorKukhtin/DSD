@@ -1978,7 +1978,7 @@ inherited ReturnInForm: TReturnInForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Key'
+          Name = 'key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId_Partion'
