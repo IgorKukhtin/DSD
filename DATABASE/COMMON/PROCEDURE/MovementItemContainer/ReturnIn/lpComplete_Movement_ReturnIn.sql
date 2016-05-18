@@ -599,23 +599,22 @@ BEGIN
      END IF;
 
 
-     -- !!!замена!!!
-     IF inStartDateSale IS NULL THEN inStartDateSale:= DATE_TRUNC ('MONTH', vbOperDatePartner) - INTERVAL '4 MONTH'; END IF;
-
      -- !!!временно!!!
-     IF 1=0 AND inUserId = 5 THEN
-     -- Проверка ошибки
-     outMessageText:= (SELECT tmp.MessageText FROM lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := inStartDateSale
-                                                                                  , inEndDateSale   := NULL
-                                                                                  , inMovementId    := inMovementId
-                                                                                  , inUserId        := inUserId
-                                                                                   )AS tmp
-                      );
-     -- !!!Выход если ошибка!!!
-     IF outMessageText <> '' AND outMessageText <> '-1' THEN RETURN; END IF;
+     IF 1=1 AND inUserId = 5
+     THEN
+         -- Проверка ошибки
+         /*outMessageText:= (SELECT tmp.MessageText FROM lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := CASE WHEN inStartDateSale IS NULL THEN DATE_TRUNC ('MONTH', vbOperDatePartner) - INTERVAL '4 MONTH' ELSE inStartDateSale END
+                                                                                      , inEndDateSale   := NULL
+                                                                                      , inMovementId    := inMovementId*/
+         outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
+                                                        , inUserId        := inUserId
+                                                         );
+         -- !!!Выход если ошибка!!!
+         IF outMessageText <> '' AND outMessageText <> '-1' THEN RETURN; END IF;
 
-     -- !!!с такой ошибкой - все равно будем проводить!!!
-     IF outMessageText = '-1' THEN outMessageText:= 'Важно.У пользователя <%> нет прав формировать привязку накладной <Возврат от покупателя> к накладной <Продажи>.', lfGet_Object_ValueData (inUserId); END IF;
+         -- !!!с такой ошибкой - все равно будем проводить!!!
+         IF outMessageText = '-1' THEN outMessageText:= 'Важно.У пользователя <%> нет прав формировать привязку накладной <Возврат от покупателя> к накладной <Продажи>.', lfGet_Object_ValueData (inUserId); END IF;
+
      END IF;
      -- !!!временно!!!
 

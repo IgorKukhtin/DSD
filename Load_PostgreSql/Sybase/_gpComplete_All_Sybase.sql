@@ -14,6 +14,64 @@ $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
 
+--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--- !!!!!!!!!!!!!!!START - _gpComplete_SelectAll_Sybase__ReturnIn!!!!!!!!!!!!!!!
+--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*
+ -- 1.1.
+ PERFORM lpUpdate_Movement_ReturnIn_fromTax_tmp (inMovementId:= inMovementId
+                                               , inUserId    := zfCalc_UserAdmin() :: Integer
+                                                );
+
+ -- 1.2.
+ IF '' <> lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
+                                        , inUserId        := zfCalc_UserAdmin() :: Integer
+                                         )
+ THEN
+     -- 1.3. сохранили свойство <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inMovementId, '***' || COALESCE (' ' || MovementString.ValueData, ''))
+     FROM Movement
+          LEFT JOIN MovementString ON MovementString.MovementId = Movement.Id AND MovementString.DescId = zc_MovementString_Comment()
+     WHERE Movement.Id = inMovementId;
+END IF;
+
+RETURN;
+*/
+--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--- !!!!!!!!!!!!!!!END - _gpComplete_SelectAll_Sybase__ReturnIn!!!!!!!!!!!!!!!
+--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--- !!!!!!!!!!!!!!!START - lpUpdate_Movement_ReturnIn_Auto_OLD!!!!!!!!!!!!!!!
+--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+ -- 2.1.
+ IF '' <> (SELECT lpUpdate_Movement_ReturnIn_Auto_OLD (inMovementId:= Movement.Id
+                                                     , inStartDateSale:= Movement.OperDate - INTERVAL '2 MONTH'
+                                                     , inEndDateSale:= Movement.OperDate
+                                                     , inUserId    := zfCalc_UserAdmin() :: Integer
+                                                      ) AS tmp
+           FROM Movement WHERE Id = inMovementId)
+ THEN
+     -- 2.2. сохранили свойство <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inMovementId, '***' || COALESCE (' ' || MovementString.ValueData, ''))
+     FROM Movement
+          LEFT JOIN MovementString ON MovementString.MovementId = Movement.Id AND MovementString.DescId = zc_MovementString_Comment()
+     WHERE Movement.Id = inMovementId;
+END IF;
+
+RETURN;
+
+--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--- !!!!!!!!!!!!!!!END - lpUpdate_Movement_ReturnIn_Auto_OLD!!!!!!!!!!!!!!!
+--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
      -- нашли
      SELECT DescId, StatusId INTO vbMovementDescId, vbStatusId FROM Movement WHERE Id = inMovementId;
 

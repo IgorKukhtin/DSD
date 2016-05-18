@@ -322,7 +322,7 @@ BEGIN
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
            
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
-           , (tmpResult.Amount - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
+           , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
        FROM tmpResult
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpResult.MovementId_Promo                -- акция
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
@@ -525,7 +525,7 @@ BEGIN
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
 
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
-           , (tmpResult.Amount - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
+           , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
        FROM tmpResult
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpResult.MovementId_Promo                -- акция
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId

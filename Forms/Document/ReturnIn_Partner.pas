@@ -184,6 +184,9 @@ type
     cxSplitter1: TcxSplitter;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    actUpdateAuto: TdsdExecStoredProc;
+    spUpdateAuto: TdsdStoredProc;
+    bbUpdateAuto: TdxBarButton;
   private
     { Private declarations }
   public

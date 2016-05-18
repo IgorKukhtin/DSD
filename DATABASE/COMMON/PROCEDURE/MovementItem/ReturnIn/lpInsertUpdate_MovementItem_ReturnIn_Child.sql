@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_ReturnIn_Child()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Child (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Child (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, Integer, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn_Child(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -10,7 +11,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn_Child(
     IN inAmount              TFloat    , --  оличество
     IN inMovementId_sale     Integer   , -- 
     IN inMovementItemId_sale Integer   , -- 
-    IN inUserId              Integer     -- пользователь
+    IN inUserId              Integer   , -- пользователь
+    IN inIsRightsAll         Boolean     -- 
 )
 RETURNS Integer
 AS
@@ -21,7 +23,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Ёлемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId, CASE WHEN inIsRightsAll = TRUE THEN -12345 ELSE 0 END);
 
      -- сохранили свойство <Id документа продажи>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_sale);
