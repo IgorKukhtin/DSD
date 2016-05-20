@@ -64,7 +64,7 @@ BEGIN
 --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --- !!!!!!!!!!!!!!!START - 2. gpUpdate_Movement_ReturnIn_Auto_OLD!!!!!!!!!!!!!!!
 --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     SELECT DISTINCT
+/*     SELECT DISTINCT
             Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -96,7 +96,7 @@ BEGIN
        AND Movement.DescId = zc_Movement_ReturnIn()
        AND Movement.StatusId = zc_Enum_Status_Complete()
 
-   union
+   union*/
      SELECT DISTINCT
             Movement.Id AS MovementId
           , Movement.OperDate
@@ -120,7 +120,7 @@ BEGIN
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-     WHERE Movement.OperDate BETWEEN '01.05.2016' AND '31.05.2016'
+     WHERE Movement.OperDate BETWEEN '07.05.2016' AND '31.05.2016'
        AND Movement.DescId = zc_Movement_ReturnIn()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND MovementLinkObject_DocumentTaxKind.ObjectId  IS NULL
