@@ -45,7 +45,7 @@ BEGIN
          RETURN;
      END IF;
 
-
+/*
      -- !!!временно, только для ТЕСТА!!!
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
@@ -57,7 +57,7 @@ BEGIN
          INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount_Partner, Price_original) SELECT MI.Id AS MovementItemId, MI.ObjectId AS GoodsId, COALESCE (MILO.ObjectId, 0) AS GoodsKindId, MIF1.ValueData AS OperCount_Partner, MIF.ValueData AS Price_original FROM MovementItem AS MI LEFT JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = MI.Id AND MILO.DescId = zc_MILinkObject_GoodsKind() LEFT JOIN MovementItemFloat AS MIF1 ON MIF1.MovementItemId = MI.Id AND MIF1.DescId = zc_MIFloat_AmountPartner() LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_Price() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE;
      END IF;
      -- !!!временно, только для ТЕСТА!!!
-
+*/
 
      -- !!!вернули ОШИБКУ, если есть!!!
      outMessageText:= (WITH tmpChild_all AS (SELECT MovementItem.ParentId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
@@ -112,3 +112,4 @@ $BODY$
 -- тест
 -- SELECT * FROM MovementItem WHERE MovementId = 3662505 AND DescId = zc_MI_Child() -- SELECT * FROM MovementItemFloat WHERE MovementItemId IN (SELECT Id FROM MovementItem WHERE MovementId = 3662505 AND DescId = zc_MI_Child())
 -- SELECT lpCheck_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3662505
+-- SELECT lpCheck_Movement_ReturnIn_Auto (inMovementId:= Movement.Id, inUserId:= zfCalc_UserAdmin() :: Integer) || CHR (13), Movement.* FROM Movement WHERE Movement.Id = 3672952 

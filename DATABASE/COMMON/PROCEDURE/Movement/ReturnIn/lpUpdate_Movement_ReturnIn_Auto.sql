@@ -38,6 +38,7 @@ $BODY$
 
    DECLARE curMI_ReturnIn refcursor;
    DECLARE curMI_Sale refcursor;
+   DECLARE curMI_Sale_two refcursor;
 BEGIN
      -- инициализация, от этих параметров может зависеть скорость
      vbPeriod1:= '15 DAY'  :: INTERVAL;
@@ -49,40 +50,48 @@ BEGIN
 
 
      -- таблица
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult_ReturnIn_Auto'))
-     THEN
-         DELETE FROM _tmpResult_ReturnIn_Auto;
-     ELSE
-         -- таблица - продаж
-         CREATE TEMP TABLE _tmpResult_Sale_Auto (OperDate TDateTime, MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, Price_original TFloat) ON COMMIT DROP;
-         -- таблица - результат
-         CREATE TEMP TABLE _tmpResult_ReturnIn_Auto (ParentId Integer, MovementId_sale Integer, MovementItemId_sale Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, Price_original TFloat) ON COMMIT DROP;
-     END IF;
-
-
-     -- таблица
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
-         -- таблица - возвраты
+         -- таблица - текущие возвраты***
          CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount_Partner TFloat, Price_original TFloat)  ON COMMIT DROP;
-     ELSE 
-         DELETE FROM _tmpItem;
+         -- текущие возвраты - сформировали один раз***
+         INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount_Partner, Price_original)
+            SELECT MI.Id, MI.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0), COALESCE (MIF_AmountPartner.ValueData, 0), COALESCE (MIF_Price.ValueData, 0)
+            FROM MovementItem AS MI
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = MI.Id AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                 LEFT JOIN MovementItemFloat AS MIF_AmountPartner ON MIF_AmountPartner.MovementItemId = MI.Id AND MIF_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                 LEFT JOIN MovementItemFloat AS MIF_Price ON MIF_Price.MovementItemId = MI.Id AND MIF_Price.DescId = zc_MIFloat_Price()
+            WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
+              AND MIF_AmountPartner.ValueData <> 0
+       ;
+     END IF;
+
+     -- таблица
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult_ReturnIn_Auto'))
+     THEN
+         --
+         -- DELETE FROM _tmpItem;
+         --
+         DELETE FROM _tmpResult_ReturnIn_Auto;
+         --
+         DELETE FROM _tmpPartner_ReturnIn_Auto;
+     ELSE
+         -- таблица - продаж (для поиска партий) + оптимизации
+         CREATE TEMP TABLE _tmpResult_Sale_Auto (PartnerId Integer, OperDate TDateTime, MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, Price_original TFloat) ON COMMIT DROP;
+         -- таблица - результат (нашли партии)***
+         CREATE TEMP TABLE _tmpResult_ReturnIn_Auto (ParentId Integer, MovementId_sale Integer, MovementItemId_sale Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_return Integer, Amount TFloat, Price_original TFloat) ON COMMIT DROP;
+         -- таблица - список контрагентов (для оптимизации)***
+         CREATE TEMP TABLE _tmpPartner_ReturnIn_Auto (PartnerId Integer) ON COMMIT DROP;
+         -- таблица - список товаров (для оптимизации)
+         CREATE TEMP TABLE _tmpGoods_ReturnIn_Auto_all (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Price_original TFloat, Amount TFloat) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpGoods_ReturnIn_Auto (GoodsId Integer) ON COMMIT DROP;
+
      END IF;
 
 
-     -- формируются текущие возвраты
-     INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount_Partner, Price_original)
-        SELECT MI.Id, MI.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0), COALESCE (MIF_AmountPartner.ValueData, 0), COALESCE (MIF_Price.ValueData, 0)
-        FROM MovementItem AS MI
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = MI.Id AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-             LEFT JOIN MovementItemFloat AS MIF_AmountPartner ON MIF_AmountPartner.MovementItemId = MI.Id AND MIF_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-             LEFT JOIN MovementItemFloat AS MIF_Price ON MIF_Price.MovementItemId = MI.Id AND MIF_Price.DescId = zc_MIFloat_Price()
-        WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
-          AND MIF_AmountPartner.ValueData <> 0
-       ;
 
      -- !!!временно!!!
-     IF 1=1 AND inUserId = 5
+     IF zc_isReturnIn_bySale() = TRUE OR inUserId = 5
      THEN
 
 
@@ -245,83 +254,102 @@ BEGIN
          WHERE Movement.Id = inMovementId;
 
 
+         -- список контрагентов - сформировали один раз***
+         INSERT INTO _tmpPartner_ReturnIn_Auto (PartnerId)
+            SELECT ObjectLink_Jur.ObjectId AS PartnerId
+            FROM ObjectLink AS ObjectLink_Jur
+            WHERE ObjectLink_Jur.ChildObjectId = (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = vbPartnerId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical())
+              AND ObjectLink_Jur.DescId        = zc_ObjectLink_Partner_Juridical();
+         -- Оптимизация
+         ANALYZE _tmpPartner_ReturnIn_Auto;
+
+
          -- Цикл по периодам (так наверно быстрее)
          WHILE vbStartDate >= inStartDateSale AND vbStartDate <= vbEndDate LOOP
 
-            -- очистили
+            -- очистили - список товаров (для оптимизации)
+            DELETE FROM _tmpGoods_ReturnIn_Auto_all;
+            DELETE FROM _tmpGoods_ReturnIn_Auto;
+            -- список товаров - формируется каждый раз
+            INSERT INTO _tmpGoods_ReturnIn_Auto_all (MovementItemId, GoodsId, GoodsKindId, Price_original, Amount)
+               -- текущий возврат МИНУС сколько партий нашли (т.е. сколько осталось)
+               SELECT tmp1.MovementItemId, tmp1.GoodsId, tmp1.GoodsKindId, tmp1.Price_original, tmp1.Amount - COALESCE (tmp2.Amount, 0) AS Amount
+               FROM (SELECT MIN (tmp.MovementItemId) AS MovementItemId, tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original, SUM (tmp.OperCount_Partner) AS Amount
+                     FROM _tmpItem AS tmp GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
+                    ) AS tmp1
+                    LEFT JOIN (SELECT tmp.GoodsId, tmp.GoodsKindId_return AS GoodsKindId, tmp.Price_original, SUM (tmp.Amount) AS Amount
+                               FROM _tmpResult_ReturnIn_Auto AS tmp GROUP BY tmp.GoodsId, tmp.GoodsKindId_return, tmp.Price_original
+                              ) AS tmp2 ON tmp2.GoodsId        = tmp1.GoodsId
+                                       AND tmp2.GoodsKindId    = tmp1.GoodsKindId
+                                       AND tmp2.Price_original = tmp1.Price_original
+               WHERE tmp1.Amount - COALESCE (tmp2.Amount, 0) > 0;
+            -- ... каждый раз
+            INSERT INTO _tmpGoods_ReturnIn_Auto (GoodsId) SELECT DISTINCT tmp.GoodsId FROM _tmpGoods_ReturnIn_Auto_all AS tmp;
+            -- Оптимизация
+            ANALYZE _tmpGoods_ReturnIn_Auto_all; ANALYZE _tmpGoods_ReturnIn_Auto;
+
+
+            -- очистили - продажи (для поиска партий) + оптимизации
             DELETE FROM _tmpResult_Sale_Auto;
 
-            -- сохранили, потом среди этих продаж будем подбирать партии
-            INSERT INTO _tmpResult_Sale_Auto (OperDate, MovementId, MovementItemId, GoodsId, GoodsKindId, Amount, Price_original)
+            -- продажи (потом среди этих продаж будем подбирать партии) - формируется каждый раз
+            INSERT INTO _tmpResult_Sale_Auto (PartnerId, OperDate, MovementId, MovementItemId, GoodsId, GoodsKindId, Amount, Price_original)
+
                WITH -- текущий возврат МИНУС сколько партий нашли (т.е. сколько осталось)
-                    tmpMI_ReturnIn AS (SELECT tmp1.GoodsId, tmp1.GoodsKindId, tmp1.Price_original, tmp1.Amount - COALESCE (tmp2.Amount, 0) AS Amount
-                                       FROM (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original, SUM (tmp.OperCount_Partner) AS Amount
-                                             FROM _tmpItem AS tmp GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
-                                            ) AS tmp1
-                                            LEFT JOIN (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original, SUM (tmp.Amount) AS Amount
-                                                       FROM _tmpResult_ReturnIn_Auto AS tmp GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
-                                                      ) AS tmp2 ON tmp2.GoodsId        = tmp1.GoodsId
-                                                               AND tmp2.GoodsKindId    = tmp1.GoodsKindId
-                                                               AND tmp2.Price_original = tmp1.Price_original
-                                       WHERE tmp1.Amount - COALESCE (tmp2.Amount, 0) > 0
-                                      )
-                  , tmpGoods_list AS (SELECT DISTINCT tmpMI_ReturnIn.GoodsId, tmpMI_ReturnIn.GoodsKindId FROM tmpMI_ReturnIn)
+                    tmpMI_ReturnIn AS (SELECT * FROM _tmpGoods_ReturnIn_Auto_all)
                     -- продажа - почти вся
-                  , tmpMI_sale_all AS (SELECT MD_OperDatePartner.ValueData                   AS OperDate
-                                            , MIContainer.MovementId                         AS MovementId
-                                            , MIContainer.MovementItemId                     AS MovementItemId
-                                            , MIContainer.ObjectId_Analyzer                  AS GoodsId
-                                            , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
-                                            , SUM (-1 * MIContainer.Amount)                  AS Amount
-                                       /*FROM MovementDate AS MD_OperDatePartner
-                                            INNER JOIN MovementItemContainer AS MIContainer
-                                                                             ON MIContainer.MovementId           = MD_OperDatePartner.MovementId
-                                                                            AND MIContainer.DescId               = zc_MIContainer_Count()
-                                                                            AND MIContainer.AnalyzerId           = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
-                                                                            AND MIContainer.MovementDescId       = zc_Movement_Sale()
-                                                                            AND MIContainer.ObjectId_Analyzer    IN (SELECT DISTINCT tmpMI_ReturnIn.GoodsId FROM tmpMI_ReturnIn)
-                                                                            AND MIContainer.ObjectExtId_analyzer = vbPartnerId
-                                       WHERE MD_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
-                                         AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()*/
-                                       FROM tmpGoods_list
-                                            INNER JOIN MovementItemContainer AS MIContainer
-                                                                             ON MIContainer.DescId               = zc_MIContainer_Count()
-                                                                            AND MIContainer.AnalyzerId           = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
-                                                                            AND MIContainer.MovementDescId       = zc_Movement_Sale()
-                                                                            AND MIContainer.ObjectId_Analyzer    = tmpGoods_list.GoodsId
-                                                                            AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = tmpGoods_list.GoodsKindId
-                                                                            AND MIContainer.ObjectExtId_analyzer = vbPartnerId
-                                            INNER JOIN MovementDate AS MD_OperDatePartner
-                                                                    ON MD_OperDatePartner.MovementId = MIContainer.MovementId
-                                                                   AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                                                   AND MD_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
-                                       GROUP BY MD_OperDatePartner.ValueData
-                                              , MIContainer.MovementId
-                                              , MIContainer.MovementItemId
-                                              , MIContainer.ObjectId_Analyzer
-                                              , MIContainer.ObjectIntId_Analyzer
-                                      )
-                        -- продажа - с ограничениями (так типа быстрее)
-                      , tmpMI_sale AS (SELECT tmpMI_sale_all.*
-                                            , tmpMI_ReturnIn.Price_original
-                                            , MIFloat_Price.ValueData    AS Price_find
-                                       FROM tmpMI_sale_all
+                  , tmpMI_sale_all AS (SELECT MovementLinkObject_To.ObjectId                 AS PartnerId
+                                            , MD_OperDatePartner.ValueData                   AS OperDate
+                                            , MovementItem.MovementId                        AS MovementId
+                                            , MovementItem.Id                                AS MovementItemId
+                                            , MovementItem.ObjectId                          AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
+                                            , MIFloat_AmountPartner.ValueData                AS Amount
+                                            , MIFloat_Price.ValueData                        AS Price_original -- Price_find
+                                       FROM MovementDate AS MD_OperDatePartner
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                          ON MovementLinkObject_To.MovementId = MD_OperDatePartner.MovementId
+                                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                            INNER JOIN _tmpPartner_ReturnIn_Auto AS tmpPartner_list ON tmpPartner_list.PartnerId = MovementLinkObject_To.ObjectId
+                                            INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
+                                                               AND Movement.DescId   = zc_Movement_Sale()
+                                                               AND Movement.StatusId = zc_Enum_Status_Complete()
+
                                             INNER JOIN MovementLinkObject AS MLO_PaidKind
-                                                                          ON MLO_PaidKind.MovementId = tmpMI_sale_all.MovementId
+                                                                          ON MLO_PaidKind.MovementId = MD_OperDatePartner.MovementId
                                                                          AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
                                                                          AND MLO_PaidKind.ObjectId   = vbPaidKindId
                                             INNER JOIN MovementLinkObject AS MLO_Contract
-                                                                          ON MLO_Contract.MovementId = tmpMI_sale_all.MovementId
+                                                                          ON MLO_Contract.MovementId = MD_OperDatePartner.MovementId
                                                                          AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
                                                                          AND MLO_Contract.ObjectId   = vbContractId
+
+                                            INNER JOIN MovementItem ON MovementItem.MovementId = MD_OperDatePartner.MovementId
+                                                                   AND MovementItem.isErased    = FALSE
+                                                                   AND MovementItem.DescId      = zc_MI_Master()
+                                            INNER JOIN _tmpGoods_ReturnIn_Auto AS tmpGoods_list ON tmpGoods_list.GoodsId = MovementItem.ObjectId
+                                            INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                                        AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                                                                        AND MIFloat_AmountPartner.ValueData    <> 0
+
+                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
                                             LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                                        ON MIFloat_Price.MovementItemId = tmpMI_sale_all.MovementItemId
+                                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_Price.DescId         = zc_MIFloat_Price()
-                                                                      -- AND MIFloat_Price.ValueData      = tmpMI_ReturnIn.Price_original
-                                            INNER JOIN tmpMI_ReturnIn ON tmpMI_ReturnIn.GoodsId        = tmpMI_sale_all.GoodsId
-                                                                     AND tmpMI_ReturnIn.GoodsKindId    = tmpMI_sale_all.GoodsKindId
-                                                                     AND tmpMI_ReturnIn.Price_original = MIFloat_Price.ValueData
-                                       -- WHERE tmpMI_sale_all.GoodsKindId IN (SELECT DISTINCT tmpMI_ReturnIn.GoodsKindId FROM tmpMI_ReturnIn)
+
+                                       WHERE MD_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
+                                         AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                      )
+                        -- продажа - с ограничениями (так типа быстрее)
+                      , tmpMI_sale AS (SELECT tmpMI_sale_all.*
+                                       FROM tmpMI_sale_all
+                                            INNER JOIN _tmpGoods_ReturnIn_Auto_all ON _tmpGoods_ReturnIn_Auto_all.GoodsId        = tmpMI_sale_all.GoodsId
+                                                                                  AND _tmpGoods_ReturnIn_Auto_all.GoodsKindId    = tmpMI_sale_all.GoodsKindId
+                                                                                  AND _tmpGoods_ReturnIn_Auto_all.Price_original = tmpMI_sale_all.Price_original
                                       )
                    -- находим для продаж - сколько уже привязано в возвратах
                  , tmpMI_ReturnIn_find AS (SELECT tmpMI_sale.MovementItemId
@@ -340,7 +368,8 @@ BEGIN
                                            GROUP BY tmpMI_sale.MovementItemId
                                           )
                -- результат - среди этих продаж будем подбирать партии
-               SELECT tmpMI_sale.OperDate
+               SELECT tmpMI_sale.PartnerId
+                    , tmpMI_sale.OperDate
                     , tmpMI_sale.MovementId
                     , MIN (tmpMI_sale.MovementItemId) AS MovementItemId
                     , tmpMI_sale.GoodsId
@@ -349,7 +378,8 @@ BEGIN
                     , tmpMI_sale.Price_original
                FROM tmpMI_sale
                     LEFT JOIN tmpMI_ReturnIn_find ON tmpMI_ReturnIn_find.MovementItemId = tmpMI_sale.MovementItemId
-               GROUP BY tmpMI_sale.OperDate
+               GROUP BY tmpMI_sale.PartnerId
+                      , tmpMI_sale.OperDate
                       , tmpMI_sale.MovementId
                       , tmpMI_sale.GoodsId
                       , tmpMI_sale.GoodsKindId
@@ -358,15 +388,7 @@ BEGIN
 
 
             -- курсор1 - текущий возврат МИНУС сколько партий нашли (т.е. сколько осталось)
-            OPEN curMI_ReturnIn FOR    SELECT tmp1.MovementItemId, tmp1.GoodsId, tmp1.GoodsKindId, tmp1.Price_original, tmp1.Amount - COALESCE (tmp2.Amount, 0) AS Amount
-                                       FROM (SELECT MIN (tmp.MovementItemId) AS MovementItemId, tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original, SUM (tmp.OperCount_Partner) AS Amount FROM _tmpItem AS tmp GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
-                                            ) AS tmp1
-                                            LEFT JOIN (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original, SUM (tmp.Amount) AS Amount FROM _tmpResult_ReturnIn_Auto AS tmp GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
-                                                      ) AS tmp2 ON tmp2.GoodsId        = tmp1.GoodsId
-                                                               AND tmp2.GoodsKindId    = tmp1.GoodsKindId
-                                                               AND tmp2.Price_original = tmp1.Price_original
-                                       WHERE tmp1.Amount - COALESCE (tmp2.Amount, 0) > 0
-                                      ;
+            OPEN curMI_ReturnIn FOR SELECT tmp.MovementItemId, tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original, tmp.Amount FROM _tmpGoods_ReturnIn_Auto_all AS tmp;
             -- начало цикла по курсору1 - возвраты
             LOOP
                 -- данные по возвратам
@@ -375,6 +397,10 @@ BEGIN
                 IF NOT FOUND THEN EXIT; END IF;
 
 
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                -- !!!!! 1 - ALL PARAM !!!!!!!!
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
                 -- курсор2 - все продажи для ОДНОГО элемента возврата
                 OPEN curMI_Sale FOR
                    SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
@@ -382,6 +408,7 @@ BEGIN
                    WHERE _tmpResult_Sale_Auto.GoodsId        = vbGoodsId
                      AND _tmpResult_Sale_Auto.GoodsKindId    = vbGoodsKindId
                      AND _tmpResult_Sale_Auto.Price_original = vbOperPrice
+                     AND _tmpResult_Sale_Auto.PartnerId      = vbPartnerId
                    ORDER BY _tmpResult_Sale_Auto.OperDate DESC, _tmpResult_Sale_Auto.Amount DESC
                   ;
 
@@ -392,19 +419,18 @@ BEGIN
                     -- если данные закончились, или все кол-во найдено тогда выход
                     IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
 
-
                     --
                     IF vbAmount_sale > vbAmount
                     THEN
                         -- получилось в продаже больше чем искали, !!!сохраняем в табл-результата!!!
-                        INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, Amount, Price_original)
-                           SELECT vbMovementItemId_return, vbMovementId_sale, vbMovementItemId_sale, vbGoodsId, vbGoodsKindId, vbAmount, vbOperPrice;
+                        INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
+                           SELECT vbMovementItemId_return, vbMovementId_sale, vbMovementItemId_sale, vbGoodsId, vbGoodsKindId, vbGoodsKindId, vbAmount, vbOperPrice;
                         -- обнуляем кол-во что бы больше не искать
                         vbAmount:= 0;
                     ELSE
                         -- получилось в продаже меньше чем искали, !!!сохраняем в табл-результата!!!
-                        INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, Amount, Price_original)
-                           SELECT vbMovementItemId_return, vbMovementId_sale, vbMovementItemId_sale, vbGoodsId, vbGoodsKindId, vbAmount_sale, vbOperPrice;
+                        INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
+                           SELECT vbMovementItemId_return, vbMovementId_sale, vbMovementItemId_sale, vbGoodsId, vbGoodsKindId, vbGoodsKindId, vbAmount_sale, vbOperPrice;
                         -- уменьшаем на кол-во которое нашли и продолжаем поиск
                         vbAmount:= vbAmount - vbAmount_sale;
                     END IF;
@@ -412,6 +438,60 @@ BEGIN
 
                 END LOOP; -- финиш цикла по курсору2 - продажи
                 CLOSE curMI_Sale; -- закрыли курсор2 - продажи
+
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                -- !!!!! 1 - END ALL PARAM !!!!!!!!
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+                IF vbAmount > 0 THEN
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                -- !!!!! 2 - NOT vbPartnerId!!!!!
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                -- курсор3 - все продажи для ОДНОГО элемента возврата
+                OPEN curMI_Sale_two FOR
+                   SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
+                   FROM _tmpResult_Sale_Auto
+                   WHERE _tmpResult_Sale_Auto.GoodsId        = vbGoodsId
+                     AND _tmpResult_Sale_Auto.GoodsKindId    = vbGoodsKindId
+                     AND _tmpResult_Sale_Auto.Price_original = vbOperPrice
+                     AND _tmpResult_Sale_Auto.PartnerId      <> vbPartnerId -- !!!без этого параметра!!!
+                   ORDER BY _tmpResult_Sale_Auto.OperDate DESC, _tmpResult_Sale_Auto.Amount DESC
+                  ;
+
+                -- начало цикла по курсору3 - продажи
+                LOOP
+                    -- данные по продажам
+                    FETCH curMI_Sale_two INTO vbMovementId_sale, vbMovementItemId_sale, vbAmount_sale;
+                    -- если данные закончились, или все кол-во найдено тогда выход
+                    IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
+
+
+                    --
+                    IF vbAmount_sale > vbAmount
+                    THEN
+                        -- получилось в продаже больше чем искали, !!!сохраняем в табл-результата!!!
+                        INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
+                           SELECT vbMovementItemId_return, vbMovementId_sale, vbMovementItemId_sale, vbGoodsId, vbGoodsKindId, vbGoodsKindId, vbAmount, vbOperPrice;
+                        -- обнуляем кол-во что бы больше не искать
+                        vbAmount:= 0;
+                    ELSE
+                        -- получилось в продаже меньше чем искали, !!!сохраняем в табл-результата!!!
+                        INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
+                           SELECT vbMovementItemId_return, vbMovementId_sale, vbMovementItemId_sale, vbGoodsId, vbGoodsKindId, vbGoodsKindId, vbAmount_sale, vbOperPrice;
+                        -- уменьшаем на кол-во которое нашли и продолжаем поиск
+                        vbAmount:= vbAmount - vbAmount_sale;
+                    END IF;
+
+
+                END LOOP; -- финиш цикла по курсору3 - продажи
+                CLOSE curMI_Sale_two; -- закрыли курсор3 - продажи
+
+                END IF; -- IF vbAmount > 0 THEN
+                -- !!!!!!!!!!!!!!!!!!!!!!!
+                -- !!!!! 2 - End vbGoodsKindId AND NOT vbPartnerId!!!!!
+                -- !!!!!!!!!!!!!!!!!!!!!!!
 
 
             END LOOP; -- финиш цикла по курсору1 - возвраты
@@ -488,7 +568,7 @@ BEGIN
                                                      )
        || CHR (13) || 'за период с <' || DATE (inStartDateSale) :: TVarChar || '> по <' || DATE (inEndDateSale) :: TVarChar || '>'
        || CHR (13) || '(' || (vbStep - 1) :: TVarChar || ')'
-       || CHR (13) || (SELECT COUNT(*) FROM _tmpResult_Sale_Auto) :: TVarChar
+       -- || CHR (13) || (SELECT COUNT(*) FROM _tmpResult_Sale_Auto) :: TVarChar
             -- || ' ' || (SELECT COUNT(*) FROM _tmpResult_ReturnIn_Auto) :: TVarChar
             -- || ' ' || DATE (vbStartDate) :: TVarChar
             -- || ' ' || DATE (vbEndDate) :: TVarChar

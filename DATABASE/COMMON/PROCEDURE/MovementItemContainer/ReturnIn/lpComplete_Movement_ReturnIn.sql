@@ -599,8 +599,8 @@ BEGIN
      END IF;
 
 
-     -- !!!временно!!!
-     IF 1=1 AND inUserId = 5
+     -- !!!запуск новой схемы - с привязкой к продажам!!!
+     IF zc_isReturnIn_bySale() = TRUE OR inUserId = 5
      THEN
          -- Проверка ошибки
          /*outMessageText:= (SELECT tmp.MessageText FROM lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := CASE WHEN inStartDateSale IS NULL THEN DATE_TRUNC ('MONTH', vbOperDatePartner) - INTERVAL '4 MONTH' ELSE inStartDateSale END

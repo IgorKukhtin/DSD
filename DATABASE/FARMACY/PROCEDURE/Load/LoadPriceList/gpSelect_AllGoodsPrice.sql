@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
   , IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-    Id                  Integer,    --ИД товара
+    Id                  Integer,    --ИД товара  !!!ВСЕГДА СЕТИ, не так как в других запросах!!!
+    Id_retail           Integer,    --ИД товара  !!!ВСЕГДА НБ, не так как в дргих запросах!!!
     Code                Integer,    --Код товара
     GoodsName           TVarChar,   --Наименование товара
     LastPrice           TFloat,     --Текущая цена
@@ -235,6 +236,7 @@ BEGIN
     (
         SELECT
             SelectMinPrice_AllGoods.GoodsId AS Id,
+            SelectMinPrice_AllGoods.GoodsId_retail AS Id_retail,
             SelectMinPrice_AllGoods.GoodsCode AS Code,
             SelectMinPrice_AllGoods.GoodsName AS GoodsName,
             Object_Price.Price                AS LastPrice,
@@ -274,11 +276,12 @@ BEGIN
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price
-                                              ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId
+                                              ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
                                              AND Object_Price.UnitId = inUnitId
             LEFT OUTER JOIN Object_Goods_View AS Object_Goods
                                               ON Object_Goods.ObjectId = vbObjectId
-                                             AND Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId
+                                                 -- !!!берем из сети!!!
+                                             AND Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId_retail -- SelectMinPrice_AllGoods.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                   ON ObjectFloat_Percent.ObjectId = SelectMinPrice_AllGoods.JuridicalId
                                  AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
@@ -295,7 +298,7 @@ BEGIN
 
             LEFT JOIN lpSelect_Income_AllGoods(inUnitId := inUnitId,
                                                inUserId := vbUserId) AS Select_Income_AllGoods 
-                                                                     ON Select_Income_AllGoods.GoodsId = SelectMinPrice_AllGoods.GoodsId
+                                                                     ON Select_Income_AllGoods.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
                                     ON ObjectBoolean_Goods_IsPromo.ObjectId = SelectMinPrice_AllGoods.Partner_GoodsId
@@ -303,7 +306,8 @@ BEGIN
     )
 
     SELECT
-        ResultSet.Id,
+        ResultSet.Id_retail AS Id,
+        ResultSet.Id        AS Id_retail,
         ResultSet.Code,
         ResultSet.GoodsName,
         ResultSet.LastPrice,

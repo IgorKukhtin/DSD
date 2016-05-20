@@ -38,6 +38,7 @@ BEGIN
      FROM Movement
           INNER JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
                                                        AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                       AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
 
           INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                           ON MovementLinkMovement_Master.MovementChildId = Movement.Id
@@ -91,9 +92,38 @@ BEGIN
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+     WHERE Movement.OperDate BETWEEN '21.04.2016' AND '31.05.2016'
        AND Movement.DescId = zc_Movement_ReturnIn()
        AND Movement.StatusId = zc_Enum_Status_Complete()
+
+   union
+     SELECT DISTINCT
+            Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+     FROM Movement
+          INNER JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
+                                                       AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                       AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                        ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                       AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+
+          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
+                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
+                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+     WHERE Movement.OperDate BETWEEN '01.05.2016' AND '31.05.2016'
+       AND Movement.DescId = zc_Movement_ReturnIn()
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND MovementLinkObject_DocumentTaxKind.ObjectId  IS NULL
 
     ) AS tmp
     ;
