@@ -151,6 +151,7 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
+    procedure LoadMobileTariffFormTest;
     //procedure LoadZakazExternalFormTest;
     //procedure LoadZakazInternalFormTest;
   end;
@@ -1950,6 +1951,22 @@ begin
   //Календарь рабочих дней
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
+end;
+
+procedure TLoadFormTest.LoadMobileTariffFormTest;
+begin
+  // форма справочника Тарифы мобильных операторов
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileTariffForm');
+  // форма правки данных справочника Тарифы мобильных операторов
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileTariffEditForm');
+  // форма справочника Мобильные телефоны сотрудников
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileNumbersEmployeeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileNumbersEmployeeForm');
+  // форма правки данных справочника Тарифы мобильных операторов
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileNumbersEmployeeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileNumbersEmployeeEditForm');
 end;
 
 procedure TLoadFormTest.LoadModelServiceFormTest;
