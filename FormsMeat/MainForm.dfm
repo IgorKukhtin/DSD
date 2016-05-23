@@ -1,16 +1,16 @@
 inherited MainForm: TMainForm
   ClientHeight = 207
-  ClientWidth = 1093
+  ClientWidth = 1398
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1109
+  ExplicitWidth = 1414
   ExplicitHeight = 265
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
     Left = 0
     Top = 0
-    Width = 1093
+    Width = 1398
     Height = 81
     Align = alTop
     BevelInner = bvNone
@@ -20,6 +20,8 @@ inherited MainForm: TMainForm
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
+    ExplicitLeft = -8
+    ExplicitTop = -5
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -64,6 +66,7 @@ inherited MainForm: TMainForm
     end
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 136
     Top = 32
     object actExportJuridical: TdsdOpenForm [0]
@@ -74,6 +77,7 @@ inherited MainForm: TMainForm
       FormName = 'TExportJuridicalForm'
       FormNameParam.Value = 'TExportJuridicalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -85,6 +89,7 @@ inherited MainForm: TMainForm
       FormName = 'TEmailKindForm'
       FormNameParam.Value = 'TEmailKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -96,6 +101,7 @@ inherited MainForm: TMainForm
       FormName = 'TEmailSettingsForm'
       FormNameParam.Value = 'TEmailSettingsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -106,6 +112,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_Branch_App1Form'
       FormNameParam.Value = 'TReport_Branch_App1Form'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -117,6 +124,7 @@ inherited MainForm: TMainForm
       FormName = 'TEmailToolsForm'
       FormNameParam.Value = 'TEmailToolsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -127,6 +135,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_Branch_App7_NewForm'
       FormNameParam.Value = 'TReport_Branch_App7_NewForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -139,15 +148,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_SendOnPriceForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = '4'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -159,25 +171,30 @@ inherited MainForm: TMainForm
       FormName = 'TBankAccount_PersonalJournalForm'
       FormNameParam.Value = 'TBankAccount_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '14462'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1050#1072#1089#1089#1072
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inProcess'
           Value = 'zc_Enum_Process_PersonalCash()'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -190,12 +207,14 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_PackageForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'InDescName'
           Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
           DataType = ftString
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -207,6 +226,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_WeighingForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -218,6 +238,7 @@ inherited MainForm: TMainForm
       FormName = 'TReceiptComponentsForm'
       FormNameParam.Value = 'TReceiptComponentsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -229,6 +250,7 @@ inherited MainForm: TMainForm
       FormName = 'TBranchJuridicalForm'
       FormNameParam.Value = 'TBranchJuridicalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -239,11 +261,13 @@ inherited MainForm: TMainForm
       FormName = 'TSaleJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inChangePercentAmount'
           Value = '0'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -255,6 +279,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsExternalForm'
       FormNameParam.Value = 'TGoodsExternalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -266,6 +291,7 @@ inherited MainForm: TMainForm
       FormName = 'TCarExternalForm'
       FormNameParam.Value = 'TCarExternalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -277,6 +303,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsByGoodsKind_OrderForm'
       FormNameParam.Value = 'TGoodsByGoodsKind_OrderForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -288,6 +315,7 @@ inherited MainForm: TMainForm
       FormName = 'TMember_TrasportForm'
       FormNameParam.Value = 'TMember_TrasportForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -298,6 +326,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_Branch_App7Form'
       FormNameParam.Value = 'TReport_Branch_App7Form'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -309,6 +338,7 @@ inherited MainForm: TMainForm
       FormName = 'TQualityNumberJournalForm'
       FormNameParam.Value = 'TQualityNumberJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -320,6 +350,7 @@ inherited MainForm: TMainForm
       FormName = 'TRouteMemberForm'
       FormNameParam.Value = 'TRouteMemberForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -330,6 +361,7 @@ inherited MainForm: TMainForm
       FormName = 'TReturnOutJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -342,15 +374,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_InternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = '3'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -362,6 +397,7 @@ inherited MainForm: TMainForm
       FormName = 'TReturnOutPartnerJournalForm'
       FormNameParam.Value = 'TReturnOutPartnerJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -373,6 +409,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_SaleOrderExternalListForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -384,6 +421,7 @@ inherited MainForm: TMainForm
       FormName = 'TIncomePartionGoodsJournalForm'
       FormNameParam.Value = 'TIncomePartionGoodsJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -396,6 +434,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_PersonalCompleteForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -407,6 +446,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_MotionGoodsCehForm'
       FormNameParam.Value = 'TReport_MotionGoodsCehForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -418,24 +458,29 @@ inherited MainForm: TMainForm
       FormName = 'TProductionUnionTechJournalForm'
       FormNameParam.Value = 'TProductionUnionTechJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'FromId'
           Value = 8447
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromName'
           Value = #1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToId'
           Value = 8447
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
           Value = #1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -447,24 +492,29 @@ inherited MainForm: TMainForm
       FormName = 'TProductionUnionTechJournalForm'
       FormNameParam.Value = 'TProductionUnionTechJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'FromId'
           Value = 8448
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromName'
           Value = #1062#1045#1061' '#1076#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToId'
           Value = 8448
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
           Value = #1062#1045#1061' '#1076#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -476,12 +526,14 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_ProductionUnionMDForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'InDescName'
           Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
           DataType = ftString
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -492,6 +544,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_GoodsBalanceForm'
       FormNameParam.Value = 'TReport_GoodsBalanceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -503,12 +556,14 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'InDescName'
           Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
           DataType = ftString
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -520,6 +575,7 @@ inherited MainForm: TMainForm
       FormName = 'TExportKindForm'
       FormNameParam.Value = 'TExportKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -531,6 +587,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_MotionGoodsUpakForm'
       FormNameParam.Value = 'TReport_MotionGoodsUpakForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -542,6 +599,7 @@ inherited MainForm: TMainForm
       FormName = 'TRouteGroupForm'
       FormNameParam.Value = 'TRouteGroupForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -553,6 +611,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_Transport_ProfitLossForm'
       FormNameParam.Value = 'TReport_Transport_ProfitLossForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -564,15 +623,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_InternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = '7'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1057#1087#1080#1089#1072#1085#1080#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -584,6 +646,7 @@ inherited MainForm: TMainForm
       FormName = 'TContractGoodsForm'
       FormNameParam.Value = 'TContractGoodsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -596,12 +659,14 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_DefrosterForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'InDescName'
           Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
           DataType = ftString
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -613,6 +678,7 @@ inherited MainForm: TMainForm
       FormName = 'TJuridical_PrintKindItemForm'
       FormNameParam.Value = 'TJuridical_PrintKindItemForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -624,23 +690,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '296540'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088' '#1041#1053
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -652,6 +723,7 @@ inherited MainForm: TMainForm
       FormName = 'TOrderTypeForm'
       FormNameParam.Value = 'TOrderTypeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -663,12 +735,14 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_ProductionUnionForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'InDescName'
           Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
           DataType = ftString
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -680,6 +754,7 @@ inherited MainForm: TMainForm
       FormName = 'TFormsForm'
       FormNameParam.Value = 'TFormsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -691,6 +766,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsGroupAnalystForm'
       FormNameParam.Value = 'TGoodsGroupAnalystForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -702,23 +778,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '14686'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1050#1080#1077#1074
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -730,15 +811,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_OrderExternal_SaleForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 1
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -750,6 +834,7 @@ inherited MainForm: TMainForm
       FormName = 'TPartnerTagForm'
       FormNameParam.Value = 'TPartnerTagForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -761,6 +846,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_TaraForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -772,6 +858,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_PromoForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -783,6 +870,7 @@ inherited MainForm: TMainForm
       FormName = 'TReceiptCostForm'
       FormNameParam.Value = 'TReceiptCostForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -794,6 +882,7 @@ inherited MainForm: TMainForm
       FormName = 'TQualityForm'
       FormNameParam.Value = 'TQualityForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -805,6 +894,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsPlatformForm'
       FormNameParam.Value = 'TGoodsPlatformForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -816,6 +906,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_SaleReturnInUnitNewForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -827,6 +918,7 @@ inherited MainForm: TMainForm
       FormName = 'TContractPartnerForm'
       FormNameParam.Value = 'TContractPartnerForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -838,6 +930,7 @@ inherited MainForm: TMainForm
       FormName = 'TContractTagForm'
       FormNameParam.Value = 'TContractTagForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -848,6 +941,7 @@ inherited MainForm: TMainForm
       FormName = 'TIncomeJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -859,6 +953,7 @@ inherited MainForm: TMainForm
       FormName = 'TIncomePartnerJournalForm'
       FormNameParam.Value = 'TIncomePartnerJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -870,6 +965,7 @@ inherited MainForm: TMainForm
       FormName = 'TRetail_PrintKindItemForm'
       FormNameParam.Value = 'TRetail_PrintKindItemForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -880,6 +976,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_PersonalForm'
       FormNameParam.Value = 'TReport_PersonalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -890,6 +987,7 @@ inherited MainForm: TMainForm
       FormName = 'TRoleUnionForm'
       FormNameParam.Value = 'TRoleUnionForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -901,6 +999,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsQualityForm'
       FormNameParam.Value = 'TGoodsQualityForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -912,6 +1011,7 @@ inherited MainForm: TMainForm
       FormName = 'TAdvertisingForm'
       FormNameParam.Value = 'TAdvertisingForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -923,23 +1023,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '279788'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1050#1088#1080#1074#1086#1081' '#1056#1086#1075
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = #1075#1088#1085
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -951,24 +1056,29 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '279789'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1053#1080#1082#1086#1083#1072#1077#1074
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -980,23 +1090,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '279790'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1061#1072#1088#1100#1082#1086#1074
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1008,23 +1123,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '279791'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1063#1077#1088#1082#1072#1089#1089#1099
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1036,6 +1156,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsByGoodsKindForm'
       FormNameParam.Value = 'TGoodsByGoodsKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1047,6 +1168,7 @@ inherited MainForm: TMainForm
       FormName = 'TPersonalServiceJournalForm'
       FormNameParam.Value = 'TPersonalServiceJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1058,23 +1180,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '301799'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1047#1072#1087#1086#1088#1086#1078#1100#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1086,23 +1213,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '280296'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1054#1076#1077#1089#1089#1072
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1114,23 +1246,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '273734'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' Integer'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '14461'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = #1075#1088#1085
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1142,23 +1279,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalUserForm'
       FormNameParam.Value = 'TCashJournalUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '407280'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1041#1053
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1169,6 +1311,7 @@ inherited MainForm: TMainForm
       FormName = 'TPersonalReportJournalForm'
       FormNameParam.Value = 'TPersonalReportJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1180,6 +1323,7 @@ inherited MainForm: TMainForm
       FormName = 'TPersonalServiceListForm'
       FormNameParam.Value = 'TPersonalServiceListForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1191,6 +1335,7 @@ inherited MainForm: TMainForm
       FormName = 'TArticleLossForm'
       FormNameParam.Value = 'TArticleLossForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1201,6 +1346,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_FoundersForm'
       FormNameParam.Value = 'TReport_FoundersForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1212,6 +1358,7 @@ inherited MainForm: TMainForm
       FormName = 'TFounderForm'
       FormNameParam.Value = 'TFounderForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1223,6 +1370,7 @@ inherited MainForm: TMainForm
       FormName = 'TCorrespondentAccountForm'
       FormNameParam.Value = 'TCorrespondentAccountForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1234,6 +1382,7 @@ inherited MainForm: TMainForm
       FormName = 'TRetailReportForm'
       FormNameParam.Value = 'TRetailReportForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1245,6 +1394,7 @@ inherited MainForm: TMainForm
       FormName = 'TReceiptForm'
       FormNameParam.Value = 'TReceiptForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1255,6 +1405,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_BankAccountForm'
       FormNameParam.Value = 'TReport_BankAccountForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1265,6 +1416,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_CashForm'
       FormNameParam.Value = 'TReport_CashForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1275,6 +1427,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_MemberForm'
       FormNameParam.Value = 'TReport_MemberForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1286,6 +1439,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TProductionOrderReportForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1297,6 +1451,7 @@ inherited MainForm: TMainForm
       FormName = 'TJuridicalGLNForm'
       FormNameParam.Value = 'TJuridicalGLNForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1308,23 +1463,28 @@ inherited MainForm: TMainForm
       FormName = 'TCashJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = 14462
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = '14461'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = #1075#1088#1085
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1336,6 +1496,7 @@ inherited MainForm: TMainForm
       FormName = 'TContractTagGroupForm'
       FormNameParam.Value = 'TContractTagGroupForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1347,6 +1508,7 @@ inherited MainForm: TMainForm
       FormName = 'TPartnerGLNForm'
       FormNameParam.Value = 'TPartnerGLNForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1358,6 +1520,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_LoginProtocolForm'
       FormNameParam.Value = 'TReport_LoginProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1369,6 +1532,7 @@ inherited MainForm: TMainForm
       FormName = 'TAssetGroupForm'
       FormNameParam.Value = 'TAssetGroupForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1380,6 +1544,7 @@ inherited MainForm: TMainForm
       FormName = 'TAreaContractForm'
       FormNameParam.Value = 'TAreaContractForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1391,6 +1556,7 @@ inherited MainForm: TMainForm
       FormName = 'TContactPersonKindForm'
       FormNameParam.Value = 'TContactPersonKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1402,6 +1568,7 @@ inherited MainForm: TMainForm
       FormName = 'TAssetForm'
       FormNameParam.Value = 'TAssetForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1413,6 +1580,7 @@ inherited MainForm: TMainForm
       FormName = 'TContactPersonForm'
       FormNameParam.Value = 'TContactPersonForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1424,6 +1592,7 @@ inherited MainForm: TMainForm
       FormName = 'TProvinceCityForm'
       FormNameParam.Value = 'TProvinceCityForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1435,6 +1604,7 @@ inherited MainForm: TMainForm
       FormName = 'TProvinceForm'
       FormNameParam.Value = 'TProvinceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1446,15 +1616,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_OrderExternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 1
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1466,6 +1639,7 @@ inherited MainForm: TMainForm
       FormName = 'TMakerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1477,6 +1651,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsTagForm'
       FormNameParam.Value = 'TGoodsTagForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1487,6 +1662,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_JuridicalSoldForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1498,6 +1674,7 @@ inherited MainForm: TMainForm
       FormName = 'TStorage_ObjectForm'
       FormNameParam.Value = 'TStorage_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1509,6 +1686,7 @@ inherited MainForm: TMainForm
       FormName = 'TStreetForm'
       FormNameParam.Value = 'TStreetForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1520,6 +1698,7 @@ inherited MainForm: TMainForm
       FormName = 'TStreetKindForm'
       FormNameParam.Value = 'TStreetKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1531,6 +1710,7 @@ inherited MainForm: TMainForm
       FormName = 'TBankAccountContractForm'
       FormNameParam.Value = 'TBankAccountContractForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1542,6 +1722,7 @@ inherited MainForm: TMainForm
       FormName = 'TCityKindForm'
       FormNameParam.Value = 'TCityKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1552,6 +1733,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_JuridicalDefermentPaymentForm'
       FormNameParam.Value = 'TReport_JuridicalDefermentPaymentForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1563,6 +1745,7 @@ inherited MainForm: TMainForm
       FormName = 'TTransportJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1574,6 +1757,7 @@ inherited MainForm: TMainForm
       FormName = 'TIncomeFuelJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1585,6 +1769,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsGroupStatForm'
       FormNameParam.Value = 'TGoodsGroupStatForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1596,6 +1781,7 @@ inherited MainForm: TMainForm
       FormName = 'TPersonalSendCashJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1607,6 +1793,7 @@ inherited MainForm: TMainForm
       FormName = 'TPersonalGroupForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1618,6 +1805,7 @@ inherited MainForm: TMainForm
       FormName = 'TRetailForm'
       FormNameParam.Value = 'TRetailForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1629,6 +1817,7 @@ inherited MainForm: TMainForm
       FormName = 'TPersonalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1640,6 +1829,7 @@ inherited MainForm: TMainForm
       FormName = 'TPositionForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1651,6 +1841,7 @@ inherited MainForm: TMainForm
       FormName = 'TCalendarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1662,6 +1853,7 @@ inherited MainForm: TMainForm
       FormName = 'TPersonalAccountJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1673,6 +1865,7 @@ inherited MainForm: TMainForm
       FormName = 'TMemberForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1684,6 +1877,7 @@ inherited MainForm: TMainForm
       FormName = 'TTransportServiceJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1695,6 +1889,7 @@ inherited MainForm: TMainForm
       FormName = 'TSendTicketFuelJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1706,6 +1901,7 @@ inherited MainForm: TMainForm
       FormName = 'TMemberExternalForm'
       FormNameParam.Value = 'TMemberExternalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1717,6 +1913,7 @@ inherited MainForm: TMainForm
       FormName = 'TStaffListDataForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1728,6 +1925,7 @@ inherited MainForm: TMainForm
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1739,6 +1937,7 @@ inherited MainForm: TMainForm
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1750,6 +1949,7 @@ inherited MainForm: TMainForm
       FormName = 'TCarModelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1761,6 +1961,7 @@ inherited MainForm: TMainForm
       FormName = 'TFuelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1772,6 +1973,7 @@ inherited MainForm: TMainForm
       FormName = 'TPartnerAddressForm'
       FormNameParam.Value = 'TPartnerAddressForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1783,6 +1985,7 @@ inherited MainForm: TMainForm
       FormName = 'TRateFuelKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1793,6 +1996,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_BalanceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1803,6 +2007,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_ProfitLossForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1814,6 +2019,7 @@ inherited MainForm: TMainForm
       FormName = 'TProcessForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1824,6 +2030,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_HistoryCostForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1834,11 +2041,13 @@ inherited MainForm: TMainForm
       FormName = 'TSaleJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inChangePercentAmount'
           Value = '1'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1849,11 +2058,13 @@ inherited MainForm: TMainForm
       FormName = 'TSale_PartnerJournalForm'
       FormNameParam.Value = 'TSale_PartnerJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inChangePercentAmount'
           Value = '1'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1864,11 +2075,13 @@ inherited MainForm: TMainForm
       FormName = 'TSale_OrderJournalForm'
       FormNameParam.Value = 'TSale_OrderJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inChangePercentAmount'
           Value = '1'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1879,6 +2092,7 @@ inherited MainForm: TMainForm
       FormName = 'TReturnInJournalForm'
       FormNameParam.Value = 'TReturnInJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1889,6 +2103,7 @@ inherited MainForm: TMainForm
       FormName = 'TReturnIn_PartnerJournalForm'
       FormNameParam.Value = 'TReturnIn_PartnerJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1899,11 +2114,13 @@ inherited MainForm: TMainForm
       FormName = 'TSendOnPriceJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inChangePercentAmount'
           Value = '1'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1915,6 +2132,7 @@ inherited MainForm: TMainForm
       FormName = 'TRegionForm'
       FormNameParam.Value = 'TRegionForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1925,11 +2143,13 @@ inherited MainForm: TMainForm
       FormName = 'TSendOnPrice_BranchJournalForm'
       FormNameParam.Value = 'TSendOnPrice_BranchJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inChangePercentAmount'
           Value = '0'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1940,6 +2160,7 @@ inherited MainForm: TMainForm
       FormName = 'TSendJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1951,6 +2172,7 @@ inherited MainForm: TMainForm
       FormName = 'TProductionSeparateJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1962,6 +2184,7 @@ inherited MainForm: TMainForm
       FormName = 'TProductionUnionJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -1973,14 +2196,17 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalJournalForm'
       FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inFromId'
           Value = '8457'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inToId'
           Value = '8446'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1992,14 +2218,17 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalPackJournalForm'
       FormNameParam.Value = 'TOrderInternalPackJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inFromId'
           Value = '8457'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inToId'
           Value = '8451'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2010,6 +2239,7 @@ inherited MainForm: TMainForm
       FormName = 'TLossJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2020,6 +2250,7 @@ inherited MainForm: TMainForm
       FormName = 'TInventoryJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2030,6 +2261,7 @@ inherited MainForm: TMainForm
       FormName = 'TProductionPeresortJournalForm'
       FormNameParam.Value = 'TProductionPeresortJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2041,6 +2273,7 @@ inherited MainForm: TMainForm
       FormName = 'TBankForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2052,6 +2285,7 @@ inherited MainForm: TMainForm
       FormName = 'TBankAccountForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2063,6 +2297,7 @@ inherited MainForm: TMainForm
       FormName = 'TBranchForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2074,6 +2309,7 @@ inherited MainForm: TMainForm
       FormName = 'TBusinessForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2085,6 +2321,7 @@ inherited MainForm: TMainForm
       FormName = 'TCashForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2096,6 +2333,7 @@ inherited MainForm: TMainForm
       FormName = 'TContractKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2107,6 +2345,7 @@ inherited MainForm: TMainForm
       FormName = 'TContractConditionValueForm'
       FormNameParam.Value = 'TContractConditionValueForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2118,6 +2357,7 @@ inherited MainForm: TMainForm
       FormName = 'TContractForm'
       FormNameParam.Value = 'TContractForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2129,6 +2369,7 @@ inherited MainForm: TMainForm
       FormName = 'TContractArticleForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2140,6 +2381,7 @@ inherited MainForm: TMainForm
       FormName = 'TAreaForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2151,6 +2393,7 @@ inherited MainForm: TMainForm
       FormName = 'TCurrencyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2162,6 +2405,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2173,6 +2417,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsTreeForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2184,6 +2429,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsGroupForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2195,6 +2441,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2206,6 +2453,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsPropertyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2217,6 +2465,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsPropertyValueForm'
       FormNameParam.Value = 'TGoodsPropertyValueForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2228,6 +2477,7 @@ inherited MainForm: TMainForm
       FormName = 'TJuridicalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2239,6 +2489,7 @@ inherited MainForm: TMainForm
       FormName = 'TJuridicalTreeForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2250,6 +2501,7 @@ inherited MainForm: TMainForm
       FormName = 'TJuridical_PriceListForm'
       FormNameParam.Value = 'TJuridical_PriceListForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2261,6 +2513,7 @@ inherited MainForm: TMainForm
       FormName = 'TJuridicalGroupForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2272,6 +2525,7 @@ inherited MainForm: TMainForm
       FormName = 'TMeasureForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2283,6 +2537,7 @@ inherited MainForm: TMainForm
       FormName = 'TBoxForm'
       FormNameParam.Value = 'TBoxForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2294,6 +2549,7 @@ inherited MainForm: TMainForm
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2305,6 +2561,7 @@ inherited MainForm: TMainForm
       FormName = 'TPartnerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2316,6 +2573,7 @@ inherited MainForm: TMainForm
       FormName = 'TPartner_PriceListForm'
       FormNameParam.Value = 'TPartner_PriceListForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2327,6 +2585,7 @@ inherited MainForm: TMainForm
       FormName = 'TPartner_PriceList_viewForm'
       FormNameParam.Value = 'TPartner_PriceList_viewForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2338,6 +2597,7 @@ inherited MainForm: TMainForm
       FormName = 'TUnitForm'
       FormNameParam.Value = 'TUnitForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2349,6 +2609,7 @@ inherited MainForm: TMainForm
       FormName = 'TUnitTreeForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2360,6 +2621,7 @@ inherited MainForm: TMainForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2371,6 +2633,7 @@ inherited MainForm: TMainForm
       FormName = 'TTradeMarkForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2382,6 +2645,7 @@ inherited MainForm: TMainForm
       FormName = 'TRouteSortingForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2392,6 +2656,7 @@ inherited MainForm: TMainForm
       FormName = 'TOrderExternalJournalForm'
       FormNameParam.Value = 'TOrderExternalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2403,6 +2668,7 @@ inherited MainForm: TMainForm
       FormName = 'TPriceListItemForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2414,6 +2680,7 @@ inherited MainForm: TMainForm
       FormName = 'TQualityParamsJournalForm'
       FormNameParam.Value = 'TQualityParamsJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2424,6 +2691,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_MotionGoodsForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2434,6 +2702,7 @@ inherited MainForm: TMainForm
       FormName = 'TRoleForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2445,6 +2714,7 @@ inherited MainForm: TMainForm
       FormName = 'TActionForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2456,6 +2726,7 @@ inherited MainForm: TMainForm
       FormName = 'TUserForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2467,6 +2738,7 @@ inherited MainForm: TMainForm
       FormName = 'TRateFuelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2478,6 +2750,7 @@ inherited MainForm: TMainForm
       FormName = 'TFreightForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2489,6 +2762,7 @@ inherited MainForm: TMainForm
       FormName = 'TCardFuelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2500,6 +2774,7 @@ inherited MainForm: TMainForm
       FormName = 'TTicketFuelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2511,6 +2786,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_FuelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2522,6 +2798,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_TransportForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2533,6 +2810,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_TransportHoursWorkForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2544,6 +2822,7 @@ inherited MainForm: TMainForm
       FormName = 'TWorkTimeKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2555,6 +2834,7 @@ inherited MainForm: TMainForm
       FormName = 'TSheetWorkTimeJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2566,6 +2846,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2577,6 +2858,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_TransportListForm'
       FormNameParam.Value = 'TReport_TransportListForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2588,6 +2870,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_GoodsTaxForm'
       FormNameParam.Value = 'TReport_GoodsTaxForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2599,6 +2882,7 @@ inherited MainForm: TMainForm
       FormName = 'TPositionLevelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2610,6 +2894,7 @@ inherited MainForm: TMainForm
       FormName = 'TModelServiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2620,15 +2905,18 @@ inherited MainForm: TMainForm
       FormName = 'TCash_PersonalJournalForm'
       FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '14462'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2639,6 +2927,7 @@ inherited MainForm: TMainForm
       FormName = 'TServiceJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2649,6 +2938,7 @@ inherited MainForm: TMainForm
       FormName = 'TBankStatementJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2659,6 +2949,7 @@ inherited MainForm: TMainForm
       FormName = 'TBankAccountJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2670,6 +2961,7 @@ inherited MainForm: TMainForm
       FormName = 'TSetUserDefaultsForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2680,6 +2972,7 @@ inherited MainForm: TMainForm
       FormName = 'TLossDebtJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2691,6 +2984,7 @@ inherited MainForm: TMainForm
       FormName = 'TCityForm'
       FormNameParam.Value = 'TCityForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2701,6 +2995,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_JuridicalDefermentIncomeForm'
       FormNameParam.Value = 'TReport_JuridicalDefermentIncomeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2711,6 +3006,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_JuridicalCollationForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2722,15 +3018,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMIForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 5
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inDescName'
           Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2741,15 +3040,18 @@ inherited MainForm: TMainForm
       FormName = 'TReport_GoodsMIForm'
       FormNameParam.Value = 'TReport_GoodsMIForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 6
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inDescName'
           Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2760,6 +3062,7 @@ inherited MainForm: TMainForm
       FormName = 'TSendDebtJournalForm'
       FormNameParam.Value = 'TSendDebtJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2770,6 +3073,7 @@ inherited MainForm: TMainForm
       FormName = 'TPartner1CLinkForm'
       FormNameParam.Value = 'TPartner1CLinkForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2780,6 +3084,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsByGoodsKind1CLinkForm'
       FormNameParam.Value = 'TGoodsByGoodsKind1CLinkForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2790,6 +3095,7 @@ inherited MainForm: TMainForm
       FormName = 'TPartner1CLink_ExcelForm'
       FormNameParam.Value = 'TPartner1CLink_ExcelForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2800,6 +3106,7 @@ inherited MainForm: TMainForm
       FormName = 'TLoadSaleFrom1CForm'
       FormNameParam.Value = 'TLoadSaleFrom1CForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2810,6 +3117,7 @@ inherited MainForm: TMainForm
       FormName = 'TLoadMoneyFrom1CForm'
       FormNameParam.Value = 'TLoadMoneyFrom1CForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2821,15 +3129,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_byMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 5
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2840,15 +3151,18 @@ inherited MainForm: TMainForm
       FormName = 'TReport_GoodsMI_byMovementForm'
       FormNameParam.Value = 'TReport_GoodsMI_byMovementForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 6
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inDescName'
           Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2860,6 +3174,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_SaleReturnInForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2871,6 +3186,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_Production_Union'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2882,6 +3198,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_ReceiptProductionAnalyzeForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2893,15 +3210,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_IncomeByPartnerForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 1
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1088#1080#1093#1086#1076' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2913,15 +3233,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_IncomeByPartnerForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 2
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2933,6 +3256,7 @@ inherited MainForm: TMainForm
       FormNameParam.Name = 'TTaxJournalForm'
       FormNameParam.Value = 'TTaxJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2944,6 +3268,7 @@ inherited MainForm: TMainForm
       FormNameParam.Name = 'TTaxCorrectiveJournalForm'
       FormNameParam.Value = 'TTaxCorrectiveJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2955,6 +3280,7 @@ inherited MainForm: TMainForm
       FormName = 'TCountryForm'
       FormNameParam.Value = 'TCountryForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2965,6 +3291,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_CheckTaxForm'
       FormNameParam.Value = 'TReport_CheckTaxForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2976,6 +3303,7 @@ inherited MainForm: TMainForm
       FormNameParam.Name = 'TProfitLossServiceJournalForm'
       FormNameParam.Value = 'TProfitLossServiceJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2986,6 +3314,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_CheckTaxCorrectiveForm'
       FormNameParam.Value = 'TReport_CheckTaxCorrectiveForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -2996,6 +3325,7 @@ inherited MainForm: TMainForm
       FormName = 'TPeriodCloseForm'
       FormNameParam.Value = 'TPeriodCloseForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3006,6 +3336,7 @@ inherited MainForm: TMainForm
       FormName = 'TPeriodClose_UserForm'
       FormNameParam.Value = 'TPeriodClose_UserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3016,6 +3347,7 @@ inherited MainForm: TMainForm
       FormName = 'TSaveTaxDocumentForm'
       FormNameParam.Value = 'TSaveTaxDocumentForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3027,6 +3359,7 @@ inherited MainForm: TMainForm
       FormName = 'TToolsWeighingTreeForm'
       FormNameParam.Value = 'TToolsWeighingTreeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3038,6 +3371,7 @@ inherited MainForm: TMainForm
       FormName = 'TOrderExternalUnitJournalForm'
       FormNameParam.Value = 'TOrderExternalUnitJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3048,6 +3382,7 @@ inherited MainForm: TMainForm
       FormName = 'TWeighingPartnerJournalForm'
       FormNameParam.Value = 'TWeighingPartnerJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3058,6 +3393,7 @@ inherited MainForm: TMainForm
       FormName = 'TWeighingProductionJournalForm'
       FormNameParam.Value = 'TWeighingProductionJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3068,6 +3404,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_CheckBonusForm'
       FormNameParam.Value = 'TReport_CheckBonusForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3079,6 +3416,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_BankAccount_CashForm'
       FormNameParam.Value = 'TReport_BankAccount_CashForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3090,6 +3428,7 @@ inherited MainForm: TMainForm
       FormName = 'TGoodsKindWeighingTreeForm'
       FormNameParam.Value = 'TGoodsKindWeighingTreeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3101,15 +3440,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_byMovementDifForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 5
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3121,15 +3463,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_byMovementDifForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 6
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3141,15 +3486,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_byPriceDifForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 5
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3161,15 +3509,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_byPriceDifForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 6
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3181,15 +3532,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_CheckContractInMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 6
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1088#1072#1079#1085#1080#1094#1072')'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3201,6 +3555,7 @@ inherited MainForm: TMainForm
       FormNameParam.Name = 'TTransferDebtOutJournalForm'
       FormNameParam.Value = 'TTransferDebtOutJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3212,6 +3567,7 @@ inherited MainForm: TMainForm
       FormNameParam.Name = 'TTransferDebtOutJournalForm'
       FormNameParam.Value = 'TTransferDebtInJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3223,6 +3579,7 @@ inherited MainForm: TMainForm
       FormName = 'TEDIJournalForm'
       FormNameParam.Value = 'TEDIJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3234,15 +3591,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_TransferDebtForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 34
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inDescName'
           Value = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3254,15 +3614,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_TransferDebtForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 33
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inDescName'
           Value = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3274,6 +3637,7 @@ inherited MainForm: TMainForm
       FormName = 'TSaveDocumentTo1CForm'
       FormNameParam.Value = 'TSaveDocumentTo1CForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3285,6 +3649,7 @@ inherited MainForm: TMainForm
       FormName = 'TSaveMarketingDocumentTo1CForm'
       FormNameParam.Value = 'TSaveMarketingDocumentTo1CForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3296,6 +3661,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3307,6 +3673,7 @@ inherited MainForm: TMainForm
       FormNameParam.Name = 'TPriceCorrectiveJournalForm'
       FormNameParam.Value = 'TPriceCorrectiveJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3318,6 +3685,7 @@ inherited MainForm: TMainForm
       FormName = 'TCurrencyJournalForm'
       FormNameParam.Value = 'TCurrencyJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3329,15 +3697,18 @@ inherited MainForm: TMainForm
       FormName = 'TFounderServiceJournalForm'
       FormNameParam.Value = 'TFounderServiceJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = 14462
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3349,20 +3720,24 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_ProductionForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 8
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1088#1080#1093#1086#1076' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inisActive'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3374,20 +3749,24 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_ProductionForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 8
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1056#1072#1089#1093#1086#1076' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inisActive'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3399,20 +3778,24 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_ProductionForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 9
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1055#1088#1080#1093#1086#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inisActive'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3424,20 +3807,24 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_ProductionForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 9
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InDescName'
           Value = #1056#1072#1089#1093#1086#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inisActive'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3454,6 +3841,7 @@ inherited MainForm: TMainForm
       FormNameParam.Name = 'TTransferDebtOutJournalForm'
       FormNameParam.Value = 'TTransferDebtOut_OrderJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3465,6 +3853,7 @@ inherited MainForm: TMainForm
       FormName = 'TTransportGoodsJournalForm'
       FormNameParam.Value = 'TTransportGoodsJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3475,6 +3864,7 @@ inherited MainForm: TMainForm
       FormName = 'TLoadFlagFromMedocForm'
       FormNameParam.Value = 'TLoadFlagFromMedocForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3486,6 +3876,7 @@ inherited MainForm: TMainForm
       FormName = 'TQualityDocJournalForm'
       FormNameParam.Value = 'TQualityDocJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3496,6 +3887,7 @@ inherited MainForm: TMainForm
       FormName = 'TGlobalConstForm'
       FormNameParam.Value = 'TGlobalConstForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3519,15 +3911,18 @@ inherited MainForm: TMainForm
       FormName = 'TCash_PersonalJournalForm'
       FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '14686'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1050#1080#1077#1074
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3538,15 +3933,18 @@ inherited MainForm: TMainForm
       FormName = 'TCash_PersonalJournalForm'
       FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '279788'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1050#1088#1080#1074#1086#1081' '#1056#1086#1075
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3557,15 +3955,18 @@ inherited MainForm: TMainForm
       FormName = 'TCash_PersonalJournalForm'
       FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '279789'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1053#1080#1082#1086#1083#1072#1077#1074
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3576,15 +3977,18 @@ inherited MainForm: TMainForm
       FormName = 'TCash_PersonalJournalForm'
       FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '279790'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1061#1072#1088#1100#1082#1086#1074
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3595,15 +3999,18 @@ inherited MainForm: TMainForm
       FormName = 'TCash_PersonalJournalForm'
       FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '279791'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1063#1077#1088#1082#1072#1089#1089#1099
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3614,15 +4021,18 @@ inherited MainForm: TMainForm
       FormName = 'TCash_PersonalJournalForm'
       FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '301799'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1047#1072#1087#1086#1088#1086#1078#1100#1077
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3633,15 +4043,18 @@ inherited MainForm: TMainForm
       FormName = 'TCash_PersonalJournalForm'
       FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'CashId_top'
           Value = '280296'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' '#1054#1076#1077#1089#1089#1072
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3652,6 +4065,7 @@ inherited MainForm: TMainForm
       FormName = 'TMedocJournalForm'
       FormNameParam.Value = 'TMedocJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3663,6 +4077,7 @@ inherited MainForm: TMainForm
       FormName = 'TWeighingPartnerItemJournalForm'
       FormNameParam.Value = 'TWeighingPartnerItemJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3674,6 +4089,7 @@ inherited MainForm: TMainForm
       FormName = 'TWeighingProductionItemJournalForm'
       FormNameParam.Value = 'TWeighingProductionItemJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3685,14 +4101,17 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inFromId'
           Value = '8447'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inToid'
           Value = '0'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3704,6 +4123,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_GoodsMI_SaleReturnInUnitForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3715,14 +4135,17 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inFromId'
           Value = '8448'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inToid'
           Value = '0'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3734,6 +4157,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_ReceiptProductionOutAnalyzeForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3745,6 +4169,7 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_ReceiptSaleAnalyzeForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3756,6 +4181,7 @@ inherited MainForm: TMainForm
       FormName = 'TPromoKindForm'
       FormNameParam.Value = 'TPromoKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3767,6 +4193,7 @@ inherited MainForm: TMainForm
       FormName = 'TConditionPromoForm'
       FormNameParam.Value = 'TConditionPromoForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3778,6 +4205,7 @@ inherited MainForm: TMainForm
       FormName = 'TPromoJournalForm'
       FormNameParam.Value = 'TPromoJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3788,6 +4216,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_WageForm'
       FormNameParam.Value = 'TReport_WageForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3798,6 +4227,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_Branch_CashForm'
       FormNameParam.Value = 'TReport_Branch_CashForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3809,6 +4239,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_SheetWorkTimeForm'
       FormNameParam.Value = 'TReport_SheetWorkTimeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -3819,6 +4250,7 @@ inherited MainForm: TMainForm
       Param.Component = FormParams
       Param.ComponentItem = 'HelpFile'
       Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
       Caption = #1055#1086#1084#1086#1097#1100
     end
     object actGet_Object_Form_HelpFile: TdsdExecStoredProc
@@ -3845,6 +4277,28 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1084#1086#1097#1100
       ShortCut = 112
     end
+    object actMobileTariff: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074'>'
+      FormName = 'TMobileTariffForm'
+      FormNameParam.Value = 'TMobileTariffForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actMobileNumbersEmployee: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+      FormName = 'TMobileNumbersEmployeeForm'
+      FormNameParam.Value = 'TMobileNumbersEmployeeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3869,6 +4323,7 @@ inherited MainForm: TMainForm
       end>
   end
   inherited MainMenu: TMainMenu
+    Images = dmMain.ImageList
     Left = 456
     Top = 64
     object miGoodsDocuments: TMenuItem [0]
@@ -4754,6 +5209,17 @@ inherited MainForm: TMainForm
           Action = actProfitLoss
         end
       end
+      object miSubMobile: TMenuItem
+        Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
+        object miMobileTariff: TMenuItem
+          Action = actMobileTariff
+          Caption = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074
+          Hint = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074
+        end
+        object miMobileNumbersEmployeeForm: TMenuItem
+          Action = actMobileNumbersEmployee
+        end
+      end
     end
     object miJuridicalGuides: TMenuItem [14]
       Caption = #1050#1083#1080#1077#1085#1090#1099
@@ -4989,6 +5455,7 @@ inherited MainForm: TMainForm
         Name = 'ActualBankStatementText'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 440
@@ -5006,6 +5473,8 @@ inherited MainForm: TMainForm
     Top = 128
   end
   object cxStyleRepository1: TcxStyleRepository
+    Left = 5
+    Top = 5
     PixelsPerInch = 96
     object cxStyle1: TcxStyle
       AssignedValues = [svColor, svFont, svTextColor]
@@ -5028,6 +5497,7 @@ inherited MainForm: TMainForm
         Value = 'TMainForm'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outHelpFile'
@@ -5035,6 +5505,7 @@ inherited MainForm: TMainForm
         Component = FormParams
         ComponentItem = 'HelpFile'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 944
@@ -5046,8 +5517,9 @@ inherited MainForm: TMainForm
         Name = 'HelpFile'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 904
+    Left = 914
     Top = 128
   end
 end
