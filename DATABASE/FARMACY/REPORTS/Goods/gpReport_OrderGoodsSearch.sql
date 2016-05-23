@@ -41,12 +41,30 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
     vbUserId:= lpGetUserBySession (inSession);
     vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-    IF vbUnitKey = '' THEN
+    IF vbUnitKey = '' OR vbUserId = 3 THEN
       vbUnitKey := '0';
     END IF;   
     vbUnitId := vbUnitKey::Integer;
 
     RETURN QUERY
+      WITH tmpGoods AS (-- ???временно захардкодил, будет всегда товар сети???
+                        SELECT DISTINCT ObjectLink_Child_to.ChildObjectId AS GoodsId
+                        FROM ObjectLink AS ObjectLink_Child
+                                INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                         AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                INNER JOIN ObjectLink AS ObjectLink_Main_to ON ObjectLink_Main_to.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                           AND ObjectLink_Main_to.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                INNER JOIN ObjectLink AS ObjectLink_Child_to ON ObjectLink_Child_to.ObjectId = ObjectLink_Main_to.ObjectId
+                                                                            AND ObjectLink_Child_to.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                      ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_to.ChildObjectId
+                                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                INNER JOIN Object ON Object.Id = ObjectLink_Goods_Object.ChildObjectId
+                                                 AND Object.DescId = zc_Object_Retail()
+                        WHERE ObjectLink_Child.ChildObjectId = inGoodsId
+                          AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                       )
+
       SELECT Movement.Id                              AS MovementId
             ,MovementDesc.ItemName                    AS ItemName
             ,COALESCE(MIFloat_AmountManual.ValueData,
@@ -74,8 +92,11 @@ BEGIN
                     ON Status.Id = Movement.StatusId 
                    AND Status.Id <> zc_Enum_Status_Erased()
         JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-        JOIN Object ON Object.Id = MovementItem.ObjectId
         JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+
+        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+        LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
 
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -130,14 +151,11 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                     ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-    WHERE 
-        Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send())
-        AND 
-        ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
-        AND 
-        Movement.OperDate BETWEEN inStartDate AND inEndDate 
-        AND 
-        Object.Id = inGoodsId;
+    WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send())
+      AND Movement.OperDate BETWEEN inStartDate AND inEndDate 
+      AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
+      -- AND Object.Id = inGoodsId
+     ;
 
 END;
 $BODY$

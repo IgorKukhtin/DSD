@@ -1,13 +1,16 @@
 -- Function: lpComplete_Movement_ReturnIn (Integer, Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_ReturnIn (Integer, Integer, Boolean);
+-- DROP FUNCTION IF EXISTS lpComplete_Movement_ReturnIn (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpComplete_Movement_ReturnIn (Integer, TDateTime, Integer, Boolean);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnIn(
     IN inMovementId        Integer               , -- ключ Документа
+    IN inStartDateSale     TDateTime             , --
+   OUT outMessageText      Text                  ,
     IN inUserId            Integer               , -- Пользователь
     IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
 )                              
- RETURNS VOID
+RETURNS Text
 AS
 $BODY$
   DECLARE vbIsHistoryCost Boolean; -- нужны проводки с/с для этого пользователя
@@ -77,6 +80,7 @@ $BODY$
 BEGIN
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
+
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -593,6 +597,26 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не установлено значение <Договор>.Проведение невозможно.';
      END IF;
+
+
+     -- !!!запуск новой схемы - с привязкой к продажам!!!
+     IF zc_isReturnIn_bySale() = TRUE OR inUserId = 5
+     THEN
+         -- Проверка ошибки
+         /*outMessageText:= (SELECT tmp.MessageText FROM lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := CASE WHEN inStartDateSale IS NULL THEN DATE_TRUNC ('MONTH', vbOperDatePartner) - INTERVAL '4 MONTH' ELSE inStartDateSale END
+                                                                                      , inEndDateSale   := NULL
+                                                                                      , inMovementId    := inMovementId*/
+         outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
+                                                        , inUserId        := inUserId
+                                                         );
+         -- !!!Выход если ошибка!!!
+         IF outMessageText <> '' AND outMessageText <> '-1' THEN RETURN; END IF;
+
+         -- !!!с такой ошибкой - все равно будем проводить!!!
+         IF outMessageText = '-1' THEN outMessageText:= 'Важно.У пользователя <%> нет прав формировать привязку накладной <Возврат от покупателя> к накладной <Продажи>.', lfGet_Object_ValueData (inUserId); END IF;
+
+     END IF;
+     -- !!!временно!!!
 
 
      -- !!! только НЕ для Админа проверка что ParentId заполнен!!!

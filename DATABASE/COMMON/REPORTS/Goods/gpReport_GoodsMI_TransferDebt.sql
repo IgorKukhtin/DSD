@@ -45,8 +45,13 @@ BEGIN
                  FROM (SELECT ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                             , MIContainer.ObjectId_analyzer          AS GoodsId
                             , MIContainer.ObjectIntId_analyzer       AS GoodsKindId
-                            , SUM (MovementItem.Amount)              AS Amount
-                            , SUM (MIContainer.Amount * CASE WHEN inDescId = zc_Movement_TransferDebtOut() THEN 1 ELSE -1 END) AS SummPartner
+                            , SUM (MovementItem.Amount * CASE WHEN inDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE  THEN -1
+                                                              WHEN inDescId = zc_Movement_TransferDebtIn()  AND MIContainer.isActive = FALSE THEN -1
+                                                              ELSE 1
+                                                         END) AS Amount
+                            , SUM (MIContainer.Amount  * CASE WHEN inDescId = zc_Movement_TransferDebtOut() THEN -1
+                                                              ELSE 1
+                                                         END) AS SummPartner
                        FROM MovementItemContainer AS MIContainer
                             INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                            ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerIntId_Analyzer
@@ -66,11 +71,12 @@ BEGIN
                             INNER JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
 
                        WHERE MIContainer.MovementDescId = inDescId
-                         AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_TransferDebtOut() THEN TRUE ELSE FALSE END
+                         -- AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_TransferDebtOut() THEN TRUE ELSE FALSE END
                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                        GROUP BY ContainerLinkObject_InfoMoney.ObjectId
                               , MIContainer.ObjectId_analyzer
                               , MIContainer.ObjectIntId_analyzer
+                              , MIContainer.isActive
                       ) AS tmpReportContainerSumm
                  WHERE tmpReportContainerSumm.Amount <> 0
                     OR tmpReportContainerSumm.SummPartner <> 0

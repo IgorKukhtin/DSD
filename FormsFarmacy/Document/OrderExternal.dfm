@@ -7,22 +7,22 @@ inherited OrderExternalForm: TOrderExternalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 73
+    Top = 121
     Width = 844
-    Height = 595
-    ExplicitTop = 73
+    Height = 547
+    ExplicitTop = 121
     ExplicitWidth = 844
-    ExplicitHeight = 595
-    ClientRectBottom = 595
+    ExplicitHeight = 547
+    ClientRectBottom = 547
     ClientRectRight = 844
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 844
-      ExplicitHeight = 571
+      ExplicitHeight = 523
       inherited cxGrid: TcxGrid
         Width = 844
-        Height = 571
+        Height = 523
         ExplicitWidth = 844
-        ExplicitHeight = 571
+        ExplicitHeight = 523
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -105,6 +105,7 @@ inherited OrderExternalForm: TOrderExternalForm
           object colClientCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'PartnerGoodsCode'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 96
           end
@@ -112,6 +113,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 53
           end
@@ -119,8 +121,9 @@ inherited OrderExternalForm: TOrderExternalForm
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 271
+            Width = 266
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -129,7 +132,8 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.DecimalPlaces = 3
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 44
+            HeaderAlignmentVert = vaCenter
+            Width = 52
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -137,7 +141,8 @@ inherited OrderExternalForm: TOrderExternalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00'
-            Width = 71
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
@@ -146,19 +151,22 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 115
+            Width = 114
           end
           object colPartionGoodsDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentVert = vaCenter
             Width = 87
           end
           object colComment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 93
+            Width = 92
           end
         end
       end
@@ -184,42 +192,52 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited DataPanel: TPanel
     Width = 844
-    Height = 47
+    Height = 95
     TabOrder = 3
     ExplicitWidth = 844
-    ExplicitHeight = 47
+    ExplicitHeight = 95
     inherited edInvNumber: TcxTextEdit
-      Left = 153
-      ExplicitLeft = 153
+      Left = 12
+      ExplicitLeft = 12
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
-      Left = 153
-      ExplicitLeft = 153
+      Left = 12
+      ExplicitLeft = 12
     end
     inherited edOperDate: TcxDateEdit
-      Left = 234
+      Left = 93
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 234
+      ExplicitLeft = 93
     end
     inherited cxLabel2: TcxLabel
-      Left = 234
-      ExplicitLeft = 234
+      Left = 93
+      ExplicitLeft = 93
+    end
+    inherited cxLabel15: TcxLabel
+      Left = 12
+      Top = 45
+      ExplicitLeft = 12
+      ExplicitTop = 45
     end
     inherited ceStatus: TcxButtonEdit
-      ExplicitWidth = 139
+      Left = 12
+      Top = 63
+      ExplicitLeft = 12
+      ExplicitTop = 63
+      ExplicitWidth = 181
       ExplicitHeight = 22
-      Width = 139
+      Width = 181
     end
     object cxLabel3: TcxLabel
-      Left = 338
+      Left = 206
       Top = 5
       Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 338
+      Left = 206
       Top = 23
       Properties.Buttons = <
         item
@@ -230,7 +248,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 190
     end
     object edTo: TcxButtonEdit
-      Left = 532
+      Left = 400
       Top = 23
       Properties.Buttons = <
         item
@@ -238,21 +256,39 @@ inherited OrderExternalForm: TOrderExternalForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 160
+      Width = 250
     end
     object cxLabel4: TcxLabel
-      Left = 532
+      Left = 400
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
+    object cxLabel6: TcxLabel
+      Left = 206
+      Top = 45
+      Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079
+    end
+    object edOrderInternal: TcxButtonEdit
+      Left = 206
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 190
+    end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 699
+    Left = 656
     Top = 5
     Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
   end
   object edContract: TcxButtonEdit [3]
-    Left = 698
+    Left = 656
     Top = 23
     Properties.Buttons = <
       item
@@ -260,7 +296,37 @@ inherited OrderExternalForm: TOrderExternalForm
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 140
+    Width = 156
+  end
+  object edComment: TcxTextEdit [4]
+    Left = 543
+    Top = 63
+    Properties.ReadOnly = False
+    TabOrder = 8
+    Width = 269
+  end
+  object cxLabel7: TcxLabel [5]
+    Left = 543
+    Top = 45
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object cxLabel8: TcxLabel [6]
+    Left = 400
+    Top = 45
+    Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
+  end
+  object edOrderKind: TcxButtonEdit [7]
+    Left = 400
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 137
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -323,6 +389,7 @@ inherited OrderExternalForm: TOrderExternalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Sale2'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -353,12 +420,14 @@ inherited OrderExternalForm: TOrderExternalForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -366,6 +435,7 @@ inherited OrderExternalForm: TOrderExternalForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -399,27 +469,35 @@ inherited OrderExternalForm: TOrderExternalForm
       Host.Value = Null
       Host.Component = FormParams
       Host.ComponentItem = 'Host'
+      Host.MultiSelectSeparator = ','
       Port.Value = 25
       Port.Component = FormParams
       Port.ComponentItem = 'Port'
+      Port.MultiSelectSeparator = ','
       UserName.Value = Null
       UserName.Component = FormParams
       UserName.ComponentItem = 'UserName'
+      UserName.MultiSelectSeparator = ','
       Password.Value = Null
       Password.Component = FormParams
       Password.ComponentItem = 'Password'
+      Password.MultiSelectSeparator = ','
       Body.Value = Null
       Body.Component = FormParams
       Body.ComponentItem = 'Body'
+      Body.MultiSelectSeparator = ','
       Subject.Value = Null
       Subject.Component = FormParams
       Subject.ComponentItem = 'Subject'
+      Subject.MultiSelectSeparator = ','
       FromAddress.Value = Null
       FromAddress.Component = FormParams
       FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.MultiSelectSeparator = ','
       ToAddress.Value = Null
       ToAddress.Component = FormParams
       ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.MultiSelectSeparator = ','
     end
     object mactSMTPSend: TMultiAction
       Category = 'SendEMail'
@@ -465,6 +543,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -472,6 +551,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -479,16 +559,19 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -623,6 +706,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
     Left = 798
@@ -644,12 +728,14 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -657,57 +743,69 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameOrderExternal'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameOrderExternalTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameOrderExternalBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Body'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AddressFrom'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AddressTo'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Subject'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Host'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Port'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UserName'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Password'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 552
@@ -730,25 +828,29 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -756,6 +858,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -763,12 +866,14 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -776,12 +881,14 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -789,12 +896,14 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -802,6 +911,37 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterId'
+        Value = Null
+        Component = OrderInternalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterInvNumber'
+        Value = Null
+        Component = OrderInternalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderKindName'
+        Value = Null
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -815,6 +955,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -822,6 +963,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -829,6 +971,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -836,6 +979,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -843,6 +987,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -850,6 +995,23 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInternalOrderId'
+        Value = Null
+        Component = OrderInternalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -871,13 +1033,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
-      end
-      item
       end
       item
         Control = edFrom
@@ -886,22 +1042,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edTo
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = edComment
       end>
     Left = 232
     Top = 193
@@ -931,6 +1072,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -938,6 +1080,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMainGoodsId'
@@ -945,6 +1088,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -952,6 +1096,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = MasterCDS
         ComponentItem = 'PartnerGoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -960,6 +1105,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -968,6 +1114,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSumm'
@@ -975,6 +1122,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -989,6 +1137,7 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -1026,6 +1175,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -1036,6 +1186,7 @@ inherited OrderExternalForm: TOrderExternalForm
     LookupControl = edFrom
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1045,6 +1196,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1053,6 +1205,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 8
@@ -1062,6 +1215,7 @@ inherited OrderExternalForm: TOrderExternalForm
     LookupControl = edTo
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientGridDataSet'
     Params = <
@@ -1071,6 +1225,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1079,15 +1234,16 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 536
-    Top = 40
+    Left = 528
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'MasterDS'
     Params = <
@@ -1097,6 +1253,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1105,9 +1262,10 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 40
+    Left = 680
+    Top = 8
   end
   object spGetDocumentDataForEmail: TdsdStoredProc
     StoredProcName = 'gpGet_DocumentDataForEmail'
@@ -1120,54 +1278,63 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Subject'
         Value = Null
         Component = FormParams
         ComponentItem = 'Subject'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Body'
         Value = Null
         Component = FormParams
         ComponentItem = 'Body'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AddressFrom'
         Value = Null
         Component = FormParams
         ComponentItem = 'AddressFrom'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AddressTo'
         Value = Null
         Component = FormParams
         ComponentItem = 'AddressTo'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Host'
         Value = Null
         Component = FormParams
         ComponentItem = 'Host'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Port'
         Value = Null
         Component = FormParams
         ComponentItem = 'Port'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UserName'
         Value = Null
         Component = FormParams
         ComponentItem = 'UserName'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Password'
         Value = Null
         Component = FormParams
         ComponentItem = 'Password'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80
@@ -1191,6 +1358,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 607
@@ -1212,26 +1380,88 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DefaultFileName'
         Value = Null
         Component = actExportToPartner
         ComponentItem = 'DefaultFileName'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ExportType'
         Value = Null
         Component = actExportToPartner
         ComponentItem = 'ExportType'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DefaultFileName'
         Value = Null
         Component = SMTPFileAction
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 608
     Top = 232
+  end
+  object OrderInternalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderInternal
+    FormNameParam.Value = 'TOrderInternalJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderInternalJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = OrderInternalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = OrderInternalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 296
+    Top = 56
+  end
+  object GuidesOrderKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderKind
+    FormNameParam.Value = 'TOrderKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 456
+    Top = 48
   end
 end

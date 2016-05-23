@@ -27,6 +27,7 @@ RETURNS TABLE (PersonalCode Integer, PersonalName TVarChar
              , MoneySumm TFloat, ServiceSumm TFloat, IncomeSumm TFloat
              , SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
+             , ContainerId Integer
               )
 AS
 $BODY$
@@ -85,7 +86,8 @@ BEGIN
         Operation.SummPhone :: TFloat                                                               AS SummPhone,
         (- 1 * Operation.EndAmount) :: TFloat                                                       AS EndAmount,
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
-        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
+        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK,
+        Operation.ContainerId :: Integer                                                            AS ContainerId
 
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId, Operation_all.PersonalServiceListId
@@ -99,7 +101,7 @@ BEGIN
                , SUM (Operation_all.SummTransportAdd)      AS SummTransportAdd
                , SUM (Operation_all.SummTransportAddLong)  AS SummTransportAddLong
                , SUM (Operation_all.SummTransportTaxi)     AS SummTransportTaxi
-               , SUM (Operation_all.SummTransportTaxi)     AS SummPhone
+               , SUM (Operation_all.SummPhone)             AS SummPhone
                , SUM (Operation_all.EndAmount)   AS EndAmount
           FROM
           (SELECT tmpContainer.ContainerId

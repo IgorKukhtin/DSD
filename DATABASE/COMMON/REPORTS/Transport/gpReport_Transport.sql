@@ -43,19 +43,104 @@ BEGIN
                                  -- , MovementItem.Id AS MovementItemId
                                  -- , MovementItem.Amount AS DistanceFuelMaster
 
-                                 , CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE THEN MovementItem.Amount ELSE COALESCE (MIFloat_DistanceFuelChild.ValueData) END AS DistanceFuel
+                                 , ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) AS Ord
+
+                                 , CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE THEN MovementItem.Amount ELSE COALESCE (MIFloat_DistanceFuelChild.ValueData) END AS DistanceFuel
 
                                  , MovementItem.ObjectId AS RouteId
                                  , MILinkObject_RouteKind.ObjectId AS RouteKindId
-                                 , MIFloat_Weight.ValueData          AS Weight
-                                 , MIFloat_WeightTransport.ValueData AS WeightTransport
 
-                                 , COALESCE (MIFloat_RateSumma.ValueData, 0) AS SumTransportAdd
-                                 , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS SumTransportAddLong
-                                 , COALESCE (MIFloat_Taxi.ValueData, 0)      AS SumTransportTaxi
+                                 -- , MIFloat_Weight.ValueData          AS Weight
+                                 -- , MIFloat_WeightTransport.ValueData AS WeightTransport
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN MIFloat_Weight.ValueData          ELSE 0 END AS Weight
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN MIFloat_WeightTransport.ValueData ELSE 0 END AS WeightTransport
 
-                                 , COALESCE (MIFloat_StartOdometre.ValueData, 0) AS StartOdometre
-                                 , COALESCE (MIFloat_EndOdometre.ValueData, 0)   AS EndOdometre
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN COALESCE (MIFloat_RateSumma.ValueData, 0) ELSE 0 END AS SumTransportAdd
+
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/ ELSE 0 END AS SumTransportAddLong
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN COALESCE (MIFloat_Taxi.ValueData, 0) ELSE 0 END AS SumTransportTaxi
+
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN COALESCE (MIFloat_StartOdometre.ValueData, 0) ELSE 0 END AS StartOdometre
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN COALESCE (MIFloat_EndOdometre.ValueData, 0) ELSE 0 END AS EndOdometre
 
                                  , MILinkObject_RateFuelKind.ObjectId AS RateFuelKindId
                                  , COALESCE (MIContainer.ObjectId_Analyzer, MI.ObjectId) AS FuelId
@@ -260,46 +345,7 @@ BEGIN
                    , MAX (tmpAll.SumTransportAddLong)      AS SumTransportAddLong
                    , MAX (tmpAll.SumTransportTaxi)         AS SumTransportTaxi
               FROM
-              -- 1. Маршруты
-             (/*SELECT tmpTransport.MovementId
-                   , tmpTransport.InvNumber
-                   , tmpTransport.OperDate
-                   , tmpTransport.CarId
-                   , tmpTransport.PersonalDriverId
-                   , tmpTransport.RouteId
-                   , tmpTransport.RouteKindId
-                   , 0 AS RateFuelKindId
-                   , 0 AS FuelId
-
-                   , 0 AS DistanceFuel
-                   , 0 AS RateFuelKindTax
-
-                   , COALESCE (MIFloat_StartOdometre.ValueData, 0) AS StartOdometre
-                   , COALESCE (MIFloat_EndOdometre.ValueData, 0)   AS EndOdometre
-                   , 0 AS AmountFuel_Start
-                   , 0 AS AmountFuel_In
-                   , 0 AS AmountFuel_Out
-
-                   , 0 AS ColdHour
-                   , 0 AS ColdDistance
-
-                   , 0 AS AmountFuel
-                   , 0 AS AmountColdHour
-                   , 0 AS AmountColdDistance
-
-                   , 0 AS Amount_Distance_calc
-                   , 0 AS Amount_ColdHour_calc
-                   , 0 AS Amount_ColdDistance_calc
-
-              FROM tmpTransport
-                   LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
-                                               ON MIFloat_StartOdometre.MovementItemId = tmpTransport.MovementItemId
-                                              AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()
-                   LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
-                                               ON MIFloat_EndOdometre.MovementItemId = tmpTransport.MovementItemId
-                                              AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
-             UNION ALL*/
-              -- 2.1. Начальный остаток (!!!расчетный!!!) + Расход топлива
+             (-- 2.1. Начальный остаток (!!!расчетный!!!) + Расход топлива
               SELECT tmpTransport.MovementId
                    , tmpTransport.InvNumber
                    , tmpTransport.OperDate

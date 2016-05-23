@@ -1,3 +1,4 @@
+-- Function: gpSelect_GoodsOnUnitRemains_ForSite
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains_ForSite (Integer, TDateTime, TVarChar);
 
@@ -31,7 +32,9 @@ BEGIN
                                                THEN MIFloat_Price.ValueData / (1 + ObjectFloat_NDSKind_NDS.ValueData/100)
                                                ELSE MIFloat_Price.ValueData
                                             END::TFloat AS PriceWithOutVAT
-                                  , container.ObjectID 
+                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
+                                  , ObjectLink_Child_NB.ChildObjectId AS ObjectID
+                                  , container.ObjectID AS ObjectID_retail
                                 FROM 
                                     container
                                     LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
@@ -52,6 +55,21 @@ BEGIN
                                     LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                                           ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                                          AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+                                                         
+                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = container.ObjectID
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
                                 WHERE 
                                     container.descid = zc_container_count()
                                     AND
@@ -75,24 +93,24 @@ BEGIN
             SELECT 
                 SUM(DD.OperAmount) AS OperAmount, 
                 SUM(DD.OperSum) AS OperSum, 
-                ObjectId
+                ObjectId, ObjectID_retail
             FROM(
                 SELECT 
                     SUM(DD.OperAmount) AS OperAmount, 
                     SUM(DD.OperAmount*PriceWithOutVAT) AS OperSum,
-                    ObjectID 
+                    ObjectID, ObjectID_retail
                 FROM(
                     SELECT 
                         containerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS OperAmount
                       , containerCount.PriceWithOutVAT  
-                      , containerCount.ObjectID 
+                      , containerCount.ObjectID, ObjectID_retail
                     FROM containerCount
                         LEFT JOIN MovementItemContainer AS MIContainer 
                                                         ON MIContainer.ContainerId = containerCount.Id
                                                        AND MIContainer.OperDate > inRemainsDate
-                    GROUP BY containerCount.Id, containerCount.ObjectID, containerCount.Amount, containerCount.PriceWithOutVAT
+                    GROUP BY containerCount.Id, containerCount.ObjectID, ObjectID_retail, containerCount.Amount, containerCount.PriceWithOutVAT
                     ) AS DD
-                GROUP BY DD.ObjectID
+                GROUP BY DD.ObjectID, ObjectID_retail
                 /* UNION ALL
                 SELECT 
                     0 AS OperAmount, 
@@ -112,20 +130,20 @@ BEGIN
                     ) AS DD
                 GROUP BY DD.ObjectID*/
                 ) AS DD
-            GROUP BY DD.ObjectID
+            GROUP BY DD.ObjectID, ObjectID_retail
             HAVING (SUM(DD.OperAmount) <> 0)-- OR (SUM(DD.OperSum) <> 0)
             ) AS DD
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = DD.ObjectId
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price
-                                              ON DD.ObjectId = Object_Price.GoodsId
-                                             AND Object_Price.UnitId = inUnitId
+                                              ON Object_Price.GoodsId = DD.ObjectID_retail -- DD.ObjectId
+                                             AND Object_Price.UnitId  = inUnitId
 
             LEFT JOIN lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
                                                 inObjectId := vbObjectId, 
                                                 inUserId := vbUserId) AS SelectMinPrice_AllGoods
                                                                       ON SelectMinPrice_AllGoods.GoodsId = Object_Goods_View.Id
-
+                                                  
 ;
 
 END;
@@ -143,4 +161,5 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForSite (Integer, TDateTime, TVarChar
 */
 
 -- тест
---select * from gpSelect_GoodsOnUnitRemains_ForSite(inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');
+-- select * from gpSelect_GoodsOnUnitRemains_ForSite(inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');
+-- select * from gpSelect_GoodsOnUnitRemains_ForSite(inUnitId := 2144918  , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3'); !!!Никополь!!!

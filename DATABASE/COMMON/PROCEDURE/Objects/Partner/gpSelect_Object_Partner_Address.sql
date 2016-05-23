@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar);
--- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Address(
@@ -48,6 +48,16 @@ BEGIN
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner_Address());
    vbUserId:= lpGetUserBySession (inSession);
 
+
+   IF inIsPeriod = FALSE
+   THEN
+       inStartDate:= NULL;
+       inEndDate  := NULL;
+   ELSE
+       inIsPeriod := FALSE;
+       inStartDate:= NULL;
+       inEndDate  := NULL;
+   END IF;
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);

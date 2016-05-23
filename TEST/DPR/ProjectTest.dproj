@@ -2593,6 +2593,18 @@
 				<Form>IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods_SalebyReturnIn.pas">
+				<Form>Report_Goods_SalebyReturnInForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods_SalebyReturnInDialog.pas">
+				<Form>Report_Goods_SalebyReturnInDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods_ReturnInBySale.pas">
+				<Form>Report_Goods_ReturnInBySaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

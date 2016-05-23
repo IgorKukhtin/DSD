@@ -21,7 +21,9 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName
              , UnitName TVarChar, OurJuridicalName TVarChar
              , JuridicalCode  Integer, JuridicalName  TVarChar
              , MP_JuridicalName TVarChar
+             , MP_ContractName TVarChar
              , MinPriceOnDate TFloat, MP_Summa TFloat
+             , MinPriceOnDateVAT TFloat, MP_SummaVAT TFloat
              )
 AS
 $BODY$
@@ -37,7 +39,7 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-        WITH containerCount AS (SELECT Container.Id                AS ContainerId
+        WITH ContainerCount AS (SELECT Container.Id                AS ContainerId
                                      , Container.Amount
                                      , Container.ObjectID          AS GoodsId
                                      , MI_Income.MovementId        AS MovementId_Income
@@ -45,13 +47,12 @@ BEGIN
                                      , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
                                      , COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
                               
-                                FROM 
-                                    container
+                                FROM Container
                                     -- партия
                                     LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                                        ON CLI_MI.ContainerId = container.Id
+                                                                        ON CLI_MI.ContainerId = Container.Id
                                                                        AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                    LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                    LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
                                     -- элемент прихода
                                     LEFT OUTER JOIN MovementItem AS MI_Income
                                                                  ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
@@ -62,7 +63,7 @@ BEGIN
                                                                AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                                     -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-                                WHERE Container.descid = zc_container_count()
+                                WHERE Container.DescId = zc_Container_count()
                                   AND Container.WhereObjectId = inUnitId)
 
            , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END AS MovementId_Income
@@ -79,7 +80,7 @@ BEGIN
                               , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END               AS ToId_Income
                               
                          FROM (
-                                 SELECT ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS Amount
+                                 SELECT ContainerCount.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
                                       , ContainerCount.GoodsId 
                                       , ContainerCount.MovementId_Income
                                       , ContainerCount.MovementId_find
@@ -89,7 +90,7 @@ BEGIN
                                       LEFT JOIN MovementItemContainer AS MIContainer 
                                                                       ON MIContainer.ContainerId = ContainerCount.ContainerId
                                                                      AND MIContainer.OperDate >= inRemainsDate
-                                 GROUP BY ContainerCount.ContainerId, containerCount.GoodsId, containerCount.Amount
+                                 GROUP BY ContainerCount.ContainerId, ContainerCount.GoodsId, ContainerCount.Amount
                                       , ContainerCount.MovementId_Income
                                       , ContainerCount.MovementId_find
                                       , ContainerCount.MovementId
@@ -170,8 +171,11 @@ BEGIN
            , Object_From_Income.ValueData            AS JuridicalName
 
            , SelectMinPrice_AllGoods_onDate.JuridicalName AS MP_JuridicalName
+           , Object_Contract.ValueData                    AS MP_ContractName
            , SelectMinPrice_AllGoods_onDate.Price         AS MinPriceOnDate
            , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount) :: TFloat    AS MP_Summa
+           , (SelectMinPrice_AllGoods_onDate.Price * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat                     AS MinPriceOnDateVAT
+           , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat    AS MP_SummaVAT
         FROM tmpData
             LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
             LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
@@ -185,6 +189,10 @@ BEGIN
             LEFT JOIN MovementDesc AS MovementDesc_Price ON MovementDesc_Price.Id = Movement_Price.DescId
         
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = tmpData.NDSKindId_Income
+                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price
                                               ON Object_Price.GoodsId = tmpData.GoodsId
@@ -208,6 +216,7 @@ BEGIN
                                                        inObjectId := vbObjectId, 
                                                        inUserId   := vbUserId) AS SelectMinPrice_AllGoods_onDate
                                                                                ON SelectMinPrice_AllGoods_onDate.GoodsId = Object_Goods_View.Id
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods_onDate.ContractId
                                                                          
            ;
 
@@ -225,4 +234,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnitRemains (inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');
+-- SELECT * FROM gpSelect_GoodsOnUnitRemains (inUnitId := 377613 , inRemainsDate := ('10.05.2016')::TDateTime, inIsPartion:= FALSE, inisPartionPrice:= FALSE, inSession := '3');

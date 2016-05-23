@@ -3,15 +3,15 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
   ClientHeight = 341
   ClientWidth = 1174
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -384
   ExplicitWidth = 1190
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1174
     Height = 284
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1174
     ExplicitHeight = 284
     ClientRectBottom = 284
@@ -41,6 +41,16 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCorrective
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -58,6 +68,16 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountTax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCorrective
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -109,6 +129,34 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 87
+          end
+          object clLineNumTax: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1053#1053
+            DataBinding.FieldName = 'LineNumTax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
+          object InvNumber_Tax: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1053#1053
+            DataBinding.FieldName = 'InvNumber_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object InvNumberPartner_Tax: TcxGridDBColumn
+            Caption = #8470' '#1053#1053
+            DataBinding.FieldName = 'InvNumberPartner_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperDate_Tax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1053#1053
+            DataBinding.FieldName = 'OperDate_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
@@ -229,6 +277,26 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
+          object AmountTax: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'AmountTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountCorrective: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'AmountCorrective'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -305,6 +373,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
       FormName = 'TReport_GoodsTaxDialogForm'
       FormNameParam.Value = 'TReport_GoodsTaxDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -312,6 +381,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -319,6 +389,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
@@ -327,6 +398,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -335,6 +407,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -358,6 +431,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -365,6 +439,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -372,6 +447,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -443,6 +519,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -452,6 +529,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -460,6 +538,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 544
     Top = 3

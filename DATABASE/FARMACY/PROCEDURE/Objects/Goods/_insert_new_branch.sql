@@ -163,3 +163,17 @@
           LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods_View_from.ObjectId
           -- inner JOIN Object_Goods_View on Object_Goods_View.ObjectId = Object_Retail.Id
           --        and Object_Goods_View.GoodsCode = Object_Goods_View_from.GoodsCode
+
+
+
+     SELECT *
+          , gpInsertUpdate_Object_LinkGoods_Load (inGoodsMainCode    := '25995'
+                                                , inGoodsCode        := '25995'
+                                                , inRetailId         := Object_Retail.Id
+                                                , inSession          := '3'
+                                                 )
+     FROM (SELECT Object_Retail_from.Id AS ObjectId
+           FROM (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail()
+                ) AS Object_Retail_from
+          ) AS Object_Goods_View_from
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods_View_from.ObjectId

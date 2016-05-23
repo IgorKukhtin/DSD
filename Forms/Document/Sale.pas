@@ -211,6 +211,8 @@ type
     actPrint_Transport: TdsdPrintAction;
     actPrint_Transport_ReportName: TdsdExecStoredProc;
     actShowMessage: TShowMessageAction;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

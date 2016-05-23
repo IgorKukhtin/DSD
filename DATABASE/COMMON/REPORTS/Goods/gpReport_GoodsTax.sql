@@ -14,13 +14,17 @@ RETURNS TABLE  (InvNumber TVarChar, OperDate TDateTime, MovementDescName TVarCha
               , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
               , InvNumberPartner TVarChar, DocumentTaxKindName TVarChar
               , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
-              , Amount TFloat, OperPrice TFloat
+              , Amount TFloat, AmountTax TFloat, AmountCorrective TFloat, OperPrice TFloat
+              , InvNumber_Tax TVarChar, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
+              , LineNumTax Integer
               )  
 AS
 $BODY$
 BEGIN
 
    RETURN QUERY
+   WITH tmpTaxLineReport AS (SELECT * FROM lpSelect_TaxFromTaxCorrectiveReport (inStartDate, inEndDate, inGoodsId))
+
    SELECT Movement.InvNumber
         , Movement.OperDate       AS OperDate
         , MovementDesc.ItemName   AS MovementDescName
@@ -48,18 +52,33 @@ BEGIN
         , Object_GoodsKind.ValueData AS GoodsKindName
 
         , CAST (tmp_All.Amount AS TFloat)    AS Amount
+        , CASE WHEN tmp_All.MovementDescId = zc_Movement_Tax()           THEN tmp_All.Amount ELSE 0 END :: TFloat AS AmountTax
+        , CASE WHEN tmp_All.MovementDescId = zc_Movement_TaxCorrective() THEN tmp_All.Amount ELSE 0 END :: TFloat AS AmountCorrective
         , CAST (tmp_All.OperPrice AS TFloat) AS OperPrice
 
-  FROM (SELECT tmpMI.MovementId
+        , CASE WHEN tmp_All.MovementDescId = zc_Movement_Tax() THEN Movement.InvNumber            ELSE Movement_Child.InvNumber            END :: TVarChar  AS InvNumber_Tax
+        , CASE WHEN tmp_All.MovementDescId = zc_Movement_Tax() THEN MS_InvNumberPartner.ValueData ELSE MS_InvNumberPartner_Child.ValueData END :: TVarChar  AS InvNumberPartner_Tax
+        , CASE WHEN tmp_All.MovementDescId = zc_Movement_Tax() THEN Movement.OperDate             ELSE Movement_Child.OperDate             END :: TDateTime AS OperDate_Tax
+
+        , tmp_All.LineNumTax 
+
+  FROM (SELECT tmpMI.MovementDescId
+             , tmpMI.MovementId
              , tmpMI.GoodsId
              , tmpMI.GoodsKindId
              , tmpMI.Amount
              , tmpMI.OperPrice
-        FROM (SELECT MovementItem.MovementId
+             , tmpMI.LineNumTax
+        FROM (SELECT Movement.DescId AS MovementDescId
+                   , MovementItem.MovementId
                    , MovementItem.ObjectId AS GoodsId
                    , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                    , MovementItem.Amount
                    , COALESCE (MIFloat_Price.ValueData, 0) AS OperPrice
+                   , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() AND COALESCE (MIFloat_NPP.ValueData, 0) = 0
+                          THEN COALESCE (tmpTaxLineReport.LineNum, tmpTaxLineReport_two.LineNum)
+                          ELSE MIFloat_NPP.ValueData
+                     END  :: Integer AS LineNumTax 
               FROM MovementItem
                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                       AND Movement.OperDate BETWEEN inStartDate and inEndDate
@@ -71,6 +90,26 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_NPP
+                                               ON MIFloat_NPP.MovementItemId = MovementItem.Id
+                                              AND MIFloat_NPP.DescId = zc_MIFloat_NPP()           
+                                       
+                   LEFT JOIN tmpTaxLineReport
+                                            ON tmpTaxLineReport.TaxCorrectiveId = Movement.Id
+                                           AND tmpTaxLineReport.GoodsId         = MovementItem.ObjectId 
+                                           AND tmpTaxLineReport.GoodsKindId     = MILinkObject_GoodsKind.ObjectId
+                                           AND tmpTaxLineReport.Price           = MIFloat_Price.ValueData
+                                           AND tmpTaxLineReport.Kind            = 1
+                                           AND Movement.DescId                  = zc_Movement_TaxCorrective()
+                   LEFT JOIN tmpTaxLineReport AS tmpTaxLineReport_two
+                                            ON tmpTaxLineReport_two.TaxCorrectiveId = Movement.Id
+                                           AND tmpTaxLineReport_two.GoodsId         = MovementItem.ObjectId 
+                                           AND tmpTaxLineReport_two.Price           = MIFloat_Price.ValueData
+                                           AND tmpTaxLineReport_two.Kind            = 2
+                                           AND tmpTaxLineReport.TaxCorrectiveId     IS NULL
+                                           AND Movement.DescId                      = zc_Movement_TaxCorrective()
+                   
               WHERE MovementItem.ObjectId = inGoodsId
                 AND MovementItem.isErased   = FALSE
              ) AS tmpMI
@@ -84,15 +123,23 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                           ON MovementLinkMovement_Child.MovementId = tmp_All.MovementId
+                                          AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+            LEFT JOIN Movement AS Movement_Child ON Movement_Child.Id = MovementLinkMovement_Child.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Child
+                                     ON MS_InvNumberPartner_Child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                    AND MS_InvNumberPartner_Child.DescId = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = tmp_All.MovementId 
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                         ON MovementLinkObject_Juridical.MovementId = tmp_All.MovementId 
-                                        AND MovementLinkObject_Juridical.DescId = CASE WHEN Movement.DescId = zc_Movement_Tax() THEN zc_MovementLinkObject_To()
-                                                                                       WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From()
+                                         ON MovementLinkObject_Juridical.MovementId = tmp_All.MovementId
+                                        AND MovementLinkObject_Juridical.DescId = CASE WHEN Movement.DescId = zc_Movement_Tax()           THEN zc_MovementLinkObject_To()
+                                                                                       WHEN MovementDesc.Id = zc_Movement_TaxCorrective() THEN zc_MovementLinkObject_From()
                                                                                   END
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
@@ -131,4 +178,4 @@ ALTER FUNCTION gpReport_GoodsTax (TDateTime, TDateTime, Integer, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsTax (inStartDate:= '01.12.2013', inEndDate:= '01.12.2013', inGoodsId:= 1826, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsTax (inStartDate:= '01.04.2016', inEndDate:= '01.04.2016', inGoodsId:= 5339, inSession:= zfCalc_UserAdmin());

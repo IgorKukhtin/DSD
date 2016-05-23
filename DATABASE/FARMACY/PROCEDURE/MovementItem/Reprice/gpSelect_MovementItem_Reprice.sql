@@ -1,4 +1,4 @@
--- Function: gpSelect_MovementItem_Reprice()
+ -- Function: gpSelect_MovementItem_Reprice()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Reprice (Integer, TVarChar);
 
@@ -117,13 +117,23 @@ BEGIN
                                   AND tmpLinkGoods.JuridicalId = Object_Juridical.Id
 
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = MovementItem.MovementId
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                   ON ObjectFloat_Percent.ObjectId = Object_Juridical.Id
                                  AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
-            LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink
-                                                     ON (Object_MarginCategoryLink.UnitId = 377605/*inUnitId*/)    
-                                                    AND Object_MarginCategoryLink.JuridicalId = Object_Juridical.Id
-            LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = Object_MarginCategoryLink.MarginCategoryId
+
+            LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_unit
+                                                     ON Object_MarginCategoryLink_unit.UnitId = MovementLinkObject_Unit.ObjectId -- 377605/*inUnitId*/
+                                                    AND Object_MarginCategoryLink_unit.JuridicalId = Object_Juridical.Id
+            LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_all
+                                                     ON COALESCE (Object_MarginCategoryLink_all.UnitId, 0) = 0
+                                                    AND Object_MarginCategoryLink_all.JuridicalId = Object_Juridical.Id
+                                                    AND Object_MarginCategoryLink_unit.JuridicalId IS NULL
+
+            LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink_unit.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
                                     AND (MIFloat_PriceSale.ValueData  * (100 + ObjectFloat_NDSKind_NDS.ValueData  )/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
                                                                                                         
          WHERE MovementItem.DescId = zc_MI_Master()
@@ -144,6 +154,4 @@ ALTER FUNCTION gpSelect_MovementItem_Reprice (Integer, TVarChar) OWNER TO postgr
 */
 
 --реяр
---select * from gpSelect_MovementItem_Reprice(inMovementId := 507851 ,  inSession := '3')
-
- 
+-- SELECT * FROM gpSelect_MovementItem_Reprice (inMovementId:= 507851,  inSession:= '3')

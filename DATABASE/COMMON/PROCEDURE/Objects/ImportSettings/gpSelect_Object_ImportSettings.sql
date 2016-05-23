@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ContractId Integer, ContractName TVarChar,
                FileTypeId Integer, FileTypeName TVarChar,
                ImportTypeId Integer, ImportTypeName TVarChar,
+               EmailKindId Integer, EmailKindName TVarChar,
                StartRow Integer, HDR Boolean, 
                Directory TVarChar, Query TBlob,
                StartTime TVarChar, EndTime TVarChar, CheckTime TFloat,
@@ -39,7 +40,10 @@ BEGIN
            
            , Object_ImportSettings_View.ImportTypeId
            , Object_ImportSettings_View.ImportTypeName 
-           
+
+           , Object_ImportSettings_View.EmailKindId
+           , Object_ImportSettings_View.EmailKindName 
+
            , Object_ImportSettings_View.StartRow
            , Object_ImportSettings_View.HDR
            , Object_ImportSettings_View.Directory
@@ -72,13 +76,12 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Mail
                                   ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
                                  AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
-;
+          ;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ImportSettings(TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_ImportSettings (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -86,8 +89,7 @@ ALTER FUNCTION gpSelect_Object_ImportSettings(TVarChar) OWNER TO postgres;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  03.03.16         *
  02.07.14         *
-
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_ImportSettings ('2')
+-- SELECT * FROM gpSelect_Object_ImportSettings ('2')

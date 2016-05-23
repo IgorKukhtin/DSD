@@ -197,4 +197,4 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Service (inMovementId:= 1, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Service (inMovementId:= 1, inMovementId_Value:= 0, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());

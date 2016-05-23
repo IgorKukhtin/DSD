@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat
+             , TotalCount TFloat, TotalSumm TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , Comment TVarChar
               )
@@ -49,17 +49,19 @@ BEGIN
                         )
 
        SELECT
-             Movement.Id                        AS Id
-           , Movement.InvNumber                 AS InvNumber
-           , Movement.OperDate                  AS OperDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
-           , MovementFloat_TotalCount.ValueData AS TotalCount
-           , MovementFloat_TotalSumm.ValueData  AS TotalSumm
-           , Object_From.Id                     AS FromId
-           , Object_From.ValueData              AS FromName
-           , Object_To.Id                       AS ToId
-           , Object_To.ValueData                AS ToName
+             Movement.Id                            AS Id
+           , Movement.InvNumber                     AS InvNumber
+           , Movement.OperDate                      AS OperDate
+           , Object_Status.ObjectCode               AS StatusCode
+           , Object_Status.ValueData                AS StatusName
+           , MovementFloat_TotalCount.ValueData     AS TotalCount
+           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
+           , Object_From.Id                         AS FromId
+           , Object_From.ValueData                  AS FromName
+           , Object_To.Id                           AS ToId
+           , Object_To.ValueData                    AS ToName
            , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
        FROM (SELECT Movement.id
@@ -78,6 +80,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

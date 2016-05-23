@@ -35,6 +35,8 @@ type
     MP_JuridicalName: TcxGridDBColumn;
     MinPriceOnDate: TcxGridDBColumn;
     MP_Summa: TcxGridDBColumn;
+    MinPriceOnDateVAT: TcxGridDBColumn;
+    MP_SummaVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

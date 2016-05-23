@@ -40,8 +40,8 @@ BEGIN
 
      -- определяем <Статус>
      SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
-     -- проверка - проведенные/удаленные документы Изменять нельзя
-     IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inUserId, 0) <> zc_Enum_Process_Auto_PartionClose()
+     -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно захардкодил -12345!!!
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inUserId, 0) NOT IN (-12345, zc_Enum_Process_Auto_PartionClose())
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;

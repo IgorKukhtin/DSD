@@ -3,6 +3,8 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -327
+  ExplicitTop = -106
   ExplicitWidth = 1122
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -479,6 +481,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colisList: TcxGridDBColumn
+            Caption = #1082' '#1054#1089#1085#1086#1074#1072#1085#1080#1102' '#8470' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isList'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
         end
       end
     end
@@ -557,17 +567,20 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actRefresh: TdsdDataSetRefresh [2]
@@ -650,10 +663,12 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -679,6 +694,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -687,6 +703,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     inherited actGridToExcel: TdsdGridToExcel [15]
     end
@@ -728,10 +745,12 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -752,10 +771,12 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -777,10 +798,12 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrintTaxCorrective_Client
       StoredProcList = <
@@ -805,11 +828,13 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
       ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -848,6 +873,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -856,6 +882,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -883,6 +910,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
@@ -891,6 +919,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TaxCorrective_Client: TMultiAction
       Category = 'DSDLib'
@@ -900,10 +929,12 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -924,10 +955,12 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -977,6 +1010,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       FormName = 'TMovement_DateDialogForm'
       FormNameParam.Value = 'TMovement_DateDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -984,6 +1018,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -991,6 +1026,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'IsPartnerDate'
@@ -998,6 +1034,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1036,6 +1073,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -1043,6 +1081,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartnerDate'
@@ -1050,6 +1089,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1057,6 +1097,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 155
   end
@@ -1263,17 +1304,34 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     StoredProcName = 'gpComplete_Movement_ReturnIn'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLastComplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -1287,6 +1345,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -1300,6 +1359,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -1310,30 +1370,35 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameTaxCorrective'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 176
@@ -1347,20 +1412,39 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inStartDateSale'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLastComplete'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Top = 80
+    Left = 320
+    Top = 144
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1371,6 +1455,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1379,6 +1464,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 912
   end
@@ -1393,6 +1479,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -1400,6 +1487,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -1407,18 +1495,28 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTaxLink'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -1426,6 +1524,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -1433,6 +1532,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1456,6 +1556,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 650
@@ -1479,12 +1580,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 650
@@ -1508,12 +1611,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 650
@@ -1542,6 +1647,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -1549,6 +1655,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -1556,18 +1663,28 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTaxLink'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -1575,6 +1692,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -1582,6 +1700,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1598,12 +1717,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescName'
         Value = 'zc_Movement_ReturnIn'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
@@ -1611,6 +1732,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'ReportName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 584
@@ -1627,6 +1749,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -1635,6 +1758,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -1651,6 +1775,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -1658,6 +1783,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameTaxCorrective'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 440
@@ -1674,12 +1800,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescName'
         Value = 'zc_Movement_PriceCorrective'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
@@ -1687,6 +1815,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = FormParams
         ComponentItem = 'ReportName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 584
@@ -1703,12 +1832,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 272

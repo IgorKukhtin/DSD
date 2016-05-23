@@ -54,6 +54,17 @@ BEGIN
                                     )
        INSERT INTO _tmpMI 
 
+           -- Маркетинговый контракт
+           WITH tmpOperDate AS (SELECT date_trunc ('day', Movement.OperDate) AS OperDate FROM Movement WHERE Movement.Id = inMovementId)
+              , GoodsPromo AS (SELECT tmp.JuridicalId
+                                    , tmp.GoodsId        -- здесь товар "сети"
+                                    , tmp.ChangePercent
+                               FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= (SELECT tmpOperDate.OperDate FROM tmpOperDate)
+                                                                       ) AS tmp
+                              )
+              , LastPriceList_View AS (SELECT * FROM lpSelect_LastPriceList_View_onDate (inOperDate:= (SELECT tmpOperDate.OperDate FROM tmpOperDate)
+                                                                                       , inUserId  := inUserId) AS tmp
+                                      )
        SELECT row_number() OVER ()
             , ddd.Id AS MovementItemId 
             , ddd.PriceListMovementItemId
@@ -73,14 +84,11 @@ BEGIN
             , CASE ddd.Deferment 
                    WHEN 0 THEN 0
                    ELSE PriceSettings.Percent
-              END::TFloat AS Percent
-            , CASE ddd.Deferment 
-                   WHEN 0 THEN FinalPrice
-                   ELSE CASE 
-                          WHEN ddd.isTOP  THEN FinalPrice
-                          ELSE FinalPrice * (100 - PriceSettings.PERCENt)/100
-                        END  
-              END::TFloat AS SuperFinalPrice   
+              END :: TFloat AS Percent
+            , CASE WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
+                        THEN FinalPrice
+                   ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
+              END :: TFloat AS SuperFinalPrice   
          FROM 
 
      (SELECT DISTINCT MovementItemOrder.Id
@@ -89,9 +97,14 @@ BEGIN
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
           , min(PriceList.amount) OVER (PARTITION BY MovementItemOrder.Id) AS MinPrice
           , CASE 
-              WHEN Goods.isTOP = TRUE OR COALESCE(JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
+              -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+              WHEN Goods.isTOP = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                    THEN PriceList.amount
+                       -- И учитывается % бонуса из Маркетинговый контракт
+                     * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
               ELSE (PriceList.amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat 
+                    -- И учитывается % бонуса из Маркетинговый контракт
+                 * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END AS FinalPrice          
           , COALESCE(JuridicalSettings.Bonus, 0)::TFloat AS Bonus
 
@@ -128,6 +141,7 @@ BEGIN
                    AND JuridicalSettings.ContractId = LastPriceList_View.ContractId 
 
               
+   -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
    LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
    
    JOIN OBJECT AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId
@@ -144,6 +158,10 @@ BEGIN
    LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
      ON Goods.Id = MovementItemOrder.ObjectId
          
+            -- % бонуса из Маркетинговый контракт
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = MovementItemOrder.ObjectId
+                                AND GoodsPromo.JuridicalId = LastPriceList_View.JuridicalId
+
    WHERE  COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE 
      ) AS ddd
    

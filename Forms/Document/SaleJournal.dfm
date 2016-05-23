@@ -5,7 +5,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1258
-  ExplicitHeight = 676
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -839,10 +839,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -863,10 +865,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_ExpInvoice
       StoredProcList = <
@@ -893,12 +897,14 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SaleInvoice'
       ReportNameParam.Name = 'PrintMovement_SaleInvoice'
       ReportNameParam.Value = 'PrintMovement_SaleInvoice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintTax_Us: TdsdPrintAction [3]
       Category = 'Print_Tax'
@@ -929,6 +935,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -937,6 +944,7 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.ComponentItem = 'ReportNameSaleTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Pack: TdsdPrintAction [4]
       Category = 'Print_Fozzy'
@@ -946,10 +954,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_Pack
       StoredProcList = <
@@ -972,13 +982,130 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SalePack21'
       ReportNameParam.Value = 'PrintMovement_SalePack21'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpSpec: TdsdPrintAction [5]
+    object actOpenReportForm: TdsdOpenForm [5]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      ImageIndex = 25
+      FormName = 'TReport_Goods_ReturnInBySaleForm'
+      FormNameParam.Value = 'TReport_Goods_ReturnInBySaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'ToId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'ToName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = #1042#1089#1077' '#1090#1086#1074#1072#1088#1099
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPrice'
+          Value = '0'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'Contractname'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = #1042#1089#1077
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actPrint_ExpSpec: TdsdPrintAction [6]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -986,10 +1113,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_ExpInvoice
       StoredProcList = <
@@ -1018,13 +1147,15 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SaleSpec'
       ReportNameParam.Value = 'PrintMovement_SaleSpec'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrintSaleOrder: TdsdPrintAction [8]
+    object actPrintSaleOrder: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1032,10 +1163,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_SaleOrder
       StoredProcList = <
@@ -1062,11 +1195,13 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Sale_Order'
       ReportNameParam.Value = 'PrintMovement_Sale_Order'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
@@ -1074,17 +1209,20 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
@@ -1093,9 +1231,10 @@ inherited SaleJournalForm: TSaleJournalForm
           ComponentItem = 'inChangePercentAmount'
           DataType = ftFloat
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
     end
-    object actChecked: TdsdExecStoredProc [11]
+    object actChecked: TdsdExecStoredProc [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1118,17 +1257,20 @@ inherited SaleJournalForm: TSaleJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
@@ -1137,9 +1279,10 @@ inherited SaleJournalForm: TSaleJournalForm
           ComponentItem = 'inChangePercentAmount'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
-    object actMovementCheck: TdsdOpenForm [20]
+    object actMovementCheck: TdsdOpenForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -1148,6 +1291,7 @@ inherited SaleJournalForm: TSaleJournalForm
       FormName = 'TMovementCheckForm'
       FormNameParam.Value = 'TMovementCheckForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1155,10 +1299,11 @@ inherited SaleJournalForm: TSaleJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
-    object actTax: TdsdExecStoredProc [29]
+    object actTax: TdsdExecStoredProc [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1173,7 +1318,7 @@ inherited SaleJournalForm: TSaleJournalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
-    object mactPrint_Sale: TMultiAction [30]
+    object mactPrint_Sale: TMultiAction [31]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1181,10 +1326,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1200,7 +1347,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object mactPrint_Account: TMultiAction [31]
+    object mactPrint_Account: TMultiAction [32]
       Category = 'Print_Account'
       MoveParams = <
         item
@@ -1208,10 +1355,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1224,7 +1373,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object mactPrint_Tax_Client: TMultiAction [32]
+    object mactPrint_Tax_Client: TMultiAction [33]
       Category = 'Print_Tax'
       MoveParams = <
         item
@@ -1232,10 +1381,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1248,7 +1399,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object actPrintTax_Client: TdsdPrintAction [33]
+    object actPrintTax_Client: TdsdPrintAction [34]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -1277,6 +1428,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1285,8 +1437,9 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.ComponentItem = 'ReportNameSaleTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
-    object ExecuteDialog: TExecuteDialog [34]
+    object ExecuteDialog: TExecuteDialog [35]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
@@ -1295,6 +1448,7 @@ inherited SaleJournalForm: TSaleJournalForm
       FormName = 'TMovement_DateDialogForm'
       FormNameParam.Value = 'TMovement_DateDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1302,6 +1456,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1309,6 +1464,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'IsPartnerDate'
@@ -1316,12 +1472,13 @@ inherited SaleJournalForm: TSaleJournalForm
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actPrint: TdsdPrintAction [35]
+    object actPrint: TdsdPrintAction [36]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1351,6 +1508,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1359,8 +1517,9 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Transport: TMultiAction [36]
+    object mactPrint_Transport: TMultiAction [37]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -1368,10 +1527,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1384,7 +1545,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
       ImageIndex = 20
     end
-    object actPrint_Account: TdsdPrintAction [37]
+    object actPrint_Account: TdsdPrintAction [38]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1414,6 +1575,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1057#1095#1077#1090
@@ -1422,8 +1584,9 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.ComponentItem = 'ReportNameSaleBill'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Transport: TdsdPrintAction [38]
+    object actPrint_Transport: TdsdPrintAction [39]
       Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1453,6 +1616,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1057#1095#1077#1090
@@ -1461,8 +1625,9 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTransport'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
-    object actSPPrintSaleProcName: TdsdExecStoredProc [39]
+    object actSPPrintSaleProcName: TdsdExecStoredProc [40]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1473,7 +1638,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actSPPrintSaleProcName'
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [40]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [41]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1484,7 +1649,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Account_ReportName'
     end
-    object actPrint_Transport_ReportName: TdsdExecStoredProc [41]
+    object actPrint_Transport_ReportName: TdsdExecStoredProc [42]
       Category = 'Print_TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1495,7 +1660,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Transport_ReportName'
     end
-    object actPrint_ExpPack: TdsdPrintAction [42]
+    object actPrint_ExpPack: TdsdPrintAction [43]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -1503,10 +1668,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_ExpPack
       StoredProcList = <
@@ -1529,14 +1696,16 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SalePack'
       ReportNameParam.Name = 'PrintMovement_SalePack'
       ReportNameParam.Value = 'PrintMovement_SalePack'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Spec: TdsdPrintAction [43]
+    object actPrint_Spec: TdsdPrintAction [44]
       Category = 'Print_Fozzy'
       MoveParams = <
         item
@@ -1544,10 +1713,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_Spec
       StoredProcList = <
@@ -1570,11 +1741,13 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SalePack22'
       ReportNameParam.Value = 'PrintMovement_SalePack22'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_QualityDoc: TdsdPrintAction
       Category = 'Print_QualityDoc'
@@ -1584,10 +1757,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_Quality
       StoredProcList = <
@@ -1614,11 +1789,13 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Quality'
       ReportNameParam.Value = 'PrintMovement_Quality'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TTN: TMultiAction
       Category = 'Print_TTN'
@@ -1628,10 +1805,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1655,18 +1834,21 @@ inherited SaleJournalForm: TSaleJournalForm
       FormName = 'TTransportGoodsForm'
       FormNameParam.Value = 'TTransportGoodsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId_TransportGoods'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MovementId_Sale'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -1675,6 +1857,7 @@ inherited SaleJournalForm: TSaleJournalForm
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1716,17 +1899,21 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actInvoice: TEDIAction
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediInvoice
       HeaderDataSet = PrintHeaderCDS
@@ -1736,7 +1923,9 @@ inherited SaleJournalForm: TSaleJournalForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediOrdrsp
       HeaderDataSet = PrintHeaderCDS
@@ -1746,7 +1935,9 @@ inherited SaleJournalForm: TSaleJournalForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediDesadv
       HeaderDataSet = PrintHeaderCDS
@@ -1804,10 +1995,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1836,10 +2029,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1868,10 +2063,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1911,10 +2108,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1955,10 +2154,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -2003,10 +2204,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -2076,10 +2279,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrintReturnInDay
       StoredProcList = <
@@ -2105,11 +2310,13 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ReturnInDay'
       ReportNameParam.Value = 'PrintMovement_ReturnInDay'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actDialog_QualityDoc: TdsdOpenForm
       Category = 'Print_QualityDoc'
@@ -2119,16 +2326,19 @@ inherited SaleJournalForm: TSaleJournalForm
       FormName = 'TQualityDocForm'
       FormNameParam.Value = 'TQualityDocForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MovementId_Sale'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2140,10 +2350,12 @@ inherited SaleJournalForm: TSaleJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -2201,6 +2413,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -2208,6 +2421,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartnerDate'
@@ -2215,6 +2429,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -2222,6 +2437,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -2321,6 +2537,14 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportForm'
         end
         item
           Visible = True
@@ -2547,6 +2771,10 @@ inherited SaleJournalForm: TSaleJournalForm
       Action = mactPrint_Transport
       Category = 0
     end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -2592,12 +2820,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 65
     Top = 370
@@ -2611,6 +2841,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outPrinted'
@@ -2618,6 +2849,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 65
     Top = 434
@@ -2631,6 +2863,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 193
     Top = 426
@@ -2641,48 +2874,56 @@ inherited SaleJournalForm: TSaleJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSale'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSaleTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameTransport'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChangePercentAmount'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPrinted'
         Value = 'True'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 216
@@ -2696,12 +2937,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 185
     Top = 354
@@ -2721,11 +2964,13 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_by'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 351
@@ -2746,11 +2991,13 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_by'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 351
@@ -2774,6 +3021,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 351
@@ -2790,6 +3038,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportNameBill'
@@ -2797,6 +3046,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameSaleBill'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 536
@@ -2819,6 +3069,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -2827,6 +3078,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -2847,6 +3099,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 271
@@ -2873,12 +3126,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -2905,12 +3160,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -2927,6 +3184,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportNameTax'
@@ -2934,6 +3192,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameSaleTax'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 704
@@ -2950,6 +3209,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportName'
@@ -2957,6 +3217,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameSale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 704
@@ -2967,6 +3228,7 @@ inherited SaleJournalForm: TSaleJournalForm
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2977,6 +3239,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2985,6 +3248,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 968
     Top = 48
@@ -3022,6 +3286,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -3038,6 +3303,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -3045,6 +3311,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -3052,6 +3319,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outInvNumberPartner_Master'
@@ -3059,12 +3334,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner_Master'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -3072,6 +3349,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -3079,6 +3357,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -3102,6 +3381,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 623
@@ -3125,6 +3405,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 623
@@ -3141,6 +3422,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -3149,6 +3431,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChangePercentAmount'
@@ -3157,12 +3440,14 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'inChangePercentAmount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_TransportGoods'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_TransportGoods'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_TransportGoods'
@@ -3170,6 +3455,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumber_TransportGoods'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_TransportGoods'
@@ -3177,6 +3463,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208
@@ -3187,14 +3474,17 @@ inherited SaleJournalForm: TSaleJournalForm
     ConnectionParams.Host.Component = FormParams
     ConnectionParams.Host.ComponentItem = 'Host'
     ConnectionParams.Host.DataType = ftString
+    ConnectionParams.Host.MultiSelectSeparator = ','
     ConnectionParams.User.Value = Null
     ConnectionParams.User.Component = FormParams
     ConnectionParams.User.ComponentItem = 'UserName'
     ConnectionParams.User.DataType = ftString
+    ConnectionParams.User.MultiSelectSeparator = ','
     ConnectionParams.Password.Value = Null
     ConnectionParams.Password.Component = FormParams
     ConnectionParams.Password.ComponentItem = 'Password'
     ConnectionParams.Password.DataType = ftString
+    ConnectionParams.Password.MultiSelectSeparator = ','
     Left = 816
     Top = 232
   end
@@ -3209,12 +3499,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiOrdspr'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 792
@@ -3231,12 +3523,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiInvoice'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 856
@@ -3253,12 +3547,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiDesadv'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 920
@@ -3275,6 +3571,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Host'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UserName'
@@ -3282,6 +3579,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'UserName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Password'
@@ -3289,6 +3587,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Password'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 888
@@ -3312,17 +3611,20 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Order'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDiff'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 511
@@ -3346,6 +3648,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 824
@@ -3362,12 +3665,14 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementDescId_new'
         Value = 'zc_Movement_SendOnPrice'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId_new'
@@ -3375,6 +3680,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'FromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId_new'
@@ -3382,6 +3688,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 49
@@ -3392,6 +3699,7 @@ inherited SaleJournalForm: TSaleJournalForm
     LookupControl = edTo
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -3401,6 +3709,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -3409,6 +3718,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 1184
     Top = 40
@@ -3431,6 +3741,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -3447,6 +3758,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inNewPrinted'
@@ -3455,6 +3767,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outPrinted'
@@ -3462,6 +3775,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 840
@@ -3478,6 +3792,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Master'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inElectron'
@@ -3486,6 +3801,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'isElectron'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 1040
@@ -3502,6 +3818,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Transport_ReportName'
@@ -3509,6 +3826,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameTransport'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 824

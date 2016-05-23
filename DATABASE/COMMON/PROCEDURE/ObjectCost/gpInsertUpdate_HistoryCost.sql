@@ -44,7 +44,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
 -- !!!¬–≈ћ≈ЌЌќ!!!
- inItearationCount:=50;
+-- inItearationCount:=50;
 -- !!!¬–≈ћ≈ЌЌќ!!!
 
      -- !!!если не филиал, тогда начальна€ дата всегда 1-ое число мес€ца!!!

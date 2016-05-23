@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , isEDI Boolean
              , InvNumber_Full TVarChar
+             , isList Boolean
               )
 AS
 $BODY$
@@ -113,7 +114,7 @@ BEGIN
 
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
            , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, MovementDate_OperDatePartner.ValueData) AS InvNumber_Full
-
+           , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
@@ -143,6 +144,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
          
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id

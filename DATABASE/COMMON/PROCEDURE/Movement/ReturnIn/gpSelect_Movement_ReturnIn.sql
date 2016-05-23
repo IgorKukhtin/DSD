@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Inte
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , Comment TVarChar
              , isEDI Boolean
+             , isList Boolean
              , isPromo Boolean
              , MovementPromo TVarChar
               )
@@ -114,6 +115,8 @@ BEGIN
            , MovementString_Comment.ValueData           AS Comment
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
 
+           , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
+
            , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
@@ -151,6 +154,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId =  Movement.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -281,6 +288,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.05.16         *
  21.08.15         * add isPartner
  26.06.15         * add Comment, Parent
  13.11.14                                        * add zc_Enum_Process_AccessKey_DocumentAll

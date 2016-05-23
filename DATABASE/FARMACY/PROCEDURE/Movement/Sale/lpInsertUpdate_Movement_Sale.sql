@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
     -- проверка
+    inOperDate:= DATE_TRUNC ('DAY', inOperDate);
     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
     THEN
         RAISE EXCEPTION 'Ошибка.Неверный формат даты.';

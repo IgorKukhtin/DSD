@@ -38,12 +38,33 @@ BEGIN
      THEN
          -- таблица
          CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer) ON COMMIT DROP;
+         IF inUnitId = -1
+         THEN
+             INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
+               select 21157 union all select 12940 union all select 16876 union all select 351328 union all select 15661 union all select 358 union all select 40180 union all select 337 union all select 343 union all select 349 union all select 352 union all select 355 union all select 331 union all select 328 union all select 46564 union all select 17533 union all select 361 union all select 37468 union all select 334 union all select 346 union all select 340 union all select 25420 union all select 351331 union all select 36076 union all select 21169 union all select 382 union all select 376 union all select 379 union all select 385 union all select 391;
+         ELSE
          INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
-           SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
+           -- SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
+            -- !!!временно захардкодил, будет всегда товар НеБолей!!!
+           SELECT DISTINCT ObjectLink_Child_NB.ChildObjectId AS GoodsID -- здесь товар "сети"
            FROM Container
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = container.ObjectID
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
            WHERE Container.DescId = zc_Container_Count()
              AND Container.WhereObjectId = inUnitId
              AND Container.Amount <> 0;
+         END IF;
      END IF;
 
     -- !!!Оптимизация!!!
@@ -84,8 +105,9 @@ BEGIN
                           -- !!!если Временно откл. - тогда будет для всех договоров!!!
                           WHERE tmp.Ord = 1
                          )
+  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus FROM JuridicalSettings)
     -- Список товаров + коды ...
-  , GoodsList AS
+  , GoodsList_all AS
        (SELECT _tmpGoodsMinPrice_List.GoodsId               AS GoodsId      -- здесь товар "сети"
              , ObjectLink_LinkGoods_Main.ChildObjectId      AS GoodsId_main -- здесь "общий" товар
              , ObjectLink_LinkGoods_Child_jur.ChildObjectId AS GoodsId_jur  -- здесь товар "поставщика"
@@ -108,15 +130,24 @@ BEGIN
                                   ON ObjectLink_Goods_Object_jur.ObjectId = ObjectLink_LinkGoods_Child_jur.ChildObjectId
                                  AND ObjectLink_Goods_Object_jur.DescId = zc_ObjectLink_Goods_Object()
        )
+    -- Список товаров + коды ...
+  , GoodsList AS
+       (SELECT GoodsList_all.*
+        FROM GoodsList_all
+             INNER JOIN Object ON Object.Id = GoodsList_all.ObjectId
+                              AND Object.DescId = zc_Object_Juridical()
+       )
     -- Список Последних цен (поставщика) !!!по документам!!! (т.е. последний документ а не последняя найденная цена)
   , Movement_PriceList AS
-       (-- выбираются с "нужным" договором из JuridicalSettings
+       /*(-- выбираются с "нужным" договором из JuridicalSettings
         SELECT tmp.MovementId
              , tmp.JuridicalId
              , tmp.ContractId
-             , COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
-             , COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
-        FROM
+             --, COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
+             --, COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
+             , tmp.PriceLimit
+             , tmp.Bonus
+        FROM*/
        (-- выбираются с "макс" датой
         SELECT *
         FROM
@@ -126,6 +157,8 @@ BEGIN
              , Movement.Id                                        AS MovementId
              , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+             , COALESCE (JuridicalSettings_list.PriceLimit, 0)    AS PriceLimit
+             , COALESCE (JuridicalSettings_list.Bonus, 0)         AS Bonus
         FROM (SELECT DISTINCT ObjectId FROM GoodsList) AS tmp
              INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                            ON MovementLinkObject_Juridical.ObjectId = tmp.ObjectId
@@ -135,22 +168,22 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             INNER JOIN JuridicalSettings_list ON JuridicalSettings_list.JuridicalId = MovementLinkObject_Juridical.ObjectId
+                                              AND JuridicalSettings_list.ContractId = MovementLinkObject_Contract.ObjectId
         WHERE Movement.DescId = zc_Movement_PriceList()
        ) AS tmp
         WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
-       ) AS tmp
+       ) /*AS tmp*/
         -- !!!INNER!!!
-        INNER JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
-                    FROM JuridicalSettings
-                   ) AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
-                                         AND JuridicalSettings.ContractId  = tmp.ContractId
+        /*INNER JOIN JuridicalSettings_list AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
+                                         AND JuridicalSettings.ContractId  = tmp.ContractId*/
         /*LEFT JOIN JuridicalSettings_close ON JuridicalSettings_close.JuridicalId = tmp.JuridicalId
                                          AND JuridicalSettings_close.ContractId  = tmp.ContractId */
 
         /*WHERE COALESCE (JuridicalSettings.ContractId, tmp.ContractId) = tmp.ContractId -- т.е. если есть юр лицо в JuridicalSettings, тогда Movement с !!!таким же!!! ContractId, иначе - !!!ВСЕ!! Movement
           AND JuridicalSettings_close.JuridicalId IS NULL -- !!!т.е. НЕ закрыт!!!
         */
-       )
+       /*)*/
     -- Последние цены (поставщика) по "нужным" товарам из GoodsList
   , MI_PriceList AS
        (SELECT Movement_PriceList.MovementId
@@ -169,7 +202,8 @@ BEGIN
              INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                               AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
-             INNER JOIN GoodsList ON GoodsList.GoodsId_jur = MILinkObject_Goods.ObjectId -- товар "поставщика"
+                                              AND MILinkObject_Goods.ObjectId      IN (SELECT GoodsList.GoodsId_jur FROM GoodsList) -- товар "поставщика"
+             LEFT JOIN GoodsList ON GoodsList.GoodsId_jur = MILinkObject_Goods.ObjectId -- товар "поставщика"
        )
 
     -- почти финальный список

@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, Boolean, TVarChar, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TBlob, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer,Integer, Integer, Boolean, TVarChar, TBlob, TVarChar, TVarChar, Tfloat, TVarchar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer,Integer, Integer, Boolean, TVarChar, TBlob, TVarChar, TVarChar, Tfloat, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
     IN inContractId              Integer   ,    -- ссылка на 
     IN inFileTypeId              Integer   ,    -- ссылка на 
     IN inImportTypeId            Integer   ,    -- ссылка на  
+    IN inEmailKindId             Integer   ,    -- ссылка на  
     IN inContactPersonId         Integer   ,    -- ссылка на контактное лицо
     IN inStartRow                Integer   ,    -- 
     IN inHDR                     Boolean   ,    -- 
@@ -56,10 +57,10 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ImportType(), ioId, inImportTypeId);
    -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_EmailKind(), ioId, inEmailKindId);
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ContactPerson(), ioId, inContactPersonId);
 
-
-   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ImportSettings_HDR(), ioId, inHDR);
 
@@ -89,11 +90,10 @@ BEGIN
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
+
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TBlob, TVarchar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -103,9 +103,8 @@ LANGUAGE plpgsql VOLATILE;
  16.09.14                         * 
  09.09.14                         * 
  02.07.14         * 
-
 */
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_ImportSettings ()                            
---select * from gpInsertUpdate_Object_ImportSettings(ioId := 0 , inCode := 0 , inName := 'иом' , inJuridicalId := 141 , inContractId := 151 , inFileTypeId := 0 , inImportTypeId := 0 , inStartRow := 0 , inDirectory := 'ьмь' ,  inSession := '8');
+-- select * from gpInsertUpdate_Object_ImportSettings(ioId := 0 , inCode := 0 , inName := 'иом' , inJuridicalId := 141 , inContractId := 151 , inFileTypeId := 0 , inImportTypeId := 0 , inStartRow := 0 , inDirectory := 'ьмь' ,  inSession := '8');

@@ -64,10 +64,10 @@ BEGIN
                                        , MIContainer.MovementDescId           AS MovementDescId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS FuelId
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Transport() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumCount_Transport
-                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) = 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_Transport
-                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAdd
-                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAddLong
-                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportTaxi
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) IN (0, zc_Enum_AnalyzerId_ProfitLoss()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_Transport
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Add()     THEN 1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAdd
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_AddLong() THEN 1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAddLong
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Taxi()    THEN 1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportTaxi
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportService
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_PersonalSendCash()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_PersonalSendCash
                                        , MIContainer.WhereObjectId_Analyzer          AS CarId
@@ -96,7 +96,7 @@ BEGIN
                                                       
                                   WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                                     AND MIContainer.MovementDescId in (zc_Movement_Transport(), zc_Movement_TransportService(),zc_Movement_PersonalSendCash())
-                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
+                                    -- AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
                                     AND (MIContainer.ObjectExtId_Analyzer = inBranchId OR inBranchId = 0)  -- филиал
                                     AND (MIContainer.ObjectIntId_Analyzer = inUnitId OR inUnitId = 0)      -- подразделение
                                     AND (MIContainer.WhereObjectId_Analyzer = inCarId OR inCarId = 0)      -- Автомобиль
@@ -210,9 +210,9 @@ BEGIN
                      , SUM(tmpAll.WeightSale)                 AS WeightSale
                      , SUM(tmpAll.SumCount_Transport)         AS SumCount_Transport
                      , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_Transport
-                     , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_TransportAdd
-                     , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_TransportAddLong
-                     , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_TransportTaxi
+                     , SUM(tmpAll.SumAmount_TransportAdd)     AS SumAmount_TransportAdd
+                     , SUM(tmpAll.SumAmount_TransportAddLong) AS SumAmount_TransportAddLong
+                     , SUM(tmpAll.SumAmount_TransportTaxi)    AS SumAmount_TransportTaxi
                      , SUM(tmpAll.SumAmount_TransportService) AS SumAmount_TransportService
                      , SUM(tmpAll.SumAmount_PersonalSendCash) AS SumAmount_PersonalSendCash
                      , SUM(tmpAll.Distance)        AS Distance

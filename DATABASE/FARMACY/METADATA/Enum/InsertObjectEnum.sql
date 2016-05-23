@@ -148,11 +148,12 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EDIStatus_DECLAR(), inDescId:= zc_Object_EDIStatus(), inCode:= zc_Enum_EDIStatus_DECLAR(), inName:= 'Налоговая', inEnumName:= 'zc_Enum_EDIStatus_DECLAR');
     
      -- !!! Тип контакта
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CreateOrder()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 1, inName:= 'Формирование заказов'          , inEnumName:= 'zc_Enum_ContactPersonKind_CreateOrder');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CheckDocument(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 2, inName:= 'Проверка документов'           , inEnumName:= 'zc_Enum_ContactPersonKind_CheckDocument');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_AktSverki()    , inDescId:= zc_Object_ContactPersonKind(), inCode:= 3, inName:= 'Акты сверки и выполенных работ', inEnumName:= 'zc_Enum_ContactPersonKind_AktSverki');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_ProcessOrder() , inDescId:= zc_Object_ContactPersonKind(), inCode:= 4, inName:= 'Обработка заказов'             , inEnumName:= 'zc_Enum_ContactPersonKind_ProcessOrder');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_PriceListIn()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 5, inName:= 'Обработка прайса-поставщика'   , inEnumName:= 'zc_Enum_ContactPersonKind_PriceListIn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CreateOrder()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 1, inName:= 'Формирование заказов'                , inEnumName:= 'zc_Enum_ContactPersonKind_CreateOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CheckDocument(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 2, inName:= 'Проверка документов'                 , inEnumName:= 'zc_Enum_ContactPersonKind_CheckDocument');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_AktSverki()    , inDescId:= zc_Object_ContactPersonKind(), inCode:= 3, inName:= 'Акты сверки и выполенных работ'      , inEnumName:= 'zc_Enum_ContactPersonKind_AktSverki');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_ProcessOrder() , inDescId:= zc_Object_ContactPersonKind(), inCode:= 4, inName:= 'Обработка заказов'                   , inEnumName:= 'zc_Enum_ContactPersonKind_ProcessOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_PriceListIn()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 5, inName:= 'Обработка прайса-поставщика'         , inEnumName:= 'zc_Enum_ContactPersonKind_PriceListIn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_IncomeMMO()    , inDescId:= zc_Object_ContactPersonKind(), inCode:= 6, inName:= 'Обработка ММО прихода от поставщика' , inEnumName:= 'zc_Enum_ContactPersonKind_IncomeMMO');
 
      -- !!! Типы счетов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Active(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активный', inEnumName:= 'zc_Enum_AccountKind_Active');
@@ -411,7 +412,8 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
-                                                              inContactPersonId:= NULL,
+                                                              inEmailKindId  := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_EmailKind()),
+                                                              inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
@@ -532,7 +534,8 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
-                                                              inContactPersonId:= NULL,
+                                                              inEmailKindId  := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_EmailKind()),
+                                                              inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
@@ -653,7 +656,8 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
-                                                              inContactPersonId:= NULL,
+                                                              inEmailKindId  := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_EmailKind()),
+                                                              inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
@@ -793,7 +797,8 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
-                                                              inContactPersonId:= NULL,
+                                                              inEmailKindId  := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_EmailKind()),
+                                                              inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
@@ -915,7 +920,8 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
-                                                              inContactPersonId:= NULL,
+                                                              inEmailKindId  := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_EmailKind()),
+                                                              inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
@@ -1041,7 +1047,8 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
-                                                              inContactPersonId:= NULL,
+                                                              inEmailKindId  := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_EmailKind()),
+                                                              inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
@@ -1109,8 +1116,9 @@ BEGIN
 
 
       -- !!! Типы установок для почты
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_OutOrder(),inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая для заказов поставщикам'  , inEnumName:= 'zc_Enum_EmailKind_OutOrder');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_InPrice(), inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Входящая для прайс-листа поставщика', inEnumName:= 'zc_Enum_EmailKind_InPrice');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_OutOrder() , inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая для заказов поставщикам'     , inEnumName:= 'zc_Enum_EmailKind_OutOrder');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_InPrice()  , inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Входящая для прайс-листа поставщика'   , inEnumName:= 'zc_Enum_EmailKind_InPrice');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_IncomeMMO(), inDescId:= zc_Object_EmailKind(), inCode:= 3, inName:= 'Входящая для ММО прихода от поставщика', inEnumName:= 'zc_Enum_EmailKind_IncomeMMO');
 
 END $$;
 
@@ -1170,7 +1178,8 @@ BEGIN
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
                                                               inImportTypeId := vbImportTypeId,
-                                                              inContactPersonId:= NULL,
+                                                              inEmailKindId  := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_EmailKind()),
+                                                              inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
                                                               inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,

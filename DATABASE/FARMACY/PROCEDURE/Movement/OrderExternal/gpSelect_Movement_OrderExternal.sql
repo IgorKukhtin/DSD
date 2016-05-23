@@ -13,6 +13,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , MasterId Integer, MasterInvNumber TVarChar, OrderKindName TVarChar
+             , Comment TVarChar
               )
 
 AS
@@ -65,10 +67,20 @@ BEGIN
            , Movement_OrderExternal_View.JuridicalName
            , Movement_OrderExternal_View.ContractId
            , Movement_OrderExternal_View.ContractName
+           , Movement_OrderExternal_View.MasterId
+           , Movement_OrderExternal_View.MasterInvNumber
+           , Object_OrderKind.ValueData                   AS OrderKindName
+           , Movement_OrderExternal_View.Comment
 
        FROM tmpUnit
           LEFT JOIN Movement_OrderExternal_View ON Movement_OrderExternal_View.ToId = tmpUnit.UnitId
                                                AND Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderKind
+                                       ON MovementLinkObject_OrderKind.MovementId = Movement_OrderExternal_View.MasterId
+                                      AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
+          LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
+
           JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
     ;
 
@@ -81,6 +93,7 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.16         *
  15.07.14                                                        *
  01.07.14                                                        *
 

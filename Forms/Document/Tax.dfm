@@ -252,19 +252,19 @@ inherited TaxForm: TTaxForm
     end
     object cxLabel6: TcxLabel
       Left = 746
-      Top = 5
+      Top = 85
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
       Left = 746
-      Top = 23
+      Top = 103
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 133
+      Width = 237
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 427
@@ -335,7 +335,7 @@ inherited TaxForm: TTaxForm
       Width = 157
     end
     object edPartner: TcxButtonEdit
-      Left = 885
+      Left = 746
       Top = 23
       Properties.Buttons = <
         item
@@ -344,23 +344,23 @@ inherited TaxForm: TTaxForm
         end>
       TabOrder = 24
       Text = ' '
-      Width = 152
+      Width = 237
     end
     object cxLabel5: TcxLabel
-      Left = 885
+      Left = 746
       Top = 5
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object cxLabel8: TcxLabel
-      Left = 885
+      Left = 901
       Top = 45
       Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
     end
     object edInvNumberBranch: TcxTextEdit
-      Left = 885
+      Left = 901
       Top = 63
       TabOrder = 27
-      Width = 73
+      Width = 82
     end
     object cxLabel16: TcxLabel
       Left = 9
@@ -373,6 +373,20 @@ inherited TaxForm: TTaxForm
       TabOrder = 29
       Width = 595
     end
+  end
+  object cxLabel22: TcxLabel [2]
+    Left = 617
+    Top = 85
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+  end
+  object edStartDateTax: TcxDateEdit [3]
+    Left = 617
+    Top = 103
+    EditValue = 42181d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 7
+    Width = 118
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -411,6 +425,7 @@ inherited TaxForm: TTaxForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -450,6 +465,7 @@ inherited TaxForm: TTaxForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -458,6 +474,7 @@ inherited TaxForm: TTaxForm
       ReportNameParam.ComponentItem = 'ReportNameTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -486,12 +503,14 @@ inherited TaxForm: TTaxForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -499,6 +518,7 @@ inherited TaxForm: TTaxForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -532,6 +552,7 @@ inherited TaxForm: TTaxForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -540,6 +561,7 @@ inherited TaxForm: TTaxForm
       ReportNameParam.ComponentItem = 'ReportNameTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actInsertMaskMulti: TMultiAction [19]
       Category = 'DSDLib'
@@ -584,6 +606,7 @@ inherited TaxForm: TTaxForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -592,6 +615,7 @@ inherited TaxForm: TTaxForm
       ReportNameParam.ComponentItem = 'ReportNameTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actInsertMaskDoc: TdsdInsertUpdateAction [22]
       Category = 'DSDLib'
@@ -602,23 +626,27 @@ inherited TaxForm: TTaxForm
       FormName = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMask'
           Value = 'True'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = edOperDate
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = MasterDS
@@ -751,6 +779,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -758,6 +787,7 @@ inherited TaxForm: TTaxForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -765,10 +795,12 @@ inherited TaxForm: TTaxForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'delme'
         Value = ''
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -909,6 +941,7 @@ inherited TaxForm: TTaxForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 2
       end>
     Left = 830
@@ -930,12 +963,14 @@ inherited TaxForm: TTaxForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -943,28 +978,33 @@ inherited TaxForm: TTaxForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSale'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = '0'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMask'
         Value = '0'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 552
@@ -987,6 +1027,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMask'
@@ -995,6 +1036,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'inMask'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1003,12 +1045,14 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isMask'
@@ -1016,17 +1060,20 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'inMask'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1034,6 +1081,7 @@ inherited TaxForm: TTaxForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1041,54 +1089,63 @@ inherited TaxForm: TTaxForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Checked'
         Value = 'False'
         Component = edIsChecked
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Document'
         Value = 'False'
         Component = edIsDocument
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isElectron'
         Value = 'False'
         Component = edIsElectron
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DateRegistered'
         Value = 0d
         Component = edDateRegistered
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -1096,12 +1153,14 @@ inherited TaxForm: TTaxForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -1109,12 +1168,14 @@ inherited TaxForm: TTaxForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -1122,12 +1183,14 @@ inherited TaxForm: TTaxForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TaxKindName'
@@ -1135,12 +1198,14 @@ inherited TaxForm: TTaxForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1148,18 +1213,34 @@ inherited TaxForm: TTaxForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberBranch'
         Value = ''
         Component = edInvNumberBranch
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDateTax'
+        Value = 'NULL'
+        Component = edStartDateTax
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1173,6 +1254,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioInvNumber'
@@ -1180,6 +1262,7 @@ inherited TaxForm: TTaxForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioInvNumberPartner'
@@ -1187,6 +1270,7 @@ inherited TaxForm: TTaxForm
         Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberBranch'
@@ -1194,6 +1278,7 @@ inherited TaxForm: TTaxForm
         Component = edInvNumberBranch
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1201,6 +1286,7 @@ inherited TaxForm: TTaxForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -1208,6 +1294,7 @@ inherited TaxForm: TTaxForm
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocument'
@@ -1215,6 +1302,7 @@ inherited TaxForm: TTaxForm
         Component = edIsDocument
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceWithVAT'
@@ -1222,6 +1310,7 @@ inherited TaxForm: TTaxForm
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inVATPercent'
@@ -1229,6 +1318,7 @@ inherited TaxForm: TTaxForm
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1236,6 +1326,7 @@ inherited TaxForm: TTaxForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -1243,6 +1334,7 @@ inherited TaxForm: TTaxForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -1250,6 +1342,7 @@ inherited TaxForm: TTaxForm
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1257,6 +1350,7 @@ inherited TaxForm: TTaxForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -1264,6 +1358,7 @@ inherited TaxForm: TTaxForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1271,6 +1366,7 @@ inherited TaxForm: TTaxForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1354,6 +1450,7 @@ inherited TaxForm: TTaxForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1361,6 +1458,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1368,6 +1466,7 @@ inherited TaxForm: TTaxForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1376,6 +1475,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1384,6 +1484,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -1392,6 +1493,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
@@ -1399,6 +1501,7 @@ inherited TaxForm: TTaxForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1406,35 +1509,42 @@ inherited TaxForm: TTaxForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'del8'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'del9'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'del10'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'del11'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'del12'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'del13'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1446,6 +1556,7 @@ inherited TaxForm: TTaxForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1453,6 +1564,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1460,12 +1572,14 @@ inherited TaxForm: TTaxForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1474,6 +1588,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -1482,11 +1597,13 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
         Value = '0'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1494,6 +1611,7 @@ inherited TaxForm: TTaxForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 424
@@ -1507,6 +1625,7 @@ inherited TaxForm: TTaxForm
     LookupControl = edFrom
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1516,6 +1635,7 @@ inherited TaxForm: TTaxForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1524,6 +1644,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 296
     Top = 8
@@ -1533,6 +1654,7 @@ inherited TaxForm: TTaxForm
     LookupControl = edTo
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1541,6 +1663,7 @@ inherited TaxForm: TTaxForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1548,12 +1671,14 @@ inherited TaxForm: TTaxForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1561,12 +1686,14 @@ inherited TaxForm: TTaxForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1574,6 +1701,7 @@ inherited TaxForm: TTaxForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 504
     Top = 16
@@ -1583,6 +1711,7 @@ inherited TaxForm: TTaxForm
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1593,6 +1722,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1601,15 +1731,17 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 872
-    Top = 128
+    Left = 904
+    Top = 96
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1620,6 +1752,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1628,6 +1761,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 672
     Top = 8
@@ -1650,6 +1784,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -1666,6 +1801,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportName'
@@ -1673,6 +1809,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'ReportNameSale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 312
@@ -1680,6 +1817,7 @@ inherited TaxForm: TTaxForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     ComponentList = <>
     Left = 648
     Top = 96
@@ -1701,6 +1839,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Tax_ReportName'
@@ -1708,6 +1847,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'ReportNameTax'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 416
@@ -1723,6 +1863,7 @@ inherited TaxForm: TTaxForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement_Params
     ControlList = <
       item
@@ -1744,6 +1885,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1751,6 +1893,7 @@ inherited TaxForm: TTaxForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1758,6 +1901,7 @@ inherited TaxForm: TTaxForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateRegistered'
@@ -1765,6 +1909,7 @@ inherited TaxForm: TTaxForm
         Component = edDateRegistered
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRegistered'
@@ -1772,6 +1917,7 @@ inherited TaxForm: TTaxForm
         Component = edIsElectron
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1779,6 +1925,7 @@ inherited TaxForm: TTaxForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 417
@@ -1805,12 +1952,14 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 311
@@ -1837,12 +1986,14 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 311
@@ -1865,6 +2016,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -1872,6 +2024,7 @@ inherited TaxForm: TTaxForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -1879,18 +2032,29 @@ inherited TaxForm: TTaxForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        Component = edStartDateTax
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outInvNumberPartner_Master'
         Value = ''
         Component = edInvNumberPartner
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -1898,6 +2062,7 @@ inherited TaxForm: TTaxForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -1905,6 +2070,7 @@ inherited TaxForm: TTaxForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -1917,6 +2083,7 @@ inherited TaxForm: TTaxForm
     TextValue = ' '
     FormNameParam.Value = 'TContractChoicePartnerForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoicePartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1925,6 +2092,7 @@ inherited TaxForm: TTaxForm
         Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1932,12 +2100,14 @@ inherited TaxForm: TTaxForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1945,12 +2115,14 @@ inherited TaxForm: TTaxForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1958,9 +2130,10 @@ inherited TaxForm: TTaxForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 960
-    Top = 24
+    Left = 800
+    Top = 16
   end
   object spUpdateIsMedoc: TdsdStoredProc
     StoredProcName = 'gpUpdate_IsMedoc'
@@ -1973,6 +2146,7 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 536

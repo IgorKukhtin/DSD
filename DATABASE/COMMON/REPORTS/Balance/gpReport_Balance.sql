@@ -16,6 +16,7 @@ RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
              , AmountActiveStart TFloat, AmountPassiveStart TFloat, AmountActiveEnd TFloat, AmountPassiveEnd TFloat
              , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
+             , ContainerId Integer
               )
 AS
 $BODY$
@@ -152,6 +153,8 @@ BEGIN
            , CAST (tmpReportOperation.CountDebet AS TFloat) AS CountDebet
            , CAST (tmpReportOperation.CountKredit AS TFloat) AS CountKredit
            , CAST (tmpReportOperation.CountRemainsEnd AS TFloat) AS CountEnd
+
+           , tmpReportOperation.ContainerId :: Integer AS ContainerId
        FROM 
            tmpAccountAll AS Object_Account_View
            LEFT JOIN
@@ -179,6 +182,8 @@ BEGIN
                  , tmpReportOperation_two.CountDebet
                  , tmpReportOperation_two.CountKredit
                  , tmpReportOperation_two.CountRemainsEnd
+
+                 , tmpReportOperation_two.ContainerId
             FROM
            (SELECT tmpMIContainer_Remains.AccountId
                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
@@ -204,6 +209,8 @@ BEGIN
                  , 0 AS CountDebet -- SUM (COALESCE (tmpMIContainer_RemainsCount.AmountDebet, 0)) AS CountDebet
                  , 0 AS CountKredit -- SUM (COALESCE (tmpMIContainer_RemainsCount.AmountKredit, 0)) AS CountKredit
                  , 0 AS CountRemainsEnd -- SUM (COALESCE (tmpMIContainer_RemainsCount.AmountRemainsStart, 0) + COALESCE (tmpMIContainer_Remains.AmountDebet, 0) - COALESCE (tmpMIContainer_Remains.AmountKredit, 0)) AS CountRemainsEnd
+
+                 , MAX (tmpMIContainer_Remains.ContainerId) AS ContainerId
             FROM
                 (SELECT Container.ObjectId AS AccountId
                       , Container.Id AS ContainerId

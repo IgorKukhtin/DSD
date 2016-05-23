@@ -86,6 +86,8 @@ type
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     actShowMessage: TShowMessageAction;
+    cxLabel22: TcxLabel;
+    edStartDateTax: TcxDateEdit;
   private
     { Private declarations }
   public

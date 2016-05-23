@@ -5,7 +5,7 @@
   ClientWidth = 612
   AddOnFormData.isSingle = False
   ExplicitWidth = 618
-  ExplicitHeight = 347
+  ExplicitHeight = 344
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -220,7 +220,7 @@
   object cxLabel13: TcxLabel [28]
     Left = 8
     Top = 183
-    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074', '#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1087#1086#1087#1072#1076#1091#1090' "'#1079#1072#1090#1088#1072#1090#1099'"'
+    Caption = #8470' '#1076#1086#1082'. - "'#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074'"'
   end
   object ceIncomeCost: TcxButtonEdit [29]
     Left = 8
@@ -606,7 +606,7 @@
         Name = 'CostMovementId'
         Value = Null
         Component = IncomeCostGuides
-        ComponentItem = 'TextValue'
+        ComponentItem = 'Key'
         DataType = ftString
         MultiSelectSeparator = ','
       end

@@ -4,7 +4,6 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
   ClientWidth = 832
   ShowHint = True
   ExplicitWidth = 848
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +21,38 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         ExplicitWidth = 832
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmountIncome
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmountAll
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmountIncome
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmountAll
+            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -72,7 +103,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -83,12 +114,23 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 98
+          end
+          object colPriceSaleIncome: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'
+            DataBinding.FieldName = 'PriceSaleIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
           end
           object colAmountIncome: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080
@@ -187,23 +229,29 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
       MoveParams = <
         item
           FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'GoodsId'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'Code'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'Name'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -230,18 +278,21 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
       FormName = 'TGoodsMainLiteForm'
       FormNameParam.Value = 'TGoodsMainLiteForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -249,6 +300,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -304,9 +356,11 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
       MoveParams = <
         item
           FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'GoodsId'
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProcList = <
@@ -332,18 +386,22 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         item
           FromParam.Value = ''
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = edCodeSearch
           ToParam.DataType = ftString
           ToParam.ParamType = ptInput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = ''
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = edGoodsSearch
           ToParam.DataType = ftString
           ToParam.ParamType = ptInput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -371,6 +429,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         Component = edCodeSearch
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsSearch'
@@ -378,6 +437,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         Component = edGoodsSearch
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 88

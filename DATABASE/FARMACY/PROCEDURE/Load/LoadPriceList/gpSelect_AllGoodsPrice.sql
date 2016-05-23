@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
   , IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-    Id                  Integer,    --ИД товара
+    Id                  Integer,    --ИД товара  !!!ВСЕГДА СЕТИ, не так как в других запросах!!!
+    Id_retail           Integer,    --ИД товара  !!!ВСЕГДА НБ, не так как в дргих запросах!!!
     Code                Integer,    --Код товара
     GoodsName           TVarChar,   --Наименование товара
     LastPrice           TFloat,     --Текущая цена
@@ -28,6 +29,7 @@ RETURNS TABLE (
     MarginPercent       TFloat,     --% наценки по точке
     Juridical_GoodsName TVarChar,   --Наименование у поставщика
     ProducerName        TVarChar,   --производитель
+    ContractName        TVarChar,   -- договор
     SumReprice          TFloat,     --сумма переоценки
     MidPriceSale        TFloat,     --средняя цена остатка
     MidPriceDiff        TFloat,     --отклонение от средняя цена остатка
@@ -234,6 +236,7 @@ BEGIN
     (
         SELECT
             SelectMinPrice_AllGoods.GoodsId AS Id,
+            SelectMinPrice_AllGoods.GoodsId_retail AS Id_retail,
             SelectMinPrice_AllGoods.GoodsCode AS Code,
             SelectMinPrice_AllGoods.GoodsName AS GoodsName,
             Object_Price.Price                AS LastPrice,
@@ -257,6 +260,7 @@ BEGIN
             SelectMinPrice_AllGoods.JuridicalName            AS JuridicalName,
             SelectMinPrice_AllGoods.Partner_GoodsName        AS Partner_GoodsName,
             SelectMinPrice_AllGoods.MakerName                AS ProducerName,
+            Object_Contract.ValueData                        AS ContractName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
             SelectMinPrice_AllGoods.MidPriceSale             AS MidPriceSale,
             Object_Goods.NDSKindId,
@@ -264,17 +268,20 @@ BEGIN
             CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
             Object_Goods.IsTop,
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo
+
         FROM
             lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
                                      inObjectId := vbObjectId, 
                                      inUserId := vbUserId) as SelectMinPrice_AllGoods
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price
-                                              ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId
+                                              ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
                                              AND Object_Price.UnitId = inUnitId
             LEFT OUTER JOIN Object_Goods_View AS Object_Goods
                                               ON Object_Goods.ObjectId = vbObjectId
-                                             AND Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId
+                                                 -- !!!берем из сети!!!
+                                             AND Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId_retail -- SelectMinPrice_AllGoods.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                   ON ObjectFloat_Percent.ObjectId = SelectMinPrice_AllGoods.JuridicalId
                                  AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
@@ -291,7 +298,7 @@ BEGIN
 
             LEFT JOIN lpSelect_Income_AllGoods(inUnitId := inUnitId,
                                                inUserId := vbUserId) AS Select_Income_AllGoods 
-                                                                     ON Select_Income_AllGoods.GoodsId = SelectMinPrice_AllGoods.GoodsId
+                                                                     ON Select_Income_AllGoods.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
                                     ON ObjectBoolean_Goods_IsPromo.ObjectId = SelectMinPrice_AllGoods.Partner_GoodsId
@@ -299,7 +306,8 @@ BEGIN
     )
 
     SELECT
-        ResultSet.Id,
+        ResultSet.Id_retail AS Id,
+        ResultSet.Id        AS Id_retail,
         ResultSet.Code,
         ResultSet.GoodsName,
         ResultSet.LastPrice,
@@ -318,6 +326,7 @@ BEGIN
         ResultSet.MarginPercent          AS MarginPercent,
         ResultSet.Partner_GoodsName      AS Juridical_GoodsName,
         ResultSet.ProducerName           AS ProducerName,
+        ResultSet.ContractName,
         ROUND(((ResultSet.NewPrice - ResultSet.LastPrice)*ResultSet.RemainsCount),2)::TFloat AS SumReprice,
         ResultSet.MidPriceSale,
         CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceSale) * 100 - 100)   END    ::TFloat AS MidPriceDiff, 
@@ -375,6 +384,7 @@ ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  TFloat, Boolean, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 11.05.16         *
  16.02.16         * add isOneJuridical
  19.11.15                                                                      *
  01.07.15                                                                      *

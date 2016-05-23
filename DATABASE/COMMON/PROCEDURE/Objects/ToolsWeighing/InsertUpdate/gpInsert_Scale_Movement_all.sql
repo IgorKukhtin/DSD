@@ -557,6 +557,7 @@ BEGIN
              PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := vbMovementId_begin
                                                           , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
                                                           , inDocumentTaxKindId_inf := NULL
+                                                          , inStartDateTax          := NULL
                                                           , inUserId                := vbUserId
                                                            );
         END IF;

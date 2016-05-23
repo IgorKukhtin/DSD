@@ -196,6 +196,8 @@ type
     bbPrint_Transport: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     actShowMessage: TShowMessageAction;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

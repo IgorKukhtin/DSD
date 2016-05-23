@@ -202,6 +202,7 @@ object MainForm: TMainForm
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = ClientDataSet
       ImportSettingsId.ComponentItem = 'Id'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <>
     end
     object actMovePriceList: TdsdExecStoredProc
@@ -250,33 +251,41 @@ object MainForm: TMainForm
       Host.Component = ExportSettingsCDS
       Host.ComponentItem = 'Host'
       Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
       Port.Value = '0'
       Port.Component = ExportSettingsCDS
       Port.ComponentItem = 'Port'
+      Port.MultiSelectSeparator = ','
       UserName.Value = '0'
       UserName.Component = ExportSettingsCDS
       UserName.ComponentItem = 'UserName'
       UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
       Password.Value = '0'
       Password.Component = ExportSettingsCDS
       Password.ComponentItem = 'PasswordValue'
       Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
       Body.Value = '0'
       Body.Component = ExportSettingsCDS
       Body.ComponentItem = 'Body'
       Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
       Subject.Value = '0'
       Subject.Component = ExportSettingsCDS
       Subject.ComponentItem = 'Subject'
       Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
       FromAddress.Value = '0'
       FromAddress.Component = ExportSettingsCDS
       FromAddress.ComponentItem = 'MailFrom'
       FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
       ToAddress.Value = '0'
       ToAddress.Component = ExportSettingsCDS
       ToAddress.ComponentItem = 'MailTo'
       ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
     end
   end
   object MasterCDS: TClientDataSet
@@ -309,6 +318,7 @@ object MainForm: TMainForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
@@ -325,6 +335,7 @@ object MainForm: TMainForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 144
@@ -356,16 +367,19 @@ object MainForm: TMainForm
       item
         Name = 'outId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -388,6 +402,7 @@ object MainForm: TMainForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -405,24 +420,34 @@ object MainForm: TMainForm
         Name = 'inObjectId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContactPersonId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inByDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inByMail'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inByFileName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72

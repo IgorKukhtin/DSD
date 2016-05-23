@@ -21,21 +21,21 @@ BEGIN
         WHERE Id IN (zc_Movement_Sale(), zc_Movement_ReturnIn()/*, zc_Movement_SendOnPrice()*/)
        UNION ALL
         -- Налоговая накладная; Корректировка к налоговой накладной
-        SELECT 2                                           AS DescId
+        SELECT 2                     AS DescId
              , MovementDesc.Id       AS MovementDescId
              , MovementDesc.ItemName AS DescName
         FROM MovementDesc
         WHERE Id IN (zc_Movement_Tax(), zc_Movement_TaxCorrective())
        UNION ALL
         -- Начисления услуг по Юридическому лицу; Начисления по Юридическому лицу (расходы будущих периодов)
-        SELECT 3                                           AS DescId
+        SELECT 3                     AS DescId
              , MovementDesc.Id       AS MovementDescId
              , MovementDesc.ItemName AS DescName
         FROM MovementDesc
         WHERE Id IN (zc_Movement_Service(), zc_Movement_ProfitLossService())
        UNION ALL
         -- Перевод долга (расход); Перевод долга (приход)
-        SELECT 4                                           AS DescId
+        SELECT 4                     AS DescId
              , MovementDesc.Id       AS MovementDescId
              , MovementDesc.ItemName AS DescName
         FROM MovementDesc

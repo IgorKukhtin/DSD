@@ -801,6 +801,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
+
+  //מעקוע
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_ReturnInBySaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_ReturnInBySaleForm');
+
 end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
@@ -854,6 +859,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
+
+  //מעקוע ןמ ןנמהאזאל עמגאנא
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyReturnInForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnInForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyReturnInDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnInDialogForm');
 end;
 { ZakazExternalForm  -> OrderExternalForm
 procedure TLoadFormTest.LoadZakazExternalFormTest;

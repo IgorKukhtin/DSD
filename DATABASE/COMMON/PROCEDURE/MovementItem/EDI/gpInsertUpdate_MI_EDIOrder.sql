@@ -30,11 +30,46 @@ BEGIN
                                          AND MovementItem.DescId = zc_MI_Master() 
                                          AND MovementItem.isErased = FALSE
              WHERE MovementItemString.ValueData = inGLNCode
-               AND MovementItemString.DescId = zc_MIString_GLNCode())
+               AND MovementItemString.DescId = zc_MIString_GLNCode()
+             )
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> дублирование товара с GLN = <%>', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI())
-                                                                                              , DATE ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI()))
-                                                                                              , inGLNCode;
+         -- попробуем исправить ... закомментил, т.к. не проверил как оно работает
+         /**/
+         UPDATE MovementItem SET isErased = TRUE
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId = zc_MI_Master() 
+           AND MovementItem.isErased = FALSE
+           AND MovementItem.Id IN (SELECT tmp.Id
+                                   FROM
+                                 (SELECT MovementItem.Id
+                                        , ROW_NUMBER() OVER (PARTITION BY MovementItemString.ValueData ORDER BY MovementItem.Id ASC) AS Ord
+                                   FROM MovementItemString 
+                                        INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
+                                                               AND MovementItem.MovementId = inMovementId
+                                                               AND MovementItem.DescId = zc_MI_Master() 
+                                                               AND MovementItem.isErased = FALSE
+                                   WHERE MovementItemString.ValueData = inGLNCode
+                                     AND MovementItemString.DescId = zc_MIString_GLNCode()
+                                  ) AS tmp
+                                  WHERE tmp.Ord = 1
+                                  );
+         /**/
+
+         -- Проверка после исправления
+         IF 1 < (SELECT COUNT (*)
+                 FROM MovementItemString 
+                      INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
+                                             AND MovementItem.MovementId = inMovementId
+                                             AND MovementItem.DescId = zc_MI_Master() 
+                                             AND MovementItem.isErased = FALSE
+                 WHERE MovementItemString.ValueData = inGLNCode
+                   AND MovementItemString.DescId = zc_MIString_GLNCode()
+                 )
+         THEN
+             RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> дублирование товара с GLN = <%>', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI())
+                                                                                                  , DATE ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI()))
+                                                                                                  , inGLNCode;
+        END IF;
      END IF;
 
      -- находим элемент (по идее один товар - один GLN-код)

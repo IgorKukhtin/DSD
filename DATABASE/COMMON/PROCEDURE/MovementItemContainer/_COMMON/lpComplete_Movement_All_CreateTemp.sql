@@ -7,7 +7,7 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpmicontainer_insert')
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMIContainer_insert'))
      THEN
          DELETE FROM _tmpMIContainer_insert;
          DELETE FROM _tmpMIReport_insert;

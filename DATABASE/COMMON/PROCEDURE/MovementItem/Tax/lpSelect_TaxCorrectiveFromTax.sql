@@ -13,28 +13,36 @@ RETURNS TABLE (GoodsId     Integer
 AS
 $BODY$
   DECLARE vbMovementId_tax Integer;
-  DECLARE vbOperDate_begin TDateTime;
+--  DECLARE vbOperDate_begin TDateTime;
 BEGIN
 
     -- нашли налоговую
     vbMovementId_tax:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child());
     -- определили дату, т.к. проверка нужна с 01.04.2016
-    vbOperDate_begin:= (SELECT CASE WHEN MovementDate_DateRegistered.ValueData > Movement.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement.OperDate END
+    /*vbOperDate_begin:= (SELECT CASE WHEN MovementDate_DateRegistered.ValueData > Movement.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement.OperDate END
                         FROM Movement
                              LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                                     ON MovementDate_DateRegistered.MovementId = Movement.Id
                                                    AND MovementDate_DateRegistered.DescId     = zc_MovementDate_DateRegistered()
                         WHERE Movement.Id = inMovementId
-                       );
+                       );*/
 
     -- !!!проверка нужна с 01.04.2016!!!
-    IF vbOperDate_begin >= '01.04.2016' OR 1 = 1
+    IF /*vbOperDate_begin >= '01.04.2016' OR*/ 1 = 1
     THEN
 
     RETURN QUERY
-    WITH -- Строчная часть налоговой с № п/п
-         tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax))
-         -- Строчная часть корерктировки
+    WITH -- документ - корректировка
+         tmpMovement AS (SELECT MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
+                         FROM Movement
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                           ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                                          AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                         WHERE Movement.Id = inMovementId
+                        )
+         -- Строчная часть налоговой с № п/п
+       , tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax))
+         -- Строчная часть корректировки
        , tmpMICorrective AS
                     (SELECT MovementItem.ObjectId                         AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -62,7 +70,21 @@ BEGIN
                     (SELECT tmpMICorrective.GoodsId
                           , tmpMICorrective.GoodsKindId
                           , tmpMICorrective.Price
-                          , CASE WHEN tmpMICorrective.LineNumTax <> 0 THEN tmpMICorrective.LineNumTax ELSE COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0)) END AS LineNumTax
+
+                          , CASE WHEN (SELECT tmpMovement.DocumentTaxKindId FROM tmpMovement) IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                 )
+                                  AND tmpMICorrective.LineNumTax <> 0 
+                                      THEN tmpMICorrective.LineNumTax
+
+                                 WHEN COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0)) <> 0
+                                  AND tmpMICorrective.LineNumTax <> 0
+                                      THEN tmpMICorrective.LineNumTax
+
+                                 ELSE COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0))
+
+                            END AS LineNumTax
+
                      FROM tmpMICorrective
                           LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
                                                          AND tmpMITax1.GoodsId     = tmpMICorrective.GoodsId
@@ -80,9 +102,8 @@ BEGIN
                 , tmpResult.Price :: TFloat AS Price
                , ('Ошибка. Не определено значение <№ п/п НН>'
                || CASE WHEN tmpResult.LineNumTax < 0 THEN ' = <' || tmpResult.LineNumTax :: TvarChar|| '>' ELSE '' END
-   || CHR (13) || 'Для товара <' || lfGet_Object_ValueData (tmpResult.GoodsId)
-                                 || CASE WHEN tmpResult.GoodsKindId > 0 THEN ' ' || lfGet_Object_ValueData (tmpResult.GoodsKindId) ELSE '' END
-                                 || '>'
+   || CHR (13) || 'Для товара <' || lfGet_Object_ValueData (tmpResult.GoodsId)|| '>'
+               || CASE WHEN tmpResult.GoodsKindId > 0 THEN CHR (13) || 'вид <' || lfGet_Object_ValueData (tmpResult.GoodsKindId) || '>' ELSE '' END
    || CHR (13) || 'с ценой = <' || tmpResult.Price :: TVarChar || '>'
    || CHR (13) || 'Налоговая № <' || COALESCE (MovementString_InvNumberPartner_tax.ValueData, '') || '> от <' || COALESCE (DATE (Movement_tax.OperDate) :: TVarChar, '???') || '>'
    || CHR (13) || 'Корректировка № <' || COALESCE (MovementString_InvNumberPartner.ValueData, '') || '> от <' || COALESCE (DATE (Movement.OperDate) :: TVarChar, '???') || '> сформирована и'

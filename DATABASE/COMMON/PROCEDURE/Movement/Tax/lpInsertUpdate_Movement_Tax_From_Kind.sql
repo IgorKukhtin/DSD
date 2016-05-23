@@ -1,11 +1,13 @@
 -- Function: lpInsertUpdate_Movement_Tax_From_Kind()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (
     IN inMovementId                 Integer  , -- ключ Документа
     IN inDocumentTaxKindId          Integer  , -- Тип формирования налогового документа
     IN inDocumentTaxKindId_inf      Integer  , -- Тип формирования налогового документа
+    IN inStartDateTax               TDateTime, -- 
    OUT outInvNumberPartner_Master   TVarChar , --
    OUT outDocumentTaxKindId         Integer  , --
    OUT outDocumentTaxKindName       TVarChar , --
@@ -228,6 +230,9 @@ BEGIN
                                     ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement.MovementChildId
                                    AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
       WHERE Movement.Id = inMovementId;
+
+      -- !!!замена!!!
+      IF inStartDateTax IS NULL THEN inStartDateTax:= DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '4 MONTH'; END IF;
 
 
       -- если надо, находим существующий <Налоговый документ>
@@ -785,7 +790,7 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '4 MONTH' AND vbOperDate - INTERVAL '0 DAY' -- !!!обязательно 0 DAY, что б попала текущая сводная <Налоговая>!!!
+                                                 AND Movement.OperDate BETWEEN inStartDateTax /*vbOperDate - INTERVAL '4 MONTH'*/ AND vbOperDate - INTERVAL '0 DAY' -- !!!обязательно 0 DAY, что б попала текущая сводная <Налоговая>!!!
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -824,7 +829,7 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '4 MONTH' AND vbOperDate - INTERVAL '0 DAY' -- !!!обязательно 0 DAY, что б попала текущая сводная <Налоговая>!!!
+                                                 AND Movement.OperDate BETWEEN inStartDateTax /*vbOperDate - INTERVAL '4 MONTH'*/ AND vbOperDate - INTERVAL '0 DAY' -- !!!обязательно 0 DAY, что б попала текущая сводная <Налоговая>!!!
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -1167,11 +1172,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, Integer) OWNER TO postgres;
+--ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, Integer) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.16         * add 
  09.07.14                                        * add zc_Movement_TransferDebtIn
  03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС
  16.05.14                                        * set lp

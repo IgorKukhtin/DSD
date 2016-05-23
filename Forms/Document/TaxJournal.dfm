@@ -585,22 +585,26 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMask'
           Value = 'False'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
@@ -613,17 +617,20 @@ inherited TaxJournalForm: TTaxJournalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMask'
           Value = 'True'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actInsertMaskMulti: TMultiAction [9]
@@ -649,22 +656,26 @@ inherited TaxJournalForm: TTaxJournalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMask'
           Value = 'False'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actMovementCheck: TdsdOpenForm [11]
@@ -676,6 +687,7 @@ inherited TaxJournalForm: TTaxJournalForm
       FormName = 'TMovementCheckForm'
       FormNameParam.Value = 'TMovementCheckForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -683,6 +695,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -734,6 +747,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -742,6 +756,7 @@ inherited TaxJournalForm: TTaxJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintTax_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -773,6 +788,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -781,6 +797,7 @@ inherited TaxJournalForm: TTaxJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actGetReporNameTax: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -801,10 +818,12 @@ inherited TaxJournalForm: TTaxJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -825,10 +844,12 @@ inherited TaxJournalForm: TTaxJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -852,12 +873,14 @@ inherited TaxJournalForm: TTaxJournalForm
       FormName = 'TTaxJournalDialogForm'
       FormNameParam.Value = 'TTaxJournalDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DateRegistered'
@@ -866,6 +889,7 @@ inherited TaxJournalForm: TTaxJournalForm
           ComponentItem = 'DateRegistered_notNull'
           DataType = ftDateTime
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isElectron'
@@ -873,6 +897,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = MasterCDS
           ComponentItem = 'isElectron'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumberRegistered'
@@ -880,6 +905,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = MasterCDS
           ComponentItem = 'InvNumberRegistered'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -887,6 +913,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
@@ -894,12 +921,14 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
@@ -907,6 +936,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -920,6 +950,7 @@ inherited TaxJournalForm: TTaxJournalForm
       FormName = 'TMovement_DateDialogForm'
       FormNameParam.Value = 'TMovement_DateDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -927,6 +958,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -934,6 +966,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'IsPartnerDate'
@@ -941,6 +974,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Component = edIsRegisterDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1071,7 +1105,9 @@ inherited TaxJournalForm: TTaxJournalForm
       Category = 'TaxLib'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediDeclar
       HeaderDataSet = PrintHeaderCDS
@@ -1116,6 +1152,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -1123,6 +1160,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsRegisterDate'
@@ -1130,6 +1168,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = edIsRegisterDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1137,6 +1176,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 171
@@ -1395,12 +1435,14 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -1414,6 +1456,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -1427,6 +1470,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -1471,12 +1515,14 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -1503,12 +1549,14 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -1525,6 +1573,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Tax_ReportName'
@@ -1532,6 +1581,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameTax'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 560
@@ -1548,6 +1598,7 @@ inherited TaxJournalForm: TTaxJournalForm
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1558,6 +1609,7 @@ inherited TaxJournalForm: TTaxJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1566,6 +1618,7 @@ inherited TaxJournalForm: TTaxJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 912
   end
@@ -1580,6 +1633,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId'
@@ -1587,6 +1641,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'TaxKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKindId_inf'
@@ -1594,6 +1649,14 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outInvNumberPartner_Master'
@@ -1601,12 +1664,14 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'TaxKindId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -1614,6 +1679,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'TaxKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -1621,6 +1687,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1637,6 +1704,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -1645,6 +1713,7 @@ inherited TaxJournalForm: TTaxJournalForm
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -1661,6 +1730,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inElectron'
@@ -1669,6 +1739,7 @@ inherited TaxJournalForm: TTaxJournalForm
         ComponentItem = 'isElectron'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
@@ -1685,6 +1756,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocument'
@@ -1693,6 +1765,7 @@ inherited TaxJournalForm: TTaxJournalForm
         ComponentItem = 'Document'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -1700,8 +1773,11 @@ inherited TaxJournalForm: TTaxJournalForm
   end
   object EDI: TEDI
     ConnectionParams.Host.Value = Null
+    ConnectionParams.Host.MultiSelectSeparator = ','
     ConnectionParams.User.Value = Null
+    ConnectionParams.User.MultiSelectSeparator = ','
     ConnectionParams.Password.Value = Null
+    ConnectionParams.Password.MultiSelectSeparator = ','
     SendToFTP = False
     Left = 776
     Top = 192
@@ -1717,6 +1793,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MedocListAction
         ComponentItem = 'Directory'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 512
@@ -1733,6 +1810,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 504
@@ -1749,6 +1827,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'onisMedoc'
@@ -1756,6 +1835,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'isMedoc'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 824
@@ -1772,17 +1852,20 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Period'
         Value = 'cxTextEdit1'
         Component = edPeriod
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LoadDateTime'
         Value = 42121d
         Component = edLoadData
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 736
@@ -1809,12 +1892,14 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -1831,6 +1916,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -1838,6 +1924,7 @@ inherited TaxJournalForm: TTaxJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 201

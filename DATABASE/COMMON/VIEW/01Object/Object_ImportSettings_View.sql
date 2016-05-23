@@ -19,7 +19,10 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            
            , Object_ImportType.Id         AS ImportTypeId
            , Object_ImportType.ValueData  AS ImportTypeName 
-           
+
+           , Object_EmailKind.Id         AS EmailKindId
+           , Object_EmailKind.ValueData  AS EmailKindName 
+
            , ObjectFloat_StartRow.ValueData::Integer AS StartRow
            , ObjectBoolean_HDR.ValueData      AS HDR
            , ObjectString_Directory.ValueData AS Directory
@@ -44,6 +47,11 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
                                AND ObjectLink_ImportSettings_FileType.DescId = zc_ObjectLink_ImportSettings_FileType()
            LEFT JOIN Object AS Object_FileType ON Object_FileType.Id = ObjectLink_ImportSettings_FileType.ChildObjectId 
    
+           LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_EmailKind
+                                ON ObjectLink_ImportSettings_EmailKind.ObjectId = Object_ImportSettings.Id
+                               AND ObjectLink_ImportSettings_EmailKind.DescId = zc_ObjectLink_ImportSettings_EmailKind()
+           LEFT JOIN Object AS Object_EmailKind ON Object_EmailKind.Id = ObjectLink_ImportSettings_EmailKind.ChildObjectId            
+
            LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_ImportType
                                 ON ObjectLink_ImportSettings_ImportType.ObjectId = Object_ImportSettings.Id
                                AND ObjectLink_ImportSettings_ImportType.DescId = zc_ObjectLink_ImportSettings_ImportType()
@@ -81,4 +89,4 @@ ALTER TABLE Object_ImportSettings_View  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_Goods_View
+-- SELECT * FROM Object_ImportSettings_View

@@ -110,7 +110,7 @@
     Caption = #1062#1077#1085#1072' '#1057#1055':'
   end
   object ceReferPrice: TcxCurrencyEdit [15]
-    Left = 128
+    Left = 124
     Top = 226
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -143,7 +143,7 @@
     Caption = '% '#1085#1072#1094#1077#1085#1082#1080
   end
   object cePercentMarkup: TcxCurrencyEdit [20]
-    Left = 9
+    Left = 8
     Top = 273
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -211,6 +211,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -218,6 +219,7 @@
         Component = ceCode
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -225,6 +227,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -232,6 +235,7 @@
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMeasureId'
@@ -239,6 +243,7 @@
         Component = dsdMeasureGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inNDSKindId'
@@ -246,6 +251,7 @@
         Component = NDSKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMinimumLot'
@@ -253,12 +259,14 @@
         Component = edMinimumLot
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReferCode'
         Value = Null
         Component = ceReferCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReferPrice'
@@ -266,6 +274,7 @@
         Component = ceReferPrice
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -273,6 +282,7 @@
         Component = ceSalePrice
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsClose'
@@ -280,6 +290,7 @@
         Component = cbIsClose
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTOP'
@@ -287,12 +298,15 @@
         Component = cbIsTop
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercentMarkup'
         Value = Null
         Component = cePercentMarkup
+        DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 0
@@ -306,23 +320,27 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName'
@@ -330,12 +348,14 @@
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MeasureId'
         Value = ''
         Component = dsdMeasureGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MeasureName'
@@ -343,12 +363,14 @@
         Component = dsdMeasureGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindId'
         Value = ''
         Component = NDSKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindName'
@@ -356,57 +378,67 @@
         Component = NDSKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MinimumLot'
         Value = Null
         Component = edMinimumLot
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReferCode'
         Value = Null
         Component = ceReferCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReferPrice'
         Value = Null
         Component = ceReferPrice
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Price'
         Value = Null
         Component = ceSalePrice
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isClose'
         Value = Null
         Component = cbIsClose
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isTop'
         Value = Null
         Component = cbIsTop
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PercentMarkup'
         Value = Null
         Component = cePercentMarkup
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IsFirst'
         Value = Null
         Component = cbIsFirst
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IsSecond'
         Value = Null
         Component = cbIsSecond
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 233
@@ -416,6 +448,7 @@
     LookupControl = ceParentGroup
     FormNameParam.Value = 'TGoodsGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -424,6 +457,7 @@
         Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -431,6 +465,7 @@
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 114
@@ -440,6 +475,7 @@
     LookupControl = ceMeasure
     FormNameParam.Value = 'TMeasureForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMeasureForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -448,6 +484,7 @@
         Value = ''
         Component = dsdMeasureGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -455,6 +492,7 @@
         Component = dsdMeasureGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 56
     Top = 169
@@ -464,6 +502,7 @@
     LookupControl = ceNDSKind
     FormNameParam.Value = 'TNDSKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TNDSKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -472,6 +511,7 @@
         Value = ''
         Component = NDSKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -479,6 +519,7 @@
         Component = NDSKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 169

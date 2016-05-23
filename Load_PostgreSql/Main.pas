@@ -2151,7 +2151,10 @@ begin
                calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
           end
      else calcEndDate:= saveEndDate;
-     pInsertHistoryCost_Period(calcStartDate,calcEndDate,FALSE);
+     //
+     if (cbOKPO.Checked)and(OKPOEdit.Text='123')
+     then pInsertHistoryCost_Period(saveStartDate,saveEndDate,FALSE)
+     else pInsertHistoryCost_Period(calcStartDate,calcEndDate,FALSE);
      //
      //
      tmpDate2:=NOw;

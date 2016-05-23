@@ -10,7 +10,8 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit;
+  cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TImportTypeForm = class(TAncestorDBGridForm)
@@ -47,6 +48,7 @@ type
     cxSplitter1: TcxSplitter;
     clNumber: TcxGridDBColumn;
     clUserParamName: TcxGridDBColumn;
+    clEnumName: TcxGridDBColumn;
   private
     { Private declarations }
   public

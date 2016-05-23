@@ -34,11 +34,18 @@ type
     JuridicalCode : Integer;
     JuridicalName : string;
     JuridicalMail : string;
+    ContactPersonId   : Integer;
+    ContactPersonName : string;
     ContractId    : Integer;
     ContractName  : string;
     Directory     : string;    // путь, в который должны попасть xls файлы перед загрузкой в программу
     StartTime     : TDateTime; // Время начала активной проверки
     EndTime       : TDateTime; // Время окончания активной проверки
+
+    zc_Enum_EmailKind_InPrice    : integer;
+    zc_Enum_EmailKind_IncomeMMO  : integer;
+    EmailKindId                  : integer;
+    EmailKindname                : string;
   end;
   TArrayImportSettings = array of TImportSettingsItem;
 
@@ -94,7 +101,7 @@ type
 
     function fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
 
-    function fError_SendEmail (inImportSettingsId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
+    function fError_SendEmail (inImportSettingsId, inContactPersonId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
 
     function fBeginAll  : Boolean; // обработка все
     function fInitArray : Boolean; // получает данные с сервера и на основании этих данных заполняет массивы
@@ -124,6 +131,7 @@ begin
   Timer.Enabled:=cbTimer.Checked;
   Timer.Interval:=100;
   cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec';
+  Sleep(5000);
   //
   GaugeHost.Progress:=0;
   GaugeMailFrom.Progress:=0;
@@ -179,7 +187,7 @@ begin
 end;
 {------------------------------------------------------------------------}
 //отправка сообщения если возникла ошибка
-function TMainForm.fError_SendEmail (inImportSettingsId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
+function TMainForm.fError_SendEmail (inImportSettingsId, inContactPersonId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
 begin
      if (inByFileName = '0') or (inByFileName = '4')
      then if IdMessage.MessageParts.Count > 0
@@ -190,7 +198,8 @@ begin
      //
      with spExportSettings_Email do
      begin
-       ParamByName('inObjectId').Value  :=inImportSettingsId;
+       ParamByName('inObjectId').Value         :=inImportSettingsId;
+       ParamByName('inContactPersonId').Value  :=inContactPersonId;
        ParamByName('inByDate').Value    :=inByDate;
        ParamByName('inByMail').Value    :=inByMail;
        ParamByName('inByFileName').Value:=inByFileName;
@@ -250,8 +259,16 @@ begin
           vbArrayImportSettings[i].JuridicalCode:=DataSet.FieldByName('JuridicalCode').asInteger;
           vbArrayImportSettings[i].JuridicalName:=DataSet.FieldByName('JuridicalName').asString;
           vbArrayImportSettings[i].JuridicalMail:=DataSet.FieldByName('JuridicalMail').asString;
+          vbArrayImportSettings[i].ContactPersonId  :=DataSet.FieldByName('ContactPersonId').asInteger;
+          vbArrayImportSettings[i].ContactPersonName:=DataSet.FieldByName('ContactPersonName').asString;
           vbArrayImportSettings[i].ContractId   :=DataSet.FieldByName('ContractId').asInteger;
           vbArrayImportSettings[i].ContractName :=DataSet.FieldByName('ContractName').asString;
+
+          vbArrayImportSettings[i].zc_Enum_EmailKind_InPrice   := DataSet.FieldByName('zc_Enum_EmailKind_InPrice').asInteger;
+          vbArrayImportSettings[i].zc_Enum_EmailKind_IncomeMMO := DataSet.FieldByName('zc_Enum_EmailKind_IncomeMMO').asInteger;
+          vbArrayImportSettings[i].EmailKindId   := DataSet.FieldByName('EmailKindId').asInteger;
+          vbArrayImportSettings[i].EmailKindname := DataSet.FieldByName('EmailKindname').asString;
+
           // путь, в который должны попасть xls файлы перед загрузкой в программу
           vbArrayImportSettings[i].Directory    :=ExpandFileName(DataSet.FieldByName('DirectoryImport').asString);
           // Время начала активной проверки
@@ -333,6 +350,7 @@ var
   searchResult, searchResult_save : TSearchRec;
   fOK:Boolean;
 begin
+//exit;
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;
@@ -364,6 +382,7 @@ begin
               //
               PanelHost.Caption:= 'Start Mail : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
               Application.ProcessMessages;
+              Sleep(5000);
               //current directory to store the email
               mailFolderMain:= vbArrayMail[ii].Directory + '\' + ReplaceStr(vbArrayMail[ii].UserName, '@', '_') + '_' + Session;
               //создали папку для писем если таковой нет + это протокол что по данному ящику была обработка
@@ -377,12 +396,12 @@ begin
 
               try
                  //подключаемся к ящику
-                 //***IdPOP3.Connect;
-                 IdPOP3.Connect(TRUE);
-                 IdPOP3.SelectMailBox('INBOX');
+                 //***IdPOP3.Connect;          //POP3
+                 IdPOP3.Connect(TRUE);         //IMAP
+                 IdPOP3.SelectMailBox('INBOX');//IMAP
                  //количество писем
-                 //***msgcnt:= IdPOP3.CheckMessages;
-                 msgcnt:= IdPOP3.MailBox.TotalMsgs;
+                 //***msgcnt:= IdPOP3.CheckMessages;  //POP3
+                 msgcnt:= IdPOP3.MailBox.TotalMsgs;   //IMAP
                  //
                  GaugeMailFrom.Progress:=0;
                  GaugeMailFrom.MaxValue:=msgcnt;
@@ -443,14 +462,35 @@ begin
                             //создали папку для загрузки, если таковой нет
                             ForceDirectories(vbArrayImportSettings[JurPos].Directory);
 
-                            // ТОЛЬКО если "сегодня" не было загрузки JurPos
-                            if fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId) = 0 then
+                            // ТОЛЬКО если "сегодня" не было загрузки JurPos или это ПРИХОД
+                            if (fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId) = 0)
+                             or(vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                            then
                             begin
                                  //НЕ будем копировать
                                  fOK:=false;
 
-                                 //поиск файла xls
-                                 if System.SysUtils.FindFirst(mailFolder + '\*.xls', faAnyFile, searchResult) = 0 then
+                                 //1. поиск файла MMO
+                                 if System.SysUtils.FindFirst(mailFolder + '\*.mmo', faAnyFile, searchResult) = 0 then
+                                 begin
+                                      searchResult_save:=searchResult;
+                                      if (System.SysUtils.FindNext(searchResult) <> 0)and(fOK=false)
+                                      then
+                                          //будем копировать
+                                          fOK:=true
+                                      else
+                                          //НЕ ошибка - найден НЕ ОДИН файл MMO для загрузки
+                                          fOK:=true;
+                                          {fError_SendEmail(vbArrayImportSettings[JurPos].Id
+                                                         , vbArrayImportSettings[JurPos].ContactPersonId
+                                                         , IdMessage.Date
+                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , '44');}
+                                 end;
+                                 //2.1. поиск файла xls И это не MMO
+                                 if (System.SysUtils.FindFirst(mailFolder + '\*.xls', faAnyFile, searchResult) = 0)
+                                  and(vbArrayImportSettings[JurPos].EmailKindId <> vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                                 then
                                  begin
                                       searchResult_save:=searchResult;
                                       if System.SysUtils.FindNext(searchResult) <> 0
@@ -460,13 +500,15 @@ begin
                                       else
                                           //ошибка - найден НЕ ОДИН файл xls для загрузки
                                           fError_SendEmail(vbArrayImportSettings[JurPos].Id
+                                                         , vbArrayImportSettings[JurPos].ContactPersonId
                                                          , IdMessage.Date
                                                          , vbArrayImportSettings[JurPos].JuridicalMail
                                                          , '4');
                                  end;
-                                 //поиск файла xlsx
-                                 if System.SysUtils.FindFirst(mailFolder + '\*.xlsx', faAnyFile, searchResult) = 0 then
-                                 begin
+                                 //2.2. поиск файла xlsx И это не MMO
+                                 if (System.SysUtils.FindFirst(mailFolder + '\*.xlsx', faAnyFile, searchResult) = 0)
+                                  and(vbArrayImportSettings[JurPos].EmailKindId <> vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                                 then begin
                                       searchResult_save:=searchResult;
                                       if (System.SysUtils.FindNext(searchResult) <> 0)and(fOK=false)
                                       then
@@ -475,30 +517,45 @@ begin
                                       else
                                           //ошибка - найден НЕ ОДИН файл xls для загрузки
                                           fError_SendEmail(vbArrayImportSettings[JurPos].Id
+                                                         , vbArrayImportSettings[JurPos].ContactPersonId
                                                          , IdMessage.Date
                                                          , vbArrayImportSettings[JurPos].JuridicalMail
                                                          , '4');
                                  end
-                                 else if fOK = false
-                                      then
-                                           //ошибка - не найден файл xls для загрузки
+                                 else // если не найдены файлы для копирования И не ММО
+                                      if (fOK = FALSE)
+                                         and(vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_InPrice)
+                                      then //ошибка - не найден файл xls для загрузки
                                            fError_SendEmail(vbArrayImportSettings[JurPos].Id
+                                                          , vbArrayImportSettings[JurPos].ContactPersonId
                                                           , IdMessage.Date
                                                           , vbArrayImportSettings[JurPos].JuridicalMail
                                                           , '0');
                                            ;
+                                  //
+                                  // если надо - будем копировать
                                   if fOK = TRUE then
                                   begin
+                                        //если это не MMO
+                                        if (vbArrayImportSettings[JurPos].EmailKindId <> vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                                        then begin
+                                              // потом скопировали ВСЕ файлики xls в папку из которой уже будет загрузка
+                                              StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                              WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                                              // потом скопировали ВСЕ файлики xlsx в папку из которой уже будет загрузка
+                                              StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                              WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+                                        end;
                                         // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                                        StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-                                        WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-                                        // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-                                        StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
+                                        StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.mmo' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
                                         WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
                                   end;
                                   // потом надо удалить письмо в почте
-                                  //flag:= true;
-                                  flag:= fOK
+                                  if (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                                  then // все равно удалить письмо в почте
+                                       flag:= true
+                                       // если найдены файлы для копирования
+                                  else flag:= fOK
                             end
                             else
                                 // если "сегодня" была загрузка JurPos - надо удалить письмо в почте
@@ -510,10 +567,8 @@ begin
                    else ShowMessage('not read :' + IntToStr(i));
 
                    //удаление письма
-                   //***if flag then IdPOP3.Delete(i);
-                   if flag then IdPOP3.DeleteMsgs(i);
-
-
+                   //***if flag then IdPOP3.Delete(i);   //POP3
+                   if flag then IdPOP3.DeleteMsgs(i);    //IMAP
                    //
                    GaugeMailFrom.Progress:=GaugeMailFrom.Progress+1;
                    Application.ProcessMessages;
@@ -526,8 +581,9 @@ begin
                  GaugeHost.Progress:=GaugeHost.Progress + 1;
                  Application.ProcessMessages;
               finally
-                 IdPOP3.Disconnect();
-                 IdPOP3.Free;
+               //***IdPOP3.Disconnect;    // POP3
+               IdPOP3.Disconnect();       //IMAP
+               IdPOP3.Free;               //IMAP
               end;
 
            end;//финиш - цикл по почтовым ящикам
@@ -554,35 +610,81 @@ begin
         //
         First;
         while not EOF do begin
-           PanelLoadXLS.Caption:= 'Load XLS : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString;
-           Application.ProcessMessages;
-           //Загружаем если есть откуда
-           if FieldByName('DirectoryImport').asString <> ''
-           then try
-                    //поиск файла xls
-                    if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.xls', faAnyFile, searchResult) = 0 then
-                    begin
-                         searchResult_save:=searchResult;
-                         if System.SysUtils.FindNext(searchResult) <> 0
-                         then
-                             // выполняется загрузка
-                             mactExecuteImportSettings.Execute
-                         else
-                             //ошибка - найден НЕ ОДИН файл xls для загрузки
-                             fError_SendEmail(FieldByName('Id').AsInteger
-                                            , NOW
-                                            //, FieldByName('JuridicalMail').AsString
-                                            , FieldByName('DirectoryImport').asString
-                                            , '2');
-                    end
-                    else;
-                        //ошибка - не найден файл xls для загрузки
-                        //та не, все нормально :)
-                except fError_SendEmail(FieldByName('Id').AsInteger
-                                      , searchResult_save.TimeStamp
-                                      , FieldByName('JuridicalMail').AsString
-                                      , searchResult_save.Name);
-                end;
+           //1.только для zc_Enum_EmailKind_InPrice!!!
+           if FieldByName('EmailKindId').asInteger = FieldByName('zc_Enum_EmailKind_InPrice').asInteger then
+           begin
+                 PanelLoadXLS.Caption:= 'Load XLS : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
+                 Sleep(2000);
+                 Application.ProcessMessages;
+                 //Загружаем если есть откуда
+                 if FieldByName('DirectoryImport').asString <> ''
+                 then try
+                          //поиск файла xls
+                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.xls', faAnyFile, searchResult) = 0 then
+                          begin
+                               searchResult_save:=searchResult;
+                               if System.SysUtils.FindNext(searchResult) <> 0
+                               then
+                                   // выполняется загрузка
+                                   mactExecuteImportSettings.Execute
+                               else
+                                   //ошибка - найден НЕ ОДИН файл xls для загрузки
+                                   fError_SendEmail(FieldByName('Id').AsInteger
+                                                  , FieldByName('ContactPersonId').AsInteger
+                                                  , NOW
+                                                  //, FieldByName('JuridicalMail').AsString
+                                                  , FieldByName('DirectoryImport').asString
+                                                  , '2');
+                          end
+                          else;
+                              //ошибка - не найден файл xls для загрузки
+                              //та не, все нормально :)
+                      except fError_SendEmail(FieldByName('Id').AsInteger
+                                            , FieldByName('ContactPersonId').AsInteger
+                                            , searchResult_save.TimeStamp
+                                            , FieldByName('JuridicalMail').AsString
+                                            , searchResult_save.Name);
+                      end;
+           end;//1.if ... !!!только для zc_Enum_EmailKind_InPrice!!!
+
+           //2.только для zc_Enum_EmailKind_IncomeMMO!!!
+           if FieldByName('EmailKindId').asInteger = FieldByName('zc_Enum_EmailKind_IncomeMMO').asInteger then
+           begin
+                 PanelLoadXLS.Caption:= 'Load MMO : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
+                 Application.ProcessMessages;
+                 Sleep(3000);
+                 //Загружаем если есть откуда
+                 if FieldByName('DirectoryImport').asString <> ''
+                 then try
+                          //поиск файла MMO
+                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.mmo', faAnyFile, searchResult) = 0 then
+                          begin
+                               searchResult_save:=searchResult;
+
+                               //НЕ ошибка - найден НЕ ОДИН файл MMO для загрузки
+                               if (1=1 ) or (System.SysUtils.FindNext(searchResult) <> 0)
+                               then
+                                   // выполняется загрузка
+                                   mactExecuteImportSettings.Execute
+                               else
+                                   //ошибка - найден НЕ ОДИН файл MMO для загрузки
+                                   fError_SendEmail(FieldByName('Id').AsInteger
+                                                  , FieldByName('ContactPersonId').AsInteger
+                                                  , NOW
+                                                  //, FieldByName('JuridicalMail').AsString
+                                                  , FieldByName('DirectoryImport').asString
+                                                  , '2');
+                          end
+                          else;
+                              //ошибка - не найден файл MMO для загрузки
+                              //та не, все нормально :)
+                      except fError_SendEmail(FieldByName('Id').AsInteger
+                                            , FieldByName('ContactPersonId').AsInteger
+                                            , searchResult_save.TimeStamp
+                                            , FieldByName('JuridicalMail').AsString
+                                            , searchResult_save.Name);
+                      end;
+           end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!
 
            Next;
            //
@@ -620,11 +722,13 @@ begin
            StartTime:=NOW;
            PanelMove.Caption:= 'Move : ('+FormatDateTime('dd.mm.yyyy',DataSet.FieldByName('OperDate').AsDateTime) + ') ' + DataSet.FieldByName('JuridicalName').AsString + ' : ' + DataSet.FieldByName('ContractName').AsString + ' for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            Application.ProcessMessages;
+           Sleep(1000);
            //
            try
               if DataSet.FieldByName('isMoved').AsBoolean = FALSE
               then actMovePriceList.Execute;
            except fError_SendEmail(Dataset.FieldByName('Id').AsInteger
+                                 , Dataset.FieldByName('ContactPersonId').AsInteger
                                  , NOW
                                  , Dataset.FieldByName('JuridicalName').AsString
                                  , '-1');

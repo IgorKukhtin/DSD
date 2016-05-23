@@ -15,6 +15,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountIncome TFloat, AmountAll TFloat
              , PriceSale  TFloat
              , SummaSale TFloat
+             , PriceSaleIncome  TFloat
              
              )
 AS
@@ -68,10 +69,10 @@ BEGIN
                          HAVING (SUM (tmpData_all.Amount) <> 0)                                
                           )
 
-
-               ,  tmpIncome AS (SELECT MovementLinkObject_To.ObjectId         AS UnitId
-                                     , MI_Income.ObjectId                     AS GoosdId
-                                     , SUM(COALESCE (MI_Income.Amount, 0))    AS AmountIncome      
+               ,  tmpIncome AS (SELECT MovementLinkObject_To.ObjectId          AS UnitId
+                                     , MI_Income.ObjectId                      AS GoosdId
+                                     , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome  
+                                     , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale    
                                 FROM Movement AS Movement_Income
                                      INNER JOIN MovementDate AS MovementDate_Branch
                                                              ON MovementDate_Branch.MovementId = Movement_Income.Id
@@ -85,8 +86,13 @@ BEGIN
                                      LEFT JOIN MovementItem AS MI_Income 
                                                             ON MI_Income.MovementId = Movement_Income.Id
                                                            AND MI_Income.isErased   = False
-                                      left join  Object ON Object.id = MI_Income.ObjectId
-                                      left join  Object AS Object1 ON Object1.id = MovementLinkObject_To.ObjectId                  
+
+                                     LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                                 ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
+                                                                AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
+                                     -- left join  Object ON Object.id = MI_Income.ObjectId
+                                     -- left join  Object AS Object1 ON Object1.id = MovementLinkObject_To.ObjectId                  
                                  WHERE Movement_Income.DescId = zc_Movement_Income()
                                    AND Movement_Income.StatusId = zc_Enum_Status_UnComplete() 
                                  GROUP BY MI_Income.ObjectId
@@ -95,29 +101,33 @@ BEGIN
 
 
         SELECT Object_Goods_View.Id                         as Id
-             , Object_Goods_View.GoodsCodeInt ::Integer     as GoodsCode
+             , Object_Goods_View.GoodsCodeInt    :: Integer as GoodsCode
              , Object_Goods_View.GoodsName                  as GoodsName
              , Object_Goods_View.NDSkindName                as NDSkindName
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
              , Object_Unit.ValueData                        AS UnitName
              , ObjectString_Phone.ValueData                 AS Phone
-             , tmpData.Amount :: TFloat                     AS Amount
-             , tmpIncome.AmountIncome :: TFloat             AS AmountIncome
-             , (tmpData.Amount + tmpIncome.AmountIncome)                           :: TFloat AS AmountAll
+             , COALESCE(tmpData.Amount,0)         :: TFloat AS Amount
+             , COALESCE(tmpIncome.AmountIncome,0)                                  :: TFloat AS AmountIncome
+             , (COALESCE(tmpData.Amount,0) + COALESCE(tmpIncome.AmountIncome,0))   :: TFloat AS AmountAll
              , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                    :: TFloat AS PriceSale
              , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) :: TFloat AS SummaSale
+             , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
               
-        FROM tmpData
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
+        FROM tmpGoods
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.DescId = zc_Object_Unit()
+            LEFT JOIN tmpData ON tmpData.GoodsId = tmpGoods.Id
+                             AND tmpData.UnitId  = Object_Unit.Id
 
-            LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
+            LEFT JOIN tmpIncome ON tmpIncome.GoosdId = tmpGoods.Id
+                               AND tmpIncome.UnitId  = Object_Unit.Id
+                               
+            LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpGoods.Id
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price
-                                              ON Object_Price.GoodsId = tmpData.GoodsId
-                                             AND Object_Price.UnitId = tmpData.UnitId
-                                       
-            LEFT JOIN tmpIncome ON tmpIncome.GoosdId = tmpData.GoodsId
-                               AND tmpIncome.UnitId  = tmpData.UnitId
+                                              ON Object_Price.GoodsId = tmpGoods.Id     
+                                             AND Object_Price.UnitId  = Object_Unit.Id  
+
             -- получаем значения цены и НТЗ из истории значений на дату на начало                                                          
             LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                     ON ObjectHistory_Price.ObjectId = Object_Price.Id
@@ -133,7 +143,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Phone
                                    ON ObjectString_Phone.ObjectId = ContactPerson_ContactPerson_Object.ObjectId
                                   AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
-    
+                                  
+          WHERE COALESCE(tmpData.Amount,0)<>0 OR COALESCE(tmpIncome.AmountIncome,0)<>0
           ORDER BY Object_Unit.ValueData 
                  , Object_Goods_View.GoodsGroupName
                  , Object_Goods_View.GoodsName 
@@ -146,8 +157,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.05.16         *
  18.04.16         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsSearchRemains ('', '', inSession := '3');
+-- SELECT * FROM gpSelect_GoodsSearchRemains ('4282', 'глюкоз', inSession := '3')
