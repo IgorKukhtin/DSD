@@ -56,7 +56,7 @@ BEGIN
              END :: TBlob AS Body
 
      FROM tmpEmail AS gpGet_Host
-          LEFT JOIN (SELECT 1 AS Num UNION ALL SELECT 2 AS Num UNION ALL SELECT 3 AS Num) AS tmp ON 1 = 1
+          LEFT JOIN (SELECT 1 AS Num UNION ALL SELECT 2 AS Num /*UNION ALL SELECT 3 AS Num*/) AS tmp ON 1 = 1
           LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
           LEFT JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
           LEFT JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
