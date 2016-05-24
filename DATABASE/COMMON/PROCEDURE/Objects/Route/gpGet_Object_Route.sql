@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Route(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , RateSumma Tfloat, RatePrice Tfloat
+             , RateSumma Tfloat, RatePrice Tfloat, TimePrice  Tfloat
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
@@ -30,6 +30,7 @@ $BODY$BEGIN
 
            , CAST (0 as TFloat)   AS RateSumma
            , CAST (0 as TFloat)   AS RatePrice
+           , CAST (0 as TFloat)   AS TimePrice
                       
            , CAST (0 as Integer)   AS UnitId 
            , CAST (0 as Integer)   AS UnitCode
@@ -63,6 +64,7 @@ $BODY$BEGIN
 
            , ObjectFloat_RateSumma.ValueData AS RateSumma
            , ObjectFloat_RatePrice.ValueData AS RatePrice
+           , ObjectFloat_TimePrice.ValueData AS TimePrice
                       
            , Object_Unit.Id         AS UnitId 
            , Object_Unit.ObjectCode AS UnitCode
@@ -94,6 +96,9 @@ $BODY$BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_RatePrice
                                   ON ObjectFloat_RatePrice.ObjectId = Object_Route.Id
                                  AND ObjectFloat_RatePrice.DescId = zc_ObjectFloat_Route_RatePrice()
+            LEFT JOIN ObjectFloat AS ObjectFloat_TimePrice
+                                  ON ObjectFloat_TimePrice.ObjectId = Object_Route.Id
+                                 AND ObjectFloat_TimePrice.DescId = zc_ObjectFloat_Route_TimePrice()
 
             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                          AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
@@ -128,6 +133,7 @@ ALTER FUNCTION gpGet_Object_Route (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.05.16         * add TimePrice
  20.04.15         * RouteGroup                
  13.12.13         * add             
  24.09.13         * add Unit, RouteKind, Freight            

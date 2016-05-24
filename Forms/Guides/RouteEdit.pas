@@ -56,6 +56,8 @@ type
     edRateSumma: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     edRatePrice: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    edTimePrice: TcxCurrencyEdit;
 
   private
     { Private declarations }
