@@ -108,11 +108,27 @@ BEGIN
     THEN
          -- все остатки
          INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
-           SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
+           -- SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
+           -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
+           SELECT DISTINCT ObjectLink_Child_NB.ChildObjectId AS ObjectID -- здесь товар "сети"
            FROM _tmpUnitMinPrice_List
                 INNER JOIN Container ON Container.WhereObjectId = _tmpUnitMinPrice_List.UnitId
                                     AND Container.DescId = zc_Container_Count()
                                     AND Container.Amount <> 0
+                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = container.ObjectID
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
           ;
     END IF;
 
@@ -127,31 +143,54 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCount'))
     THEN
         -- таблица
-        CREATE TEMP TABLE _tmpContainerCount (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpContainerCount (UnitId Integer, GoodsId Integer, GoodsId_retail Integer, Amount TFloat) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpContainerCount;
     END IF;
     --
-    INSERT INTO _tmpContainerCount (UnitId, GoodsId, Amount)
+    INSERT INTO _tmpContainerCount (UnitId, GoodsId, GoodsId_retail, Amount)
                 WITH tmpContainer AS 
-               (SELECT Container.WhereObjectId AS UnitId
-                     , Container.ObjectId      AS GoodsId
-                     , SUM (Container.Amount)  AS Amount
+               (SELECT Container.WhereObjectId           AS UnitId
+                     , ObjectLink_Child_NB.ChildObjectId AS GoodsId
+                     , Container.ObjectId                AS GoodsId_retail
+                     , SUM (Container.Amount)            AS Amount
                 FROM _tmpGoodsMinPrice_List
                      INNER JOIN Container ON Container.ObjectId = _tmpGoodsMinPrice_List.GoodsId
                                          AND Container.DescId   = zc_Container_Count()
                                          AND Container.Amount   <> 0
                                          AND Container.WhereObjectId IN (SELECT _tmpUnitMinPrice_List.UnitId FROM _tmpUnitMinPrice_List)
+
+                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = container.ObjectID
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
+
                 GROUP BY Container.WhereObjectId
                        , Container.ObjectId
+                       , ObjectLink_Child_NB.ChildObjectId
                 HAVING SUM (Container.Amount) > 0
                )
                 SELECT tmpContainer.UnitId
                      , tmpContainer.GoodsId
+                     , tmpContainer.GoodsId_retail
                      , tmpContainer.Amount
                 FROM tmpContainer
                      -- INNER JOIN _tmpUnitMinPrice_List ON _tmpUnitMinPrice_List.UnitId = tmpContainer.UnitId
                ;
+
+    -- !!!добавили, если нет остатка!!!
+    INSERT INTO _tmpContainerCount (UnitId, GoodsId, GoodsId_retail, Amount)
+       SELECT 0, tmp.GoodsId, tmp.GoodsId, 0 FROM _tmpGoodsMinPrice_List AS tmp LEFT JOIN _tmpContainerCount ON _tmpContainerCount.GoodsId = tmp.GoodsId WHERE _tmpContainerCount.GoodsId IS NULL;
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpContainerCount;
@@ -160,13 +199,13 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpList'))
     THEN
         -- таблица
-        CREATE TEMP TABLE _tmpList (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpList (UnitId Integer, GoodsId Integer, GoodsId_retail Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpList;
     END IF;
     --
-    INSERT INTO _tmpList (UnitId, GoodsId)
-                SELECT DISTINCT _tmpContainerCount.UnitId, _tmpContainerCount.GoodsId FROM _tmpContainerCount;
+    INSERT INTO _tmpList (UnitId, GoodsId, GoodsId_retail)
+                SELECT DISTINCT _tmpContainerCount.UnitId, _tmpContainerCount.GoodsId, _tmpContainerCount.GoodsId_retail FROM _tmpContainerCount;
                 /*SELECT _tmpUnitMinPrice_List.UnitId
                      , _tmpGoodsMinPrice_List.GoodsId
                 FROM _tmpGoodsMinPrice_List
@@ -407,14 +446,14 @@ BEGIN
 
              , ObjectFloat_NDSKind_NDS.ValueData    AS NDS
              , Object_NDSKind.ValueData             AS NDSKindName
-
+             
         FROM _tmpContainerCount AS tmpList -- _tmpList AS tmpList -- _tmpGoodsMinPrice_List
              -- LEFT JOIN _tmpUnitMinPrice_List ON 1=1
 
-             LEFT JOIN tmpMI_Deferred ON tmpMI_Deferred.GoodsId = tmpList.GoodsId
+             LEFT JOIN tmpMI_Deferred ON tmpMI_Deferred.GoodsId = tmpList.GoodsId_retail
                                      AND tmpMI_Deferred.UnitId  = tmpList.UnitId
 
-             LEFT JOIN Price_Unit     ON Price_Unit.GoodsId     = tmpList.GoodsId
+             LEFT JOIN Price_Unit     ON Price_Unit.GoodsId     = tmpList.GoodsId_retail
                                      AND Price_Unit.UnitId      = tmpList.UnitId
              /*LEFT JOIN _tmpContainerCount AS ContainerCount
                                           ON ContainerCount.GoodsId = tmpList.GoodsId
@@ -473,6 +512,7 @@ BEGIN
              LEFT JOIN MarginCategory_site ON MinPrice_List.Price >= MarginCategory_site.MinPrice AND MinPrice_List.Price < MarginCategory_site.MaxPrice
              LEFT JOIN Object AS Object_MarginCategory      ON Object_MarginCategory.Id      = MarginCategory.MarginCategoryId
              LEFT JOIN Object AS Object_MarginCategory_site ON Object_MarginCategory_site.Id = vbMarginCategoryId_site
+        ORDER BY Price_Unit.Price
        ;
 
 END;
@@ -489,4 +529,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar) OWNER
 -- тест
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '183292', inGoodsId_list:= '951', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
-SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpselect_goodsonunit_forsite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit
+-- SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpselect_goodsonunit_forsite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit

@@ -186,6 +186,13 @@ type
     childGoodsCode: TcxGridDBColumn;
     childAmountPartner: TcxGridDBColumn;
     childInvNumber_Master: TcxGridDBColumn;
+    spUpdateAuto: TdsdStoredProc;
+    actUpdateAuto: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    FromName: TcxGridDBColumn;
+    ToCode: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

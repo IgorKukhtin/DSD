@@ -41,10 +41,58 @@ end if;
              WHERE Movement.DescId = zc_Movement_EDI()
                AND Movement.OperDate = inOrderOperDate
                AND Movement.InvNumber = inOrderInvNumber
-               AND Movement.StatusId <> zc_Enum_Status_Erased())
+               AND Movement.StatusId <> zc_Enum_Status_Erased()
+            )
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ EDI № <%> от <%> для точки доставки с GLN = <%> загружен больше 1 раза.', inOrderInvNumber, DATE (inOrderOperDate), inGLNPlace;
+         -- попробуем исправить ... закомментил, т.к. не проверил как оно работает
+         /**/
+         UPDATE Movement SET StatusId = zc_Enum_Status_Erased() 
+         WHERE Movement.DescId = zc_Movement_EDI()
+           AND Movement.OperDate = inOrderOperDate
+           AND Movement.Id IN (SELECT tmp.Id
+                               FROM 
+                                   (SELECT Movement.*
+                                         , Movement_Order.Id AS MovementId_find
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementString_GLNPlaceCode.ValueData, Movement.InvNumber
+                                                              ORDER BY CASE WHEN Movement_Order.Id > 0 THEN 1 ELSE 2 END) AS Ord
+                                    FROM Movement
+                                         INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                                                   ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                                                  AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                                                  -- AND MovementString_GLNPlaceCode.ValueData = '4820141820833'
+                                         LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                        ON MovementLinkMovement_Order.MovementChildId = Movement.Id 
+                                                                       AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                         LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
+                                                                             -- AND Movement_Order.StatusId = zc_Enum_Status_Complete()
+                                    WHERE Movement.DescId = zc_Movement_EDI()
+                                      AND Movement.OperDate = inOrderOperDate
+                                      -- AND Movement.InvNumber = '3369002860' -- '3147002592'
+                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    ) AS tmp
+                               WHERE tmp.Ord <> 1
+                                 AND tmp.MovementId_find IS NULL
+                              );
+        /**/
+        -- Проверка после исправления
+        IF 1 < (SELECT COUNT (*)
+                FROM Movement
+                     INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                               ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                              AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                              AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                WHERE Movement.DescId = zc_Movement_EDI()
+                  AND Movement.OperDate = inOrderOperDate
+                  AND Movement.InvNumber = inOrderInvNumber
+                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+               )
+        THEN
+            -- 
+            RAISE EXCEPTION 'Ошибка.Документ EDI № <%> от <%> для точки доставки с GLN = <%> загружен больше 1 раза.', inOrderInvNumber, DATE (inOrderOperDate), inGLNPlace;
+        END IF;
+
      END IF;
+
 
      -- находим документ (по идее один товар - один GLN-код) + !!!по точке доставки!!!
      vbMovementId:= (SELECT Movement.Id

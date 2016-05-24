@@ -5,30 +5,33 @@ DROP FUNCTION IF EXISTS gpUpdate_Status_ReturnIn (Integer, Integer, TDateTime, T
 
 CREATE OR REPLACE FUNCTION gpUpdate_Status_ReturnIn(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
+ INOUT ioStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
     IN inStartDateSale       TDateTime , --
    OUT outMessageText        Text      ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Text
+RETURNS RECORD
 AS
 $BODY$
 BEGIN
 
-     CASE inStatusCode
+     CASE ioStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_ReturnIn (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            outMessageText:= gpComplete_Movement_ReturnIn (inMovementId     := inMovementId
-                                                         , inStartDateSale  := inStartDateSale
-                                                         , inIsLastComplete := FALSE
-                                                         , inSession        := inSession
-                                                          );
+            outMessageText:= (SELECT tmp.outMessageText FROM gpComplete_Movement_ReturnIn (inMovementId     := inMovementId
+                                                                                         , inStartDateSale  := inStartDateSale
+                                                                                         , inIsLastComplete := FALSE
+                                                                                         , inSession        := inSession
+                                                                                          ) AS tmp);
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_ReturnIn (inMovementId, inSession);
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;
+
+     -- Вернули статус (вдруг он не изменился)
+     ioStatusCode:= (SELECT Object.ObjectCode FROM Movement INNER JOIN Object ON Object.Id = Movement.StatusId WHERE Movement.Id = inMovementId);
 
 END;
 $BODY$

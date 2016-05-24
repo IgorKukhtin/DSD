@@ -4,7 +4,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1130
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

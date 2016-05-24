@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpSelectMinPrice_AllGoods(
 
 RETURNS TABLE (
     GoodsId            Integer,
+    GoodsId_retail     Integer,
     GoodsCode          Integer,
     GoodsName          TVarChar,
     Remains            TFloat,
@@ -56,7 +57,9 @@ BEGIN
     -- Остатки
   , Remains AS
        (SELECT
-            Container.ObjectId, -- здесь товар "сети"
+            -- !!!временно захардкодил, будет всегда товар НеБолей!!!
+            ObjectLink_Child_NB.ChildObjectId AS ObjectID, -- здесь товар "сети"
+            Container.ObjectId AS ObjectId_retail, -- здесь товар "сети"
             SUM(Container.Amount)::TFloat                      AS Amount,
             MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate, -- Срок годности
             SUM( Container.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)) / SUM(Container.Amount)      AS MidPriceSale -- !!! средняя Цена реал. с НДС!!!
@@ -74,16 +77,33 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                         ON MIFloat_PriceSale.MovementItemId = Object_PartionMovementItem.ObjectCode
                                        AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale() 
+                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = container.ObjectID
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
         WHERE Container.DescId = zc_Container_Count()
           AND Container.WhereObjectId = inUnitId
           AND Container.Amount <> 0
-        GROUP BY Container.ObjectId
+        -- GROUP BY Container.ObjectId
+        GROUP BY ObjectLink_Child_NB.ChildObjectId
+               , Container.ObjectId
         HAVING SUM (Container.Amount) > 0
        )
     -- Остатки + коды ...
   , GoodsList AS
        (SELECT 
             Remains.ObjectId,                  -- здесь товар "сети"
+            Remains.ObjectId_retail,           -- здесь товар "сети"
             Object_LinkGoods_View.GoodsMainId, -- здесь "общий" товар
             PriceList_GoodsLink.GoodsId,       -- здесь товар "поставщика"
             Remains.Amount,
@@ -99,6 +119,7 @@ BEGIN
   , FinalList AS
        (SELECT 
         ddd.GoodsId
+      , ddd.GoodsId_retail
       , ddd.GoodsCode
       , ddd.GoodsName  
       , ddd.Remains
@@ -128,6 +149,7 @@ BEGIN
 
     FROM (SELECT DISTINCT 
             GoodsList.ObjectId                 AS GoodsId
+          , GoodsList.ObjectId_retail          AS GoodsId_retail
           , Goods.GoodsCodeInt                 AS GoodsCode
           , Goods.GoodsName                    AS GoodsName  
           , GoodsList.Amount                   AS Remains
@@ -220,6 +242,7 @@ BEGIN
     -- Результат
     SELECT
         MinPriceList.GoodsId,
+        MinPriceList.GoodsId_retail,
         MinPriceList.GoodsCode,
         MinPriceList.GoodsName,
         MinPriceList.Remains,
@@ -254,4 +277,5 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 */
 
 -- тест
+-- SELECT * FROM lpSelectMinPrice_AllGoods (2144918, 4, 3) WHERE GoodsCode = 4797 -- !!!Никополь!!!
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 4797

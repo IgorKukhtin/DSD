@@ -4,8 +4,10 @@ DROP FUNCTION IF EXISTS lpUpdate_Movement_ReturnIn_fromTax_tmp (Integer, Integer
 
 CREATE OR REPLACE FUNCTION lpUpdate_Movement_ReturnIn_fromTax_tmp(
     IN inMovementId          Integer   , -- ключ Документа - zc_Movement_ReturnIn
+--   OUT outMessageText        Text      ,
     IN inUserId              Integer     -- Пользователь
 )
+-- RETURNS Text
 RETURNS TABLE (LineNum         Integer
              , LineNum3        Integer
              , LineNum1        Integer
@@ -212,7 +214,7 @@ BEGIN
                           )
              -- корректировка - по товар + вид
           , _tmpMI_corr2 AS (SELECT _tmpMI_corr.*
-                                  , ROW_NUMBER() OVER (PARTITION BY _tmpMI_corr.GoodsId, _tmpMI_corr.GoodsKindId ORDER BY _tmpMI_corr.LineNum ASC) AS Ord
+                                  , ROW_NUMBER() OVER (PARTITION BY _tmpMI_corr.MovementId_tax, _tmpMI_corr.GoodsId, _tmpMI_corr.GoodsKindId ORDER BY _tmpMI_corr.LineNum ASC) AS Ord
                              FROM _tmpMI_corr
                             )
              -- продажа - по товар + цена
@@ -237,8 +239,8 @@ BEGIN
              , COALESCE (_tmpMI_corr1.LineNum2, _tmpMI_corr2.LineNum2)    :: Integer AS LineNum2
 
              , tmpReturn.MovementItemId AS ParentId
-             , COALESCE (_tmpMI_sale1.MovementId, COALESCE (_tmpMI_sale2.MovementId, COALESCE (_tmpMI_sale3.MovementId, _tmpMI_sale4.MovementId))) :: Integer AS MovementId_sale
-             , COALESCE (_tmpMI_sale1.MovementItemId, COALESCE (_tmpMI_sale2.MovementItemId, COALESCE (_tmpMI_sale3.MovementItemId, _tmpMI_sale4.MovementItemId))) :: Integer AS MovementItemId_sale
+             , COALESCE (_tmpMI_sale1.MovementId, COALESCE (_tmpMI_sale2.MovementId, COALESCE (_tmpMI_sale3.MovementId, COALESCE (_tmpMI_sale4.MovementId, 0)))) :: Integer AS MovementId_sale
+             , COALESCE (_tmpMI_sale1.MovementItemId, COALESCE (_tmpMI_sale2.MovementItemId, COALESCE (_tmpMI_sale3.MovementItemId, COALESCE (_tmpMI_sale4.MovementItemId, 0)))) :: Integer AS MovementItemId_sale
 
              , _tmpMI_sale1.MovementId AS MovementId1
              , _tmpMI_sale2.MovementId AS MovementId2
@@ -249,13 +251,13 @@ BEGIN
              , _tmpMI_sale3.MovementItemId AS MovementItemId3
              , _tmpMI_sale4.MovementItemId AS MovementItemId4
 
-             , _tmpMI_corr1.MovementId_corr
-             , _tmpMI_corr1.MovementId_tax
+             , COALESCE (_tmpMI_corr1.MovementId_corr, _tmpMI_corr2.MovementId_corr) AS MovementId_corr
+             , COALESCE (_tmpMI_corr1.MovementId_tax, _tmpMI_corr2.MovementId_tax)   AS MovementId_tax
 
              , tmpReturn.GoodsId
              , tmpReturn.GoodsKindId
-             , _tmpMI_corr1.GoodsKindId_tax
-             , _tmpMI_corr1.Amount
+             , COALESCE (_tmpMI_corr1.GoodsKindId_tax, _tmpMI_corr2.GoodsKindId_tax) AS GoodsKindId_tax
+             , COALESCE (_tmpMI_corr1.Amount, _tmpMI_corr2.Amount)                   AS Amount
              , tmpReturn.Price_original
         FROM tmpReturn
              -- корректировка - по всем параметрам 
@@ -299,7 +301,7 @@ BEGIN
                                                        , inMovementId          := inMovementId
                                                        , inParentId            := tmp.ParentId
                                                        , inGoodsId             := tmp.GoodsId
-                                                       , inAmount              := COALESCE (tmp.Amount, 0)
+                                                       , inAmount              := CASE WHEN tmp.MovementId_sale > 0 AND tmp.MovementItemId_sale > 0 THEN COALESCE (tmp.Amount, 0) ELSE 0 END
                                                        , inMovementId_sale     := COALESCE (tmp.MovementId_sale, 0)
                                                        , inMovementItemId_sale := COALESCE (tmp.MovementItemId_sale, 0)
                                                        , inUserId              := inUserId
@@ -317,7 +319,7 @@ BEGIN
                                 AND MovementItem.DescId     = zc_MI_Child()
                              )
                  , MI_All AS (SELECT MI_Child.Id AS MovementItemId
-                                   , COALESCE (_tmpResult_ReturnIn_Auto.ParentId, MI_Child.ParentId) AS ParentId
+                                   , COALESCE (_tmpResult_ReturnIn_Auto.ParentId, COALESCE (MI_Child.ParentId, 0)) AS ParentId
                                    , _tmpResult_ReturnIn_Auto.MovementId_sale
                                    , _tmpResult_ReturnIn_Auto.MovementItemId_sale
                                    , _tmpResult_ReturnIn_Auto.Amount
@@ -340,6 +342,12 @@ BEGIN
      RETURN QUERY
      SELECT * FROM _tmpResult;
 
+     -- результат
+     /*outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
+                                                    , inUserId        := inUserId
+                                                     );*/
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -353,3 +361,4 @@ $BODY$
 -- тест
 -- SELECT * FROM MovementItem WHERE MovementId = 3662505 AND DescId = zc_MI_Child() -- SELECT * FROM MovementItemFloat WHERE MovementItemId IN (SELECT Id FROM MovementItem WHERE MovementId = 3662505 AND DescId = zc_MI_Child())
 -- SELECT * FROM lpUpdate_Movement_ReturnIn_fromTax_tmp (inMovementId:= 3662505 , inUserId:= zfCalc_UserAdmin() :: Integer) ORDER BY 1
+-- SELECT * FROM lpUpdate_Movement_ReturnIn_fromTax_tmp (inMovementId:= 2242573 , inUserId:= zfCalc_UserAdmin() :: Integer) ORDER BY 1

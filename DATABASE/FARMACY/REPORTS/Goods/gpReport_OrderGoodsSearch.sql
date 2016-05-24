@@ -41,13 +41,14 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
     vbUserId:= lpGetUserBySession (inSession);
     vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-    IF vbUnitKey = '' THEN
+    IF vbUnitKey = '' OR vbUserId = 3 THEN
       vbUnitKey := '0';
     END IF;   
     vbUnitId := vbUnitKey::Integer;
 
     RETURN QUERY
-      WITH tmpGoods AS (SELECT DISTINCT ObjectLink_Child_to.ChildObjectId AS GoodsId
+      WITH tmpGoods AS (-- ???временно захардкодил, будет всегда товар сети???
+                        SELECT DISTINCT ObjectLink_Child_to.ChildObjectId AS GoodsId
                         FROM ObjectLink AS ObjectLink_Child
                                 INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                                          AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()

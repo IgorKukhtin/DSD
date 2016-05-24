@@ -275,6 +275,77 @@ BEGIN
        ;
      END IF;
 
+
+
+     IF (zc_isReturnIn_bySale() = TRUE OR vbUserId = 5) AND vbMovementDescId = zc_Movement_ReturnIn()
+     THEN
+          -- в этом случае привязка - zc_MI_Child
+          INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, CountForPrice)
+             WITH tmpMI AS (SELECT MovementLinkMovement_Tax.MovementChildId      AS MovementId_Tax
+                                 , MI_Master.ObjectId                            AS GoodsId
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , MovementItem.Amount AS Amount
+                                 , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                             -- в "налоговом документе" всегда будут без НДС
+                                             THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                                      / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                                        ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                   END AS OperPrice
+                                 , MIFloat_CountForPrice.ValueData AS CountForPrice
+                            FROM MovementItem AS MI_Master
+                                 INNER JOIN MovementItem ON MovementItem.ParentId   = MI_Master.Id
+                                                        AND MovementItem.MovementId = inMovementId
+                                                        AND MovementItem.DescId     = zc_MI_Child()
+                                                        AND MovementItem.isErased   = FALSE
+                                 INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                              ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                 INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                              ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = MI_Master.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                             ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
+                                                            AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                                                 ON MovementLinkMovement_Tax.MovementId     = MIFloat_MovementId.ValueData :: Integer
+                                                                AND MovementLinkMovement_Tax.DescId         = zc_MovementLinkMovement_Master()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                                                 AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                            WHERE MI_Master.MovementId = inMovementId
+                              AND MI_Master.DescId     = zc_MI_Master()
+                              AND MI_Master.isErased   = FALSE
+                           )
+                , tmpMovement_Corrective AS (SELECT MIN (MovementLinkMovement_Corrective.MovementId) AS MovementId
+                                                  , MovementLinkMovement_Tax.MovementChildId AS MovementId_Tax
+                                             FROM MovementLinkMovement AS MovementLinkMovement_Corrective
+                                                  INNER JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                                                                  ON MovementLinkMovement_Tax.MovementId     = MovementLinkMovement_Corrective.MovementId
+                                                                                 AND MovementLinkMovement_Tax.DescId         = zc_MovementLinkMovement_Child()
+                                                                                 AND MovementLinkMovement_Tax.MovementChildId > 0
+                                             WHERE MovementLinkMovement_Corrective.MovementChildId = inMovementId
+                                               AND MovementLinkMovement_Corrective.DescId          = zc_MovementLinkMovement_Master()
+                                             GROUP BY MovementLinkMovement_Tax.MovementChildId
+                                            )
+             -- РЕЗУЛЬТАТ
+             SELECT COALESCE (tmpMovement_Corrective.MovementId, 0) AS MovementId_Corrective
+                  , tmpMI.MovementId_Tax
+                  , tmpMI.GoodsId
+                  , tmpMI.GoodsKindId
+                  , tmpMI.Amount
+                  , tmpMI.OperPrice
+                  , tmpMI.CountForPrice
+             FROM tmpMI
+                  LEFT JOIN tmpMovement_Corrective ON tmpMovement_Corrective.MovementId_Tax = tmpMI.MovementId_Tax
+             WHERE tmpMI.MovementId_Tax > 0
+            ;
+
+     ELSE
      IF inIsTaxLink = FALSE OR vbMovementDescId = zc_Movement_PriceCorrective()
      THEN 
           -- в этом случае не будет привязки, но есть поиск !!!одного!!! <Налогового документа> что есть у текущего <Возврат от покупателя> или <Перевод долга (приход)> или <Корректировка цены>
@@ -487,6 +558,7 @@ BEGIN
          END LOOP; -- финиш цикла по курсору1 - возвраты
          CLOSE curMI_ReturnIn; -- закрыли курсор1 - возвраты
 
+     END IF; -- завершили привязку к налоговым или не привязку (т.е. все данные в табл-результат)
      END IF; -- завершили привязку к налоговым или не привязку (т.е. все данные в табл-результат)
 
 

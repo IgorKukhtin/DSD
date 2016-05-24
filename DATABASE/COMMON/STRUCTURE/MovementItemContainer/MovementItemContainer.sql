@@ -53,6 +53,10 @@ CREATE INDEX idx_MovementItemContainer_OperDate_DescId_MovementDescId_WhereObjec
 CREATE INDEX idx_MovementItemContainer_MovementItemId ON MovementItemContainer (MovementItemId);
 CREATE INDEX idx_MovementItemContainer_ParentId ON MovementItemContainer (ParentId);
 -- CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate_Amount ON MovementItemContainer (ContainerId, DescId, OperDate, Amount);
+-- 15.05.2016
+CREATE INDEX idx_MovementItemContainer_ObjectId_Analyzer_AnalyzerId ON MovementItemContainer (ObjectId_Analyzer, AnalyzerId);
+-- ???18.05.2016???
+-- CREATE INDEX idx_MovementItemContainer_ObjectId_Analyzer_OperDate_AnalyzerId ON MovementItemContainer (ObjectId_Analyzer_OperDate, AnalyzerId);
                                                                          
 DO $$ 
     BEGIN

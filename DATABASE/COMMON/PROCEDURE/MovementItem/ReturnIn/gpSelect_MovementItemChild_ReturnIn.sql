@@ -11,9 +11,13 @@ RETURNS TABLE (Id Integer, ParentId Integer, Amount TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , AmountPartner TFloat, Price TFloat
-             , InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
-             , InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
+             , MovementId_sale Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+             , MovementId_tax Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
              , DocumentTaxKindName TVarChar
+             , FromName TVarChar
+             , ToCode Integer
+             , ToName TVarChar
+             , JuridicalName TVarChar
               )
 AS
 $BODY$
@@ -55,20 +59,41 @@ BEGIN
             , MIFloat_AmountPartner.ValueData       ::tfloat AS AmountPartner
             , COALESCE (MIFloat_Price.ValueData, 0) ::tfloat AS Price
 
+            , Movement_Sale.Id                               AS MovementId_sale
             , Movement_Sale.InvNumber
             , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
             , Movement_Sale.OperDate
             , MD_OperDatePartner.ValueData                   AS OperDatePartner
 
+            , Movement_DocumentMaster.Id                     AS MovementId_tax
             , Movement_DocumentMaster.InvNumber              AS InvNumber_Master
             , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
             , Movement_DocumentMaster.OperDate               AS OperDate_Master
             , Object_TaxKind_Master.ValueData                AS DocumentTaxKindName
                            
+           , Object_From.ValueData                      AS FromName
+           , Object_To.ObjectCode                       AS ToCode
+           , Object_To.ValueData                        AS ToName
+           , Object_Juridical.ValueData                 AS JuridicalName
+
        FROM tmpMI
           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpMI.MovementId_sale 
           LEFT JOIN MovementDate AS MD_OperDatePartner ON MD_OperDatePartner.MovementId = Movement_Sale.Id
                                                       AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
 
           LEFT JOIN MovementItem AS MISale ON MISale.Id = tmpMI.MovementItemId_sale
              
