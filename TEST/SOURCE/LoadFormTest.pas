@@ -1028,6 +1028,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInJournalForm');
+  //
+  //מעקוע ןמ ןנמהאזאל עמגאנא
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyTransferDebtInForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyTransferDebtInForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyTransferDebtInDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyTransferDebtInDialogForm');
 end;
 
 procedure TLoadFormTest.LoadPriceCorrectiveFormTest;

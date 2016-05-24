@@ -39,6 +39,7 @@ BEGIN
             , MIFloat_RateSumma.ValueData               AS RateSumma
             , MIFloat_RatePrice.ValueData               AS RatePrice
             , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS RatePrice_Calc
+            , COALESCE (MIFloat_TimePrice.ValueData, 0) AS TimePrice
             , MIFloat_Taxi.ValueData                    AS Taxi
            
             , Object_Freight.Id           AS FreightId
@@ -64,6 +65,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
                                          ON MIFloat_RatePrice.MovementItemId =  MovementItem.Id
                                         AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
+             LEFT JOIN MovementItemFloat AS MIFloat_TimePrice
+                                         ON MIFloat_TimePrice.MovementItemId =  MovementItem.Id
+                                        AND MIFloat_TimePrice.DescId = zc_MIFloat_TimePrice()
+
              LEFT JOIN MovementItemFloat AS MIFloat_Taxi
                                          ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
                                         AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
