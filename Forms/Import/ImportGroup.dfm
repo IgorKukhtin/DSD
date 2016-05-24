@@ -4,26 +4,26 @@ inherited ImportGroupForm: TImportGroupForm
   ClientWidth = 583
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 599
-  ExplicitHeight = 380
+  ExplicitWidth = 591
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 583
     Height = 319
-    ExplicitWidth = 578
-    ExplicitHeight = 313
+    ExplicitWidth = 583
+    ExplicitHeight = 319
     ClientRectBottom = 319
     ClientRectRight = 583
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 578
-      ExplicitHeight = 313
+      ExplicitWidth = 583
+      ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Width = 273
         Height = 319
         Align = alLeft
         ExplicitWidth = 273
-        ExplicitHeight = 313
+        ExplicitHeight = 319
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Inserting = True
           Styles.Content = nil
@@ -55,8 +55,6 @@ inherited ImportGroupForm: TImportGroupForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 302
-        ExplicitHeight = 313
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -112,7 +110,6 @@ inherited ImportGroupForm: TImportGroupForm
         Height = 319
         AutoPosition = False
         Control = cxGrid
-        ExplicitHeight = 313
       end
     end
   end
@@ -234,6 +231,7 @@ inherited ImportGroupForm: TImportGroupForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -241,18 +239,21 @@ inherited ImportGroupForm: TImportGroupForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ImportSettingsItemsId'
           Value = Null
           Component = ChildCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ImportSettingsItemsName'
           Value = Null
           Component = ChildCDS
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -265,12 +266,14 @@ inherited ImportGroupForm: TImportGroupForm
       FormName = 'TImportSettingsForm'
       FormNameParam.Value = 'TImportSettingsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = ChildCDS
           ComponentItem = 'ImportSettingsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -278,6 +281,7 @@ inherited ImportGroupForm: TImportGroupForm
           Component = ChildCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -288,7 +292,22 @@ inherited ImportGroupForm: TImportGroupForm
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = ChildCDS
       ImportSettingsId.ComponentItem = 'ImportSettingsId'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <>
+    end
+    object macGUILoadPrice: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactLoadPrice
+        end
+        item
+          Action = actRefreshMovementItemLastPriceList_View
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1042#1057#1045' '#1079#1072#1075#1088#1091#1079#1082#1080'? '
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1087#1086' '#1042#1057#1045#1052' '#1101#1083#1077#1084#1077#1085#1090#1072#1084
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1089#1077#1093
     end
     object mactLoadPrice: TMultiAction
       Category = 'Load'
@@ -301,9 +320,6 @@ inherited ImportGroupForm: TImportGroupForm
           Action = actProtocol
         end>
       View = cxGridDBTableView1
-      QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1042#1057#1045' '#1079#1072#1075#1088#1091#1079#1082#1080'? '
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1087#1086' '#1042#1057#1045#1052' '#1101#1083#1077#1084#1077#1085#1090#1072#1084
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1089#1077#1093
     end
     object actProtocol: TdsdExecStoredProc
       Category = 'Load'
@@ -325,10 +341,24 @@ inherited ImportGroupForm: TImportGroupForm
         end
         item
           Action = actProtocol
+        end
+        item
+          Action = actRefreshMovementItemLastPriceList_View
         end>
       QuestionBeforeExecute = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1086#1076#1085#1086#1084#1091' '#1101#1083#1077#1084#1077#1085#1090#1091'? '
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1087#1086' '#1086#1076#1085#1086#1084#1091' '#1101#1083#1077#1084#1077#1085#1090#1091
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072
+    end
+    object actRefreshMovementItemLastPriceList_View: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spRefreshMovementItemLastPriceList_View
+      StoredProcList = <
+        item
+          StoredProc = spRefreshMovementItemLastPriceList_View
+        end>
+      Caption = 'actRefreshMovementItemLastPriceList_View'
     end
   end
   inherited MasterDS: TDataSource
@@ -415,7 +445,7 @@ inherited ImportGroupForm: TImportGroupForm
       Category = 0
     end
     object bbLoadAllPrice: TdxBarButton
-      Action = mactLoadPrice
+      Action = macGUILoadPrice
       Category = 0
     end
   end
@@ -434,6 +464,7 @@ inherited ImportGroupForm: TImportGroupForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -442,6 +473,7 @@ inherited ImportGroupForm: TImportGroupForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
@@ -485,6 +517,7 @@ inherited ImportGroupForm: TImportGroupForm
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inImportSettingsId'
@@ -492,6 +525,7 @@ inherited ImportGroupForm: TImportGroupForm
         Component = ChildCDS
         ComponentItem = 'ImportSettingsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inImportGroupId'
@@ -499,6 +533,7 @@ inherited ImportGroupForm: TImportGroupForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432
@@ -529,6 +564,7 @@ inherited ImportGroupForm: TImportGroupForm
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 352
@@ -545,6 +581,7 @@ inherited ImportGroupForm: TImportGroupForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
@@ -561,9 +598,19 @@ inherited ImportGroupForm: TImportGroupForm
         Component = ChildCDS
         ComponentItem = 'ImportSettingsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
     Top = 64
+  end
+  object spRefreshMovementItemLastPriceList_View: TdsdStoredProc
+    StoredProcName = 'lpRefreshMovementItemLastPriceList_View'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 512
+    Top = 184
   end
 end

@@ -52,6 +52,9 @@ type
     actProtocol: TdsdExecStoredProc;
     spUpdate_Protocol_LoadPriceList: TdsdStoredProc;
     macExecuteImportSettings_Protocol: TMultiAction;
+    spRefreshMovementItemLastPriceList_View: TdsdStoredProc;
+    actRefreshMovementItemLastPriceList_View: TdsdExecStoredProc;
+    macGUILoadPrice: TMultiAction;
   private
     { Private declarations }
   public
