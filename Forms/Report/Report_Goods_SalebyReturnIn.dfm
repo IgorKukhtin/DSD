@@ -1059,6 +1059,23 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 170

@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 650
   ClientWidth = 1244
   ExplicitWidth = 1260
-  ExplicitHeight = 685
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -543,9 +543,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1171,7 +1168,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 199
     end
     object cbPartner: TcxCheckBox
-      Left = 212
+      Left = 213
       Top = 103
       Hint = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
       Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
@@ -1466,6 +1463,23 @@ inherited ReturnInForm: TReturnInForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = Null
+          Component = JuridicalFromGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = Null
+          Component = JuridicalFromGuides
+          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2902,6 +2916,21 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = cbList
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId_From'
+        Value = Null
+        Component = JuridicalFromGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName_From'
+        Value = Null
+        Component = JuridicalFromGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 224
@@ -4571,5 +4600,34 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 224
     Top = 364
+  end
+  object JuridicalFromGuides: TdsdGuides
+    KeyField = 'Id'
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalFromGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalFromGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 425
+    Top = 16
   end
 end
