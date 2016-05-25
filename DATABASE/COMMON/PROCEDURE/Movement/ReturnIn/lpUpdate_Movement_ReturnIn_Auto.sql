@@ -255,13 +255,13 @@ BEGIN
 
 
          -- список контрагентов - сформировали один раз***
-         INSERT INTO _tmpPartner_ReturnIn_Auto (PartnerId)
+         /*INSERT INTO _tmpPartner_ReturnIn_Auto (PartnerId)
             SELECT ObjectLink_Jur.ObjectId AS PartnerId
             FROM ObjectLink AS ObjectLink_Jur
             WHERE ObjectLink_Jur.ChildObjectId = (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = vbPartnerId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical())
               AND ObjectLink_Jur.DescId        = zc_ObjectLink_Partner_Juridical();
          -- Оптимизация
-         ANALYZE _tmpPartner_ReturnIn_Auto;
+         ANALYZE _tmpPartner_ReturnIn_Auto;*/
 
 
          -- Цикл по периодам (так наверно быстрее)
@@ -310,7 +310,8 @@ BEGIN
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = MD_OperDatePartner.MovementId
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                            INNER JOIN _tmpPartner_ReturnIn_Auto AS tmpPartner_list ON tmpPartner_list.PartnerId = MovementLinkObject_To.ObjectId
+                                                                         AND MovementLinkObject_To.ObjectId = vbPartnerId
+                                            -- INNER JOIN _tmpPartner_ReturnIn_Auto AS tmpPartner_list ON tmpPartner_list.PartnerId = MovementLinkObject_To.ObjectId
                                             INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
                                                                AND Movement.DescId   = zc_Movement_Sale()
                                                                AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -443,7 +444,7 @@ BEGIN
                 -- !!!!! 1 - END ALL PARAM !!!!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
+/*
                 IF vbAmount > 0 THEN
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 -- !!!!! 2 - NOT vbPartnerId!!!!!
@@ -492,7 +493,7 @@ BEGIN
                 -- !!!!!!!!!!!!!!!!!!!!!!!
                 -- !!!!! 2 - End vbGoodsKindId AND NOT vbPartnerId!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!
-
+*/
 
             END LOOP; -- финиш цикла по курсору1 - возвраты
             CLOSE curMI_ReturnIn; -- закрыли курсор1 - возвраты

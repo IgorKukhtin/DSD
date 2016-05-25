@@ -299,14 +299,19 @@ BEGIN
                 WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                   AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                   AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0
-                       OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
+                       OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE) -- !!!пересорт!!
+                       OR CLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                      )
                   AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0
                        OR tmpListBranch_Constraint.ContractId > 0
-                       OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE)) -- !!!пересорт!!
+                       OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE) -- !!!пересорт!!
+                       OR CLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                      )
                   AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR COALESCE (inInfoMoneyDestinationId, 0) = 0)
                   AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                   AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR COALESCE (inInfoMoneyGroupId, 0) = 0)
                   AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
+
                 ) AS tmpContainer
                 LEFT JOIN MovementItemContainer AS MIContainer
                                                 ON MIContainer.ContainerId = tmpContainer.ContainerId

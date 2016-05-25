@@ -93,10 +93,13 @@ BEGIN
                               -- WHERE tmp.isPriceClose = FALSE -- ублал, т.к. tmp.isSite = TRUE
                              )
     -- ћаркетинговый контракт
-  , GoodsPromo AS (SELECT tmp.JuridicalId
+  , GoodsPromo AS (SELECT 0 AS JuridicalId
+                        , 0 AS GoodsId        -- здесь товар "сети"
+                        , 0 AS ChangePercent
+                   /*SELECT tmp.JuridicalId
                         , tmp.GoodsId        -- здесь товар "сети"
                         , tmp.ChangePercent
-                   FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+                   FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp*/
                   )
 
     -- ¬ыбираем в первую очередь тот что дл€ сайта
@@ -251,11 +254,11 @@ BEGIN
                  WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE OR COALESCE (MI_PriceList.PriceLimit, 0) <= MI_PriceList.Price
                     THEN MI_PriceList.Price
                          -- » учитываетс€ % бонуса из ћаркетинговый контракт
-                       * (1 - GoodsPromo.ChangePercent / 100)
+                       * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
                  -- иначе учитываетс€ бонус
                  ELSE (MI_PriceList.Price * (100 - COALESCE (MI_PriceList.Bonus, 0)) / 100)
                       -- » учитываетс€ % бонуса из ћаркетинговый контракт
-                    * (1 - GoodsPromo.ChangePercent / 100)
+                    * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END :: TFloat AS FinalPrice
 
           , MI_PriceList.GoodsId_jur           AS Partner_GoodsId
