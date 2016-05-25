@@ -187,6 +187,7 @@ type
     actUpdateAuto: TdsdExecStoredProc;
     spUpdateAuto: TdsdStoredProc;
     bbUpdateAuto: TdxBarButton;
+    JuridicalFromGuides: TdsdGuides;
   private
     { Private declarations }
   public

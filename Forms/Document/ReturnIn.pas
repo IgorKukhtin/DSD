@@ -193,6 +193,7 @@ type
     ToCode: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
+    JuridicalFromGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
+             , JuridicalId_From Integer, JuridicalName_From TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , StartDateTax TDateTime
@@ -75,6 +76,10 @@ BEGIN
              , ObjectCurrency.ValueData                 AS CurrencyDocumentName
              , 0                                        AS CurrencyPartnerId
              , CAST ('' as TVarChar)                    AS CurrencyPartnerName
+
+             , 0                                        AS JuridicalId_From
+             , CAST ('' as TVarChar)                    AS JuridicalName_From
+
              , Object_PriceList.Id                      AS PriceListId
              , Object_PriceList.ValueData               AS PriceListName
              , 0                     		        AS DocumentTaxKindId
@@ -168,6 +173,10 @@ BEGIN
            , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
            , Object_CurrencyPartner.Id              AS CurrencyPartnerId
            , Object_CurrencyPartner.ValueData       AS CurrencyPartnerName
+
+           , Object_JuridicalFrom.id             AS JuridicalId_From
+           , Object_JuridicalFrom.ValueData      AS JuridicalName_From
+
            , (SELECT tmp.PriceListId   FROM lfGet_Object_Partner_PriceList (inContractId:= MovementLinkObject_Contract.ObjectId, inPartnerId:= MovementLinkObject_From.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp) AS PriceListId
            , (SELECT tmp.PriceListName FROM lfGet_Object_Partner_PriceList (inContractId:= MovementLinkObject_Contract.ObjectId, inPartnerId:= MovementLinkObject_From.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp) AS PriceListName
 
@@ -260,6 +269,12 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
