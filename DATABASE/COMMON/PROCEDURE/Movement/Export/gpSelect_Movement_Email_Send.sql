@@ -1,14 +1,17 @@
--- Function: gpselect_movement_email_send(integer, tvarchar)
+-- Function: gpSelect_Movement_Email_Send(integer, tvarchar)
 
--- DROP FUNCTION gpselect_movement_email_send(integer, tvarchar);
+-- DROP FUNCTION gpSelect_Movement_Email_Send(integer, tvarchar);
 
-CREATE OR REPLACE FUNCTION gpselect_movement_email_send(
-    IN inmovementid integer,
-    IN insession tvarchar)
-  RETURNS TABLE(rowdata tblob) AS
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Email_Send(
+    IN inMovementId           Integer   ,
+    IN inSession              TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (RowData TBlob)
+AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbPartnerId Integer;
    DECLARE vbGoodsPropertyId Integer;
    DECLARE vbGoodsPropertyId_basis Integer;
    DECLARE vbExportKindId Integer;
@@ -23,26 +26,33 @@ BEGIN
 
 
      -- параметры из документа
-     SELECT tmp.GoodsPropertyId
+     SELECT tmp.PartnerId
+          , tmp.GoodsPropertyId
           , tmp.GoodsPropertyId_basis
           , tmp.ExportKindId
-            INTO vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId
+            INTO vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId
      FROM
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
-     SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId) AS GoodsPropertyId
+     SELECT Object_Partner.Id AS PartnerId
+          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id), Object_Partner.Id) AS GoodsPropertyId
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0) AS GoodsPropertyId_basis
           , tmpExportJuridical.ExportKindId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementLinkObject_To.ObjectId ELSE MovementLinkObject_From.ObjectId END
+
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-          LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = MovementLinkObject_To.ObjectId
+          LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = Object_Partner.Id
      WHERE Movement.Id = inMovementId
     ) AS tmp
     ;
@@ -73,11 +83,8 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                     ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                    AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
              LEFT JOIN ObjectString AS ObjectString_RoomNumber
-                                    ON ObjectString_RoomNumber.ObjectId = MovementLinkObject_To.ObjectId
+                                    ON ObjectString_RoomNumber.ObjectId = vbPartnerId
                                    AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
         WHERE Movement.Id = inMovementId
        ;
@@ -200,7 +207,7 @@ BEGIN
      || ';' || Movement.InvNumber
      || ';' || COALESCE (ObjectString_GLNCode.ValueData, '') -- || ':V' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
      || ';' || '14' -- Версия формата
-     || ';' || 'RN' -- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
+     || ';' || CASE WHEN Movement.DescId = zc_Movement_Sale() THEN 'RN' ELSE 'VN' END -- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
      || ';' || zfConvert_DateToString (MovementDate_OperDatePartner.ValueData)
      || ';' || COALESCE (View_Contract.InvNumber, '')
      || ';' || CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN '10' ELSE '11' END
@@ -233,14 +240,11 @@ BEGIN
                                                                 AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                 AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
              LEFT JOIN ObjectString AS ObjectString_GLNCode
-                                    ON ObjectString_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
+                                    ON ObjectString_GLNCode.ObjectId = vbPartnerId
                                    AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
              LEFT JOIN ObjectString AS ObjectString_RoomNumber
-                                    ON ObjectString_RoomNumber.ObjectId = MovementLinkObject_To.ObjectId
+                                    ON ObjectString_RoomNumber.ObjectId = vbPartnerId
                                    AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
         WHERE Movement.Id = inMovementId
        ;
@@ -395,7 +399,7 @@ BEGIN
                 (SELECT Movement.Id                                      AS MovementId
                       , Movement.InvNumber                               AS InvNumber
                       , MovementDate_OperDatePartner.ValueData           AS OperDatePartner
-                      , MovementLinkObject_To.ObjectId                   AS PartnerId
+                      , vbPartnerId                                      AS PartnerId
                       , COALESCE (Object_To.ValueData, '')               AS PartnerName
                       , COALESCE (ObjectString_GLNCode.ValueData, '')    AS GLNCode
                       , COALESCE (ObjectString_RoomNumber.ValueData, '') AS RoomNumber
@@ -404,15 +408,12 @@ BEGIN
                                              ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
-                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                      LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                      LEFT JOIN Object AS Object_To ON Object_To.Id = vbPartnerId
                       LEFT JOIN ObjectString AS ObjectString_GLNCode
-                                             ON ObjectString_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
+                                             ON ObjectString_GLNCode.ObjectId = vbPartnerId
                                             AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
                       LEFT JOIN ObjectString AS ObjectString_RoomNumber
-                                             ON ObjectString_RoomNumber.ObjectId = MovementLinkObject_To.ObjectId
+                                             ON ObjectString_RoomNumber.ObjectId = vbPartnerId
                                             AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
                  WHERE Movement.Id = inMovementId
                 )
@@ -557,19 +558,15 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpselect_movement_email_send(integer, tvarchar)
-  OWNER TO admin;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Левицкий Б.
+ 27.05.16                                        *
+ 05.04.16                                                         * Допилена выгрузка для Шери - XML формат
  23.03.16                                        *
  25.02.16                                        *
- 05.06.16 Допилена выгрузка для Шери - XML формат*
 */
 
 -- тест

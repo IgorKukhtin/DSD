@@ -123,7 +123,7 @@ BEGIN
                                , tmpMI_all.GoodsId
                                , tmpMI_all.GoodsKindId
                                , tmpMI_all.Price_original
-                               , SUM (tmpMI_all.Amount) AS Amount
+                               , SUM (tmpMI_all.Amount) AS Amount_return
                                , tmpMI_all.MovementId_sale
                           FROM tmpMI_all
                           WHERE tmpMI_all.MovementId_sale > 0
@@ -137,6 +137,7 @@ BEGIN
                                     , tmpMI.MovementId_sale
                                     , tmpMI.GoodsId
                                     , tmpMI.GoodsKindId
+                                    , tmpMI.Amount_return
                                     , tmpMI.Price_original
                                     , MIFloat_Price.ValueData    AS Price_find
                                     , MIN (MovementItem.Id)      AS MovementItemId_sale
@@ -158,6 +159,7 @@ BEGIN
                                       , tmpMI.MovementId_sale
                                       , tmpMI.GoodsId
                                       , tmpMI.GoodsKindId
+                                      , tmpMI.Amount_return
                                       , tmpMI.Price_original
                                       , MIFloat_Price.ValueData
                               )
@@ -170,6 +172,7 @@ BEGIN
                                         , MIFloat_Price.ValueData    AS Price_find
                                         , SUM (MovementItem.Amount)  AS Amount_return
                                    FROM tmpMI_sale
+                                        -- !!!обязательно по документу!!!
                                         INNER JOIN MovementItemFloat AS MIFloat_MovementId
                                                                      ON MIFloat_MovementId.ValueData = tmpMI_sale.MovementId_sale
                                                                     AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
@@ -199,6 +202,7 @@ BEGIN
                                    , tmpMI_sale.MovementItemId_sale
                                    , tmpMI_sale.GoodsId
                                    , tmpMI_sale.GoodsKindId
+                                   , tmpMI_sale.Amount_return -- итого для текущего возврата
                                      -- что осталось в продаже
                                    , tmpMI_sale.Amount_sale - COALESCE (tmpMI_ReturnIn.Amount_return, 0) AS Amount
                               FROM tmpMI_sale
@@ -214,13 +218,14 @@ BEGIN
                 , tmpMI_all.GoodsId
                 , tmpMI_all.GoodsKindId
                   -- если в возврате <= чем осталось в продаже, тогда = ВОЗВРАТУ, иначе = что осталось в продаже
-                , CASE WHEN tmpResult.MovementItemId = tmpMI_all.MovementItemId THEN CASE WHEN tmpMI_all.Amount <= tmpResult.Amount THEN tmpMI_all.Amount ELSE tmpResult.Amount END ELSE 0 END AS Amount
+                , CASE WHEN tmpResult.MovementItemId = tmpMI_all.MovementItemId THEN CASE WHEN tmpResult.Amount_return < tmpResult.Amount THEN tmpResult.Amount_return ELSE tmpResult.Amount END ELSE 0 END AS Amount
                 , tmpMI_all.Price_original
            FROM tmpMI_all
                 LEFT JOIN tmpResult ON tmpResult.MovementId_sale = tmpMI_all.MovementId_sale
                                    AND tmpResult.GoodsId         = tmpMI_all.GoodsId
                                    AND tmpResult.GoodsKindId     = tmpMI_all.GoodsKindId
-                                   AND tmpResult.Amount          > 0
+                                   AND (tmpResult.Amount          >= 0
+                                     OR tmpResult.Amount_return   < 0)
           ;
 
      ELSE
@@ -282,7 +287,9 @@ BEGIN
                               ) AS tmp2 ON tmp2.GoodsId        = tmp1.GoodsId
                                        AND tmp2.GoodsKindId    = tmp1.GoodsKindId
                                        AND tmp2.Price_original = tmp1.Price_original
-               WHERE tmp1.Amount - COALESCE (tmp2.Amount, 0) > 0;
+               WHERE tmp1.Amount < 0
+                  OR tmp1.Amount - COALESCE (tmp2.Amount, 0) > 0
+                    ;
             -- ... каждый раз
             INSERT INTO _tmpGoods_ReturnIn_Auto (GoodsId) SELECT DISTINCT tmp.GoodsId FROM _tmpGoods_ReturnIn_Auto_all AS tmp;
             -- Оптимизация
@@ -421,7 +428,7 @@ BEGIN
                     IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
 
                     --
-                    IF vbAmount_sale > vbAmount
+                    IF vbAmount_sale > vbAmount OR vbAmount < 0
                     THEN
                         -- получилось в продаже больше чем искали, !!!сохраняем в табл-результата!!!
                         INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
@@ -470,7 +477,7 @@ BEGIN
 
 
                     --
-                    IF vbAmount_sale > vbAmount
+                    IF vbAmount_sale > vbAmount OR vbAmount < 0
                     THEN
                         -- получилось в продаже больше чем искали, !!!сохраняем в табл-результата!!!
                         INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)

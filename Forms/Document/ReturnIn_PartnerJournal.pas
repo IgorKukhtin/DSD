@@ -24,7 +24,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, dsdInternetAction;
 
 type
   TReturnIn_PartnerJournalForm = class(TAncestorJournalForm)
@@ -110,6 +110,24 @@ type
     isPromo: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     actShowMessage: TShowMessageAction;
+    spGet_Export_Email: TdsdStoredProc;
+    spGet_Export_FileName: TdsdStoredProc;
+    spSelect_Export: TdsdStoredProc;
+    ExportDS: TDataSource;
+    ExportCDS: TClientDataSet;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    actGet_Export_Email: TdsdExecStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    actExport: TMultiAction;
+    bbExport: TdxBarButton;
   private
     { Private declarations }
   public

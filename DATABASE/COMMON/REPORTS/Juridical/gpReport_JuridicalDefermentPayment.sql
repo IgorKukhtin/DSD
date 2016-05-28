@@ -51,8 +51,8 @@ BEGIN
      vbIsJuridicalGroup:= COALESCE (inJuridicalGroupId, 0) > 0;
 
      -- определяется уровень доступа
-     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
-     vbObjectId_Constraint_JuridicalGroup:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
+     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 AND COALESCE (Object_RoleAccessKeyGuide_View.AccessKeyId_PersonalService, 0) = 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+     vbObjectId_Constraint_JuridicalGroup:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 AND COALESCE (Object_RoleAccessKeyGuide_View.AccessKeyId_PersonalService, 0) = 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
      -- !!!меняется параметр!!!
      IF vbObjectId_Constraint_Branch > 0 THEN inBranchId:= vbObjectId_Constraint_Branch; END IF;
      IF vbObjectId_Constraint_JuridicalGroup > 0 THEN inJuridicalGroupId:= vbObjectId_Constraint_JuridicalGroup; END IF;
@@ -217,7 +217,8 @@ from (
              , RESULT_all.ContractConditionKindId
              , RESULT_all.DayCount
              , RESULT_all.ContractDate
-             , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
+             , CASE WHEN Object_Contract.IsErased = FALSE AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close() THEN COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) ELSE 0 END AS DelayCreditLimit
+
              , CLO_InfoMoney.ObjectId AS InfoMoneyId
              , CLO_PaidKind.ObjectId  AS PaidKindId
              , CLO_Partner.ObjectId   AS PartnerId
@@ -294,6 +295,11 @@ from (
            LEFT JOIN tmpJuridical ON tmpJuridical.JuridicalId = RESULT_all.JuridicalId
            LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.ContractId = RESULT_all.ContractId
 
+           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = RESULT_all.ContractId
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                ON ObjectLink_Contract_ContractStateKind.ObjectId = RESULT_all.ContractId
+                               AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
+
               LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
                               , Object_ContractCondition_View.PaidKindId
                               , Value AS DelayCreditLimit
@@ -318,7 +324,7 @@ from (
                 , RESULT_all.ContractConditionKindId
                 , RESULT_all.DayCount
                 , RESULT_all.ContractDate
-                , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0)
+                , CASE WHEN Object_Contract.IsErased = FALSE AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close() THEN COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) ELSE 0 END
                 , CLO_InfoMoney.ObjectId
                 , CLO_PaidKind.ObjectId
                 , CLO_Partner.ObjectId

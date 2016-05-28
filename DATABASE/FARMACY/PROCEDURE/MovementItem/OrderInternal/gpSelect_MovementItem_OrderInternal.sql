@@ -24,7 +24,10 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternal());
     vbUserId := inSession;
+
+    --
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+    --
     SELECT MovementLinkObject.ObjectId INTO vbUnitId
     FROM MovementLinkObject
     WHERE MovementLinkObject.MovementId = inMovementId
@@ -62,10 +65,23 @@ BEGIN
                         )
     -- ћаркетинговый контракт
   , GoodsPromo AS (SELECT tmp.JuridicalId
-                        , tmp.GoodsId        -- здесь товар "сети"
+                        , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
                         , tmp.MovementId
                         , tmp.ChangePercent
                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                   )
 
 

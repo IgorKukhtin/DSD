@@ -34,7 +34,7 @@ BEGIN
                       THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
                  || '_' || Movement.InvNumber
                  || '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
-                                                                                                    THEN MovementLinkObject_To.ObjectId :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
+                                                                                                    THEN Object_Partner.Id :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
                                                                                                ELSE COALESCE (ObjectString_RoomNumber.ValueData, '0')
                                                                                           END
                  || '_' || zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData)
@@ -69,11 +69,16 @@ BEGIN
                               AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
           LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId)
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementLinkObject_To.ObjectId ELSE MovementLinkObject_From.ObjectId END
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
@@ -81,13 +86,13 @@ BEGIN
           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
           LEFT JOIN ObjectString AS ObjectString_RoomNumber
-                                 ON ObjectString_RoomNumber.ObjectId = MovementLinkObject_To.ObjectId
+                                 ON ObjectString_RoomNumber.ObjectId = Object_Partner.Id
                                 AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
                                 AND ObjectString_RoomNumber.ValueData <> ''
           LEFT JOIN ObjectString AS ObjectString_GLNCode
-                                 ON ObjectString_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
+                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id
                                 AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
-          LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = MovementLinkObject_To.ObjectId
+          LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = Object_Partner.Id
      WHERE Movement.Id = inMovementId) AS tmp
     ;
 
