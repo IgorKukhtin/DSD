@@ -194,6 +194,8 @@ type
     ToName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     JuridicalFromGuides: TdsdGuides;
+    actOpenReportCheckForm: TdsdOpenForm;
+    bbReportCheck: TdxBarButton;
   private
     { Private declarations }
   public

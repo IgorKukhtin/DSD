@@ -1346,7 +1346,78 @@ inherited ReturnInForm: TReturnInForm
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
     end
-    object actOpenReportForm: TdsdOpenForm [7]
+    object actOpenReportCheckForm: TdsdOpenForm [7]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      ImageIndex = 24
+      FormName = 'TReport_Check_ReturnInToSaleForm'
+      FormNameParam.Value = 'TReport_Check_ReturnInToSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 42181d
+          Component = edStartDateTax
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42181d
+          Component = edOperDatePartner
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = ''
+          Component = JuridicalFromGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = ''
+          Component = JuridicalFromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportForm: TdsdOpenForm [8]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1486,7 +1557,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = False
     end
-    object actOpenTax: TdsdOpenForm [8]
+    object actOpenTax: TdsdOpenForm [9]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -1531,7 +1602,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = False
     end
-    object actOpenTaxCorrective: TdsdOpenForm [9]
+    object actOpenTaxCorrective: TdsdOpenForm [10]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -1570,7 +1641,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = False
     end
-    object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [10]
+    object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1582,7 +1653,7 @@ inherited ReturnInForm: TReturnInForm
       Caption = 'actUpdateTaxCorrectiveDS'
       DataSource = TaxCorrectiveDS
     end
-    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus [12]
+    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus [13]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -1601,7 +1672,7 @@ inherited ReturnInForm: TReturnInForm
       Status = mtUncomplete
       DataSource = TaxCorrectiveDS
     end
-    object actSetErasedTaxCorrective: TdsdChangeMovementStatus [13]
+    object actSetErasedTaxCorrective: TdsdChangeMovementStatus [14]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -1621,7 +1692,7 @@ inherited ReturnInForm: TReturnInForm
       Status = mtDelete
       DataSource = TaxCorrectiveDS
     end
-    object actCompleteTaxCorrective: TdsdChangeMovementStatus [14]
+    object actCompleteTaxCorrective: TdsdChangeMovementStatus [15]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -1672,7 +1743,7 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_TaxCorrective_Us: TdsdPrintAction [16]
+    object actPrint_TaxCorrective_Us: TdsdPrintAction [17]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Us
@@ -1709,7 +1780,7 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_TaxCorrective_Client: TdsdPrintAction [17]
+    object actPrint_TaxCorrective_Client: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -1754,7 +1825,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object mactPrintPriceCorr: TMultiAction [19]
+    object mactPrintPriceCorr: TMultiAction [20]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1768,7 +1839,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
       ImageIndex = 16
     end
-    object mactPrint: TMultiAction [20]
+    object mactPrint: TMultiAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1783,7 +1854,7 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [21]
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [22]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -1825,7 +1896,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actTaxJournalChoice: TOpenChoiceForm [25]
+    object actTaxJournalChoice: TOpenChoiceForm [26]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2354,6 +2425,10 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbReportCheck'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2506,6 +2581,10 @@ inherited ReturnInForm: TReturnInForm
     end
     object dxBarButton1: TdxBarButton
       Action = actUpdateAuto
+      Category = 0
+    end
+    object bbReportCheck: TdxBarButton
+      Action = actOpenReportCheckForm
       Category = 0
     end
   end
@@ -4615,7 +4694,6 @@ inherited ReturnInForm: TReturnInForm
         Value = ''
         Component = JuridicalFromGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -4624,7 +4702,6 @@ inherited ReturnInForm: TReturnInForm
         Component = JuridicalFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 425

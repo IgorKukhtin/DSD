@@ -817,7 +817,9 @@ uses
   Report_Goods_SalebyReturnInDialog in '..\..\Forms\Report\Report_Goods_SalebyReturnInDialog.pas' {Report_Goods_SalebyReturnInDialogForm: TParentForm},
   Report_Goods_ReturnInBySale in '..\..\Forms\Report\Report_Goods_ReturnInBySale.pas' {Report_Goods_ReturnInBySaleForm: TParentForm},
   Report_Goods_SalebyTransferDebtIn in '..\..\Forms\Report\Report_Goods_SalebyTransferDebtIn.pas' {Report_Goods_SalebyTransferDebtInForm: TParentForm},
-  Report_Goods_SalebyTransferDebtInDialog in '..\..\Forms\Report\Report_Goods_SalebyTransferDebtInDialog.pas' {Report_Goods_SalebyTransferDebtInDialogForm: TParentForm};
+  Report_Goods_SalebyTransferDebtInDialog in '..\..\Forms\Report\Report_Goods_SalebyTransferDebtInDialog.pas' {Report_Goods_SalebyTransferDebtInDialogForm: TParentForm},
+  Report_Check_ReturnInToSale in '..\..\Forms\Report\Report_Check_ReturnInToSale.pas' {Report_Check_ReturnInToSaleForm: TParentForm},
+  Report_Check_ReturnInToSaleDialog in '..\..\Forms\Report\Report_Check_ReturnInToSaleDialog.pas' {Report_Check_ReturnInToSaleDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
