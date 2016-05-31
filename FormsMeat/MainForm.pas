@@ -692,6 +692,8 @@ type
     N105: TMenuItem;
     actExportJuridical: TdsdOpenForm;
     N106: TMenuItem;
+    actReport_Check_ReturnInToSale: TdsdOpenForm;
+    N107: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
