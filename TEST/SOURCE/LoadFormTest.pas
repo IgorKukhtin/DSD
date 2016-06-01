@@ -846,6 +846,8 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
+// exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));

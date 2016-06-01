@@ -23,6 +23,7 @@ RETURNS TABLE (Movement_ReturnId Integer, StatusCode Integer
              , GoodsCode_Sale Integer, GoodsName_Sale TVarChar, GoodsKindName_Sale TVarChar
              , Price_Sale TFloat 
              , isDiff Boolean
+             , isDiffPartner Boolean
              ) 
 
 AS
@@ -130,11 +131,14 @@ BEGIN
 
                   , CASE WHEN (tmpData.GoodsId <> tmpData.GoodsId_Sale 
                             OR tmpData.GoodsKindId <> tmpData.GoodsKindId_Sale 
-                            OR tmpData.PartnerId <> tmpData.PartnerId_Sale 
                             OR tmpData.Price <> tmpData.Price_Sale)
                          THEN TRUE
                          ELSE FALSE
                          END                      AS isDiff
+                  , CASE WHEN tmpData.PartnerId <> tmpData.PartnerId_Sale
+                         THEN TRUE
+                         ELSE FALSE
+                         END                      AS isDiffPartner
              FROM tmpData
                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
                 LEFT JOIN Object AS Object_PartnerSale ON Object_PartnerSale.Id = tmpData.PartnerId_Sale
@@ -151,7 +155,7 @@ BEGIN
             WHERE (tmpData.GoodsId <> tmpData.GoodsId_Sale 
                  OR tmpData.GoodsKindId <> tmpData.GoodsKindId_Sale 
                  OR tmpData.PartnerId <> tmpData.PartnerId_Sale 
-                 OR tmpData.Price <> tmpData.Price_Sale)  OR inShowAll = TRUE
+                 OR tmpData.Price <> tmpData.Price_Sale)  OR inShowAll = FALSE
 
        ;
          
@@ -166,4 +170,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Check_ReturnInToSale (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inShowAll:= True, inMovementId:=0, inJuridicalId:= 0, inPartnerId:=0, inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpReport_Check_ReturnInToSale (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inShowAll:= True, inMovementId:=0, inJuridicalId:= 0, inPartnerId:=0, inSession:= zfCalc_UserAdmin()) 

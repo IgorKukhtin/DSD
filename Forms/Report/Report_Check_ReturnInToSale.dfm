@@ -4,8 +4,9 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -61
   ExplicitWidth = 1093
-  ExplicitHeight = 521
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,6 +25,8 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 392
+        ExplicitLeft = 25
+        ExplicitTop = 40
         ExplicitWidth = 1077
         ExplicitHeight = 392
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -35,11 +38,18 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
           Styles.Footer = nil
           Styles.Header = nil
           object isDiff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1082#1086#1083'. '#1080#1083#1080' '#1090#1086#1074'.'
             DataBinding.FieldName = 'isDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 83
+            Width = 85
+          end
+          object isDiffPartner: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'isDiffPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089' ('#1074#1086#1079#1074#1088#1072#1090')'
@@ -627,6 +637,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput

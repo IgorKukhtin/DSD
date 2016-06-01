@@ -46,6 +46,7 @@ type
     OperDate: TcxGridDBColumn;
     StatusCode: TcxGridDBColumn;
     isDiff: TcxGridDBColumn;
+    isDiffPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public
