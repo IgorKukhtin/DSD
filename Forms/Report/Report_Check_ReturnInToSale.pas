@@ -47,6 +47,9 @@ type
     StatusCode: TcxGridDBColumn;
     isDiff: TcxGridDBColumn;
     isDiffPartner: TcxGridDBColumn;
+    isDiffGoodsKind: TcxGridDBColumn;
+    isDiffPrice: TcxGridDBColumn;
+    isDiffStatus: TcxGridDBColumn;
   private
     { Private declarations }
   public

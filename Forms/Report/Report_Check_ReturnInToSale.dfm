@@ -38,18 +38,39 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
           Styles.Footer = nil
           Styles.Header = nil
           object isDiff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1082#1086#1083'. '#1080#1083#1080' '#1090#1086#1074'.'
+            Caption = #1054#1090#1082#1083'. '#1090#1086#1074'.'
             DataBinding.FieldName = 'isDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 85
+            Width = 45
+          end
+          object isDiffGoodsKind: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1074#1080#1076
+            DataBinding.FieldName = 'isDiffGoodsKind'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object isDiffPrice: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'isDiffPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object isDiffStatus: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1089#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'isDiffStatus'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object isDiffPartner: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            Caption = #1054#1090#1082#1083'. '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'isDiffPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 85
+            Width = 75
           end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089' ('#1074#1086#1079#1074#1088#1072#1090')'
