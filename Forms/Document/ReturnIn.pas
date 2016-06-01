@@ -199,6 +199,8 @@ type
     actChoiceSale: TOpenChoiceForm;
     spUpdateMIChild: TdsdStoredProc;
     actUpdateDetailDS: TdsdUpdateDataSet;
+    actOpenReportCheckAmountForm: TdsdOpenForm;
+    bbOpenReportCheckAmount: TdxBarButton;
   private
     { Private declarations }
   public

@@ -43,7 +43,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             Width = 83
           end
           object StatusCode: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089' ('#1074#1086#1079#1074#1088#1072#1090')'
+            Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Images = dmMain.ImageList
@@ -298,8 +298,8 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Check_ReturnInToSaleDialogForm'
-      FormNameParam.Value = 'TReport_Check_ReturnInToSaleDialogForm'
+      FormName = 'TReport_CheckAmount_ReturnInToSaleDialogForm'
+      FormNameParam.Value = 'TReport_CheckAmount_ReturnInToSaleDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -376,7 +376,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Check_ReturnInToSale'
+    StoredProcName = 'gpReport_CheckAmount_ReturnInToSale'
     DataSets = <
       item
         DataSet = MasterCDS
