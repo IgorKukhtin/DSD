@@ -66,8 +66,6 @@ object MobileNumbersEmployeeEditForm: TMobileNumbersEmployeeEditForm
     LookAndFeel.NativeStyle = False
     ModalResult = 8
     TabOrder = 2
-    ExplicitLeft = 726
-    ExplicitTop = 320
   end
   object cxButton2: TcxButton
     Left = 262
@@ -82,7 +80,6 @@ object MobileNumbersEmployeeEditForm: TMobileNumbersEmployeeEditForm
     LookAndFeel.NativeStyle = False
     ModalResult = 8
     TabOrder = 3
-    ExplicitTop = 313
   end
   object lblID: TcxLabel
     Left = 10
@@ -472,7 +469,7 @@ object MobileNumbersEmployeeEditForm: TMobileNumbersEmployeeEditForm
     Params = <
       item
         Name = 'ID'
-        Value = Null
+        Value = 0
         Component = ceCode
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -487,7 +484,7 @@ object MobileNumbersEmployeeEditForm: TMobileNumbersEmployeeEditForm
     Params = <
       item
         Name = 'inid'
-        Value = Null
+        Value = 0
         Component = dsdFormParams
         ComponentItem = 'ID'
         ParamType = ptInputOutput
@@ -495,6 +492,7 @@ object MobileNumbersEmployeeEditForm: TMobileNumbersEmployeeEditForm
       end
       item
         Name = 'EmployeeID'
+        Value = Null
         Component = EmployeeGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
@@ -551,6 +549,7 @@ object MobileNumbersEmployeeEditForm: TMobileNumbersEmployeeEditForm
       end
       item
         Name = 'Navigator'
+        Value = Null
         Component = ceNavigator
         DataType = ftFloat
         MultiSelectSeparator = ','

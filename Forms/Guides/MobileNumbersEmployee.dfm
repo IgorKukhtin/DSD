@@ -334,7 +334,6 @@ object MobileNumbersEmployeeForm: TMobileNumbersEmployeeForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-      DataSet = ClientDataSet
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -488,7 +487,7 @@ object MobileNumbersEmployeeForm: TMobileNumbersEmployeeForm
       GuiParams = <
         item
           Name = 'Id'
-          Value = Null
+          Value = 0
           MultiSelectSeparator = ','
         end>
       isShowModal = True

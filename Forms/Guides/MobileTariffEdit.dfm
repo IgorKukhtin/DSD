@@ -62,7 +62,6 @@ object MobileTariffEditForm: TMobileTariffEditForm
     LookAndFeel.NativeStyle = False
     ModalResult = 8
     TabOrder = 2
-    ExplicitTop = 320
   end
   object cxButton2: TcxButton
     Left = 262
@@ -77,7 +76,6 @@ object MobileTariffEditForm: TMobileTariffEditForm
     LookAndFeel.NativeStyle = False
     ModalResult = 8
     TabOrder = 3
-    ExplicitTop = 320
   end
   object lblCode: TcxLabel
     Left = 10
@@ -542,7 +540,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'ID'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
