@@ -233,6 +233,7 @@ IF inBranchId <> 0
          , Movement_Sale.Operdate
          , tmpContainer.OperDatePartner
          
+         , Movement_DocumentMaster.InvNumber        AS InvNumber_Master
          , MS_InvNumberPartner_Master.ValueData     AS InvNumberPartner_Master
          , Movement_DocumentMaster.OperDate         AS OperDate_Master
          , Object_TaxKind_Master.ValueData     	    AS DocumentTaxKindName

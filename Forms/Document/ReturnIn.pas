@@ -198,6 +198,7 @@ type
     bbReportCheck: TdxBarButton;
     actChoiceSale: TOpenChoiceForm;
     spUpdateMIChild: TdsdStoredProc;
+    actUpdateDetailDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

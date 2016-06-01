@@ -337,6 +337,7 @@ inherited ReturnInForm: TReturnInForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 350
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -1674,7 +1675,22 @@ inherited ReturnInForm: TReturnInForm
       Caption = 'actUpdateTaxCorrectiveDS'
       DataSource = TaxCorrectiveDS
     end
-    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus [13]
+    object actUpdateDetailDS: TdsdUpdateDataSet [13]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild
+        end
+        item
+          StoredProc = spSelect_MI_Child
+        end>
+      Caption = 'actUpdateDetailDS'
+      DataSource = DetailDS
+    end
+    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus [14]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -1693,7 +1709,7 @@ inherited ReturnInForm: TReturnInForm
       Status = mtUncomplete
       DataSource = TaxCorrectiveDS
     end
-    object actSetErasedTaxCorrective: TdsdChangeMovementStatus [14]
+    object actSetErasedTaxCorrective: TdsdChangeMovementStatus [15]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -1713,7 +1729,7 @@ inherited ReturnInForm: TReturnInForm
       Status = mtDelete
       DataSource = TaxCorrectiveDS
     end
-    object actCompleteTaxCorrective: TdsdChangeMovementStatus [15]
+    object actCompleteTaxCorrective: TdsdChangeMovementStatus [16]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -1764,7 +1780,7 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_TaxCorrective_Us: TdsdPrintAction [17]
+    object actPrint_TaxCorrective_Us: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Us
@@ -1801,7 +1817,7 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_TaxCorrective_Client: TdsdPrintAction [18]
+    object actPrint_TaxCorrective_Client: TdsdPrintAction [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -1846,7 +1862,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object mactPrintPriceCorr: TMultiAction [20]
+    object mactPrintPriceCorr: TMultiAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1860,7 +1876,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
       ImageIndex = 16
     end
-    object mactPrint: TMultiAction [21]
+    object mactPrint: TMultiAction [22]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1875,7 +1891,7 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [22]
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -1917,7 +1933,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actTaxJournalChoice: TOpenChoiceForm [26]
+    object actTaxJournalChoice: TOpenChoiceForm [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3573,8 +3589,8 @@ inherited ReturnInForm: TReturnInForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 616
-    Top = 296
+    Left = 560
+    Top = 288
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ReturnIn_SetErased'
@@ -5025,7 +5041,6 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = DetailCDS
         ComponentItem = 'id'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -5033,14 +5048,6 @@ inherited ReturnInForm: TReturnInForm
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParentId'
-        Value = Null
-        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
