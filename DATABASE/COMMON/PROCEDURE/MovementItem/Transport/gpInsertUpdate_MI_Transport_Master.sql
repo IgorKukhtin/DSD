@@ -160,7 +160,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), ioId, inTimePrice);
 
-   IF  COALESCE (inTimePrice,0) <> 0
+   IF COALESCE (inTimePrice,0) <> 0 OR 1=1 -- !!!временно - что б всегда!!!
    THEN
        vbHours := (SELECT CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS Hours_All
                    FROM MovementFloat AS MovementFloat_HoursWork

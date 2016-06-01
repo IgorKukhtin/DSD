@@ -23,6 +23,10 @@ RETURNS TABLE (Movement_ReturnId Integer, StatusCode Integer
              , GoodsCode_Sale Integer, GoodsName_Sale TVarChar, GoodsKindName_Sale TVarChar
              , Price_Sale TFloat 
              , isDiff Boolean
+             , isDiffGoodsKind Boolean
+             , isDiffPartner Boolean
+             , isDiffPrice Boolean
+             , isDiffStatus Boolean
              ) 
 
 AS
@@ -30,6 +34,10 @@ $BODY$
  DECLARE vbUserId Integer;
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
+
+    IF inJuridicalId = 0 AND inPartnerId = 0
+    THEN inShowAll:= TRUE;
+    END IF;
 
     -- Результат
     RETURN QUERY
@@ -45,6 +53,7 @@ BEGIN
                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                         WHERE (Movement.id = inMovementId OR inMovementId = 0)
                           AND Movement.DescId = zc_Movement_ReturnIn()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND (MovementLinkObject_From.ObjectId = inPartnerId OR inPartnerId = 0)
                           AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
@@ -65,7 +74,7 @@ BEGIN
                          INNER JOIN MovementItemFloat AS MIFloat_MovementId
                                                      ON MIFloat_MovementId.MovementItemId = MI_Child.Id
                                                     AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                         
-                                                    AND COALESCE (MIFloat_MovementId.ValueData,0) <> 0                         
+                                                    AND MIFloat_MovementId.ValueData <> 0                         
                          INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                      ON MIFloat_MovementItemId.MovementItemId = MI_Child.Id
                                                     AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
@@ -128,13 +137,26 @@ BEGIN
                   , Object_GoodsKindSale.ValueData  AS GoodsKindName_Sale
                   , tmpData.Price_Sale :: Tfloat
 
-                  , CASE WHEN (tmpData.GoodsId <> tmpData.GoodsId_Sale 
-                            OR tmpData.GoodsKindId <> tmpData.GoodsKindId_Sale 
-                            OR tmpData.PartnerId <> tmpData.PartnerId_Sale 
-                            OR tmpData.Price <> tmpData.Price_Sale)
+                  , CASE WHEN tmpData.GoodsId <> tmpData.GoodsId_Sale 
                          THEN TRUE
                          ELSE FALSE
                          END                      AS isDiff
+                  , CASE WHEN tmpData.GoodsKindId <> tmpData.GoodsKindId_Sale
+                         THEN TRUE
+                         ELSE FALSE
+                         END                      AS isDiffGoodsKind
+                  , CASE WHEN tmpData.PartnerId <> tmpData.PartnerId_Sale
+                         THEN TRUE
+                         ELSE FALSE
+                         END                      AS isDiffPartner
+                  , CASE WHEN tmpData.Price <> tmpData.Price_Sale
+                         THEN TRUE
+                         ELSE FALSE
+                         END                      AS isDiffPrice
+                  , CASE WHEN COALESCE (Movement_Sale.StatusId, 0) <> zc_Enum_Status_Complete()
+                         THEN TRUE
+                         ELSE FALSE
+                         END                      AS isDiffStatus
              FROM tmpData
                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
                 LEFT JOIN Object AS Object_PartnerSale ON Object_PartnerSale.Id = tmpData.PartnerId_Sale
@@ -144,14 +166,16 @@ BEGIN
                 LEFT JOIN Object AS Object_GoodsKindSale ON Object_GoodsKindSale.Id = tmpData.GoodsKindId_Sale
 
                 LEFT JOIN Movement AS Movement_Return ON Movement_Return.Id = tmpData.Id
-                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Return .StatusId
+                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Return.StatusId
 
                 LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpData.Sale_Id
                 LEFT JOIN Object AS Object_StatusSale ON Object_StatusSale.Id = Movement_Sale.StatusId
             WHERE (tmpData.GoodsId <> tmpData.GoodsId_Sale 
-                 OR tmpData.GoodsKindId <> tmpData.GoodsKindId_Sale 
-                 OR tmpData.PartnerId <> tmpData.PartnerId_Sale 
-                 OR tmpData.Price <> tmpData.Price_Sale)  OR inShowAll = TRUE
+                OR tmpData.GoodsKindId <> tmpData.GoodsKindId_Sale 
+                OR tmpData.PartnerId <> tmpData.PartnerId_Sale 
+                OR tmpData.Price <> tmpData.Price_Sale
+                OR Movement_Sale.StatusId <> zc_Enum_Status_Complete()
+                  ) OR inShowAll = FALSE
 
        ;
          
@@ -166,4 +190,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Check_ReturnInToSale (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inShowAll:= True, inMovementId:=0, inJuridicalId:= 0, inPartnerId:=0, inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpReport_Check_ReturnInToSale (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inShowAll:= True, inMovementId:=0, inJuridicalId:= 0, inPartnerId:=0, inSession:= zfCalc_UserAdmin()) 
