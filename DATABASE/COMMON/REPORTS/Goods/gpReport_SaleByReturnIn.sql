@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpReport_SaleByReturnIn (
     IN inPrice             Tfloat    , --
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , RetailName TVarChar
@@ -31,9 +31,9 @@ RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , Price         TFloat  -- 
              
              , InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
-             , InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
+             , InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
              , DocumentTaxKindName TVarChar
-             
+             , MovementId Integer, MovementItemId Integer
              ) 
 
 AS
@@ -198,7 +198,8 @@ IF inBranchId <> 0
                        )
 
                                              
-    SELECT Object_Goods.ObjectCode                    AS GoodsCode
+    SELECT Object_Goods.Id                            AS GoodsId
+         , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
          , Object_GoodsKind.ValueData                 AS GoodsKindName
         
@@ -232,9 +233,13 @@ IF inBranchId <> 0
          , Movement_Sale.Operdate
          , tmpContainer.OperDatePartner
          
+         , Movement_DocumentMaster.InvNumber        AS InvNumber_Master
          , MS_InvNumberPartner_Master.ValueData     AS InvNumberPartner_Master
          , Movement_DocumentMaster.OperDate         AS OperDate_Master
          , Object_TaxKind_Master.ValueData     	    AS DocumentTaxKindName
+
+         , tmpContainer.MovementId
+         , tmpContainer.MovementItemId
                     
        FROM tmpContainer
           LEFT JOIN tmpReturnAmount ON tmpReturnAmount.MovementItemId = tmpContainer.MovementItemId

@@ -1,8 +1,9 @@
-inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072'>'
+inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_ChoiceForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072'> ('#1074#1099#1073#1086#1088')'
   ClientHeight = 382
   ClientWidth = 1085
   AddOnFormData.isSingle = False
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1101
@@ -323,7 +324,6 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
           object clInvNumber_Master: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumber_Master'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -740,6 +740,167 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberPartner'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberPartner'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Master'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Master'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberPartner_Master'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberPartner_Master'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate_Master'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Master'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountPartner'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DocumentTaxKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DocumentTaxKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -872,9 +1033,18 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end>
@@ -884,14 +1054,15 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
       Category = 0
     end
     object bbChoiceGuides: TdxBarButton
-      Caption = #1042#1099#1073#1086#1088
+      Action = dsdChoiceGuides
       Category = 0
-      Hint = #1042#1099#1073#1086#1088
-      Visible = ivAlways
-      ImageIndex = 7
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end>
     Left = 320
     Top = 232
   end

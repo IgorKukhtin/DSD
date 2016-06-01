@@ -194,6 +194,11 @@ type
     ToName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     JuridicalFromGuides: TdsdGuides;
+    actOpenReportCheckForm: TdsdOpenForm;
+    bbReportCheck: TdxBarButton;
+    actChoiceSale: TOpenChoiceForm;
+    spUpdateMIChild: TdsdStoredProc;
+    actUpdateDetailDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

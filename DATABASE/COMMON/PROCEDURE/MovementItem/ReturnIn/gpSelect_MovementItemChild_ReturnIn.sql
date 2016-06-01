@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, ParentId Integer, Amount TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , AmountPartner TFloat, Price TFloat
-             , MovementId_sale Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+             , MovementItemId_sale Integer, MovementId_sale Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , MovementId_tax Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
              , DocumentTaxKindName TVarChar
              , FromName TVarChar
@@ -59,6 +59,7 @@ BEGIN
             , MIFloat_AmountPartner.ValueData       ::tfloat AS AmountPartner
             , COALESCE (MIFloat_Price.ValueData, 0) ::tfloat AS Price
 
+            , MISale.Id                                      AS MovementItemId_sale
             , Movement_Sale.Id                               AS MovementId_sale
             , Movement_Sale.InvNumber
             , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner

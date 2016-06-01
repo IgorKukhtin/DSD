@@ -2613,6 +2613,26 @@
 				<Form>Report_Goods_SalebyTransferDebtInDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Check_ReturnInToSale.pas">
+				<Form>Report_Check_ReturnInToSaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Check_ReturnInToSaleDialog.pas">
+				<Form>Report_Check_ReturnInToSaleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckAmount_ReturnInToSaleDialog.pas">
+				<Form>Report_CheckAmount_ReturnInToSaleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckAmount_ReturnInToSale.pas">
+				<Form>Report_CheckAmount_ReturnInToSaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods_SalebyReturnIn_Choice.pas">
+				<Form>Report_Goods_SalebyReturnIn_ChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
