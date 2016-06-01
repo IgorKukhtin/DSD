@@ -274,6 +274,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
     object edShowAll: TcxCheckBox
       Left = 554
       Top = 5
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 8
       Width = 223
