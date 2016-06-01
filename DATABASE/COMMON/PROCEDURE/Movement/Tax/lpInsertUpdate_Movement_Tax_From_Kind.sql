@@ -60,6 +60,17 @@ BEGIN
       THEN inDocumentTaxKindId:= zc_Enum_DocumentTaxKind_Tax();
       END IF;
 
+      -- это тип формирования по дефолту
+      IF inUserId <> 5 AND 1=0
+     AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR() -- сводная налоговая по юр.л.(реализация-возвраты)
+                               , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR() -- сводная налоговая по т.т.(реализация-возвраты)
+                               , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS() -- сводная налоговая по юр.л.(реализация)
+                               , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS() -- сводная налоговая по т.т.(реализация)
+                                )
+      THEN
+          RAISE EXCEPTION 'Ошибка. Формирование сводного документа не работает. Все сформированные документы за май необходимо будет переформировать.';
+      END IF;
+
 
       -- Создание или ...
       IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpmovement')
@@ -83,7 +94,7 @@ BEGIN
           -- временная таблица "база" документов
           CREATE TEMP TABLE _tmpMovement (MovementId Integer, DescId Integer, DocumentTaxKindId Integer) ON COMMIT DROP;
           -- временная таблица "база" строчной части
-          CREATE TEMP TABLE _tmpMI (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount_Tax TFloat, Amount_TaxCorrective TFloat) ON COMMIT DROP;
+          CREATE TEMP TABLE _tmpMI (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount_Tax TFloat, Amount_TaxCorrective TFloat, MovementId_Tax Integer) ON COMMIT DROP;
           -- временная таблица - существующие документы "Корректировки" - !!!только сводные!!!
           CREATE TEMP TABLE _tmpMovementCorrective (MovementId Integer, MovementId_Tax Integer) ON COMMIT DROP;
           -- временная таблица - привязка "Корректировки" к "Налоговой" - !!!только сводные!!!
@@ -382,7 +393,7 @@ BEGIN
       ELSE
       IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
       THEN
-           -- данные по Юр.лицу + Договор из всех накладных
+           -- данные по Юр.лицу + Договор из всех накладных - Juridical
            INSERT INTO _tmpMovement (MovementId, DescId, DocumentTaxKindId)
               -- данные <Продажа покупателю> и <Возврат от покупателя>
               SELECT Movement.Id
@@ -415,7 +426,7 @@ BEGIN
               WHERE MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
              UNION ALL
-              -- данные <Перевод долга (расход)> и <Перевод долга (приход)>
+              -- данные <Перевод долга (расход)> и <Перевод долга (приход)> - Juridical
               SELECT Movement.Id
                    , Movement.DescId
                    , CASE WHEN Movement.DescId <> zc_Movement_TransferDebtIn()
@@ -445,7 +456,7 @@ BEGIN
       ELSE
       IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
       THEN
-           -- данные по Контрагенту + Договор из всех накладных
+           -- данные по Контрагенту + Договор из всех накладных - Partner
            INSERT INTO _tmpMovement (MovementId, DescId, DocumentTaxKindId)
               -- данные <Продажа покупателю> и <Возврат от покупателя>
               SELECT Movement.Id
@@ -480,10 +491,11 @@ BEGIN
 
 
       -- формируются данные для "база" строчной части
-      WITH _tmpMovement2 
-          AS (SELECT Movement.Id AS MovementId, Movement.DescId, inDocumentTaxKindId AS DocumentTaxKindId FROM Movement WHERE Movement.Id = inMovementId AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
+      WITH _tmpMovement2
+          AS -- (SELECT _tmpMovement.MovementId, _tmpMovement.DescId, _tmpMovement.DocumentTaxKindId FROM _tmpMovement)
+           (SELECT Movement.Id AS MovementId, Movement.DescId, inDocumentTaxKindId AS DocumentTaxKindId FROM Movement WHERE Movement.Id = inMovementId AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
              UNION ALL
-              -- данные <Продажа покупателю> и <Возврат от покупателя>
+              -- данные <Продажа покупателю> и <Возврат от покупателя> - Juridical
               SELECT Movement.Id
                    , Movement.DescId
                    , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
@@ -515,7 +527,7 @@ BEGIN
                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                 AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
              UNION ALL
-              -- данные <Перевод долга (расход)> и <Перевод долга (приход)>
+              -- данные <Перевод долга (расход)> и <Перевод долга (приход)> - Juridical
               SELECT Movement.Id
                    , Movement.DescId
                    , CASE WHEN Movement.DescId <> zc_Movement_TransferDebtIn()
@@ -542,7 +554,7 @@ BEGIN
                                                 AND MovementLinkObject_PaidKind.DescId = tmpDesc.PaidKindDescId
                                                 AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
              UNION ALL
-              -- данные <Продажа покупателю> и <Возврат от покупателя>
+              -- данные <Продажа покупателю> и <Возврат от покупателя> - Partner
               SELECT Movement.Id
                    , Movement.DescId
                    , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
@@ -571,8 +583,30 @@ BEGIN
                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                 AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
             )
-      -- Результат
-      INSERT INTO _tmpMI (GoodsId, GoodsKindId, Price, CountForPrice, Amount_Tax, Amount_TaxCorrective)
+/*         , _tmpMI_ReturnIn
+          AS (SELECT _tmpMovement.MovementId, _tmpMovement.DescId, _tmpMovement.DocumentTaxKindId
+              FROM _tmpMovement
+                          INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement.MovementId
+                                                 AND MovementItem.DescId   = zc_MI_Child()
+                                                 AND MovementItem.Amount   <> 0
+                                                 AND MovementItem.isErased = FALSE
+                          INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.ParentId
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                      AND MIFloat_Price.ValueData <> 0  
+                          LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.Id = MovementItem.ParentId
+                                                                       AND MovementItem_Master.isErased = FALSE
+                          LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                      ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                          LEFT JOIN _tmpMovement2 AS _tmpMovement_find ON _tmpMovement_find.MovementId = MIFloat_MovementId.ValueData :: Integer
+                          LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MIFloat_MovementId.ValueData :: Integer
+                                                        AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Master()
+                                                        AND _tmpMovement_find.MovementId IS NULL
+              WHERE _tmpMovement.DescId = zc_Movement_ReturnIn()
+             )*/
+      -- Результат - строчная часть
+      INSERT INTO _tmpMI (GoodsId, GoodsKindId, Price, CountForPrice, Amount_Tax, Amount_TaxCorrective, MovementId_Tax)
          SELECT tmpMI.GoodsId
               , tmpMI.GoodsKindId
               , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
@@ -585,13 +619,22 @@ BEGIN
               , tmpMI.CountForPrice
               , CASE WHEN tmpMI.Amount_Sale > 0 THEN tmpMI.Amount_Sale ELSE 0 END AS Amount_Tax
               , tmpMI.Amount_ReturnIn + CASE WHEN tmpMI.Amount_Sale < 0 THEN -1 * tmpMI.Amount_Sale ELSE 0 END AS Amount_TaxCorrective
+              , tmpMI.MovementId_Tax
          FROM (SELECT tmpMI_all.GoodsId
                     , tmpMI_all.GoodsKindId
                     , tmpMI_all.Price
                     , tmpMI_all.CountForPrice
                     , CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN tmpMI_all.Amount_Sale - tmpMI_all.Amount_ReturnIn ELSE tmpMI_all.Amount_Sale END AS Amount_Sale
                     , CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN 0 ELSE tmpMI_all.Amount_ReturnIn END AS Amount_ReturnIn
-               FROM (SELECT MovementItem.ObjectId                         AS GoodsId
+                    , tmpMI_all.MovementId_Tax
+               FROM (SELECT CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn()
+                                      THEN CASE WHEN _tmpMovement_find.MovementId > 0
+                                                     THEN vbMovementId_Tax
+                                                ELSE COALESCE (MovementLinkMovement.MovementChildId, 0)
+                                           END
+                                 ELSE vbMovementId_Tax
+                            END AS MovementId_Tax
+                          , MovementItem.ObjectId                         AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в налоговых цены всегда будут без НДС
@@ -609,14 +652,29 @@ BEGIN
                             END AS Price
                           , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END AS CountForPrice
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount_Sale
-                          , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtIn() THEN MovementItem.Amount ELSE 0 END) AS Amount_ReturnIn
+                          , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MovementItem_Child.Amount, 0) /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ WHEN _tmpMovement.DescId = zc_Movement_TransferDebtIn() THEN MovementItem.Amount ELSE 0 END) AS Amount_ReturnIn
                      FROM _tmpMovement2 AS _tmpMovement
                           INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement.MovementId
+                                                 AND MovementItem.DescId   = zc_MI_Master()
                                                  AND MovementItem.isErased = FALSE
                           INNER JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price() 
                                                       AND MIFloat_Price.ValueData <> 0  
+                          LEFT JOIN MovementItem AS MovementItem_Child ON MovementItem_Child.MovementId = _tmpMovement.MovementId
+                                                                      AND MovementItem_Child.isErased = FALSE
+                                                                      AND MovementItem_Child.DescId   = zc_MI_Child()
+                                                                      AND MovementItem_Child.ParentId = MovementItem.Id
+                                                                      AND MovementItem_Child.Amount   <> 0
+                                                                      AND _tmpMovement.DescId = zc_Movement_ReturnIn()
+                          LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                      ON MIFloat_MovementId.MovementItemId = MovementItem_Child.Id
+                                                     AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                          LEFT JOIN _tmpMovement2 AS _tmpMovement_find ON _tmpMovement_find.MovementId = MIFloat_MovementId.ValueData :: Integer
+                          LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MIFloat_MovementId.ValueData :: Integer
+                                                        AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Master()
+                                                        AND _tmpMovement_find.MovementId IS NULL
+                   
                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()                             
@@ -634,7 +692,14 @@ BEGIN
                                                       ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                      AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                                                      AND _tmpMovement.DescId = zc_Movement_Sale()
-                     GROUP BY MovementItem.ObjectId
+                     GROUP BY CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn()
+                                        THEN CASE WHEN _tmpMovement_find.MovementId > 0
+                                                       THEN vbMovementId_Tax
+                                                  ELSE COALESCE (MovementLinkMovement.MovementChildId, 0)
+                                             END
+                                   ELSE vbMovementId_Tax
+                              END
+                            , MovementItem.ObjectId
                             , MILinkObject_GoodsKind.ObjectId
                             , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                         -- в налоговых цены всегда будут без НДС
@@ -656,6 +721,21 @@ BEGIN
               ) AS tmpMI
          WHERE tmpMI.Amount_Sale <> 0 OR tmpMI.Amount_ReturnIn <> 0
         ;
+
+
+/*
+if inUserId = 5 
+then
+    RAISE EXCEPTION '<%>  %  %   %  %  %', (select count(*) from _tmpMI), (select count(*) from _tmpMI where coalesce (MovementId_Tax, 0) = 0 )
+, (select count(*) from _tmpMI where Amount_TaxCorrective < 0 )
+, (select count(*) from _tmpMI where Amount_TaxCorrective > 0 and MovementId_Tax <> 0)
+, (select min (MovementId_Tax) from _tmpMI where Amount_TaxCorrective > 0 and MovementId_Tax <> 0)
+, (select max (MovementId_Tax) from _tmpMI where Amount_TaxCorrective > 0 and MovementId_Tax <> 0)
+;
+
+    -- 'Повторите действие через 3 мин.'
+end if;
+*/
 
       -- 3. удаляем все "лишние" налоговые у "базы"
       PERFORM lpSetErased_Movement (inMovementId:= MovementLinkMovement.MovementChildId
@@ -759,8 +839,17 @@ BEGIN
       -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+      -- !!!ТОЛЬКО для сводных корректировок - НЕ сложнейший алгоритм!!!
+      IF 1 = 1 AND vbDocumentTaxKindId_TaxCorrective <> 0
+      THEN
+          -- !!! получилось !!!
+          INSERT INTO _tmpMICorrective (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, Price, CountForPrice)
+             SELECT 0, _tmpMI.MovementId_Tax, _tmpMI.GoodsId, _tmpMI.GoodsKindId, _tmpMI.Amount_TaxCorrective, _tmpMI.Price, _tmpMI.CountForPrice
+             FROM _tmpMI
+             WHERE _tmpMI.Amount_TaxCorrective <> 0;
+      ELSE
       -- !!!ТОЛЬКО для сводных корректировок - сложнейший алгоритм!!!
-      IF vbDocumentTaxKindId_TaxCorrective <> 0
+      IF 1 = 0 AND vbDocumentTaxKindId_TaxCorrective <> 0
       THEN
           -- курсор1 - возвраты
           OPEN curMI_ReturnIn FOR
@@ -1043,7 +1132,10 @@ BEGIN
             ;
          END IF;
 
+         RAISE EXCEPTION '!!!ТОЛЬКО для сводных корректировок - сложнейший алгоритм!!!';
+
       END IF; -- !!!ТОЛЬКО для сводных корректировок - сложнейший алгоритм!!! - завершили привязку к налоговым или не привязку (т.е. все данные в табл-результат)
+      END IF; -- !!!ТОЛЬКО для сводных корректировок - НЕ сложнейший алгоритм!!!
 
 
       -- 3. удаляем все "лишние" корректировки у "базы" + "сводные"

@@ -192,6 +192,9 @@ end if;
 
      -- нашли
      SELECT DescId, StatusId INTO vbMovementDescId, vbStatusId FROM Movement WHERE Id = inMovementId;
+     -- !!!выход!!!
+     IF vbStatusId <> zc_Enum_Status_Complete() THEN RETURN; END IF;
+
 
      -- !!!выход!!!
      -- IF vbMovementDescId IN (zc_Movement_Sale()) THEN RETURN; END IF;

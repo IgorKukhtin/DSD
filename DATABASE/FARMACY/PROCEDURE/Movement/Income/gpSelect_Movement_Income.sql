@@ -39,7 +39,9 @@ BEGIN
 
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется <Торговая сеть>
-     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+     IF vbUserId = 3 THEN vbObjectId:= 0;
+     ELSE vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+     END IF;
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -55,7 +57,7 @@ BEGIN
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                                                AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbObjectId = 0)
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         )
         , Movement_Income AS (

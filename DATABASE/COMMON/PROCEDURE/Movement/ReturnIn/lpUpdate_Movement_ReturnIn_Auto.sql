@@ -366,9 +366,9 @@ BEGIN
                                                 INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                                              ON MIFloat_MovementItemId.ValueData = tmpMI_sale.MovementItemId
                                                                             AND MIFloat_MovementItemId.DescId    = zc_MIFloat_MovementItemId()
-                                                INNER JOIN MovementItem ON MovementItem.Id          = MIFloat_MovementItemId.ValueData :: Integer
+                                                INNER JOIN MovementItem ON MovementItem.Id          = MIFloat_MovementItemId.MovementItemId
                                                                        AND MovementItem.isErased    = FALSE
-                                                                       AND MovementItem.DescId      = zc_MI_Master()
+                                                                       AND MovementItem.DescId      = zc_MI_Child()
                                                                        AND MovementItem.MovementId <> inMovementId -- !!!что б не попал текущий возврат!!!
                                                 INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                                    AND Movement.DescId   IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
@@ -520,6 +520,9 @@ BEGIN
      END IF; -- партии продажи - сформированы
 
 
+     IF inUserId = 5 THEN
+        RAISE EXCEPTION 'inUserId = 5';
+     ELSE
      -- !!!сохранение!!!
      PERFORM lpInsertUpdate_MovementItem_ReturnIn_Child (ioId                  := tmp.MovementItemId
                                                        , inMovementId          := inMovementId
@@ -564,7 +567,7 @@ BEGIN
                 LEFT JOIN MI_All ON MI_All.ParentId = MI_Master.Id
           ) AS tmp;
 
-    
+     END IF;
 
      END IF;
      -- !!!временно!!! -- IF 1=1 AND inUserId = 5

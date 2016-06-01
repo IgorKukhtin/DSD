@@ -34,11 +34,21 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbRemainsStart TFloat;
    DECLARE vbRemainsEnd TFloat;
+   DECLARE vbObjectId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- определяется <Торговая сеть>
+    IF vbUserId = 3 THEN vbObjectId:= 0;
+    ELSE vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+    END IF;
+
+
+    --
     SELECT
       SUM(AmountStart)::TFloat,
       SUM(AmountEnd)::TFloat
@@ -50,8 +60,26 @@ BEGIN
               Container.Amount - COALESCE(SUM(MovementItemContainer.Amount),0) AS AmountStart,
               Container.Amount - COALESCE(SUM(CASE WHEN date_trunc('day',MovementItemContainer.OperDate) > inEndDate THEN MovementItemContainer.Amount ELSE 0 END),0) AS AmountEnd
               
-            FROM
-                Container
+            FROM (-- !!!временно захардкодил, будут все сети!!!!
+                  SELECT ObjectLink_Child_ALL.ChildObjectId AS GoodsId
+                  FROM ObjectLink AS ObjectLink_Child
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_ALL ON ObjectLink_Main_ALL.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                AND ObjectLink_Main_ALL.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_ALL ON ObjectLink_Child_ALL.ObjectId = ObjectLink_Main_ALL.ObjectId
+                                                                                 AND ObjectLink_Child_ALL.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_ALL.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND (ObjectLink_Goods_Object.ChildObjectId = vbObjectId OR vbObjectId = 0)
+                                    INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
+                                                                      AND Object_Retail.DescId = zc_Object_Retail()
+                  WHERE ObjectLink_Child.ChildObjectId = inGoodsId
+                    AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                 ) tmp
+                INNER JOIN Container ON Container.DescId   = zc_Container_Count()
+                                    AND Container.ObjectId = tmp.GoodsId
                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                ON CLO_Unit.ContainerId = Container.Id
                                               AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -61,19 +89,11 @@ BEGIN
                                                    AND CLO_Party.descid = zc_ContainerLinkObject_PartionMovementItem()
                 LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                      AND date_trunc('day',MovementItemContainer.OperDate) >= inStartDate
-            WHERE
-                Container.DescId = zc_Container_Count()
-                AND
-                Container.ObjectId = inGoodsId
-                AND
-                (
-                  CLO_Party.ObjectId = inPartyId
-                  or 
-                  COALESCE(inPartyId,0) = 0
-                )
-            GROUP BY
-                Container.Amount,
-                Container.Id
+            WHERE (CLO_Party.ObjectId = inPartyId
+                OR COALESCE (inPartyId, 0) = 0
+                   )
+            GROUP BY Container.Amount
+                   , Container.Id
         ) AS Remains;
     -- Результат
     RETURN QUERY
@@ -121,14 +141,37 @@ BEGIN
                                                                 CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
                                                                 CASE WHEN MovementItemContainer.Amount > 0 THEN 0 ELSE 0 END,
                                                                 MovementItemContainer.MovementId,MovementItemContainer.MovementItemId,CLO_Party.ObjectID))+vbRemainsStart AS Saldo
-            FROM
-                MovementItemContainer
-                INNER JOIN Movement ON MovementItemContainer.MovementId = Movement.Id
-                INNER JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
-                INNER JOIN Container ON MovementItemContainer.ContainerId = Container.Id
+            FROM (-- !!!временно захардкодил, будут все сети!!!!
+                  SELECT ObjectLink_Child_ALL.ChildObjectId AS GoodsId
+                  FROM ObjectLink AS ObjectLink_Child
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_ALL ON ObjectLink_Main_ALL.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                AND ObjectLink_Main_ALL.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_ALL ON ObjectLink_Child_ALL.ObjectId = ObjectLink_Main_ALL.ObjectId
+                                                                                 AND ObjectLink_Child_ALL.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_ALL.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND (ObjectLink_Goods_Object.ChildObjectId = vbObjectId OR vbObjectId = 0)
+                                    INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
+                                                                      AND Object_Retail.DescId = zc_Object_Retail()
+                  WHERE ObjectLink_Child.ChildObjectId = inGoodsId
+                    AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                 ) tmp
+                INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
+                                    AND Container.DescId = zc_Container_Count()
                 INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                               AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
                                               AND ContainerLinkObject.ObjectId = inUnitId
+
+                INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                AND MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+
+
+                INNER JOIN Movement ON MovementItemContainer.MovementId = Movement.Id
+                INNER JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
+
                 LEFT OUTER JOIN ContainerLinkObject AS CLO_Party
                                                     ON CLO_Party.containerid = container.id 
                                                    AND CLO_Party.descid = zc_ContainerLinkObject_PartionMovementItem()                              
@@ -165,18 +208,9 @@ BEGIN
                 LEFT JOIN MovementString AS MovementString_Bayer
                                          ON MovementString_Bayer.MovementId = Movement.Id
                                         AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
-            WHERE
-                date_trunc('day', MovementItemContainer.OperDate) BETWEEN inStartDate AND inEndDate
-                AND
-                MovementItemContainer.DescId = zc_MIContainer_Count()
-                AND
-                Container.ObjectId = inGoodsId
-                AND
-                (
-                  CLO_Party.ObjectID = inPartyId 
-                  OR
-                  inPartyId = 0
-                )
+            WHERE (CLO_Party.ObjectID = inPartyId 
+                OR inPartyId = 0
+                  )
             UNION ALL
             SELECT
                 NULL                       AS MovementId,   --ИД накдалдной

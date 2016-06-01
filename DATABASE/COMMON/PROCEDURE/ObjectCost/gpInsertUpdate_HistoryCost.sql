@@ -51,7 +51,14 @@ BEGIN
      vbStartDate_zavod:= DATE_TRUNC ('MONTH', inStartDate);
      -- !!!если не филиал, тогда конечна€ дата всегда последнее число мес€ца!!!
      vbEndDate_zavod:= DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
-
+/*
+if inBranchId = 0 then
+     inStartDate:= '01.05.2016';
+     inEndDate  := '30.05.2016';
+     vbStartDate_zavod:= '01.05.2016';
+     vbEndDate_zavod  := '30.05.2016';
+end if;
+*/
 
      -- таблица - —писок сущностей которые €вл€ютс€ элементами с/с.
      CREATE TEMP TABLE _tmpMaster (ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
@@ -764,7 +771,8 @@ BEGIN
                                                                       );*/
          -- —охран€ем что насчитали - !!!кроме всех ‘илиалов!!!
          INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
-            SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
+            SELECT _tmpMaster.ContainerId, inStartDate AS StartDate
+                 , DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
                  , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                              THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
                                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
@@ -801,7 +809,7 @@ BEGIN
      END IF;
 
 
-
+/*
         -- !!!¬–≈ћ≈ЌЌќ!!!
         UPDATE HistoryCost SET Price          = 1.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
                              , Price_external = 1.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
@@ -824,7 +832,7 @@ BEGIN
           AND ABS (HistoryCost.Price) >  1000
           AND HistoryCost.ContainerId = Container.Id
        ;        
-
+*/
         -- !!!¬–≈ћ≈ЌЌќ-1!!!
         /*UPDATE MovementItemContainer SET ContainerIntId_analyzer = ContainerId
         WHERE MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
