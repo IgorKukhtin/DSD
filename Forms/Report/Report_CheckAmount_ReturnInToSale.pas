@@ -18,7 +18,6 @@ uses
 
 type
   TReport_CheckAmount_ReturnInToSaleForm = class(TAncestorReportForm)
-    GoodsGroupName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     FormParams: TdsdFormParams;

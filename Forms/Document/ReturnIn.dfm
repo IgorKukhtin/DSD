@@ -22,7 +22,7 @@ inherited ReturnInForm: TReturnInForm
         Width = 1244
         Height = 344
         ExplicitWidth = 1244
-        ExplicitHeight = 362
+        ExplicitHeight = 344
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -337,7 +337,6 @@ inherited ReturnInForm: TReturnInForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 350
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -559,12 +558,14 @@ inherited ReturnInForm: TReturnInForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 362
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
