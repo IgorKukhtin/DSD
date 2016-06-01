@@ -372,23 +372,9 @@ BEGIN
 
      -- первые строчки XML
      -- INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
-     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
+     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-8"?>');
      INSERT INTO _Result(RowData) VALUES ('<root>');
      INSERT INTO _Result(RowData) VALUES ('<Export Provider="9990057" />');
-
-
-     -- первая строчка CSV  - Шапка
---     INSERT INTO _Result(RowData)
---        SELECT 'KOD'       -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом) 
---            || ';KOL'      -- количество 
---            || ';CEN'      -- цена с НДС (Ваша) 
---            || ';NAM'      -- имя товара на всяк случай если забыли сообщить штрихкод 
---            || ';KLN'      -- клиент (константа, код поставщика в нашей базе )  - 9990057 
---            || ';MAG'      -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
---            || ';NAM_TT'   -- название адрес ТТ
---            || ';DAT'      -- дата дока
---            || ';NAK'      -- номер накладной (мало знаков - расширяйте на свое усмотрение)
---       ;
 
      -- Строчная часть
      INSERT INTO _Result(RowData)
