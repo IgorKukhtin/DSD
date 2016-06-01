@@ -1,4 +1,4 @@
-unit Report_Goods_SalebyReturnIn;
+unit Report_Goods_SalebyReturnIn_Choice;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
 
 type
-  TReport_Goods_SalebyReturnInForm = class(TAncestorReportForm)
+  TReport_Goods_SalebyReturnIn_ChoiceForm = class(TAncestorReportForm)
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clAmount: TcxGridDBColumn;
@@ -58,6 +58,7 @@ type
     edGoodsKind: TcxButtonEdit;
     GoodsKindGuides: TdsdGuides;
     bbChoiceGuides: TdxBarButton;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public
@@ -68,6 +69,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_Goods_SalebyReturnInForm);
+  RegisterClass(TReport_Goods_SalebyReturnIn_ChoiceForm);
 
 end.

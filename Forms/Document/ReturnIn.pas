@@ -196,6 +196,7 @@ type
     JuridicalFromGuides: TdsdGuides;
     actOpenReportCheckForm: TdsdOpenForm;
     bbReportCheck: TdxBarButton;
+    actChoiceSale: TOpenChoiceForm;
   private
     { Private declarations }
   public

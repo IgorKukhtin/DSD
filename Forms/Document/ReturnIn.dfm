@@ -373,7 +373,6 @@ inherited ReturnInForm: TReturnInForm
           OptionsCustomize.DataRowSizing = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -386,6 +385,7 @@ inherited ReturnInForm: TReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object childGoodsName: TcxGridDBColumn
@@ -394,6 +394,7 @@ inherited ReturnInForm: TReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 209
           end
           object childGoodsKindName: TcxGridDBColumn
@@ -403,6 +404,7 @@ inherited ReturnInForm: TReturnInForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object childAmount: TcxGridDBColumn
@@ -424,6 +426,7 @@ inherited ReturnInForm: TReturnInForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object childPrice: TcxGridDBColumn
@@ -440,6 +443,13 @@ inherited ReturnInForm: TReturnInForm
           object childInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceSale
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -450,6 +460,7 @@ inherited ReturnInForm: TReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 89
           end
           object childOperDate: TcxGridDBColumn
@@ -458,6 +469,7 @@ inherited ReturnInForm: TReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object childOperDatePartner: TcxGridDBColumn
@@ -465,6 +477,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object childDocumentTaxKindName: TcxGridDBColumn
@@ -481,6 +494,7 @@ inherited ReturnInForm: TReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object childInvNumberPartner_Master: TcxGridDBColumn
@@ -488,6 +502,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'InvNumberPartner_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 86
           end
           object childOperDate_Master: TcxGridDBColumn
@@ -495,6 +510,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'OperDate_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object FromName: TcxGridDBColumn
@@ -502,6 +518,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object ToCode: TcxGridDBColumn
@@ -509,6 +526,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'ToCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object ToName: TcxGridDBColumn
@@ -516,6 +534,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object JuridicalName: TcxGridDBColumn
@@ -523,6 +542,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
         end
@@ -2264,6 +2284,293 @@ inherited ReturnInForm: TReturnInForm
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
       MoveParams = <>
+    end
+    object actChoiceSale: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Report_Goods_SalebyReturnIn_ChoiceForm'
+      FormName = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
+      FormNameParam.Name = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
+      FormNameParam.Value = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'MovementId_sale'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = DetailCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'MovementItemId_sale'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inStartDate'
+          Value = 42181d
+          Component = edStartDateTax
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42181d
+          Component = edOperDatePartner
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPrice'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractName'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = ''
+          Component = JuridicalFromGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = ''
+          Component = JuridicalFromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToCode'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ToCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ToName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberPartner'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'InvNumberPartner'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = 'NULL'
+          Component = DetailCDS
+          ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberPartner_Master'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'InvNumberPartner_Master'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate_Master'
+          Value = 'NULL'
+          Component = DetailCDS
+          ComponentItem = 'OperDate_Master'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountPartner'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'AmountPartner'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Master'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'InvNumber_Master'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DocumentTaxKindName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'DocumentTaxKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource

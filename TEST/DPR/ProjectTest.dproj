@@ -2629,6 +2629,10 @@
 				<Form>Report_CheckAmount_ReturnInToSaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods_SalebyReturnIn_Choice.pas">
+				<Form>Report_Goods_SalebyReturnIn_ChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

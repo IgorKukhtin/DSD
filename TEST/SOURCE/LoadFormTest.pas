@@ -864,6 +864,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyReturnInDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnInDialogForm');
+  //Выбор
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyReturnIn_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnIn_ChoiceForm');
 
   //Отчет Проверка привязки возврата к продажам
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToSaleForm'));
