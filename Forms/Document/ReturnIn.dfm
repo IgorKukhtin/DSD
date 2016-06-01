@@ -20,7 +20,7 @@ inherited ReturnInForm: TReturnInForm
       ExplicitHeight = 460
       inherited cxGrid: TcxGrid
         Width = 1244
-        Height = 362
+        Height = 344
         ExplicitWidth = 1244
         ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -331,9 +331,9 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 370
+        Top = 352
         Width = 1244
-        Height = 90
+        Height = 108
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -552,12 +552,13 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 362
+        Top = 344
         Width = 1244
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 362
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
@@ -5013,5 +5014,72 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 425
     Top = 16
+  end
+  object spUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ReturnIn_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'id'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Sale'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_sale'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'MovementItemId_sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 576
   end
 end
