@@ -38,6 +38,7 @@ BEGIN
     IF inJuridicalId = 0 AND inPartnerId = 0
     THEN inShowAll:= TRUE;
     END IF;
+    inShowAll:= TRUE;
 
     -- Результат
     RETURN QUERY

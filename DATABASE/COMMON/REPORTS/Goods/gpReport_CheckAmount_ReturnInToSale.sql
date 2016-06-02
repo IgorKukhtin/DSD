@@ -30,6 +30,11 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
+    IF inJuridicalId = 0 AND inPartnerId = 0
+    THEN inShowAll:= TRUE;
+    END IF;
+    inShowAll:= TRUE;
+
     -- Результат
     RETURN QUERY
        WITH 
@@ -170,7 +175,7 @@ BEGIN
                 LEFT JOIN Object AS Object_TaxKind_Master 
                                  ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
                                 AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete()
-             WHERE (tmpData.AmountSale < tmpData.Amount) OR inShowAll = TRUE
+             WHERE (tmpData.AmountSale < tmpData.Amount) OR inShowAll = FALSE
        ;
          
 END;
