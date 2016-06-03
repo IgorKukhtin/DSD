@@ -30,6 +30,10 @@ type
     edShowAll: TcxCheckBox;
     GuidesPartner: TdsdGuides;
     GuidesJuridical: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edInvNumber: TcxTextEdit;
+    edOperDate: TcxDateEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

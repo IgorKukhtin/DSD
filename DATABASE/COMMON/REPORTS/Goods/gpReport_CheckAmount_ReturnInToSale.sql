@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, StatusCode Integer
              , Price TFloat 
 
              , AmountSale TFloat, AmountInReturn TFloat, AmountReturn TFloat 
+             , AmountBeforeReturn TFloat, AmountAfterReturn TFloat 
              , isError Boolean
              ) 
 
@@ -40,21 +41,33 @@ BEGIN
        WITH 
       tmpMovReturn  AS (SELECT Movement.Id
                              , MovementLinkObject_From.ObjectId AS PartnerId
-                        FROM Movement 
+                             , MD_OperDatePartner.ValueData     AS OperDatePartner
+                        FROM MovementDate AS MD_OperDatePartner
+                                       
+                            INNER JOIN Movement ON Movement.Id = MD_OperDatePartner.MovementId
+                                               AND Movement.DescId   = zc_Movement_ReturnIn()
+                                               --AND (Movement.id = inMovementId OR inMovementId = 0)
+                                               
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                     ON MovementLinkObject_From.MovementId = Movement.Id
                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                        WHERE (Movement.id = inMovementId OR inMovementId = 0)
-                          AND Movement.DescId = zc_Movement_ReturnIn()
-                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+
+                              
+                        WHERE MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                          AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                          AND (MD_OperDatePartner.MovementId = inMovementId OR inMovementId = 0)
+                       -- (Movement.id = inMovementId OR inMovementId = 0)
+                       --   AND Movement.DescId = zc_Movement_ReturnIn()
+                       --   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND (MovementLinkObject_From.ObjectId = inPartnerId OR inPartnerId = 0)
                           AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                  )
 
     , tmpMIChildReturn AS (SELECT tmpMovReturn.Id
+                             , tmpMovReturn.OperDatePartner
                              , tmpMovReturn.PartnerId
                              , MI_Child.ParentId                             AS MI_Id
                              , MI_Child.ObjectId                             AS GoodsId
@@ -80,8 +93,25 @@ BEGIN
                            , MI_Return.ObjectId                  AS GoodsId
                            , MI_Sale.Amount                      AS AmountSale
                            , Sum(MI_Return.Amount)               AS Amount
-                           , Sum(CASE WHEN Movement_Return.Operdate BETWEEN inStartDate AND inEndDate THEN MI_Return.Amount ELSE 0 END) AS AmountIn       --inStartDate AND inEndDate
-                           , Sum(CASE WHEN Movement_Return.Operdate BETWEEN inStartDate AND inEndDate THEN 0 ELSE MI_Return.Amount END) AS AmountOut 
+
+                           , Sum(CASE WHEN inMovementId = 0 THEN
+                                           CASE WHEN MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate THEN MI_Return.Amount ELSE 0 END
+                                           ELSE 
+                                           CASE WHEN (Movement_Return.Id = inMovementId) THEN MI_Return.Amount ELSE 0 END
+                                 END ) AS AmountIn  
+                           , Sum(CASE WHEN inMovementId = 0 THEN
+                                           CASE WHEN MD_OperDatePartner.ValueData < inStartDate THEN MI_Return.Amount ELSE 0 END
+                                           ELSE 
+                                           CASE WHEN MD_OperDatePartner.ValueData < tmpMIChildReturn.OperDatePartner THEN MI_Return.Amount ELSE 0 END
+                                 END ) AS AmountOutBefore  
+                           , Sum(CASE WHEN inMovementId = 0 THEN
+                                           CASE WHEN MD_OperDatePartner.ValueData > inEndDate THEN MI_Return.Amount ELSE 0 END
+                                           ELSE 
+                                           CASE WHEN (MD_OperDatePartner.ValueData >= tmpMIChildReturn.OperDatePartner AND Movement_Return.Id <> inMovementId) THEN MI_Return.Amount ELSE 0 END
+                                 END ) AS AmountOutAfter                             
+                           --, Sum(CASE WHEN (MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate AND (Movement_Return.Id = inMovementId OR inMovementId = 0) ) THEN MI_Return.Amount ELSE 0 END) AS AmountIn       --inStartDate AND inEndDate
+                           -- , Sum(CASE WHEN (MD_OperDatePartner.ValueData < inStartDate OR (Movement_Return.Id = inMovementId OR inMovementId = 0)) THEN MI_Return.Amount ELSE 0 END) AS AmountOutBefore
+                           -- , Sum(CASE WHEN (MD_OperDatePartner.ValueData > inEndDate ) THEN MI_Return.Amount ELSE 0 END) AS AmountOutAfter
                       from tmpMIChildReturn
                          INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                      ON MIFloat_MovementItemId.ValueData = tmpMIChildReturn.MovementItemId_sale    --MIFloat_MovementItemId.MovementItemId = MI_Child.Id
@@ -91,6 +121,9 @@ BEGIN
                          INNER JOIN MovementItem AS MI_Return ON MI_Return.Id = MIFloat_MovementItemId.MovementItemId  -- MIFloat_MovementId.MovementItemId--
                          INNER JOIN Movement AS Movement_Return ON Movement_Return.Id = MI_Return.MovementId
                                                                AND Movement_Return.DescId = zc_Movement_ReturnIn()
+                         LEFT JOIN MovementDate AS MD_OperDatePartner
+                                                ON MD_OperDatePartner.MovementId = Movement_Return.Id 
+                                                AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                          GROUP BY tmpMIChildReturn.MovementId_sale
                                 , MI_Sale.Id
                                 , MI_Return.ObjectId 
@@ -124,6 +157,9 @@ BEGIN
                   , tmpData.AmountSale   :: Tfloat
                   , tmpData.AmountIn     :: Tfloat AS AmountInReturn
                   , tmpData.Amount       :: Tfloat AS AmountReturn
+                  , tmpData.AmountOutBefore      :: Tfloat AS AmountBeforeReturn
+                  , tmpData.AmountOutAfter       :: Tfloat AS AmountAfterReturn
+                  
                   , CASE WHEN tmpData.AmountSale < tmpData.Amount THEN TRUE ELSE FALSE END AS isError
 
              FROM tmpData
@@ -190,4 +226,5 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inShowAll:= false, inMovementId:=0, inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 
---SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inShowAll:= true, inMovementId:=0, inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 
+--SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inShowAll:= false, inMovementId:=3710462 , inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 
+--select * from gpReport_CheckAmount_ReturnInToSale(inStartDate := ('19.05.2016')::TDateTime , inEndDate := ('19.05.2016')::TDateTime , inShowAll := 'False' , inMovementId := 3710462 , inJuridicalId := 0 , inPartnerId := 566835 ,  inSession := '5');

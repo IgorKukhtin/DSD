@@ -236,7 +236,24 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_CheckAmount_ReturnInToSaleForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inInvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actReport_Weighing: TdsdOpenForm [11]

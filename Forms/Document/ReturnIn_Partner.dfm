@@ -9,18 +9,18 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1145
-    Height = 373
+    Height = 354
     ExplicitTop = 166
     ExplicitWidth = 1145
     ExplicitHeight = 373
-    ClientRectBottom = 373
+    ClientRectBottom = 354
     ClientRectRight = 1145
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1145
       ExplicitHeight = 349
       inherited cxGrid: TcxGrid
         Width = 1145
-        Height = 349
+        Height = 330
         ExplicitWidth = 1145
         ExplicitHeight = 349
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -310,13 +310,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitHeight = 349
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
         Width = 1145
-        Height = 349
+        Height = 330
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 349
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -1045,9 +1047,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   end
   object cxGrid1: TcxGrid [16]
     Left = 0
-    Top = 547
+    Top = 528
     Width = 1145
-    Height = 90
+    Height = 109
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 20
@@ -1246,12 +1248,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   end
   object cxSplitter1: TcxSplitter [17]
     Left = 0
-    Top = 539
+    Top = 520
     Width = 1145
     Height = 8
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
+    ExplicitTop = 539
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -1393,6 +1396,22 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1462,6 +1481,22 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
