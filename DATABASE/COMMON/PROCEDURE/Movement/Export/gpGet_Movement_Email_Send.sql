@@ -40,8 +40,8 @@ BEGIN
                       WHERE tmpExportJuridical.PartnerId = vbPartnerId)
                    , 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Данная функция для Покупателя <%> не предусмотрена.'
-                       , lfGet_Object_ValueData ();
+         RAISE EXCEPTION 'Ошибка.Данная функция для Контрагента <%> не предусмотрена.'
+                       , lfGet_Object_ValueData (vbPartnerId);
      END IF;
 
      -- Результат

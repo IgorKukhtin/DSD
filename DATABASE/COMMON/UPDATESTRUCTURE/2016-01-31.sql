@@ -53,12 +53,15 @@ $$;
 DO $$ 
   DECLARE vbTmp Integer;
     BEGIN
-                 vbTmp:= 10000000;	
+            -- select 1, count(*) from movementprotocol union all select 2, count(*) from movementitemprotocol;
+
+                 vbTmp:= (select max (Id) from movementprotocol);	
 
          insert into movementprotocol_arc
             select * from movementprotocol where Id < vbTmp;
          delete from movementprotocol where Id < vbTmp;
 
+                 vbTmp:= (select max (Id) from movementitemprotocol);	
          insert into movementitemprotocol_arc
             select * from movementitemprotocol where Id < vbTmp;
          delete from movementitemprotocol where Id < vbTmp;
