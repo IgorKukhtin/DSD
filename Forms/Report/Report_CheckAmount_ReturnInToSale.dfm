@@ -174,6 +174,26 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
+          object AmountBeforeReturn: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1076#1086')'
+            DataBinding.FieldName = 'AmountBeforeReturn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 69
+          end
+          object AmountAfterReturn: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1087#1086#1089#1083#1077')'
+            DataBinding.FieldName = 'AmountAfterReturn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 69
+          end
           object clDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
@@ -278,6 +298,34 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
       TabOrder = 8
       Width = 223
     end
+    object cxLabel4: TcxLabel
+      Left = 903
+      Top = 5
+      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+    end
+    object edOperDate: TcxDateEdit
+      Left = 903
+      Top = 23
+      EditValue = 42132d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 10
+      Width = 100
+    end
+    object cxLabel5: TcxLabel
+      Left = 783
+      Top = 5
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    end
+    object edInvNumber: TcxTextEdit
+      Left = 783
+      Top = 23
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Text = ' '
+      Width = 114
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -374,6 +422,22 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
           Value = 'False'
           Component = edShowAll
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -656,6 +720,22 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ' '
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 154
@@ -686,8 +766,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 432
-    Top = 8
+    Left = 424
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'

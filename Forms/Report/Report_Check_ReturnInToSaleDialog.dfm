@@ -3,7 +3,7 @@ object Report_Check_ReturnInToSaleDialogForm: TReport_Check_ReturnInToSaleDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
-  ClientHeight = 251
+  ClientHeight = 228
   ClientWidth = 478
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_Check_ReturnInToSaleDialogForm: TReport_Check_ReturnInToSaleDialog
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 114
-    Top = 214
+    Top = 186
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_Check_ReturnInToSaleDialogForm: TReport_Check_ReturnInToSaleDialog
   end
   object cxButton2: TcxButton
     Left = 288
-    Top = 214
+    Top = 186
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,79 +37,107 @@ object Report_Check_ReturnInToSaleDialogForm: TReport_Check_ReturnInToSaleDialog
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 121
-    Top = 27
+    Left = 66
+    Top = 48
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
   end
   object deStart: TcxDateEdit
-    Left = 11
-    Top = 27
+    Left = 66
+    Top = 21
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90
   end
   object cxLabel6: TcxLabel
-    Left = 11
-    Top = 7
+    Left = 8
+    Top = 22
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object cxLabel7: TcxLabel
-    Left = 121
-    Top = 7
+    Left = 8
+    Top = 49
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel3: TcxLabel
     Left = 8
-    Top = 125
+    Top = 143
     Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object edPartner: TcxButtonEdit
-    Left = 8
-    Top = 149
+    Left = 76
+    Top = 142
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 449
+    Width = 381
   end
   object cxLabel13: TcxLabel
-    Left = 11
-    Top = 64
+    Left = 8
+    Top = 96
     Caption = #1070#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridical: TcxButtonEdit
-    Left = 11
-    Top = 88
+    Left = 66
+    Top = 95
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 9
-    Width = 446
+    Width = 391
   end
   object edShowAll: TcxCheckBox
-    Left = 253
-    Top = 27
+    Left = 217
+    Top = 48
     Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 10
-    Width = 218
+    Width = 226
+  end
+  object cxLabel5: TcxLabel
+    Left = 217
+    Top = 3
+    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  end
+  object edInvNumber: TcxTextEdit
+    Left = 217
+    Top = 21
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Text = ' '
+    Width = 114
+  end
+  object edOperDate: TcxDateEdit
+    Left = 357
+    Top = 21
+    EditValue = 42132d
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 13
+    Width = 100
+  end
+  object cxLabel4: TcxLabel
+    Left = 357
+    Top = 3
+    Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 424
-    Top = 16
+    Left = 360
+    Top = 72
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 336
-    Top = 16
+    Left = 296
+    Top = 88
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -121,8 +149,8 @@ object Report_Check_ReturnInToSaleDialogForm: TReport_Check_ReturnInToSaleDialog
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 216
-    Top = 20
+    Left = 200
+    Top = 76
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -185,9 +213,25 @@ object Report_Check_ReturnInToSaleDialogForm: TReport_Check_ReturnInToSaleDialog
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
-    Top = 200
+    Top = 184
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'

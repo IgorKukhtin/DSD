@@ -4,9 +4,8 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -61
   ExplicitWidth = 1093
-  ExplicitHeight = 518
+  ExplicitHeight = 521
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,8 +24,6 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 392
-        ExplicitLeft = 25
-        ExplicitTop = 40
         ExplicitWidth = 1077
         ExplicitHeight = 392
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -315,6 +312,33 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
       TabOrder = 8
       Width = 223
     end
+    object cxLabel5: TcxLabel
+      Left = 783
+      Top = 5
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    end
+    object edInvNumber: TcxTextEdit
+      Left = 783
+      Top = 23
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 114
+    end
+    object edOperDate: TcxDateEdit
+      Left = 903
+      Top = 23
+      EditValue = 42132d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 11
+      Width = 100
+    end
+    object cxLabel4: TcxLabel
+      Left = 903
+      Top = 5
+      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -396,6 +420,22 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
           Value = 'False'
           Component = edShowAll
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -676,6 +716,22 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
       item
         Name = 'inMovementId'
         Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

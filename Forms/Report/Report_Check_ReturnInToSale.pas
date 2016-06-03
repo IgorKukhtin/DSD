@@ -50,6 +50,10 @@ type
     isDiffGoodsKind: TcxGridDBColumn;
     isDiffPrice: TcxGridDBColumn;
     isDiffStatus: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edInvNumber: TcxTextEdit;
+    edOperDate: TcxDateEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

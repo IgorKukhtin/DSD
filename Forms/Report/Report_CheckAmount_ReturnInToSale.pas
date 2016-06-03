@@ -46,6 +46,10 @@ type
     StatusCode: TcxGridDBColumn;
     isDiff: TcxGridDBColumn;
     dsdDataSetRefresh1: TdsdDataSetRefresh;
+    cxLabel4: TcxLabel;
+    edOperDate: TcxDateEdit;
+    cxLabel5: TcxLabel;
+    edInvNumber: TcxTextEdit;
   private
     { Private declarations }
   public
