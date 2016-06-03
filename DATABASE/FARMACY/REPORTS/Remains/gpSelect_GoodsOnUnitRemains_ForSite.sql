@@ -162,4 +162,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForSite (Integer, TDateTime, TVarChar
 
 -- тест
 -- select * from gpSelect_GoodsOnUnitRemains_ForSite(inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');
--- select * from gpSelect_GoodsOnUnitRemains_ForSite(inUnitId := 2144918  , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3'); !!!Никополь!!!
+-- select * from gpSelect_GoodsOnUnitRemains_ForSite(inUnitId := 2144918  , inRemainsDate := ('01.06.2016')::TDateTime ,  inSession := '3'); -- !!!Никополь!!!

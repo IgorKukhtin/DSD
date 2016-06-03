@@ -38,8 +38,11 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferCode(), ioId, inReferCode);
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferPrice(), ioId, inReferPrice);
 
+         -- Закрыт
+         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Close(), ioId, inIsClose);
+
      -- !!!только для торговой сети vbObjectId!!!
-     IF 1=1 -- vbObjectId = inObjectId
+     IF vbObjectId = inObjectId
      THEN
          -- Кратность (Мин.округление
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(), ioId, inMinimumLot);
@@ -47,8 +50,6 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentMarkup(), ioId, inPercentMarkup);
          -- Цена
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Price(), ioId, inPrice);
-         -- Закрыт
-         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Close(), ioId, inIsClose);
          -- ТОП - позиция
          PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), ioId, inTOP);
      END IF;
