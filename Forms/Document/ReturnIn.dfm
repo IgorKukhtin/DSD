@@ -450,6 +450,7 @@ inherited ReturnInForm: TReturnInForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -2507,12 +2508,16 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inGoodsKindId'
           Value = '0'
+          Component = DetailCDS
+          ComponentItem = 'GoodsKindId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inGoodsKindName'
           Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsKindName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

@@ -45,6 +45,7 @@ type
     OperDate: TcxGridDBColumn;
     StatusCode: TcxGridDBColumn;
     isDiff: TcxGridDBColumn;
+    dsdDataSetRefresh1: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

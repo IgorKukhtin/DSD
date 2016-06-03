@@ -4,7 +4,6 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
   ClientWidth = 1085
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1101
   ExplicitHeight = 420
@@ -1011,14 +1010,6 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
       0)
     inherited Bar: TdxBar
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExecuteDialog'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
