@@ -309,7 +309,7 @@ BEGIN
         SELECT tmpGoodsByGoodsKind.ObjectId :: TVarChar
      || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
                -- Цена с НДС
-     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar 
+     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar
      || ';' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
      || ';1' -- Коэффициент
      || ';' || COALESCE (Object_Measure.ValueData, '')
@@ -364,17 +364,16 @@ BEGIN
        ;
 
      ELSE
-     
+
      -- !!!3.Формат XML - zc_Enum_ExportKind_Brusn34604386!!!
 
      IF vbExportKindId = zc_Enum_ExportKind_Brusn34604386()
      THEN
 
      -- первые строчки XML
-     -- INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
-     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-8"?>');
+     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
      INSERT INTO _Result(RowData) VALUES ('<root>');
-     INSERT INTO _Result(RowData) VALUES ('<Export Provider="9990057" />');
+     INSERT INTO _Result(RowData) VALUES ('<Export Provider="9990074" />');
 
      -- Строчная часть
      INSERT INTO _Result(RowData)
@@ -461,12 +460,12 @@ BEGIN
                  WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                 )
         -- результат
-        SELECT 
+        SELECT
         -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом)
       '    <tov KOD="' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
                -- количество
      || '" KOL="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
-               -- цена с НДС (Ваша) 
+               -- цена с НДС (Ваша)
      || '" CEN="' || CAST(((CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END)
 		     +
 		     ((CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END)
@@ -522,7 +521,7 @@ BEGIN
           AND MovementItem.isErased = FALSE
           AND MIFloat_AmountPartner.ValueData <> 0
        ;
-       
+
      -- послние строчки XML
      --INSERT INTO _Result(RowData) VALUES ('</head>');
      INSERT INTO _Result(RowData) VALUES ('</root>');
