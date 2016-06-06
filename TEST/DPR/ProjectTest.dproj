@@ -64,6 +64,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
+			<BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
+			<BCC_DebugLineNumbers>true</BCC_DebugLineNumbers>
 			<Manifest_File>None</Manifest_File>
 			<DCC_ExeOutput>..\..\BIN\</DCC_ExeOutput>
 			<DCC_DcuOutput>..\..\DCU</DCC_DcuOutput>
@@ -2605,6 +2608,28 @@
 				<Form>Report_Goods_ReturnInBySaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MobileTariff.pas">
+				<Form>MobileTariffForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MobileTariffEdit.pas">
+				<Form>MobileTariffEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MobileNumbersEmployee.pas">
+				<Form>MobileNumbersEmployeeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MobileNumbersEmployeeEdit.pas">
+				<Form>MobileNumbersEmployeeEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="XMLBillKS.pas"/>
+			<DCCReference Include="..\..\Forms\Report\Report_MobileKS.pas">
+				<Form>Report_MobileKSForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<None Include="Profiling\AQtimeModule1.aqt"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -815,7 +815,12 @@ uses
   Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm},
   Report_Goods_SalebyReturnIn in '..\..\Forms\Report\Report_Goods_SalebyReturnIn.pas' {Report_Goods_SalebyReturnInForm: TParentForm},
   Report_Goods_SalebyReturnInDialog in '..\..\Forms\Report\Report_Goods_SalebyReturnInDialog.pas' {Report_Goods_SalebyReturnInDialogForm: TParentForm},
-  Report_Goods_ReturnInBySale in '..\..\Forms\Report\Report_Goods_ReturnInBySale.pas' {Report_Goods_ReturnInBySaleForm: TParentForm};
+  Report_Goods_ReturnInBySale in '..\..\Forms\Report\Report_Goods_ReturnInBySale.pas' {Report_Goods_ReturnInBySaleForm: TParentForm},
+  MobileTariff in '..\..\Forms\Guides\MobileTariff.pas' {MobileTariffForm: TParentForm},
+  MobileTariffEdit in '..\..\Forms\Guides\MobileTariffEdit.pas' {MobileTariffEditForm: TParentForm},
+  MobileNumbersEmployee in '..\..\Forms\Guides\MobileNumbersEmployee.pas' {MobileNumbersEmployeeForm: TParentForm},
+  MobileNumbersEmployeeEdit in '..\..\Forms\Guides\MobileNumbersEmployeeEdit.pas' {MobileNumbersEmployeeEditForm: TParentForm},
+  Report_MobileKS in '..\..\Forms\Report\Report_MobileKS.pas' {Report_MobileKSForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -829,4 +834,5 @@ begin
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.
+
 
