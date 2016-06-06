@@ -1978,6 +1978,9 @@ begin
   // форма правки данных справочника Тарифы мобильных операторов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileNumbersEmployeeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileNumbersEmployeeEditForm');
+  // форма отчета Отчет Затраты мобильной связи по сотрудникам
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MobileKSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MobileKSForm');
 end;
 
 procedure TLoadFormTest.LoadModelServiceFormTest;
