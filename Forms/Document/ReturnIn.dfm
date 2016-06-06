@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 650
   ClientWidth = 1244
   ExplicitWidth = 1260
-  ExplicitHeight = 688
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -564,6 +564,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1366,6 +1369,15 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_Child
+        end>
     end
     object actOpenReportCheckAmountForm: TdsdOpenForm [7]
       Category = 'DSDLib'

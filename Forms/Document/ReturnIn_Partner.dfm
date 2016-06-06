@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1145
   ExplicitWidth = 1161
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -310,6 +310,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -1722,6 +1725,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_Child
+        end>
     end
     object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [12]
       Category = 'DSDLib'
