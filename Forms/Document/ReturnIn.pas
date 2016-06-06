@@ -203,6 +203,8 @@ type
     bbOpenReportCheckAmount: TdxBarButton;
     MIChildProtocolOpenForm: TdsdOpenForm;
     bbMIChildProtocol: TdxBarButton;
+    childIsErased: TcxGridDBColumn;
+    edJuridicalFrom: TcxButtonEdit;
   private
     { Private declarations }
   public

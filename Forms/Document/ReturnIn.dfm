@@ -546,6 +546,14 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
+          object childIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -564,9 +572,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1199,6 +1204,19 @@ inherited ReturnInForm: TReturnInForm
       Properties.ReadOnly = False
       TabOrder = 36
       Width = 100
+    end
+    object edJuridicalFrom: TcxButtonEdit
+      Left = 321
+      Top = 41
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 37
+      Visible = False
+      Width = 64
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -2540,7 +2558,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inGoodsId'
           Value = Null
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'GoodsId'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2548,7 +2566,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inGoodsName'
           Value = Null
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
@@ -2557,7 +2575,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inPrice'
           Value = Null
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'Price'
           DataType = ftFloat
           ParamType = ptInput
@@ -2583,7 +2601,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inGoodsKindId'
           Value = '0'
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'GoodsKindId'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2591,7 +2609,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inGoodsKindName'
           Value = Null
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
           ParamType = ptInput
@@ -5175,28 +5193,13 @@ inherited ReturnInForm: TReturnInForm
   end
   object JuridicalFromGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edJuridicalFrom
     FormNameParam.Name = 'TJuridical_ObjectForm'
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = JuridicalFromGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = JuridicalFromGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 425
     Top = 16
   end

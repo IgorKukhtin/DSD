@@ -6,7 +6,7 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1101
-  ExplicitHeight = 420
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -527,41 +527,7 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
     Width = 159
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = deEnd
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = deStart
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = GuidesRetail
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesPartner
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = JuridicalGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = PaidKindGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end>
+    Components = <>
   end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog

@@ -61,13 +61,18 @@ BEGIN
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                                 ON MovementLinkObject_DocumentTaxKind.MovementId = MD_OperDatePartner.MovementId
                                                                AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                ON MovementLinkObject_Contract.MovementId = MD_OperDatePartner.MovementId
+                                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                   LEFT JOIN _tmpKN_err_06062016 ON _tmpKN_err_06062016.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                AND _tmpKN_err_06062016.ContractId  = MovementLinkObject_Contract.ObjectId
                               WHERE inMovementId = 0
                                 AND MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                                 AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                 AND (MovementLinkObject_From.ObjectId = inPartnerId OR inPartnerId = 0)
                                 AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
-                                AND (COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, 0) IN (0, zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
+                                -- AND (COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, 0) IN (0, zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
+                                AND (_tmpKN_err_06062016.JuridicalId > 0
                                   OR vbTaxKind_null = FALSE)
                              UNION ALL
                               SELECT MD_OperDatePartner.MovementId    AS Id
@@ -111,24 +116,24 @@ BEGIN
 
         , tmpData AS (SELECT tmpMIChildReturn.MovementId_sale
                            , tmpMIChildReturn.MovementItemId_sale
-                           , MI_Sale.ObjectId                                            AS GoodsId
-                           , MIFloat_AmountPartner_Sale.ValueData                        AS AmountSale
-                           , SUM (COALESCE (MIFloat_AmountPartner_Return.ValueData, 0))  AS Amount
+                           , MI_Sale.ObjectId                      AS GoodsId
+                           , MIFloat_AmountPartner_Sale.ValueData  AS AmountSale
+                           , SUM (MI_Return.Amount)                AS Amount
 
                            , Sum(CASE WHEN inMovementId = 0 THEN
-                                           CASE WHEN MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate THEN COALESCE (MIFloat_AmountPartner_Return.ValueData, 0) ELSE 0 END
+                                           CASE WHEN MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate THEN MI_Return.Amount ELSE 0 END
                                            ELSE 
-                                           CASE WHEN (Movement_Return.Id = inMovementId) THEN COALESCE (MIFloat_AmountPartner_Return.ValueData, 0) ELSE 0 END
+                                           CASE WHEN (Movement_Return.Id = inMovementId) THEN MI_Return.Amount ELSE 0 END
                                  END ) AS AmountIn  
                            , Sum(CASE WHEN inMovementId = 0 THEN
-                                           CASE WHEN MD_OperDatePartner.ValueData < inStartDate THEN COALESCE (MIFloat_AmountPartner_Return.ValueData, 0) ELSE 0 END
+                                           CASE WHEN MD_OperDatePartner.ValueData < inStartDate THEN MI_Return.Amount ELSE 0 END
                                            ELSE 
-                                           CASE WHEN MD_OperDatePartner.ValueData < tmpMIChildReturn.OperDatePartner THEN COALESCE (MIFloat_AmountPartner_Return.ValueData, 0) ELSE 0 END
+                                           CASE WHEN MD_OperDatePartner.ValueData < tmpMIChildReturn.OperDatePartner THEN MI_Return.Amount ELSE 0 END
                                  END ) AS AmountOutBefore  
                            , Sum(CASE WHEN inMovementId = 0 THEN
-                                           CASE WHEN MD_OperDatePartner.ValueData > inEndDate THEN COALESCE (MIFloat_AmountPartner_Return.ValueData, 0) ELSE 0 END
+                                           CASE WHEN MD_OperDatePartner.ValueData > inEndDate THEN MI_Return.Amount ELSE 0 END
                                            ELSE 
-                                           CASE WHEN (MD_OperDatePartner.ValueData >= tmpMIChildReturn.OperDatePartner AND Movement_Return.Id <> inMovementId) THEN COALESCE (MIFloat_AmountPartner_Return.ValueData, 0) ELSE 0 END
+                                           CASE WHEN (MD_OperDatePartner.ValueData >= tmpMIChildReturn.OperDatePartner AND Movement_Return.Id <> inMovementId) THEN MI_Return.Amount ELSE 0 END
                                  END ) AS AmountOutAfter                             
 
                       FROM tmpMIChildReturn
@@ -152,15 +157,12 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner_Sale
                                                        ON MIFloat_AmountPartner_Sale.MovementItemId = MI_Sale.Id
                                                       AND MIFloat_AmountPartner_Sale.DescId = zc_MIFloat_AmountPartner()
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner_Return
-                                                       ON MIFloat_AmountPartner_Return.MovementItemId = MI_Return.ParentId
-                                                      AND MIFloat_AmountPartner_Return.DescId = zc_MIFloat_AmountPartner()
 
                          GROUP BY tmpMIChildReturn.MovementId_sale
                                 , tmpMIChildReturn.MovementItemId_sale
                                 , MI_Sale.ObjectId
                                 , MIFloat_AmountPartner_Sale.ValueData
-                         HAVING MIFloat_AmountPartner_Sale.ValueData < SUM (COALESCE (MIFloat_AmountPartner_Return.ValueData, 0))
+                         HAVING MIFloat_AmountPartner_Sale.ValueData < SUM (MI_Return.Amount)
                              OR inShowAll = FALSE
                       )   
 

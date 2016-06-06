@@ -310,9 +310,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -934,6 +931,19 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Caption = #1087#1088#1080#1074#1103#1079#1082#1072' '#1082' '#1054#1089#1085#1086#1074'. '#8470' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 34
       Width = 183
+    end
+    object edJuridicalFrom: TcxButtonEdit
+      Left = 344
+      Top = 39
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 35
+      Visible = False
+      Width = 64
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -4622,6 +4632,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   end
   object JuridicalFromGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edJuridicalFrom
     FormNameParam.Name = 'TJuridical_ObjectForm'
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
