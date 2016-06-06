@@ -14,17 +14,17 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
     Height = 302
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1389
+    ExplicitWidth = 1360
     ExplicitHeight = 302
     ClientRectBottom = 302
     ClientRectRight = 1360
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1389
+      ExplicitWidth = 1360
       ExplicitHeight = 302
       inherited cxGrid: TcxGrid
         Width = 1360
         Height = 302
-        ExplicitWidth = 1389
+        ExplicitWidth = 1360
         ExplicitHeight = 302
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -336,7 +336,7 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
   inherited Panel: TPanel
     Width = 1360
     Height = 54
-    ExplicitWidth = 1389
+    ExplicitWidth = 1360
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 174
@@ -864,10 +864,6 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True

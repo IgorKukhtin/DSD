@@ -3,7 +3,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 422
   ClientWidth = 1259
   ExplicitWidth = 1275
-  ExplicitHeight = 457
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1009,6 +1009,138 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       isShowModal = True
     end
+    object actOpenReportForm: TdsdOpenForm [9]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      ImageIndex = 25
+      FormName = 'TReport_Goods_ReturnInBySaleForm'
+      FormNameParam.Value = 'TReport_Goods_ReturnInBySaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractName'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -1046,7 +1178,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_ExpInvoice: TdsdPrintAction [13]
+    object actPrint_ExpInvoice: TdsdPrintAction [14]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpInvoice
@@ -1083,7 +1215,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpSpec: TdsdPrintAction [14]
+    object actPrint_ExpSpec: TdsdPrintAction [15]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpInvoice
@@ -1121,7 +1253,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Spec: TdsdPrintAction [15]
+    object actPrint_Spec: TdsdPrintAction [16]
       Category = 'Print_Fozzy'
       MoveParams = <>
       StoredProc = spSelectPrint_Spec
@@ -1153,7 +1285,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpPack: TdsdPrintAction [16]
+    object actPrint_ExpPack: TdsdPrintAction [17]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpPack
@@ -1186,7 +1318,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Sale: TMultiAction [17]
+    object mactPrint_Sale: TMultiAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1200,7 +1332,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object mactPrint_Tax_Us: TMultiAction [18]
+    object mactPrint_Tax_Us: TMultiAction [19]
       Category = 'Print_Tax'
       MoveParams = <>
       ActionList = <
@@ -1214,7 +1346,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object mactPrint_Tax_Client: TMultiAction [19]
+    object mactPrint_Tax_Client: TMultiAction [20]
       Category = 'Print_Tax'
       MoveParams = <>
       ActionList = <
@@ -1228,7 +1360,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object mactPrint_Account: TMultiAction [20]
+    object mactPrint_Account: TMultiAction [21]
       Category = 'Print_Account'
       MoveParams = <>
       ActionList = <
@@ -1242,7 +1374,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Us: TdsdPrintAction [21]
+    object actPrintTax_Us: TdsdPrintAction [22]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -1282,7 +1414,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTax_Client: TdsdPrintAction [22]
+    object actPrintTax_Client: TdsdPrintAction [23]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -1330,7 +1462,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
         end>
     end
-    object actPrint_Account: TdsdPrintAction [24]
+    object actPrint_Account: TdsdPrintAction [25]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1375,7 +1507,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
         end>
     end
-    object actGoodsBoxChoice: TOpenChoiceForm [28]
+    object actGoodsBoxChoice: TOpenChoiceForm [29]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1402,7 +1534,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [29]
+    object actGoodsKindChoice: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1429,7 +1561,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       isShowModal = True
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [34]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [35]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1440,7 +1572,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Caption = 'actPrint_Account_ReportName'
     end
-    object actSPPrintSaleProcName: TdsdExecStoredProc [35]
+    object actSPPrintSaleProcName: TdsdExecStoredProc [36]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1451,7 +1583,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Caption = 'actSPPrintSaleProcName'
     end
-    object actPrint_Tax_ReportName: TdsdExecStoredProc [36]
+    object actPrint_Tax_ReportName: TdsdExecStoredProc [37]
       Category = 'Print_Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1462,7 +1594,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Caption = 'actPrint_Tax_ReportName'
     end
-    object actRefreshPrice: TdsdDataSetRefresh [37]
+    object actRefreshPrice: TdsdDataSetRefresh [38]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1475,7 +1607,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actTax: TdsdExecStoredProc [38]
+    object actTax: TdsdExecStoredProc [39]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1801,6 +1933,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1946,6 +2086,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object bbPrint_Transport: TdxBarButton
       Action = mactPrint_Transport
+      Category = 0
+    end
+    object bbOpenReport: TdxBarButton
+      Action = actOpenReportForm
       Category = 0
     end
   end
