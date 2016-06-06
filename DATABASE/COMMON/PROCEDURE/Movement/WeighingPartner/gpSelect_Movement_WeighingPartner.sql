@@ -133,7 +133,7 @@ BEGIN
              , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
              , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
-             , Object_RouteSorting.ValueData      AS RouteSortingName
+             , '' :: TVarChar                     AS RouteSortingName
              , Object_RouteGroup.ValueData        AS RouteGroupName
              , Object_Route.ValueData             AS RouteName
 
@@ -178,7 +178,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                     ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
-            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData -- COALESCE (Movement_Parent.DescId, MovementFloat_MovementDesc.ValueData)
+            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData :: Integer -- COALESCE (Movement_Parent.DescId, MovementFloat_MovementDesc.ValueData)
 
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
@@ -301,11 +301,6 @@ BEGIN
                                                                AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
             LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                         ON MovementLinkObject_RouteSorting.MovementId = MovementLinkMovement_Order.MovementChildId
-                                        AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
-            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
-
 --
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
@@ -356,4 +351,4 @@ ALTER FUNCTION gpSelect_Movement_WeighingPartner (TDateTime, TDateTime, Boolean,
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2016', inEndDate:= '02.06.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
