@@ -6,13 +6,23 @@ uses
   SysUtils, Classes, ImgList, Controls, frxClass, cxClasses, cxStyles,
   cxGridBandedTableView, cxGridTableView, cxTL, Data.DB, Datasnap.DBClient,
   dsdAddOn, cxPropertiesStore, cxLookAndFeels, dxSkinsCore,
-  dxSkinsDefaultPainters, frxExportPDF;
+  dxSkinsDefaultPainters, frxExportPDF, cxGraphics, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
 
   {форма содержит компоненты с картинками}
   TdmMain = class(TDataModule)
-    ImageList: TImageList;
+    ImageList1: TImageList;
     MainImageList: TImageList;
     TreeImageList: TImageList;
     frxReport: TfrxReport;
@@ -30,6 +40,8 @@ type
     cxLookAndFeelController: TcxLookAndFeelController;
     cxRemainsContentStyle: TcxStyle;
     frxPDFExport1: TfrxPDFExport;
+    cxImageList1: TcxImageList;
+    ImageList: TcxImageList;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   end;
