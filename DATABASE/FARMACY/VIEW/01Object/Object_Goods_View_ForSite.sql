@@ -47,7 +47,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
                                   AND ObjectLink_Goods_Appointment.DescId = zc_ObjectLink_Goods_Appointment()
     WHERE Object_Goods.ObjectId = 4 -- !!!бпелеммн!!!
       -- AND (ObjectBoolean_Goods_Published.ValueData = TRUE OR ObjectBoolean_Goods_Published.ValueData IS NULL)
-    -- ORDER BY ObjectBlob_Site.ValueData
+    --ORDER BY ObjectBlob_Site.ValueData
    ;
 
 ALTER TABLE Object_Goods_View_ForSite  OWNER TO postgres;

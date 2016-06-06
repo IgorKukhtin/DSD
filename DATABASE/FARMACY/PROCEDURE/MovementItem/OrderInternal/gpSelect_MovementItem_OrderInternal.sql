@@ -17,6 +17,8 @@ $BODY$
   DECLARE vbObjectId Integer;
   DECLARE vbUnitId Integer;
   DECLARE vbOperDate TDateTime;
+  DECLARE vbOperDateEnd TDateTime;
+  DECLARE vbDate180 TDateTime;
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -37,7 +39,9 @@ BEGIN
     SELECT date_trunc('day', Movement.OperDate)  INTO vbOperDate
     FROM Movement
     WHERE Movement.Id = inMovementId;
-      
+    
+    vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
+    vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
      PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
 
@@ -56,9 +60,9 @@ BEGIN
                                LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.MovementItemId = MI_Check.Id
                                                                     AND MIContainer.DescId = zc_MIContainer_Count() 
-                         WHERE Movement_Check.DescId = zc_Movement_Check()
+                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
                          -- AND DATE_TRUNC ('DAY', Movement_Check.OperDate) = vbOperDate -- CURRENT_DATE
-                          AND Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDate + INTERVAL '1 DAY'
+                          AND Movement_Check.DescId = zc_Movement_Check()
                           AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                         GROUP BY MI_Check.ObjectId 
                         HAVING SUM (MI_Check.Amount) <> 0 
@@ -120,7 +124,7 @@ BEGIN
            , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
            , COALESCE(tmpMI.isCalculated, FALSE)                    AS isCalculated
-           , CASE WHEN tmpMI.PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
+           , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN 456
                      ELSE 0
                 END AS PartionGoodsDateColor   
            , Remains.Amount                                         AS RemainsInUnit
@@ -153,8 +157,8 @@ BEGIN
                   , Object_Goods.isFirst                         AS isFirst
                   , Object_Goods.isSecond                        AS isSecond
              FROM Object_Goods_View AS Object_Goods
-             WHERE Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
-                   AND inShowAll = true       
+             WHERE inShowAll = true AND 
+               Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
             ) AS tmpGoods
 
             FULL JOIN (SELECT MovementItem.Id
@@ -298,7 +302,7 @@ BEGIN
 
      -- Результат 2
      OPEN Cursor2 FOR
-        SELECT *, CASE WHEN PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
+        SELECT *, CASE WHEN PartionGoodsDate < vbDate180 THEN 456
                      ELSE 0
                 END AS PartionGoodsDateColor      
               , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
@@ -342,3 +346,4 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- select * from gpSelect_MovementItem_OrderInternal(inMovementId := 2158888 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

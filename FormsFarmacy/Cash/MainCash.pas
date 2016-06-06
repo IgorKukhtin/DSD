@@ -1495,7 +1495,8 @@ begin
     Result := True;
     //сохранили шапку
     try
-      if not FLocalDataBaseHead.Locate('ID',FormParams.ParamByName('CheckId').Value,[]) then
+      if (FormParams.ParamByName('CheckId').Value = 0) or
+         not FLocalDataBaseHead.Locate('ID',FormParams.ParamByName('CheckId').Value,[]) then
       Begin
         FLocalDataBaseHead.AppendRecord([FormParams.ParamByName('CheckId').Value, //id чека
                                          AUID,                                    //uid чека
@@ -2140,7 +2141,7 @@ begin
   try
     EnterCriticalSection(csCriticalSection_All);
     try
-      for I := 0 to 5 do
+      for I := 0 to 6 do
       Begin
         //ждем пока освободится доступ к локальной базе
         while LocalDataBaseisBusy <> 0 do

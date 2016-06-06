@@ -71,7 +71,7 @@ uses
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   Cash_FP320 in '..\FormsFarmacy\Cash\Cash_FP320.pas',
   OposFiscalPrinter_1_11_Lib_TLB in '..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas',
-  LocalWorkUnit in '..\FormsFarmacy\Cash\LocalWorkUnit.pas',
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash};
 
 {$R *.res}

@@ -1262,6 +1262,7 @@ inherited MainCashForm: TMainCashForm
         Name = 'ManagerName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 72
@@ -1549,7 +1550,7 @@ inherited MainCashForm: TMainCashForm
   end
   object TimerSaveAll: TTimer
     Enabled = False
-    Interval = 360000
+    Interval = 60000
     OnTimer = TimerSaveAllTimer
     Left = 32
     Top = 24
