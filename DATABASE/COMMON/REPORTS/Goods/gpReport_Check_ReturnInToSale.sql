@@ -40,25 +40,42 @@ BEGIN
     END IF;
     inShowAll:= TRUE;
 
+
     -- Результат
     RETURN QUERY
       WITH 
-      tmpMovReturn  AS (SELECT Movement.Id
-                             , MovementLinkObject_From.ObjectId AS PartnerId
-                        FROM Movement 
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                    ON MovementLinkObject_From.MovementId = Movement.Id
-                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                   ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
-                                  AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                        WHERE (Movement.id = inMovementId OR inMovementId = 0)
-                          AND Movement.DescId = zc_Movement_ReturnIn()
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                          AND (MovementLinkObject_From.ObjectId = inPartnerId OR inPartnerId = 0)
-                          AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
-                 )
+      tmpMovReturn  AS (SELECT tmp.Id
+                             , tmp.PartnerId
+                             , tmp.OperDatePartner
+                        FROM (SELECT Movement.Id
+                                   , MovementLinkObject_From.ObjectId AS PartnerId
+                                   , MD_OperDatePartner.ValueData     AS OperDatePartner
+                              FROM MovementDate AS MD_OperDatePartner
+                                   INNER JOIN Movement ON Movement.Id = MD_OperDatePartner.MovementId
+                                                      AND Movement.DescId   = zc_Movement_ReturnIn()
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = MD_OperDatePartner.MovementId
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                        ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                              WHERE inMovementId = 0
+                                AND MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                                AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                AND (MovementLinkObject_From.ObjectId = inPartnerId OR inPartnerId = 0)
+                                AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                             UNION ALL
+                              SELECT MD_OperDatePartner.MovementId    AS Id
+                                   , MovementLinkObject_From.ObjectId AS PartnerId
+                                   , MD_OperDatePartner.ValueData     AS OperDatePartner
+                              FROM MovementDate AS MD_OperDatePartner
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = MD_OperDatePartner.MovementId
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                              WHERE MD_OperDatePartner.MovementId = inMovementId
+                                AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                             ) AS tmp
+                       )
 
     , tmpMIReturn AS (SELECT tmpMovReturn.Id
                              , tmpMovReturn.PartnerId
@@ -70,12 +87,15 @@ BEGIN
                          INNER JOIN MovementItem AS MI_Child
                                                 ON MI_Child.MovementId = tmpMovReturn.Id
                                                AND MI_Child.DescId     = zc_MI_Child()
-                                               AND MI_Child.isErased   = False
-                        
+                                               AND MI_Child.isErased   = FALSE
+                         INNER JOIN MovementItem AS MI_Master
+                                                 ON MI_Master.Id = MI_Child.ParentId
+                                                AND MI_Master.isErased   = FALSE
+
                          INNER JOIN MovementItemFloat AS MIFloat_MovementId
                                                      ON MIFloat_MovementId.MovementItemId = MI_Child.Id
                                                     AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                         
-                                                    AND MIFloat_MovementId.ValueData <> 0                         
+                                                    AND MIFloat_MovementId.ValueData > 0
                          INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                      ON MIFloat_MovementItemId.MovementItemId = MI_Child.Id
                                                     AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 

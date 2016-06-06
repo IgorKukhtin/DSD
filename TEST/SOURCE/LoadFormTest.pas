@@ -665,9 +665,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitJournalForm');
   //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternal_SendOnPriceJournalChoiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderExternal_SendOnPriceJournalChoiceForm');
-
 end;
 
 procedure TLoadFormTest.LoadOrderTypeFormTest;
@@ -2140,6 +2137,9 @@ end;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerItemJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternal_SendOnPriceJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternal_SendOnPriceJournalChoiceForm');
 end;
 
  procedure TLoadFormTest.LoadWeighingProductionFormTest;
