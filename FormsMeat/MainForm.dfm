@@ -75,7 +75,23 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_Check_ReturnInToSaleForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inInvNumber'
+          Value = ' '
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actExportJuridical: TdsdOpenForm [1]
@@ -238,20 +254,14 @@ inherited MainForm: TMainForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inInvNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inMovementId'
           Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = #1074#1089#1077
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

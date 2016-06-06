@@ -2633,6 +2633,10 @@
 				<Form>Report_Goods_SalebyReturnIn_ChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderExternal_SendOnPriceJournalChoice.pas">
+				<Form>OrderExternal_SendOnPriceJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

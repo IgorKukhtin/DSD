@@ -116,7 +116,6 @@ type
     edInvNumber_parent: TcxTextEdit;
     cxLabel14: TcxLabel;
     cxLabel15: TcxLabel;
-    edInvNumberOrder: TcxTextEdit;
     cxLabel16: TcxLabel;
     edContract: TcxButtonEdit;
     cxLabel17: TcxLabel;
@@ -149,6 +148,10 @@ type
     HeaderSaver2: THeaderSaver;
     isBarCode: TcxGridDBColumn;
     cbPromo: TcxCheckBox;
+    edInvNumberOrder: TcxButtonEdit;
+    OrderChoiceGuides: TdsdGuides;
+    HeaderSaver3: THeaderSaver;
+    spUpdateMovement_Order: TdsdStoredProc;
   private
   public
   end;
