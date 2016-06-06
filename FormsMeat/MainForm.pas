@@ -696,6 +696,11 @@ type
     miSubMobile: TMenuItem;
     miMobileNumbersEmployeeForm: TMenuItem;
     actMobileNumbersEmployee: TdsdOpenForm;
+    N107: TMenuItem;
+    N108: TMenuItem;
+    actReport_MobileKS: TdsdOpenForm;
+    dsdOpenForm2: TdsdOpenForm;
+    dsdOpenForm3: TdsdOpenForm;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
