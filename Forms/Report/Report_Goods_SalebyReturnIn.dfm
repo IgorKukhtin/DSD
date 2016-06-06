@@ -223,7 +223,6 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -884,6 +883,13 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
       Action = ExecuteDialog
       Category = 0
     end
+    object bbChoiceGuides: TdxBarButton
+      Caption = #1042#1099#1073#1086#1088
+      Category = 0
+      Hint = #1042#1099#1073#1086#1088
+      Visible = ivAlways
+      ImageIndex = 7
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -1055,6 +1061,23 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
         Name = 'inGoodsKindName'
         Value = Null
         Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

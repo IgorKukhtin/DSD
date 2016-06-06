@@ -12,33 +12,42 @@ RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVa
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId   Integer;
+
+   DECLARE vbPartnerId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_XML_Mida());
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- определяется <Контрагент>
+     vbPartnerId:= (SELECT CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementLinkObject_To.ObjectId ELSE MovementLinkObject_From.ObjectId END
+                    FROM Movement
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                      ON MovementLinkObject_From.MovementId = Movement.Id
+                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                      ON MovementLinkObject_To.MovementId = Movement.Id
+                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                    WHERE Movement.Id = inMovementId
+                   );
+
      -- проверка
      IF 0 = COALESCE((WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
                       SELECT 1
-                      FROM MovementLinkObject AS MovementLinkObject_To
-                           INNER JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = MovementLinkObject_To.ObjectId
-                      WHERE MovementLinkObject_To.MovementId = inMovementId
-                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To())
+                      FROM tmpExportJuridical
+                      WHERE tmpExportJuridical.PartnerId = vbPartnerId)
                    , 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Данная функция для Покупателя <%> не предусмотрена.', lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_To()));
+         RAISE EXCEPTION 'Ошибка.Данная функция для Контрагента <%> не предусмотрена.'
+                       , lfGet_Object_ValueData (vbPartnerId);
      END IF;
 
      -- Результат
      RETURN QUERY
      WITH -- Один Покупатель
-          tmpPartnerTo AS (SELECT MovementLinkObject_To.ObjectId AS PartnerId
-                           FROM MovementLinkObject AS MovementLinkObject_To
-                           WHERE MovementLinkObject_To.MovementId = inMovementId
-                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                          )
+          tmpPartnerTo AS (SELECT vbPartnerId AS PartnerId)
           -- ВСЕ, кому надо отправить Email
         , tmpExportJuridical AS (SELECT tmp.PartnerId, tmp.EmailKindId, STRING_AGG (tmp.ContactPersonMail, ';') AS ContactPersonMail FROM lpSelect_Object_ExportJuridical_list() AS tmp GROUP BY tmp.PartnerId, tmp.EmailKindId)
           -- ВСЕ параметры - откуда отправлять, для Одного Покупателя
@@ -51,8 +60,8 @@ BEGIN
      SELECT tmp.outFileName          :: TVarChar AS Subject
           , ''                       :: TBlob    AS Body
           , gpGet_Mail.Value                     AS AddressFrom
-          , tmpExportJuridical.ContactPersonMail :: TVarChar AS AddressTo
-          -- , case when inSession = '5' then 'ashtu777@ua.fm' else  tmpExportJuridical.ContactPersonMail end :: TVarChar AS AddressTo
+          -- , tmpExportJuridical.ContactPersonMail :: TVarChar AS AddressTo
+          , CASE WHEN inSession = '5' THEN 'ashtu777@ua.fm' ELSE tmpExportJuridical.ContactPersonMail END :: TVarChar AS AddressTo
           , gpGet_Host.Value                     AS Host
           , gpGet_Port.Value                     AS Port
           , gpGet_User.Value                     AS UserName

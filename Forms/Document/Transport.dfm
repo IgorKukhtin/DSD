@@ -442,7 +442,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 72
+            Width = 50
           end
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -457,7 +457,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 154
+            Width = 108
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -472,7 +472,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 110
+            Width = 78
           end
           object colFreightName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
@@ -487,21 +487,21 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 93
+            Width = 65
           end
           object colAmount: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 82
+            Width = 57
           end
           object colDistanceFuelChild: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1076#1086#1087#1086#1083#1085#1080#1090'.)'
             DataBinding.FieldName = 'DistanceFuelChild'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 82
+            Width = 58
           end
           object colDistanceWeightTransport: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1089' '#1075#1088#1091#1079#1086#1084', '#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
@@ -516,21 +516,21 @@
             DataBinding.FieldName = 'StartOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 72
           end
           object colEndOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'EndOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 113
+            Width = 79
           end
           object colWeight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1088#1072#1079#1075#1088#1091#1079#1082#1072')'
             DataBinding.FieldName = 'Weight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 85
+            Width = 60
           end
           object colWeightTranspor: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
@@ -553,7 +553,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 67
+            Width = 47
           end
           object colRouteKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
@@ -561,7 +561,18 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 47
+          end
+          object clTimePrice: TcxGridDBColumn
+            Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
+            DataBinding.FieldName = 'TimePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
+            Width = 66
           end
           object clRateSumma: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077', '#1075#1088#1085'.'
@@ -572,7 +583,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
-            Width = 85
+            Width = 59
           end
           object clRatePrice: TcxGridDBColumn
             Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
@@ -583,7 +594,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
-            Width = 100
+            Width = 69
           end
           object clRatePrice_Calc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077',  '#1075#1088#1085
@@ -595,7 +606,7 @@
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072',  '#1075#1088#1085' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
             Options.Editing = False
-            Width = 100
+            Width = 69
           end
           object clTaxi: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080', '#1075#1088#1085'.'
@@ -606,14 +617,14 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080
-            Width = 100
+            Width = 68
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 194
+            Width = 134
           end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -945,9 +956,6 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1262,9 +1270,6 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1415,6 +1420,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 336
@@ -1437,12 +1443,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1450,6 +1458,7 @@
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 105
@@ -1578,10 +1587,12 @@
           Name = 'isFrom'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintTo: TdsdPrintAction
       Category = 'DSDLib'
@@ -1612,10 +1623,12 @@
           Name = 'isFrom'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintAdmin: TdsdPrintAction
       Category = 'DSDLib'
@@ -1642,6 +1655,7 @@
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1040#1076#1084#1080#1085
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1660,6 +1674,7 @@
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1667,6 +1682,7 @@
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1780,18 +1796,21 @@
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1799,12 +1818,14 @@
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindName'
@@ -1812,12 +1833,14 @@
           Component = MasterCDS
           ComponentItem = 'RouteKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FreightId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FreightId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FreightName'
@@ -1825,12 +1848,14 @@
           Component = MasterCDS
           ComponentItem = 'FreightName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindId2'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindId_Freight'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindName2'
@@ -1838,12 +1863,14 @@
           Component = MasterCDS
           ComponentItem = 'RouteKindName_Freight'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -1851,6 +1878,7 @@
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RateSumma'
@@ -1858,6 +1886,7 @@
           Component = MasterCDS
           ComponentItem = 'RateSumma'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RatePrice'
@@ -1865,6 +1894,15 @@
           Component = MasterCDS
           ComponentItem = 'RatePrice'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TimePrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TimePrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1876,12 +1914,14 @@
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1889,6 +1929,7 @@
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1916,18 +1957,21 @@
       FormName = 'TFreightForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FreightId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FreightName'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1939,12 +1983,14 @@
       FormName = 'TRouteKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindId_Freight'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1952,6 +1998,7 @@
           Component = MasterCDS
           ComponentItem = 'RouteKindName_Freight'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2012,18 +2059,21 @@
       FormName = 'TSourceFuel_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'FromCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2031,12 +2081,14 @@
           Component = IncomeCDS
           ComponentItem = 'FromName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -2044,12 +2096,14 @@
           Component = IncomeCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
@@ -2057,24 +2111,28 @@
           Component = IncomeCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChangePrice'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'ChangePrice'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsCode'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -2082,6 +2140,7 @@
           Component = IncomeCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelName'
@@ -2089,6 +2148,7 @@
           Component = IncomeCDS
           ComponentItem = 'FuelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
@@ -2097,6 +2157,7 @@
           ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2108,12 +2169,14 @@
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2121,6 +2184,7 @@
           Component = IncomeCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2132,18 +2196,21 @@
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2151,6 +2218,7 @@
           Component = IncomeCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelName'
@@ -2158,6 +2226,7 @@
           Component = IncomeCDS
           ComponentItem = 'FuelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2169,12 +2238,14 @@
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = IncomeCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2182,6 +2253,7 @@
           Component = IncomeCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2338,6 +2410,7 @@
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -2345,6 +2418,7 @@
           Component = ChildCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelName'
@@ -2353,6 +2427,7 @@
           ComponentItem = 'FuelName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2365,6 +2440,7 @@
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -2372,6 +2448,7 @@
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteName'
@@ -2380,6 +2457,7 @@
           ComponentItem = 'RouteName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2400,6 +2478,7 @@
     LookupControl = edCar
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2410,6 +2489,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2418,6 +2498,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 250
     Top = 11
@@ -2433,130 +2514,152 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarId'
         Value = ''
         Component = GuidesCar
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarName'
         Value = ''
         Component = GuidesCar
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarTrailerId'
         Value = ''
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarTrailerName'
         Value = ''
         Component = GuidesCarTrailer
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverId'
         Value = ''
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverName'
         Value = ''
         Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverMoreId'
         Value = ''
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverMoreName'
         Value = ''
         Component = GuidesPersonalDriverMore
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalId'
         Value = ''
         Component = GuidesPersonal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalName'
         Value = ''
         Component = GuidesPersonal
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitForwardingId'
         Value = ''
         Component = GuidesBranchForwarding
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitForwardingName'
         Value = ''
         Component = GuidesBranchForwarding
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartRunPlan'
         Value = 0d
         Component = edStartRunPlan
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndRunPlan'
         Value = 0d
         Component = edEndRunPlan
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartRun'
         Value = 0d
         Component = edStartRun
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndRun'
         Value = 0d
         Component = edEndRun
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'HoursWork'
         Value = 0.000000000000000000
         Component = edHoursWork
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'HoursAdd'
         Value = 0.000000000000000000
         Component = edHoursAdd
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -2564,6 +2667,7 @@
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -2571,6 +2675,7 @@
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 205
@@ -2595,6 +2700,7 @@
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -2602,6 +2708,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteId'
@@ -2609,6 +2716,7 @@
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -2617,6 +2725,7 @@
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDistanceFuelChild'
@@ -2625,6 +2734,7 @@
         ComponentItem = 'DistanceFuelChild'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDistanceWeightTransport'
@@ -2633,6 +2743,7 @@
         ComponentItem = 'DistanceWeightTransport'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWeight'
@@ -2641,6 +2752,7 @@
         ComponentItem = 'Weight'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWeightTransport'
@@ -2649,6 +2761,7 @@
         ComponentItem = 'WeightTransport'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartOdometre'
@@ -2657,6 +2770,7 @@
         ComponentItem = 'StartOdometre'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndOdometre'
@@ -2665,14 +2779,16 @@
         ComponentItem = 'EndOdometre'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
-        Name = 'inRateSumma'
+        Name = 'ioRateSumma'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RateSumma'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRatePrice'
@@ -2681,6 +2797,16 @@
         ComponentItem = 'RatePrice'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimePrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TimePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTaxi'
@@ -2689,6 +2815,7 @@
         ComponentItem = 'Taxi'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outRatePrice_Calc'
@@ -2696,6 +2823,7 @@
         Component = MasterCDS
         ComponentItem = 'RatePrice_Calc'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFreightId'
@@ -2703,6 +2831,7 @@
         Component = MasterCDS
         ComponentItem = 'FreightId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteKindId_Freight'
@@ -2710,6 +2839,7 @@
         Component = MasterCDS
         ComponentItem = 'RouteKindId_Freight'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteKindId'
@@ -2717,6 +2847,7 @@
         Component = MasterCDS
         ComponentItem = 'RouteKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioUnitId'
@@ -2724,6 +2855,7 @@
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outUnitName'
@@ -2731,6 +2863,7 @@
         Component = MasterCDS
         ComponentItem = 'UnitName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -2739,6 +2872,7 @@
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 75
@@ -2770,6 +2904,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -2777,6 +2912,7 @@
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -2784,6 +2920,7 @@
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartRunPlan'
@@ -2791,6 +2928,7 @@
         Component = edStartRunPlan
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndRunPlan'
@@ -2798,6 +2936,7 @@
         Component = edEndRunPlan
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartRun'
@@ -2805,6 +2944,7 @@
         Component = edStartRun
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndRun'
@@ -2812,6 +2952,7 @@
         Component = edEndRun
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHoursAdd'
@@ -2819,12 +2960,14 @@
         Component = edHoursAdd
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outHoursWork'
         Value = 0.000000000000000000
         Component = edHoursWork
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -2832,6 +2975,7 @@
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
@@ -2839,6 +2983,7 @@
         Component = GuidesCar
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarTrailerId'
@@ -2846,6 +2991,7 @@
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalDriverId'
@@ -2853,6 +2999,7 @@
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalDriverMoreId'
@@ -2860,6 +3007,7 @@
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -2867,6 +3015,7 @@
         Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitForwardingId'
@@ -2874,6 +3023,7 @@
         Component = GuidesBranchForwarding
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 348
@@ -2884,6 +3034,7 @@
     LookupControl = edCarTrailer
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2893,6 +3044,7 @@
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2901,6 +3053,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 722
     Top = 91
@@ -2910,6 +3063,7 @@
     LookupControl = edPersonalDriver
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2919,6 +3073,7 @@
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2927,6 +3082,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 186
     Top = 35
@@ -2936,6 +3092,7 @@
     LookupControl = edPersonalDriverMore
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2945,6 +3102,7 @@
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2953,6 +3111,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 778
     Top = 91
@@ -2962,6 +3121,7 @@
     LookupControl = edBranchForwarding
     FormNameParam.Value = 'TBranch_orUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_orUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2971,6 +3131,7 @@
         Component = GuidesBranchForwarding
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2979,6 +3140,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 1098
     Top = 59
@@ -2994,6 +3156,7 @@
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -3001,6 +3164,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -3008,6 +3172,7 @@
         Component = ChildCDS
         ComponentItem = 'ParentId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFuelId'
@@ -3015,6 +3180,7 @@
         Component = ChildCDS
         ComponentItem = 'FuelId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsCalculated'
@@ -3023,6 +3189,7 @@
         ComponentItem = 'isCalculated'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsMasterFuel'
@@ -3031,6 +3198,7 @@
         ComponentItem = 'isMasterFuel'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmount'
@@ -3039,6 +3207,7 @@
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmount_calc'
@@ -3046,6 +3215,7 @@
         Component = ChildCDS
         ComponentItem = 'Amount_calc'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmount_Distance_calc'
@@ -3053,6 +3223,7 @@
         Component = ChildCDS
         ComponentItem = 'Amount_Distance_calc'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmount_ColdHour_calc'
@@ -3060,6 +3231,7 @@
         Component = ChildCDS
         ComponentItem = 'Amount_ColdHour_calc'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmount_ColdDistance_calc'
@@ -3067,6 +3239,7 @@
         Component = ChildCDS
         ComponentItem = 'Amount_ColdDistance_calc'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inColdHour'
@@ -3075,6 +3248,7 @@
         ComponentItem = 'ColdHour'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inColdDistance'
@@ -3083,6 +3257,7 @@
         ComponentItem = 'ColdDistance'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountFuel'
@@ -3091,6 +3266,7 @@
         ComponentItem = 'AmountFuel'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountColdHour'
@@ -3099,6 +3275,7 @@
         ComponentItem = 'AmountColdHour'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountColdDistance'
@@ -3107,6 +3284,7 @@
         ComponentItem = 'AmountColdDistance'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inNumber'
@@ -3115,6 +3293,7 @@
         ComponentItem = 'Number'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRateFuelKindTax'
@@ -3123,6 +3302,7 @@
         ComponentItem = 'RateFuelKindTax'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRateFuelKindId'
@@ -3130,6 +3310,7 @@
         Component = ChildCDS
         ComponentItem = 'RateFuelKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 98
@@ -3139,6 +3320,7 @@
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = GuidesCar
@@ -3160,6 +3342,7 @@
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -3529,12 +3712,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -3542,6 +3727,7 @@
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 106
@@ -3558,6 +3744,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioMovementId'
@@ -3565,6 +3752,7 @@
         Component = IncomeCDS
         ComponentItem = 'MovementId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioInvNumber'
@@ -3573,6 +3761,7 @@
         ComponentItem = 'InvNumber'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -3580,6 +3769,7 @@
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioOperDatePartner'
@@ -3588,6 +3778,7 @@
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberPartner'
@@ -3596,6 +3787,7 @@
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioPriceWithVAT'
@@ -3604,6 +3796,7 @@
         ComponentItem = 'PriceWithVAT'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioVATPercent'
@@ -3612,6 +3805,7 @@
         ComponentItem = 'VATPercent'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChangePrice'
@@ -3620,6 +3814,7 @@
         ComponentItem = 'ChangePrice'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -3627,6 +3822,7 @@
         Component = IncomeCDS
         ComponentItem = 'FromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -3634,6 +3830,7 @@
         Component = GuidesCar
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioPaidKindId'
@@ -3641,6 +3838,7 @@
         Component = IncomeCDS
         ComponentItem = 'PaidKindId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioPaidKindName'
@@ -3649,6 +3847,7 @@
         ComponentItem = 'PaidKindName'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioContractId'
@@ -3656,6 +3855,7 @@
         Component = IncomeCDS
         ComponentItem = 'ContractId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioContractName'
@@ -3664,6 +3864,7 @@
         ComponentItem = 'ContractName'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioRouteId'
@@ -3671,6 +3872,7 @@
         Component = IncomeCDS
         ComponentItem = 'RouteId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioRouteName'
@@ -3679,6 +3881,7 @@
         ComponentItem = 'RouteName'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalDriverId'
@@ -3686,6 +3889,7 @@
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioMovementItemId'
@@ -3693,6 +3897,7 @@
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioGoodsId'
@@ -3700,6 +3905,7 @@
         Component = IncomeCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioGoodsCode'
@@ -3707,6 +3913,7 @@
         Component = IncomeCDS
         ComponentItem = 'GoodsCode'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioGoodsName'
@@ -3715,6 +3922,7 @@
         ComponentItem = 'GoodsName'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioFuelName'
@@ -3723,6 +3931,7 @@
         ComponentItem = 'FuelName'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -3731,6 +3940,7 @@
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -3739,6 +3949,7 @@
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -3747,6 +3958,7 @@
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
@@ -3754,6 +3966,7 @@
         Component = IncomeCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSummTotal'
@@ -3761,6 +3974,7 @@
         Component = IncomeCDS
         ComponentItem = 'AmountSummTotal'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 75
@@ -3777,6 +3991,7 @@
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -3784,10 +3999,11 @@
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 790
-    Top = 185
+    Left = 814
+    Top = 209
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -3800,6 +4016,7 @@
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -3807,6 +4024,7 @@
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 678
@@ -3823,6 +4041,7 @@
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -3830,6 +4049,7 @@
         Component = IncomeCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 612
@@ -3846,6 +4066,7 @@
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -3853,6 +4074,7 @@
         Component = IncomeCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 684
@@ -3883,12 +4105,14 @@
         Component = IncomeCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsLastComplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 552
@@ -3905,6 +4129,7 @@
         Component = IncomeCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 624
@@ -3921,6 +4146,7 @@
         Component = IncomeCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 696
@@ -3931,6 +4157,7 @@
     LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 40
@@ -3947,6 +4174,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStatusCode'
@@ -3954,6 +4182,7 @@
         Component = StatusGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -3984,12 +4213,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -3997,6 +4228,7 @@
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 106
@@ -4022,6 +4254,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 530
@@ -4032,6 +4265,7 @@
     LookupControl = edPersonal
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -4041,6 +4275,7 @@
         Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -4049,6 +4284,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 922
     Top = 75
@@ -4064,6 +4300,7 @@
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -4071,6 +4308,7 @@
         Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 846
@@ -4087,6 +4325,7 @@
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -4094,6 +4333,7 @@
         Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 798

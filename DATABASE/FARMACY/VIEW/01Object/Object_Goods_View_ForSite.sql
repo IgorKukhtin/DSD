@@ -45,8 +45,9 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Appointment
                                    ON ObjectLink_Goods_Appointment.ObjectId = Object_Goods.ObjectId
                                   AND ObjectLink_Goods_Appointment.DescId = zc_ObjectLink_Goods_Appointment()
-    WHERE (ObjectBoolean_Goods_Published.ValueData = TRUE OR ObjectBoolean_Goods_Published.ValueData IS NULL)
-      AND Object_Goods.ObjectId = 4 -- !!!бпелеммн!!!
+    WHERE Object_Goods.ObjectId = 4 -- !!!бпелеммн!!!
+      -- AND (ObjectBoolean_Goods_Published.ValueData = TRUE OR ObjectBoolean_Goods_Published.ValueData IS NULL)
+    -- ORDER BY ObjectBlob_Site.ValueData
    ;
 
 ALTER TABLE Object_Goods_View_ForSite  OWNER TO postgres;

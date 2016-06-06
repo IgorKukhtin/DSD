@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpReport_SaleByReturnIn (
     IN inPrice             Tfloat    , --
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , RetailName TVarChar
@@ -31,9 +31,9 @@ RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , Price         TFloat  -- 
              
              , InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
-             , InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
+             , InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
              , DocumentTaxKindName TVarChar
-             
+             , MovementId Integer, MovementItemId Integer
              ) 
 
 AS
@@ -51,9 +51,15 @@ BEGIN
         INSERT INTO _tmpListPartner (PartnerId, JuridicalId)
             SELECT ObjectLink_Jur.ObjectId AS PartnerId, ObjectLink_Jur.ChildObjectId AS JuridicalId
             FROM ObjectLink AS ObjectLink_Jur
+            WHERE ObjectLink_Jur.ObjectId = inPartnerId
+              AND ObjectLink_Jur.DescId   = zc_ObjectLink_Partner_Juridical()
+           ;
+        /*INSERT INTO _tmpListPartner (PartnerId, JuridicalId)
+            SELECT ObjectLink_Jur.ObjectId AS PartnerId, ObjectLink_Jur.ChildObjectId AS JuridicalId
+            FROM ObjectLink AS ObjectLink_Jur
             WHERE ObjectLink_Jur.ChildObjectId = (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = inPartnerId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical())
               AND ObjectLink_Jur.DescId        = zc_ObjectLink_Partner_Juridical()
-          ;
+          ;*/
     ELSE 
         IF inJuridicalId <> 0
         THEN
@@ -130,7 +136,8 @@ IF inBranchId <> 0
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = MD_OperDatePartner.MovementId
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                            INNER JOIN _tmpListPartner ON _tmpListPartner.PartnerId = MovementLinkObject_To.ObjectId
+                                                                         AND MovementLinkObject_To.ObjectId IN (SELECT _tmpListPartner.PartnerId FROM _tmpListPartner)
+                                            -- INNER JOIN _tmpListPartner ON _tmpListPartner.PartnerId = MovementLinkObject_To.ObjectId
                                             INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
                                                                AND Movement.DescId   = zc_Movement_Sale()
                                                                AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -191,7 +198,8 @@ IF inBranchId <> 0
                        )
 
                                              
-    SELECT Object_Goods.ObjectCode                    AS GoodsCode
+    SELECT Object_Goods.Id                            AS GoodsId
+         , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
          , Object_GoodsKind.ValueData                 AS GoodsKindName
         
@@ -225,9 +233,13 @@ IF inBranchId <> 0
          , Movement_Sale.Operdate
          , tmpContainer.OperDatePartner
          
+         , Movement_DocumentMaster.InvNumber        AS InvNumber_Master
          , MS_InvNumberPartner_Master.ValueData     AS InvNumberPartner_Master
          , Movement_DocumentMaster.OperDate         AS OperDate_Master
          , Object_TaxKind_Master.ValueData     	    AS DocumentTaxKindName
+
+         , tmpContainer.MovementId
+         , tmpContainer.MovementItemId
                     
        FROM tmpContainer
           LEFT JOIN tmpReturnAmount ON tmpReturnAmount.MovementItemId = tmpContainer.MovementItemId

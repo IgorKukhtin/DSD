@@ -375,6 +375,12 @@ BEGIN
 
            , ObjectString_Partner_ShortName.ValueData   AS ShortNamePartner_To
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
+
+           , (CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
+           || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
+           || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
+           || ObjectString_ToAddress.ValueData
+             ) :: TVarChar            AS PartnerAddressAll_To
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
            , COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName) AS JuridicalName_To
            , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
@@ -573,7 +579,6 @@ BEGIN
                             AND ObjectLink_Branch_PersonalStore.DescId = zc_ObjectLink_Branch_PersonalStore()
         LEFT JOIN Object_Personal_View AS Object_PersonalStore_View ON Object_PersonalStore_View.PersonalId = ObjectLink_Branch_PersonalStore.ChildObjectId  
 
-
                                                              
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
@@ -590,6 +595,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Partner_ShortName
                                    ON ObjectString_Partner_ShortName.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                   AND ObjectString_Partner_ShortName.DescId = zc_ObjectString_Partner_ShortName()
+            LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
+            LEFT JOIN ObjectString AS ObjectString_PostalCode
+                                   ON ObjectString_PostalCode.ObjectId = View_Partner_Address.StreetId
+                                  AND ObjectString_PostalCode.DescId = zc_ObjectString_Street_PostalCode()
+
 
             /*LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id

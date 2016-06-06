@@ -3,24 +3,25 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientHeight = 535
   ClientWidth = 1114
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -113
   ExplicitWidth = 1130
   ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1114
-    Height = 478
+    Height = 393
     TabOrder = 3
     ExplicitWidth = 1114
     ExplicitHeight = 478
-    ClientRectBottom = 478
+    ClientRectBottom = 393
     ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1114
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1114
-        Height = 478
+        Height = 393
         ExplicitWidth = 1114
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -528,6 +529,42 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
     end
   end
+  object ExportXmlGrid: TcxGrid [2]
+    Left = 0
+    Top = 450
+    Width = 1114
+    Height = 85
+    Align = alBottom
+    TabOrder = 6
+    Visible = False
+    ExplicitLeft = -63
+    ExplicitWidth = 1177
+    object ExportXmlGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ExportDS
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.IncSearch = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.Header = False
+      object RowData: TcxGridDBColumn
+        DataBinding.FieldName = 'RowData'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+    end
+    object ExportXmlGridLevel: TcxGridLevel
+      GridView = ExportXmlGridDBTableView
+    end
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
@@ -554,11 +591,38 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   inherited ActionList: TActionList
     Left = 31
     Top = 138
-    inherited actInsert: TdsdInsertUpdateAction [0]
+    object actExport: TMultiAction [0]
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email
+        end
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actSelect_Export
+        end
+        item
+          Action = actExport_Grid
+        end
+        item
+          Action = actSMTPFile
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1087#1086' '#1087#1086#1095#1090#1077 +
+        '?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      ImageIndex = 53
+    end
+    inherited actInsert: TdsdInsertUpdateAction [1]
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
     end
-    inherited actUpdate: TdsdInsertUpdateAction [1]
+    inherited actUpdate: TdsdInsertUpdateAction [2]
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
       GuiParams = <
@@ -584,24 +648,24 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actRefresh: TdsdDataSetRefresh [2]
+    inherited actRefresh: TdsdDataSetRefresh [3]
     end
-    inherited actUnComplete: TdsdChangeMovementStatus [3]
+    inherited actUnComplete: TdsdChangeMovementStatus [4]
     end
-    inherited actComplete: TdsdChangeMovementStatus [4]
+    inherited actComplete: TdsdChangeMovementStatus [5]
     end
-    inherited actSetErased: TdsdChangeMovementStatus [5]
+    inherited actSetErased: TdsdChangeMovementStatus [6]
     end
-    inherited actCompleteList: TMultiAction [6]
+    inherited actCompleteList: TMultiAction [7]
       View = cxGridDBTableView
     end
-    inherited actUnCompleteList: TMultiAction [7]
+    inherited actUnCompleteList: TMultiAction [8]
       View = cxGridDBTableView
     end
-    inherited actSetErasedList: TMultiAction [8]
+    inherited actSetErasedList: TMultiAction [9]
       View = cxGridDBTableView
     end
-    object actTaxCorrective: TdsdExecStoredProc [9]
+    object actTaxCorrective: TdsdExecStoredProc [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -620,7 +684,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
         #1080#1074#1103#1079#1082#1086#1081')>.'
     end
-    object actCorrective: TdsdExecStoredProc [10]
+    object actCorrective: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -639,11 +703,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
-    inherited actMovementItemContainer: TdsdOpenForm [11]
+    inherited actMovementItemContainer: TdsdOpenForm [12]
     end
-    inherited actShowErased: TBooleanStoredProcAction [12]
+    inherited actShowErased: TBooleanStoredProcAction [13]
     end
-    object actPrint: TdsdPrintAction [13]
+    object actPrint: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -693,15 +757,15 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    inherited actGridToExcel: TdsdGridToExcel [14]
+    inherited actGridToExcel: TdsdGridToExcel [15]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [15]
+    inherited actInsertMask: TdsdInsertUpdateAction [16]
     end
-    inherited actReCompleteList: TMultiAction [16]
+    inherited actReCompleteList: TMultiAction [17]
     end
-    inherited spReCompete: TdsdExecStoredProc [17]
+    inherited spReCompete: TdsdExecStoredProc [18]
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [18]
+    inherited MovementProtocolOpenForm: TdsdOpenForm [19]
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1056,6 +1120,93 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actGet_Export_Email: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_Email
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_Email
+        end>
+      Caption = 'actGet_Export_Email'
+    end
+    object actGet_Export_FileName: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName
+        end>
+      Caption = 'actGet_Export_FileName'
+    end
+    object actSelect_Export: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_Export
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Export
+        end>
+      Caption = 'actSelect_Export'
+    end
+    object actExport_Grid: TExportGrid
+      Category = 'Export_Email'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Grid = ExportXmlGrid
+      Caption = 'actExport_Grid'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XML'
+    end
+    object actSMTPFile: TdsdSMTPFileAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = ExportEmailCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1233,6 +1384,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbExport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1270,6 +1429,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     object bbPrintPriceCorr: TdxBarButton
       Action = mactPrintPriceCorr
+      Category = 0
+    end
+    object bbExport: TdxBarButton
+      Action = actExport
       Category = 0
     end
   end
@@ -1336,7 +1499,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 320
+    Top = 291
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_ReturnIn'
@@ -1350,7 +1513,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 384
+    Top = 339
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_ReturnIn'
@@ -1363,8 +1526,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 376
+    Left = 160
+    Top = 315
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1763,8 +1926,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
-    Top = 435
+    Left = 328
+    Top = 387
   end
   object spGetReportNameTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -1844,7 +2007,120 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    Left = 280
+    Top = 387
+  end
+  object spGet_Export_Email: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_Send'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
     Left = 272
-    Top = 435
+    Top = 480
+  end
+  object spGet_Export_FileName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 200
+    Top = 464
+  end
+  object spSelect_Export: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Email_Send'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 128
+    Top = 480
+  end
+  object ExportDS: TDataSource
+    DataSet = ExportCDS
+    Left = 80
+    Top = 480
+  end
+  object ExportCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 48
+    Top = 480
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 40
+    Top = 432
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 80
+    Top = 433
   end
 end

@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
  INOUT ioId             Integer   , -- Ключ объекта <маршрут>
@@ -11,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
     IN inName           TVarChar  , -- свойство <Наименование маршрута>
     IN inRateSumma      Tfloat    , -- Сумма коммандировочных
     IN inRatePrice      Tfloat    , -- Ставка грн/км (дальнобойные)
+    IN inTimePrice      Tfloat    , -- Ставка грн/ч (коммандировочные)
     IN inUnitId         Integer   , -- ссылка на Подразделение
     IN inBranchId       Integer   , -- ссылка на Филиал
     IN inRouteKindId    Integer   , -- ссылка на Типы маршрутов
@@ -59,6 +62,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RateSumma(), ioId, inRateSumma);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RatePrice(), ioId, inRatePrice);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_TimePrice(), ioId, inTimePrice);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -72,6 +78,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.05.16         * add TimePrice
  17.04.16         *
  20.04.15         * RouteGroup                
  13.12.13         * add inBranchId              

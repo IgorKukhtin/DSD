@@ -34,6 +34,8 @@ BEGIN
      DELETE FROM _tmpItem_Transport;
      -- !!!обязательно!!! очистили таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem_TransportSumm_Transport;
+     -- !!!обязательно!!! очистили таблицу - элементы по Сотруднику (ЗП) + затраты "командировочные" + "дальнобойные" + "такси", со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpItem_SummPersonal;
 
 
      -- !!!обязательно!!! пересчитали Child - нормы
@@ -337,7 +339,8 @@ BEGIN
              ) AS _tmpItem
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                           ON MovementLinkObject_PersonalDriver.MovementId = inMovementId
-                                         AND MovementLinkObject_PersonalDriver.DescId     = zc_MovementLinkObject_PersonalDriver()
+                                         AND MovementLinkObject_PersonalDriver.DescId     IN (zc_MovementLinkObject_PersonalDriver(), zc_MovementLinkObject_PersonalDriverMore())
+                                         AND MovementLinkObject_PersonalDriver.ObjectId   > 0 
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
 
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
@@ -582,18 +585,21 @@ BEGIN
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        WITH _tmpItem AS (SELECT _tmpItem_SummPersonal.MovementItemId
+                              , _tmpItem_SummPersonal.ContainerId
                               , zc_Enum_AnalyzerId_Transport_Add()     AS AnalyzerId -- Сумма командировочные
                               , _tmpItem_SummPersonal.OperSumm_Add     AS OperSumm
                          FROM _tmpItem_SummPersonal
                          WHERE _tmpItem_SummPersonal.OperSumm_Add <> 0 -- !!!надо ограничивать!!!
                         UNION ALL
                          SELECT _tmpItem_SummPersonal.MovementItemId
+                              , _tmpItem_SummPersonal.ContainerId
                               , zc_Enum_AnalyzerId_Transport_AddLong() AS AnalyzerId -- Сумма дальнобойные (тоже командировочные)
                               , _tmpItem_SummPersonal.OperSumm_AddLong AS OperSumm
                          FROM _tmpItem_SummPersonal
                          WHERE _tmpItem_SummPersonal.OperSumm_AddLong <> 0 -- !!!надо ограничивать!!!
                         UNION ALL
                          SELECT _tmpItem_SummPersonal.MovementItemId
+                              , _tmpItem_SummPersonal.ContainerId
                               , zc_Enum_AnalyzerId_Transport_Taxi()    AS AnalyzerId -- Сумма на такси
                               , _tmpItem_SummPersonal.OperSumm_Taxi    AS OperSumm
                          FROM _tmpItem_SummPersonal
@@ -617,6 +623,7 @@ BEGIN
             , TRUE                                    AS isActive
        FROM _tmpItem
             INNER JOIN _tmpItem_SummPersonal ON _tmpItem_SummPersonal.MovementItemId = _tmpItem.MovementItemId
+                                            AND _tmpItem_SummPersonal.ContainerId    = _tmpItem.ContainerId
       UNION ALL
        -- Прибыль
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPersonal.MovementItemId
@@ -636,6 +643,7 @@ BEGIN
             , FALSE                                   AS isActive               -- !!!ОПиУ всегда по Кредиту!!!
        FROM _tmpItem
             INNER JOIN _tmpItem_SummPersonal ON _tmpItem_SummPersonal.MovementItemId = _tmpItem.MovementItemId
+                                            AND _tmpItem_SummPersonal.ContainerId    = _tmpItem.ContainerId
       ;
 
 
@@ -779,4 +787,56 @@ where MovementItemContainer.MovementDescId = zc_Movement_Transport()
   and MovementItemContainer.MovementItemId is null
   and MovementItemContainer.AccountId is null
   and MIContainer.Id = MovementItemContainer.Id;
+*/
+/*
+ select a.*
+  , gpReComplete_Movement_Transport (a.Id, false, zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
+
+from (
+ select distinct Movement.*
+--  select Movement.*
+/ * , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), MovementItem.Id, ObjectFloat.ValueData * (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0)))
+  , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), MovementItem.Id, ObjectFloat.ValueData)
+  , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RatePrice(), MovementItem.Id, ObjectFloat2.ValueData)
+ , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0))* /
+
+        FROM Movement
+                       LEFT JOIN MovementFloat AS MovementFloat_HoursWork
+                                               ON MovementFloat_HoursWork.MovementId = Movement.Id
+                                              AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
+                       LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
+                                               ON MovementFloat_HoursAdd.MovementId = Movement.Id
+                                              AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+
+             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              
+             left JOIN MovementItemFloat AS MIFloat_RateSumma
+                                         ON MIFloat_RateSumma.MovementItemId =  MovementItem.Id
+                                        AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
+
+             left  JOIN MovementItemFloat AS MIFloat_TimePrice
+                                         ON MIFloat_TimePrice.MovementItemId =  MovementItem.Id
+                                        AND MIFloat_TimePrice.DescId = zc_MIFloat_TimePrice()
+                                        
+
+             left JOIN ObjectFloat
+                                         ON ObjectFloat.ObjectId =  MovementItem.ObjectId
+                                        AND ObjectFloat.DescId = zc_ObjectFloat_Route_TimePrice()
+                                        
+             left JOIN ObjectFloat as ObjectFloat2
+                                         ON ObjectFloat2.ObjectId =  MovementItem.ObjectId
+                                        AND ObjectFloat2.DescId = zc_ObjectFloat_Route_RatePrice()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                         AND MovementLinkObject_PersonalDriver.DescId      = zc_MovementLinkObject_PersonalDriverMore()
+
+where Movement.DescId = zc_Movement_Transport ()
+  and Movement.OperDate between '15.04.2016' and '26.05.2016'
+  AND coalesce (ObjectFloat.ValueData, 0) <> 0
+  AND (MIFloat_RateSumma.ValueData <> 0 OR MIFloat_TimePrice.ValueData <> 0)
+  -- AND MovementLinkObject_PersonalDriver.ObjectId   > 0 
+) as a
+where StatusId = zc_Enum_Status_Complete()
 */

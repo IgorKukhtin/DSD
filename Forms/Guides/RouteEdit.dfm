@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
-  ClientHeight = 453
+  ClientHeight = 494
   ClientWidth = 361
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 70
-    Top = 416
+    Left = 62
+    Top = 462
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 214
-    Top = 416
+    Left = 206
+    Top = 462
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -162,19 +162,35 @@
     Width = 120
   end
   object cxLabel6: TcxLabel
-    Left = 170
-    Top = 353
+    Left = 32
+    Top = 404
     Hint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
     Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
   end
   object edRatePrice: TcxCurrencyEdit
+    Left = 32
+    Top = 427
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 19
+    Width = 135
+  end
+  object cxLabel8: TcxLabel
+    Left = 170
+    Top = 353
+    Hint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
+    Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
+  end
+  object edTimePrice: TcxCurrencyEdit
     Left = 170
     Top = 376
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 19
+    TabOrder = 21
     Width = 135
   end
   object ActionList: TActionList
@@ -220,12 +236,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -233,6 +251,7 @@
         Component = edRouteName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRateSumma'
@@ -240,6 +259,7 @@
         Component = edRateSumma
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRatePrice'
@@ -247,30 +267,43 @@
         Component = edRatePrice
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimePrice'
+        Value = Null
+        Component = edTimePrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnit'
         Value = ''
         Component = UnitGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranch'
         Value = ''
         Component = BranchGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteKind'
         Value = ''
         Component = RouteKindGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFreight'
         Value = ''
         Component = FreightGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteGroupId'
@@ -278,6 +311,7 @@
         Component = RouteGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -289,6 +323,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 248
     Top = 104
@@ -304,23 +339,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edRouteName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -328,12 +367,14 @@
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
         Value = ''
         Component = BranchGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -341,12 +382,14 @@
         Component = BranchGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteKindId'
         Value = ''
         Component = RouteKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteKindName'
@@ -354,12 +397,14 @@
         Component = RouteKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FreightId'
         Value = ''
         Component = FreightGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FreightName'
@@ -367,12 +412,14 @@
         Component = FreightGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteGroupId'
         Value = Null
         Component = RouteGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteGroupName'
@@ -380,18 +427,28 @@
         Component = RouteGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RateSumma'
         Value = Null
         Component = edRateSumma
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RatePrice'
         Value = Null
         Component = edRatePrice
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TimePrice'
+        Value = Null
+        Component = edTimePrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -420,6 +477,7 @@
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -430,6 +488,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -438,6 +497,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 191
     Top = 161
@@ -447,6 +507,7 @@
     LookupControl = ceRouteKind
     FormNameParam.Value = 'TRouteKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRouteKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -457,6 +518,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -465,6 +527,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 127
     Top = 209
@@ -474,6 +537,7 @@
     LookupControl = ceFreight
     FormNameParam.Value = 'TFreightForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TFreightForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -484,6 +548,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -492,6 +557,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 207
     Top = 257
@@ -501,6 +567,7 @@
     LookupControl = ceBranch
     FormNameParam.Value = 'TBranchForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -510,6 +577,7 @@
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -518,6 +586,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 138
     Top = 116
@@ -527,6 +596,7 @@
     LookupControl = ceRouteGroup
     FormNameParam.Value = 'TRouteGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRouteGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -537,6 +607,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -545,6 +616,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 159
     Top = 305

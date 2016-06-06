@@ -27,6 +27,7 @@ object RouteForm: TRouteForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 24
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,31 +54,31 @@ object RouteForm: TRouteForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 54
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 202
+        Width = 176
       end
       object clBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
-        Width = 144
+        Width = 125
       end
       object clUnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
-        Width = 163
+        Width = 142
       end
       object clRouteKind: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteKindName'
         HeaderAlignmentVert = vaCenter
-        Width = 104
+        Width = 92
       end
       object clFreight: TcxGridDBColumn
         Caption = #1043#1088#1091#1079
@@ -91,7 +92,7 @@ object RouteForm: TRouteForm
         DataBinding.FieldName = 'RouteGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 103
+        Width = 89
       end
       object clRateSumma: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076'.'
@@ -103,7 +104,19 @@ object RouteForm: TRouteForm
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
         Options.Editing = False
-        Width = 85
+        Width = 74
+      end
+      object clTimePrice: TcxGridDBColumn
+        Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
+        DataBinding.FieldName = 'TimePrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+        Options.Editing = False
+        Width = 104
       end
       object clRatePrice: TcxGridDBColumn
         Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
@@ -115,7 +128,7 @@ object RouteForm: TRouteForm
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
         Options.Editing = False
-        Width = 100
+        Width = 95
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -318,10 +331,12 @@ object RouteForm: TRouteForm
       FormName = 'TRouteEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -337,6 +352,7 @@ object RouteForm: TRouteForm
       FormName = 'TRouteEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -344,6 +360,7 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -392,6 +409,7 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -399,6 +417,7 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
@@ -406,12 +425,14 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'Code'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'RouteKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindName'
@@ -419,12 +440,14 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FreightId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'FreightId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FreightName'
@@ -432,12 +455,14 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'FreightName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindId2'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'RouteKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindName2'
@@ -445,12 +470,14 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -458,6 +485,7 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RateSumma'
@@ -465,6 +493,7 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'RateSumma'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RatePrice'
@@ -472,6 +501,15 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'RatePrice'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TimePrice'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'TimePrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -496,6 +534,7 @@ object RouteForm: TRouteForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -503,6 +542,7 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -511,6 +551,7 @@ object RouteForm: TRouteForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -542,6 +583,7 @@ object RouteForm: TRouteForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288

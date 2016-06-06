@@ -187,6 +187,11 @@ type
     actUpdateAuto: TdsdExecStoredProc;
     spUpdateAuto: TdsdStoredProc;
     bbUpdateAuto: TdxBarButton;
+    JuridicalFromGuides: TdsdGuides;
+    actOpenReportCheckForm: TdsdOpenForm;
+    actOpenReportCheckAmountForm: TdsdOpenForm;
+    bbOpenReportCheckAmount: TdxBarButton;
+    bbOpenReportCheck: TdxBarButton;
   private
     { Private declarations }
   public

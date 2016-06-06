@@ -8,8 +8,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxBar, cxClasses, Vcl.ActnList,
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
   dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
-  Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn,
-  AncestorMain, dxSkinsdxBarPainter, Vcl.Menus,
+  Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
+  dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter, Vcl.Menus,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, cxLabel, frxBarcode, cxTextEdit, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxDBData, cxGridLevel, cxGridCustomView,
@@ -696,11 +696,14 @@ type
     miSubMobile: TMenuItem;
     miMobileNumbersEmployeeForm: TMenuItem;
     actMobileNumbersEmployee: TdsdOpenForm;
+    actReport_Check_ReturnInToSale: TdsdOpenForm;
     N107: TMenuItem;
-    N108: TMenuItem;
+    actReport_CheckAmount_ReturnInToSale: TdsdOpenForm;
+    miReport_MobileKS: TMenuItem;
     actReport_MobileKS: TdsdOpenForm;
     dsdOpenForm2: TdsdOpenForm;
     dsdOpenForm3: TdsdOpenForm;
+    
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

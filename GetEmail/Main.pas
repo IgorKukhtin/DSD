@@ -85,6 +85,8 @@ type
     actSendEmail: TdsdSMTPFileAction;
     spExportSettings_Email: TdsdStoredProc;
     ExportSettingsCDS: TClientDataSet;
+    spRefreshMovementItemLastPriceList_View: TdsdStoredProc;
+    actRefreshMovementItemLastPriceList_View: TdsdExecStoredProc;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);

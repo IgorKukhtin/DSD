@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Route(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
-             , RateSumma Tfloat, RatePrice  Tfloat
+             , RateSumma Tfloat, RatePrice  Tfloat, TimePrice  Tfloat
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
@@ -33,6 +33,7 @@ BEGIN
               
        , ObjectFloat_RateSumma.ValueData AS RateSumma
        , ObjectFloat_RatePrice.ValueData AS RatePrice
+       , ObjectFloat_TimePrice.ValueData AS TimePrice
 
        , Object_Unit.Id         AS UnitId 
        , Object_Unit.ObjectCode AS UnitCode
@@ -44,7 +45,7 @@ BEGIN
 
        , Object_RouteKind.Id         AS RouteKindId 
        , Object_RouteKind.ObjectCode AS RouteKindCode
-       , Object_RouteKind.ValueData AS RouteKindName
+       , Object_RouteKind.ValueData  AS RouteKindName
 
        , Object_Freight.Id         AS FreightId 
        , Object_Freight.ObjectCode AS FreightCode
@@ -66,6 +67,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_RatePrice
                               ON ObjectFloat_RatePrice.ObjectId = Object_Route.Id
                              AND ObjectFloat_RatePrice.DescId = zc_ObjectFloat_Route_RatePrice()
+        LEFT JOIN ObjectFloat AS ObjectFloat_TimePrice
+                              ON ObjectFloat_TimePrice.ObjectId = Object_Route.Id
+                             AND ObjectFloat_TimePrice.DescId = zc_ObjectFloat_Route_TimePrice()
         
         LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                      AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
@@ -98,6 +102,7 @@ BEGIN
 
            , 0 :: Tfloat AS RateSumma
            , 0 :: Tfloat AS RatePrice
+           , 0 :: Tfloat AS TimePrice
        
            , 0 AS UnitId 
            , 0 AS UnitCode
@@ -131,6 +136,7 @@ ALTER FUNCTION gpSelect_Object_Route (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.05.16         * add TimePrice
  17.04.16         * 
  20.04.15         * RouteGroup             
  14.12.13                                        * add vbAccessKeyAll

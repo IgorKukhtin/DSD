@@ -12,17 +12,17 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Height = 268
     ExplicitTop = 166
     ExplicitWidth = 1140
-    ExplicitHeight = 366
+    ExplicitHeight = 268
     ClientRectBottom = 268
     ClientRectRight = 1140
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1140
-      ExplicitHeight = 342
+      ExplicitHeight = 244
       inherited cxGrid: TcxGrid
         Width = 1140
         Height = 244
         ExplicitWidth = 1140
-        ExplicitHeight = 342
+        ExplicitHeight = 244
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -152,6 +152,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 342
       object cxGridTaxCorrective: TcxGrid
         Left = 0
@@ -799,8 +801,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitTop = 362
-    ExplicitWidth = 8
   end
   object cxGrid1: TcxGrid [9]
     Left = 0
@@ -810,9 +810,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 13
-    ExplicitLeft = -104
-    ExplicitTop = 370
-    ExplicitWidth = 1244
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -1150,8 +1147,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
       ImageIndex = 25
-      FormName = 'TReport_Goods_SalebyReturnInForm'
-      FormNameParam.Value = 'TReport_Goods_SalebyReturnInForm'
+      FormName = 'TReport_Goods_SalebyTransferDebtInForm'
+      FormNameParam.Value = 'TReport_Goods_SalebyTransferDebtInForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

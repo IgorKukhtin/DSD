@@ -847,6 +847,8 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
+// exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
@@ -865,6 +867,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyReturnInDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnInDialogForm');
+  //Выбор
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyReturnIn_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnIn_ChoiceForm');
+
+  //Отчет Проверка привязки возврата к продажам
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToSaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToSaleDialogForm');
+
+  //Отчет Проверка количества в привязке возврата к продажам
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckAmount_ReturnInToSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckAmount_ReturnInToSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckAmount_ReturnInToSaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckAmount_ReturnInToSaleDialogForm');
+
 end;
 { ZakazExternalForm  -> OrderExternalForm
 procedure TLoadFormTest.LoadZakazExternalFormTest;
@@ -1029,6 +1047,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInJournalForm');
+  //
+  //отчет по продажам товара
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyTransferDebtInForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyTransferDebtInForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyTransferDebtInDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyTransferDebtInDialogForm');
 end;
 
 procedure TLoadFormTest.LoadPriceCorrectiveFormTest;
@@ -1214,6 +1238,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
 // exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');

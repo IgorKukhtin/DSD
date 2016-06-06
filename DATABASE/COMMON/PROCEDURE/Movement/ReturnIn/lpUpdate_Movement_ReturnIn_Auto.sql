@@ -123,7 +123,7 @@ BEGIN
                                , tmpMI_all.GoodsId
                                , tmpMI_all.GoodsKindId
                                , tmpMI_all.Price_original
-                               , SUM (tmpMI_all.Amount) AS Amount
+                               , SUM (tmpMI_all.Amount) AS Amount_return
                                , tmpMI_all.MovementId_sale
                           FROM tmpMI_all
                           WHERE tmpMI_all.MovementId_sale > 0
@@ -137,6 +137,7 @@ BEGIN
                                     , tmpMI.MovementId_sale
                                     , tmpMI.GoodsId
                                     , tmpMI.GoodsKindId
+                                    , tmpMI.Amount_return
                                     , tmpMI.Price_original
                                     , MIFloat_Price.ValueData    AS Price_find
                                     , MIN (MovementItem.Id)      AS MovementItemId_sale
@@ -158,6 +159,7 @@ BEGIN
                                       , tmpMI.MovementId_sale
                                       , tmpMI.GoodsId
                                       , tmpMI.GoodsKindId
+                                      , tmpMI.Amount_return
                                       , tmpMI.Price_original
                                       , MIFloat_Price.ValueData
                               )
@@ -170,6 +172,7 @@ BEGIN
                                         , MIFloat_Price.ValueData    AS Price_find
                                         , SUM (MovementItem.Amount)  AS Amount_return
                                    FROM tmpMI_sale
+                                        -- !!!обязательно по документу!!!
                                         INNER JOIN MovementItemFloat AS MIFloat_MovementId
                                                                      ON MIFloat_MovementId.ValueData = tmpMI_sale.MovementId_sale
                                                                     AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
@@ -199,6 +202,7 @@ BEGIN
                                    , tmpMI_sale.MovementItemId_sale
                                    , tmpMI_sale.GoodsId
                                    , tmpMI_sale.GoodsKindId
+                                   , tmpMI_sale.Amount_return -- итого для текущего возврата
                                      -- что осталось в продаже
                                    , tmpMI_sale.Amount_sale - COALESCE (tmpMI_ReturnIn.Amount_return, 0) AS Amount
                               FROM tmpMI_sale
@@ -214,13 +218,14 @@ BEGIN
                 , tmpMI_all.GoodsId
                 , tmpMI_all.GoodsKindId
                   -- если в возврате <= чем осталось в продаже, тогда = ВОЗВРАТУ, иначе = что осталось в продаже
-                , CASE WHEN tmpResult.MovementItemId = tmpMI_all.MovementItemId THEN CASE WHEN tmpMI_all.Amount <= tmpResult.Amount THEN tmpMI_all.Amount ELSE tmpResult.Amount END ELSE 0 END AS Amount
+                , CASE WHEN tmpResult.MovementItemId = tmpMI_all.MovementItemId THEN CASE WHEN tmpResult.Amount_return < tmpResult.Amount THEN tmpResult.Amount_return ELSE tmpResult.Amount END ELSE 0 END AS Amount
                 , tmpMI_all.Price_original
            FROM tmpMI_all
                 LEFT JOIN tmpResult ON tmpResult.MovementId_sale = tmpMI_all.MovementId_sale
                                    AND tmpResult.GoodsId         = tmpMI_all.GoodsId
                                    AND tmpResult.GoodsKindId     = tmpMI_all.GoodsKindId
-                                   AND tmpResult.Amount          > 0
+                                   AND (tmpResult.Amount          >= 0
+                                     OR tmpResult.Amount_return   < 0)
           ;
 
      ELSE
@@ -255,13 +260,13 @@ BEGIN
 
 
          -- список контрагентов - сформировали один раз***
-         INSERT INTO _tmpPartner_ReturnIn_Auto (PartnerId)
+         /*INSERT INTO _tmpPartner_ReturnIn_Auto (PartnerId)
             SELECT ObjectLink_Jur.ObjectId AS PartnerId
             FROM ObjectLink AS ObjectLink_Jur
             WHERE ObjectLink_Jur.ChildObjectId = (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = vbPartnerId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical())
               AND ObjectLink_Jur.DescId        = zc_ObjectLink_Partner_Juridical();
          -- Оптимизация
-         ANALYZE _tmpPartner_ReturnIn_Auto;
+         ANALYZE _tmpPartner_ReturnIn_Auto;*/
 
 
          -- Цикл по периодам (так наверно быстрее)
@@ -282,7 +287,9 @@ BEGIN
                               ) AS tmp2 ON tmp2.GoodsId        = tmp1.GoodsId
                                        AND tmp2.GoodsKindId    = tmp1.GoodsKindId
                                        AND tmp2.Price_original = tmp1.Price_original
-               WHERE tmp1.Amount - COALESCE (tmp2.Amount, 0) > 0;
+               WHERE tmp1.Amount < 0
+                  OR tmp1.Amount - COALESCE (tmp2.Amount, 0) > 0
+                    ;
             -- ... каждый раз
             INSERT INTO _tmpGoods_ReturnIn_Auto (GoodsId) SELECT DISTINCT tmp.GoodsId FROM _tmpGoods_ReturnIn_Auto_all AS tmp;
             -- Оптимизация
@@ -310,7 +317,8 @@ BEGIN
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = MD_OperDatePartner.MovementId
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                            INNER JOIN _tmpPartner_ReturnIn_Auto AS tmpPartner_list ON tmpPartner_list.PartnerId = MovementLinkObject_To.ObjectId
+                                                                         AND MovementLinkObject_To.ObjectId = vbPartnerId
+                                            -- INNER JOIN _tmpPartner_ReturnIn_Auto AS tmpPartner_list ON tmpPartner_list.PartnerId = MovementLinkObject_To.ObjectId
                                             INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
                                                                AND Movement.DescId   = zc_Movement_Sale()
                                                                AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -358,9 +366,9 @@ BEGIN
                                                 INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                                              ON MIFloat_MovementItemId.ValueData = tmpMI_sale.MovementItemId
                                                                             AND MIFloat_MovementItemId.DescId    = zc_MIFloat_MovementItemId()
-                                                INNER JOIN MovementItem ON MovementItem.Id          = MIFloat_MovementItemId.ValueData :: Integer
+                                                INNER JOIN MovementItem ON MovementItem.Id          = MIFloat_MovementItemId.MovementItemId
                                                                        AND MovementItem.isErased    = FALSE
-                                                                       AND MovementItem.DescId      = zc_MI_Master()
+                                                                       AND MovementItem.DescId      = zc_MI_Child()
                                                                        AND MovementItem.MovementId <> inMovementId -- !!!что б не попал текущий возврат!!!
                                                 INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                                    AND Movement.DescId   IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
@@ -420,7 +428,7 @@ BEGIN
                     IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
 
                     --
-                    IF vbAmount_sale > vbAmount
+                    IF vbAmount_sale > vbAmount OR vbAmount < 0
                     THEN
                         -- получилось в продаже больше чем искали, !!!сохраняем в табл-результата!!!
                         INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
@@ -443,7 +451,7 @@ BEGIN
                 -- !!!!! 1 - END ALL PARAM !!!!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
+/*
                 IF vbAmount > 0 THEN
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 -- !!!!! 2 - NOT vbPartnerId!!!!!
@@ -469,7 +477,7 @@ BEGIN
 
 
                     --
-                    IF vbAmount_sale > vbAmount
+                    IF vbAmount_sale > vbAmount OR vbAmount < 0
                     THEN
                         -- получилось в продаже больше чем искали, !!!сохраняем в табл-результата!!!
                         INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
@@ -492,7 +500,7 @@ BEGIN
                 -- !!!!!!!!!!!!!!!!!!!!!!!
                 -- !!!!! 2 - End vbGoodsKindId AND NOT vbPartnerId!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!
-
+*/
 
             END LOOP; -- финиш цикла по курсору1 - возвраты
             CLOSE curMI_ReturnIn; -- закрыли курсор1 - возвраты
@@ -512,6 +520,9 @@ BEGIN
      END IF; -- партии продажи - сформированы
 
 
+     IF inUserId = 5 THEN
+        RAISE EXCEPTION 'inUserId = 5';
+     ELSE
      -- !!!сохранение!!!
      PERFORM lpInsertUpdate_MovementItem_ReturnIn_Child (ioId                  := tmp.MovementItemId
                                                        , inMovementId          := inMovementId
@@ -556,7 +567,7 @@ BEGIN
                 LEFT JOIN MI_All ON MI_All.ParentId = MI_Master.Id
           ) AS tmp;
 
-    
+     END IF;
 
      END IF;
      -- !!!временно!!! -- IF 1=1 AND inUserId = 5

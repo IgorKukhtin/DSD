@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, In
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
@@ -20,8 +20,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inWeightTransport           TFloat    , -- Вес груза, кг (перевезено)
     IN inStartOdometre             TFloat    , -- Спидометр начальное показание, км
     IN inEndOdometre               TFloat    , -- Спидометр конечное показание, км
-    IN inRateSumma                 TFloat    , -- Сумма коммандировочных
+ INOUT iоRateSumma                 TFloat    , -- Сумма коммандировочных
     IN inRatePrice                 TFloat    , -- Ставка грн/км (дальнобойные)
+    IN inTimePrice                 TFloat    , -- Ставка грн/ч коммандировочных
     IN inTaxi                      TFloat    , -- Сумма на такси
    OUT outRatePrice_Calc           TFloat    , -- Сумма грн (дальнобойные)
     IN inFreightId                 Integer   , -- Название груза
@@ -37,6 +38,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbHours TFloat;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransportMaster());
@@ -150,11 +152,30 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_EndOdometre(), ioId, inEndOdometre);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), ioId, inRateSumma);
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), ioId, iоRateSumma);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RatePrice(), ioId, inRatePrice);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Taxi(), ioId, inTaxi);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), ioId, inTimePrice);
+
+   IF COALESCE (inTimePrice,0) <> 0 OR 1=1 -- !!!временно - что б всегда!!!
+   THEN
+       vbHours := (SELECT CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS Hours_All
+                   FROM MovementFloat AS MovementFloat_HoursWork
+                       LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
+                                               ON MovementFloat_HoursAdd.MovementId = MovementFloat_HoursWork.MovementId
+                                              AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+                   WHERE MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
+                     AND MovementFloat_HoursWork.MovementId = inMovementId);
+       
+       iоRateSumma:= COALESCE (vbHours,0) * inTimePrice;
+       -- пересохранили свойство <>
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), ioId, iоRateSumma);
+       
+   END IF;
+
    
    outRatePrice_Calc:= COALESCE (inRatePrice,0) /** (COALESCE (inAmount,0) + COALESCE (inDistanceFuelChild,0))*/;
    

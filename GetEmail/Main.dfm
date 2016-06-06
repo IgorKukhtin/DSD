@@ -241,6 +241,9 @@ object MainForm: TMainForm
         end
         item
           Action = actProtocol
+        end
+        item
+          Action = actRefreshMovementItemLastPriceList_View
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072
     end
@@ -286,6 +289,17 @@ object MainForm: TMainForm
       ToAddress.ComponentItem = 'MailTo'
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
+    end
+    object actRefreshMovementItemLastPriceList_View: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spRefreshMovementItemLastPriceList_View
+      StoredProcList = <
+        item
+          StoredProc = spRefreshMovementItemLastPriceList_View
+        end>
+      Caption = 'actRefreshMovementItemLastPriceList_View'
     end
   end
   object MasterCDS: TClientDataSet
@@ -458,5 +472,14 @@ object MainForm: TMainForm
     Params = <>
     Left = 128
     Top = 192
+  end
+  object spRefreshMovementItemLastPriceList_View: TdsdStoredProc
+    StoredProcName = 'lpRefreshMovementItemLastPriceList_View'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 512
+    Top = 184
   end
 end

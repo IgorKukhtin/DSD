@@ -2292,6 +2292,10 @@ BEGIN
      -- !!!6.0.3. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Business(), _tmpItem.MovementItemId, _tmpItem.BusinessId_To)
      FROM _tmpItem;
+     -- !!!6.0.4. формируется свойство <zc_MIFloat_Summ - Сумма> + <zc_MIFloat_SummPriceList - Сумма по прайсу>!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPriceList(), _tmpItem.MovementItemId, _tmpItem.OperSumm_PriceList)
+     FROM _tmpItem;
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки

@@ -10,6 +10,10 @@ BEGIN
      -- таблица - ѕроводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
+     -- таблица
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_Transport'))
+     THEN
+
      -- таблица свойств (остатки) документа/элементов
      CREATE TEMP TABLE _tmpPropertyRemains (Kind Integer, FuelId Integer, Amount TFloat) ON COMMIT DROP;
      -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
@@ -28,6 +32,8 @@ BEGIN
                                             , BusinessId_ProfitLoss Integer, BranchId_ProfitLoss Integer, UnitId_ProfitLoss Integer
                                             , ContainerId_ProfitLoss Integer
                                              ) ON COMMIT DROP;
+
+     END IF;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
