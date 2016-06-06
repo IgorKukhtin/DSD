@@ -22,7 +22,7 @@ type
 implementation
 
 uses Storage, Variants, DBClient, dsdException, MessagesUnit, UtilConst,
-     Dialogs, DB, UtilConvert;
+     Dialogs, DB, UtilConvert, CommonData;
 
 {$R DevExpressRus.res}
 
@@ -75,7 +75,7 @@ begin
      exit;
   EMessage := E.Message;
   TMessagesForm.Create(nil).Execute(GetTextMessage(E, isMessage), EMessage);
-  if not isMessage then begin
+  if not isMessage AND not gc_User.Local then begin
     // Сохраняем протокол в базе
     try
       spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);

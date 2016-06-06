@@ -3,11 +3,11 @@ inherited VIPDialogForm: TVIPDialogForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = #1042#1099#1073#1086#1088' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' VIP '#1095#1077#1082#1086#1074
-  ClientHeight = 117
+  ClientHeight = 163
   ClientWidth = 554
   Position = poDesktopCenter
   ExplicitWidth = 560
-  ExplicitHeight = 142
+  ExplicitHeight = 193
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel [0]
@@ -24,19 +24,53 @@ inherited VIPDialogForm: TVIPDialogForm
     Height = 13
     Caption = #1060#1072#1084#1080#1083#1080#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103':'
   end
+  object grMember: TcxGrid [2]
+    Left = 0
+    Top = 0
+    Width = 289
+    Height = 125
+    TabOrder = 1
+    Visible = False
+    object grtvMember: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = dsMember
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.HideFocusRectOnExit = False
+      OptionsSelection.InvertSelect = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.Indicator = True
+      object grtvMemberName: TcxGridDBColumn
+        Caption = #1052#1077#1085#1077#1076#1078#1077#1088':'
+        DataBinding.FieldName = 'Name'
+      end
+    end
+    object grlMember: TcxGridLevel
+      GridView = grtvMember
+    end
+  end
   inherited bbOk: TcxButton
     Left = 190
-    Top = 75
+    Top = 131
+    TabOrder = 3
     ExplicitLeft = 190
-    ExplicitTop = 75
+    ExplicitTop = 131
   end
   inherited bbCancel: TcxButton
     Left = 311
-    Top = 75
+    Top = 131
+    TabOrder = 4
     ExplicitLeft = 311
-    ExplicitTop = 75
+    ExplicitTop = 131
   end
-  object ceMember: TcxButtonEdit [4]
+  object ceMember: TcxButtonEdit [5]
     Left = 16
     Top = 27
     Properties.Buttons = <
@@ -46,13 +80,13 @@ inherited VIPDialogForm: TVIPDialogForm
       end>
     Properties.ReadOnly = True
     Properties.UseNullString = True
-    TabOrder = 2
+    TabOrder = 0
     Width = 265
   end
-  object edBayerName: TcxTextEdit [5]
+  object edBayerName: TcxTextEdit [6]
     Left = 295
     Top = 27
-    TabOrder = 3
+    TabOrder = 2
     Width = 250
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -108,5 +142,16 @@ inherited VIPDialogForm: TVIPDialogForm
       end>
     Left = 200
     Top = 48
+  end
+  object dsMember: TDataSource
+    DataSet = cdsMember
+    Left = 304
+    Top = 72
+  end
+  object cdsMember: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 344
+    Top = 72
   end
 end

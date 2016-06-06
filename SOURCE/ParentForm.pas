@@ -43,6 +43,7 @@ type
     property onAfterShow: TNotifyEvent read FonAfterShow write FonAfterShow;
     // проперти устанавливается в компоненте TRefreshDispatcher если форма не видима, но было изменение значений для изменения запроса
     property NeedRefreshOnExecute: boolean read FNeedRefreshOnExecute write FNeedRefreshOnExecute;
+    property isAlreadyOpen: Boolean read FisAlreadyOpen write FisAlreadyOpen;
   published
     property AddOnFormData: TAddOnFormData read FAddOnFormData write FAddOnFormData;
   end;
@@ -57,7 +58,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI{, DataModul};
+  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData{, DataModul};
 
 {$R *.dfm}
 
@@ -192,6 +193,8 @@ var
 begin
   //если хелпфайл заполнен, считаем что все уже отработано ранее
   if (Self.HelpFile <> '') or FNoHelpFile then exit;
+  if gc_user.Local then exit;
+  
   //Вытащили путь к файлу помощи
   sp := TdsdStoredProc.Create(nil);
   try
