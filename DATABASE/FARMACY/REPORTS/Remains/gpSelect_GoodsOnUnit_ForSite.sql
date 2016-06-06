@@ -71,7 +71,7 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
     THEN
         -- таблица
-        CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer, GoodsId_retail Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpGoodsMinPrice_List;
     END IF;
@@ -98,26 +98,51 @@ BEGIN
     vbIndex := 1;
     WHILE SPLIT_PART (inGoodsId_list, ',', vbIndex) <> '' LOOP
         -- добавляем то что нашли
-        INSERT INTO _tmpGoodsMinPrice_List (GoodsId) SELECT SPLIT_PART (inGoodsId_list, ',', vbIndex) :: Integer;
+        INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
+           SELECT tmp.GoodsId
+                , ObjectLink_Child_ALL.ChildObjectId AS GoodsId_retail
+           FROM (SELECT SPLIT_PART (inGoodsId_list, ',', vbIndex) :: Integer AS GoodsId
+                ) AS tmp
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_ALL ON ObjectLink_Main_ALL.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                AND ObjectLink_Main_ALL.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_ALL ON ObjectLink_Child_ALL.ObjectId = ObjectLink_Main_ALL.ObjectId
+                                                                                 AND ObjectLink_Child_ALL.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_ALL.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                    INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
+                                                                      AND Object_Retail.DescId = zc_Object_Retail()
+          ;
         -- теперь следуюющий
         vbIndex := vbIndex + 1;
     END LOOP;
     
+
+    -- !!!Оптимизация!!!
+    ANALYZE _tmpUnitMinPrice_List;
+
     -- если нет товаров
     IF NOT EXISTS (SELECT 1 FROM _tmpGoodsMinPrice_List WHERE GoodsId <> 0)
     THEN
          -- все остатки
-         INSERT INTO _tmpGoodsMinPrice_List (GoodsId)
+         INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
            -- SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
            -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
-           SELECT DISTINCT ObjectLink_Child_NB.ChildObjectId AS ObjectID -- здесь товар "сети"
+           SELECT DISTINCT
+                  ObjectLink_Child_NB.ChildObjectId AS ObjectID -- здесь товар "сети"
+                , Container.ObjectId
            FROM _tmpUnitMinPrice_List
                 INNER JOIN Container ON Container.WhereObjectId = _tmpUnitMinPrice_List.UnitId
                                     AND Container.DescId = zc_Container_Count()
                                     AND Container.Amount <> 0
                                     -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
                                     INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = container.ObjectID
+                                                          ON ObjectLink_Child.ChildObjectId = Container.ObjectId
                                                          AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
                                     INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                                              AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
@@ -135,9 +160,6 @@ BEGIN
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpGoodsMinPrice_List;
-    -- !!!Оптимизация!!!
-    ANALYZE _tmpUnitMinPrice_List;
-
 
     -- еще оптимизируем - _tmpContainerCount
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCount'))
@@ -150,36 +172,20 @@ BEGIN
     --
     INSERT INTO _tmpContainerCount (UnitId, GoodsId, GoodsId_retail, Amount)
                 WITH tmpContainer AS 
-               (SELECT Container.WhereObjectId           AS UnitId
-                     , _tmpGoodsMinPrice_List.GoodsId    AS GoodsId
-                     , Container.ObjectId                AS GoodsId_retail
-                     , SUM (Container.Amount)            AS Amount
+               (SELECT Container.WhereObjectId                AS UnitId
+                     , _tmpGoodsMinPrice_List.GoodsId         AS GoodsId
+                     , _tmpGoodsMinPrice_List.GoodsId_retail  AS GoodsId_retail
+                     , SUM (Container.Amount)                 AS Amount
                 FROM _tmpGoodsMinPrice_List
-                                    -- !!!временно захардкодил, т.к. в _tmpGoodsMinPrice_List - всегда товар НеБолей!!!!
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = _tmpGoodsMinPrice_List.GoodsId
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_ALL ON ObjectLink_Main_ALL.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                                AND ObjectLink_Main_ALL.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_ALL ON ObjectLink_Child_ALL.ObjectId = ObjectLink_Main_ALL.ObjectId
-                                                                                 AND ObjectLink_Child_ALL.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_ALL.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                    INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
-                                                                      AND Object_Retail.DescId = zc_Object_Retail()
-
-                     INNER JOIN Container ON Container.ObjectId = ObjectLink_Child_ALL.ChildObjectId
+                     INNER JOIN Container ON Container.ObjectId = _tmpGoodsMinPrice_List.GoodsId_retail
                                          AND Container.DescId   = zc_Container_Count()
                                          AND Container.Amount   <> 0
                                          AND Container.WhereObjectId IN (SELECT _tmpUnitMinPrice_List.UnitId FROM _tmpUnitMinPrice_List)
 
 
                 GROUP BY Container.WhereObjectId
-                       , Container.ObjectId
                        , _tmpGoodsMinPrice_List.GoodsId
+                       , _tmpGoodsMinPrice_List.GoodsId_retail
                 HAVING SUM (Container.Amount) > 0
                )
                 -- результат
