@@ -306,7 +306,6 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
     object edOperDate: TcxDateEdit
       Left = 903
       Top = 23
-      EditValue = 42132d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -332,6 +331,29 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
     Top = 320
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesJuridical
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPartner
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
     Left = 48
   end
   inherited ActionList: TActionList
@@ -683,7 +705,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
       end
       item
         Name = 'inPartnerId'
-        Value = Null
+        Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -737,8 +759,8 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
-    Top = 154
+    Left = 336
+    Top = 210
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -771,6 +793,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
+    Key = '0'
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

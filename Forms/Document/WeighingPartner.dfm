@@ -221,13 +221,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Top = 5
       Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
     end
-    object edInvNumberOrder: TcxTextEdit
-      Left = 9
-      Top = 22
-      Properties.ReadOnly = True
-      TabOrder = 24
-      Width = 99
-    end
     object cxLabel16: TcxLabel
       Left = 670
       Top = 45
@@ -242,7 +235,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Enabled = False
           Kind = bkEllipsis
         end>
-      TabOrder = 26
+      TabOrder = 25
       Width = 92
     end
     object cxLabel17: TcxLabel
@@ -259,7 +252,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Left = 859
       Top = 63
       Properties.ReadOnly = True
-      TabOrder = 29
+      TabOrder = 28
       Width = 146
     end
     object edWeighingNumber: TcxCurrencyEdit
@@ -270,7 +263,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = False
-      TabOrder = 30
+      TabOrder = 29
       Width = 54
     end
     object edContractTag: TcxButtonEdit
@@ -283,7 +276,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 31
+      TabOrder = 30
       Width = 97
     end
     object edPriceWithVAT: TcxCheckBox
@@ -291,7 +284,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Top = 22
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
-      TabOrder = 32
+      TabOrder = 31
       Width = 128
     end
     object edChangePercent: TcxCurrencyEdit
@@ -300,7 +293,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
-      TabOrder = 33
+      TabOrder = 32
       Width = 144
     end
     object cxLabel20: TcxLabel
@@ -314,7 +307,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = True
-      TabOrder = 35
+      TabOrder = 34
       Width = 40
     end
   end
@@ -877,8 +870,20 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Top = 63
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 100
+  end
+  object edInvNumberOrder: TcxButtonEdit
+    Left = 9
+    Top = 22
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 104
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -886,6 +891,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -893,6 +899,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 262
     Top = 375
@@ -911,6 +918,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -919,6 +927,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -926,6 +935,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -1171,6 +1181,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'From'
@@ -1179,6 +1190,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -1186,10 +1198,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1305,6 +1319,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     LookupControl = edFrom
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1315,6 +1330,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1323,6 +1339,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 472
     Top = 8
@@ -1332,6 +1349,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     LookupControl = edTo
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1342,6 +1360,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1350,6 +1369,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 776
   end
@@ -1387,6 +1407,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     ControlList = <
       item
         Control = edInvNumber
@@ -1432,12 +1453,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1445,80 +1468,103 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = OrderChoiceGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberOrder'
         Value = ''
-        Component = edInvNumberOrder
+        Component = OrderChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_parent'
         Value = ''
         Component = edInvNumber_parent
+        MultiSelectSeparator = ','
       end
       item
         Name = 'WeighingNumber'
         Value = 0.000000000000000000
         Component = edWeighingNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_parent'
         Value = 0d
         Component = edOperDate_parent
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartWeighing'
         Value = 0d
         Component = edStartWeighing
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndWeighing'
         Value = 0d
         Component = edEndWeighing
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
         Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
         Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -1526,6 +1572,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTagName'
@@ -1533,12 +1580,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = ContractTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -1546,12 +1595,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UserId'
         Value = ''
         Component = UserGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UserName'
@@ -1559,30 +1610,35 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = UserGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = Null
         Component = edPriceWithVAT
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = Null
         Component = edVATPercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ChangePercent'
         Value = Null
         Component = edChangePercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPromo'
         Value = Null
         Component = cbPromo
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1600,6 +1656,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = dsdGuidesFrom
@@ -1620,9 +1677,10 @@ object WeighingPartnerForm: TWeighingPartnerForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProcName = 'gpUpdate_Status_WeighingPartner'
-    Left = 312
-    Top = 88
+    Left = 136
+    Top = 48
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -1635,6 +1693,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1642,6 +1701,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 630
@@ -1658,6 +1718,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1665,6 +1726,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 638
@@ -1675,6 +1737,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 47
@@ -1691,6 +1754,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStatusCode'
@@ -1698,6 +1762,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = StatusGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 76
@@ -1708,6 +1773,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     LookupControl = edUser
     FormNameParam.Value = 'TUser_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUser_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1718,6 +1784,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1726,6 +1793,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 904
     Top = 8
@@ -1735,6 +1803,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1745,6 +1814,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1753,6 +1823,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 616
     Top = 56
@@ -1762,6 +1833,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1772,6 +1844,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1780,6 +1853,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 688
     Top = 56
@@ -1789,6 +1863,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     LookupControl = edContractTag
     FormNameParam.Value = 'TContractTagForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractTagForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1799,6 +1874,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1807,6 +1883,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 795
     Top = 60
@@ -1822,21 +1899,24 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWeighingNumber'
         Value = '0'
         Component = edWeighingNumber
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 465
-    Top = 224
+    Left = 433
+    Top = 256
   end
   object HeaderSaver2: THeaderSaver
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spUpdateMovement
     ControlList = <
       item
@@ -1845,5 +1925,113 @@ object WeighingPartnerForm: TWeighingPartnerForm
     GetStoredProc = spGet
     Left = 368
     Top = 217
+  end
+  object OrderChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberOrder
+    Key = '0'
+    FormNameParam.Value = 'TOrderExternal_SendOnPriceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderExternal_SendOnPriceJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = OrderChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = OrderChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerId'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerName'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateEnd'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 44
+    Top = 8
+  end
+  object HeaderSaver3: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateMovement_Order
+    ControlList = <
+      item
+        Control = edInvNumberOrder
+      end>
+    GetStoredProc = spGet
+    Left = 432
+    Top = 209
+  end
+  object spUpdateMovement_Order: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_WeighingPartner_Order'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberOrder'
+        Value = Null
+        Component = OrderChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = 0.000000000000000000
+        Component = OrderChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 529
+    Top = 248
   end
 end

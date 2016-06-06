@@ -12,17 +12,17 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Height = 354
     ExplicitTop = 166
     ExplicitWidth = 1145
-    ExplicitHeight = 373
+    ExplicitHeight = 354
     ClientRectBottom = 354
     ClientRectRight = 1145
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1145
-      ExplicitHeight = 349
+      ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 1145
         Height = 330
         ExplicitWidth = 1145
-        ExplicitHeight = 349
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -310,7 +310,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitHeight = 349
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -318,7 +317,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Height = 330
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 349
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -1254,7 +1252,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitTop = 539
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -1976,10 +1973,41 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end>
       isShowModal = True
     end
+    object MIChildProtocolOpenForm: TdsdOpenForm [26]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actGoodsChoice: TOpenChoiceForm [29]
+    object actGoodsChoice: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2548,6 +2576,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbMIChildProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2625,6 +2661,10 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
     object bbOpenReportCheck: TdxBarButton
       Action = actOpenReportCheckForm
+      Category = 0
+    end
+    object bbMIChildProtocol: TdxBarButton
+      Action = MIChildProtocolOpenForm
       Category = 0
     end
   end

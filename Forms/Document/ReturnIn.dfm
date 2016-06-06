@@ -2104,6 +2104,37 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
+    object MIChildProtocolOpenForm: TdsdOpenForm [29]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
@@ -2939,6 +2970,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbMIChildProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -3025,6 +3064,10 @@ inherited ReturnInForm: TReturnInForm
       Action = actOpenReportCheckAmountForm
       Category = 0
     end
+    object bbMIChildProtocol: TdxBarButton
+      Action = MIChildProtocolOpenForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
@@ -3099,7 +3142,7 @@ inherited ReturnInForm: TReturnInForm
   end
   inherited StatusGuides: TdsdGuides
     Left = 56
-    Top = 40
+    Top = 16
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'

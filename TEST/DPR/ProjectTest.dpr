@@ -822,7 +822,8 @@ uses
   Report_Check_ReturnInToSaleDialog in '..\..\Forms\Report\Report_Check_ReturnInToSaleDialog.pas' {Report_Check_ReturnInToSaleDialogForm: TParentForm},
   Report_CheckAmount_ReturnInToSaleDialog in '..\..\Forms\Report\Report_CheckAmount_ReturnInToSaleDialog.pas' {Report_CheckAmount_ReturnInToSaleDialogForm: TParentForm},
   Report_CheckAmount_ReturnInToSale in '..\..\Forms\Report\Report_CheckAmount_ReturnInToSale.pas' {Report_CheckAmount_ReturnInToSaleForm: TParentForm},
-  Report_Goods_SalebyReturnIn_Choice in '..\..\Forms\Report\Report_Goods_SalebyReturnIn_Choice.pas' {Report_Goods_SalebyReturnIn_ChoiceForm: TParentForm};
+  Report_Goods_SalebyReturnIn_Choice in '..\..\Forms\Report\Report_Goods_SalebyReturnIn_Choice.pas' {Report_Goods_SalebyReturnIn_ChoiceForm: TParentForm},
+  OrderExternal_SendOnPriceJournalChoice in '..\..\Forms\Document\OrderExternal_SendOnPriceJournalChoice.pas' {OrderExternal_SendOnPriceJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
