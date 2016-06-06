@@ -689,6 +689,32 @@ type
   published
     property MessageText: String read GetMessageText write SetMessageText;
   end;
+
+  // Загрузка XML Киевстара в БД
+  TdsdLoadXMLKS = class(TdsdCustomAction)
+  private
+    FXMLFilename: String;
+    FXMLFilenameDev: Boolean; // признак указано при разработке - не открывать odOpenXML
+    FInsertProcedureName: string;
+    odOpenXML: TOpenDialog;
+    spInsertProcedure: TdsdStoredProc;
+    // обработка свойства XMLFilename
+    procedure SetXMLFilename(Value: String);
+    function GetXMLFilename: String;
+    // обработка свойства InsertProcedureName
+    procedure SetInsertProcedureName(Value: String);
+    function GetInsertProcedureName: String;
+  protected
+    // основная функция - Сохранение файла в БД
+    function Execute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property XMLFilename: String read GetXMLFilename write SetXMLFilename;
+    property InsertProcedureName: String read GetInsertProcedureName write SetInsertProcedureName;
+  end;
+
 procedure Register;
 
 implementation
@@ -729,6 +755,7 @@ begin
   RegisterActions('DSDLib', [TUpdateRecord], TUpdateRecord);
   RegisterActions('DSDLib', [TShellExecuteAction], TShellExecuteAction);
   RegisterActions('DSDLib', [TShowMessageAction], TShowMessageAction);
+  RegisterActions('DSDLib', [TdsdLoadXMLKS], TdsdLoadXMLKS);
 
 end;
 
@@ -2843,6 +2870,93 @@ begin
   FMessageText := Value;
   if not (csDesigning in ComponentState) then
     LocalExecute;
+end;
+
+{ TdsdLoadXMLKS }
+
+constructor TdsdLoadXMLKS.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  odOpenXML := TOpenDialog.Create(Application);
+  odOpenXML.Filter := 'XML файл|*.xml|ZIP файл|*.zip';
+  odOpenXML.Title := 'Укажите файл для загрузки';
+  odOpenXML.Options := [ofReadOnly, ofFileMustExist];
+end;
+
+destructor TdsdLoadXMLKS.Destroy;
+begin
+  odOpenXML.Free;
+  inherited;
+end;
+
+function TdsdLoadXMLKS.GetInsertProcedureName: String;
+begin
+  if FInsertProcedureName = '' then
+    Result := 'gpInsertUpdate_logBillsKS'
+  else
+    Result := FInsertProcedureName;
+end;
+
+function TdsdLoadXMLKS.GetXMLFilename: String;
+begin
+  Result := FXMLFilename;
+end;
+
+function TdsdLoadXMLKS.Execute: Boolean;
+var
+  XMLFileStream: TStringStream;
+
+  function UnXML(inXML: Variant): Variant;
+  begin
+    Result := inXML;
+    Result := StringReplace(Result, '<', '%', [rfReplaceAll]);
+    Result := StringReplace(Result, '>', '$', [rfReplaceAll]);
+    Result := StringReplace(Result, #9, '', [rfReplaceAll]);
+    Result := StringReplace(Result, '&quot;', '', [rfReplaceAll]);
+    Result := StringReplace(Result, '"', '^', [rfReplaceAll]);
+  end;
+begin
+  if (XMLFilename = '') or (not FileExists(FXMLFilename)) then // если не указан файл или не существует
+    if odOpenXML.Execute then // тогда спрашиваем
+      XMLFilename := odOpenXML.FileName // запоминаем
+    else                                // а если нет
+      Exit;                             // то выходим
+
+  // через поток заливаем в БД
+  XMLFileStream := TStringStream.Create;
+  XMLFileStream.LoadFromFile(XMLFilename);
+  spInsertProcedure := TdsdStoredProc.Create(Application);
+  spInsertProcedure.OutputType := otResult;
+  spInsertProcedure.StoredProcName := 'gpInsertUpdate_logBillsKS'; // FInsertProcedureName;
+  spInsertProcedure.Params.AddParam('inXMLFile', ftBlob, ptInput, null);
+  spInsertProcedure.ParamByName('inXMLFile').Value := UnXML(XMLFileStream.DataString);
+  try
+    try
+      spInsertProcedure.Execute();
+    except
+      on E:Exception do
+      begin
+        //ShowMessage(e.Message);
+      end;
+    end;
+  finally
+    spInsertProcedure.Free;
+    XMLFileStream.Free;
+  end;
+  XMLFilename := ''; // т.к. данный экшн автоматом создается и переменная запоминается - нужно обнулять
+
+  //inherited;
+end;
+
+procedure TdsdLoadXMLKS.SetInsertProcedureName(Value: String);
+begin
+  FInsertProcedureName := Value;
+end;
+
+procedure TdsdLoadXMLKS.SetXMLFilename(Value: String);
+begin
+  FXMLFilename := Value;
 end;
 
 end.
