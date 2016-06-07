@@ -5,7 +5,7 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1376
-  ExplicitHeight = 420
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1102,8 +1102,8 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 65533
+    Left = 520
+    Top = 65525
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1132,8 +1132,8 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 24
+    Left = 608
+    Top = 40
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'

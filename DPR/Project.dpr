@@ -79,7 +79,8 @@ uses
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   RunScript in '..\SOURCE\AutoMode\RunScript.pas',
   ScriptXML in '..\SOURCE\AutoMode\ScriptXML.pas',
-  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -106,7 +107,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
     with TLoginForm.Create(Application) do
@@ -116,8 +117,8 @@ begin
          TUpdater.AutomaticUpdateProgram;
          TUpdater.AutomaticCheckConnect;
          Application.ProcessMessages;
-         Application.CreateForm(TMainForm, MainFormInstance);
          Application.CreateForm(TdmMain, dmMain);
+         Application.CreateForm(TMainForm, MainFormInstance);
       end;
   Application.Run;
 end.

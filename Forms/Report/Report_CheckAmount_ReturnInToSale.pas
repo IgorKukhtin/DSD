@@ -50,6 +50,9 @@ type
     edOperDate: TcxDateEdit;
     cxLabel5: TcxLabel;
     edInvNumber: TcxTextEdit;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    AmountDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

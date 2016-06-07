@@ -15,11 +15,14 @@ RETURNS TABLE (Id Integer, StatusCode Integer
              , OperDate TDateTime, InvNumber TVarChar, OperDatePartner TDateTime, InvNumberPartner TVarChar 
              , InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime, DocumentTaxKindName TVarChar
              
-             , PartnerCode Integer, PartnerName TVarChar
-             , JuridicalCode Integer, JuridicalName TVarChar
-             , GoodsGroupNameFull TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , ContractId Integer, ContractName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , GoodsGroupNameFull TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar
              , Price TFloat 
 
+             , AmountDiff TFloat 
              , AmountSale TFloat, AmountInReturn TFloat, AmountReturn TFloat 
              , AmountBeforeReturn TFloat, AmountAfterReturn TFloat 
              , isError Boolean
@@ -178,23 +181,35 @@ BEGIN
                   , Movement_DocumentMaster.OperDate         AS OperDate_Master
                   , Object_TaxKind_Master.ValueData          AS DocumentTaxKindName
                            
+                  , View_Contract_InvNumber.ContractId
+                  , View_Contract_InvNumber.InvNumber AS ContractName
+                  , Object_PaidKind.Id                AS PaidKindId
+                  , Object_PaidKind.ValueData         AS PaidKindName
+
+                  , Object_Partner.Id               AS PartnerId
                   , Object_Partner.ObjectCode       AS PartnerCode
                   , Object_Partner.ValueData        AS PartnerName
 
+                  , Object_Juridical.Id         AS JuridicalId
                   , Object_Juridical.ObjectCode AS JuridicalCode
                   , Object_Juridical.ValueData  AS JuridicalName
                   
                   , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                  , Object_Goods.Id                 AS GoodsId
                   , Object_Goods.ObjectCode         AS GoodsCode
                   , Object_Goods.ValueData          AS GoodsName
-                  , Object_GoodsKind.ValueData      AS GoodsKindName
-                  , COALESCE (MIFloat_Price.ValueData, 0)  :: Tfloat  AS Price
 
-                  , tmpData.AmountSale   :: Tfloat
-                  , tmpData.AmountIn     :: Tfloat AS AmountInReturn
-                  , tmpData.Amount       :: Tfloat AS AmountReturn
-                  , tmpData.AmountOutBefore      :: Tfloat AS AmountBeforeReturn
-                  , tmpData.AmountOutAfter       :: Tfloat AS AmountAfterReturn
+                  , Object_GoodsKind.Id             AS GoodsKindId
+                  , Object_GoodsKind.ValueData      AS GoodsKindName
+                  , COALESCE (MIFloat_Price.ValueData, 0)  :: TFloat  AS Price
+
+                  , (tmpData.AmountSale - tmpData.Amount) :: TFloat AS AmountDiff
+
+                  , tmpData.AmountSale   :: TFloat AS AmountSale
+                  , tmpData.AmountIn     :: TFloat AS AmountInReturn
+                  , tmpData.Amount       :: TFloat AS AmountReturn
+                  , tmpData.AmountOutBefore      :: TFloat AS AmountBeforeReturn
+                  , tmpData.AmountOutAfter       :: TFloat AS AmountAfterReturn
                   
                   , CASE WHEN tmpData.AmountSale < tmpData.Amount THEN TRUE ELSE FALSE END AS isError
 
@@ -247,6 +262,17 @@ BEGIN
                 LEFT JOIN Object AS Object_TaxKind_Master 
                                  ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
                                 AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete()
+
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                             ON MovementLinkObject_Contract.MovementId = Movement_Sale.Id
+                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                             ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
+                                            AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
              WHERE (tmpData.AmountSale < tmpData.Amount) OR inShowAll = FALSE
        ;
          
