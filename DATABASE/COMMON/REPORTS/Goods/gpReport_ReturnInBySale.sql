@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, StatusCode Integer
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
 
              , Amount        TFloat  -- 
-             , AmountPartner TFloat  -- 
+             --, AmountPartner TFloat  -- 
              , Price         TFloat  -- 
              ) 
 
@@ -33,20 +33,22 @@ BEGIN
     RETURN QUERY
       WITH 
       tmpMIChildReturn AS (SELECT MI_Child.ParentId
+                                , MI_Child.Amount
                            FROM MovementItemFloat AS MIFloat_MovementIdSale
                                  INNER JOIN MovementItem AS MI_Child
                                                          ON MI_Child.Id       = MIFloat_MovementIdSale.MovementItemId 
                                                         AND MI_Child.DescId   = zc_MI_Child()
                                                         AND MI_Child.isErased = FALSE
-                           WHERE /*MIFloat_MovementIdSale.ValueData = inMovementId
-                             AND */MIFloat_MovementIdSale.DescId    = zc_MIFloat_MovementId()
+                           WHERE MIFloat_MovementIdSale.ValueData = inMovementId
+                             AND MIFloat_MovementIdSale.DescId    = zc_MIFloat_MovementId()
                              AND (MI_Child.ObjectId = inGoodsId OR inGoodsId = 0)
                            )
     , tmpMIReturn AS (SELECT MI_Master.MovementId
-                           , MI_Master.Amount                              AS Amount
+                           --, MI_Master.Amount                              AS Amount
+                           , tmpMIChildReturn.Amount                       AS Amount
                            , MI_Master.ObjectId                            AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
+                           --, COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                           
                       FROM tmpMIChildReturn
@@ -62,9 +64,9 @@ BEGIN
                                                       ON MIFloat_Price.MovementItemId = MI_Master.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                      AND (COALESCE (MIFloat_Price.ValueData, 0) = inPrice OR inPrice = 0)
-                         LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                         /*LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                      ON MIFloat_AmountPartner.MovementItemId = MI_Master.Id
-                                                    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                                    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()*/
                       )
      , tmpMovReturn AS (SELECT Movement.Id
                              , Object_From.ObjectCode               AS PartnerCode
@@ -137,7 +139,7 @@ BEGIN
            , Object_GoodsKind.ValueData 	AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
            , tmpMIReturn.Amount         ::TFloat
-           , tmpMIReturn.AmountPartner  ::TFloat
+           --, tmpMIReturn.AmountPartner  ::TFloat
            , tmpMIReturn.Price          ::TFloat
       FROM tmpMIReturn
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIReturn.GoodsId
@@ -164,3 +166,4 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_ReturnInBySale (inMovementId:= 0, inGoodsId:= 2507, inGoodsKindId:= 0, inPrice:=0, inSession:= zfCalc_UserAdmin()) limit 10 ; -- 
+--select * from gpReport_ReturnInBySale(inMovementId := 3555574 , inGoodsId := 2153 , inGoodsKindId := 0 , inPrice := 0 ,  inSession := '5');
