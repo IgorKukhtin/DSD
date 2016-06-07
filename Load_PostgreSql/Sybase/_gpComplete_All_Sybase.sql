@@ -14,6 +14,23 @@ $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
 /*
+ -- 1.1.
+ IF '' <> lpUpdate_Movement_ReturnIn_Auto (inMovementId    := inMovementId
+                                         , inStartDateSale := (SELECT OperDate - INTERVAL '6 MONTH' FROM Movement WHERE Id = inMovementId)
+                                         , inEndDateSale   := (SELECT OperDate - INTERVAL '1 DAY' FROM Movement WHERE Id = inMovementId)
+                                         , inUserId        := zfCalc_UserAdmin() :: Integer
+                                          )
+ THEN
+     -- 1.3. сохранили свойство <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inMovementId, '?????' || COALESCE (' ' || MovementString.ValueData, ''))
+     FROM Movement
+          LEFT JOIN MovementString ON MovementString.MovementId = Movement.Id AND MovementString.DescId = zc_MovementString_Comment()
+     WHERE Movement.Id = inMovementId;
+END IF;
+
+RETURN;
+*/
+/*
 if exists (select 1
      FROM Movement
      where Movement.Id = inMovementId
