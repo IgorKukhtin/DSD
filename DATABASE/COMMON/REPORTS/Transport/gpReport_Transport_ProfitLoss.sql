@@ -62,19 +62,19 @@ BEGIN
                            FROM (
                                   SELECT MIContainer.MovementId               AS MovementId
                                        , MIContainer.MovementDescId           AS MovementDescId
-                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS FuelId
+                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND MovementItem.Id IS NULL THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS FuelId
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Transport() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumCount_Transport
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) IN (0, zc_Enum_AnalyzerId_ProfitLoss()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_Transport
-                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Add()     THEN 1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAdd
-                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_AddLong() THEN 1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAddLong
-                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Taxi()    THEN 1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportTaxi
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAdd
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAddLong
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportTaxi
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportService
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_PersonalSendCash()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_PersonalSendCash
                                        , MIContainer.WhereObjectId_Analyzer          AS CarId
                                        , MIContainer.ObjectIntId_Analyzer            AS UnitId
                                        , MIContainer.ObjectExtId_Analyzer            AS BranchId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
-                                       , MILinkObject_Route.ObjectId                 AS RouteId
+                                       , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId) AS RouteId
                                        , CLO_ProfitLoss.ObjectId                     AS ProfitLossId
                                        , CLO_Business.ObjectId                       AS BusinessId
                                
@@ -93,6 +93,9 @@ BEGIN
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                         ON MILinkObject_Route.MovementItemId = MIContainer.MovementItemId
                                                                        AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
+                                       LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                                                             AND MovementItem.DescId = zc_MI_Master()
+                                                             AND MIContainer.MovementDescId = zc_Movement_Transport()
                                                       
                                   WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                                     AND MIContainer.MovementDescId in (zc_Movement_Transport(), zc_Movement_TransportService(),zc_Movement_PersonalSendCash())
@@ -106,9 +109,11 @@ BEGIN
                                           , MIContainer.WhereObjectId_Analyzer 
                                           , MIContainer.ObjectIntId_Analyzer 
                                           , MIContainer.ObjectExtId_Analyzer
-                                          , MILinkObject_Route.ObjectId           
+                                          , MILinkObject_Route.ObjectId
                                           , CLO_ProfitLoss.ObjectId , CLO_Business.ObjectId 
                                           , MovementLinkObject_PersonalDriver.ObjectId   
+                                          , MovementItem.Id
+                                          , MovementItem.ObjectId
                             ) AS tmpContainer   
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = tmpContainer.MovementId
                                                        AND MovementItem.ObjectId   = tmpContainer.RouteId

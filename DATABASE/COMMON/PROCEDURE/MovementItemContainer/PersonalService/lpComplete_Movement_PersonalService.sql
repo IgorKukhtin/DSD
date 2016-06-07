@@ -418,9 +418,9 @@ BEGIN
      FROM (SELECT _tmpItem.MovementItemId
                 , _tmpItem.OperSumm
                 , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransport
-                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
-                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
-                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
                 , 0 AS SummPhone
            FROM _tmpItem
                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId    = _tmpItem.ContainerId

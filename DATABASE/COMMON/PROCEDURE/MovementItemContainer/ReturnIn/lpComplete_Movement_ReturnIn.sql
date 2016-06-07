@@ -597,6 +597,17 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не установлено значение <Договор>.Проведение невозможно.';
      END IF;
+     -- проверка для кривых пользователей
+     IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
+        AND TRUE = (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_List())
+        AND EXISTS (SELECT 1 FROM _tmpItem
+                                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                               ON MIFloat_MovementId.MovementItemId = _tmpItem.MovementItemId
+                                                              AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                   WHERE COALESCE (MIFloat_MovementId.ValueData, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе установлен признак <привязка к Основ. № (да/нет)>, но не у всех элементов заполнено <Основание № (продажа)>.';
+     END IF;
 
 
      -- !!!запуск новой схемы - с привязкой к продажам!!!

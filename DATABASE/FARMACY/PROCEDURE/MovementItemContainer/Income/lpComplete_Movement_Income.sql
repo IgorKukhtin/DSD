@@ -16,6 +16,12 @@ $BODY$
    DECLARE vbNDS TFloat;
 BEGIN
 
+     -- !!!ѕроверка что б второй раз не провели накладную и проводки не задвоились!!!
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         RAISE EXCEPTION 'ќшибка.ƒокумент уже проведен.';
+     END IF;
+
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 

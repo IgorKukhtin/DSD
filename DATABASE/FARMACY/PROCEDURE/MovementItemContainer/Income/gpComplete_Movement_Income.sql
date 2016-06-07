@@ -23,6 +23,12 @@ BEGIN
      -- поиск <Торговой сети>
      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
+     -- !!!Проверка что б второй раз не провели накладную и проводки не задвоились!!!
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ уже проведен.';
+     END IF;
+
      -- Проверили что установлены все связи
      PERFORM lpCheckComplete_Movement_Income (inMovementId);
 
