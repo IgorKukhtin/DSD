@@ -4,7 +4,6 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
   ClientWidth = 1360
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -378
   ExplicitWidth = 1376
   ExplicitHeight = 420
   PixelsPerInch = 96
