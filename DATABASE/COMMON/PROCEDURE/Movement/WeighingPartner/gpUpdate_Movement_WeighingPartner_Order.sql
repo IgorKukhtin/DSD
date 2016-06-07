@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingPartner_Order(
     IN inMovementId_Order     Integer   , -- ключ Документа заявка
     IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS Void
 AS
 $BODY$
    DECLARE vbUserId Integer;

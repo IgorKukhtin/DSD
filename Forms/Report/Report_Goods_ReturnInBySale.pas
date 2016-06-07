@@ -21,7 +21,6 @@ type
     clGoodsName: TcxGridDBColumn;
     clAmount: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    clAmountPartner: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     cxLabel7: TcxLabel;

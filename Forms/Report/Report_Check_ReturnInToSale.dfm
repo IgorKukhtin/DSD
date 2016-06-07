@@ -812,9 +812,24 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 32
+    Left = 344
+    Top = 24
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
