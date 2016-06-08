@@ -49,9 +49,13 @@ type
     FCheckUID: String;
     FShapeColor: TColor;
     FNeedSaveVIP: Boolean;
+    FLastError: String;
     procedure SetShapeState(AColor: TColor);
     procedure SyncShapeState;
     procedure UpdateRemains;
+    procedure SendError(const AErrorMessage: String);
+  private
+    procedure SendErrorMineForm;
   protected
     procedure Execute; override;
   end;
@@ -1940,8 +1944,7 @@ begin
               End;
             except ON E: Exception do
               Begin
-                MainCashForm.ThreadErrorMessage:=E.Message;
-                PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
+                SendError(E.Message);
               End;
             end;
           finally
@@ -1968,8 +1971,7 @@ begin
                 Head.COMPL := True;
               except on E: Exception do
                 Begin
-                  MainCashForm.ThreadErrorMessage:=E.Message;
-                  PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
+                  SendError(E.Message);
                 End;
               end;
               SetShapeState(clYellow);
@@ -2057,10 +2059,21 @@ begin
   end;
 end;
 
+procedure TSaveRealThread.SendError(const AErrorMessage: String);
+begin
+  FLastError := AErrorMessage;
+  Synchronize(SendErrorMineForm);
+end;
+
+procedure  TSaveRealThread.SendErrorMineForm;
+begin
+  MainCashForm.ThreadErrorMessage := FLastError;
+  PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
+end;
+
 procedure TSaveRealThread.SetShapeState(AColor: TColor);
 begin
   FShapeColor := AColor;
-//  Queue(SyncShapeState);
   Synchronize(SyncShapeState);
 end;
 
