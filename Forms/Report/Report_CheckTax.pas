@@ -37,6 +37,8 @@ type
     clSumm_Sale: TcxGridDBColumn;
     clSumm_Tax: TcxGridDBColumn;
     clSumm_Diff: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

@@ -13,12 +13,10 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 42370d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 142
-      EditValue = 42370d
       ExplicitLeft = 142
     end
     inherited cxLabel1: TcxLabel
@@ -110,6 +108,26 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
               Format = ',0.00'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colOrderAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colOverAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithOutVATOrder
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithOutVATOver
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -151,6 +169,26 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
               Format = ',0.00'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colOrderAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colOverAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithOutVATOrder
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaWithOutVATOver
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -204,6 +242,28 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object colOrderAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1077
+            DataBinding.FieldName = 'OrderAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object colOverAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1074#1077#1088#1093' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'OverAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
           object PriceWithOutVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceWithOutVAT'
@@ -252,6 +312,24 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           object colSummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
+          object colSummaWithOutVATOrder: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057') ('#1087#1086' '#1079#1072#1103#1074#1082#1077')'
+            DataBinding.FieldName = 'SummaWithOutVATOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
+          object colSummaWithOutVATOver: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057') ('#1089#1074#1077#1088#1093' '#1079#1072#1103#1074#1082#1080')'
+            DataBinding.FieldName = 'SummaWithOutVATOver'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -371,6 +449,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       FormName = 'TReport_MovementIncomeDialogForm'
       FormNameParam.Value = 'TReport_MovementIncomeDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -378,6 +457,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -385,6 +465,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -392,6 +473,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -400,6 +482,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -449,6 +532,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateStart'
@@ -456,6 +540,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateFinal'
@@ -463,6 +548,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartion'
@@ -470,6 +556,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = cbPartion
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisPartionPrice'
@@ -477,6 +564,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = cbPartionPrice
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 160
@@ -542,6 +630,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -555,6 +644,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -564,6 +654,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -572,6 +663,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 24
@@ -586,6 +678,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -593,6 +686,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432

@@ -1356,6 +1356,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentIncomeDialogForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxForm');
 

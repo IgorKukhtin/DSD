@@ -13,7 +13,7 @@ uses
   cxGrid, cxPC, Vcl.ExtCtrls, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
   cxButtonEdit, cxCurrencyEdit, ExternalLoad, cxPCdxBarPopupMenu, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ComCtrls,
-  dxCore, cxDateUtils, cxLabel, cxDropDownEdit, cxCalendar;
+  dxCore, cxDateUtils, cxLabel, cxDropDownEdit, cxCalendar, cxCheckBox;
 
 type
   TPriceForm = class(TAncestorEnumForm)

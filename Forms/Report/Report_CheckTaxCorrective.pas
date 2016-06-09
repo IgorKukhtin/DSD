@@ -38,6 +38,8 @@ type
     clPartnerName: TcxGridDBColumn;
     clInvNumberPartner_ReturnIn: TcxGridDBColumn;
     clInvNumberPartner_TaxCorrective: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

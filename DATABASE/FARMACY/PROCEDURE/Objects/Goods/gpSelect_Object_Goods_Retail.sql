@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , PercentMarkup TFloat, Price TFloat
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
+             , isPromo boolean
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -33,6 +34,26 @@ BEGIN
    IF (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
    RETURN QUERY 
+-- ћаркетинговый контракт
+  WITH  GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+                                      , ObjectLink_Goods_Object.ChildObjectId AS ObjectId
+                         --   , tmp.ChangePercent
+                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                       --  AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                         )
+
    SELECT 
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
@@ -58,8 +79,11 @@ BEGIN
            , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
+           , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
     FROM Object AS Object_Retail
          INNER JOIN Object_Goods_View ON Object_Goods_View.ObjectId = Object_Retail.Id
+         LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
+                             AND GoodsPromo.ObjectId = Object_Goods_View.ObjectId 
     WHERE Object_Retail.DescId = zc_Object_Retail();
 
    ELSE
@@ -67,6 +91,24 @@ BEGIN
    -- дл€ остальных...
 
    RETURN QUERY 
+  -- ћаркетинговый контракт
+  WITH  GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+                         --   , tmp.ChangePercent
+                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                         )
    SELECT 
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
@@ -92,8 +134,10 @@ BEGIN
            , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
+           , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
     FROM Object_Goods_View
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
+         LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
     WHERE Object_Goods_View.ObjectId = vbObjectId;
 
    END IF;

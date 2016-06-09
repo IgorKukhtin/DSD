@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 478
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -128,6 +128,16 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 86
+          end
+          object clisPromo: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
+            DataBinding.FieldName = 'isPromo'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Properties.AllowGrayed = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object cbPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
@@ -544,6 +554,21 @@ inherited GoodsForm: TGoodsForm
       end
       item
         ColorColumn = colPrice
+        BackGroundValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisSecond
+        BackGroundValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisPromo
+        BackGroundValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisPublished
         BackGroundValueColumn = clColor_calc
         ColorValueList = <>
       end>
