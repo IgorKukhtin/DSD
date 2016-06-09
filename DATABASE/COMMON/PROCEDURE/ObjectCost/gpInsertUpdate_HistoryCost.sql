@@ -52,6 +52,7 @@ BEGIN
      -- !!!если не филиал, тогда конечная дата всегда последнее число месяца!!!
      vbEndDate_zavod:= DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
 /*
+-- if inBranchId = 0 then return; end if;
 if inBranchId = 0 then
      inStartDate:= '01.05.2016';
      inEndDate  := '30.05.2016';
@@ -75,12 +76,13 @@ end if;
         WHERE COALESCE (inBranchId, 0) <= 0
           -- AND ObjectLink_Unit_Branch.ChildObjectId <> zc_Branch_Basis()
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-          AND ObjectLink_Unit_Branch.ChildObjectId IN (8374   -- филиал Одесса
-                                                     , 301310 -- филиал Запорожье
-                                                     , 8373   -- филиал Николаев (Херсон)
-                                                     , 8375   -- филиал Черкассы (Кировоград)
-                                                     , 8377   -- филиал Кр.Рог
-                                                     , 8381   -- филиал Харьков
+          AND ObjectLink_Unit_Branch.ChildObjectId IN (8374   -- 4. филиал Одесса
+                                                     , 301310 -- 11. филиал Запорожье
+                                                     , 8373   -- 3. филиал Николаев (Херсон)
+                                                     , 8375   -- 5. филиал Черкассы (Кировоград)
+                                                     , 8377   -- 7. филиал Кр.Рог
+                                                     , 8381   -- 9. филиал Харьков
+                                                     , 8379   -- 2. филиал Киев
                                                       )
       UNION
        SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
@@ -527,7 +529,7 @@ end if;
                , MIContainer_Summ_In.WhereObjectId_Analyzer
         ;
 
-     END IF; -- if inBranchId = 0
+     END IF; -- if inBranchId >= 0
 
 
 /*     -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
@@ -651,7 +653,7 @@ end if;
                GROUP BY _tmpChild.MasterContainerId
               ) AS _tmpSumm 
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
-           AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
+           --*** AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
            -- AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8440 END -- Дефростер
         ;
 
@@ -691,7 +693,7 @@ end if;
               ) AS _tmpSumm 
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
            AND ABS (_tmpMaster.CalcSumm - _tmpSumm.CalcSumm) > inDiffSumm
-           AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
+           --*** AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
            -- AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8440 END -- Дефростер
         ;
 
