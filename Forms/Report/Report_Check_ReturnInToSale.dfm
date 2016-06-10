@@ -279,6 +279,76 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
+          object StatusCode_Tax: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'StatusCode_Tax'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OperDate_Tax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'OperDate_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object InvNumber_Tax: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'InvNumber_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object colInvNumberPartner_Tax: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colDocumentTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentTaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object ContractCode_Tax: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'ContractCode_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
+          object ContractName_Tax: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'ContractName_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
         end
       end
     end
@@ -683,8 +753,8 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 696
-    Top = 136
+    Left = 648
+    Top = 208
   end
   inherited PopupMenu: TPopupMenu
     Left = 144
@@ -719,8 +789,8 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
       item
         Component = edShowAll
       end>
-    Left = 592
-    Top = 144
+    Left = 560
+    Top = 208
   end
   object FormParams: TdsdFormParams
     Params = <
