@@ -14,7 +14,7 @@ BEGIN
      CREATE TEMP TABLE _tmpGoods_Complete_Inventory (GoodsId Integer) ON COMMIT DROP;
 
      -- таблица - количественный остаток
-     CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, GoodsId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperCount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, GoodsId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperCount TFloat, OperCount_find TFloat) ON COMMIT DROP;
      -- таблица - суммовой остаток
      CREATE TEMP TABLE _tmpRemainsSumm (ContainerId_Goods Integer, ContainerId Integer, AccountId Integer, GoodsId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperSumm TFloat) ON COMMIT DROP;
 
