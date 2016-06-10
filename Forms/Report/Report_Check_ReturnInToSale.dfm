@@ -71,6 +71,13 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
+          object isDiffContract: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.  '#1076#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'isDiffContract'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 61
+          end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089' ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'StatusCode'
@@ -131,13 +138,6 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 67
-          end
-          object isErrContract: TcxGridDBColumn
-            Caption = #1054#1096#1080#1073#1082#1072' '#1076#1086#1075'. '#1076#1072'/'#1085#1077#1090
-            DataBinding.FieldName = 'isErrContract'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 61
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077') ('#1074#1086#1079#1074#1088#1072#1090')'

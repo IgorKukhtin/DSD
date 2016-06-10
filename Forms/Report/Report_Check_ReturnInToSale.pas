@@ -56,7 +56,7 @@ type
     cxLabel4: TcxLabel;
     ContractName: TcxGridDBColumn;
     ContractCode: TcxGridDBColumn;
-    isErrContract: TcxGridDBColumn;
+    isDiffContract: TcxGridDBColumn;
   private
     { Private declarations }
   public

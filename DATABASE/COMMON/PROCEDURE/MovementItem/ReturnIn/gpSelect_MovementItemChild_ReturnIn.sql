@@ -12,8 +12,10 @@ RETURNS TABLE (Id Integer, ParentId Integer, Amount TFloat
              , GoodsKindId Integer, GoodsKindName TVarChar
              , AmountPartner TFloat, Price TFloat
              , MovementItemId_sale Integer, MovementId_sale Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+             , ContractCode_Sale Integer, ContractName_Sale TVarChar
              , MovementId_tax Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
              , DocumentTaxKindName TVarChar
+             , ContractCode_Tax Integer, ContractName_Tax TVarChar
              , FromName TVarChar
              , ToCode Integer
              , ToName TVarChar
@@ -36,7 +38,7 @@ BEGIN
                            , MIFloat_MovementId.ValueData      :: Integer AS MovementId_sale
                            , MIFloat_MovementItemId.ValueData  :: Integer AS MovementItemId_sale
                            , CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN TRUE ELSE MovementItem.isErased END :: Boolean AS isErased
-                      FROM MovementItem ON 
+                      FROM MovementItem  
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                         
@@ -70,12 +72,16 @@ BEGIN
             , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
             , Movement_Sale.OperDate
             , MD_OperDatePartner.ValueData                   AS OperDatePartner
+            , View_Contract_InvNumber_Sale.ContractCode      AS ContractCode_Sale
+            , View_Contract_InvNumber_Sale.InvNumber         AS ContractName_Sale
 
             , Movement_DocumentMaster.Id                     AS MovementId_tax
             , Movement_DocumentMaster.InvNumber              AS InvNumber_Master
             , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
             , Movement_DocumentMaster.OperDate               AS OperDate_Master
             , Object_TaxKind_Master.ValueData                AS DocumentTaxKindName
+            , View_Contract_InvNumber_Tax.ContractCode       AS ContractCode_Tax
+            , View_Contract_InvNumber_Tax.InvNumber          AS ContractName_Tax
                            
            , Object_From.ValueData                      AS FromName
            , Object_To.ObjectCode                       AS ToCode
@@ -135,6 +141,17 @@ BEGIN
           LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
                                                    AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete() 
 
+
+          LEFT JOIN MovementLinkObject AS MLO_Contract_Sale
+                                       ON MLO_Contract_Sale.MovementId = Movement_Sale.Id
+                                      AND MLO_Contract_Sale.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_Sale ON View_Contract_InvNumber_Sale.ContractId = MLO_Contract_Sale.ObjectId  
+
+          LEFT JOIN MovementLinkObject AS MLO_Contract_Tax
+                                       ON MLO_Contract_Tax.MovementId = Movement_DocumentMaster.Id 
+                                      AND MLO_Contract_Tax.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_Tax ON View_Contract_InvNumber_Tax.ContractId = MLO_Contract_Tax.ObjectId                             
+      
 ;
                      
 END;

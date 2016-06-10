@@ -29,7 +29,7 @@ RETURNS TABLE (Movement_ReturnId Integer, StatusCode Integer
              , isDiffPartner Boolean
              , isDiffPrice Boolean
              , isDiffStatus Boolean
-             , isErrContract Boolean
+             , isDiffContract Boolean
              ) 
 
 AS
@@ -200,7 +200,7 @@ BEGIN
                          ELSE FALSE
                          END                      AS isDiffStatus
                          
-                  , CASE WHEN tmpData.ContractId <> View_Contract_InvNumber_Sale.ContractId THEN TRUE ELSE FALSE END AS isErrContract
+                  , CASE WHEN tmpData.ContractId <> View_Contract_InvNumber_Sale.ContractId THEN TRUE ELSE FALSE END AS isDiffContract
              FROM tmpData
                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
                 LEFT JOIN Object AS Object_PartnerSale ON Object_PartnerSale.Id = tmpData.PartnerId_Sale
