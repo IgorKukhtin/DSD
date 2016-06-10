@@ -217,8 +217,8 @@ BEGIN
                 LEFT JOIN Object AS Object_StatusSale ON Object_StatusSale.Id = Movement_Sale.StatusId
                 
                 LEFT JOIN MovementLinkObject AS MLO_Contract_Sale
-                                          ON MLO_Contract_Sale.MovementId = Movement_Sale.Id
-                                         AND MLO_Contract_Sale.DescId = zc_MovementLinkObject_Contract()
+                                             ON MLO_Contract_Sale.MovementId = Movement_Sale.Id
+                                            AND MLO_Contract_Sale.DescId = zc_MovementLinkObject_Contract()
                 LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_Sale ON View_Contract_InvNumber_Sale.ContractId = MLO_Contract_Sale.ObjectId                             
                 
             WHERE (tmpData.GoodsId <> tmpData.GoodsId_Sale 
