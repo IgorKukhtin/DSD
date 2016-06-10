@@ -21,6 +21,11 @@ RETURNS TABLE (Movement_ReturnId Integer, StatusCode Integer
              , Movement_SaleId Integer, StatusCode_Sale Integer
              , OperDate_Sale TDateTime, InvNumber_Sale TVarChar
              , ContractCode_Sale Integer, ContractName_Sale TVarChar
+
+             , MovementId_Tax Integer, StatusCode_Tax Integer
+             , OperDate_Tax TDateTime, InvNumber_Tax TVarChar, InvNumberPartner_Tax TVarChar, DocumentTaxKindName TVarChar
+             , ContractCode_Tax Integer, ContractName_Tax TVarChar
+
              , PartnerCode_Sale Integer, PartnerName_Sale TVarChar
              , GoodsCode_Sale Integer, GoodsName_Sale TVarChar, GoodsKindName_Sale TVarChar
              , Price_Sale TFloat 
@@ -165,12 +170,21 @@ BEGIN
                   , Object_GoodsKind.ValueData  AS GoodsKindName
                   , tmpData.Price :: Tfloat
                   
-                  , Movement_Sale.Id                AS Movement_SaleId
-                  , Object_StatusSale.ObjectCode    AS StatusCode_Sale
-                  , Movement_Sale.OperDate          AS OperDate_Sale
-                  , Movement_Sale.InvNumber         AS InvNumber_Sale
+                  , Movement_Sale.Id                                AS Movement_SaleId
+                  , Object_StatusSale.ObjectCode                    AS StatusCode_Sale
+                  , Movement_Sale.OperDate                          AS OperDate_Sale
+                  , Movement_Sale.InvNumber                         AS InvNumber_Sale
                   , View_Contract_InvNumber_Sale.ContractCode       AS ContractCode_Sale
                   , View_Contract_InvNumber_Sale.InvNumber          AS ContractName_Sale
+
+                  , Movement_Tax.Id                                 AS MovementId_Tax
+                  , Object_StatusTax.ObjectCode                     AS StatusCode_Tax
+                  , Movement_Tax.OperDate                           AS OperDate_Tax
+                  , Movement_Tax.InvNumber                          AS InvNumber_Tax
+                  , MS_InvNumberPartner_Tax.ValueData               AS InvNumberPartner_Tax
+                  , Object_TaxKind.ValueData                        AS DocumentTaxKindName
+                  , View_Contract_InvNumber_Tax.ContractCode        AS ContractCode_Tax
+                  , View_Contract_InvNumber_Tax.InvNumber           AS ContractName_Tax
 
                   , Object_PartnerSale.ObjectCode   AS PartnerCode_Sale
                   , Object_PartnerSale.ValueData    AS PartnerName_Sale
@@ -196,11 +210,16 @@ BEGIN
                          ELSE FALSE
                          END                      AS isDiffPrice
                   , CASE WHEN COALESCE (Movement_Sale.StatusId, 0) <> zc_Enum_Status_Complete()
+                           OR COALESCE (Movement_Tax.StatusId, 0) <> zc_Enum_Status_Complete()
                          THEN TRUE
                          ELSE FALSE
                          END                      AS isDiffStatus
                          
-                  , CASE WHEN tmpData.ContractId <> View_Contract_InvNumber_Sale.ContractId THEN TRUE ELSE FALSE END AS isDiffContract
+                  , CASE WHEN tmpData.ContractId <> COALESCE (View_Contract_InvNumber_Sale.ContractId, 0)
+                          OR tmpData.ContractId <> COALESCE (View_Contract_InvNumber_Tax.ContractId, 0)
+                         THEN TRUE
+                         ELSE FALSE
+                         END                      AS isDiffContract
              FROM tmpData
                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
                 LEFT JOIN Object AS Object_PartnerSale ON Object_PartnerSale.Id = tmpData.PartnerId_Sale
@@ -221,11 +240,36 @@ BEGIN
                                             AND MLO_Contract_Sale.DescId = zc_MovementLinkObject_Contract()
                 LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_Sale ON View_Contract_InvNumber_Sale.ContractId = MLO_Contract_Sale.ObjectId                             
                 
-            WHERE (tmpData.GoodsId <> tmpData.GoodsId_Sale 
+                LEFT JOIN MovementLinkMovement AS MLM_Tax
+                                               ON MLM_Tax.MovementId = Movement_Sale.Id
+                                              AND MLM_Tax.DescId = zc_MovementLinkMovement_Master()
+                LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MLM_Tax.MovementChildId
+                LEFT JOIN Object AS Object_StatusTax ON Object_StatusTax.Id = Movement_Tax.StatusId
+
+                LEFT JOIN MovementLinkObject AS MLO_Contract_Tax
+                                             ON MLO_Contract_Tax.MovementId = Movement_Tax.Id
+                                            AND MLO_Contract_Tax.DescId = zc_MovementLinkObject_Contract()
+                LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_Tax ON View_Contract_InvNumber_Tax.ContractId = MLO_Contract_Tax.ObjectId
+
+                LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind
+                                             ON MLO_DocumentTaxKind.MovementId = Movement_Tax.Id
+                                            AND MLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                LEFT JOIN Object AS Object_TaxKind
+                                 ON Object_TaxKind.Id = MLO_DocumentTaxKind.ObjectId
+                                AND Movement_Tax.StatusId = zc_Enum_Status_Complete()
+
+                LEFT JOIN MovementString AS MS_InvNumberPartner_Tax
+                                         ON MS_InvNumberPartner_Tax.MovementId = Movement_Tax.Id
+                                        AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
+
+            WHERE (tmpData.GoodsId <> tmpData.GoodsId_Sale
                 OR tmpData.GoodsKindId <> tmpData.GoodsKindId_Sale 
                 OR tmpData.PartnerId <> tmpData.PartnerId_Sale 
                 OR tmpData.Price <> tmpData.Price_Sale
-                OR Movement_Sale.StatusId <> zc_Enum_Status_Complete()
+                OR COALESCE (Movement_Sale.StatusId, 0) <> zc_Enum_Status_Complete()
+                OR COALESCE (Movement_Tax.StatusId, 0) <> zc_Enum_Status_Complete()
+                OR tmpData.ContractId <> COALESCE (View_Contract_InvNumber_Sale.ContractId, 0)
+                OR tmpData.ContractId <> COALESCE (View_Contract_InvNumber_Tax.ContractId, 0)
                   ) OR inShowAll = FALSE
 
        ;
