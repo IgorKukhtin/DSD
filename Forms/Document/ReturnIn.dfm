@@ -486,6 +486,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'ContractCode_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object childContractName_Sale: TcxGridDBColumn
@@ -493,6 +494,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'ContractName_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 67
           end
           object childDocumentTaxKindName: TcxGridDBColumn
@@ -533,6 +535,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'ContractCode_Tax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 62
           end
           object childContractName_Tax: TcxGridDBColumn
@@ -540,6 +543,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'ContractName_Tax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 67
           end
           object FromName: TcxGridDBColumn

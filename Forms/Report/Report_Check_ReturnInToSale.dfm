@@ -24,8 +24,6 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 392
-        ExplicitLeft = 176
-        ExplicitTop = -3
         ExplicitWidth = 1077
         ExplicitHeight = 392
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -130,6 +128,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             DataBinding.FieldName = 'ContractCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 54
           end
           object ContractName: TcxGridDBColumn
@@ -137,6 +136,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 67
           end
           object GoodsGroupNameFull: TcxGridDBColumn
@@ -230,6 +230,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             DataBinding.FieldName = 'ContractCode_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 54
           end
           object ContractName_Sale: TcxGridDBColumn
@@ -237,6 +238,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             DataBinding.FieldName = 'ContractName_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 67
           end
           object PartnerName_Sale: TcxGridDBColumn
