@@ -203,7 +203,19 @@ object MainForm: TMainForm
       ImportSettingsId.Component = ClientDataSet
       ImportSettingsId.ComponentItem = 'Id'
       ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <>
+      ExternalParams = <
+        item
+          Name = 'isNext_aftErr'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'outMsgText'
+          Value = ''
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
     end
     object actMovePriceList: TdsdExecStoredProc
       Category = 'DSDLib'

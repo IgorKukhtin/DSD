@@ -109,6 +109,7 @@ type
     function fInitArray : Boolean; // получает данные с сервера и на основании этих данных заполняет массивы
     function fBeginMail : Boolean; // обработка всей почты
     function fBeginXLS  : Boolean; // обработка всех XLS
+    function fBeginMMO (inImportSettingsId:Integer;msgDate:TDateTime)  : Boolean; // обработка MMO
     function fBeginMove : Boolean; // перенос цен
   public
   end;
@@ -350,7 +351,8 @@ var
   StartTime:TDateTime;
   IdPOP3:TIdIMAP4;
   searchResult, searchResult_save : TSearchRec;
-  fOK:Boolean;
+  fOK,fMMO:Boolean;
+  msgDate_save:TDateTime;
 begin
 //exit;
      if vbIsBegin = true then exit;
@@ -413,6 +415,9 @@ begin
                  begin
                    IdMessage.Clear; // очистка буфера для сообщения
                    flag:= false;
+
+                   //такого файла - нет
+                   fMMO:= false;
 
                    //если вытянулось из почты письмо
                    if (IdPOP3.Retrieve(i, IdMessage)) then
@@ -477,10 +482,19 @@ begin
                                  begin
                                       searchResult_save:=searchResult;
                                       if (System.SysUtils.FindNext(searchResult) <> 0)and(fOK=false)
-                                      then
+                                      then begin
+                                          //такой файл - нашелся
+                                          fMMO:= true;
+                                          //получится что сохраним из последнего MessageParts
+                                          msgDate_save:=IdMessage.Date;
                                           //будем копировать
-                                          fOK:=true
-                                      else
+                                          fOK:=true;
+                                      end
+                                      else begin
+                                          //такой файл - нашелся
+                                          fMMO:= true;
+                                          //получится что сохраним из последнего MessageParts
+                                          msgDate_save:=IdMessage.Date;
                                           //НЕ ошибка - найден НЕ ОДИН файл MMO для загрузки
                                           fOK:=true;
                                           {fError_SendEmail(vbArrayImportSettings[JurPos].Id
@@ -488,6 +502,7 @@ begin
                                                          , IdMessage.Date
                                                          , vbArrayImportSettings[JurPos].JuridicalMail
                                                          , '44');}
+                                      end;
                                  end;
                                  //2.1. поиск файла xls И это не MMO
                                  if (System.SysUtils.FindFirst(mailFolder + '\*.xls', faAnyFile, searchResult) = 0)
@@ -568,14 +583,21 @@ begin
                    end
                    else ShowMessage('not read :' + IntToStr(i));
 
+                   //а теперь только для ММО - обработка
+                   if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                   then fBeginMMO (vbArrayImportSettings[JurPos].Id,msgDate_save);
+
                    //удаление письма
                    //***if flag then IdPOP3.Delete(i);   //POP3
                    if flag then IdPOP3.DeleteMsgs(i);    //IMAP
                    //
+
+                   //все, идем дальше
                    GaugeMailFrom.Progress:=GaugeMailFrom.Progress+1;
                    Application.ProcessMessages;
 
                  end;//финиш - цикл по входящим письмам
+
                  //осталось сохранить время последней обработки почтового ящика
                  vbArrayMail[ii].BeginTime:=vbOnTimer;
                  //
@@ -651,41 +673,7 @@ begin
 
            //2.только для zc_Enum_EmailKind_IncomeMMO!!!
            if FieldByName('EmailKindId').asInteger = FieldByName('zc_Enum_EmailKind_IncomeMMO').asInteger then
-           begin
-                 PanelLoadXLS.Caption:= 'Load MMO : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
-                 Application.ProcessMessages;
-                 Sleep(3000);
-                 //Загружаем если есть откуда
-                 if FieldByName('DirectoryImport').asString <> ''
-                 then try
-                          //поиск файла MMO
-                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.mmo', faAnyFile, searchResult) = 0 then
-                          begin
-                               searchResult_save:=searchResult;
-
-                               //НЕ ошибка - найден НЕ ОДИН файл MMO для загрузки
-                               if (1=1 ) or (System.SysUtils.FindNext(searchResult) <> 0)
-                               then
-                                   // выполняется загрузка
-                                   mactExecuteImportSettings.Execute
-                               else
-                                   //ошибка - найден НЕ ОДИН файл MMO для загрузки
-                                   fError_SendEmail(FieldByName('Id').AsInteger
-                                                  , FieldByName('ContactPersonId').AsInteger
-                                                  , NOW
-                                                  //, FieldByName('JuridicalMail').AsString
-                                                  , FieldByName('DirectoryImport').asString
-                                                  , '2');
-                          end
-                          else;
-                              //ошибка - не найден файл MMO для загрузки
-                              //та не, все нормально :)
-                      except fError_SendEmail(FieldByName('Id').AsInteger
-                                            , FieldByName('ContactPersonId').AsInteger
-                                            , searchResult_save.TimeStamp
-                                            , FieldByName('JuridicalMail').AsString
-                                            , searchResult_save.Name);
-                      end;
+           begin // ВСЯ ОБРАБОТКА СРАЗУ В ПОЧТЕ
            end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!
 
            Next;
@@ -698,6 +686,79 @@ begin
      // завершена обработка
      vbIsBegin:= false;
 
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+// обработка всех MMO
+function TMainForm.fBeginMMO (inImportSettingsId:Integer;msgDate:TDateTime) : Boolean;
+var
+ searchResult : TSearchRec;
+ mailFolder,StrCopyFolder: ansistring;
+begin
+     with ClientDataSet do begin
+        GaugeLoadXLS.Progress:=0;
+        GaugeLoadXLS.MaxValue:=RecordCount;
+        Application.ProcessMessages;
+        //
+        First;
+        while not EOF do begin
+
+           //2.только для zc_Enum_EmailKind_IncomeMMO!!!
+           if (FieldByName('EmailKindId').asInteger = FieldByName('zc_Enum_EmailKind_IncomeMMO').asInteger)
+              and (FieldByName('Id').asInteger = inImportSettingsId)
+           then begin
+                 PanelLoadXLS.Caption:= 'Load MMO : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
+                 Application.ProcessMessages;
+                 Sleep(3000);
+                 //Загружаем если есть откуда
+                 if FieldByName('DirectoryImport').asString <> ''
+                 then try
+                          //поиск файла MMO
+                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.mmo', faAnyFile, searchResult) = 0 then
+                          begin
+                               //НЕ ошибка - найден НЕ ОДИН файл MMO для загрузки
+                               if (1=1 )
+                               then
+                                   // выполняется загрузка
+                                   mactExecuteImportSettings.Execute
+                               else //ошибка - найден НЕ ОДИН файл MMO для загрузки
+                                   ;
+                               if actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value <> ''
+                               then begin
+                                    //current directory to store the email files
+                                    mailFolder:= FieldByName('DirectoryImport').AsString+'\ОШИБКА\';
+                                    //создали папку для ... если таковой нет
+                                    ForceDirectories(mailFolder);
+
+                                    //переносим ВСЕ файлики с ошибками в папку "ОШИБКА"
+                                    StrCopyFolder:='cmd.exe /c move ' + chr(34) + FieldByName('DirectoryImport').AsString + '\*.mmo' + chr(34) + ' ' + chr(34) + mailFolder + chr(34);
+                                    WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+
+                                    //а здесь уже ошибка
+                                    fError_SendEmail(FieldByName('Id').AsInteger
+                                                   , FieldByName('ContactPersonId').AsInteger
+                                                   , msgDate
+                                                   , FieldByName('JuridicalMail').AsString
+                                                   , actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
+                                end;
+
+                          end
+                          else //ошибка - не найден файл MMO для загрузки
+                               //та не, все нормально :)
+                               ;
+                      except //а здесь уже ошибка
+                             fError_SendEmail(FieldByName('Id').AsInteger
+                                            , FieldByName('ContactPersonId').AsInteger
+                                            , msgDate
+                                            , FieldByName('JuridicalMail').AsString
+                                            , searchResult.Name);
+                      end;
+           end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!
+
+           Next;
+           //
+           Application.ProcessMessages;
+        end;
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // перенос цен
