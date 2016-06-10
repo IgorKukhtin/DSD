@@ -24,6 +24,8 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 392
+        ExplicitLeft = 176
+        ExplicitTop = -3
         ExplicitWidth = 1077
         ExplicitHeight = 392
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -116,6 +118,27 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.  ('#1074#1086#1079#1074#1088#1072#1090')'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
+          object ContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.  ('#1074#1086#1079#1074#1088#1072#1090')'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 67
+          end
+          object isErrContract: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072' '#1076#1086#1075'. '#1076#1072'/'#1085#1077#1090
+            DataBinding.FieldName = 'isErrContract'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 61
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077') ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -201,6 +224,20 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 83
+          end
+          object ContractCode_Sale: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ContractCode_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
+          object ContractName_Sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ContractName_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 67
           end
           object PartnerName_Sale: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1086#1076#1072#1078#1072')'

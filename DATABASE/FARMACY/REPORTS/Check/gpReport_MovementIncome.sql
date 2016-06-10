@@ -37,9 +37,9 @@ RETURNS TABLE (
   SummaWithVAT       TFloat,
   SummaSale          TFloat,
   SummaMargin        TFloat,
-  SummaMarginWithVAT TFloat,
-  SummaWithOutVATOrder  TFloat,
-  SummaWithOutVATOver   TFloat
+  SummaMarginWithVAT TFloat
+ -- SummaWithOutVATOrder  TFloat,
+ -- SummaWithOutVATOver   TFloat
 
   )
 AS
@@ -125,7 +125,7 @@ BEGIN
                    , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0)) AS SummaWithOutVAT
                    , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT                   
                    , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_PriceSale.ValueData, 0))       AS SummaSale
-                   , SUM (COALESCE (MI_Order.Amount, 0)  * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVATOrder  
+                   --, SUM (COALESCE (MI_Order.Amount, 0)  * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithOutVATOrder  
                    , CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.Movement_OrderId ELSE 0 END AS Movement_OrderId           
               FROM tmpMovementIncome
                   INNER JOIN MovementItem AS MI_Income 
@@ -168,79 +168,6 @@ BEGIN
                      , CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.Movement_OrderId ELSE 0 END
               ) 
               
-, tmpData_2 AS (SELECT tmpMovementIncome.InvNumber
-                     , tmpMovementIncome.OperDate
-                     , tmpMovementIncome.DescName
-                   , CASE WHEN inIsPartion = TRUE THEN Movement.InvNumber ELSE tmpMovementIncome.InvNumber END AS InvNumberOrder
-                   , CASE WHEN inIsPartion = TRUE THEN Movement.OperDate ELSE tmpMovementIncome.OperDate END AS OperDateOrder
-                   , CASE WHEN inIsPartion = TRUE THEN MovementDesc.ItemName ELSE tmpMovementIncome.DescName END AS DescNameOrder
-                   ,  CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.FromOrderId ELSE tmpMovementIncome.FromId END AS FromId
-                   --, tmpMovementIncome.FromOrderId AS FromId
-                 /*  , tmpMovementIncome.ToId
-                   , tmpMovementIncome.OurJuridicalId
-                   , tmpMovementIncome.NDSKindId*/
-                   , MI_Order.ObjectId                        AS GoodsId
-                   , CAST( COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))   AS PriceWithOutVAT                  
-                   , SUM (COALESCE (MI_Order.Amount, 0))      AS AmountOrder
-                   
-                   , SUM (COALESCE (MI_Order.Amount, 0)  * COALESCE (MIFloat_Price.ValueData, 0))    AS SummaWithVATOrder             
-                   , CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.Movement_OrderId ELSE 0 END AS Movement_OrderId      
-              FROM tmpMovementIncome
-                  
-                  INNER JOIN MovementItem AS MI_Order 
-                                         ON MI_Order.MovementId = tmpMovementIncome.Movement_OrderId
-                                        AND MI_Order.isErased   = False
-                                         
-                  LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                      ON MIFloat_Price.MovementItemId = MI_Order.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                  LEFT JOIN Movement ON Movement.Id = tmpMovementIncome.Movement_OrderId
-                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId 
-                  
-              GROUP BY  tmpMovementIncome.InvNumber
-                     , tmpMovementIncome.OperDate
-                     , tmpMovementIncome.DescName
-                     , CASE WHEN inIsPartion = TRUE THEN Movement.InvNumber ELSE tmpMovementIncome.InvNumber END 
-                    , CASE WHEN inIsPartion = TRUE THEN Movement.OperDate ELSE tmpMovementIncome.OperDate END 
-                     , CASE WHEN inIsPartion = TRUE THEN MovementDesc.ItemName ELSE tmpMovementIncome.DescName END
-                   ,  CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.FromOrderId ELSE tmpMovementIncome.FromId END--  , tmpMovementIncome.FromOrderId
-                     /*, tmpMovementIncome.ToId
-                     , tmpMovementIncome.OurJuridicalId
-                     , tmpMovementIncome.NDSKindId                                   */
-                     , MI_Order.ObjectId
-                     , COALESCE (MIFloat_Price.ValueData, 0)
-                     , CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.Movement_OrderId ELSE 0 END
-              ) 
-              
-, tmpData AS (SELECT  COALESCE (tmpData_1.InvNumber, tmpData_2.InvNumberOrder) AS InvNumber
-                   , COALESCE (tmpData_1.OperDate, tmpData_2.OperDateOrder) AS OperDate
-                   , COALESCE (tmpData_1.DescName,tmpData_2.DescNameOrder) AS DescName
-                   , COALESCE (tmpData_1.FromId, tmpData_2.FromId) AS FromId
-                   , COALESCE (tmpData_1.ToId, 0) AS ToId
-                   , COALESCE (tmpData_1.OurJuridicalId,0) AS OurJuridicalId
-                   , COALESCE (tmpData_1.NDSKindId,0) AS NDSKindId
-                   , COALESCE (tmpData_1.GoodsId, tmpData_2.GoodsId) AS GoodsId
-                   , COALESCE (tmpData_1.Price,0) AS Price
-                   , COALESCE (tmpData_1.PriceWithOutVAT, tmpData_2.PriceWithOutVAT)   AS PriceWithOutVAT
-                   , COALESCE (tmpData_1.PriceWithVAT,0) AS PriceWithVAT
-                   , COALESCE (tmpData_1.PriceSale,0) AS PriceSale
-                   , COALESCE (tmpData_1.Amount,0) AS Amount
-                   , COALESCE (tmpData_2.AmountOrder,0) AS AmountOrder
-                   , COALESCE (tmpData_1.Summa,0) AS Summa
-                   , COALESCE (tmpData_1.SummaWithOutVAT, 0) AS SummaWithOutVAT
-                   , COALESCE (tmpData_1.SummaWithVAT,0) AS SummaWithVAT
-                   , COALESCE (tmpData_1.SummaSale,0) AS SummaSale
-                   , COALESCE (tmpData_2.SummaWithVATOrder,0) AS SummaWithOutVATOrder                
-              FROM tmpData_1
-                  
-                   FULL JOIN tmpData_2 ON tmpData_2.GoodsId = tmpData_1.GoodsId
-                                     AND tmpData_2.FromId  = tmpData_1.FromId
-                                    AND tmpData_2.PriceWithOutVAT  = tmpData_1.PriceWithOutVAT
-                                    AND ( tmpData_2.InvNumber  = tmpData_1.InvNumber OR inIsPartion = False )
-                                  --  AND tmpData_2.Movement_OrderId  = tmpData_1.Movement_OrderId
- 
-              ) 
-
 
         SELECT
              Object_Goods_View.Id                           AS GoodsId
@@ -274,10 +201,10 @@ BEGIN
            , (tmpData.SummaSale - tmpData.Summa)        :: TFloat AS SummaMargin
            , (tmpData.SummaSale - tmpData.SummaWithVAT) :: TFloat AS SummaMarginWithVAT
 
-           , tmpData.SummaWithOutVATOrder ::TFloat AS SummaWithOutVATOrder
-           , CASE WHEN (tmpData.Amount - tmpData.AmountOrder) > 0 THEN (tmpData.SummaWithOutVAT - tmpData.SummaWithOutVATOrder) ELSE 0 END ::TFloat AS SummaWithOutVATOver
+           --, tmpData.SummaWithOutVATOrder ::TFloat AS SummaWithOutVATOrder
+           --, CASE WHEN (tmpData.Amount - tmpData.AmountOrder) > 0 THEN (tmpData.SummaWithOutVAT - tmpData.SummaWithOutVATOrder) ELSE 0 END ::TFloat AS SummaWithOutVATOver
 
-        FROM tmpData 
+        FROM tmpData_1 tmpData 
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = tmpData.NDSKindId
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId

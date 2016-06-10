@@ -3,6 +3,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1142
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -160
   ExplicitWidth = 1158
   PixelsPerInch = 96
   TextHeight = 13
@@ -248,6 +249,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -259,6 +261,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -323,8 +326,10 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             DataBinding.FieldName = 'SummaWithOutVATOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 87
           end
           object colSummaWithOutVATOver: TcxGridDBColumn
@@ -332,8 +337,10 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             DataBinding.FieldName = 'SummaWithOutVATOver'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 87
           end
           object colSumma: TcxGridDBColumn

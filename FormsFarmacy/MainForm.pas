@@ -134,7 +134,7 @@ type
     N43: TMenuItem;
     actMarginCategory: TdsdOpenForm;
     actMarginCategoryItem: TdsdOpenForm;
-    dsdOpenForm2: TdsdOpenForm;
+    actMarginCategoryReport: TdsdOpenForm;
     actMarginCategoryLink: TdsdOpenForm;
     N44: TMenuItem;
     N45: TMenuItem;
@@ -259,6 +259,8 @@ type
     actPromo: TdsdOpenForm;
     N65: TMenuItem;
     N70: TMenuItem;
+    actReport_RemainsOverGoods: TdsdOpenForm;
+    miReport_RemainsOverGoods: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

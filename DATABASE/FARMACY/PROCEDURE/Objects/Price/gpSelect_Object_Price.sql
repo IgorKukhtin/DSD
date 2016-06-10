@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
+             , isPromo boolean
              ) AS
 $BODY$
 DECLARE
@@ -79,6 +80,7 @@ BEGIN
                ,NULL::Boolean                    AS isClose 
                ,NULL::Boolean                    AS isFirst 
                ,NULL::Boolean                    AS isSecond 
+               ,NULL::Boolean                    AS isPromo 
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -92,6 +94,24 @@ BEGIN
                          AND Container.WhereObjectId = inUnitId
                        GROUP BY container.objectid
                        )
+        -- ћаркетинговый контракт
+      , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+                         --   , tmp.ChangePercent
+                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                         )
         
             SELECT
                 Object_Price_View.Id                                                AS Id
@@ -128,7 +148,7 @@ BEGIN
                , Object_Goods_View.isClose
                , Object_Goods_View.isFirst
                , Object_Goods_View.isSecond
-               
+               , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
                                      AND ObjectLink.ChildObjectId = vbObjectId
@@ -156,7 +176,7 @@ BEGIN
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
                                              ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
-                                            
+                LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id                             
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
             ORDER BY GoodsGroupName, GoodsName;
     ELSE
@@ -170,7 +190,25 @@ BEGIN
                          AND Container.WhereObjectId = inUnitId
                        GROUP BY container.objectid
                        )
-        
+           -- ћаркетинговый контракт
+      , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+                         --   , tmp.ChangePercent
+                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                         )
+     
             SELECT
                  Object_Price_View.Id                      AS Id
                , COALESCE (Object_Price_View.Price,0)                     :: TFloat    AS Price
@@ -204,7 +242,7 @@ BEGIN
                , Object_Goods_View.isClose
                , Object_Goods_View.isFirst
                , Object_Goods_View.isSecond
-               
+               , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
@@ -228,7 +266,7 @@ BEGIN
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
                                              ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
-                
+                LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
             WHERE Object_Price_View.unitid = inUnitId
               AND (inisShowDel = True OR Object_Goods_View.isErased = False)
             ORDER BY GoodsGroupName, GoodsName;

@@ -419,7 +419,9 @@ uses
   Promo in '..\..\FormsFarmacy\Document\Promo.pas' {PromoForm: TParentForm},
   PromoJournal in '..\..\FormsFarmacy\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
   ReportMovementCheckMiddle in '..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas' {ReportMovementCheckMiddleForm: TParentForm},
-  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm};
+  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
+  Report_RemainsOverGoods in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas' {Report_RemainsOverGoodsForm: TParentForm},
+  Report_RemainsOverGoodsDialog in '..\..\FormsFarmacy\Report\Report_RemainsOverGoodsDialog.pas' {Report_RemainsOverGoodsDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

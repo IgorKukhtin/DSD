@@ -2,7 +2,7 @@ inherited RecalcMCS_DialogForm: TRecalcMCS_DialogForm
   ActiveControl = edPeriod
   Caption = 'RecalcMCS_DialogForm'
   ClientHeight = 128
-  ExplicitHeight = 153
+  ExplicitHeight = 156
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -72,13 +72,16 @@ inherited RecalcMCS_DialogForm: TRecalcMCS_DialogForm
         Value = Null
         Component = edPeriod
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RecalcMCS_Day'
         Value = Null
         Component = edDay
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Top = 48
+    Left = 40
+    Top = 16
   end
 end

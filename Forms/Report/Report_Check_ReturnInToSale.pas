@@ -54,6 +54,9 @@ type
     edInvNumber: TcxTextEdit;
     edOperDate: TcxDateEdit;
     cxLabel4: TcxLabel;
+    ContractName: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    isErrContract: TcxGridDBColumn;
   private
     { Private declarations }
   public
