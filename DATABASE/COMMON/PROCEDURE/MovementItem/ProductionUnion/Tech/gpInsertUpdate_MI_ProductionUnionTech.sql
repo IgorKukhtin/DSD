@@ -266,7 +266,7 @@ BEGIN
                                                                   , inUserId             := vbUserId
                                                                    );
    -- сохранили св-во <на основании дозаявки>
-   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_WeightMain(), tmp.MovementItemId, CASE WHEN MIFloat_AmountSecond.ValueData > 0 THEN TRUE ELSE FALSE END)
+   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_OrderSecond(), tmp.MovementItemId, CASE WHEN MIFloat_AmountSecond.ValueData > 0 THEN TRUE ELSE FALSE END)
    FROM (SELECT ioMovementItemId AS MovementItemId) AS tmp
         LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                     ON MIFloat_AmountSecond.MovementItemId = inMovementItemId_order
