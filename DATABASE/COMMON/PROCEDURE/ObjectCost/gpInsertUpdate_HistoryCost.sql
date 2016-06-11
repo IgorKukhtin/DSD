@@ -811,7 +811,6 @@ end if;
      END IF;
 
 
-/*
         -- !!!бпелеммн!!!
         UPDATE HistoryCost SET Price          = 1.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
                              , Price_external = 1.1234 * CASE WHEN HistoryCost.Price < 0 THEN -1 ELSE 1 END
@@ -831,10 +830,10 @@ end if;
                                                                                                              )
                                                                    )
         WHERE HistoryCost.StartDate = inStartDate
-          AND ABS (HistoryCost.Price) >  1000
+          AND ABS (HistoryCost.Price) >  10000
           AND HistoryCost.ContainerId = Container.Id
        ;        
-*/
+
         -- !!!бпелеммн-1!!!
         /*UPDATE MovementItemContainer SET ContainerIntId_analyzer = ContainerId
         WHERE MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -1063,10 +1062,10 @@ from Container
      left join ContainerLinkObject as clo2 on clo2.ContainerId = Container.Id and clo2.DescId = zc_ContainerLinkObject_Goods()                      left join Object as Object2 on Object2.Id = clo2.ObjectId
      left join ContainerLinkObject as clo3 on clo3.ContainerId = Container.Id and clo3.DescId = zc_ContainerLinkObject_GoodsKind()                  left join Object as Object3 on Object3.Id = clo3.ObjectId
      left join ContainerLinkObject as clo4 on clo4.ContainerId = Container.Id and clo4.DescId = zc_ContainerLinkObject_PartionGoods()               left join Object as Object4 on Object4.Id = clo4.ObjectId
-where  Container.Id in (SELECT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.04.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 and CalcSumm > 1000000)
+where  Container.Id in (SELECT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.06.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 and CalcSumm > 1000000)
 order by 3, 5
 SELECT * 
-FROM HistoryCost WHERE ('01.04.2016' BETWEEN StartDate AND EndDate)
+FROM HistoryCost WHERE ('01.06.2016' BETWEEN StartDate AND EndDate)
 and abs (Price) = 1.1234
 and CalcSumm > 1000000
 order by Price desc
