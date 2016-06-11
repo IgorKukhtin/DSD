@@ -51,6 +51,7 @@ BEGIN
 
     -- Результат
     CREATE TEMP TABLE tmpUnit (UnitId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpPrice (PriceId Integer, GoodsId Integer, UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemeins (objectid Integer, Remains tfloat, RemainsEnd tfloat, UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (MCSValue tfloat, GoodsId Integer, UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpData (Id Integer, Price TFloat, MCSValue TFloat
@@ -59,6 +60,7 @@ BEGIN
                              , StartDateEnd TDateTime
                              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
                              , GoodsGroupName TVarChar, NDSKindName TVarChar
+                             , isClose Boolean, isTOP Boolean, isFirst Boolean, isSecond Boolean
                              , DateChange TDateTime, MCSDateChange TDateTime
                              , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
                              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
@@ -68,12 +70,18 @@ BEGIN
                              , RemainsNotMCS TFloat, SummaNotMCS TFloat
                              , PriceEnd TFloat
                              , RemainsEnd TFloat, SummaRemainsEnd TFloat
+                             , RemainsNotMCSEnd TFloat, SummaNotMCSEnd TFloat
                              , UnitId Integer) ON COMMIT DROP;
     
-        INSERT INTO tmpUnit (UnitId)
-                    SELECT Object_Unit.Id AS UnitId
-                    FROM Object AS Object_Unit
-                    WHERE Object_Unit.DescId = zc_Object_Unit();
+        INSERT INTO tmpPrice (PriceId, GoodsId, UnitId)
+                    SELECT Price_Goods.ObjectId      AS PriceId
+                         , Price_Goods.ChildObjectId AS GoodsId
+                         , ObjectLink_Price_Unit.ChildObjectId AS UnitId
+                    FROM ObjectLink AS Price_Goods
+                        LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
+                                             ON ObjectLink_Price_Unit.ObjectId = Price_Goods.ObjectId
+                                            AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                    WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods();
                     
         INSERT INTO tmpRemeins (objectid, Remains, RemainsEnd, UnitId)
                         SELECT tmp.objectid,
@@ -111,43 +119,85 @@ BEGIN
 */
        
 
-        INSERT INTO tmpData (Id--, Price
+        INSERT INTO tmpData ( Price
                              , MCSValue 
                              , MCSPeriod, MCSDay
-                             --, StartDate, StartDateEnd
+                             , StartDate, StartDateEnd
                              , GoodsId, GoodsCode, GoodsName
                              , GoodsGroupName, NDSKindName
+                             , isClose, isTOP, isFirst, isSecond 
                              
-                             , Remains-- SummaRemains
-                           --  , RemainsNotMCS-- SummaNotMCS
-                             , RemainsEnd, Unitid)
+                             , Remains, SummaRemains
+                             , RemainsNotMCS, SummaNotMCS
+                             , RemainsEnd
+                             , SummaRemainsEnd
+                             , RemainsNotMCSEnd, SummaNotMCSEnd
+                             , Unitid)
                              
              SELECT
-                 0 --   Object_Price_View.Id                            AS Id
-               , COALESCE(tmpMCS.MCSValue,0)                     AS MCSValue
+                 COALESCE (ObjectHistoryFloat_Price.ValueData, 0)  AS Price
+               , COALESCE(tmpMCS.MCSValue,0)                       AS MCSValue
                , inPeriod                AS MCSPeriod
                , inDay                   AS MCSDay
-               , Object_Goods_View.id                            AS GoodsId
-               , Object_Goods_View.GoodsCodeInt                  AS GoodsCode
-               , Object_Goods_View.GoodsName                     AS GoodsName
-               , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
-               , Object_Goods_View.NDSKindName                   AS NDSKindName
-         
+               , COALESCE (ObjectHistory_Price.StartDate, NULL)    AS StartDate
+               , COALESCE (ObjectHistory_PriceEnd.StartDate, NULL) AS StartDateEnd
+               , Object_Goods_View.id                              AS GoodsId
+               , Object_Goods_View.GoodsCodeInt                    AS GoodsCode
+               , Object_Goods_View.GoodsName                       AS GoodsName
+               , Object_Goods_View.GoodsGroupName                  AS GoodsGroupName
+               , Object_Goods_View.NDSKindName                     AS NDSKindName
+
+               , Object_Goods_View.isClose
+               , Object_Goods_View.isTOP          
+               , Object_Goods_View.isFirst
+               , Object_Goods_View.isSecond
+
                , Object_Remains.Remains                          AS Remains
+               , (Object_Remains.Remains * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) AS SummaRemains
+               
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE(tmpMCS.MCSValue,0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE(tmpMCS.MCSValue,0) ELSE 0 END :: TFloat AS RemainsNotMCS
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE(tmpMCS.MCSValue,0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE(tmpMCS.MCSValue,0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END :: TFloat AS SummaNotMCS
+               
                , Object_Remains.RemainsEnd                       AS RemainsEnd
+
+               , (Object_Remains.RemainsEnd * COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0)) ::TFloat AS SummaRemainsEnd
+               , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE(tmpMCS.MCSValue,0) THEN COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE(tmpMCS.MCSValue,0) ELSE 0 END :: TFloat AS RemainsNotMCSEnd
+               , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE(tmpMCS.MCSValue,0) THEN (COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE(tmpMCS.MCSValue,0)) * COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0) ELSE 0 END :: TFloat AS SummaNotMCSEnd
+              
                , Object_Remains.unitid 
-            FROM               
-            Object_Goods_View
+               
+            FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
                                      AND ObjectLink.ChildObjectId = vbObjectId
-                                                              
+
+                LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_Goods_View.Id 
+                                                               
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
                                            ON Object_Remains.ObjectId = Object_Goods_View.Id
-                                      --    AND Object_Remains.unitid = Object_Price_View.unitid
-                      
+                                          AND Object_Remains.UnitId = tmpPrice.UnitId
+
                 LEFT JOIN tmpMCS ON tmpMCS.GoodsId = Object_Goods_View.Id 
                                 AND tmpMCS.UnitId = Object_Remains.unitid
-                 
+                                
+                -- получаем значения цены и НТЗ из истории значений на начало дня                                                          
+                LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                                        ON ObjectHistory_Price.ObjectId = tmpPrice.PriceId
+                                       AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                       AND DATE_TRUNC ('DAY', inStartDate) >= ObjectHistory_Price.StartDate AND DATE_TRUNC ('DAY', inStartDate) < ObjectHistory_Price.EndDate
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
+                                             ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                            AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                                                                            
+                -- получаем значения цены и НТЗ из истории значений на конец дня (на сл.день 00:00)
+                LEFT JOIN ObjectHistory AS ObjectHistory_PriceEnd
+                                        ON ObjectHistory_PriceEnd.ObjectId = tmpPrice.PriceId
+
+                                       AND ObjectHistory_PriceEnd.DescId = zc_ObjectHistory_Price()
+                                        AND DATE_TRUNC ('DAY', inStartDate) +interval '1 day' >= ObjectHistory_PriceEnd.StartDate AND DATE_TRUNC ('DAY', inStartDate) +interval '1 day' < ObjectHistory_PriceEnd.EndDate
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceEnd
+                                             ON ObjectHistoryFloat_PriceEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
+                                            AND ObjectHistoryFloat_PriceEnd.DescId = zc_ObjectHistoryFloat_Price_Value()
+ 
             WHERE Object_Goods_View.isErased = False
             ORDER BY GoodsGroupName, GoodsName;
 
@@ -159,20 +209,31 @@ BEGIN
                , tmpData.MCSDay          :: TFLOAT     
                , tmpData.StartDate       :: TDateTime 
                , tmpData.StartDateEnd    :: TDateTime 
+               , tmpData.Price           :: TFloat
+               , tmpData.StartDate       :: TDateTime
+               , tmpData.Remains         :: TFloat       
+               , tmpData.SummaRemains    :: TFloat       
+               , tmpData.RemainsNotMCS   :: TFloat
+               , tmpData.SummaNotMCS     :: TFloat
                
-               , tmpData.Remains         :: TFloat                AS Remains
-               , tmpData.SummaRemains    :: TFloat                AS SummaRemains
 
-               , tmpData.RemainsEnd      :: TFloat                AS RemainsEnd
-               , Object_Unit.ValueDAta   :: TVarChar              AS UnitName 
-               , tmpData.GoodsId         ::integer                
-               , tmpData.GoodsCode       ::integer                AS GoodsCode
-               , tmpData.GoodsName       ::TVarChar               AS GoodsName
-               , tmpData.GoodsGroupName  ::TVarChar               AS GoodsGroupName
-               , tmpData.NDSKindName     ::TVarChar               AS NDSKindName
+               , tmpData.RemainsEnd      :: TFloat          
+               , tmpData.SummaRemainsEnd    :: TFloat       
+               , tmpData.RemainsNotMCSEnd   :: TFloat
+               , tmpData.SummaNotMCSEnd     :: TFloat
+
+               , tmpData.GoodsId         :: integer                
+               , tmpData.GoodsCode       :: integer    
+               , tmpData.GoodsName       :: TVarChar   
+               , tmpData.GoodsGroupName  :: TVarChar   
+               , tmpData.NDSKindName     :: TVarChar   
+               , tmpData.isClose         :: Boolean
+               , tmpData.isTOP           :: Boolean
+               , tmpData.isFirst         :: Boolean
+               , tmpData.isSecond        :: Boolean
              
      FROM tmpData
-     LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
+     --LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
      WHERE tmpData.UnitId = inUnitId
           
           ;
@@ -182,23 +243,34 @@ BEGIN
 
      OPEN Cursor2 FOR
 
-     SELECT      tmpData.MCSValue  ::TFLOAT     
-               , tmpData.MCSPeriod ::TFLOAT     
-               , tmpData.MCSDay    ::TFLOAT     
-               , tmpData.StartDate :: TDateTime 
-               , tmpData.StartDateEnd :: TDateTime AS StartDateEnd
+       SELECT    Object_Unit.ValueDAta   :: TVarChar    AS UnitName 
+               , tmpData.MCSValue        :: TFLOAT     
+               , tmpData.MCSPeriod       :: TFLOAT     
+               , tmpData.MCSDay          :: TFLOAT     
+               , tmpData.StartDate       :: TDateTime 
+               , tmpData.StartDateEnd    :: TDateTime 
+               , tmpData.Price           :: TFloat
+               , tmpData.StartDate       :: TDateTime
+               , tmpData.Remains         :: TFloat       
+               , tmpData.SummaRemains    :: TFloat       
+               , tmpData.RemainsNotMCS   :: TFloat
+               , tmpData.SummaNotMCS     :: TFloat
                
-               , tmpData.Remains  :: TFloat               AS Remains
-               , tmpData.SummaRemains ::TFloat AS SummaRemains
+               , tmpData.RemainsEnd      :: TFloat          
+               , tmpData.SummaRemainsEnd    :: TFloat       
+               , tmpData.RemainsNotMCSEnd   :: TFloat
+               , tmpData.SummaNotMCSEnd     :: TFloat
 
-               , tmpData.RemainsEnd :: TFloat      AS RemainsEnd
-               --, tmpData.Unitid  
-               , Object_Unit.ValueDAta   ::TVarChar                AS UnitName 
-               , tmpData.GoodsId  ::integer                
-          , tmpData.GoodsCode      ::integer                 AS GoodsCode
-          , tmpData.GoodsName      ::TVarChar                AS GoodsName
-          , tmpData.GoodsGroupName ::TVarChar                AS GoodsGroupName
-          , tmpData.NDSKindName    ::TVarChar                AS NDSKindName
+               , tmpData.GoodsId         :: integer                
+               , tmpData.GoodsCode       :: integer       
+               , tmpData.GoodsName       :: TVarChar      
+               , tmpData.GoodsGroupName  :: TVarChar      
+               , tmpData.NDSKindName     :: TVarChar      
+               , tmpData.isClose         :: Boolean
+               , tmpData.isTOP           :: Boolean
+               , tmpData.isFirst         :: Boolean
+               , tmpData.isSecond        :: Boolean
+                  
      FROM tmpData
      LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
      WHERE tmpData.UnitId <> inUnitId
