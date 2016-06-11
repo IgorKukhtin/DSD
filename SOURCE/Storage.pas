@@ -352,16 +352,7 @@ begin
             Begin
               if LastAttempt then
               Begin
-                if ANeedShowException then
-                Begin
-                  if gc_allowLocalConnection AND not gc_User.Local then
-                  Begin
-                    gc_User.Local := True;
-                    //ShowMessage('Программа переведена в режим автономной работы.'+#13+
-                    //            'Перезайдите в программу после восстановления связи с сервером.')
-                  end;
-                  raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.'+#10+#13+E.Message);
-                End;
+                raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.'+#10+#13+E.Message);
               End
               else
               Begin
