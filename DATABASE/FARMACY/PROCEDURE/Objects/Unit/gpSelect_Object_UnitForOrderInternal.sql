@@ -29,6 +29,10 @@ BEGIN
     WITH 
          tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+                          INNER JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                                ON ObjectLink_Unit_Parent.ObjectId = ObjectLink_Unit_Juridical.ObjectId
+                                               AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                                               AND ObjectLink_Unit_Parent.ChildObjectId > 0 -- исключили "группы"
                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
@@ -62,10 +66,11 @@ BEGIN
            END::Boolean                              as ExistsOrderInternal
          , OrderInternal.MovementId
     FROM tmpUnit
-        LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = tmpUnit.Unitid
+        -- LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = tmpUnit.Unitid
         LEFT OUTER JOIN OrderInternal ON OrderInternal.UnitId = tmpUnit.Unitid
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.Unitid
-    WHERE Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitUnitId() ;         
+    -- WHERE Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitUnitId()
+    ;
             
 END;
 $BODY$
