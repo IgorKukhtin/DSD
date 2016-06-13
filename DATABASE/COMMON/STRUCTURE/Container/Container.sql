@@ -14,6 +14,11 @@ CREATE TABLE Container(
    Amount                TFloat  NOT NULL DEFAULT 0,
    ParentId              Integer NULL,  
 
+   KeyValue              TVarChar,
+   MasterKeyValue        BigInt,
+   ChildKeyValue         BigInt,
+   WhereObjectId         Integer,
+   
    CONSTRAINT fk_Container_DescId_ContainerDesc FOREIGN KEY(DescId) REFERENCES ContainerDesc(Id),
    CONSTRAINT fk_Container_ObjectId_Object FOREIGN KEY(ObjectId) REFERENCES Object(Id),
    CONSTRAINT fk_Container_ParentId_Container FOREIGN KEY(ParentId) REFERENCES Container(Id)
