@@ -5,8 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_UnitForFarmacyCash(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForFarmacyCash(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UnitName TVarChar
+RETURNS TABLE (Id Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
              , UserFarmacyCashId Integer, UserFarmacyCashName TVarChar
              , FarmacyCashAmount TFloat, FarmacyCashDate TDateTime
 ) AS
@@ -22,6 +23,8 @@ BEGIN
              , Object_Unit.ValueData                AS Name
              , COALESCE(Object_Parent.Id,0)         AS ParentId
              , Object_Parent.ValueData              AS ParentName
+             , Object_Juridical.Id                  AS JuridicalId
+             , Object_Juridical.ValueData           AS JuridicalName
              , Object_UserFarmacyCash.Id            AS UserFarmacyCashId
              , Object_UserFarmacyCash.ValueData     AS UserFarmacyCashName
 
@@ -30,9 +33,10 @@ BEGIN
 
         FROM Object AS Object_Unit
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+        INNER JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                            AND ObjectLink_Unit_Parent.ChildObjectId > 0 -- исключили "группы"
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
         
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -70,4 +74,4 @@ ALTER FUNCTION gpSelect_Object_UnitForFarmacyCash(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_UnitForFarmacyCash ('2')
+ --SELECT * FROM gpSelect_Object_UnitForFarmacyCash ('2')
