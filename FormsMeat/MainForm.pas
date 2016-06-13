@@ -696,6 +696,8 @@ type
     N107: TMenuItem;
     actReport_CheckAmount_ReturnInToSale: TdsdOpenForm;
     N108: TMenuItem;
+    actDocumentKind: TdsdOpenForm;
+    N109: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
