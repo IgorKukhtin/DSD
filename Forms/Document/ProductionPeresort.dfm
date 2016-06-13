@@ -3,7 +3,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   ClientHeight = 499
   ClientWidth = 1128
   ExplicitWidth = 1144
-  ExplicitHeight = 534
+  ExplicitHeight = 537
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -374,6 +374,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ProductionUnion'
       ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -404,12 +405,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindChildId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -417,6 +420,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindChildName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -428,12 +432,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -441,6 +447,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -452,12 +459,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsChildId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -465,12 +474,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Component = MasterCDS
           ComponentItem = 'GoodsChildName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsChildCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -482,18 +493,21 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       FormName = 'TPartionGoodsChoiceForm'
       FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inGoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inUnitId'
           Value = ''
           Component = GuidesFrom
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Key'
@@ -501,6 +515,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Component = MasterCDS
           ComponentItem = 'PartionGoodsId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -509,6 +524,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price'
@@ -517,6 +533,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           ComponentItem = 'Price'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StorageName'
@@ -525,14 +542,16 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           ComponentItem = 'StorageName_Partion'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDatePartion'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -554,6 +573,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -561,6 +581,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -568,16 +589,19 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -678,6 +702,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
     Left = 830
@@ -699,12 +724,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -712,24 +739,28 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSend'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSendTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSendBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 496
@@ -752,25 +783,29 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -778,6 +813,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -785,12 +821,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -798,12 +836,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -811,91 +851,110 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -909,6 +968,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -916,6 +976,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -923,6 +984,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -930,6 +992,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -937,12 +1000,20 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPeresort'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1023,6 +1094,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1030,6 +1102,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1037,6 +1110,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountOut'
@@ -1045,6 +1119,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'AmountOut'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -1053,6 +1128,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
@@ -1061,6 +1137,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1069,6 +1146,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1076,6 +1154,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioGoodsChildId'
@@ -1083,6 +1162,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsChildId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsChild'
@@ -1091,6 +1171,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'PartionGoodsChild'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDateChild'
@@ -1099,6 +1180,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'PartionGoodsDateChild'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindChildId'
@@ -1106,6 +1188,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindChildId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outGoodsChildName'
@@ -1113,12 +1196,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsChildName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outGoodsChilCode'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsChildCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OutAmountin'
@@ -1126,6 +1211,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'Amountin'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1137,6 +1223,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Name = 'ioId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1144,6 +1231,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1151,12 +1239,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountOut'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -1165,6 +1255,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
@@ -1173,6 +1264,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1181,6 +1273,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1188,6 +1281,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioGoodsChildId'
@@ -1195,6 +1289,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsChildId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsChild'
@@ -1203,6 +1298,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'PartionGoodsChild'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDateChild'
@@ -1211,6 +1307,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'PartionGoodsDateChild'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindChildId'
@@ -1218,6 +1315,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindChildId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outGoodsChildName'
@@ -1225,12 +1323,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsChildName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outGoodsChilCode'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsChildCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountIn'
@@ -1238,6 +1338,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'Amountin'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 272
@@ -1248,6 +1349,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     ComponentList = <
       item
       end>
@@ -1284,6 +1386,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -1294,6 +1397,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     LookupControl = edFrom
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1303,6 +1407,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1311,6 +1416,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 16
@@ -1320,6 +1426,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     LookupControl = edTo
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1329,6 +1436,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1337,6 +1445,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 536
     Top = 8
