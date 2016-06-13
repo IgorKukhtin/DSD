@@ -42,7 +42,6 @@ type
     cxIsClose: TcxGridDBColumn;
     cxisFirst: TcxGridDBColumn;
     cxisSecond: TcxGridDBColumn;
-    cxisPromo: TcxGridDBColumn;
     cxPrice: TcxGridDBColumn;
     cxMCSValue: TcxGridDBColumn;
     cxRemains: TcxGridDBColumn;
@@ -50,7 +49,6 @@ type
     cxRemainsNotMCS: TcxGridDBColumn;
     cxSummaNotMCS: TcxGridDBColumn;
     cxMCSIsClose: TcxGridDBColumn;
-    cxMCSIsCloseDateChange: TcxGridDBColumn;
     cxisErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     UnitName: TcxGridDBColumn;

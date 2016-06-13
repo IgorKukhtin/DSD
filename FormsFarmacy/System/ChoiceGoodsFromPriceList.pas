@@ -12,7 +12,8 @@ uses
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxPC, cxContainer, cxTextEdit,
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
-  dxBarBuiltInMenu, cxNavigator, Vcl.StdCtrls, cxButtons;
+  dxBarBuiltInMenu, cxNavigator, Vcl.StdCtrls, cxButtons, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TChoiceGoodsFromPriceListForm = class(TAncestorEnumForm)
@@ -52,6 +53,11 @@ type
     cxLabel4: TcxLabel;
     actClearFilter: TMultiAction;
     btnClearFilter: TcxButton;
+    cxLabel5: TcxLabel;
+    edCodeSearch: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    actRefreshSearch3: TdsdExecStoredProc;
+    colPriceWithNDS: TcxGridDBColumn;
   private
     { Private declarations }
   public
