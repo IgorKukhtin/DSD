@@ -421,7 +421,8 @@ uses
   ReportMovementCheckMiddle in '..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas' {ReportMovementCheckMiddleForm: TParentForm},
   Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   Report_RemainsOverGoods in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas' {Report_RemainsOverGoodsForm: TParentForm},
-  Report_RemainsOverGoodsDialog in '..\..\FormsFarmacy\Report\Report_RemainsOverGoodsDialog.pas' {Report_RemainsOverGoodsDialogForm: TParentForm};
+  Report_RemainsOverGoodsDialog in '..\..\FormsFarmacy\Report\Report_RemainsOverGoodsDialog.pas' {Report_RemainsOverGoodsDialogForm: TParentForm},
+  MovementItemProtocol in '..\..\Forms\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

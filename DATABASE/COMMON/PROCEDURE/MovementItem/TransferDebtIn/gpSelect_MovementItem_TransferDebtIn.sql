@@ -1,20 +1,21 @@
 -- Function: gpSelect_MovementItem_TransferDebtIn()
 
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_TransferDebtIn (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
-
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_TransferDebtIn (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TransferDebtIn(
     IN inMovementId  Integer      , -- ключ Документа
     IN inPriceListId Integer      , -- ключ Прайс листа
     IN inOperDate    TDateTime    , -- Дата документа
     IN inShowAll     Boolean      , --
-    IN inisErased    Boolean      , --
+    IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, Price TFloat, CountForPrice TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
-             , AmountSumm TFloat, isErased Boolean
+             , AmountSumm TFloat
+             , AmountChild TFloat, AmountChildDiff TFloat
+             , isErased Boolean
              )
 AS
 $BODY$
@@ -36,8 +37,17 @@ BEGIN
                               WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_1107() AND UserId = vbUserId)
                              )
+     , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
+                           , SUM (MovementItem.Amount) AS Amount
+                      FROM MovementItem
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                      )
        SELECT
              0                          AS Id
+           , 0 :: Integer               AS LineNum
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
@@ -48,6 +58,10 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
            , CAST (NULL AS TFloat)      AS AmountSumm
+
+           , 0 :: TFloat AS AmountChild
+           , 0 :: TFloat AS AmountChildDiff
+
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id           AS GoodsId
@@ -103,6 +117,7 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id				AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
            , Object_Goods.Id          			AS GoodsId
            , Object_Goods.ObjectCode  			AS GoodsCode
            , Object_Goods.ValueData   			AS GoodsName
@@ -115,9 +130,13 @@ BEGIN
            , Object_Measure.ValueData                   AS MeasureName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                        THEN CAST ( (COALESCE (MovementItem.Amount, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat) 				AS AmountSumm
+                        THEN CAST ( MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                        ELSE CAST ( MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                   END AS TFloat) 			AS AmountSumm
+
+           , tmpMIChild.Amount       :: TFloat   AS AmountChild
+           , (MovementItem.Amount - COALESCE (tmpMIChild.Amount, 0)) :: TFloat   AS AmountChildDiff
+
            , MovementItem.isErased				AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -141,13 +160,23 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = MovementItem.Id
             ;
 
      ELSE
 
      RETURN QUERY
+  WITH tmpMIChild AS (SELECT MovementItem.ParentId    AS MI_ParentId
+                           , SUM(MovementItem.Amount) AS Amount
+                      FROM MovementItem
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                      )
        SELECT
              MovementItem.Id				AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
            , Object_Goods.Id          			AS GoodsId
            , Object_Goods.ObjectCode  			AS GoodsCode
            , Object_Goods.ValueData   			AS GoodsName
@@ -160,9 +189,13 @@ BEGIN
            , Object_Measure.ValueData                   AS MeasureName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                           THEN CAST ( MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                        ELSE CAST ( MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)		AS AmountSumm
+
+           , tmpMIChild.Amount       :: TFloat   AS AmountChild
+           , (MovementItem.Amount - COALESCE (tmpMIChild.Amount, 0)) :: TFloat   AS AmountChildDiff
+
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -188,6 +221,7 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = MovementItem.Id
             ;
      END IF;
 
@@ -205,4 +239,4 @@ ALTER FUNCTION gpSelect_MovementItem_TransferDebtIn (Integer, Integer, TDateTime
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_TransferDebtIn (inMovementId:= 25173, inPriceListId:= 18840, inOperDate:='01.01.2014'::TDateTime, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_TransferDebtIn (inMovementId:= 25173, inPriceListId:= 18840, inOperDate:='01.01.2014'::TDateTime, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')

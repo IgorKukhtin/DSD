@@ -1,13 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
@@ -74,7 +66,11 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), ioId, inInvNumberBranch);
 
     -- 
-    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), ioId, inOperDateBranch);
+    IF inOperDateBranch IS NOT NULL
+    THEN
+        -- 
+        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), ioId, inOperDateBranch);
+    END IF;
 
 END;
 $BODY$

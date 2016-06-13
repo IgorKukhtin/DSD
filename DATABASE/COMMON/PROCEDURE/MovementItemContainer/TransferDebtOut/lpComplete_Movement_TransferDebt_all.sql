@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_TransferDebt_all (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_TransferDebt_all(
     IN inMovementId        Integer               , -- ключ Документа
+   OUT outMessageText      Text                  ,
     IN inUserId            Integer                 -- Пользователь
 )                              
-RETURNS VOID
+RETURNS Text
 AS
 $BODY$
   DECLARE vbOperSumm_Partner TFloat;
@@ -238,7 +239,7 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , AccountId_From, AccountId_To, ContainerId_From, ContainerId_To
                          , ContainerId_Summ, GoodsId, GoodsKindId
-                         , tmpOperSumm_Partner, OperSumm_Partner
+                         , OperCount, Price_original, tmpOperSumm_Partner, OperSumm_Partner
                          , AccountId_Summ, InfoMoneyId_Summ)
         SELECT tmpMI.MovementItemId
              , 0 AS AccountId_From    -- сформируем позже
@@ -248,6 +249,8 @@ BEGIN
              , 0 AS ContainerId_Summ  -- сформируем позже
              , tmpMI.GoodsId
              , tmpMI.GoodsKindId
+             , tmpMI.OperCount
+             , tmpMI.Price_original
 
               -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
             , tmpMI.tmpOperSumm_Partner AS tmpOperSumm_Partner
@@ -278,6 +281,8 @@ BEGIN
         FROM (SELECT tmpMI.MovementItemId
                    , tmpMI.GoodsId
                    , tmpMI.GoodsKindId
+                   , tmpMI.OperCount
+                   , tmpMI.Price_original
 
                      -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
                    , CASE WHEN tmpMI.CountForPrice <> 0
@@ -288,8 +293,8 @@ BEGIN
                      -- Статьи назначения
                    , COALESCE (ObjectLink_Goods_InfoMoney.ObjectId, 0) AS InfoMoneyId
               FROM 
-             (SELECT (MovementItem.Id) AS MovementItemId
-                   , MovementItem.ObjectId AS GoodsId
+             (SELECT (MovementItem.Id)                             AS MovementItemId
+                   , MovementItem.ObjectId                         AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
 
                    , SUM (MovementItem.Amount) AS OperCount
@@ -299,6 +304,7 @@ BEGIN
                                THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
+                   , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
               FROM Movement
@@ -328,6 +334,22 @@ BEGIN
                                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              ) AS tmpMI
         ;
+
+
+     -- !!!запуск новой схемы - с привязкой к продажам!!!
+     IF zc_isReturnIn_bySale() = TRUE AND vbMovementDescId = zc_Movement_TransferDebtIn()
+     THEN
+         outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
+                                                        , inUserId        := inUserId
+                                                         );
+         -- !!!Выход если ошибка!!!
+         IF outMessageText <> '' AND outMessageText <> '-1' THEN RETURN; END IF;
+
+         -- !!!с такой ошибкой - все равно будем проводить!!!
+         IF outMessageText = '-1' THEN outMessageText:= 'Важно.У пользователя <%> нет прав формировать привязку накладной <%> к накладной <Продажи>.', lfGet_Object_ValueData (inUserId), (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = vbMovementDescId); END IF;
+
+     END IF;
+     -- !!!временно!!!
 
 
      -- Расчет Итоговой суммы по Контрагенту
@@ -638,6 +660,9 @@ BEGIN
       ;
 
 
+     -- !!!Проводки для отчета больше не нужны!!!
+     IF 1=0 THEN
+
      -- 4.1. формируются Проводки для отчета (Счета: Контрагент (От кого) <-> Транзит + виртуальный склад
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
                                               , inMovementId         := inMovementId
@@ -698,6 +723,8 @@ BEGIN
            FROM _tmpItem
           ) AS tmpMIReport;
 
+     END IF; -- if 1=0 -- !!!Проводки для отчета больше не нужны!!!
+
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
@@ -728,6 +755,21 @@ BEGIN
                                                        , inStartDateTax          := NULL
                                                        , inUserId                := inUserId
                                                         );
+     END IF;
+
+     -- !!!6.0.5. синхронизируем zc_MI_Master и zc_MI_Child!!!
+     IF vbMovementDescId = zc_Movement_TransferDebtIn()
+     THEN
+         UPDATE MovementItem SET ObjectId = tmp.ObjectId
+                               , isErased = tmp.isErased
+         FROM (SELECT MI_Master.Id, MI_Master.ObjectId, MI_Master.isErased FROM MovementItem AS MI_Master WHERE MI_Master.MovementId = inMovementId AND MI_Master.DescId = zc_MI_Master()
+              ) AS tmp
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     = zc_MI_Child()
+           AND MovementItem.ParentId   = tmp.Id
+           AND (MovementItem.ObjectId  <> tmp.ObjectId
+             OR MovementItem.isErased  <> tmp.isErased)
+        ;
      END IF;
 
 END;

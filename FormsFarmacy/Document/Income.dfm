@@ -3,7 +3,7 @@
   ClientHeight = 516
   ClientWidth = 946
   ExplicitWidth = 962
-  ExplicitHeight = 554
+  ExplicitHeight = 551
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1126,7 +1126,19 @@
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbPrint_Bill: TdxBarButton [5]

@@ -69,6 +69,7 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     N4: TMenuItem;
+    MovementDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

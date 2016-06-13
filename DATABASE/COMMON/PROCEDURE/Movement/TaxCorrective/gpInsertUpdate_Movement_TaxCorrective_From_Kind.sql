@@ -277,7 +277,7 @@ BEGIN
 
 
 
-     IF (zc_isReturnIn_bySale() = TRUE OR vbUserId = 5) AND vbMovementDescId = zc_Movement_ReturnIn()
+     IF (zc_isReturnIn_bySale() = TRUE OR vbUserId = 5) AND vbMovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
      THEN
           -- в этом случае привязка - zc_MI_Child
           INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, CountForPrice)

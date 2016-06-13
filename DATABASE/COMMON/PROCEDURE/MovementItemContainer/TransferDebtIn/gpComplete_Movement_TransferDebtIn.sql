@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_TransferDebtIn (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_TransferDebtIn(
     IN inMovementId        Integer              , -- ключ ƒокумента
+   OUT outMessageText      Text                 ,
     IN inSession           TVarChar               -- сесси€ пользовател€
 )                              
- RETURNS VOID
+RETURNS Text
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -18,8 +19,8 @@ BEGIN
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
      PERFORM lpComplete_Movement_TransferDebt_all_CreateTemp();
      -- проводим ƒокумент
-     PERFORM lpComplete_Movement_TransferDebt_all (inMovementId := inMovementId
-                                                 , inUserId     := vbUserId);
+     outMessageText:= lpComplete_Movement_TransferDebt_all (inMovementId := inMovementId
+                                                          , inUserId     := vbUserId);
 
 END;
 $BODY$

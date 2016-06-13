@@ -149,6 +149,17 @@ type
     cxGridLevel1: TcxGridLevel;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    childDescName_Sale: TcxGridDBColumn;
+    spUpdateAuto: TdsdStoredProc;
+    actUpdateAuto: TdsdExecStoredProc;
+    actOpenReportCheckAmountForm: TdsdOpenForm;
+    actOpenReportCheckForm: TdsdOpenForm;
+    bbOpenReportCheckAmountForm: TdxBarButton;
+    bbOpenReportCheckForm: TdxBarButton;
+    bbUpdateAuto: TdxBarButton;
+    colAmountChild: TcxGridDBColumn;
+    colAmountChildDiff: TcxGridDBColumn;
+    LineNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

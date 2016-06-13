@@ -119,6 +119,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
@@ -321,7 +322,13 @@ BEGIN
         AND MovementItem.PartionGoods = inPartitionGoods
         AND MovementItem.ExpirationDate = inExpirationDate;
   
-     vbMovementItemId := lpInsertUpdate_MovementItem_Income(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
+
+     -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem_Income (vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
+
+     -- сохранили
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
 
      -- Срок годности заодно влепим
@@ -359,7 +366,8 @@ BEGIN
 
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

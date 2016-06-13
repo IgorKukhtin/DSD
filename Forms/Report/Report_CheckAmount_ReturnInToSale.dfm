@@ -4,8 +4,9 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -61
   ExplicitWidth = 1093
-  ExplicitHeight = 521
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -102,7 +103,14 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1086#1096#1080#1073#1082#1072' '#1076#1072'/'#1085#1077#1090' - '#1077#1089#1083#1080' '#1080#1090#1086#1075#1086' '#1074#1086#1079#1074#1088#1072#1090' > '#1082#1086#1083' '#1087#1088#1086#1076#1072#1078#1072
-            Width = 83
+            Width = 55
+          end
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
@@ -544,8 +552,8 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1055#1088#1086#1076#1072#1078#1080'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1055#1088#1086#1076#1072#1078#1080'>'
       ImageIndex = 25
       FormName = 'TReport_Goods_ReturnInBySaleForm'
       FormNameParam.Value = 'TReport_Goods_ReturnInBySaleForm'

@@ -4,22 +4,28 @@ DROP FUNCTION IF EXISTS gpUpdate_Status_TransferDebtOut (Integer, Integer, TVarC
 
 CREATE OR REPLACE FUNCTION gpUpdate_Status_TransferDebtOut(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
+ INOUT ioStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
+   OUT outMessageText        Text      ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS RECORD
+AS
 $BODY$
 BEGIN
-     CASE inStatusCode
+
+     CASE ioStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_TransferDebtOut (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_TransferDebtOut (inMovementId, inSession);
+            outMessageText:= (SELECT tmp.outMessageText FROM gpComplete_Movement_TransferDebtOut (inMovementId, inSession) AS tmp);
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_TransferDebtOut (inMovementId, inSession);
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;
+
+     -- Вернули статус (вдруг он не изменился)
+     ioStatusCode:= (SELECT Object.ObjectCode FROM Movement INNER JOIN Object ON Object.Id = Movement.StatusId WHERE Movement.Id = inMovementId);
 
 END;
 $BODY$

@@ -3,7 +3,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   ClientHeight = 364
   ClientWidth = 930
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -140
+  ExplicitLeft = -124
   ExplicitWidth = 946
   ExplicitHeight = 399
   PixelsPerInch = 96
@@ -118,7 +118,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -154,6 +153,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 42
           end
           object colAmount: TcxGridDBColumn
@@ -180,6 +180,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object JuridicalName: TcxGridDBColumn
@@ -187,6 +188,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object PriceWithOutVAT: TcxGridDBColumn
@@ -196,6 +198,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colPriceWithVAT: TcxGridDBColumn
@@ -205,6 +208,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 78
           end
           object colPrice: TcxGridDBColumn
@@ -214,6 +218,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 79
           end
           object colPriceSale: TcxGridDBColumn
@@ -223,6 +228,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
           end
           object colSummaWithOutVAT: TcxGridDBColumn
@@ -232,6 +238,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
           object colSummaWithVAT: TcxGridDBColumn
@@ -241,6 +248,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
           object colSumma: TcxGridDBColumn
@@ -250,6 +258,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 102
           end
           object colSummaSale: TcxGridDBColumn
@@ -259,6 +268,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object PartionDescName: TcxGridDBColumn
@@ -266,6 +276,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'PartionDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object PartionInvNumber: TcxGridDBColumn
@@ -273,6 +284,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'PartionInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object PartionOperDate: TcxGridDBColumn
@@ -280,6 +292,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'PartionOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object PartionPriceDescName: TcxGridDBColumn
@@ -287,6 +300,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'PartionPriceDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object PartionPriceInvNumber: TcxGridDBColumn
@@ -294,6 +308,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'PartionPriceInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object PartionPriceOperDate: TcxGridDBColumn
@@ -301,6 +316,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'PartionPriceOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object UnitName: TcxGridDBColumn
@@ -316,6 +332,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'OurJuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object MP_JuridicalName: TcxGridDBColumn
@@ -351,6 +368,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object MP_Summa: TcxGridDBColumn
@@ -370,7 +388,23 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
+          end
+          object ContainerId: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1082#1083#1102#1095')'
+            DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end

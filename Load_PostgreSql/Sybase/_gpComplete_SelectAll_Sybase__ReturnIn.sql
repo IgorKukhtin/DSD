@@ -105,7 +105,7 @@ BEGIN
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           INNER JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
-                                                       AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                       AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKindFrom()
                                                        AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -130,14 +130,14 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MLO_From.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-          INNER JOIN _tmpKN_err_06062016 ON JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                                        AND ContractId  = MovementLinkObject_Contract.ObjectId
+          /*INNER JOIN _tmpKN_err_06062016 ON JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                        AND ContractId  = MovementLinkObject_Contract.ObjectId*/
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId = zc_Movement_ReturnIn()
+       AND Movement.DescId = zc_Movement_TransferDebtIn()
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND NOT (COALESCE (MovementString.ValueData, '') LIKE '???%')
-       -- AND MovementLinkObject_DocumentTaxKind.ObjectId  IS NULL
+       -- AND NOT (COALESCE (MovementString.ValueData, '') LIKE '???%')
+       AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Corrective()
 
     ) AS tmp
     ;

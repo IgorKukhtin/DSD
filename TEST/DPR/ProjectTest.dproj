@@ -2605,14 +2605,6 @@
 				<Form>Report_Goods_ReturnInBySaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Goods_SalebyTransferDebtIn.pas">
-				<Form>Report_Goods_SalebyTransferDebtInForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Goods_SalebyTransferDebtInDialog.pas">
-				<Form>Report_Goods_SalebyTransferDebtInDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Check_ReturnInToSale.pas">
 				<Form>Report_Check_ReturnInToSaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>

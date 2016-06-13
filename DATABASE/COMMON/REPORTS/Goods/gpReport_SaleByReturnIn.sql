@@ -1,5 +1,6 @@
 -- Function: gpReport_SaleByReturnIn ()
 
+DROP FUNCTION IF EXISTS gpReport_SaleByTransferDebtIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Tfloat, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SaleByReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Tfloat, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SaleByReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Tfloat, TVarChar);
 
@@ -17,13 +18,13 @@ CREATE OR REPLACE FUNCTION gpReport_SaleByReturnIn (
     IN inPrice             Tfloat    , --
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , RetailName TVarChar
              , PaidKindId TVarChar, PaidKindName TVarChar
              , BranchName TVarChar, UnitName TVarChar
-             , ContractCode Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
 
              , Amount        TFloat  -- 
              , AmountReturn  TFloat  -- 
@@ -34,6 +35,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKind
              , InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
              , DocumentTaxKindName TVarChar
              , MovementId Integer, MovementItemId Integer
+             , MovementDescName TVarChar
              ) 
 
 AS
@@ -119,6 +121,7 @@ IF inBranchId <> 0
     -- Результат
     RETURN QUERY
     WITH tmpContainer_All AS (
+              -- Продажа покупателю
               SELECT MovementItem.MovementId
                    , MovementItem.Id                      AS MovementItemId
                    , MD_OperDatePartner.ValueData         AS OperDatePartner
@@ -171,6 +174,56 @@ IF inBranchId <> 0
                                                                        AND MIFloat_Price.DescId         = zc_MIFloat_Price()
               WHERE MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate - INTERVAL '1 DAY'
                 AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+             UNION ALL
+              -- Перевод долга (расход)
+              SELECT MovementItem.MovementId
+                   , MovementItem.Id                      AS MovementItemId
+                   , Movement.OperDate                    AS OperDatePartner
+                   , MovementLinkObject_Partner.ObjectId  AS PartnerId
+                   , MovementLinkObject_From.ObjectId     AS UnitId
+                   , MLO_PaidKind.ObjectId                AS PaidKindId
+                   , MLO_Contract.ObjectId                AS ContractId 
+                   , MovementItem.ObjectId                AS GoodsId
+                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId       
+            
+                   , MovementItem.Amount                  AS Amount
+                   , MIFloat_Price.ValueData              AS Price
+          
+               FROM Movement
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                                                         AND MovementLinkObject_Partner.ObjectId IN (SELECT _tmpListPartner.PartnerId FROM _tmpListPartner)
+                                            -- INNER JOIN _tmpListPartner ON _tmpListPartner.PartnerId = MovementLinkObject_To.ObjectId
+
+                                            INNER JOIN MovementLinkObject AS MLO_PaidKind
+                                                                          ON MLO_PaidKind.MovementId = Movement.Id
+                                                                         AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKindTo()
+                                                                         AND MLO_PaidKind.ObjectId   = inPaidKindId
+                                            LEFT JOIN MovementLinkObject AS MLO_Contract
+                                                                         ON MLO_Contract.MovementId = Movement.Id
+                                                                        AND MLO_Contract.DescId     = zc_MovementLinkObject_ContractTo()
+
+                                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_PartnerFrom()
+
+                                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                   AND MovementItem.isErased    = FALSE
+                                                                   AND MovementItem.DescId      = zc_MI_Master()
+                                                                   AND MovementItem.ObjectId    = inGoodsId
+                                                                   AND MovementItem.Amount      <> 0
+
+                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+              WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate - INTERVAL '1 DAY'
+                AND Movement.DescId = zc_Movement_TransferDebtOut()
+                AND Movement.StatusId = zc_Enum_Status_Complete()
                 )
   , tmpContainer AS (SELECT tmpContainer_All.*
                      FROM tmpContainer_All
@@ -201,6 +254,7 @@ IF inBranchId <> 0
     SELECT Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
+         , Object_GoodsKind.Id                        AS GoodsKindId
          , Object_GoodsKind.ValueData                 AS GoodsKindName
         
          , Object_Juridical.ObjectCode AS JuridicalCode
@@ -218,6 +272,7 @@ IF inBranchId <> 0
          , Object_Branch.ValueData        AS BranchName
          , Object_Unit.ValueData          AS UnitName
 
+         , View_Contract_InvNumber.ContractId      AS ContractId
          , View_Contract_InvNumber.ContractCode    AS ContractCode
          , View_Contract_InvNumber.InvNumber       AS ContractName
          
@@ -241,6 +296,8 @@ IF inBranchId <> 0
          , tmpContainer.MovementId
          , tmpContainer.MovementItemId
                     
+         , MovementDesc.ItemName AS MovementDescName
+
        FROM tmpContainer
           LEFT JOIN tmpReturnAmount ON tmpReturnAmount.MovementItemId = tmpContainer.MovementItemId
 
@@ -266,6 +323,7 @@ IF inBranchId <> 0
           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpContainer.MovementId
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Sale.DescId
 
           LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                    ON MovementString_InvNumberPartner.MovementId = Movement_Sale.Id 
@@ -284,9 +342,7 @@ IF inBranchId <> 0
                                       AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
           LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
                                                    AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete() 
-
-
-  ;
+         ;
          
 END;
 $BODY$

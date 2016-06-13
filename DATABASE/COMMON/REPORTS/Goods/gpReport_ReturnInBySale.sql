@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_ReturnInBySale (
     IN inPrice             Tfloat    , --
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, StatusCode Integer
+RETURNS TABLE (Id Integer, MovementDescName TVarChar, StatusCode Integer
              , InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , PartnerCode Integer, PartnerName TVarChar
              , BranchName TVarChar, UnitName TVarChar                        
@@ -69,6 +69,7 @@ BEGIN
                                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()*/
                       )
      , tmpMovReturn AS (SELECT Movement.Id
+                             , Movement.DescId                      AS MovementDescId
                              , Object_From.ObjectCode               AS PartnerCode
                              , Object_From.ValueData                AS PartnerName
                              , Object_To.ValueData                  AS UnitName
@@ -79,11 +80,11 @@ BEGIN
                              , Movement.InvNumber
                              , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
                              , Movement.OperDate
-                             , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
+                             , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementDate_OperDatePartner.ValueData ELSE Movement.OperDate END AS OperDatePartner
                              , Object_Status.ObjectCode                  AS StatusCode
                               
-                        FROM (SELECT DISTINCT tmpMIReturn.MovementId AS Id
-                              FROM tmpMIReturn) AS tmpMovement
+                        FROM (SELECT DISTINCT tmpMIReturn.MovementId AS Id FROM tmpMIReturn
+                             ) AS tmpMovement
                             LEFT JOIN Movement ON Movement.id = tmpMovement.id
                             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
               
@@ -97,13 +98,14 @@ BEGIN
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                    ON MovementLinkObject_From.MovementId = Movement.Id
-                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_PartnerFrom() END
                             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                    ON MovementLinkObject_To.MovementId = Movement.Id
-                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                  AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_Partner() END
                             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
                             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                    ON ObjectLink_Unit_Branch.ObjectId = Object_To.Id
                                   AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -111,16 +113,17 @@ BEGIN
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                    ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                  AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                  AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_PaidKind() ELSE zc_MovementLinkObject_PaidKindFrom() END
                             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
                             
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                    ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                  AND MovementLinkObject_Contract.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_Contract() ELSE zc_MovementLinkObject_ContractFrom() END
                             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
                         )
 
       SELECT tmpMovReturn.Id
+           , MovementDesc.ItemName AS MovementDescName
            , tmpMovReturn.StatusCode
            , tmpMovReturn.InvNumber
            , tmpMovReturn.InvNumberPartner
@@ -151,8 +154,8 @@ BEGIN
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN tmpMovReturn ON tmpMovReturn.Id = tmpMIReturn.MovementId
-
-  ;
+          LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMovReturn.MovementDescId
+     ;
          
 END;
 $BODY$

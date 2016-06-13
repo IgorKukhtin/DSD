@@ -24,9 +24,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat, AmountSummVat TFloat
              , MovementId_Partion Integer, PartionMovementName TVarChar
-             , isErased Boolean
              , MovementPromo TVarChar, PricePromo TFloat
              , AmountChild TFloat, AmountChildDiff TFloat
+             , isErased Boolean
              )
 AS
 $BODY$
@@ -205,8 +205,8 @@ BEGIN
                      WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                         OR (vbIsB = TRUE AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                     )
-     , tmpMIChild AS (SELECT MovementItem.ParentId    AS MI_ParentId
-                           , SUM(MovementItem.Amount) AS Amount
+     , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
+                           , SUM (MovementItem.Amount) AS Amount
                       FROM MovementItem
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
@@ -247,12 +247,13 @@ BEGIN
            , CAST (0  AS Integer)       AS MovementId_Partion
            , CAST ('' AS TVarChar)  	AS PartionMovementName
 
-           , FALSE                      AS isErased
            , CAST ('' AS TVarChar)      AS MovementPromo
            , CAST (NULL AS TFloat)      AS PricePromo
 
            , 0 :: TFloat AS AmountChild
            , 0 :: TFloat AS AmountChildDiff
+
+           , FALSE                      AS isErased
 
        FROM tmpGoods
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
@@ -317,12 +318,14 @@ BEGIN
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
-           , tmpResult.isErased                AS isErased
            , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
            
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
            , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
+
+           , tmpResult.isErased                AS isErased
+
        FROM tmpResult
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpResult.MovementId_Promo                -- акция
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
@@ -520,12 +523,14 @@ BEGIN
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
-           , tmpResult.isErased                AS isErased
            , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
 
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
            , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
+
+           , tmpResult.isErased                AS isErased
+
        FROM tmpResult
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpResult.MovementId_Promo                -- акция
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId

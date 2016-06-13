@@ -627,7 +627,7 @@ BEGIN
                     , CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN tmpMI_all.Amount_Sale - tmpMI_all.Amount_ReturnIn ELSE tmpMI_all.Amount_Sale END AS Amount_Sale
                     , CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN 0 ELSE tmpMI_all.Amount_ReturnIn END AS Amount_ReturnIn
                     , tmpMI_all.MovementId_Tax
-               FROM (SELECT CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn()
+               FROM (SELECT CASE WHEN _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
                                       THEN CASE WHEN _tmpMovement_find.MovementId > 0
                                                      THEN vbMovementId_Tax
                                                 ELSE COALESCE (MovementLinkMovement.MovementChildId, 0)
@@ -652,7 +652,7 @@ BEGIN
                             END AS Price
                           , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END AS CountForPrice
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount_Sale
-                          , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MovementItem_Child.Amount, 0) /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ WHEN _tmpMovement.DescId = zc_Movement_TransferDebtIn() THEN MovementItem.Amount ELSE 0 END) AS Amount_ReturnIn
+                          , SUM (CASE WHEN _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN COALESCE (MovementItem_Child.Amount, 0) /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ WHEN _tmpMovement.DescId = zc_Movement_TransferDebtIn() THEN MovementItem.Amount ELSE 0 END) AS Amount_ReturnIn
                      FROM _tmpMovement2 AS _tmpMovement
                           INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement.MovementId
                                                  AND MovementItem.DescId   = zc_MI_Master()
@@ -666,7 +666,7 @@ BEGIN
                                                                       AND MovementItem_Child.DescId   = zc_MI_Child()
                                                                       AND MovementItem_Child.ParentId = MovementItem.Id
                                                                       AND MovementItem_Child.Amount   <> 0
-                                                                      AND _tmpMovement.DescId = zc_Movement_ReturnIn()
+                                                                      AND _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                       ON MIFloat_MovementId.MovementItemId = MovementItem_Child.Id
                                                      AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
@@ -692,7 +692,7 @@ BEGIN
                                                       ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                      AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                                                      AND _tmpMovement.DescId = zc_Movement_Sale()
-                     GROUP BY CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn()
+                     GROUP BY CASE WHEN _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
                                         THEN CASE WHEN _tmpMovement_find.MovementId > 0
                                                        THEN vbMovementId_Tax
                                                   ELSE COALESCE (MovementLinkMovement.MovementChildId, 0)

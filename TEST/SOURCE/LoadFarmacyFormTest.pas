@@ -400,14 +400,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
-
- exit;
-
+// exit;
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
@@ -984,6 +977,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkForm');
@@ -1005,8 +1000,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
   }
