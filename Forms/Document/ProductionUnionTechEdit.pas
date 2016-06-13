@@ -41,6 +41,8 @@ type
     cxLabel8: TcxLabel;
     ceGooodsKindCompleteGuides: TcxButtonEdit;
     GooodsKindCompleteGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceCuterWeight: TcxCurrencyEdit;
   private
     { Private declarations }
   public

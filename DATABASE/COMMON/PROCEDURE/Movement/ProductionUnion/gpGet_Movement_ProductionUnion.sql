@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnion(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
                )
 AS
@@ -36,6 +37,8 @@ BEGIN
              , CAST ('' AS TVarChar) 			        AS FromName
              , 0                     			        AS ToId
              , CAST ('' AS TVarChar) 				AS ToName
+             , 0                                                AS DocumentKindId
+             , CAST ('' AS TVarChar) 				AS DocumentKindName
              , CAST (False as Boolean)                          AS isAuto
              , Null:: TDateTime                                 AS InsertDate
 
@@ -52,6 +55,8 @@ BEGIN
          , Object_From.ValueData                    AS FromName
          , Object_To.Id                             AS ToId
          , Object_To.ValueData                      AS ToName
+         , Object_DocumentKind.Id                   AS DocumentKindId
+         , Object_DocumentKind.ValueData            AS DocumentKindName
          , COALESCE(MovementBoolean_isAuto.ValueData, False)         AS isAuto
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
 
@@ -67,6 +72,11 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                       ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                      AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+          LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
 
           LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                     ON MovementBoolean_isAuto.MovementId = Movement.Id
@@ -90,6 +100,7 @@ ALTER FUNCTION gpGet_Movement_ProductionUnion (Integer, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.06.16         *
  23.06.14                                                        *
  16.07.13         *
 

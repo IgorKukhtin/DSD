@@ -50,6 +50,7 @@ type
     procedure LoadCurrencyFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadDefaultFormTest;
+    procedure LoadDocumentKindFormTest;
     procedure LoadDocumentTaxKindFormTest;
     procedure LoadEDIForm;
     procedure LoadEmailForm;
@@ -1109,6 +1110,14 @@ procedure TLoadFormTest.LoadPaidKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
+end;
+
+procedure TLoadFormTest.LoadDocumentKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDocumentKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDocumentKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDocumentKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDocumentKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadDocumentTaxKindFormTest;

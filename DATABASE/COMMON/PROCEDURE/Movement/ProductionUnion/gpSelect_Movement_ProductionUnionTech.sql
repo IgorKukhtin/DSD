@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_ProductionUnionTech()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inStartDate      TDateTime,
     IN inEndDate        TDateTime,
     IN inFromId         Integer,
     IN inToId           Integer,
+    IN inDocumentKindId Integer,
     IN inIsErased       Boolean      , --
     IN inSession        TVarChar       -- сессия пользователя
 )
@@ -29,7 +31,7 @@ BEGIN
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
      -- 
-     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat, isPartionDate Boolean, isOrderSecond Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, DocumentKindId integer,MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat, isPartionDate Boolean, isOrderSecond Boolean) ON COMMIT DROP;
 
      -- определяется - ЦЕХ колбаса+дел-сы
      vbIsOrder:= (inFromId = inToId) AND EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId);
@@ -87,6 +89,10 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN MovementLinkObject AS MLO_DocumentKind
+                                                            ON MLO_DocumentKind.MovementId = Movement.Id
+                                                           AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+
                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                                                     ON ObjectLink_Receipt_GoodsKind.ObjectId = MILO_ReceiptBasis.ObjectId
                                                    AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
@@ -103,6 +109,7 @@ BEGIN
 
                           WHERE MLO_To.ObjectId IN (inFromId, vbFromId_group)
                             -- AND OrderType_Unit.ChildObjectId = inFromId
+                           AND (MLO_DocumentKind.ObjectId = inDocumentKindId OR inDocumentKindId = 0)
                           GROUP BY Movement.OperDate
                                  , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
                                  , ObjectLink_Receipt_GoodsKind.ChildObjectId
@@ -131,6 +138,7 @@ BEGIN
                                , MILO_GoodsKindComplete.ObjectId                                AS GoodsKindId_Complete
                                , MILO_Receipt.ObjectId                                          AS ReceiptId
                                , MLO_From.ObjectId                                              AS FromId
+                               , MLO_DocumentKind.ObjectId                                      AS DocumentKindId
                                , MovementItem.Id                                                AS MovementItemId
                                , MovementItem.Amount                                            AS Amount
                                , COALESCE (MIFloat_CuterCount.ValueData, 0)                     AS CuterCount
@@ -157,6 +165,10 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN MovementLinkObject AS MLO_DocumentKind
+                                                            ON MLO_DocumentKind.MovementId = Movement.Id
+                                                           AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+         
                                LEFT JOIN ObjectBoolean AS ObjectBoolean_UnitFrom_PartionDate
                                                        ON ObjectBoolean_UnitFrom_PartionDate.ObjectId = MLO_From.ObjectId
                                                       AND ObjectBoolean_UnitFrom_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
@@ -168,6 +180,7 @@ BEGIN
                               AND Movement.DescId = zc_Movement_ProductionUnion()
                               AND MLO_From.ObjectId = inFromId
                               AND MLO_To.ObjectId = inToId
+                              AND (MLO_DocumentKind.ObjectId = inDocumentKindId OR inDocumentKindId = 0)
                            )
       , tmpMI_order22 AS (SELECT tmpMI_order2.OperDate
                                , tmpMI_order2.MovementItemId AS MovementItemId_order
@@ -210,11 +223,12 @@ BEGIN
                          )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
-    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate, isOrderSecond)
+    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, DocumentKindId, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate, isOrderSecond)
        SELECT COALESCE (tmpMI_production.MovementId, 0)                                          AS MovementId
             , COALESCE (tmpMI_production.StatusId, 0)                                            AS StatusId
             , COALESCE (tmpMI_production.InvNumber, '')                                          AS InvNumber
             , COALESCE (tmpMI_production.OperDate, tmpMI_order.OperDate)                         AS OperDate
+            , COALESCE (tmpMI_production.DocumentKindId, 0)                                      AS DocumentKindId
             , COALESCE (tmpMI_production.MovementItemId, tmpMI_order.MovementItemId_order)       AS MovementItemId
             , tmpMI_order.MovementItemId_order                                                   AS MovementItemId_order
             , COALESCE (tmpMI_production.GoodsId, tmpMI_order.GoodsId)                           AS GoodsId
@@ -257,6 +271,8 @@ BEGIN
             , _tmpListMaster.MovementItemId_order
             , _tmpListMaster.InvNumber
             , _tmpListMaster.OperDate
+            , _tmpListMaster.DocumentKindId
+            , Object_DocumentKind.ValueData     AS DocumentKindName
 
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
@@ -271,6 +287,7 @@ BEGIN
             , MIString_Comment.ValueData        AS Comment
             , MIFloat_Count.ValueData           AS Count
             , MIFloat_RealWeight.ValueData      AS RealWeight
+            , MIFloat_CuterWeight.ValueData     AS CuterWeight 
 
             , _tmpListMaster.Amount_order
             , _tmpListMaster.CuterCount_order
@@ -335,6 +352,10 @@ BEGIN
                                          ON MIFloat_RealWeight.MovementItemId = _tmpListMaster.MovementItemId
                                         AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
                                         AND _tmpListMaster.MovementId <> 0
+             LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
+                                         ON MIFloat_CuterWeight.MovementItemId = _tmpListMaster.MovementItemId
+                                        AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
+                                        AND _tmpListMaster.MovementId <> 0
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = _tmpListMaster.MovementItemId
@@ -366,6 +387,7 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = _tmpListMaster.GoodsKindId_Complete
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = _tmpListMaster.ReceiptId
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = _tmpListMaster.StatusId
+             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = _tmpListMaster.DocumentKindId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -675,12 +697,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.06.16        *
  07.11.15        * GoodsKindComplete
  15.03.15                                        * all
  19.12.14                                                        *

@@ -20,7 +20,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime
              , GoodsKindCompleteId Integer, GoodsKindCompleteName TVarChar
              , ReceiptId Integer, ReceiptName TVarChar, ReceiptCode TVarChar
              , Amount_order TFloat, CuterCount_order TFloat
-             , RealWeight TFloat, CuterCount TFloat, Count TFloat
+             , RealWeight TFloat, CuterCount TFloat, CuterWeight TFloat, Count TFloat
              , Comment TVarChar
                )
 AS
@@ -57,6 +57,7 @@ BEGIN
 
                , 0 :: TFloat		           AS RealWeight
                , 0 :: TFloat   		           AS CuterCount
+               , 0 :: TFloat   		           AS CuterWeight
                , 0 :: TFloat		           AS Count
                , '' :: TVarChar                    AS Comment
 
@@ -122,6 +123,7 @@ BEGIN
 
                , MIFloat_RealWeight.ValueData      AS RealWeight
                , MIFloat_CuterCount.ValueData      AS CuterCount
+               , MIFloat_CuterWeight.ValueData     AS CuterWeight
                , MIFloat_Count.ValueData	   AS Count
                , MIString_Comment.ValueData        AS Comment
 
@@ -137,11 +139,11 @@ BEGIN
                                                 ON MILO_Receipt.MovementItemId = MovementItem.Id
                                                AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
-                                                                ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-                                                               AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                               AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
-                                                                ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                               AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                                ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                               AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
 
                LEFT JOIN ObjectString AS ObjectString_Receipt_Code
                                       ON ObjectString_Receipt_Code.ObjectId = MILO_Receipt.ObjectId
@@ -155,6 +157,9 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                            ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
                                           AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+               LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
+                                           ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
+                                          AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
                LEFT JOIN MovementItemFloat AS MIFloat_Count
                                            ON MIFloat_Count.MovementItemId = MovementItem.Id
                                           AND MIFloat_Count.DescId = zc_MIFloat_Count()
@@ -199,6 +204,7 @@ BEGIN
 
                , 0 :: TFloat		             AS RealWeight
                , 0 :: TFloat   		             AS CuterCount
+               , 0 :: TFloat   		             AS CuterWeight
                , 0 :: TFloat		             AS Count
                , '' :: TVarChar                      AS Comment
          ;
@@ -213,6 +219,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.06.16         * CuterWeight
  15.03.15                                        * all
  12.12.14                                                        *
 */

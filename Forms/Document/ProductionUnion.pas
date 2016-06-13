@@ -60,6 +60,9 @@ type
     colChildGoodsKindCompleteName: TcxGridDBColumn;
     actGoodsKindCompleteChoiceChild: TOpenChoiceForm;
     colchildCount_onCount: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edDocumentKind: TcxButtonEdit;
+    GuidesDocumentKind: TdsdGuides;
   private
     { Private declarations }
   public
