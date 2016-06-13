@@ -53,10 +53,10 @@ BEGIN
    THEN
        inStartDate:= NULL;
        inEndDate  := NULL;
-   ELSE
+   /*ELSE
        inIsPeriod := FALSE;
        inStartDate:= NULL;
-       inEndDate  := NULL;
+       inEndDate  := NULL;*/
    END IF;
 
    -- определяется уровень доступа
