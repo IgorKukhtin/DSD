@@ -788,23 +788,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       TabOrder = 13
       Width = 85
     end
-    object cxLabel7: TcxLabel
-      Left = 794
-      Top = 8
-      Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072':'
-    end
-    object edDocumentKind: TcxButtonEdit
-      Left = 877
-      Top = 7
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 15
-      Width = 192
-    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1753,14 +1736,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDocumentKindId'
-        Value = Null
-        Component = GuidesDocumentKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsErased'
         Value = Null
         Component = actShowErased
@@ -2463,7 +2438,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Component = GuidesTo
       end
       item
-        Component = GuidesDocumentKind
       end>
     Left = 288
     Top = 232
@@ -2701,33 +2675,5 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     PackSize = 1
     Left = 912
     Top = 144
-  end
-  object GuidesDocumentKind: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edDocumentKind
-    FormNameParam.Value = 'TDocumentKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TDocumentKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesDocumentKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesDocumentKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 880
   end
 end

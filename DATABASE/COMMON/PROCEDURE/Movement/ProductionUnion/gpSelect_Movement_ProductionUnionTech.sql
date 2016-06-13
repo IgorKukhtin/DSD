@@ -1,14 +1,15 @@
 -- Function: gpSelect_Movement_ProductionUnionTech()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inStartDate      TDateTime,
     IN inEndDate        TDateTime,
     IN inFromId         Integer,
     IN inToId           Integer,
-    IN inDocumentKindId Integer,
     IN inIsErased       Boolean      , --
     IN inSession        TVarChar       -- сессия пользователя
 )
@@ -109,7 +110,6 @@ BEGIN
 
                           WHERE MLO_To.ObjectId IN (inFromId, vbFromId_group)
                             -- AND OrderType_Unit.ChildObjectId = inFromId
-                           AND (MLO_DocumentKind.ObjectId = inDocumentKindId OR inDocumentKindId = 0)
                           GROUP BY Movement.OperDate
                                  , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
                                  , ObjectLink_Receipt_GoodsKind.ChildObjectId
@@ -180,7 +180,6 @@ BEGIN
                               AND Movement.DescId = zc_Movement_ProductionUnion()
                               AND MLO_From.ObjectId = inFromId
                               AND MLO_To.ObjectId = inToId
-                              AND (MLO_DocumentKind.ObjectId = inDocumentKindId OR inDocumentKindId = 0)
                            )
       , tmpMI_order22 AS (SELECT tmpMI_order2.OperDate
                                , tmpMI_order2.MovementItemId AS MovementItemId_order

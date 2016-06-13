@@ -137,9 +137,6 @@ type
     ExecuteDialog: TExecuteDialog;
     isOrderSecond: TcxGridDBColumn;
     colDocumentKindName: TcxGridDBColumn;
-    cxLabel7: TcxLabel;
-    edDocumentKind: TcxButtonEdit;
-    GuidesDocumentKind: TdsdGuides;
     colCuterWeight: TcxGridDBColumn;
   private
     { Private declarations }
