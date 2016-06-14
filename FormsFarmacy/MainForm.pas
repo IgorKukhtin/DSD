@@ -261,6 +261,8 @@ type
     N70: TMenuItem;
     actReport_RemainsOverGoods: TdsdOpenForm;
     miReport_RemainsOverGoods: TMenuItem;
+    actUnitForFarmacyCash: TdsdOpenForm;
+    FarmacyCash1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

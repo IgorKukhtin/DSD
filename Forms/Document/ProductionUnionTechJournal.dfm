@@ -1096,6 +1096,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DocumentKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DocumentKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate

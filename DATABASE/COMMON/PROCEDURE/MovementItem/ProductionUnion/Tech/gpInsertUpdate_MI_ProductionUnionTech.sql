@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_ProductionUnionTech()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inMovementItemId_order Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
+    IN inDocumentKindId       Integer   , -- Тип документа (в документе)
 
     IN inReceiptId            Integer   , -- Рецептуры
     IN inGoodsId              Integer   , -- Товары
@@ -71,6 +73,7 @@ BEGIN
                                                               , inOperDate  := inOperDate
                                                               , inFromId    := inFromId
                                                               , inToId      := inToId
+                                                              , inDocumentKindId := inDocumentKindId
                                                               , inIsPeresort:= FALSE
                                                               , inUserId    := vbUserId
                                                                );
@@ -335,6 +338,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.06.16         *
  21.03.15                                        *all
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  12.12.14                                                       *
