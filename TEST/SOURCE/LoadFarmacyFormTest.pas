@@ -400,7 +400,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-// exit;
+  // отчет распределение остатков
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
+ exit;
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
