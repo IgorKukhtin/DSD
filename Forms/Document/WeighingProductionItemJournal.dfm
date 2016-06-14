@@ -337,6 +337,14 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Options.Editing = False
         Width = 100
       end
+      object colDocumentKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'DocumentKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 77
+      end
       object colUserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
@@ -924,15 +932,18 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       FormName = 'TIncomeForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -947,17 +958,20 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       FormName = 'TWeighingProductionForm'
       FormNameParam.Value = 'TWeighingProductionForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1035,6 +1049,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1042,6 +1057,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1049,6 +1065,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1069,6 +1086,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1076,6 +1094,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -1083,6 +1102,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1090,12 +1110,14 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -1111,6 +1133,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -1137,6 +1160,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1156,6 +1180,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1194,6 +1219,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1218,6 +1244,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndtDate'
@@ -1225,6 +1252,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -1235,6 +1263,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1245,6 +1274,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1253,6 +1283,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 568
     Top = 24
@@ -1262,6 +1293,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1272,6 +1304,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1280,6 +1313,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 816
     Top = 23

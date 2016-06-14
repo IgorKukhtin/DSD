@@ -4,7 +4,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
   ClientWidth = 982
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 998
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -566,10 +566,12 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -589,20 +591,23 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       Params = <
         item
           Name = 'StartDate'
-          Value = Null
+          Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = Null
+          Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_byElements: TdsdPrintAction
       Category = 'DSDLib'
@@ -611,28 +616,34 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42005d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42005d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
@@ -651,22 +662,26 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'maintext'
           Value = #1088'/'#1089#1095#1077#1090#1091
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_byElements_byComments: TdsdPrintAction
       Category = 'DSDLib'
@@ -675,28 +690,34 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42005d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42005d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
@@ -715,22 +736,26 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'maintext'
           Value = #1088'/'#1089#1095#1077#1090#1091
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -741,6 +766,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       FormName = 'TReport_BankAccount_CashDialogForm'
       FormNameParam.Value = 'TReport_BankAccount_CashDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -748,6 +774,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -755,6 +782,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BankAccountId'
@@ -763,6 +791,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BankAccountName'
@@ -771,6 +800,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
@@ -778,6 +808,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           Component = AccountGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -786,6 +817,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
@@ -793,6 +825,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           Component = CurrencyGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -801,6 +834,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -823,6 +857,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -830,6 +865,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -837,6 +873,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
@@ -844,6 +881,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
@@ -851,6 +889,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashId'
@@ -858,12 +897,14 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDetail'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 184
@@ -982,6 +1023,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'IncomeDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
@@ -989,6 +1031,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'ReturnOutDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
@@ -996,6 +1039,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'SaleDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
@@ -1003,6 +1047,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'ReturnInDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
@@ -1010,6 +1055,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'MoneyDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
@@ -1017,6 +1063,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'ServiceDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
@@ -1024,6 +1071,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'SendDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
@@ -1031,6 +1079,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'OtherDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
@@ -1038,6 +1087,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'SaleRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
@@ -1045,6 +1095,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'ReturnInRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
@@ -1052,6 +1103,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = FormParams
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1063,56 +1115,67 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Name = 'IncomeDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 232
@@ -1122,6 +1185,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1131,6 +1195,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -1139,6 +1204,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 752
   end
@@ -1147,6 +1213,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
     LookupControl = ceBankAccount
     FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1156,6 +1223,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1164,12 +1232,14 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 388
     Top = 65533
@@ -1188,6 +1258,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1195,6 +1266,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1202,6 +1274,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
@@ -1209,6 +1282,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
@@ -1216,12 +1290,14 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDetail'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 639
@@ -1238,6 +1314,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
     LookupControl = edCurrency
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrency_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1248,6 +1325,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1256,6 +1334,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 704
     Top = 24
@@ -1265,6 +1344,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
     LookupControl = ceCash
     FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1273,6 +1353,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Value = ''
         Component = GuidesCash
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1280,39 +1361,46 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
         Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName_all'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionName'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 480
     Top = 13

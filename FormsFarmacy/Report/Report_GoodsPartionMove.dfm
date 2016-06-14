@@ -2,6 +2,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
   Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 375
   ClientWidth = 753
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 769
   ExplicitHeight = 413
@@ -104,8 +105,8 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
       Width = 184
     end
     object cxLabel3: TcxLabel
-      Left = 291
-      Top = 29
+      Left = 289
+      Top = 32
       Caption = #1058#1086#1074#1072#1088
     end
     object edGoods: TcxButtonEdit
@@ -138,11 +139,128 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
       Width = 184
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesGoods
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesParty
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
+  end
+  inherited ActionList: TActionList
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsPartionMoveDialogForm'
+      FormNameParam.Value = 'TReport_GoodsPartionMoveDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyId'
+          Value = Null
+          Component = GuidesParty
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyName'
+          Value = Null
+          Component = GuidesParty
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
+  end
   inherited MasterDS: TDataSource
-    Top = 32
+    Left = 296
+    Top = 152
   end
   inherited MasterCDS: TClientDataSet
-    Top = 40
+    Left = 192
+    Top = 144
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_GoodsPartionMove'
@@ -153,6 +271,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Component = GuidesParty
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -160,6 +279,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -167,6 +287,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
@@ -174,6 +295,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -181,25 +303,59 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Top = 32
+    Left = 376
+    Top = 160
   end
   inherited BarManager: TdxBarManager
-    Top = 40
+    Left = 448
+    Top = 168
     DockControlHeights = (
       0
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Top = 104
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end>
     Top = 104
   end
   object GuidesUnit: TdsdGuides
@@ -207,6 +363,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -216,6 +373,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -224,6 +382,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 24
@@ -233,6 +392,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsLiteForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsLiteForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -242,6 +402,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -250,6 +411,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 424
     Top = 24
@@ -259,6 +421,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
     LookupControl = edParty
     FormNameParam.Value = 'TPartionGoodsChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartionGoodsChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -268,6 +431,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Component = GuidesParty
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -276,18 +440,21 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
         Value = Null
         Component = GuidesGoods
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end>
     Left = 632
     Top = 24
@@ -299,41 +466,48 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         Value = Null
         Component = GuidesParty
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartyName'
         Value = Null
         Component = GuidesParty
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
         Value = Null
         Component = GuidesGoods
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
         Value = Null
         Component = GuidesGoods
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RemainsDate'
         Value = Null
         Component = deEnd
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 264

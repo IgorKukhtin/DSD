@@ -13,6 +13,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementDesc TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , UserId Integer, UserName TVarChar
+             , DocumentKindId Integer, DocumentKindName TVarChar
+
               )
 AS
 $BODY$
@@ -47,6 +49,10 @@ BEGIN
 
              , 0                     AS UserId
              , CAST ('' as TVarChar) AS UserName
+
+
+             , 0                     AS DocumentKindId
+             , CAST ('' as TVarChar) AS DocumentKindName
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -73,6 +79,9 @@ BEGIN
              
              , Object_User.Id                  AS UserId
              , Object_User.ValueData           AS UserName
+
+             , Object_DocumentKind.Id          AS DocumentKindId
+             , Object_DocumentKind.ValueData   AS DocumentKindName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -111,6 +120,11 @@ BEGIN
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                         ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+            LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingProduction();
      END IF;
@@ -122,6 +136,7 @@ ALTER FUNCTION gpGet_Movement_WeighingProduction (Integer, TVarChar) OWNER TO po
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 14.06.16         *
  13.03.14         *
 */
 

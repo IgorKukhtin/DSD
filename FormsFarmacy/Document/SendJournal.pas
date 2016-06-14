@@ -40,6 +40,7 @@ type
     actPrint: TdsdPrintAction;
     colTotalSumm: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    colisAuto: TcxGridDBColumn;
   private
     { Private declarations }
   public
