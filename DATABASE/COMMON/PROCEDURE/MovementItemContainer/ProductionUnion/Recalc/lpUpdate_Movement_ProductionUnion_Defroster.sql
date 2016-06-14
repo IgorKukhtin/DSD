@@ -170,6 +170,7 @@ BEGIN
                                                          , inOperDate              := tmp.OperDate
                                                          , inFromId                := inUnitId
                                                          , inToId                  := inUnitId
+                                                         , inDocumentKindId        := 0
                                                          , inIsPeresort            := FALSE
                                                          , inUserId                := zc_Enum_Process_Auto_Defroster()
                                                           ) AS MovementId

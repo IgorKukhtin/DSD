@@ -325,6 +325,7 @@ BEGIN
                                                   , inOperDate              := inOperDate
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
+                                                  , inDocumentKindId        := 0
                                                   , inIsPeresort            := FALSE
                                                   , inUserId                := vbUserId
                                                    )
