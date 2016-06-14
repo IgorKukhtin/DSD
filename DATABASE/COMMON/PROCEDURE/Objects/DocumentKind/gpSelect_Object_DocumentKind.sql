@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_DocumentKind (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_DocumentKind(
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, EnumName TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -17,12 +17,17 @@ $BODY$BEGIN
         Object_DocumentKind.Id           AS Id 
       , Object_DocumentKind.ObjectCode   AS Code
       , Object_DocumentKind.ValueData    AS Name
+      -- , ObjectString_Enum.ValueData      AS EnumName
+      , ObjectString_Enum.DescId :: TVarChar
       
       , Object_DocumentKind.isErased     AS isErased
       
    FROM Object AS Object_DocumentKind
-                              
-   WHERE Object_DocumentKind.DescId = zc_Object_DocumentKind();
+        LEFT JOIN ObjectString AS ObjectString_Enum ON ObjectString_Enum.ObjectId = Object_DocumentKind.Id
+                                                   AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
+   WHERE Object_DocumentKind.DescId = zc_Object_DocumentKind()
+     AND ObjectString_Enum.ObjectId IS NULL
+  ;
   
 END;$BODY$
 

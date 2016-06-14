@@ -290,3 +290,106 @@ select *  FROM MovementItemContainer where MovementItemId = 26009762
 */
 
 -- Select * from gpSelect_Report_SoldDay ('20150901'::TDateTime, 0, True, '3')
+
+--------------------------------------------------------------
+-------------- 1 ---------------------------------------------
+--------------------------------------------------------------
+/*
+-- select gpReComplete_Movement_Check (MovementId, '3'), * from (select distinct MovementItemContainer.MovementId
+select *
+from
+(select Container.Id, Container.ObjectId, Container.Amount, max (MovementItemContainer.Id) AS Id_micontainer
+from _Container_13_06_16 
+
+-- select * from Container where Amount < 0 and descId = 1
+ 
+     join Container on Container.Id = _Container_13_06_16.Id and Container.Amount < 0
+     left join MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
+                                 and -1 * MovementItemContainer.Amount >= -1 * Container.Amount
+                                 and MovementItemContainer.MovementDescId = zc_Movement_Check()
+     left join MovementDesc on MovementDesc.Id = MovementItemContainer.MovementDescId 
+  -- where Container.Id = 2095487
+group by Container.Id, Container.ObjectId, Container.Amount
+) as tmp
+     left join MovementItemContainer on MovementItemContainer.Id = tmp.Id_micontainer
+                                     -- and MovementItemContainer.MovementDescId = zc_Movement_Check()
+and 1=0
+     left join Container on Container.Id = tmp.Id
+
+-- where Id_micontainer > 0 
+-- where Id_micontainer is null
+
+-- limit 500
+-- ) as a
+-- order by MovementItemContainer.id desc
+*/
+/*
+select * from Movement where Id = 627700
+select * from MovementDesc where Id = 44
+select * from MovementItem 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = MovementItem.MovementId
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Unit()
+             LEFT JOIN Object AS Object_From on Object_From.Id = MovementLinkObject_From.ObjectId
+where MovementItem.MovementId = 2278536
+select * from MovementItemContainer where MovementId = 2278536
+select * from Container where Id = 1186828 -- select sum (amount) from MovementItemContainer where ContainerId = 3070979 
+select * from MovementItemContainer where ContainerId = 1186828 order by OperDate Desc
+
+SELECT  gpReComplete_Movement_Check (2278536, '3');
+SELECT  gpUnComplete_Movement_Check (2278536, '3');
+SELECT  gpUpdate_Status_Check (2278536, zc_Enum_StatusCode_Complete(), '3');
+*/
+
+
+--------------------------------------------------------------
+-------------- 2 ---------------------------------------------
+--------------------------------------------------------------
+
+/*select tmp.*
+    , gpReComplete_Movement_Check (tmp.MovementId, '3')
+from (select distinct MovementId from _err_13_06_16) as tmp
+*/
+-- drop TABLE _err_13_06_16 
+-- CREATE TABLE _err_13_06_16 as 
+/*select Movement.InvNumber, Movement.OperDate, Object_From.Id As UnitId, Object_From.ValueData :: TVarChar as UnitName, MIFloat_Price.ValueData as Price, tmp.MovementId, tmp.Id_mi, GoodsId, Amount, calcAmount, Object.ObjectCode as goodsCode, Object.ValueData :: TVarChar as goodsName 
+
+from (select Movement_Check.InvNumber, MI_Check.Id as Id_mi, MI_Check.ObjectId as GoodsId, MI_Check.Amount, coalesce (-1 * SUM (MIContainer.Amount), 0) as calcAmount , Movement_Check.Id as MovementId
+      FROM (select distinct MovementId from MIContainer_13_06_16 where MovementDescId = zc_Movement_Check()) as tmp
+          INNER JOIN Movement AS Movement_Check on Movement_Check.Id = tmp.MovementId 
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                        ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                       -- AND MovementLinkObject_Unit.ObjectId = 183292 -- Аптека_1 пр_Правды_6
+            INNER JOIN MovementItem AS MI_Check
+                                    ON MI_Check.MovementId = Movement_Check.Id
+                                   AND MI_Check.DescId = zc_MI_Master()
+                                   AND MI_Check.isErased = FALSE
+            LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                  ON MIContainer.MovementItemId = MI_Check.Id
+                                                 AND MIContainer.DescId = zc_MIContainer_Count() 
+--    where Movement_Check.OperDate >= '01.01.2016' and Movement_Check.OperDate < '01.02.2016'
+--    where Movement_Check.OperDate >= '01.02.2016' and Movement_Check.OperDate < '01.03.2016'
+--   where Movement_Check.Id = 1695311
+--        and Movement_Check.DescId = zc_Movement_Check()
+--        AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+      group by Movement_Check.InvNumber, MI_Check.Id, MI_Check.Amount , Movement_Check.Id, MI_Check.ObjectId
+       having MI_Check.Amount <> coalesce (-1 * SUM (MIContainer.Amount), 0)
+      ) as tmp 
+             LEFT JOIN Object on Object.Id = tmp.GoodsId
+             LEFT JOIN Movement on  Movement.Id = tmp.MovementId
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Unit()
+             LEFT JOIN Object AS Object_From on Object_From.Id = MovementLinkObject_From.ObjectId
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId =  tmp.Id_mi
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+order by 2 desc
+*/
+-- select * from MovementItemContainer where ContainerId = 2384226
+/*
+750926
+2384226
+2990276
+*/
