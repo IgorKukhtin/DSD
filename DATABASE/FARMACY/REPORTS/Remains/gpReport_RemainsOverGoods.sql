@@ -51,6 +51,7 @@ BEGIN
 
     -- Результат
     CREATE TEMP TABLE tmpUnit (UnitId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpGoodsList (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpGoods(GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
                              , GoodsGroupName TVarChar, NDSKindName TVarChar
                              , isClose Boolean, isTOP Boolean, isFirst Boolean, isSecond Boolean
@@ -112,14 +113,14 @@ BEGIN
                                                                     ON MIContainer.ContainerId = container.Id
                                                                    AND MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                               WHERE container.descid = zc_container_count() 
-                            --   AND Container.WhereObjectId = 377610 --inUnitId
+                             --  AND Container.WhereObjectId = inUnitId--377610 --inUnitId
                               GROUP BY container.objectid,COALESCE(container.Amount,0), container.Id,Container.WhereObjectId 
                                HAVING  COALESCE(container.Amount,0) - COALESCE(SUM(MIContainer.Amount), 0)<>0 
                                    OR 
                                      (COALESCE(container.Amount,0) - SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate )+interval '1 day' then COALESCE(MIContainer.Amount, 0) ELSE 0 END))  <> 0
                              ) AS tmp
                         GROUP BY tmp.objectid, tmp.UnitId
-                        --limit 100
+                        limit 10000
                        ;
 
        INSERT INTO tmpMCS (MCSValue, GoodsId, UnitId)
@@ -134,8 +135,26 @@ BEGIN
                              AND tmp.GoodsId = tmpRemeins.objectid;
                     */
 
+       INSERT INTO tmpGoodsList (GoodsId)
+         SELECT DISTINCT tmpRemeins.objectid AS GoodsId
+         FROM tmpRemeins
+       Union 
+         SELECT DISTINCT tmpMCS.Goodsid AS GoodsId
+         FROM tmpMCS where tmpMCS.mcsvalue <> 0;
+
         INSERT INTO tmpPrice (PriceId, GoodsId, UnitId)
-                    SELECT Price_Goods.ObjectId      AS PriceId
+                   /* SELECT Price_Goods.ObjectId      AS PriceId
+                         , Price_Goods.ChildObjectId AS GoodsId
+                         , ObjectLink_Price_Unit.ChildObjectId AS UnitId
+                    FROM tmpGoodsList
+                        LEFT JOIN ObjectLink AS Price_Goods 
+                                             ON Price_Goods.ChildObjectId = tmpGoodsList.GoodsId
+                                            AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                
+                        LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
+                                             ON ObjectLink_Price_Unit.ObjectId = Price_Goods.ObjectId
+                                            AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()*/
+ SELECT Price_Goods.ObjectId      AS PriceId
                          , Price_Goods.ChildObjectId AS GoodsId
                          , ObjectLink_Price_Unit.ChildObjectId AS UnitId
                     FROM ObjectLink AS Price_Goods
@@ -157,9 +176,12 @@ BEGIN
                  , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS isTOP
                  , COALESCE(ObjectBoolean_First.ValueData, False)         AS isFirst
                  , COALESCE(ObjectBoolean_Second.ValueData, False)        AS isSecond
-            FROM ObjectLink 
-                            
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id =  ObjectLink.ObjectId
+            FROM tmpGoodsList
+                INNER JOiN ObjectLink ON ObjectLink.ObjectId = tmpGoodsList.GoodsId
+                                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Object()
+                                    AND ObjectLink.ChildObjectId = vbObjectId
+                                     
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsList.GoodsId
                                                  AND Object_Goods.DescId= zc_Object_Goods() 
                                                  AND Object_Goods.isErased = False
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -183,9 +205,7 @@ BEGIN
                                        AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First() 
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
                                         ON ObjectBoolean_Second.ObjectId = ObjectLink.ObjectId
-                                       AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()
-                   where           ObjectLink.DescId = zc_ObjectLink_Goods_Object()
-                                     AND ObjectLink.ChildObjectId = vbObjectId ;
+                                       AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second();
 
         INSERT INTO tmpData( /*Price
                              , */MCSValue 
@@ -240,7 +260,7 @@ BEGIN
                                           AND Object_Remains.UnitId = tmpPrice.UnitId
 
                 LEFT JOIN tmpMCS ON tmpMCS.GoodsId = tmpGoods.GoodsId  
-                                AND tmpMCS.UnitId = Object_Remains.unitid
+                                AND tmpMCS.UnitId =  tmpPrice.UnitId
                                
                                 
                 -- получаем значения цены и НТЗ из истории значений на начало дня                                                          
@@ -303,7 +323,7 @@ BEGIN
      FROM tmpData
      --LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
      WHERE tmpData.UnitId = inUnitId
-          
+              
           ;
      RETURN NEXT Cursor1;
 
@@ -342,6 +362,7 @@ BEGIN
      FROM tmpData
      LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
      WHERE tmpData.UnitId <> inUnitId
+     limit 95000
      ;
      
      RETURN NEXT Cursor2;
