@@ -126,6 +126,8 @@ BEGIN
           END IF;
      END IF;
      
+     -- !!! Типы документов - !!! Элементы справочника добавляет Пользователь!!!
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 1, inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_CuterWeight');
 
 
      -- !!! Типы аналитик для проводок

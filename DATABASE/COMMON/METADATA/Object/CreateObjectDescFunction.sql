@@ -774,7 +774,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_Object_DocumentKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DocumentKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
-  SELECT 'zc_Object_DocumentKind', 'Виды операций' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DocumentKind');
+  SELECT 'zc_Object_DocumentKind', 'Типы документов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DocumentKind');
 
   
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
