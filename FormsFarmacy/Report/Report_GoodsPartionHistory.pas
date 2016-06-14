@@ -13,7 +13,8 @@ uses
   cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView, cxGrid, cxPC,
-  cxPCdxBarPopupMenu, cxCurrencyEdit;
+  cxPCdxBarPopupMenu, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TReport_GoodsPartionHistoryForm = class(TAncestorReportForm)
@@ -57,6 +58,8 @@ type
     rdGoods: TRefreshDispatcher;
     rdParty: TRefreshDispatcher;
     colSumma: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

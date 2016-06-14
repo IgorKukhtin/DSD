@@ -3,6 +3,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   ClientHeight = 359
   ClientWidth = 763
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 779
   ExplicitHeight = 397
   PixelsPerInch = 96
@@ -201,6 +202,37 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       Width = 184
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesGoods
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesParty
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
+  end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -239,6 +271,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       FormNameParam.ComponentItem = 'FormClass'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInput
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -246,6 +279,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
           Component = MasterCDS
           ComponentItem = 'MovementId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -273,6 +307,88 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 1
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsPartionMoveDialogForm'
+      FormNameParam.Value = 'TReport_GoodsPartionMoveDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyId'
+          Value = ''
+          Component = GuidesParty
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartyName'
+          Value = ''
+          Component = GuidesParty
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 136
@@ -289,6 +405,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = FormParams
         ComponentItem = 'PartyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -296,6 +413,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = FormParams
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -303,6 +421,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
@@ -310,6 +429,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -317,6 +437,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 136
   end
@@ -327,6 +448,41 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -345,16 +501,19 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Top = 168
+    Left = 32
+    Top = 200
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Top = 176
+    Left = 104
+    Top = 200
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -364,6 +523,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -372,6 +532,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 24
@@ -381,6 +542,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsLiteForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsLiteForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -390,6 +552,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -398,6 +561,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 424
     Top = 24
@@ -407,6 +571,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
     LookupControl = edParty
     FormNameParam.Value = 'TPartionGoodsChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartionGoodsChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -416,6 +581,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = GuidesParty
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -424,18 +590,21 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end>
     Left = 632
     Top = 24
@@ -450,6 +619,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -457,6 +627,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432
@@ -468,6 +639,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Name = 'FormClass'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
@@ -475,6 +647,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
@@ -482,6 +655,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartyId'
@@ -489,6 +663,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = GuidesParty
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 240
@@ -504,6 +679,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = MasterCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outFormClass'
@@ -511,6 +687,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Component = FormParams
         ComponentItem = 'FormClass'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 272
@@ -518,6 +695,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   end
   object rgUnit: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -528,6 +706,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   end
   object rdGoods: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -538,6 +717,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   end
   object rdParty: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
