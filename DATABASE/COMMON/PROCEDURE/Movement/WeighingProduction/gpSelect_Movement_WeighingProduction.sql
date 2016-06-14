@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
+             , DocumentKindId Integer, DocumentKindName TVarChar
               )
 AS
 $BODY$
@@ -75,6 +76,9 @@ BEGIN
              
              , Object_User.ValueData           AS UserName
 
+             , Object_DocumentKind.Id          AS DocumentKindId
+             , Object_DocumentKind.ValueData   AS DocumentKindName
+
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingProduction()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -129,7 +133,12 @@ BEGIN
                                          ON MovementLinkObject_User.MovementId = Movement.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
-            
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                         ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+            LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -141,6 +150,7 @@ ALTER FUNCTION gpSelect_Movement_WeighingProduction (TDateTime, TDateTime, Boole
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.06.16         * DocumentKind
  12.06.15                                        * all
  13.03.14         *
 */
