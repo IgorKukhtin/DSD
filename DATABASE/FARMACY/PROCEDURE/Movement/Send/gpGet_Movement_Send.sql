@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , Comment TVarChar
+             , isAuto Boolean
               )
 AS
 $BODY$
@@ -36,6 +37,7 @@ BEGIN
              , 0                     		                AS ToId
              , CAST ('' AS TVarChar) 			        AS ToName
              , CAST ('' AS TVarChar) 		                AS Comment
+             , FALSE                                            AS isAuto
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -52,7 +54,8 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
-           , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+           , COALESCE(MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
+           , COALESCE(MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -74,6 +77,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+       
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Send();
@@ -89,6 +96,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 14.06.16         *
  21.03.16         *
  29.07.15                                                                       *
  */
