@@ -21,7 +21,7 @@ var
   DMMainScaleForm: TDMMainScaleForm;
 
 implementation
-uses DialogMovementDesc,UtilScale;
+uses DialogMovementDesc,UtilScale,MainCeh;
 {------------------------------------------------------------------------}
 function gpInitialize_MovementDesc: Boolean;
 begin
@@ -37,12 +37,16 @@ begin
              then ShowMessage('Ошибка.Код операции не определен.')
              else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
                         ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+                        ParamsMovement.ParamByName('DocumentKindId').AsInteger:= CDS.FieldByName('DocumentKindId').AsInteger;
+                        ParamsMovement.ParamByName('DocumentKindName').asString := CDS.FieldByName('DocumentKindName').asString;
                         ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
                         ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
                   end;
         end
         else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
    end;
+   with MainCehForm do
+     if ParamsMovement.ParamByName('DocumentKindId').AsInteger > 0 then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;

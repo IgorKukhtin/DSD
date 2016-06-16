@@ -3,8 +3,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   ClientHeight = 685
   ClientWidth = 1076
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -303
   ExplicitWidth = 1092
-  ExplicitHeight = 723
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -250,18 +251,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colCuterWeight: TcxGridDBColumn [16]
-            Caption = #1042#1077#1089' '#1082#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
-            DataBinding.FieldName = 'CuterWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colAmount: TcxGridDBColumn [17]
+          object colAmount: TcxGridDBColumn [16]
             Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -272,9 +262,20 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colAmount_calc: TcxGridDBColumn [18]
+          object colAmount_calc: TcxGridDBColumn [17]
             Caption = #1056#1072#1089#1095#1077#1090' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colCuterWeight: TcxGridDBColumn [18]
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
+            DataBinding.FieldName = 'CuterWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

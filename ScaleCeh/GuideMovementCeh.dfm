@@ -235,6 +235,13 @@ object GuideMovementCehForm: TGuideMovementCehForm
           Options.Editing = False
           Width = 80
         end
+        object DocumentKindName: TcxGridDBColumn
+          Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+          DataBinding.FieldName = 'DocumentKindName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
         object OperDate_parent: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
           DataBinding.FieldName = 'OperDate_parent'
@@ -508,17 +515,20 @@ object GuideMovementCehForm: TGuideMovementCehForm
       FormName = 'TWeighingPartnerForm'
       FormNameParam.Value = 'TWeighingPartnerForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -532,6 +542,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 184

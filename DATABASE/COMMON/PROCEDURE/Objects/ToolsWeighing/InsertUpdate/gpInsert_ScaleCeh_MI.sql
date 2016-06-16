@@ -35,11 +35,28 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbId Integer;
+   DECLARE vbDocumentKindId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_ScaleCeh_MI());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- определили <Тип документа>
+     vbDocumentKindId:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
+                         FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                               , inLevel2      := 'Movement'
+                                                               , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                               , inItemName    := 'DocumentKindId'
+                                                               , inDefaultValue:= '0'
+                                                               , inSession     := inSession
+                                                                ) AS RetV
+                               FROM MovementFloat
+                               WHERE MovementFloat.MovementId = inMovementId
+                                 AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                 AND MovementFloat.ValueData > 0
+                              ) AS tmp
+                        );
 
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingProduction (ioId                  := 0
@@ -58,8 +75,9 @@ BEGIN
                                                           , inCountSkewer2        := inCountSkewer2
                                                           , inWeightSkewer2       := inWeightSkewer2
                                                           , inWeightOther         := inWeightOther
-                                                          , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE THEN inPartionGoodsDate ELSE NULL END :: TDateTime
-                                                          , inPartionGoods        := inPartionGoods
+                                                          , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0 THEN inPartionGoodsDate ELSE NULL END :: TDateTime
+                                                          , inPartionGoods        := CASE WHEN vbDocumentKindId > 0 AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN '' ELSE inPartionGoods END
+                                                          , inMovementItemId      := CASE WHEN vbDocumentKindId > 0 AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN zfConvert_StringToNumber (inPartionGoods) ELSE 0 END
                                                           , inGoodsKindId         := CASE WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
                                                                                                 FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                                                      LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId

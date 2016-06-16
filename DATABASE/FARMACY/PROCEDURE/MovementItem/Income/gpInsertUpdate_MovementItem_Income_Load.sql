@@ -153,10 +153,17 @@ BEGIN
                -- почти результат
                SELECT tmpList.ContractId, tmpList.UnitId
                FROM tmpList
-               WHERE (LOWER (inUnitName) = StringKey AND StringKey  <> '' AND StringKey1 = '' AND StringKey2 = '' AND StringKey3 = '')
-                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND StringKey1 <> '' AND StringKey2 = '' AND StringKey3 = '')
-                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND LOWER (inUnitName) LIKE '%' || StringKey2 AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 = '')
-                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%' AND LOWER (inUnitName) LIKE '%' || StringKey3 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 <> '')
+               WHERE (LOWER (inUnitName) = StringKey AND StringKey  <> '' AND StringKey1 = '' AND StringKey2 = '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND StringKey1 <> '' AND StringKey2 = '' AND StringKey3 = ''
+                      )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey3 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 <> ''
+                     )
               ) AS tmp;
 
 
@@ -178,10 +185,17 @@ BEGIN
                -- почти результат
                SELECT tmpList.JuridicalId, tmpList.UnitId
                FROM tmpList
-               WHERE (LOWER (inUnitName) = StringKey AND StringKey  <> '' AND StringKey1 = '' AND StringKey2 = '' AND StringKey3 = '')
-                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND StringKey1 <> '' AND StringKey2 = '' AND StringKey3 = '')
-                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND LOWER (inUnitName) LIKE '%' || StringKey2 AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 = '')
-                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%' AND LOWER (inUnitName) LIKE '%' || StringKey3 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 <> '')
+               WHERE (LOWER (inUnitName) = StringKey AND StringKey  <> '' AND StringKey1 = '' AND StringKey2 = '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND StringKey1 <> '' AND StringKey2 = '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey3 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 <> ''
+                     )
               ) AS tmp;
 
     END IF;

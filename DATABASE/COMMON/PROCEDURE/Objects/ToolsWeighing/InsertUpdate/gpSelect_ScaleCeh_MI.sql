@@ -63,8 +63,15 @@ BEGIN
            , tmpMI.HeadCount   :: TFloat AS HeadCount
            , tmpMI.LiveWeight  :: TFloat AS LiveWeight
 
-           
-           , tmpMI.PartionGoods :: TVarChar       AS PartionGoods
+           , CASE WHEN tmpMI.PartionGoods <> ''
+                       THEN tmpMI.PartionGoods
+                  ELSE ('кол.=<' || zfConvert_FloatToString (COALESCE (MovementItem.Amount, 0)) || '>'
+                     || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
+                     || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
+                     || ' партия=<' || DATE (Movement.OperDate) || '>'
+                     || ' № <' || Movement.InvNumber || '>'
+                       )
+             END :: TVarChar AS PartionGoods
            , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
 
            
@@ -97,8 +104,10 @@ BEGIN
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                   , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
           
-                  , MIString_PartionGoods.ValueData   AS PartionGoods
+                  , MIString_PartionGoods.ValueData AS PartionGoods
+
                   , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
+                  , CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer AS MovementItemId_Partion
 
                   , MIDate_Insert.ValueData AS InsertDate
                   , MIDate_Update.ValueData AS UpdateDate
@@ -160,6 +169,10 @@ BEGIN
                                               ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
                                              AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                              ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                             AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -178,6 +191,16 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+                                 LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId_Partion
+                                 LEFT JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                   AND Movement.DescId   = zc_Movement_ProductionUnion()
+                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                                                  ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                 AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                 LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                                             ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
        ORDER BY tmpMI.MovementItemId DESC
      ;
 

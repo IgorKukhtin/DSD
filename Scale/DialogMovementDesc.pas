@@ -240,14 +240,16 @@ begin
           if ParamsMovement_local.ParamByName('isMovementId_check').asBoolean = FALSE
           then ParamByName('MovementId').AsInteger:=0; // т.е. будет Insert, иначе Update
           //
-          ParamByName('ColorGridValue').AsInteger:=CDS.FieldByName('ColorGridValue').asInteger;
-          ParamByName('MovementDescNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
-          ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
-          ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
+          ParamByName('ColorGridValue').AsInteger          := CDS.FieldByName('ColorGridValue').asInteger;
+          ParamByName('MovementDescNumber').AsInteger      := CDS.FieldByName('Number').asInteger;
+          ParamByName('MovementDescId').AsInteger          := CDS.FieldByName('MovementDescId').asInteger;
+          ParamByName('MovementDescName_master').asString  := CDS.FieldByName('MovementDescName_master').asString;
           ParamByName('GoodsKindWeighingGroupId').asInteger:= CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
-          ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
-          ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
-          ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
+          ParamByName('DocumentKindId').asInteger          := CDS.FieldByName('DocumentKindId').asInteger;
+          ParamByName('DocumentKindName').asString         := CDS.FieldByName('DocumentKindName').asString;
+          ParamByName('isSendOnPriceIn').asBoolean         := CDS.FieldByName('isSendOnPriceIn').asBoolean;
+          ParamByName('isPartionGoodsDate').asBoolean      := CDS.FieldByName('isPartionGoodsDate').asBoolean;
+          ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)

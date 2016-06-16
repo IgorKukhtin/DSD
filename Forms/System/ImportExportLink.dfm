@@ -3,9 +3,9 @@ inherited ImportExportLinkForm: TImportExportLinkForm
   ClientHeight = 395
   ClientWidth = 847
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitLeft = -65
-  ExplicitWidth = 855
-  ExplicitHeight = 422
+  ExplicitLeft = -57
+  ExplicitWidth = 863
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -26,6 +26,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
+          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -34,17 +35,19 @@ inherited ImportExportLinkForm: TImportExportLinkForm
           object colIntegerKey: TcxGridDBColumn
             Caption = #1050#1083#1102#1095' '#1095#1080#1089#1083#1086
             DataBinding.FieldName = 'IntegerKey'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 83
           end
           object colStringKey: TcxGridDBColumn
             Caption = #1050#1083#1102#1095' '#1089#1090#1088#1086#1082#1072
             DataBinding.FieldName = 'StringKey'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 227
           end
           object colObjectMainName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090
+            Caption = #1054#1073#1098#1077#1082#1090' - '#1088#1077#1079#1091#1083#1100#1090#1072#1090
             DataBinding.FieldName = 'ObjectMainName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -53,11 +56,21 @@ inherited ImportExportLinkForm: TImportExportLinkForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 173
           end
+          object DescMainName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1086#1073#1098#1077#1082#1090' - '#1088#1077#1079#1091#1083#1100#1090#1072#1090
+            DataBinding.FieldName = 'DescMainName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object colObjectChildName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090
+            Caption = #1054#1073#1098#1077#1082#1090' - '#1082#1083#1102#1095
             DataBinding.FieldName = 'ObjectChildName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -67,8 +80,17 @@ inherited ImportExportLinkForm: TImportExportLinkForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 133
+          end
+          object DescChildName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1086#1073#1098#1077#1082#1090' - '#1082#1083#1102#1095
+            DataBinding.FieldName = 'DescChildName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object colLinkTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1089#1074#1103#1079#1080
@@ -80,6 +102,8 @@ inherited ImportExportLinkForm: TImportExportLinkForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
@@ -88,6 +112,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
             DataBinding.FieldName = 'SomeText'
             PropertiesClassName = 'TcxBlobEditProperties'
             Properties.BlobPaintStyle = bpsText
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
@@ -99,16 +124,19 @@ inherited ImportExportLinkForm: TImportExportLinkForm
     object OpenObjectChildForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'OpenObjectForm'
       FormName = 'TObjectForm'
       FormNameParam.Value = 'TObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ValueId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -116,22 +144,26 @@ inherited ImportExportLinkForm: TImportExportLinkForm
           Component = MasterCDS
           ComponentItem = 'ObjectChildName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object OpenLinkTypeForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'OpenObjectForm'
       FormName = 'TImportExportLinkTypeForm'
       FormNameParam.Value = 'TImportExportLinkTypeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'LinkTypeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -139,22 +171,26 @@ inherited ImportExportLinkForm: TImportExportLinkForm
           Component = MasterCDS
           ComponentItem = 'LinkTypeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object OpenObjectForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'OpenObjectForm'
       FormName = 'TObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MainId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -162,12 +198,14 @@ inherited ImportExportLinkForm: TImportExportLinkForm
           Component = MasterCDS
           ComponentItem = 'ObjectMainName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -209,6 +247,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIntegerKey'
@@ -216,6 +255,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         Component = MasterCDS
         ComponentItem = 'IntegerKey'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStringKey'
@@ -224,6 +264,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         ComponentItem = 'StringKey'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inObjectMainId'
@@ -231,6 +272,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         Component = MasterCDS
         ComponentItem = 'MainId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inObjectChildId'
@@ -238,6 +280,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         Component = MasterCDS
         ComponentItem = 'ValueId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLinkTypeId'
@@ -245,6 +288,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         Component = MasterCDS
         ComponentItem = 'LinkTypeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inText'
@@ -253,6 +297,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         ComponentItem = 'SomeText'
         DataType = ftWideString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 248

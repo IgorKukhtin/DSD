@@ -212,6 +212,8 @@ type
     bbChangeHeadCount: TSpeedButton;
     bbChangePartionGoods: TSpeedButton;
     bbChangePartionGoodsDate: TSpeedButton;
+    PanelMovementInfo: TPanel;
+    MemoMovementInfo: TMemo;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -271,6 +273,7 @@ type
     procedure bbChangePartionGoodsClick(Sender: TObject);
     procedure bbChangePartionGoodsDateClick(Sender: TObject);
     procedure EditPartionGoodsEnter(Sender: TObject);
+    procedure EditGoodsKindCodeEnter(Sender: TObject);
   private
     oldGoodsId:Integer;
 
@@ -305,7 +308,8 @@ var
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
-    ,GuideMovementCeh, DialogNumberValue, DialogStringValue, DialogDateValue, DialogPrint, DialogMessage;
+    ,GuideMovementCeh, DialogNumberValue, DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
+    ,GuideWorkProgress;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -323,6 +327,8 @@ begin
      //
      EditGoodsCode.Text:='';
      PanelGoodsName.Caption:='Значение не установлено';
+     //
+     MemoMovementInfo.Text:='Партия не выбрана';
      //
      EditGoodsKindCode.Text:='';
      if rgGoodsKind.Items.Count > 0 then rgGoodsKind.ItemIndex:=0;
@@ -348,7 +354,8 @@ end;
 procedure TMainCehForm.InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
 var i,i2:Integer;
 begin
-     PanelGoodsKind.Visible:=(GoodsKindWeighingGroupId>0)or(SettingMain.isGoodsComplete = TRUE);
+     PanelGoodsKind.Visible:=(GoodsKindWeighingGroupId>0)
+                           or((SettingMain.isGoodsComplete = TRUE)and(ParamsMovement.ParamByName('DocumentKindId').asInteger=0));
      //
      //if GoodsKindWeighingGroupId = 0 then exit;
      //
@@ -602,7 +609,8 @@ begin
      end;
 
      // доопределили параметр
-     ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
+     if ParamsMovement.ParamByName('DocumentKindId').AsInteger = 0
+     then ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
 
      //обязательно перед Проверка - только для Обв.
@@ -679,9 +687,11 @@ begin
                Initialize_afterSave_all;
                Initialize_afterSave_MI;
           end;
+
           InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
      end;
-     myActiveControl;
+     //***myActiveControl;
+     if ParamsMovement.ParamByName('DocumentKindId').AsInteger > 0 then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.bbChangeCountClick(Sender: TObject);
@@ -944,6 +954,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditGoodsCodeExit(Sender: TObject);
 var GoodsCode_int:Integer;
+    ParamsWorkProgress:TParams;
 begin
      if (ParamsMovement.ParamByName('MovementDescId').asInteger = 0)and(ActiveControl.ClassName <> 'TcxGridSite')and(ActiveControl.ClassName <> 'TcxGrid') and (ActiveControl.ClassName <> 'TcxDateEdit')
          and (ActiveControl.ClassName <> 'TGroupButton')
@@ -960,6 +971,44 @@ begin
      except
       GoodsCode_int:= 0;
      end;
+     //
+     //Схема - через справочник
+     if (1=1)and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> 0) then
+     begin
+          Create_ParamsWorkProgress(ParamsWorkProgress);
+
+          ParamsWorkProgress.ParamByName('OperDate').AsDateTime:=StrToDate(PartionDateEdit.Text);
+          try ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:=ParamsMI.ParamByName('PartionGoods').AsInteger;
+          except ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:= 0; end;
+          ParamsWorkProgress.ParamByName('GoodsCode').AsInteger:=GoodsCode_int;
+          ParamsWorkProgress.ParamByName('UnitId').AsInteger:=ParamsMovement.ParamByName('FromId').AsInteger;
+
+          if GuideWorkProgressForm.Execute(ParamsWorkProgress)//isChoice=TRUE
+          then begin
+                    MemoMovementInfo.Text:=ParamsWorkProgress.ParamByName('MovementInfo').AsString;
+                    EditGoodsCode.Text :=ParamsWorkProgress.ParamByName('GoodsCode').AsString;
+                    PanelGoodsName.Caption:=ParamsWorkProgress.ParamByName('GoodsName').AsString;
+                    //
+                    ParamsMI.ParamByName('PartionGoods').AsString  := ParamsWorkProgress.ParamByName('MovementItemId').AsString;
+                    ParamsMI.ParamByName('GoodsId').AsInteger      := ParamsWorkProgress.ParamByName('GoodsId').AsInteger;
+                    ParamsMI.ParamByName('GoodsCode').AsInteger    := ParamsWorkProgress.ParamByName('GoodsCode').AsInteger;
+                    ParamsMI.ParamByName('GoodsName').asString     := ParamsWorkProgress.ParamByName('GoodsName').asString;
+                    ParamsMI.ParamByName('MeasureId').AsInteger    := ParamsWorkProgress.ParamByName('MeasureId').asInteger;
+                    ParamsMI.ParamByName('MeasureCode').AsInteger  := ParamsWorkProgress.ParamByName('MeasureCode').AsInteger;
+                    ParamsMI.ParamByName('MeasureName').asString   := ParamsWorkProgress.ParamByName('MeasureName').asString;
+                    //
+                    //ActiveControl:=EditWeightTare_enter;
+          end
+          else begin ActiveControl:=EditGoodsCode;
+                     PanelMovementDesc.Font.Color:=clRed;
+                     PanelMovementDesc.Caption:='Ошибка.Не определен код <Продукции>';
+               end;
+          ParamsWorkProgress.Free;
+
+     end
+     else
+
+     //
      //поиск товара по коду + заполняются параметры
      if DMMainScaleCehForm.gpGet_Scale_Goods(ParamsMI,IntToStr(GoodsCode_int)) = TRUE
      then begin
@@ -990,6 +1039,14 @@ begin
                 PanelMovementDesc.Caption:='Ошибка.Не определен вес <Продукции>';
           end
      else WriteParamsMovement;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainCehForm.EditGoodsKindCodeEnter(Sender: TObject);
+begin
+     if rgGoodsKind.Items.Count = 1
+     then
+          if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
+          else ActiveControl:=EditCount;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditGoodsKindCodeExit(Sender: TObject);
@@ -1386,6 +1443,7 @@ end;
 procedure TMainCehForm.WriteParamsMovement;
 begin
   PanelPartionDate.Visible:=ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean=true;
+  PanelMovementInfo.Visible:=ParamsMovement.ParamByName('DocumentKindId').asInteger>0;
   //
   PanelMovementDesc.Font.Color:=clBlue;
 

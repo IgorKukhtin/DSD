@@ -36,7 +36,7 @@ BEGIN
                                  ON ObjectLink_GoodsKindWeighing_GoodsKind.ObjectId = ObjectLink_GoodsKindWeighing_Group.ObjectId
                                 AND ObjectLink_GoodsKindWeighing_GoodsKind.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKind()
             INNER JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsKindWeighing_GoodsKind.ChildObjectId
-                                                 AND Object_GoodsKind.ObjectCode <> 0
+                                                 AND (Object_GoodsKind.ObjectCode <> 0 OR Object_GoodsKind.Id = zc_GoodsKind_WorkProgress())
                                                  AND Object_GoodsKind.isErased = FALSE
        WHERE ObjectLink_GoodsKindWeighing_Group.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKindWeighingGroup()
      UNION ALL
