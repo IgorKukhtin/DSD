@@ -201,6 +201,10 @@ type
     actUpdateDetailDS: TdsdUpdateDataSet;
     actOpenReportCheckAmountForm: TdsdOpenForm;
     bbOpenReportCheckAmount: TdxBarButton;
+    MIChildProtocolOpenForm: TdsdOpenForm;
+    bbMIChildProtocol: TdxBarButton;
+    childIsErased: TcxGridDBColumn;
+    edJuridicalFrom: TcxButtonEdit;
   private
     { Private declarations }
   public

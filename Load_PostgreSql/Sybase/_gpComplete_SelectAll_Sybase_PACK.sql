@@ -1,10 +1,12 @@
 -- Function: gpComplete_SelectAll_Sybase_PACK()
 
 DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
     IN inStartDate          TDateTime , -- 
     IN inEndDate            TDateTime , --
+    IN inIsSale             Boolean   , -- 
     IN inIsBefoHistoryCost  Boolean
 )                              
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code TVarChar, ItemName TVarChar

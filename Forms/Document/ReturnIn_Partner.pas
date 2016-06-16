@@ -192,6 +192,9 @@ type
     actOpenReportCheckAmountForm: TdsdOpenForm;
     bbOpenReportCheckAmount: TdxBarButton;
     bbOpenReportCheck: TdxBarButton;
+    MIChildProtocolOpenForm: TdsdOpenForm;
+    bbMIChildProtocol: TdxBarButton;
+    edJuridicalFrom: TcxButtonEdit;
   private
     { Private declarations }
   public

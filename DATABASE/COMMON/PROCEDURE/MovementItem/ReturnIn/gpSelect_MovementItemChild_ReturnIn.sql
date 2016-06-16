@@ -28,24 +28,29 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     RETURN QUERY
-       WITH tmpMI AS (SELECT MovementItem.Id                              AS MI_Id
+
+   WITH tmpMI_all AS (SELECT MovementItem.Id                              AS MI_Id
                            , MovementItem.ParentId                        AS MI_ParentId
                            , MovementItem.ObjectId                        AS GoodsId
                            , MovementItem.Amount                          AS Amount
                            , MIFloat_MovementId.ValueData      :: Integer AS MovementId_sale
                            , MIFloat_MovementItemId.ValueData  :: Integer AS MovementItemId_sale
-                           , MovementItem.isErased                        AS isErased
-                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                           INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                  AND MovementItem.DescId     = zc_MI_Child()
-                                                  AND MovementItem.isErased   = tmpIsErased.isErased
+                           , CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN TRUE ELSE MovementItem.isErased END :: Boolean AS isErased
+                      FROM MovementItem ON 
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                         
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                        ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                       AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
                       )
+          , tmpMI AS (SELECT *
+                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                           LEFT JOIN tmpMI_all ON tmpMI_all.isErased = tmpIsErased.isErased
+                      )
+
        -- результат
        SELECT tmpMI.MI_Id                                    AS Id
             , tmpMI.MI_ParentId                              AS ParentId

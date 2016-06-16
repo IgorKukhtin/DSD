@@ -103,6 +103,10 @@ BEGIN
 
      -- если - использовать "основание № (продажа)" для привязки к накладной "продажа"
      IF TRUE = (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_List())
+        AND EXISTS (SELECT 1 FROM _tmpItem
+                                   INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                               ON MIFloat_MovementId.MovementItemId = _tmpItem.MovementItemId
+                                                              AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId())
      THEN
          -- !!!будут чуть быстрее формироваться партии продажи!!!
          INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, Amount, Price_original)
@@ -379,19 +383,21 @@ BEGIN
                SELECT tmpMI_sale.PartnerId
                     , tmpMI_sale.OperDate
                     , tmpMI_sale.MovementId
-                    , MIN (tmpMI_sale.MovementItemId) AS MovementItemId
+                    , (tmpMI_sale.MovementItemId) AS MovementItemId -- !!! MIN ???
                     , tmpMI_sale.GoodsId
                     , tmpMI_sale.GoodsKindId
-                    , SUM (tmpMI_sale.Amount - COALESCE (tmpMI_ReturnIn_find.Amount, 0))
+                    , (tmpMI_sale.Amount - COALESCE (tmpMI_ReturnIn_find.Amount, 0)) -- !!! SUM ???
                     , tmpMI_sale.Price_original
                FROM tmpMI_sale
                     LEFT JOIN tmpMI_ReturnIn_find ON tmpMI_ReturnIn_find.MovementItemId = tmpMI_sale.MovementItemId
-               GROUP BY tmpMI_sale.PartnerId
+               WHERE (tmpMI_sale.Amount - COALESCE (tmpMI_ReturnIn_find.Amount, 0)) > 0
+               /*GROUP BY tmpMI_sale.PartnerId
                       , tmpMI_sale.OperDate
                       , tmpMI_sale.MovementId
                       , tmpMI_sale.GoodsId
                       , tmpMI_sale.GoodsKindId
                       , tmpMI_sale.Price_original
+               HAVING SUM (tmpMI_sale.Amount - COALESCE (tmpMI_ReturnIn_find.Amount, 0)) > 0*/
              ;
 
 
@@ -520,7 +526,7 @@ BEGIN
      END IF; -- партии продажи - сформированы
 
 
-     IF inUserId = 5 THEN
+     IF 1=0 AND inUserId = 5 THEN
         RAISE EXCEPTION 'inUserId = 5';
      ELSE
      -- !!!сохранение!!!
@@ -532,7 +538,7 @@ BEGIN
                                                        , inMovementId_sale     := COALESCE (tmp.MovementId_sale, 0)
                                                        , inMovementItemId_sale := COALESCE (tmp.MovementItemId_sale, 0)
                                                        , inUserId              := inUserId
-                                                       , inIsRightsAll         := FALSE
+                                                       , inIsRightsAll         := CASE WHEN inUserId = zfCalc_UserAdmin() :: Integer THEN TRUE ELSE FALSE END
                                                         )
      FROM (WITH MI_Master AS (SELECT MovementItem.Id, MovementItem.ObjectId AS GoodsId
                               FROM MovementItem

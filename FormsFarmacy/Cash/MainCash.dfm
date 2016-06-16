@@ -7,10 +7,11 @@ inherited MainCashForm: TMainCashForm
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = ParentFormKeyDown
+  OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 781
-  ExplicitHeight = 453
+  ExplicitWidth = 773
+  ExplicitHeight = 447
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -21,7 +22,6 @@ inherited MainCashForm: TMainCashForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 768
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -29,7 +29,6 @@ inherited MainCashForm: TMainCashForm
       Height = 196
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 514
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = CheckDS
@@ -81,7 +80,6 @@ inherited MainCashForm: TMainCashForm
       Height = 196
       Align = alRight
       TabOrder = 1
-      ExplicitLeft = 517
       object AlternativeGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = AlternativeDS
@@ -156,7 +154,6 @@ inherited MainCashForm: TMainCashForm
       Height = 196
       AlignSplitter = salRight
       Control = AlternativeGrid
-      ExplicitLeft = 514
     end
   end
   object cxSplitter2: TcxSplitter [1]
@@ -166,7 +163,6 @@ inherited MainCashForm: TMainCashForm
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitWidth = 768
   end
   object MainPanel: TPanel [2]
     Left = 0
@@ -176,7 +172,6 @@ inherited MainCashForm: TMainCashForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 768
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
@@ -184,7 +179,6 @@ inherited MainCashForm: TMainCashForm
       Height = 166
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 768
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -503,7 +497,6 @@ inherited MainCashForm: TMainCashForm
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitWidth = 768
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -725,7 +718,6 @@ inherited MainCashForm: TMainCashForm
     ParentBackground = False
     TabOrder = 3
     Visible = False
-    ExplicitWidth = 768
     object Label1: TLabel
       Left = 16
       Top = 0
@@ -942,6 +934,9 @@ inherited MainCashForm: TMainCashForm
           Action = actSelectCheck
         end
         item
+          Action = actSelectLocalVIPCheck
+        end
+        item
           Action = actRefreshLite
         end
         item
@@ -1044,6 +1039,14 @@ inherited MainCashForm: TMainCashForm
           StoredProc = spSelectCheck
         end>
       Caption = 'actSelectCheck'
+    end
+    object actSelectLocalVIPCheck: TAction
+      Caption = 'actSelectLocalVIPCheck'
+      OnExecute = actSelectLocalVIPCheckExecute
+    end
+    object actCheckConnection: TAction
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1089#1077#1088#1074#1077#1088#1086#1084
+      OnExecute = actCheckConnectionExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -1178,9 +1181,6 @@ inherited MainCashForm: TMainCashForm
     object N3: TMenuItem
       Action = actCashWork
     end
-    object N2: TMenuItem
-      Action = actDeferrent
-    end
     object VIP1: TMenuItem
       Action = actSetVIP
     end
@@ -1197,6 +1197,12 @@ inherited MainCashForm: TMainCashForm
     end
     object N10: TMenuItem
       Action = actRefreshRemains
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object N11: TMenuItem
+      Action = actCheckConnection
     end
   end
   object FormParams: TdsdFormParams
@@ -1241,6 +1247,12 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManagerName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -1529,7 +1541,7 @@ inherited MainCashForm: TMainCashForm
   end
   object TimerSaveAll: TTimer
     Enabled = False
-    Interval = 360000
+    Interval = 60000
     OnTimer = TimerSaveAllTimer
     Left = 32
     Top = 24

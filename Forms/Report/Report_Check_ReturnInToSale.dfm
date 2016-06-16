@@ -327,7 +327,6 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
     object edOperDate: TcxDateEdit
       Left = 903
       Top = 23
-      EditValue = 42132d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -345,6 +344,29 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
     Top = 320
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesPartner
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesJuridical
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
     Left = 48
   end
   inherited ActionList: TActionList
@@ -790,9 +812,24 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 32
+    Left = 344
+    Top = 24
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>

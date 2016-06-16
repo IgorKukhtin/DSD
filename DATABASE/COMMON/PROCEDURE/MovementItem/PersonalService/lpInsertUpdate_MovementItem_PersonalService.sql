@@ -91,11 +91,11 @@ BEGIN
      SELECT -- Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
             SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS SummTransport
             -- Сумма командировочные (доплата)
-          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN MIContainer.Amount ELSE 0 END) AS SummTransportAdd
+          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAdd
             -- Сумма дальнобойные (доплата, тоже командировочные)
-          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN MIContainer.Amount ELSE 0 END) AS SummTransportAddLong
+          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAddLong
             -- Сумма на такси (доплата)
-          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN MIContainer.Amount ELSE 0 END) AS SummTransportTaxi
+          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportTaxi
             -- Сумма Моб.связь (удержание)
           , 0 AS SummPhone
             INTO outSummTransport, outSummTransportAdd, outSummTransportAddLong, outSummTransportTaxi, outSummPhone

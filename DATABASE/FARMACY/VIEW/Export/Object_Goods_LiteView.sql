@@ -13,7 +13,7 @@ CREATE OR REPLACE VIEW Object_Goods_LiteView AS
     FROM
         Object_Goods_View
     WHERE
-        ObjectId = lpGet_DefaultValue('zc_Object_Retail', Null::Integer)::Integer;
+        ObjectId in (Select id from Object Where DescId = zc_Object_Retail());--= lpGet_DefaultValue('zc_Object_Retail', Null::Integer)::Integer;
 ALTER TABLE Object_Goods_LiteView  OWNER TO postgres;
 
 
@@ -22,6 +22,7 @@ ALTER TABLE Object_Goods_LiteView  OWNER TO postgres;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
  03.09.15                                                          *
+ 26.05.16                                                          *
  
 */
 

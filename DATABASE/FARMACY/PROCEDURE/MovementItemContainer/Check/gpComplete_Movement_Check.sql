@@ -43,8 +43,8 @@ BEGIN
                   Movement.StatusId <> zc_Enum_Status_Complete()
              )
     THEN
-        --ѕеребили дату документа
-        UPDATE Movement SET OperDate = CURRENT_TIMESTAMP WHERE Movement.Id = inMovementId;
+      --  --ѕеребили дату документа
+      --  UPDATE Movement SET OperDate = CURRENT_TIMESTAMP WHERE Movement.Id = inMovementId; /*ƒата проведени€ хранитс€ в локальной базе и не должна перебиватьс€*/
 
         SELECT MLO_Unit.ObjectId
         INTO vbUnitId

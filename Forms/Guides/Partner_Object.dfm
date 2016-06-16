@@ -435,6 +435,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -442,12 +443,14 @@ object Partner_ObjectForm: TPartner_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -455,15 +458,18 @@ object Partner_ObjectForm: TPartner_ObjectForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RetailName'
@@ -471,12 +477,14 @@ object Partner_ObjectForm: TPartner_ObjectForm
           Component = MasterCDS
           ComponentItem = 'RetailName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RetailId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RetailId'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -526,6 +534,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -533,6 +542,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80
@@ -573,6 +583,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -582,6 +593,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -590,12 +602,14 @@ object Partner_ObjectForm: TPartner_ObjectForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -611,6 +625,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -618,6 +633,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 112

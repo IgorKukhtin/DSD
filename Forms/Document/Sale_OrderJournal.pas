@@ -209,6 +209,8 @@ type
     ExportEmailCDS: TClientDataSet;
     ExportEmailDS: TDataSource;
     actShowMessage: TShowMessageAction;
+    actOpenReportForm: TdsdOpenForm;
+    bbactOpenReport: TdxBarButton;
   private
     { Private declarations }
   public

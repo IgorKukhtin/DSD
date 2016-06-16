@@ -173,6 +173,8 @@ type
     actPrint_Transport_ReportName: TdsdExecStoredProc;
     mactPrint_Transport: TMultiAction;
     actShowMessage: TShowMessageAction;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReport: TdxBarButton;
   private
     { Private declarations }
   public

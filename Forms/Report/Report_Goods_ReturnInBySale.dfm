@@ -14,17 +14,17 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
     Height = 302
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1389
+    ExplicitWidth = 1360
     ExplicitHeight = 302
     ClientRectBottom = 302
     ClientRectRight = 1360
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1389
+      ExplicitWidth = 1360
       ExplicitHeight = 302
       inherited cxGrid: TcxGrid
         Width = 1360
         Height = 302
-        ExplicitWidth = 1389
+        ExplicitWidth = 1360
         ExplicitHeight = 302
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -48,7 +48,6 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner
             end
             item
               Format = ',0.####'
@@ -111,7 +110,6 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner
             end
             item
               Format = ',0.####'
@@ -310,7 +308,7 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
             Width = 69
           end
           object clAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1074#1103#1079#1082#1072')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -319,16 +317,6 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
             HeaderAlignmentVert = vaCenter
             Width = 93
           end
-          object clAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'AmountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 92
-          end
         end
       end
     end
@@ -336,7 +324,7 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
   inherited Panel: TPanel
     Width = 1360
     Height = 54
-    ExplicitWidth = 1389
+    ExplicitWidth = 1360
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 174
@@ -867,10 +855,6 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         end
         item
           Visible = True
-          ItemName = 'bbExecuteDialog'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1106,8 +1090,8 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 65533
+    Left = 520
+    Top = 65525
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1136,8 +1120,8 @@ inherited Report_Goods_ReturnInBySaleForm: TReport_Goods_ReturnInBySaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 24
+    Left = 608
+    Top = 40
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'

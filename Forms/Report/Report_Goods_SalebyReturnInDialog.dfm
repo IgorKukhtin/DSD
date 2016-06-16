@@ -452,6 +452,36 @@ object Report_Goods_SalebyReturnInDialogForm: TReport_Goods_SalebyReturnInDialog
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 6

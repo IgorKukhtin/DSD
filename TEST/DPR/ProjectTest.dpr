@@ -827,7 +827,9 @@ uses
   MobileTariffEdit in '..\..\Forms\Guides\MobileTariffEdit.pas' {MobileTariffEditForm: TParentForm},
   MobileNumbersEmployee in '..\..\Forms\Guides\MobileNumbersEmployee.pas' {MobileNumbersEmployeeForm: TParentForm},
   MobileNumbersEmployeeEdit in '..\..\Forms\Guides\MobileNumbersEmployeeEdit.pas' {MobileNumbersEmployeeEditForm: TParentForm},
-  Report_MobileKS in '..\..\Forms\Report\Report_MobileKS.pas' {Report_MobileKSForm: TParentForm};
+  Report_MobileKS in '..\..\Forms\Report\Report_MobileKS.pas' {Report_MobileKSForm: TParentForm},
+  OrderExternal_SendOnPriceJournalChoice in '..\..\Forms\Document\OrderExternal_SendOnPriceJournalChoice.pas' {OrderExternal_SendOnPriceJournalChoiceForm: TParentForm},
+  Report_CheckTaxDialog in '..\..\Forms\Report\Report_CheckTaxDialog.pas' {Report_CheckTaxDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

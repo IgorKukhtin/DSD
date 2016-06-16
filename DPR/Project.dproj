@@ -60,7 +60,7 @@
 			<VerInfo_Release>1</VerInfo_Release>
 			<Manifest_File>None</Manifest_File>
 			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+			<Icon_MainIcon>Project_Icon2.ico</Icon_MainIcon>
 			<DCC_UsePackage>JvGlobus;JvMM;JvManagedThreads;fmx;JvDlgs;JvCrypt;DataSnapServer;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;JvNet;DataSnapProviderClient;JvDotNetCtrls;DbxCommonDriver;dbxcds;JvXPCtrls;DBXOracleDriver;CustomIPTransport;JvCore;dsnap;fmxase;JvAppFrm;JvDB;inetdbxpress;JvDocking;JvWizards;JvHMI;bindcompfmx;JvBands;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;JvPluginSystem;JvCmp;JvSystem;xmlrtl;ibxpress;JvTimeFramework;JvControls;DBXMySQLDriver;bindengine;soaprtl;JvStdCtrls;JvCustom;JvJans;JvPrintPreview;JvPageComps;DBXInformixDriver;DBXFirebirdDriver;inet;fmxobj;JvPascalInterpreter;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;JvBDE;$(DCC_UsePackage)</DCC_UsePackage>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
@@ -94,11 +94,11 @@
 			<VerInfo_Locale>1033</VerInfo_Locale>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<Icon_MainIcon>Project_Icon.ico</Icon_MainIcon>
-			<VerInfo_Build>7</VerInfo_Build>
+			<Icon_MainIcon>alan.ico</Icon_MainIcon>
+			<VerInfo_Build>10</VerInfo_Build>
 			<VerInfo_Release>3</VerInfo_Release>
 			<VerInfo_MinorVer>5</VerInfo_MinorVer>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.5.3.7;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.5.3.10;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<Debugger_DebugSourcePath>D:\WORK\ExtLib\Components\FastReport 4.12\Source\ExportPack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -218,6 +218,7 @@
 			<DCCReference Include="..\SOURCE\AutoMode\RunScript.pas"/>
 			<DCCReference Include="..\SOURCE\AutoMode\ScriptXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\LocalWorkUnit.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

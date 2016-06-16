@@ -48,7 +48,7 @@ type
 
 implementation
 
-uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs, dsdAddOn;
+uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs, dsdAddOn, CommonData;
 
 // Процедура по символьно переводит строку в набор цифр
 function ConvertConvert(S: String): String;
@@ -176,40 +176,40 @@ begin
         end;
   end;
   LoadStoredProc.ParamByName('FormName').Value := FormName;
-    for AttemptCount := 1 to 3 do
-      try
-        try
-          // Создаем форму
-          Application.CreateForm(TParentForm, Result);
-          Result.FormClassName := FormName;
-          FormStr := ReConvertConvert(LoadStoredProc.Execute);
-          StringStream.WriteString(FormStr);
-          if StringStream.Size = 0 then
-             raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
-          StringStream.Position := 0;
-          // Преобразовать текст в бинарные данные
-          ObjectTextToBinary(StringStream, MemoryStream);
-          // Вернуть смещение
-          MemoryStream.Position := 0;
-          // Прочитать компонент из потока
-          MemoryStream.ReadComponent(Result);
-          break;
-        finally
-          StringStream.Clear;
-          MemoryStream.Clear;
-        end;
-        break;
-      except
-        on E: Exception do begin
-          FreeAndNil(Result);
-          if AttemptCount > 2 then
-             raise Exception.Create(FormName + ' TdsdFormStorage.Load ' + E.Message);
-        end;
-      end;
-    // Загрузить пользователские дефолты!!!
-      for i := 0 to Result.ComponentCount - 1 do
-          if Result.Components[i] is TdsdUserSettingsStorageAddOn then
-             TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
+  for AttemptCount := 1 to 3 do
+  try
+    try
+      // Создаем форму
+      Application.CreateForm(TParentForm, Result);
+      Result.FormClassName := FormName;
+      FormStr := ReConvertConvert(LoadStoredProc.Execute);
+      StringStream.WriteString(FormStr);
+      if StringStream.Size = 0 then
+         raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
+      StringStream.Position := 0;
+      // Преобразовать текст в бинарные данные
+      ObjectTextToBinary(StringStream, MemoryStream);
+      // Вернуть смещение
+      MemoryStream.Position := 0;
+      // Прочитать компонент из потока
+      MemoryStream.ReadComponent(Result);
+      break;
+    finally
+      StringStream.Clear;
+      MemoryStream.Clear;
+    end;
+    break;
+  except
+    on E: Exception do begin
+      FreeAndNil(Result);
+      if AttemptCount > 2 then
+         raise Exception.Create(FormName + ' TdsdFormStorage.Load ' + E.Message);
+    end;
+  end;
+// Загрузить пользователские дефолты!!!
+  for i := 0 to Result.ComponentCount - 1 do
+      if Result.Components[i] is TdsdUserSettingsStorageAddOn then
+         TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
 end;
 
 function TdsdFormStorage.LoadFile(FileName: string): AnsiString;
@@ -277,6 +277,7 @@ end;
 
 procedure TdsdFormStorage.SaveUserFormSettings(FormName: String; Data: String);
 begin
+  if gc_User.Local then exit;
   SaveUserFormSettingsStoredProc.ParamByName('inFormName').Value := FormName;
   SaveUserFormSettingsStoredProc.ParamByName('inUserFormSettingsData').Value := Data;
   SaveUserFormSettingsStoredProc.Execute;

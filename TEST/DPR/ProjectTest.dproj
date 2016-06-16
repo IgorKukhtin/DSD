@@ -64,9 +64,6 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
-			<BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
-			<BCC_DebugLineNumbers>true</BCC_DebugLineNumbers>
 			<Manifest_File>None</Manifest_File>
 			<DCC_ExeOutput>..\..\BIN\</DCC_ExeOutput>
 			<DCC_DcuOutput>..\..\DCU</DCC_DcuOutput>
@@ -2634,6 +2631,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Goods_SalebyReturnIn_Choice.pas">
 				<Form>Report_Goods_SalebyReturnIn_ChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderExternal_SendOnPriceJournalChoice.pas">
+				<Form>OrderExternal_SendOnPriceJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckTaxDialog.pas">
+				<Form>Report_CheckTaxDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MobileTariff.pas">

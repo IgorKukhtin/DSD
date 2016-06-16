@@ -611,14 +611,14 @@ BEGIN
             , _tmpItem_SummPersonal.AccountId         AS AccountId                -- счет есть всегда
             , _tmpItem.AnalyzerId                     AS AnalyzerId               -- есть аналитика, т.е. деление ...
             , _tmpItem_SummPersonal.PersonalId        AS ObjectId_Analyzer        -- Сотрудник (ЗП)
-            , vbMemberDriverId                        AS WhereObjectId_Analyzer   -- Физ.лицо (ЗП)
+            , vbCarId                                 AS WhereObjectId_Analyzer   -- Автомобиль, а было Физ.лицо (ЗП) - vbMemberDriverId
             , _tmpItem_SummPersonal.ContainerId_ProfitLoss AS ContainerId_Analyzer -- Контейнер - ОПиУ (корреспондент)
             , zc_Enum_Account_100301()                AS AccountId_Analyzer       -- Счет - ОПиУ (корреспондент) - прибыль текущего периода
             , _tmpItem_SummPersonal.UnitId            AS ObjectIntId_Analyzer     -- !!!добавил Подразделение (ЗП)!!!
             , _tmpItem_SummPersonal.BranchId          AS ObjectExtId_Analyzer     -- Филиал (ЗП)
             , 0                                       AS ContainerIntId_Analyzer  -- вроде не нужен
             , 0                                       AS ParentId
-            , 1 * (_tmpItem.OperSumm)
+            , -1 * (_tmpItem.OperSumm)
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
        FROM _tmpItem
@@ -631,14 +631,14 @@ BEGIN
             , zc_Enum_Account_100301()                AS AccountId                -- прибыль текущего периода
             , _tmpItem.AnalyzerId                     AS AnalyzerId               -- есть аналитика, т.е. деление ... !!!хотя в других проводках ОПиУ этого не делалось!!!
             , _tmpItem_SummPersonal.PersonalId        AS ObjectId_Analyzer        -- Сотрудник (ЗП)
-            , vbMemberDriverId                        AS WhereObjectId_Analyzer   -- Физ.лицо (ЗП)
+            , vbCarId                                 AS WhereObjectId_Analyzer   -- Автомобиль, а было Физ.лицо (ЗП) - vbMemberDriverId
             , _tmpItem_SummPersonal.ContainerId       AS ContainerId_Analyzer     -- Контейнер - корреспондент
             , _tmpItem_SummPersonal.AccountId         AS AccountId_Analyzer       -- Счет - корреспондент
             , _tmpItem_SummPersonal.UnitId_ProfitLoss AS ObjectIntId_Analyzer     -- Подразделение (ОПиУ)
             , _tmpItem_SummPersonal.BranchId_ProfitLoss AS ObjectExtId_Analyzer   -- Филиал (ОПиУ), а может было б лучше BusinessId_ProfitLoss
             , 0                                       AS ContainerIntId_Analyzer  -- вроде не нужен
             , 0                                       AS ParentId
-            , -1 * (_tmpItem.OperSumm)
+            , 1 * (_tmpItem.OperSumm)
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive               -- !!!ОПиУ всегда по Кредиту!!!
        FROM _tmpItem

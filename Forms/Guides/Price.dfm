@@ -172,6 +172,16 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 60
           end
+          object clisPromo: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
+            DataBinding.FieldName = 'isPromo'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Properties.AllowGrayed = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object StartDate: TcxGridDBColumn
             Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089
             DataBinding.FieldName = 'StartDate'
@@ -482,12 +492,14 @@ inherited PriceForm: TPriceForm
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId_MCS'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
           Name = 'inUnitId'
           Value = Null
           Component = FormParams
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end>
     end
     object actStartLoadPrice: TMultiAction
@@ -525,12 +537,14 @@ inherited PriceForm: TPriceForm
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId_Price'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
           Name = 'inUnitId'
           Value = Null
           Component = FormParams
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end>
     end
     object actRecalcMCS: TdsdExecStoredProc
@@ -570,6 +584,7 @@ inherited PriceForm: TPriceForm
       FormNameParam.Name = 'TRecalcMCS_DialogForm'
       FormNameParam.Value = 'TRecalcMCS_DialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'RecalcMCS_Period'
@@ -577,6 +592,7 @@ inherited PriceForm: TPriceForm
           Component = FormParams
           ComponentItem = 'RecalcMCS_Period'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RecalcMCS_Day'
@@ -584,6 +600,7 @@ inherited PriceForm: TPriceForm
           Component = FormParams
           ComponentItem = 'RecalcMCS_Day'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -615,6 +632,7 @@ inherited PriceForm: TPriceForm
       FormName = 'TPriceHistoryForm'
       FormNameParam.Value = 'TPriceHistoryForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -622,6 +640,7 @@ inherited PriceForm: TPriceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -633,6 +652,7 @@ inherited PriceForm: TPriceForm
       FormName = 'TPriceDialogForm'
       FormNameParam.Value = 'TPriceDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'OperDate'
@@ -640,6 +660,7 @@ inherited PriceForm: TPriceForm
           Component = deOperDate
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -647,6 +668,7 @@ inherited PriceForm: TPriceForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -655,6 +677,7 @@ inherited PriceForm: TPriceForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -676,6 +699,7 @@ inherited PriceForm: TPriceForm
         Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisShowAll'
@@ -683,6 +707,7 @@ inherited PriceForm: TPriceForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisShowDel'
@@ -690,6 +715,7 @@ inherited PriceForm: TPriceForm
         Component = actShowDel
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 88
     Top = 144
@@ -834,6 +860,7 @@ inherited PriceForm: TPriceForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -843,6 +870,7 @@ inherited PriceForm: TPriceForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -851,6 +879,7 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 72
@@ -863,6 +892,7 @@ inherited PriceForm: TPriceForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -871,22 +901,27 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ImportSettingId_MCS'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ImportSettingId_Price'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RecalcMCS_Period'
         Value = '40'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RecalcMCS_Day'
         Value = '5'
+        MultiSelectSeparator = ','
       end>
     Left = 264
     Top = 48
@@ -902,12 +937,14 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioStartDate'
         Value = 73051d
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -916,6 +953,7 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMCSValue'
@@ -924,18 +962,21 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'MCSValue'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMCSPeriod'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMCSDay'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -943,6 +984,7 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -950,6 +992,7 @@ inherited PriceForm: TPriceForm
         Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMCSIsClose'
@@ -958,6 +1001,7 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'MCSIsClose'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMCSNotRecalc'
@@ -966,6 +1010,7 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'MCSNotRecalc'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFix'
@@ -974,6 +1019,7 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'Fix'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDateChange'
@@ -981,6 +1027,7 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'DateChange'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMCSDateChange'
@@ -988,6 +1035,7 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'MCSDateChange'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMCSIsCloseDateChange'
@@ -995,6 +1043,7 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'MCSIsCloseDateChange'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMCSNotRecalcDateChange'
@@ -1002,6 +1051,7 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'MCSNotRecalcDateChange'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outFixDateChange'
@@ -1009,6 +1059,7 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'FixDateChange'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outStartDate'
@@ -1016,6 +1067,7 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 272
@@ -1023,6 +1075,7 @@ inherited PriceForm: TPriceForm
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1043,11 +1096,13 @@ inherited PriceForm: TPriceForm
         Value = 'TPriceForm;zc_Object_ImportSetting_MCS'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserKeyId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_DefaultValue'
@@ -1055,6 +1110,7 @@ inherited PriceForm: TPriceForm
         Component = FormParams
         ComponentItem = 'ImportSettingId_MCS'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
@@ -1072,11 +1128,13 @@ inherited PriceForm: TPriceForm
         Value = 'TPriceForm;zc_Object_ImportSetting_Price'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserKeyId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_DefaultValue'
@@ -1084,6 +1142,7 @@ inherited PriceForm: TPriceForm
         Component = FormParams
         ComponentItem = 'ImportSettingId_Price'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 312
@@ -1100,6 +1159,7 @@ inherited PriceForm: TPriceForm
         Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPeriod'
@@ -1107,6 +1167,7 @@ inherited PriceForm: TPriceForm
         Component = FormParams
         ComponentItem = 'RecalcMCS_Period'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDay'
@@ -1114,6 +1175,7 @@ inherited PriceForm: TPriceForm
         Component = FormParams
         ComponentItem = 'RecalcMCS_Day'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 408
@@ -1130,6 +1192,7 @@ inherited PriceForm: TPriceForm
         Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 504

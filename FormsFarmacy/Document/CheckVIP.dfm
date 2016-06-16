@@ -3,8 +3,8 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientHeight = 382
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 684
-  ExplicitHeight = 420
+  ExplicitWidth = 676
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

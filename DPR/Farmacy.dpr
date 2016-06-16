@@ -66,7 +66,8 @@ uses
   dsdException in '..\SOURCE\dsdException.pas',
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   RepriceUnit in '..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm},
-  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas';
 
 {$R *.res}
 

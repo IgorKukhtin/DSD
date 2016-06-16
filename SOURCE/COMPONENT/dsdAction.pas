@@ -2588,9 +2588,9 @@ begin
   Stream := TStringStream.Create;
   OldFieldIndexList := TStringList.Create;
   ExpandedStr := '';
-  try //mainTry
+  try // mainTry
     FReport.PreviewOptions.Maximized := APreviewWindowMaximized;
-    for i := 0 to ADataSets.Count - 1 do //залить источники данных
+    for i := 0 to ADataSets.Count - 1 do // залить источники данных
     begin
       DataSetList.Add(TfrxDBDataset.Create(nil));
       with TfrxDBDataset(DataSetList[DataSetList.Count - 1]) do
@@ -2614,7 +2614,7 @@ begin
         begin
           TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).BeginUpdate;
           try
-            //сохранили состояние разворотов до сортировки
+            // сохранили состояние разворотов до сортировки
             for ExpandedIdx := 0 to TAddOnDataSet(ADataSets[i]).GridView.ViewData.RowCount - 1 do
               if TAddOnDataSet(ADataSets[i]).GridView.ViewData.Rows[ExpandedIdx].Expanded then
                 ExpandedStr := ExpandedStr + INtToStr(ExpandedIdx)+';';
@@ -2656,17 +2656,17 @@ begin
 //              end;
 //            end;
 
-            //развернули все строки, что бы ChildTableView загрузил все данные в клоны
+            // развернули все строки, что бы ChildTableView загрузил все данные в клоны
 
             TAddOnDataSet(ADataSets[i]).GridView.ViewData.Expand(True);
 
-            //перегрузили отсортированные данные в dxMemData
-            //MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
+            // перегрузили отсортированные данные в dxMemData
+            // MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
             MemTableList.Add(ViewToMemTable.LoadData2(TAddOnDataSet(ADataSets[i]).GridView));
             TClientDataSet(MemTableList.Items[MemTableList.Count-1]).IndexFieldNames :=
                 TAddOnDataSet(ADataSets[i]).IndexFieldNames
 
-            //вернули сортировку наместо
+            // вернули сортировку наместо
 //            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then
 //              TAddOnDataSet(ADataSets[i]).GridView.DataController.ClearSorting(false);
 //            if OldSort <> '' then

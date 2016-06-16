@@ -70,7 +70,9 @@ uses
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   Cash_FP320 in '..\FormsFarmacy\Cash\Cash_FP320.pas',
-  OposFiscalPrinter_1_11_Lib_TLB in '..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas';
+  OposFiscalPrinter_1_11_Lib_TLB in '..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas',
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
+  Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash};
 
 {$R *.res}
 
@@ -79,17 +81,27 @@ begin
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
 
+  StartSplash('Старт');
   TdsdApplication.Create;
 
   with TLoginForm.Create(Application) do
-  //Если все хорошо создаем главную форму Application.CreateForm();
-  if ShowModal = mrOk then
-  begin
-     TUpdater.AutomaticUpdateProgram;
-     TUpdater.AutomaticCheckConnect;
-     Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainCashForm, MainCashForm);
-
-  end;
+  Begin
+    //Если все хорошо создаем главную форму Application.CreateForm();
+    AllowLocalConnect := True;
+    if ShowModal = mrOk then
+    begin
+      if not gc_User.Local then
+      Begin
+        TUpdater.AutomaticUpdateProgram;
+        TUpdater.AutomaticCheckConnect;
+      End
+      else
+        gc_isSetDefault := True;
+      Application.CreateForm(TdmMain, dmMain);
+      Application.CreateForm(TMainCashForm, MainCashForm);
+      Application.CreateForm(TfrmSplash, frmSplash);
+      EndSplash;
+    end;
+  End;
   Application.Run;
 end.

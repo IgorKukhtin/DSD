@@ -8,7 +8,10 @@ uses
   cxClasses, cxPropertiesStore, dsdAddOn, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.StdCtrls, cxButtons, cxTextEdit, Vcl.ExtCtrls, dsdGuides, dsdDB,
-  cxMaskEdit, cxButtonEdit, AncestorBase;
+  cxMaskEdit, cxButtonEdit, AncestorBase, dxSkinsCore, dxSkinsDefaultPainters,
+  cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
+  Data.DB, cxDBData, Datasnap.DBClient, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGridLevel, cxGridCustomView, cxGrid, CommonData;
 
 type
   TVIPDialogForm = class(TAncestorDialogForm)
@@ -17,31 +20,73 @@ type
     Label1: TLabel;
     edBayerName: TcxTextEdit;
     Label2: TLabel;
+    grtvMember: TcxGridDBTableView;
+    grlMember: TcxGridLevel;
+    grMember: TcxGrid;
+    grtvMemberName: TcxGridDBColumn;
+    dsMember: TDataSource;
+    cdsMember: TClientDataSet;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
+var
+  VIPDialogForm: TVIPDialogForm;
 
-function VIPDialogExecute(var AManagerID: Integer; var BayerName: String): boolean;
+function VIPDialogExecute(var AManagerID: Integer; var AManagerName: String; var BayerName: String): boolean;
 
 implementation
-
+uses
+  LocalWorkUnit;
 {$R *.dfm}
 
-function VIPDialogExecute(var AManagerID: Integer; var BayerName: String): boolean;
+function VIPDialogExecute(var AManagerID: Integer; var AManagerName: String; var BayerName: String): boolean;
 Begin
-With TVIPDialogForm.Create(nil) do
+  if NOT assigned(VIPDialogForm) then
+    VIPDialogForm := TVIPDialogForm.Create(Application);
+  With VIPDialogForm do
   Begin
     try
+      if gc_User.Local then
+      Begin
+        label1.Visible := False;
+        ceMember.Visible := False;
+        grMember.Visible := true;
+        if not cdsMember.Active then
+        Begin
+          cdsMember.LoadFromFile(Member_lcl);
+          cdsMember.Open;
+        End;
+        ActiveControl := grMember;
+      End
+      else
+      Begin
+        label1.Visible := true;
+        ceMember.Visible := true;
+        grMember.Visible := false;
+        ActiveControl := ceMember;
+      End;
       Result := ShowModal = mrOK;
       if Result then
       Begin
-        AManagerID := FormParams.ParamByName('MemberId').Value;
+        if gc_User.Local then
+        Begin
+          AManagerID := cdsMember.FieldByName('Id').AsInteger;
+          AManagerName := cdsMember.FieldByName('Name').AsString;
+        End
+        else
+        Begin
+          AManagerID := FormParams.ParamByName('MemberId').Value;
+          AManagerName := FormParams.ParamByName('MemberName').Value;
+        End;
         BayerName := edBayerName.Text;
       End;
-    finally
-      free;
+    Except ON E: Exception DO
+    Begin
+      MessageDlg(E.Message,mtError,[mbOk],0);
+      result := False;
+    End;
     end;
   End;
 End;
