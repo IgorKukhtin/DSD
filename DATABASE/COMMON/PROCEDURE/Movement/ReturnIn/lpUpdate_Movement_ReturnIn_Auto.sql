@@ -709,9 +709,9 @@ BEGIN
             -- || ' ' || DATE (vbEndDate) :: TVarChar
                      ;
 
-if inUserId = 5
+if inUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end ';
+    RAISE EXCEPTION 'Admin - Errr _end   %', outMessageText;
     -- 'Повторите действие через 3 мин.'
 end if;
 

@@ -51,7 +51,7 @@ BEGIN
 
     -- Результат
     CREATE TEMP TABLE tmpUnit (UnitId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpGoodsList (GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpGoodsList (GoodsId Integer, UnitId  Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpGoods(GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
                              , GoodsGroupName TVarChar, NDSKindName TVarChar
                              , isClose Boolean, isTOP Boolean, isFirst Boolean, isSecond Boolean
@@ -60,23 +60,6 @@ BEGIN
     CREATE TEMP TABLE tmpPrice (PriceId Integer, GoodsId Integer, UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemeins (objectid Integer, Remains tfloat, RemainsEnd tfloat, UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (MCSValue tfloat, GoodsId Integer, UnitId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpData_1 (Id Integer, Price TFloat, MCSValue TFloat
-                             , MCSPeriod TFloat, MCSDay TFloat
-                             , StartDate TDateTime
-                             , StartDateEnd TDateTime
-                             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-                             , GoodsGroupName TVarChar, NDSKindName TVarChar
-                             , isClose Boolean, isTOP Boolean, isFirst Boolean, isSecond Boolean
-                             , DateChange TDateTime, MCSDateChange TDateTime
-                             , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
-                             , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
-                             , Fix Boolean, FixDateChange TDateTime
-                             , Remains TFloat, SummaRemains TFloat
-                             , RemainsNotMCS TFloat, SummaNotMCS TFloat
-                             , PriceEnd TFloat
-                             , RemainsEnd TFloat, SummaRemainsEnd TFloat
-                             , RemainsNotMCSEnd TFloat, SummaNotMCSEnd TFloat
-                             , UnitId Integer) ON COMMIT DROP;
 
     CREATE TEMP TABLE tmpData (Id Integer, Price TFloat, MCSValue TFloat
                              , MCSPeriod TFloat, MCSDay TFloat
@@ -94,9 +77,10 @@ BEGIN
                              , PriceEnd TFloat
                              , RemainsEnd TFloat, SummaRemainsEnd TFloat
                              , RemainsNotMCSEnd TFloat, SummaNotMCSEnd TFloat
-                             , UnitId Integer) ON COMMIT DROP;
+                             , UnitId Integer
+                             , primary key (UnitId, GoodsId)
+                              ) ON COMMIT DROP;
 
-    
 
                     
         INSERT INTO tmpRemeins (objectid, Remains, RemainsEnd, UnitId)
@@ -107,7 +91,7 @@ BEGIN
                         FROM (SELECT container.objectid,
                                      Container.WhereObjectId AS UnitId,
                                     COALESCE(container.Amount,0) - COALESCE(SUM(MIContainer.Amount), 0)   AS Remains , 
-                                    (COALESCE(container.Amount,0) - SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate )+interval '1 day' then COALESCE(MIContainer.Amount, 0) ELSE 0 END)) AS RemainsEnd
+                                    0 AS RemainsEnd -- (COALESCE(container.Amount,0) - SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate )+interval '1 day' then COALESCE(MIContainer.Amount, 0) ELSE 0 END)) AS RemainsEnd
                               FROM Container
                                     LEFT JOIN MovementItemContainer AS MIContainer 
                                                                     ON MIContainer.ContainerId = container.Id
@@ -116,11 +100,10 @@ BEGIN
                              --  AND Container.WhereObjectId = inUnitId--377610 --inUnitId
                               GROUP BY container.objectid,COALESCE(container.Amount,0), container.Id,Container.WhereObjectId 
                                HAVING  COALESCE(container.Amount,0) - COALESCE(SUM(MIContainer.Amount), 0)<>0 
-                                   OR 
-                                     (COALESCE(container.Amount,0) - SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate )+interval '1 day' then COALESCE(MIContainer.Amount, 0) ELSE 0 END))  <> 0
+                                   -- OR  (COALESCE(container.Amount,0) - SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate )+interval '1 day' then COALESCE(MIContainer.Amount, 0) ELSE 0 END))  <> 0
                              ) AS tmp
                         GROUP BY tmp.objectid, tmp.UnitId
-                        limit 10000
+                        -- limit 10000
                        ;
 
        INSERT INTO tmpMCS (MCSValue, GoodsId, UnitId)
@@ -128,45 +111,31 @@ BEGIN
                           , tmp.GoodsId 
                           , tmp.UnitId 
                        FROM gpSelect_RecalcMCS(0, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp;
-       
-                   /*  FROM (SELECT * FROM tmpRemeins WHERE tmpRemeins.Remains >0 OR tmpRemeins.RemainsEND >0) AS tmpRemeins
-                       LEFT JOIN gpSelect_RecalcMCS(tmpRemeins.UnitId, 0/*tmpRemeins.objectid*/ , inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp 
-                              ON tmp.UnitId  = tmpRemeins.UnitId
-                             AND tmp.GoodsId = tmpRemeins.objectid;
-                    */
 
-       INSERT INTO tmpGoodsList (GoodsId)
-         SELECT DISTINCT tmpRemeins.objectid AS GoodsId
+       INSERT INTO tmpGoodsList (GoodsId, UnitId)
+         SELECT tmpRemeins.objectid AS GoodsId, tmpRemeins.UnitId
          FROM tmpRemeins
        Union 
-         SELECT DISTINCT tmpMCS.Goodsid AS GoodsId
+         SELECT tmpMCS.Goodsid AS GoodsId, tmpMCS.UnitId
          FROM tmpMCS where tmpMCS.mcsvalue <> 0;
 
         INSERT INTO tmpPrice (PriceId, GoodsId, UnitId)
-                   /* SELECT Price_Goods.ObjectId      AS PriceId
-                         , Price_Goods.ChildObjectId AS GoodsId
-                         , ObjectLink_Price_Unit.ChildObjectId AS UnitId
+                    SELECT Price_Goods.ObjectId AS PriceId
+                         , tmpGoodsList.GoodsId AS GoodsId
+                         , tmpGoodsList.UnitId  AS UnitId
                     FROM tmpGoodsList
-                        LEFT JOIN ObjectLink AS Price_Goods 
+                        INNER JOIN ObjectLink AS Price_Goods 
                                              ON Price_Goods.ChildObjectId = tmpGoodsList.GoodsId
                                             AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                                 
-                        LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
-                                             ON ObjectLink_Price_Unit.ObjectId = Price_Goods.ObjectId
-                                            AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()*/
- SELECT Price_Goods.ObjectId      AS PriceId
-                         , Price_Goods.ChildObjectId AS GoodsId
-                         , ObjectLink_Price_Unit.ChildObjectId AS UnitId
-                    FROM ObjectLink AS Price_Goods
-                        LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
+                        INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                              ON ObjectLink_Price_Unit.ObjectId = Price_Goods.ObjectId
                                             AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                    WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods();
-                    
+                                            AND ObjectLink_Price_Unit.ChildObjectId = tmpGoodsList.UnitId;
        INSERT INTO  tmpGoods ( GoodsId, GoodsCode, GoodsName
                              , GoodsGroupName, NDSKindName
                              , isClose, isTOP, isFirst, isSecond)
-            SELECT Object_Goods.id                              AS GoodsId
+            SELECT tmpGoodsList.GoodsId
                  , Object_Goods.ObjectCode                      AS GoodsCode
                  , Object_Goods.ValueData                       AS GoodsName
                  , Object_GoodsGroup.ValueData                  AS GoodsGroupName
@@ -176,35 +145,30 @@ BEGIN
                  , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS isTOP
                  , COALESCE(ObjectBoolean_First.ValueData, False)         AS isFirst
                  , COALESCE(ObjectBoolean_Second.ValueData, False)        AS isSecond
-            FROM tmpGoodsList
-                INNER JOiN ObjectLink ON ObjectLink.ObjectId = tmpGoodsList.GoodsId
-                                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Object()
-                                    AND ObjectLink.ChildObjectId = vbObjectId
-                                     
+            FROM (SELECT DISTINCT GoodsId FROM tmpGoodsList) AS tmpGoodsList
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsList.GoodsId
-                                                 AND Object_Goods.DescId= zc_Object_Goods() 
-                                                 AND Object_Goods.isErased = False
+
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                     ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink.ObjectId
+                                     ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoodsList.GoodsId
                                     AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                 LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId 
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                     ON ObjectLink_Goods_NDSKind.ObjectId = ObjectLink.ObjectId
+                                     ON ObjectLink_Goods_NDSKind.ObjectId = tmpGoodsList.GoodsId
                                     AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
                 LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId     
 
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
-                                        ON ObjectBoolean_Goods_Close.ObjectId = ObjectLink.ObjectId
+                                        ON ObjectBoolean_Goods_Close.ObjectId = tmpGoodsList.GoodsId
                                        AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()   
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                        ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink.ObjectId
+                                        ON ObjectBoolean_Goods_TOP.ObjectId = tmpGoodsList.GoodsId
                                        AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_First
-                                        ON ObjectBoolean_First.ObjectId = ObjectLink.ObjectId
+                                        ON ObjectBoolean_First.ObjectId = tmpGoodsList.GoodsId
                                        AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First() 
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
-                                        ON ObjectBoolean_Second.ObjectId = ObjectLink.ObjectId
+                                        ON ObjectBoolean_Second.ObjectId = tmpGoodsList.GoodsId
                                        AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second();
 
         INSERT INTO tmpData( /*Price
@@ -228,7 +192,7 @@ BEGIN
                , inDay                   AS MCSDay
                --, COALESCE (ObjectHistory_Price.StartDate, NULL)    AS StartDate
                --, COALESCE (ObjectHistory_PriceEnd.StartDate, NULL) AS StartDateEnd
-               , tmpGoods.GoodsId
+               , tmpGoodsList.GoodsId
                , tmpGoods.GoodsCode
                , tmpGoods.GoodsName
                , tmpGoods.GoodsGroupName
@@ -250,17 +214,20 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE(tmpMCS.MCSValue,0) THEN COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE(tmpMCS.MCSValue,0) ELSE 0 END :: TFloat AS RemainsNotMCSEnd
             --   , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE(tmpMCS.MCSValue,0) THEN (COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE(tmpMCS.MCSValue,0)) * COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0) ELSE 0 END :: TFloat AS SummaNotMCSEnd
               
-               , Object_Remains.unitid 
+               , tmpGoodsList.UnitId
                
-            FROM tmpGoods
-                LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId 
+            FROM tmpGoodsList
+                LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpGoodsList.GoodsId
+
+                LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoodsList.GoodsId
+                                  AND tmpPrice.UnitId = tmpGoodsList.UnitId
                                                                
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
-                                           ON Object_Remains.ObjectId = tmpGoods.GoodsId 
-                                          AND Object_Remains.UnitId = tmpPrice.UnitId
+                                           ON Object_Remains.ObjectId = tmpGoodsList.GoodsId
+                                          AND Object_Remains.UnitId = tmpGoodsList.UnitId
 
-                LEFT JOIN tmpMCS ON tmpMCS.GoodsId = tmpGoods.GoodsId  
-                                AND tmpMCS.UnitId =  tmpPrice.UnitId
+                LEFT JOIN tmpMCS ON tmpMCS.GoodsId = tmpGoodsList.GoodsId
+                                AND tmpMCS.UnitId =  tmpGoodsList.UnitId
                                
                                 
                 -- получаем значения цены и НТЗ из истории значений на начало дня                                                          
@@ -287,6 +254,8 @@ BEGIN
             ;
 
        
+--  RAISE EXCEPTION '<%>  <%>', (select count (*) from tmpData), (select count (*) from tmpData where UnitId = inUnitId);
+--  RAISE EXCEPTION '<%>  <%>', (select count (*) from tmpData where UnitId = inUnitId), (select count (*) from tmpData where UnitId <> inUnitId);
 
 
 
@@ -344,25 +313,25 @@ BEGIN
                , tmpData.RemainsNotMCS   :: TFloat
                , tmpData.SummaNotMCS     :: TFloat
                
-               , tmpData.RemainsEnd      :: TFloat          
-               , tmpData.SummaRemainsEnd    :: TFloat       
-               , tmpData.RemainsNotMCSEnd   :: TFloat
-               , tmpData.SummaNotMCSEnd     :: TFloat
+               -- , tmpData.RemainsEnd      :: TFloat          
+               -- , tmpData.SummaRemainsEnd    :: TFloat       
+               -- , tmpData.RemainsNotMCSEnd   :: TFloat
+               -- , tmpData.SummaNotMCSEnd     :: TFloat
 
                , tmpData.GoodsId         :: integer                
                , tmpData.GoodsCode       :: integer       
-               , tmpData.GoodsName       :: TVarChar      
-               , tmpData.GoodsGroupName  :: TVarChar      
-               , tmpData.NDSKindName     :: TVarChar      
-               , tmpData.isClose         :: Boolean
-               , tmpData.isTOP           :: Boolean
-               , tmpData.isFirst         :: Boolean
-               , tmpData.isSecond        :: Boolean
+               -- , tmpData.GoodsName       :: TVarChar      
+               -- , tmpData.GoodsGroupName  :: TVarChar      
+               -- , tmpData.NDSKindName     :: TVarChar      
+               -- , tmpData.isClose         :: Boolean
+               -- , tmpData.isTOP           :: Boolean
+               -- , tmpData.isFirst         :: Boolean
+               -- , tmpData.isSecond        :: Boolean
                   
      FROM tmpData
-     LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
+          LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
      WHERE tmpData.UnitId <> inUnitId
-     limit 95000
+     -- limit 95000
      ;
      
      RETURN NEXT Cursor2;
@@ -379,5 +348,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_RemainsOverGoods (inUnitId := 377613 , inRemainsDate := ('10.05.2016')::TDateTime, inIsPartion:= FALSE, inisPartionPrice:= FALSE, inSession := '3');
---select * from gpReport_RemainsOverGoods(inUnitId := 377574 , inStartDate:= '01.10.2015'::TDateTime, inPeriod := 2 ::TFloat , inDay := 2 ::TFloat,   inSession := '3'::TVarChar)
+-- select * from gpReport_RemainsOverGoods(inUnitId := 183292, inStartDate:= '01.06.2016', inPeriod := 30 ::TFloat , inDay := 5 ::TFloat, inSession := '3'::TVarChar)

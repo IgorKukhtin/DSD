@@ -297,6 +297,7 @@ BEGIN
                                                         AND MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Child()
                                                         AND MovementItem.isErased   = FALSE
+                                                        AND MovementItem.Amount <> 0
                                  INNER JOIN MovementItemFloat AS MIFloat_MovementId
                                                               ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                              AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
