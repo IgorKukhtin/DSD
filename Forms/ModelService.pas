@@ -109,6 +109,7 @@ type
     isErasedChild: TcxGridDBColumn;
     cxLeftSplitter: TcxSplitter;
     cxSplitterBottom: TcxSplitter;
+    DocumentKindChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

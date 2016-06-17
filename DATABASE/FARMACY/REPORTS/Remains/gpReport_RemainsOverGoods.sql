@@ -63,22 +63,14 @@ BEGIN
     CREATE TEMP TABLE tmpRemeins (objectid Integer, Remains tfloat, RemainsEnd tfloat, UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (MCSValue tfloat, GoodsId Integer, UnitId Integer) ON COMMIT DROP;
 
-    CREATE TEMP TABLE tmpData (Id Integer, Price TFloat, MCSValue TFloat
+    CREATE TEMP TABLE tmpData (Price TFloat, MCSValue TFloat
                              , MCSPeriod TFloat, MCSDay TFloat
                              , StartDate TDateTime
                              , StartDateEnd TDateTime
-                             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-                             , GoodsGroupName TVarChar, NDSKindName TVarChar
-                             , isClose Boolean, isTOP Boolean, isFirst Boolean, isSecond Boolean
-                             , DateChange TDateTime, MCSDateChange TDateTime
-                             , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
-                             , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
-                             , Fix Boolean, FixDateChange TDateTime
+                             , GoodsId Integer
                              , Remains TFloat, SummaRemains TFloat
                              , RemainsNotMCS TFloat, SummaNotMCS TFloat
-                             , PriceEnd TFloat
-                             , RemainsEnd TFloat, SummaRemainsEnd TFloat
-                             , RemainsNotMCSEnd TFloat, SummaNotMCSEnd TFloat
+                             , Deficit TFloat, SummaDeficit TFloat
                              , UnitId Integer
                              , primary key (UnitId, GoodsId)
                               ) ON COMMIT DROP;
@@ -97,10 +89,10 @@ BEGIN
                                                                     ON MIContainer.ContainerId = container.Id
                                                                    AND MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                               WHERE container.descid = zc_container_count() 
-                             --  AND Container.WhereObjectId = inUnitId--377610 --inUnitId
+                             -- AND Container.WhereObjectId = inUnitId--377610 --inUnitId
                               GROUP BY container.objectid,COALESCE(container.Amount,0), container.Id,Container.WhereObjectId 
-                               HAVING  COALESCE(container.Amount,0) - COALESCE(SUM(MIContainer.Amount), 0)<>0 
-                          
+                              HAVING  COALESCE(container.Amount,0) - COALESCE(SUM(MIContainer.Amount), 0)<>0 
+                             -- LIMIT 10000
                              ) AS tmp
  
                         GROUP BY tmp.objectid, tmp.UnitId;
@@ -178,7 +170,7 @@ BEGIN
                              
                              , Remains, SummaRemains
                              , RemainsNotMCS, SummaNotMCS
-                            
+                             , Deficit, SummaDeficit
                              , Unitid)
                              
              SELECT
@@ -193,9 +185,12 @@ BEGIN
                , Object_Remains.Remains                          AS Remains
                , (Object_Remains.Remains * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) AS SummaRemains
                
-               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE(tmpMCS.MCSValue,0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE(tmpMCS.MCSValue,0) ELSE 0 END :: TFloat AS RemainsNotMCS
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE(tmpMCS.MCSValue,0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (tmpMCS.MCSValue,0) ELSE 0 END :: TFloat AS RemainsNotMCS  --over
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE(tmpMCS.MCSValue,0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE(tmpMCS.MCSValue,0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END :: TFloat AS SummaNotMCS
-               
+
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) < COALESCE(tmpMCS.MCSValue,0) THEN COALESCE (tmpMCS.MCSValue,0) - COALESCE (Object_Remains.Remains, 0) ELSE 0 END :: TFloat AS Deficit
+               , CASE WHEN COALESCE (Object_Remains.Remains, 0) < COALESCE(tmpMCS.MCSValue,0) THEN (COALESCE(tmpMCS.MCSValue,0) - COALESCE (Object_Remains.Remains, 0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END :: TFloat AS SummaDeficit
+
                , tmpGoodsList.UnitId
                
             FROM tmpGoodsList
@@ -238,6 +233,13 @@ BEGIN
                , tmpData.SummaRemains    :: TFloat       
                , tmpData.RemainsNotMCS   :: TFloat
                , tmpData.SummaNotMCS     :: TFloat
+               , tmpData.Deficit         :: TFloat       
+               , tmpData.SummaDeficit    :: TFloat
+
+               , tmpChild.RemainsNotMCS   :: TFloat  AS RemainsNotMCS_Child
+               , tmpChild.SummaNotMCS     :: TFloat  AS SummaNotMCS_Child
+               , tmpChild.Deficit         :: TFloat  AS Deficit_Child
+               , tmpChild.SummaDeficit    :: TFloat  AS SummaDeficit_Child
                
                , tmpData.GoodsId          :: integer   
                , tmpGoods.GoodsCode       :: integer    
@@ -251,6 +253,13 @@ BEGIN
              
      FROM tmpData
        LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpData.GoodsId
+       LEFT JOIN (SELECT tmpData.GoodsId
+                       , SUM(tmpData.RemainsNotMCS) AS RemainsNotMCS, SUM(tmpData.SummaNotMCS) AS SummaNotMCS
+                       , SUM(tmpData.Deficit) AS Deficit, SUM(tmpData.SummaDeficit) AS SummaDeficit
+                  FROM tmpData
+                  WHERE tmpData.UnitId <> inUnitId
+                  GROUP BY tmpData.GoodsId) AS tmpChild ON tmpChild.GoodsId = tmpData.GoodsId
+
      WHERE tmpData.UnitId = inUnitId;
      RETURN NEXT Cursor1;
 
@@ -269,6 +278,8 @@ BEGIN
                , tmpData.SummaRemains    :: TFloat       
                , tmpData.RemainsNotMCS   :: TFloat
                , tmpData.SummaNotMCS     :: TFloat
+               , tmpData.Deficit         :: TFloat       
+               , tmpData.SummaDeficit    :: TFloat
                
                , tmpData.GoodsId         :: integer                
                   
