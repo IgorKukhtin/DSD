@@ -1,9 +1,9 @@
-п»ї-- Function: gpSelect_Object_ModelServiceItemMaster()
+-- Function: gpSelect_Object_ModelServiceItemMaster()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemMaster(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemMaster(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , MovementDescId Integer, MovementDescName TVarChar, Ratio TFloat
@@ -12,12 +12,13 @@ RETURNS TABLE (Id Integer
              , ToId Integer, ToName TVarChar                
              , SelectKindId Integer, SelectKindName TVarChar  
              , ModelServiceId Integer, ModelServiceName TVarChar  
+             , DocumentKindId Integer, DocumentKindName TVarChar  
              , isErased boolean
              ) AS
-$BODY$
+$BODY$ 
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ModelServiceItemMaster());
 
    RETURN QUERY 
@@ -41,6 +42,9 @@ BEGIN
          , Object_ModelService.Id         AS ModelServiceId
          , Object_ModelService.ValueData  AS ModelServiceName
 
+         , Object_DocumentKind.Id         AS DocumentKindId
+         , Object_DocumentKind.ValueData  AS DocumentKindName
+
          , Object_ModelServiceItemMaster.isErased AS isErased
          
      FROM OBJECT AS Object_ModelServiceItemMaster
@@ -63,6 +67,11 @@ BEGIN
                                ON ObjectLink_ModelServiceItemMaster_ModelService.ObjectId = Object_ModelServiceItemMaster.Id
                               AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
           LEFT JOIN Object AS Object_ModelService ON Object_ModelService.Id = ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_DocumentKind
+                               ON ObjectLink_ModelServiceItemMaster_DocumentKind.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_DocumentKind.DescId = zc_ObjectLink_ModelServiceItemMaster_DocumentKind()
+          LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = ObjectLink_ModelServiceItemMaster_DocumentKind.ChildObjectId
           
           LEFT JOIN ObjectFloat AS ObjectFloat_MovementDesc 
                                 ON ObjectFloat_MovementDesc.ObjectId = Object_ModelServiceItemMaster.Id 
@@ -87,11 +96,12 @@ ALTER FUNCTION gpSelect_Object_ModelServiceItemMaster (TVarChar) OWNER TO postgr
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.06.16         * DocumentKind
  21.11.13                                        * MovementDescName
  19.10.13         * 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_ModelServiceItemMaster ('2')

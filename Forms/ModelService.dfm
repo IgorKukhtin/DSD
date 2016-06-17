@@ -27,9 +27,6 @@ object ModelServiceForm: TModelServiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -6
-    ExplicitTop = 20
-    ExplicitHeight = 358
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -126,10 +123,6 @@ object ModelServiceForm: TModelServiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 467
-    ExplicitTop = 20
-    ExplicitWidth = 519
-    ExplicitHeight = 358
     object cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemMasterDS
@@ -187,6 +180,21 @@ object ModelServiceForm: TModelServiceForm
         Properties.Buttons = <
           item
             Action = MovementDescChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clDocumentKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'DocumentKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = DocumentKindChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -329,7 +337,6 @@ object ModelServiceForm: TModelServiceForm
     Width = 8
     Height = 352
     Control = cxGrid
-    ExplicitHeight = 501
   end
   object cxSplitterBottom: TcxSplitter
     Left = 0
@@ -338,7 +345,6 @@ object ModelServiceForm: TModelServiceForm
     Height = 6
     AlignSplitter = salBottom
     Control = cxGridStaffListCost
-    ExplicitTop = 20
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -659,6 +665,7 @@ object ModelServiceForm: TModelServiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -666,6 +673,7 @@ object ModelServiceForm: TModelServiceForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -690,11 +698,13 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TModelServiceEditForm'
       FormNameParam.Value = 'TModelServiceEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = ModelServiceItemMasterDS
@@ -711,6 +721,7 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TModelServiceEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -718,6 +729,7 @@ object ModelServiceForm: TModelServiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -745,12 +757,14 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -758,6 +772,7 @@ object ModelServiceForm: TModelServiceForm
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -791,12 +806,14 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TModelServiceKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ModelServiceKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -804,6 +821,7 @@ object ModelServiceForm: TModelServiceForm
           Component = MasterCDS
           ComponentItem = 'ModelServiceKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -815,12 +833,14 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -828,6 +848,7 @@ object ModelServiceForm: TModelServiceForm
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'FromName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -839,12 +860,14 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'Toid'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -852,6 +875,34 @@ object ModelServiceForm: TModelServiceForm
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'ToName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object DocumentKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'DocumentKindChoiceForm'
+      FormName = 'TDocumentKindForm'
+      FormNameParam.Value = 'TDocumentKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'DocumentKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'DocumentKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -863,12 +914,14 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TSelectKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'SelectKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -876,6 +929,7 @@ object ModelServiceForm: TModelServiceForm
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'SelectKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -887,12 +941,14 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TGoodsTree_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = ModelServiceItemChildCDS
           ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -900,6 +956,7 @@ object ModelServiceForm: TModelServiceForm
           Component = ModelServiceItemChildCDS
           ComponentItem = 'FromName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -911,12 +968,14 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TGoodsTree_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ModelServiceItemChildCDS
           ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -924,6 +983,7 @@ object ModelServiceForm: TModelServiceForm
           Component = ModelServiceItemChildCDS
           ComponentItem = 'ToName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -935,12 +995,14 @@ object ModelServiceForm: TModelServiceForm
       FormName = 'TMovementDescForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'MovementDescId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -948,6 +1010,7 @@ object ModelServiceForm: TModelServiceForm
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'MovementDescName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1005,6 +1068,7 @@ object ModelServiceForm: TModelServiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -1048,6 +1112,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementDescId'
@@ -1056,6 +1121,7 @@ object ModelServiceForm: TModelServiceForm
         ComponentItem = 'MovementDescId'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRatio'
@@ -1064,6 +1130,7 @@ object ModelServiceForm: TModelServiceForm
         ComponentItem = 'Ratio'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1072,6 +1139,7 @@ object ModelServiceForm: TModelServiceForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inModelServiceId'
@@ -1079,6 +1147,7 @@ object ModelServiceForm: TModelServiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1086,6 +1155,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'FromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -1093,6 +1163,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'ToId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSelectKindId'
@@ -1100,6 +1171,15 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'SelectKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentKindId'
+        Value = Null
+        Component = ModelServiceItemMasterCDS
+        ComponentItem = 'DocumentKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 600
@@ -1143,6 +1223,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1151,6 +1232,7 @@ object ModelServiceForm: TModelServiceForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1158,6 +1240,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemChildCDS
         ComponentItem = 'FromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -1165,6 +1248,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemChildCDS
         ComponentItem = 'ToId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inModelServiceItemMasterId'
@@ -1172,6 +1256,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -1188,6 +1273,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 528
@@ -1256,6 +1342,7 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 400
