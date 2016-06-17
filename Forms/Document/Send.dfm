@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 861
   ExplicitWidth = 877
-  ExplicitHeight = 652
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -421,6 +421,23 @@ inherited SendForm: TSendForm
       Caption = #1050#1086#1084#1091
     end
   end
+  object cxLabel6: TcxLabel [2]
+    Left = 477
+    Top = 45
+    Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  end
+  object edDocumentKind: TcxButtonEdit [3]
+    Left = 477
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 270
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -456,6 +473,7 @@ inherited SendForm: TSendForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
@@ -484,12 +502,14 @@ inherited SendForm: TSendForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -497,6 +517,7 @@ inherited SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -521,12 +542,14 @@ inherited SendForm: TSendForm
       FormName = 'TStorage_ObjectForm'
       FormNameParam.Value = 'TStorage_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'StorageId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -534,6 +557,7 @@ inherited SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'StorageName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -545,12 +569,14 @@ inherited SendForm: TSendForm
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -558,6 +584,7 @@ inherited SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -569,18 +596,21 @@ inherited SendForm: TSendForm
       FormName = 'TPartionGoodsChoiceForm'
       FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inGoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inUnitId'
           Value = ''
           Component = GuidesFrom
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Key'
@@ -588,6 +618,7 @@ inherited SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'PartionGoodsId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -596,6 +627,7 @@ inherited SendForm: TSendForm
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price'
@@ -604,6 +636,7 @@ inherited SendForm: TSendForm
           ComponentItem = 'Price'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StorageName'
@@ -612,14 +645,16 @@ inherited SendForm: TSendForm
           ComponentItem = 'StorageName_Partion'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDatePartion'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -631,12 +666,14 @@ inherited SendForm: TSendForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -644,12 +681,14 @@ inherited SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -671,6 +710,7 @@ inherited SendForm: TSendForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -678,6 +718,7 @@ inherited SendForm: TSendForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -685,16 +726,19 @@ inherited SendForm: TSendForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -795,10 +839,11 @@ inherited SendForm: TSendForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
-    Left = 830
-    Top = 265
+    Left = 750
+    Top = 225
   end
   inherited PopupMenu: TPopupMenu
     Left = 800
@@ -816,12 +861,14 @@ inherited SendForm: TSendForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -829,24 +876,28 @@ inherited SendForm: TSendForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSend'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSendTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSendBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 496
@@ -869,25 +920,29 @@ inherited SendForm: TSendForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -895,6 +950,7 @@ inherited SendForm: TSendForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -902,12 +958,14 @@ inherited SendForm: TSendForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -915,12 +973,14 @@ inherited SendForm: TSendForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -928,91 +988,113 @@ inherited SendForm: TSendForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
+        Name = 'DocumentKindId'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
+        Name = 'DocumentKindName'
         Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Component = GuidesDocumentKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1026,6 +1108,7 @@ inherited SendForm: TSendForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1033,6 +1116,7 @@ inherited SendForm: TSendForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1040,6 +1124,7 @@ inherited SendForm: TSendForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1047,6 +1132,7 @@ inherited SendForm: TSendForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -1054,62 +1140,77 @@ inherited SendForm: TSendForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
+        Name = 'inDocumentKindId'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1146,6 +1247,7 @@ inherited SendForm: TSendForm
         Control = edTo
       end
       item
+        Control = edDocumentKind
       end
       item
       end
@@ -1190,6 +1292,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1197,6 +1300,7 @@ inherited SendForm: TSendForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1204,6 +1308,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1212,14 +1317,16 @@ inherited SendForm: TSendForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCount'
@@ -1228,6 +1335,7 @@ inherited SendForm: TSendForm
         ComponentItem = 'Count'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
@@ -1236,6 +1344,7 @@ inherited SendForm: TSendForm
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioPartionGoods'
@@ -1244,6 +1353,7 @@ inherited SendForm: TSendForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1251,6 +1361,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAssetId'
@@ -1258,6 +1369,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1265,6 +1377,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStorageId'
@@ -1272,6 +1385,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'StorageId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsId'
@@ -1279,6 +1393,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1290,6 +1405,7 @@ inherited SendForm: TSendForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1297,6 +1413,7 @@ inherited SendForm: TSendForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1304,32 +1421,37 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioPartionGoods'
@@ -1338,6 +1460,7 @@ inherited SendForm: TSendForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1345,6 +1468,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAssetId'
@@ -1352,6 +1476,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1359,6 +1484,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStorageId'
@@ -1366,6 +1492,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'StorageId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsId'
@@ -1373,6 +1500,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 272
@@ -1383,6 +1511,7 @@ inherited SendForm: TSendForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -1426,11 +1555,13 @@ inherited SendForm: TSendForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 367
@@ -1441,6 +1572,7 @@ inherited SendForm: TSendForm
     LookupControl = edFrom
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1450,6 +1582,7 @@ inherited SendForm: TSendForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1458,6 +1591,7 @@ inherited SendForm: TSendForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 16
@@ -1467,6 +1601,7 @@ inherited SendForm: TSendForm
     LookupControl = edTo
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1476,6 +1611,7 @@ inherited SendForm: TSendForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1484,8 +1620,38 @@ inherited SendForm: TSendForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 544
-    Top = 16
+    Left = 600
+    Top = 8
+  end
+  object GuidesDocumentKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentKind
+    FormNameParam.Value = 'TDocumentKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDocumentKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDocumentKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 664
+    Top = 48
   end
 end

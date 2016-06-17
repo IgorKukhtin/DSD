@@ -54,6 +54,9 @@ type
     clMeasureName: TcxGridDBColumn;
     actGoodsChoiceForm: TOpenChoiceForm;
     colAmountRemains: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edDocumentKind: TcxButtonEdit;
+    GuidesDocumentKind: TdsdGuides;
   private
     { Private declarations }
   public
