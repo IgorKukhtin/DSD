@@ -98,7 +98,19 @@ BEGIN
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
-             , MovementString_PartionGoods.ValueData      AS PartionGoods
+             , CASE WHEN MIString_PartionGoodsMI.ValueData <> ''
+                         THEN MIString_PartionGoodsMI.ValueData
+                    WHEN MI_Partion.Id > 0
+                         THEN 
+                       ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
+                     || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
+                     || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
+                     || ' партия=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
+                     || ' № <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
+                       )
+                    ELSE MIFloat_MovementItemId.ValueData :: TVarChar
+               END :: TVarChar AS PartionGoods
+
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
 
              , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -287,6 +299,20 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
             
+                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                             ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                                 LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer
+                                 LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
+                                                                       AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
+                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                                                  ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
+                                                                 AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                 LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                                             ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
+                                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -304,4 +330,4 @@ ALTER FUNCTION gpSelect_Movement_WeighingProduction_Item (TDateTime, TDateTime, 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingProduction_Item (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inGoodsGroupId:= 0, inGoodsId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingProduction_Item (inStartDate:= '01.05.2016', inEndDate:= '01.05.2016', inGoodsGroupId:= 0, inGoodsId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

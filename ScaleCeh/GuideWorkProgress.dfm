@@ -26,7 +26,6 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 731
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -35,7 +34,6 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 731
       object bbExit: TSpeedButton
         Left = 443
         Top = 3
@@ -98,7 +96,6 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
       Height = 350
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 731
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -426,7 +423,6 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 731
     object gbGoodsCode: TGroupBox
       Left = 0
       Top = 0
@@ -456,7 +452,6 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
       Align = alClient
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       TabOrder = 1
-      ExplicitWidth = 594
       object EditGoodsName: TEdit
         Left = 5
         Top = 17

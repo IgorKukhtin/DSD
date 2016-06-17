@@ -20,6 +20,7 @@ $BODY$
 
    DECLARE vbId_tmp Integer;
    DECLARE vbGoodsId_ReWork Integer;
+   DECLARE vbDocumentKindId Integer;
    DECLARE vbPartionGoods   TVarChar;
    DECLARE vbPartionGoods_partner TVarChar;
    DECLARE vbIsProductionIn Boolean;
@@ -57,6 +58,32 @@ BEGIN
                               ) AS tmp
                         );
 
+     -- определили <Тип документа>
+     vbDocumentKindId:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
+                         FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                               , inLevel2      := 'Movement'
+                                                               , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                               , inItemName    := 'DocumentKindId'
+                                                               , inDefaultValue:= '0'
+                                                               , inSession     := inSession
+                                                                ) AS RetV
+                               FROM MovementFloat
+                               WHERE MovementFloat.MovementId = inMovementId
+                                 AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                 AND MovementFloat.ValueData > 0
+                              ) AS tmp
+                        );
+     -- определили <Партия товара>
+     vbPartionGoods:= (SELECT DISTINCT MIString_PartionGoods.ValueData
+                       FROM MovementItem
+                            INNER JOIN MovementItemString AS MIString_PartionGoods
+                                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                                         AND MIString_PartionGoods.ValueData <> ''
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.isErased = FALSE
+                         AND vbMovementDescId = zc_Movement_ProductionSeparate()
+                      );
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
      IF vbMovementDescId = zc_Movement_Send() AND (vbGoodsId_ReWork > 0 
@@ -93,18 +120,6 @@ BEGIN
          vbIsProductionIn:= TRUE;
      END IF;
 
-
-     -- определили <Партия товара>
-     vbPartionGoods:= (SELECT DISTINCT MIString_PartionGoods.ValueData
-                       FROM MovementItem
-                            INNER JOIN MovementItemString AS MIString_PartionGoods
-                                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
-                                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                                         AND MIString_PartionGoods.ValueData <> ''
-                       WHERE MovementItem.MovementId = inMovementId
-                         AND MovementItem.isErased = FALSE
-                         AND vbMovementDescId = zc_Movement_ProductionSeparate()
-                      );
 
      -- для zc_Movement_ProductionUnion + если Обвалка
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
@@ -293,7 +308,10 @@ BEGIN
     IF COALESCE (vbMovementId_begin, 0) = 0
     THEN
         -- сохранили
-        vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_Loss()
+        vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
+                                                    -- !!!нет Документа!!!
+                                               THEN 0
+                                          WHEN vbMovementDescId = zc_Movement_Loss()
                                                     -- <Списание>
                                                THEN lpInsertUpdate_Movement_Loss_scale
                                                    (ioId                    := 0
@@ -325,7 +343,7 @@ BEGIN
                                                   , inOperDate              := inOperDate
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
-                                                  , inDocumentKindId        := 0
+                                                  , inDocumentKindId        := vbDocumentKindId
                                                   , inIsPeresort            := FALSE
                                                   , inUserId                := vbUserId
                                                    )
@@ -355,14 +373,19 @@ BEGIN
 
                                     FROM gpGet_Movement_WeighingProduction (inMovementId:= inMovementId, inSession:= inSession) AS tmp
                                  );
-         -- Проверка
-         IF COALESCE (vbMovementId_begin, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
-         END IF;
 
-        -- дописали св-во <Дата/время создания>
-        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId_begin, CURRENT_TIMESTAMP);
+         -- только НЕ для <Взвешивание п/ф факт куттера>
+         IF vbMovementDescId <> zc_Movement_ProductionUnion() OR vbDocumentKindId <> zc_Enum_DocumentKind_CuterWeight()
+         THEN
+             -- Проверка
+             IF COALESCE (vbMovementId_begin, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
+             END IF;
+
+            -- дописали св-во <Дата/время создания>
+            PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId_begin, CURRENT_TIMESTAMP);
+         END IF;
 
     ELSE
         -- Распроводим Документ !!!существующий!!!
@@ -484,6 +507,13 @@ BEGIN
                                                         , inUserId              := vbUserId
                                                          )
 
+                       WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
+                                 -- <Приход с производства> - Взвешивание п/ф факт куттера
+                            THEN lpUpdate_MI_ProductionUnion_CuterWeight
+                                                         (inId                  := tmp.MovementItemId_Partion
+                                                        , inAmount              := tmp.Amount
+                                                        , inUserId              := vbUserId
+                                                         )
                        WHEN vbMovementDescId = zc_Movement_ProductionUnion()
                                  -- <Приход с производства>
                             THEN lpInsertUpdate_MI_ProductionUnion_Master
@@ -543,6 +573,7 @@ BEGIN
 
                   END AS tmpId
           FROM (SELECT MAX (tmp.MovementItemId)      AS MovementItemId_find
+                     , tmp.MovementItemId_Partion
                      , tmp.GoodsId
                      , tmp.GoodsKindId
                      , tmp.PartionGoodsDate
@@ -609,6 +640,9 @@ BEGIN
                                        THEN 0 -- надо суммировать
                                   ELSE MovementItem.Id -- пока не надо суммировать
                              END AS myId
+
+                           , MIFloat_MovementItemId.ValueData :: Integer AS MovementItemId_Partion
+
                       FROM MovementItem
                            LEFT JOIN _tmpScale_receipt ON _tmpScale_receipt.GoodsId_from = MovementItem.ObjectId
 
@@ -624,6 +658,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
                                                        ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
                                                       AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                       ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
 
                            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -666,6 +704,9 @@ BEGIN
 
                            , 0                                                   AS Amount_mi
                            , 0                                                   AS myId
+
+                           , 0                                                   AS MovementItemId_Partion
+
                       FROM (SELECT zc_MI_Master() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_Inventory()
                            UNION
                             SELECT zc_MI_Master() AS DescId, -1 AS Amount WHERE vbMovementDescId = zc_Movement_ProductionUnion()
@@ -702,7 +743,8 @@ BEGIN
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                      ) AS tmp
-                GROUP BY tmp.GoodsId
+                GROUP BY tmp.MovementItemId_Partion
+                       , tmp.GoodsId
                        , tmp.GoodsKindId
                        , tmp.PartionGoodsDate
                        , tmp.PartionGoods
@@ -825,7 +867,7 @@ BEGIN
                                               , inSession        := inSession);
           ELSE
                -- <Приход с производства>
-               IF vbMovementDescId = zc_Movement_ProductionUnion()
+               IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId <> zc_Enum_DocumentKind_CuterWeight()
                THEN
                    -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
                    PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
@@ -848,10 +890,10 @@ BEGIN
 
 
      -- финиш - сохранили <Документ> - <Взвешивание (производство)> - только дату + ParentId + AccessKeyId
-     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, vbMovementId_begin, Movement_begin.AccessKeyId)
+     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, COALESCE (Movement_begin.Id, Movement.ParentId), COALESCE (Movement_begin.AccessKeyId, Movement.AccessKeyId))
      FROM Movement
           LEFT JOIN Movement AS Movement_begin ON Movement_begin.Id = vbMovementId_begin
-     WHERE Movement.Id = inMovementId ;
+     WHERE Movement.Id = inMovementId;
 
      -- сохранили свойство <Протокол взвешивания>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inMovementId, CURRENT_TIMESTAMP);

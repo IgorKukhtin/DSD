@@ -264,11 +264,21 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
           Name = 'WMDTYPESTR'
           DataType = ftString
           Size = 4
+        end
+        item
+          Name = 'DKOR'
+          DataType = ftDate
+        end
+        item
+          Name = 'D1_NUM'
+          DataType = ftString
+          Size = 20
         end>
       DataSet = TaxBillList
       OpenFileDialog = False
       FileName.Value = Null
       FileName.DataType = ftString
+      FileName.MultiSelectSeparator = ','
     end
     object actClose: TdsdFormClose
       Category = 'DSDLib'
@@ -296,6 +306,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -303,20 +314,23 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDateReg'
-        Value = Null
+        Value = 'NULL'
         Component = deStartReg
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDateReg'
-        Value = Null
+        Value = 'NULL'
         Component = deEndReg
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -324,6 +338,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -331,6 +346,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTaxCorrectiveOnly'
@@ -338,6 +354,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = cbTaxCorrectiveOnly
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -359,6 +376,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -367,6 +385,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -374,6 +393,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 53
@@ -383,6 +403,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -393,6 +414,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -401,6 +423,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 112

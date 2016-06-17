@@ -46,7 +46,8 @@ begin
         else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
    end;
    with MainCehForm do
-     if ParamsMovement.ParamByName('DocumentKindId').AsInteger > 0 then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
+     if ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight
+     then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;

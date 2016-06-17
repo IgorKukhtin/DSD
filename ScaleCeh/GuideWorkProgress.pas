@@ -96,6 +96,13 @@ begin
        Execute;
      end;
 
+     if execParamsGoods.ParamByName('MovementItemId').AsInteger < 0 then
+     begin
+          Result:=Checked;
+          if Result then CopyValuesParamsFrom(ParamsGoods_local,execParamsGoods);
+          exit;
+     end;
+
      if execParamsGoods.ParamByName('GoodsCode').AsInteger = 0
      then begin
                fEnterGoodsCode:=true;

@@ -103,15 +103,17 @@ BEGIN
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )
        , tmpMI_Weighing AS (SELECT tmpMI.MovementItemId
-                                 , MovementItem.Amount
+                                 , SUM (MovementItem.Amount) :: TFloat AS Amount
                             FROM tmpMI
                                  INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                               ON MIFloat_MovementItemId.ValueData = tmpMI.MovementItemId
                                                              AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
-                                 INNER JOIN MovementItem ON MovementItem.Id = MIFloat_MovementItemId.MovementItemId
+                                 INNER JOIN MovementItem ON MovementItem.Id         = MIFloat_MovementItemId.MovementItemId
+                                                        AND MovementItem.isErased   = FALSE
                                  INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                     AND Movement.DescId   = zc_Movement_WeighingProduction()
                                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                            GROUP BY tmpMI.MovementItemId
                            )
        -- Результат
        SELECT tmpMI.MovementId
