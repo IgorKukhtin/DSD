@@ -287,6 +287,24 @@ $BODY$
  09.06.15                        *
 
 */
+/*
+-- !!!ERROR - UPDATE!!!
+-- update  ObjectHistory set EndDate = coalesce (tmp.StartDate, zc_DateEnd()) from (
+with tmp as (
+select ObjectHistory_Price.*
+     , Row_Number() OVER (PARTITION BY ObjectHistory_Price.ObjectId ORDER BY ObjectHistory_Price.StartDate Asc, ObjectHistory_Price.Id) AS Ord
+from ObjectHistory AS ObjectHistory_Price
+-- Where ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+)
 
+select  tmp.Id, tmp.ObjectId, tmp.EndDate,  tmp2.StartDate, tmp2.Ord, ObjectHistoryDesc.Code
+from tmp
+     left join tmp as tmp2 on tmp2.ObjectId = tmp.ObjectId and tmp2.Ord = tmp.Ord + 1 and tmp2.DescId = tmp.DescId
+     left join ObjectHistoryDesc on ObjectHistoryDesc. Id = tmp.DescId
+where tmp.EndDate <> coalesce (tmp2.StartDate, zc_DateEnd())
+ order by 3-- ) as tmp where tmp.Id = ObjectHistory.Id
+-- select * from ObjectHistory   where ObjectId = 558863 order by StartDate
+-- select ObjectHistoryDesc.Code, ObjectId, StartDate, count (*) from ObjectHistory  join ObjectHistoryDesc on ObjectHistoryDesc. Id = DescId group by ObjectHistoryDesc.Code, ObjectId, StartDate having count (*) > 1
+*/
 -- тест
---select * from gpSelect_Object_Price(inUnitId := 183292 , inStartDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+-- select * from gpSelect_Object_Price(inUnitId := 183292 , inStartDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

@@ -17,7 +17,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Load(
 RETURNS TABLE (NPP TVarChar,  NUM TVarChar,   DATEV TDateTime, NAZP TVarChar, IPN TVarChar, 
                ZAGSUM TFloat, BAZOP20 TFloat, SUMPDV TFloat,   BAZOP0 TFloat, ZVILN TFloat,
                EXPORT TFloat, PZOB TFloat,    NREZ TFloat,     KOR TFloat,    WMDTYPE TFloat, 
-               WMDTYPESTR TVarChar)
+               WMDTYPESTR TVarChar
+             , DKOR TDateTime, D1_NUM TVarChar
+)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -63,6 +65,10 @@ BEGIN
                        THEN 'РКП'
                   ELSE ''
              END ::TVarChar AS WMDTYPESTR
+
+           , Movement_DocumentChild.OperDate AS DKOR
+           , (MS_InvNumberPartner_DocumentChild.ValueData || CASE WHEN MS_InvNumberBranch_DocumentChild.ValueData <> '' THEN '/' || MS_InvNumberBranch_DocumentChild.ValueData ELSE '' END) :: TVarChar AS D1_NUM
+
        FROM Movement
             INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -71,6 +77,18 @@ BEGIN
                                                                                 AND (View_Contract_InvNumber.InfoMoneyId NOT IN (zc_Enum_InfoMoney_30201()) -- Мясное сырье
                                                                                   OR inInfoMoneyId <> 0
                                                                                     )
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                           ON MovementLinkMovement_Child.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                                          AND Movement.DescId = zc_Movement_TaxCorrective()
+            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_Child.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_DocumentChild ON MS_InvNumberPartner_DocumentChild.MovementId = Movement_DocumentChild.Id
+                                                                         AND MS_InvNumberPartner_DocumentChild.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MS_InvNumberBranch_DocumentChild
+                                     ON MS_InvNumberBranch_DocumentChild.MovementId =  Movement_DocumentChild.Id
+                                    AND MS_InvNumberBranch_DocumentChild.DescId = zc_MovementString_InvNumberBranch()
+
+
             LEFT JOIN MovementString AS MovementString_InvNumberBranch
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
@@ -156,4 +174,4 @@ ALTER FUNCTION gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TDateTime, TDat
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '01.02.2015', inEndDate:= '28.02.2015', inStartDateReg:= '16.03.2015', inEndDateReg:= '16.03.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '01.06.2016', inEndDate:= '01.06.2016', inStartDateReg:= '16.03.2015', inEndDateReg:= '16.03.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, inSession:= zfCalc_UserAdmin())

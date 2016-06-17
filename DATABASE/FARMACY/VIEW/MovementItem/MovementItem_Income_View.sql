@@ -22,8 +22,8 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
            , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))::TFloat AS SummSale
            , MovementItem.isErased              AS isErased
            , MovementItem.MovementId            AS MovementId
-           , MIDate_ExpirationDate.ValueData    AS ExpirationDate
-           , MIString_PartionGoods.ValueData    AS PartionGoods
+           , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) :: TDateTime AS ExpirationDate
+           , COALESCE(MIString_PartionGoods.ValueData, '')              :: TVarChar  AS PartionGoods
            , MIString_FEA.ValueData             AS FEA
            , MIString_Measure.ValueData         AS Measure
            , Object_PartnerGoods.MakerName      AS MakerName

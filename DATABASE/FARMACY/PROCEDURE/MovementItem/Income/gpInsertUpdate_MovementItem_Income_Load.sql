@@ -326,15 +326,15 @@ BEGIN
 
        WHERE Goods_Juridical.GoodsId = vbPartnerGoodsId;
 
-  -- Ищем товар в документе. Пока ключи: код поставщика, документ, цена, партия, срок годности. 
-     SELECT MovementItem.Id INTO vbMovementItemId
-       FROM MovementItem_Income_View AS MovementItem
-        
-      WHERE MovementItem.MovementId = vbMovementId
-        AND MovementItem.PartnerGoodsId = vbPartnerGoodsId
-        AND MovementItem.Price = inPrice--MovementItem.Price
-        AND MovementItem.PartionGoods = inPartitionGoods
-        AND MovementItem.ExpirationDate = inExpirationDate;
+     -- Ищем товар в документе. Пока ключи: код поставщика, документ, цена, партия, срок годности. 
+     SELECT MovementItem.Id
+            INTO vbMovementItemId
+     FROM MovementItem_Income_View AS MovementItem
+     WHERE MovementItem.MovementId     = vbMovementId
+       AND MovementItem.PartnerGoodsId = vbPartnerGoodsId
+       AND MovementItem.Price          = inPrice -- MovementItem.Price
+       AND MovementItem.PartionGoods   = inPartitionGoods
+       AND MovementItem.ExpirationDate = COALESCE (inExpirationDate, zc_DateStart());
   
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
@@ -346,29 +346,29 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
 
      -- Срок годности заодно влепим
-     IF NOT (inExpirationDate IS NULL) THEN 
+     IF inExpirationDate IS NOT NULL THEN 
         -- сохранили свойство <Срок годности>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), vbMovementItemId, inExpirationDate);
      END IF;
 
      -- Ну и серию, если есть 
-     IF COALESCE(inPartitionGoods, '') <> '' THEN 
+     IF inPartitionGoods <> '' THEN 
         -- сохранили свойство <Серия>
         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), vbMovementItemId, inPartitionGoods);
      END IF;
      
     -- Если есть то рег номер
-     IF COALESCE(inSertificatNumber, '') <> '' THEN 
+     IF inSertificatNumber <> '' THEN 
         -- сохранили свойство <Номер регистрации>
         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_SertificatNumber(), vbMovementItemId, inSertificatNumber);
      END IF;
     -- Если есть до дату начала регистрации
-     IF inSertificatStart is not null THEN 
+     IF inSertificatStart IS NOT NULL THEN
         -- сохранили свойство <Дата начала регистрации>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SertificatStart(), vbMovementItemId, inSertificatStart);
      END IF;
     -- Если есть до дату окончания регистрации
-     IF inSertificatEnd is not null THEN 
+     IF inSertificatEnd IS NOT NULL THEN
         -- сохранили свойство <Дата окончания регистрации>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SertificatEnd(), vbMovementItemId, inSertificatEnd);
      END IF;

@@ -647,6 +647,12 @@ begin
          Execute;
          zc_BarCodePref_MI:=DataSet.FieldByName('Value').asString;
 
+         // DocumentKind
+         // Взвешивание п/ф факт куттера
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_DocumentKind_CuterWeight() :: TVarChar';
+         Execute;
+         zc_Enum_DocumentKind_CuterWeight:=DataSet.FieldByName('Value').asInteger;
+
          // InfoMoney
          // 30201 Доходы + Мясное сырье + Мясное сырье
          Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_InfoMoney_30201() :: TVarChar';

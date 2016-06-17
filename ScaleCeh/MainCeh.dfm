@@ -962,8 +962,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = -15
-        ExplicitTop = 21
+        ExplicitWidth = 59
       end
       object OperDateEdit: TcxDateEdit
         Left = 10
@@ -1565,8 +1564,6 @@ object MainCehForm: TMainCehForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 1
-        ExplicitLeft = -6
-        ExplicitTop = 46
       end
     end
     object PanelGoodsKind: TPanel
@@ -1577,7 +1574,6 @@ object MainCehForm: TMainCehForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 113
       object LabelGoodsKind: TLabel
         Left = 0
         Top = 0
@@ -1641,7 +1637,6 @@ object MainCehForm: TMainCehForm
       Height = 41
       Align = alTop
       TabOrder = 2
-      ExplicitTop = 269
       object LabelPartionGoods: TLabel
         Left = 1
         Top = 1
@@ -1677,7 +1672,6 @@ object MainCehForm: TMainCehForm
       Height = 51
       Align = alTop
       TabOrder = 3
-      ExplicitTop = 310
       object LabelCount_all: TLabel
         Left = 1
         Top = 1
@@ -1776,7 +1770,6 @@ object MainCehForm: TMainCehForm
       Height = 37
       Align = alTop
       TabOrder = 4
-      ExplicitTop = 463
       object PanelSkewer2: TPanel
         Left = 1
         Top = 1
@@ -1864,7 +1857,6 @@ object MainCehForm: TMainCehForm
       Height = 51
       Align = alTop
       TabOrder = 5
-      ExplicitTop = 361
       object LabelTare_enter_all: TLabel
         Left = 1
         Top = 1
@@ -1968,7 +1960,6 @@ object MainCehForm: TMainCehForm
       Height = 51
       Align = alTop
       TabOrder = 6
-      ExplicitTop = 412
       object LabelSkewer: TLabel
         Left = 1
         Top = 1
@@ -2072,7 +2063,6 @@ object MainCehForm: TMainCehForm
       Height = 38
       Align = alTop
       TabOrder = 7
-      ExplicitTop = 500
       object LabelWeightOther: TLabel
         Left = 1
         Top = 1
@@ -2183,10 +2173,6 @@ object MainCehForm: TMainCehForm
           'MemoMovementInfo')
         ReadOnly = True
         TabOrder = 0
-        ExplicitLeft = 112
-        ExplicitTop = 8
-        ExplicitWidth = 185
-        ExplicitHeight = 89
       end
     end
   end
