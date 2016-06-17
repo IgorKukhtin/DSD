@@ -80,7 +80,8 @@ uses
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
   GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
   GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
-  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas';
 
 {$R *.res}
 

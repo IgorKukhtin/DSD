@@ -74,8 +74,8 @@
 			<VerInfo_Release>4</VerInfo_Release>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<Debugger_RunParams>Scale_EXP.ini ves=1</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>3</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.4;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>4</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -217,6 +217,7 @@
 				<Form>GuideMovementForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\LocalWorkUnit.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
