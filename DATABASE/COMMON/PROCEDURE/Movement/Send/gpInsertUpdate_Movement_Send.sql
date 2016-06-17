@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Send()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inDocumentKindId      Integer   , -- Тип документа (в документе)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -23,6 +25,7 @@ BEGIN
                                          , inOperDate         := inOperDate
                                          , inFromId           := inFromId
                                          , inToId             := inToId
+                                         , inDocumentKindId   := inDocumentKindId
                                          , inUserId           := vbUserId
                                           );
 
@@ -33,6 +36,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.06.16         *
  29.05.15                                        *
 */
 
