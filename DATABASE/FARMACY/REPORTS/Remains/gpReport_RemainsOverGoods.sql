@@ -88,7 +88,6 @@ BEGIN
         INSERT INTO tmpRemeins (objectid, Remains, UnitId)
                         SELECT tmp.objectid,
                                SUM(tmp.Remains)     AS Remains,
-                               SUM(tmp.RemainsEnd)  AS RemainsEnd,
                                tmp.UnitId
                         FROM (SELECT container.objectid,
                                      Container.WhereObjectId AS UnitId,
