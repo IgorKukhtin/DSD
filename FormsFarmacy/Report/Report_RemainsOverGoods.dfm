@@ -46,6 +46,36 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = clSummaNotMCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colDeficit_Child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRemainsNotMCS_Child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummaNotMCS_Child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaDeficit_Child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -72,6 +102,36 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = clSummaNotMCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colDeficit_Child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clRemainsNotMCS_Child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummaNotMCS_Child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaDeficit_Child
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -161,6 +221,38 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
+          object colRemains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colDeficit: TcxGridDBColumn
+            Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
+            DataBinding.FieldName = 'Deficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clRemainsNotMCS: TcxGridDBColumn
+            Caption = #1048#1079#1083#1080#1096#1077#1082
+            DataBinding.FieldName = 'RemainsNotMCS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Options.Editing = False
+            Width = 70
+          end
           object clMCSValue: TcxGridDBColumn
             AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
             Caption = #1053#1058#1047
@@ -173,16 +265,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
             Width = 53
           end
-          object colRemains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
           object SummaRemains: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'SummaRemains'
@@ -194,20 +276,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 80
           end
-          object clRemainsNotMCS: TcxGridDBColumn
-            Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090
-            DataBinding.FieldName = 'RemainsNotMCS'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
-            Options.Editing = False
-            Width = 70
-          end
           object clSummaNotMCS: TcxGridDBColumn
-            Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
+            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
             DataBinding.FieldName = 'SummaNotMCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
@@ -218,9 +288,66 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 80
           end
+          object SummaDeficit: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
+            DataBinding.FieldName = 'SummaDeficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colDeficit_Child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1085#1077#1076#1086#1089#1090#1072#1095#1072' ('#1076#1088'. '#1072#1087#1090#1077#1082#1080')'
+            DataBinding.FieldName = 'Deficit_Child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object clRemainsNotMCS_Child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1080#1079#1083#1080#1096#1077#1082' ('#1076#1088'. '#1072#1087#1090#1077#1082#1080')'
+            DataBinding.FieldName = 'RemainsNotMCS_Child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Options.Editing = False
+            Width = 81
+          end
+          object clSummaNotMCS_Child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072' ('#1076#1088'. '#1072#1087#1090#1077#1082#1080')'
+            DataBinding.FieldName = 'SummaNotMCS_Child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Options.Editing = False
+            Width = 88
+          end
+          object SummaDeficit_Child: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080' ('#1076#1088'. '#1072#1087#1090#1077#1082#1080')'
+            DataBinding.FieldName = 'SummaDeficit_Child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+          end
           object StartDate: TcxGridDBColumn
             Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089
             DataBinding.FieldName = 'StartDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -233,7 +360,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 71
           end
           object clisErased: TcxGridDBColumn
@@ -281,6 +407,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = cxSummaNotMCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaDeficit
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -306,6 +442,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = cxSummaNotMCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaDeficit
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -374,18 +520,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 55
           end
-          object cxRemainsNotMCS: TcxGridDBColumn
-            Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090
-            DataBinding.FieldName = 'RemainsNotMCS'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
-            Options.Editing = False
-            Width = 70
-          end
           object cxSummaRemains: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'SummaRemains'
@@ -397,8 +531,20 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 80
           end
+          object cxRemainsNotMCS: TcxGridDBColumn
+            Caption = #1048#1079#1083#1080#1096#1077#1082
+            DataBinding.FieldName = 'RemainsNotMCS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Options.Editing = False
+            Width = 70
+          end
           object cxSummaNotMCS: TcxGridDBColumn
-            Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
+            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
             DataBinding.FieldName = 'SummaNotMCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
@@ -406,6 +552,27 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
+            Options.Editing = False
+            Width = 80
+          end
+          object cxDeficit: TcxGridDBColumn
+            Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
+            DataBinding.FieldName = 'Deficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object cxSummaDeficit: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
+            DataBinding.FieldName = 'SummaDeficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
