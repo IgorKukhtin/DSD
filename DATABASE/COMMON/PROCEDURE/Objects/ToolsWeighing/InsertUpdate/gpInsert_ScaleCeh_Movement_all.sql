@@ -333,6 +333,7 @@ BEGIN
                                                   , inOperDate              := inOperDate
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
+                                                  , inDocumentKindId        := vbDocumentKindId
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ProductionUnion()

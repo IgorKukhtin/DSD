@@ -17,7 +17,7 @@ BEGIN
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Province());
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - может ли пользовать видеть весь справочник
-     vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+     -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
      -- Результат
      RETURN QUERY 
@@ -33,8 +33,8 @@ BEGIN
            , Object_Province.isErased    AS isErased
            
        FROM Object AS Object_Province
-            LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId
-                      ) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Province.AccessKeyId
+            -- LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId
+            --           ) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Province.AccessKeyId
        
             LEFT JOIN ObjectLink AS ObjectLink_Province_Region
                                 ON ObjectLink_Province_Region.ObjectId = Object_Province.Id
@@ -42,7 +42,7 @@ BEGIN
             LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_Province_Region.ChildObjectId
 
      WHERE Object_Province.DescId = zc_Object_Province()
-       AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+       -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
     ;
 
 END;

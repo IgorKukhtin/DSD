@@ -422,6 +422,8 @@ begin
                    //если вытянулось из почты письмо
                    if (IdPOP3.Retrieve(i, IdMessage)) then
                    begin
+                        //IdMessage.CharSet := 'UTF-8';
+
                         //находим поставщика, который отправил на этот UserName + есть в нашем списке + время
                         JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].UserName, IdMessage.From.Address);
                         //
