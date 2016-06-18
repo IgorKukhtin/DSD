@@ -667,7 +667,11 @@ BEGIN
                                 AND MovementItem.DescId     = zc_MI_Master()
                                 AND MovementItem.isErased   = FALSE
                              )
-               , MI_Child AS (SELECT MovementItem.Id, MovementItem.ParentId, COALESCE (MIFloat_MovementItemId.ValueData, 0) :: Integer AS MovementItemId_sale
+               , MI_Child AS (SELECT MovementItem.Id, MovementItem.ParentId
+                                   , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MIFloat_MovementItemId.ValueData ORDER BY MovementItem.Id)  = 1
+                                               THEN COALESCE (MIFloat_MovementItemId.ValueData, 0) 
+                                          ELSE 0
+                                     END :: Integer AS MovementItemId_sale
                               FROM MovementItem
                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                                ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id

@@ -81,4 +81,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 228283, inContactPersonId:= 2324911, inByDate:= CURRENT_TIMESTAMP, inByMail:= '', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3
+-- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 2367552, inContactPersonId:= 2324488, inByDate:= CURRENT_TIMESTAMP, inByMail:= ''info-fk.dp@framco.com.ua', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3

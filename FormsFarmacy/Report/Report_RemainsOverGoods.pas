@@ -35,16 +35,24 @@ type
     ChildCDS: TClientDataSet;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    cxGoodsCode: TcxGridDBColumn;
-    cxPrice: TcxGridDBColumn;
-    cxMCSValue: TcxGridDBColumn;
-    cxRemains: TcxGridDBColumn;
-    cxSummaRemains: TcxGridDBColumn;
-    cxRemainsNotMCS: TcxGridDBColumn;
-    cxSummaNotMCS: TcxGridDBColumn;
-    cxisErased: TcxGridDBColumn;
+    chPrice: TcxGridDBColumn;
+    chMCSValue: TcxGridDBColumn;
+    chRemainsStart: TcxGridDBColumn;
+    chSummaRemainsStart: TcxGridDBColumn;
+    chRemainsMCS_from: TcxGridDBColumn;
+    chSummaRemainsMCS_from: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    UnitName: TcxGridDBColumn;
+    chUnitName: TcxGridDBColumn;
+    chStartDate: TcxGridDBColumn;
+    chEndDate: TcxGridDBColumn;
+    SummaMCSValue: TcxGridDBColumn;
+    MCSValue_Child: TcxGridDBColumn;
+    SummaMCSValue_Child: TcxGridDBColumn;
+    RemainsMCS_result: TcxGridDBColumn;
+    SummaRemainsMCS_result: TcxGridDBColumn;
+    chSummaMCSValue: TcxGridDBColumn;
+    chRemainsMCS_result: TcxGridDBColumn;
+    chSummaRemainsMCS_result: TcxGridDBColumn;
   private
     { Private declarations }
   public

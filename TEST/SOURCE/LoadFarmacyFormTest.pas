@@ -405,7 +405,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
-// exit;
+ exit;
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
@@ -484,6 +484,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
+
+  // отчет распределение остатков
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
 
 end;
 

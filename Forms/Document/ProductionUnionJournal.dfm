@@ -4,7 +4,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   ClientWidth = 1073
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -206,10 +206,10 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     Width = 1073
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
