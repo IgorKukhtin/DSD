@@ -319,10 +319,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         item
           StoredProc = spSelectPrint1
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -343,6 +342,46 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       ReportName = 'PrintMovement_ProductionUnion'
       ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = 'PrintMovement_ProductionUnion'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintCeh: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintCeh
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCeh
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' - '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1087'/'#1092' '#1092#1072#1082#1090' '#1082#1091#1090#1090#1077#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' - '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1087'/'#1092' '#1092#1072#1082#1090' '#1082#1091#1090#1090#1077#1088#1072
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
+      ReportNameParam.Value = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -501,6 +540,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintCeh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -522,9 +569,11 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     end
     object bbPrint1: TdxBarButton
       Action = actPrint1
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '
       Category = 0
-      ImageIndex = 16
+    end
+    object bbPrintCeh: TdxBarButton
+      Action = actPrintCeh
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -705,5 +754,42 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     PackSize = 1
     Left = 503
     Top = 168
+  end
+  object spSelectPrintCeh: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 455
+    Top = 256
   end
 end

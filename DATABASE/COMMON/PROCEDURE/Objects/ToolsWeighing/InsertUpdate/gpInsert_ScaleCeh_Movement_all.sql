@@ -642,7 +642,7 @@ BEGIN
                                   ELSE MovementItem.Id -- пока не надо суммировать
                              END AS myId
 
-                           , MIFloat_MovementItemId.ValueData :: Integer AS MovementItemId_Partion
+                           , COALESCE (MIFloat_MovementItemId.ValueData, 0) :: Integer AS MovementItemId_Partion
 
                       FROM MovementItem
                            LEFT JOIN _tmpScale_receipt ON _tmpScale_receipt.GoodsId_from = MovementItem.ObjectId
@@ -970,7 +970,48 @@ BEGIN
                       HAVING COUNT (*) > 1
                     )
           THEN
-              RAISE EXCEPTION 'Ошибка.Документ <Инвентаризация> за <%> заблокирован другим пользователем.Повторите действие через 25 сек.', DATE (inOperDate - INTERVAL '1 DAY');
+              RAISE EXCEPTION 'Ошибка.Документ <Инвентаризация> за <%> заблокирован другим пользователем.Повторите действие через 25 сек. <%> <%>', DATE (inOperDate - INTERVAL '1 DAY')
+                  , lfGet_Object_ValueData (
+                    (SELECT MovementItem.ObjectId
+                     FROM MovementItem
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                     ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                    AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                          LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                       ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                      AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                      WHERE MovementItem.MovementId = vbMovementId_begin
+                        AND MovementItem.isErased = FALSE
+                        AND MovementItem.Amount <> 0
+                      GROUP BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()), COALESCE (MIString_PartionGoods.ValueData, '')
+                      HAVING COUNT (*) > 1
+                      ORDER BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId
+                      LIMIT 1
+                     ))
+                  , lfGet_Object_ValueData (
+                    (SELECT MILinkObject_GoodsKind.ObjectId
+                     FROM MovementItem
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                     ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                    AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                          LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                       ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                      AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                      WHERE MovementItem.MovementId = vbMovementId_begin
+                        AND MovementItem.isErased = FALSE
+                        AND MovementItem.Amount <> 0
+                      GROUP BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()), COALESCE (MIString_PartionGoods.ValueData, '')
+                      HAVING COUNT (*) > 1
+                      ORDER BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId
+                      LIMIT 1
+                     ))
+                ;
           END IF;
 
      END IF;
@@ -1039,6 +1080,11 @@ BEGIN
 
      END IF;
 
+if inSession = '5' AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Errr _end';
+    -- 'Повторите действие через 3 мин.'
+end if;
 
      -- Результат
      RETURN QUERY

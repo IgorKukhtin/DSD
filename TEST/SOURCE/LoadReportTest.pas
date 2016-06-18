@@ -89,8 +89,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('PrintMovement_Tax0416', ReportPath + '\Товарный Учет\PrintMovement_Tax0416.fr3');
-  LoadReportFromFile('PrintMovement_TaxCorrective0416', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0416.fr3');
+  LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
  exit;
   // Другие
   LoadReportFromFile('Шаблон по точкам доставки', ReportPath + '\Отчеты (товарные)\Шаблон по точкам доставки.fr3');
@@ -175,6 +174,7 @@ begin
 
   LoadReportFromFile('Акт обвалки', ReportPath + '\Производство\Акт обвалки.fr3');
   LoadReportFromFile('Накладная по обвалке', ReportPath + '\Производство\Накладная по обвалке.fr3');
+  LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
   LoadReportFromFile('Заявка на производство', ReportPath + '\Производство\Заявка на производство.fr3');
   LoadReportFromFile('Заявка на упаковку', ReportPath + '\Производство\Заявка на упаковку.fr3');
   LoadReportFromFile('Заявка на сырье', ReportPath + '\Производство\Заявка на сырье.fr3');

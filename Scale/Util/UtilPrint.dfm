@@ -42,6 +42,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportNameTax'
@@ -49,6 +50,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'ReportNameSaleTax'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -65,6 +67,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportName'
@@ -72,6 +75,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'ReportNameSale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -88,6 +92,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_Sale_ReportNameBill'
@@ -95,6 +100,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'ReportNameSaleBill'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 584
@@ -121,12 +127,14 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 327
@@ -153,12 +161,14 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 327
@@ -185,6 +195,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 175
@@ -208,6 +219,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 455
@@ -231,6 +243,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 687
@@ -251,6 +264,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 447
@@ -271,6 +285,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_by'
@@ -278,6 +293,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'MovementId_by'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 583
@@ -298,6 +314,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_by'
@@ -305,6 +322,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'MovementId_by'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 583
@@ -316,41 +334,49 @@ object UtilPrintForm: TUtilPrintForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSale'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSaleTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_by'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportType'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EDIEventsName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDiff'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 16
@@ -381,16 +407,19 @@ object UtilPrintForm: TUtilPrintForm
       FormName = 'TQualityDocForm'
       FormNameParam.Value = 'TQualityDocForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MovementId_Sale'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -416,18 +445,21 @@ object UtilPrintForm: TUtilPrintForm
       FormName = 'TTransportGoodsForm'
       FormNameParam.Value = 'TTransportGoodsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
           Component = FormParams
           ComponentItem = 'MovementId_by'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MovementId_Sale'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -436,6 +468,7 @@ object UtilPrintForm: TUtilPrintForm
           ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -467,12 +500,14 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SaleInvoice'
       ReportNameParam.Name = 'PrintMovement_SaleInvoice'
       ReportNameParam.Value = 'PrintMovement_SaleInvoice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Tax_ReportName: TdsdExecStoredProc
       Category = 'Print_Tax'
@@ -515,11 +550,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SaleSpec'
       ReportNameParam.Value = 'PrintMovement_SaleSpec'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_ExpPack: TdsdPrintAction
       Category = 'Print_Export'
@@ -545,12 +582,14 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SalePack'
       ReportNameParam.Name = 'PrintMovement_SalePack'
       ReportNameParam.Value = 'PrintMovement_SalePack'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Sale: TMultiAction
       Category = 'DSDLib'
@@ -607,6 +646,7 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -615,6 +655,7 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_ReturnIn: TMultiAction
       Category = 'DSDLib'
@@ -668,6 +709,7 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -676,6 +718,7 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Account: TMultiAction
       Category = 'Print_Account'
@@ -728,6 +771,7 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1057#1095#1077#1090
@@ -736,6 +780,7 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.ComponentItem = 'ReportNameSaleBill'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Tax_Us: TMultiAction
       Category = 'Print_Tax'
@@ -780,6 +825,7 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -788,6 +834,7 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.ComponentItem = 'ReportNameSaleTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Tax_Client: TMultiAction
       Category = 'Print_Tax'
@@ -832,6 +879,7 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -840,6 +888,7 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.ComponentItem = 'ReportNameSaleTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Pack: TdsdPrintAction
       Category = 'Print_Fozzy'
@@ -867,11 +916,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SalePack21'
       ReportNameParam.Value = 'PrintMovement_SalePack21'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Spec: TdsdPrintAction
       Category = 'Print_Fozzy'
@@ -897,17 +948,21 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SalePack22'
       ReportNameParam.Value = 'PrintMovement_SalePack22'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actInvoice: TEDIAction
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediInvoice
       HeaderDataSet = PrintHeaderCDS
@@ -939,17 +994,21 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actOrdSpr: TEDIAction
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediOrdrsp
       HeaderDataSet = PrintHeaderCDS
@@ -959,7 +1018,9 @@ object UtilPrintForm: TUtilPrintForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediDesadv
       HeaderDataSet = PrintHeaderCDS
@@ -972,11 +1033,13 @@ object UtilPrintForm: TUtilPrintForm
           FromParam.Name = 'EDIEventsName'
           FromParam.Value = 'zc_MovementBoolean_EdiInvoice'
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EDIEventsName'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'EDIEventsName'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1004,11 +1067,13 @@ object UtilPrintForm: TUtilPrintForm
           FromParam.Name = 'EDIEventsName'
           FromParam.Value = 'zc_MovementBoolean_EdiOrdSpr'
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EDIEventsName'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'EDIEventsName'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1036,11 +1101,13 @@ object UtilPrintForm: TUtilPrintForm
           FromParam.Name = 'EDIEventsName'
           FromParam.Value = 'zc_MovementBoolean_EdiDesadv'
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EDIEventsName'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'EDIEventsName'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1155,11 +1222,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Quality'
       ReportNameParam.Value = 'PrintMovement_Quality'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_SendOnPrice_out: TdsdPrintAction
       Category = 'DSDLib'
@@ -1167,10 +1236,12 @@ object UtilPrintForm: TUtilPrintForm
         item
           FromParam.Name = 'ReportType'
           FromParam.Value = 0
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'ReportType'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'ReportType'
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_SendOnPrice
       StoredProcList = <
@@ -1196,16 +1267,19 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PrintParam'
           Value = '1'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_SendOnPrice_in: TdsdPrintAction
       Category = 'DSDLib'
@@ -1213,10 +1287,12 @@ object UtilPrintForm: TUtilPrintForm
         item
           FromParam.Name = 'ReportType'
           FromParam.Value = 1
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'ReportType'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'ReportType'
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_SendOnPrice
       StoredProcList = <
@@ -1242,17 +1318,20 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PrintParam'
           Value = '4'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_SendOnPrice_diff: TdsdPrintAction
       Category = 'DSDLib'
@@ -1260,10 +1339,12 @@ object UtilPrintForm: TUtilPrintForm
         item
           FromParam.Name = 'ReportType'
           FromParam.Value = 1
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'ReportType'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'ReportType'
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_SendOnPrice
       StoredProcList = <
@@ -1289,17 +1370,20 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PrintParam'
           Value = '3'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Income: TdsdPrintAction
       Category = 'DSDLib'
@@ -1328,11 +1412,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Income'
       ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_ReturnOut: TdsdPrintAction
       Category = 'DSDLib'
@@ -1361,11 +1447,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ReturnOut'
       ReportNameParam.Value = 'PrintMovement_ReturnOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Send: TdsdPrintAction
       Category = 'DSDLib'
@@ -1394,11 +1482,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Loss: TdsdPrintAction
       Category = 'DSDLib'
@@ -1427,11 +1517,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Loss'
       ReportNameParam.Value = 'PrintMovement_Loss'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_ProductionSeparate: TdsdPrintAction
       Category = 'DSDLib'
@@ -1461,11 +1553,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
       ReportNameParam.Value = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Inventory: TdsdPrintAction
       Category = 'DSDLib'
@@ -1495,11 +1589,13 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Inventory'
       ReportNameParam.Value = 'PrintMovement_Inventory'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintSaleOrder: TdsdPrintAction
       Category = 'DSDLib'
@@ -1529,11 +1625,52 @@ object UtilPrintForm: TUtilPrintForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Sale_Order'
       ReportNameParam.Value = 'PrintMovement_Sale_Order'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintCeh: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintCeh
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCeh
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' - '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1087'/'#1092' '#1092#1072#1082#1090' '#1082#1091#1090#1090#1077#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' - '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1087'/'#1092' '#1092#1072#1082#1090' '#1082#1091#1090#1090#1077#1088#1072
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
+      ReportNameParam.Value = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
@@ -1554,6 +1691,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 162
@@ -1570,12 +1708,14 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescName'
         Value = 'zc_Movement_ReturnIn'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
@@ -1583,6 +1723,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'ReportName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1593,14 +1734,17 @@ object UtilPrintForm: TUtilPrintForm
     ConnectionParams.Host.Component = FormParams
     ConnectionParams.Host.ComponentItem = 'Host'
     ConnectionParams.Host.DataType = ftString
+    ConnectionParams.Host.MultiSelectSeparator = ','
     ConnectionParams.User.Value = Null
     ConnectionParams.User.Component = FormParams
     ConnectionParams.User.ComponentItem = 'UserName'
     ConnectionParams.User.DataType = ftString
+    ConnectionParams.User.MultiSelectSeparator = ','
     ConnectionParams.Password.Value = Null
     ConnectionParams.Password.Component = FormParams
     ConnectionParams.Password.ComponentItem = 'Password'
     ConnectionParams.Password.DataType = ftString
+    ConnectionParams.Password.MultiSelectSeparator = ','
     Left = 312
     Top = 264
   end
@@ -1615,12 +1759,14 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiDesadv'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 448
@@ -1637,12 +1783,14 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiInvoice'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 384
@@ -1659,12 +1807,14 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiOrdspr'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -1681,6 +1831,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Host'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UserName'
@@ -1688,6 +1839,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'UserName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Password'
@@ -1695,6 +1847,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Password'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 600
@@ -1718,6 +1871,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 687
@@ -1741,6 +1895,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 151
@@ -1764,6 +1919,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -1787,6 +1943,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1810,6 +1967,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
@@ -1817,6 +1975,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'MovementId_by'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 159
@@ -1840,6 +1999,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 263
@@ -1863,6 +2023,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
@@ -1870,6 +2031,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'MovementId_by'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 351
@@ -1884,6 +2046,7 @@ object UtilPrintForm: TUtilPrintForm
         Name = 'ioId'
         Value = 0
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -1891,6 +2054,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -1899,6 +2063,7 @@ object UtilPrintForm: TUtilPrintForm
         ComponentItem = 'EDIEventsName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 576
@@ -1922,6 +2087,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
@@ -1929,6 +2095,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'MovementId_by'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 463
@@ -1952,6 +2119,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -1975,6 +2143,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
@@ -1982,6 +2151,7 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'MovementId_by'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDiff'
@@ -1990,9 +2160,74 @@ object UtilPrintForm: TUtilPrintForm
         ComponentItem = 'inIsDiff'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 455
     Top = 408
+  end
+  object spSelectPrintCeh: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_by'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 71
+    Top = 504
+  end
+  object spGetMovement: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_by'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDocumentKindId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 152
+    Top = 184
   end
 end

@@ -38,12 +38,15 @@ type
     bbPrint: TdxBarButton;
     colTotalCountChild: TcxGridDBColumn;
     spSelectPrint1: TdsdStoredProc;
-    actPrint1: TdsdPrintAction;
+    actPrintCeh: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     isAuto: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     colDocumentKindName: TcxGridDBColumn;
+    spSelectPrintCeh: TdsdStoredProc;
+    actPrint1: TdsdPrintAction;
+    bbPrintCeh: TdxBarButton;
   private
     { Private declarations }
   public

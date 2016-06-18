@@ -57,6 +57,13 @@ BEGIN
                                  AND MovementFloat.ValueData > 0
                               ) AS tmp
                         );
+     -- проверка
+     IF vbDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
+     THEN IF zfConvert_StringToNumber (inPartionGoods) = 0
+          THEN
+              RAISE EXCEPTION 'Ошибка.Партия прозводства ПФ-ГП не определена. <%>', inPartionGoods;
+          END IF;
+     END IF;
 
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingProduction (ioId                  := 0

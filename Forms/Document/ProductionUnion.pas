@@ -63,6 +63,9 @@ type
     cxLabel6: TcxLabel;
     edDocumentKind: TcxButtonEdit;
     GuidesDocumentKind: TdsdGuides;
+    actPrintCeh: TdsdPrintAction;
+    spSelectPrintCeh: TdsdStoredProc;
+    bbPrintCeh: TdxBarButton;
   private
     { Private declarations }
   public

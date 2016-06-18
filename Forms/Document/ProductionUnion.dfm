@@ -523,6 +523,15 @@ inherited ProductionUnionForm: TProductionUnionForm
         item
           StoredProc = spSelectPrint
         end>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
     end
@@ -549,7 +558,6 @@ inherited ProductionUnionForm: TProductionUnionForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -682,6 +690,32 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
+    object actPrintCeh: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintCeh
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCeh
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' - '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1087'/'#1092' '#1092#1072#1082#1090' '#1082#1091#1090#1090#1077#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' - '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1087'/'#1092' '#1092#1072#1082#1090' '#1082#1091#1090#1090#1077#1088#1072
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
+      ReportNameParam.Value = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 768
@@ -789,6 +823,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintCeh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIMasterProtocol'
         end
         item
@@ -817,6 +859,10 @@ inherited ProductionUnionForm: TProductionUnionForm
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Category = 0
       ImageIndex = 16
+    end
+    object bbPrintCeh: TdxBarButton
+      Action = actPrintCeh
+      Category = 0
     end
   end
   inherited PopupMenu: TPopupMenu
@@ -1364,5 +1410,42 @@ inherited ProductionUnionForm: TProductionUnionForm
       end>
     Left = 792
     Top = 48
+  end
+  object spSelectPrintCeh: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 423
+    Top = 408
   end
 end

@@ -92,6 +92,23 @@ object RepriceUnitForm: TRepriceUnitForm
         Options.Editing = False
         Width = 82
       end
+      object colLastPrice_to: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074' '#1072#1087#1090'. ('#1074#1099#1073#1086#1088')'
+        DataBinding.FieldName = 'LastPrice_to'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        Options.Editing = False
+        Width = 80
+      end
+      object colPriceDiff_to: TcxGridDBColumn
+        Caption = '% '#1086#1090#1082#1083'. '#1086#1090' '#1072#1087#1090'. ('#1074#1099#1073#1086#1088')'
+        DataBinding.FieldName = 'PriceDiff_to'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '+0.0%;-0.0%; ;'
+        Options.Editing = False
+        Width = 55
+      end
       object colNewPrice: TcxGridDBColumn
         Caption = #1053#1086#1074#1072#1103' '#1094#1077#1085#1072
         DataBinding.FieldName = 'NewPrice'
@@ -387,6 +404,17 @@ object RepriceUnitForm: TRepriceUnitForm
           TabOrder = 8
           OnClick = btnRepriceSelNoClick
         end
+        object edUnit: TcxButtonEdit
+          Left = 871
+          Top = 3
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          TabOrder = 9
+          Width = 247
+        end
       end
     end
   end
@@ -433,6 +461,12 @@ object RepriceUnitForm: TRepriceUnitForm
     Params = <
       item
         Name = 'inUnitId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId_to'
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -638,6 +672,14 @@ object RepriceUnitForm: TRepriceUnitForm
         Name = 'ContractName'
         DataType = ftString
         Size = 50
+      end
+      item
+        Name = 'LastPrice_to'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'PriceDiff_to'
+        DataType = ftCurrency
       end>
     IndexDefs = <>
     Params = <>
@@ -646,7 +688,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      6C0300009619E0BD01000000180000001D0000000000030000006C0302496404
+      BE0300009619E0BD01000000180000001F000000000003000000BE0302496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -673,7 +715,10 @@ object RepriceUnitForm: TRepriceUnitForm
       7269636553616C65080004000000010007535542545950450200490006004D6F
       6E6579000C4D6964507269636544696666080004000000010007535542545950
       450200490006004D6F6E6579000C436F6E74726163744E616D65010049000000
-      01000557494454480200020032000000}
+      01000557494454480200020032000C4C61737450726963655F746F0800040000
+      00010007535542545950450200490006004D6F6E6579000C5072696365446966
+      665F746F080004000000010007535542545950450200490006004D6F6E657900
+      0000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -704,6 +749,12 @@ object RepriceUnitForm: TRepriceUnitForm
     end
     object cdsResultPriceDiff: TCurrencyField
       FieldName = 'PriceDiff'
+    end
+    object cdsResultLastPrice_to: TFloatField
+      FieldName = 'LastPrice_to'
+    end
+    object cdsResultPriceDiff_to: TFloatField
+      FieldName = 'PriceDiff_to'
     end
     object cdsResultReprice: TBooleanField
       FieldName = 'Reprice'
@@ -879,5 +930,34 @@ object RepriceUnitForm: TRepriceUnitForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 352
     Top = 384
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 872
+    Top = 232
   end
 end

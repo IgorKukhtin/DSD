@@ -138,6 +138,9 @@ type
     isOrderSecond: TcxGridDBColumn;
     colDocumentKindName: TcxGridDBColumn;
     colCuterWeight: TcxGridDBColumn;
+    spSelectPrintCeh: TdsdStoredProc;
+    actPrintCeh: TdsdPrintAction;
+    bbPrintCeh: TdxBarButton;
   private
     { Private declarations }
   public

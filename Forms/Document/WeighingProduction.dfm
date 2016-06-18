@@ -257,6 +257,8 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -144
+        ExplicitTop = -24
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -563,7 +565,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Top = 62
     Enabled = False
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 157
   end
   object cxLabel13: TcxLabel
@@ -712,11 +714,23 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -863,44 +877,27 @@ object WeighingProductionForm: TWeighingProductionForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
+      StoredProc = spSelectPrintCeh
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCeh
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' - '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1087'/'#1092' '#1092#1072#1082#1090' '#1082#1091#1090#1090#1077#1088#1072
       Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
+      ImageIndex = 17
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
-          UserName = 'frxDBDataset'
-        end>
-      Params = <
-        item
-          Name = 'InvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end
         item
-          Name = 'From'
-          Value = ''
-          Component = dsdGuidesFrom
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = 0d
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
         end>
-      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = ''
+      Params = <>
+      ReportName = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
+      ReportNameParam.Value = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102' '#1082#1091#1090#1090#1077#1088#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
@@ -1490,5 +1487,54 @@ object WeighingProductionForm: TWeighingProductionForm
       end>
     Left = 1008
     Top = 16
+  end
+  object spSelectPrintCeh: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 384
+    Top = 256
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 484
+    Top = 217
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 412
+    Top = 222
   end
 end

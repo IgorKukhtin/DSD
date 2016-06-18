@@ -3,7 +3,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   ClientHeight = 631
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -85
   ExplicitWidth = 1082
   ExplicitHeight = 666
   PixelsPerInch = 96
@@ -814,6 +813,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 247
     end

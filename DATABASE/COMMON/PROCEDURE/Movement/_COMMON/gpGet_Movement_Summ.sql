@@ -1,3 +1,5 @@
+-- Function: gpGet_Movement_Summ
+
 DROP FUNCTION IF EXISTS gpGet_Movement_Summ (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Summ(

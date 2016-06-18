@@ -1269,6 +1269,12 @@ BEGIN
           END IF;
      END IF;
 
+if inSession = '5' AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Errr _end';
+    -- 'Повторите действие через 3 мин.'
+end if;
+
 
      -- Результат
      RETURN QUERY

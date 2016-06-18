@@ -15,54 +15,14 @@ $BODY$
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
-
-    DECLARE vbGoodsPropertyId Integer;
-    DECLARE vbGoodsPropertyId_basis Integer;
-
-    DECLARE vbDescId Integer;
-    DECLARE vbStatusId Integer;
-    DECLARE vbPriceWithVAT Boolean;
-    DECLARE vbVATPercent TFloat;
-    DECLARE vbDiscountPercent TFloat;
-    DECLARE vbExtraChargesPercent TFloat;
-    DECLARE vbPaidKindId Integer;
-    DECLARE vbOperDate TDateTime;
-
-    DECLARE vbStoreKeeperName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- параметры из документа
-     SELECT Movement.DescId
-          , Movement.StatusId
-          , Movement.OperDate                  AS OperDate
-       INTO vbDescId, vbStatusId, vbOperDate
-     FROM Movement
-     WHERE Movement.Id = inMovementId
-    ;
 
-
-    -- очень важная проверка
-    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_Erased()
-    THEN
-        IF vbStatusId = zc_Enum_Status_Erased()
-        THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
-        END IF;
-        IF vbStatusId = zc_Enum_Status_UnComplete()
-        THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
-        END IF;
-        -- это уже странная ошибка
-        RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
-    END IF;
-
-
-
-     --
+    --
     OPEN Cursor1 FOR
     
     WITH tmpMovement AS (SELECT Movement.Id
@@ -209,11 +169,17 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
                                                           ON MIFloat_CuterWeight.MovementItemId = MI_partion.Id
                                                          AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                               ON MILinkObject_GoodsKind.MovementItemId = MI_partion.Id
+                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                         WHERE MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() OR inIsAll = FALSE
                         )
        -- Результат - Все элементы
-       SELECT Object_Goods.ObjectCode  			  AS GoodsCode
+       SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_Goods.ObjectCode  			  AS GoodsCode
             , Object_Goods.ValueData   			  AS GoodsName
-            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_GoodsKindComplete.ObjectCode         AS GoodsKindCompleteCode
+            , Object_GoodsKindComplete.ValueData          AS GoodsKindCompleteName
             , Object_Measure.ValueData                    AS MeasureName
             , tmpMI.Amount                      :: TFloat AS Amount
             , tmpMI.Amount_Weighing             :: TFloat AS Amount_Weighing
@@ -221,8 +187,11 @@ BEGIN
             , tmpMI.CuterCount                  :: TFloat AS CuterCount
             , tmpMI.InvNumber
             , tmpMI.OperDate
+            , ObjectString_Receipt_Code.ValueData         AS ReceiptCode
+            , Object_Receipt.ValueData                    AS ReceiptName
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI.GoodsKindId_Complete
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -232,6 +201,16 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                             ON MILinkObject_Receipt.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+            LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_Receipt_Code
+                                   ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
+                                  AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
+
+       ORDER BY ObjectString_Goods_GoodsGroupFull.ValueData, Object_Goods.ValueData, Object_GoodsKindComplete.ValueData, tmpMI.InvNumber
       ;
       
 
