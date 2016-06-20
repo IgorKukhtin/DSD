@@ -48,7 +48,7 @@ BEGIN
                                      AND MovementLinkObject_To.ObjectId = inToId
 
       WHERE Movement.DescId = zc_Movement_Send() AND Movement.OperDate = inOperDate
-          AND Movement.Movement.StatusId <> zc_Enum_Status_Erased();
+          AND Movement.StatusId <> zc_Enum_Status_Erased();
     
       IF COALESCE (vbMovementId,0) = 0 THEN
        -- записываем новый <Документ>

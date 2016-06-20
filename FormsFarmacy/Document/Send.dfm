@@ -11,17 +11,17 @@ inherited SendForm: TSendForm
     Width = 1002
     Height = 432
     ExplicitTop = 126
-    ExplicitWidth = 782
+    ExplicitWidth = 1002
     ExplicitHeight = 432
     ClientRectBottom = 432
     ClientRectRight = 1002
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 1002
       ExplicitHeight = 408
       inherited cxGrid: TcxGrid
         Width = 1002
         Height = 408
-        ExplicitWidth = 782
+        ExplicitWidth = 1002
         ExplicitHeight = 408
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -268,9 +268,7 @@ inherited SendForm: TSendForm
     Width = 1002
     Height = 100
     TabOrder = 3
-    ExplicitLeft = 8
-    ExplicitTop = 4
-    ExplicitWidth = 1103
+    ExplicitWidth = 1002
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -371,7 +369,8 @@ inherited SendForm: TSendForm
   object edPeriod: TcxCurrencyEdit [6]
     Left = 960
     Top = 23
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 10
     Width = 37
@@ -379,7 +378,8 @@ inherited SendForm: TSendForm
   object edDay: TcxCurrencyEdit [7]
     Left = 960
     Top = 63
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 37
