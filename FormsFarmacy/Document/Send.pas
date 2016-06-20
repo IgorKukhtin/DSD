@@ -48,6 +48,28 @@ type
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
     edIsAuto: TcxCheckBox;
+    ActionList1: TActionList;
+    dsdDataSetRefresh1: TdsdDataSetRefresh;
+    dsdGridToExcel1: TdsdGridToExcel;
+    actOpenPartionReport: TdsdOpenForm;
+    actRefreshPartionPrice: TdsdDataSetRefresh;
+    actRefreshIsPartion: TdsdDataSetRefresh;
+    ExecuteDialog: TExecuteDialog;
+    actSend: TdsdExecStoredProc;
+    macSend: TMultiAction;
+    ActionList2: TActionList;
+    dsdDataSetRefresh2: TdsdDataSetRefresh;
+    dsdGridToExcel2: TdsdGridToExcel;
+    dsdOpenForm1: TdsdOpenForm;
+    dsdDataSetRefresh3: TdsdDataSetRefresh;
+    dsdDataSetRefresh4: TdsdDataSetRefresh;
+    ExecuteDialog1: TExecuteDialog;
+    dsdExecStoredProc1: TdsdExecStoredProc;
+    MultiAction1: TMultiAction;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edPeriod: TcxCurrencyEdit;
+    edDay: TcxCurrencyEdit;
   private
     { Private declarations }
   public
