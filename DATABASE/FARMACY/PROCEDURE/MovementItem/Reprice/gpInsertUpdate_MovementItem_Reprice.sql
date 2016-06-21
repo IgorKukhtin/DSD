@@ -1,9 +1,6 @@
 -- Function: gpInsert_MovementItem_Reprice()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
  INOUT ioId                  Integer   , -- Ключ записи
@@ -41,7 +38,7 @@ BEGIN
         Movement_Reprice.UnitId = inUnitId
         AND
         Movement_Reprice.GUID = inGUID;
-    IF COALESCE(vbMovementId,0) = 0
+    IF COALESCE (vbMovementId, 0) = 0
     THEN
         -- 
         vbMovementId := lpInsertUpdate_Movement_Reprice(ioId        := COALESCE(vbMovementId,0),
@@ -51,7 +48,11 @@ BEGIN
                                                         inGUID      := inGUID,
                                                         inUserId    := vbUserId);
         -- сохранили связь с <Подразделения(основание для равенства цен)>
-        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), ioId, inUnitId_Forwarding);
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), vbMovementId, inUnitId_Forwarding);
+
+    ELSE 
+        -- сохранили связь с <Подразделения(основание для равенства цен)>
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), vbMovementId, inUnitId_Forwarding);
 
     END IF;
 

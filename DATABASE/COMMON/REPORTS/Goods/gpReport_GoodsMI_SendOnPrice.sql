@@ -180,6 +180,7 @@ BEGIN
                          SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, не совсем забалансовый счет, расход приб. буд. периодов, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         */
                         )
+    , tmpUnit_from AS (SELECT DISTINCT _tmpUnit.UnitId FROM _tmpUnit)
     , tmpMovement_pl AS (SELECT Movement.Id, Movement.OperDate, MovementDate_OperDatePartner.ValueData AS OperDatePartner
                               , MovementLinkObject_From.ObjectId AS FromId
                               , MovementLinkObject_To.ObjectId   AS ToId
@@ -193,8 +194,8 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
-                                                 AND _tmpUnit.UnitId_by = MovementLinkObject_To.ObjectId
+                              INNER JOIN tmpUnit_from AS _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+                                                                 -- AND _tmpUnit.UnitId_by = MovementLinkObject_To.ObjectId
                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                            AND Movement.StatusId = zc_Enum_Status_Complete()
                            AND Movement.DescId = zc_Movement_SendOnPrice()
@@ -212,8 +213,8 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
-                                                 AND _tmpUnit.UnitId_by = MovementLinkObject_To.ObjectId
+                              INNER JOIN tmpUnit_from AS _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+                                                                 -- AND _tmpUnit.UnitId_by = MovementLinkObject_To.ObjectId
                          WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                         )
@@ -468,9 +469,11 @@ BEGIN
                         , CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_SummOut_110101()) THEN MIContainer.AnalyzerId ELSE COALESCE (MIContainer.AccountId, 0) END
                         , MIContainer.isActive
                 UNION ALL
-                 SELECT CASE WHEN inIsMovement = TRUE THEN tmpMovement_pl.Id ELSE 0 END AS MovementId
+                 SELECT tmp.*
+                 FROM
+                (SELECT CASE WHEN inIsMovement = TRUE THEN tmpMovement_pl.Id ELSE 0 END AS MovementId
                       , tmpMovement_pl.FromId
-                      , tmpMovement_pl.ToId
+                      , COALESCE (MILinkObject_Unit.ObjectId, tmpMovement_pl.ToId) AS ToId
                       , MovementItem.ObjectId AS GoodsId
                       , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
                       , 0     AS ContainerId_analyzer
@@ -501,6 +504,9 @@ BEGIN
                       INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement_pl.Id
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = FALSE
+                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                       ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -508,11 +514,16 @@ BEGIN
                                                   ON MIFloat_SummPriceList.MovementItemId = MovementItem.Id
                                                  AND MIFloat_SummPriceList.DescId = zc_MIFloat_SummPriceList()
 
+                      INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = tmpMovement_pl.FromId -- tmp.FromId
+                                         AND _tmpUnit.UnitId_by = COALESCE (MILinkObject_Unit.ObjectId, tmpMovement_pl.ToId) -- tmp.ToId
+
                  GROUP BY CASE WHEN inIsMovement = TRUE THEN tmpMovement_pl.Id ELSE 0 END
                         , tmpMovement_pl.FromId
-                        , tmpMovement_pl.ToId
+                        , COALESCE (MILinkObject_Unit.ObjectId, tmpMovement_pl.ToId)
                         , MovementItem.ObjectId
                         , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
+                ) AS tmp
+
                   ) AS tmpContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
      

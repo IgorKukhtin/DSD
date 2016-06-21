@@ -187,6 +187,7 @@ type
     actCheckConnection: TAction;
     N2: TMenuItem;
     N11: TMenuItem;
+    spUpdate_UnitForFarmacyCash: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -438,9 +439,6 @@ begin
   spGet_Password_MoneyInCash.Execute;
   //временно будем без парол€
   //if InputBox('ѕароль','¬ведите пароль:','') <> spGet_Password_MoneyInCash.ParamByName('outPassword').AsString then exit;
-  spGetMoneyInCash.ParamByName('inDate').Value := Date;
-  spGetMoneyInCash.Execute;
-  lblMoneyInCash.Caption := FormatFloat(',0.00',spGetMoneyInCash.ParamByName('outTotalSumm').AsFloat);
   //
   TimerMoneyInCash.Enabled:=True;
 end;
@@ -1732,6 +1730,11 @@ end;
 
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
 begin
+  //пишем протокол что св€зь с базой есть + сколько чеков еще не перенеслось
+  try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:=FLocalDataBaseHead.RecordCount;
+      spUpdate_UnitForFarmacyCash.Execute;
+  except end;
+  //
   if not FLocalDataBaseHead.IsEmpty then
     SaveRealAll;
 end;

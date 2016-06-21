@@ -3,8 +3,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   ClientHeight = 557
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -293
   ExplicitWidth = 1082
-  ExplicitHeight = 595
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -226,6 +227,13 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object clNDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057

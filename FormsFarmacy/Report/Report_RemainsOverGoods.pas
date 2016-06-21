@@ -64,6 +64,7 @@ type
     macSendChild: TMultiAction;
     actSendChild: TdsdExecStoredProc;
     bbSendChild: TdxBarButton;
+    MeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public
