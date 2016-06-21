@@ -854,6 +854,12 @@ object RepriceUnitForm: TRepriceUnitForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitId_Forwarding'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJuridicalId'
         Value = Null
         ParamType = ptInput

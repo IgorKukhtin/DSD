@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
  INOUT ioId                  Integer   , -- Ключ записи
     IN inGoodsId             Integer   , -- Товары
     IN inUnitId              Integer   , -- подразделение
+    IN inUnitId_Forwarding   Integer   , -- Подразделения(основание для равенства цен)
     IN inJuridicalId         Integer   , -- поставщик
     IN inExpirationDate      TDateTime , -- Срок годности 
     IN inMinExpirationDate   TDateTime , -- Срок годности остатка
@@ -41,13 +43,18 @@ BEGIN
         Movement_Reprice.GUID = inGUID;
     IF COALESCE(vbMovementId,0) = 0
     THEN
+        -- 
         vbMovementId := lpInsertUpdate_Movement_Reprice(ioId        := COALESCE(vbMovementId,0),
                                                         inInvNumber := CAST(NEXTVAL('movement_sale_seq') AS TVarChar),
                                                         inOperDate  := CURRENT_DATE::TDateTime,
                                                         inUnitId    := inUnitId,
                                                         inGUID      := inGUID,
                                                         inUserId    := vbUserId);
+        -- сохранили связь с <Подразделения(основание для равенства цен)>
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), ioId, inUnitId_Forwarding);
+
     END IF;
+
     --переоценить товар
     PERFORM lpInsertUpdate_Object_Price(inGoodsId := inGoodsId,
                                         inUnitId  := inUnitId,

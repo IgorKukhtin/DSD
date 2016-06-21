@@ -102,7 +102,7 @@ BEGIN
 
     UNION ALL
      SELECT 
-           0 :: Integer AS Id 
+           0 :: Integer AS Id
          , 0 :: Integer Code
          , '<осярн>' :: TVarChar AS Name
          

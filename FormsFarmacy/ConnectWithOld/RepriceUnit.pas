@@ -179,7 +179,12 @@ begin
           try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colUnitId.Index];
-          except ShowMessage('2');exit;end;
+          except ShowMessage('2.1.');exit;end;
+
+          try
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value :=
+            GuidesUnit.Params.ParamByName('Key').Value;
+          except ShowMessage('2.2.');exit;end;
 
           try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridicalId').Value :=

@@ -67,6 +67,21 @@ inherited Report_WageForm: TReport_WageForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object StaffListCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1096#1090'.'#1088'.'
+            DataBinding.FieldName = 'StaffListCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object StaffListName: TcxGridDBColumn
+            Caption = #1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
+            DataBinding.FieldName = 'StaffListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -95,15 +110,6 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object colPersonalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'PersonalCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
           object colMemberName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
             DataBinding.FieldName = 'MemberName'
@@ -111,9 +117,21 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object SUM_MemberHours: TcxGridDBColumn
-            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'SUM_MemberHours'
+          object Count_Member: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'Count_Member'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object Count_Day: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1076#1085'. 1 '#1095#1077#1083' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'Count_Day'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -128,19 +146,39 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object SUM_MemberHours: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'SUM_MemberHours'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1075#1088#1085'./'#1079#1072' '#1082#1075' '#1048#1051#1048' '#1075#1088#1085'./'#1089#1090#1072#1074#1082#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object PriceName: TcxGridDBColumn
+            Caption = #1080#1085#1092#1086' ('#1089#1090#1072#1074#1082#1072')'
+            DataBinding.FieldName = 'PriceName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object colServiceModelName: TcxGridDBColumn
             Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' / '#1058#1080#1087' '#1089#1091#1084#1084#1099
             DataBinding.FieldName = 'ServiceModelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 131
-          end
-          object colPrice: TcxGridDBColumn
-            Caption = #1075#1088#1085'. '#1079#1072' '#1082#1075' / '#1089#1090#1072#1074#1082#1072
-            DataBinding.FieldName = 'Price'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 81
           end
           object colFromName: TcxGridDBColumn
             Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099': '#1086#1090' '#1082#1086#1075#1086
@@ -183,8 +221,8 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colCount_MemberInDay: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082
+          object Count_MemberInDay: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082' ('#1079#1072' 1 '#1076'.)'
             DataBinding.FieldName = 'Count_MemberInDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -253,7 +291,6 @@ inherited Report_WageForm: TReport_WageForm
     inherited deStart: TcxDateEdit
       Left = 10
       Top = 23
-      EditValue = 42370d
       ExplicitLeft = 10
       ExplicitTop = 23
       ExplicitWidth = 91
@@ -262,7 +299,6 @@ inherited Report_WageForm: TReport_WageForm
     inherited deEnd: TcxDateEdit
       Left = 144
       Top = 23
-      EditValue = 42370d
       ExplicitLeft = 144
       ExplicitTop = 23
       ExplicitWidth = 97
@@ -446,12 +482,14 @@ inherited Report_WageForm: TReport_WageForm
           Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'dateEnd'
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -459,10 +497,12 @@ inherited Report_WageForm: TReport_WageForm
           Component = UnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_1'
       ReportNameParam.Value = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_1'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint2: TdsdPrintAction
       Category = 'DSDLib'
@@ -485,12 +525,14 @@ inherited Report_WageForm: TReport_WageForm
           Value = 41395d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'dateEnd'
           Value = 41395d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -498,19 +540,21 @@ inherited Report_WageForm: TReport_WageForm
           Component = UnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_2'
       ReportNameParam.Value = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_2'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
     Left = 48
-    Top = 152
+    Top = 192
   end
   inherited MasterCDS: TClientDataSet
     Left = 16
-    Top = 152
+    Top = 192
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Report_Wage'
@@ -521,6 +565,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -528,6 +573,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -535,6 +581,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inModelServiceId'
@@ -542,6 +589,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = ModelServiceGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId'
@@ -549,6 +597,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = MemberGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -556,6 +605,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDetailDay'
@@ -563,6 +613,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = chkDetailDay
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDetailModelService'
@@ -570,6 +621,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = chkDetailModelService
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDetailModelServiceItemMaster'
@@ -577,6 +629,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = chkDetailModelServiceItemMaster
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDetailModelServiceItemChild'
@@ -584,9 +637,10 @@ inherited Report_WageForm: TReport_WageForm
         Component = chkDetailModelServiceItemChild
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 152
+    Top = 192
   end
   inherited BarManager: TdxBarManager
     Left = 272
@@ -654,13 +708,14 @@ inherited Report_WageForm: TReport_WageForm
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 112
-    Top = 192
+    Top = 232
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -670,6 +725,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -678,6 +734,7 @@ inherited Report_WageForm: TReport_WageForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 392
     Top = 13
@@ -687,6 +744,7 @@ inherited Report_WageForm: TReport_WageForm
     LookupControl = ceModelService
     FormNameParam.Value = 'TModelServiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TModelServiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -696,6 +754,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = ModelServiceGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -704,6 +763,7 @@ inherited Report_WageForm: TReport_WageForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 656
     Top = 5
@@ -713,6 +773,7 @@ inherited Report_WageForm: TReport_WageForm
     LookupControl = cePosition
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -722,6 +783,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -730,6 +792,7 @@ inherited Report_WageForm: TReport_WageForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 88
     Top = 53
@@ -739,6 +802,7 @@ inherited Report_WageForm: TReport_WageForm
     LookupControl = ceMember
     FormNameParam.Value = 'TMemberForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -748,6 +812,7 @@ inherited Report_WageForm: TReport_WageForm
         Component = MemberGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -756,6 +821,7 @@ inherited Report_WageForm: TReport_WageForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 53

@@ -36,7 +36,7 @@ type
     colUnitName: TcxGridDBColumn;
     colPositionName: TcxGridDBColumn;
     colPositionLevelName: TcxGridDBColumn;
-    colPersonalCount: TcxGridDBColumn;
+    Count_Member: TcxGridDBColumn;
     colMemberName: TcxGridDBColumn;
     colSheetWorkTime_Amount: TcxGridDBColumn;
     colServiceModelName: TcxGridDBColumn;
@@ -47,7 +47,7 @@ type
     colModelServiceItemChild_FromName: TcxGridDBColumn;
     colModelServiceItemChild_ToName: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
-    colCount_MemberInDay: TcxGridDBColumn;
+    Count_MemberInDay: TcxGridDBColumn;
     Gross: TcxGridDBColumn;
     colGrossOnOneMember: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
@@ -59,6 +59,10 @@ type
     dxBarButton2: TdxBarButton;
     PersonalGroupName: TcxGridDBColumn;
     SUM_MemberHours: TcxGridDBColumn;
+    StaffListCode: TcxGridDBColumn;
+    StaffListName: TcxGridDBColumn;
+    Count_Day: TcxGridDBColumn;
+    PriceName: TcxGridDBColumn;
   private
     { Private declarations }
   public

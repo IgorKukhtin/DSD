@@ -200,7 +200,16 @@ BEGIN
         ResultSet.isIncome,
         ResultSet.IsTop,
         ResultSet.IsPromo,
-        CASE WHEN (ResultSet.isIncome = True OR ResultSet.IsTop = True OR ResultSet.isPriceFix = True) THEN False ELSE True END  AS Reprice
+        CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE OR ResultSet.IsTop = TRUE OR ResultSet.isPriceFix = TRUE)
+                  THEN FALSE
+             WHEN COALESCE (inUnitId_to, 0) = 0
+                  THEN TRUE
+             WHEN inUnitId_to <> 0 AND ResultSet.LastPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
+                                                                                      ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
+                                                                                 END AS NUMERIC (16, 1))
+                  THEN TRUE
+             ELSE FALSE
+        END  AS Reprice
     FROM 
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId
@@ -208,9 +217,9 @@ BEGIN
                                        AND ResultSet.LastPrice < MarginCondition.MaxPrice
 
     WHERE
-       ((inUnitId_to > 0 AND ResultSet.LastPrice_to > 0 AND CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
-                                                                       ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
-                                                                  END AS NUMERIC (16, 1)) <> 0
+       ((inUnitId_to > 0 AND ResultSet.LastPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
+                                                                            ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
+                                                                       END AS NUMERIC (16, 1))
         )
      OR (
         COALESCE(ResultSet.NewPrice,0) > 0
