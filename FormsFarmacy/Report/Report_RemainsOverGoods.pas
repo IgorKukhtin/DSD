@@ -58,6 +58,12 @@ type
     macSend: TMultiAction;
     bbSend: TdxBarButton;
     cxSplitterChild: TcxSplitter;
+    DataSetDocs: TClientDataSet;
+    DataSourceDocs: TDataSource;
+    spSendChild: TdsdStoredProc;
+    macSendChild: TMultiAction;
+    actSendChild: TdsdExecStoredProc;
+    bbSendChild: TdxBarButton;
   private
     { Private declarations }
   public

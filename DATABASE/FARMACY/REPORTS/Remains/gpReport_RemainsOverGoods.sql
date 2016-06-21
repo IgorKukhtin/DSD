@@ -36,6 +36,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
+   DECLARE Cursor3 refcursor;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -363,7 +364,44 @@ BEGIN
      
      RETURN NEXT Cursor2;
 
+      -- Результат 2
+
+     OPEN Cursor3 FOR
+
+       SELECT    Object_Unit.Id        AS UnitId
+               , Object_Unit.ValueDAta AS UnitName 
+               , tmpData.GoodsId
+               , tmpData.MCSValue
+               , (tmpData.MCSValue * tmpData.Price) :: TFloat AS SummaMCSValue
+
+               , tmpData.StartDate
+               , tmpData.EndDate
+               , tmpData.Price
+               , tmpDataFrom.Price  :: TFloat  AS PriceFrom 
+
+               , tmpData.RemainsStart
+               , tmpData.SummaRemainsStart
+               , tmpData.RemainsMCS_from
+               , tmpData.SummaRemainsMCS_from
+               , tmpData.RemainsMCS_to
+               , tmpData.SummaRemainsMCS_to
+
+               , tmpDataTo.RemainsMCS_result
+               , (tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
+               
+                  
+     FROM tmpData
+          LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
+          LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId AND tmpDataTo.UnitId = tmpData.UnitId
+          LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId AND tmpDataFrom.UnitId = inUnitId
+     WHERE tmpData.UnitId <> inUnitId
+       -- AND tmpDataTo.RemainsMCS_result > 0
+       AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
+     --LIMIT 50000
+    ;
      
+     RETURN NEXT Cursor3;
+  
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

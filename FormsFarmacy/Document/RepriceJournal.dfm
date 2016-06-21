@@ -3,6 +3,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
   ClientWidth = 709
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 725
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -62,6 +63,14 @@ inherited RepriceJournalForm: TRepriceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 221
+          end
+          object colUnitForwardingName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1088#1072#1074#1077#1085#1089#1090#1074#1072' '#1094#1077#1085')'
+            DataBinding.FieldName = 'UnitForwardingName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1088#1072#1074#1077#1085#1089#1090#1074#1072' '#1094#1077#1085')'
+            Width = 173
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -150,6 +159,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
       FormName = 'TRepriceForm'
       FormNameParam.Value = 'TRepriceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -157,6 +167,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -173,6 +184,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -180,6 +192,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -187,6 +200,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -208,6 +222,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -215,6 +230,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 128
   end
@@ -277,6 +293,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

@@ -1040,11 +1040,39 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         item
           Action = actSend
         end>
-      DataSource = ChildDS
+      DataSource = DataSourceDocs
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1089#1086#1079#1076#1072#1085#1099
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      ImageIndex = 41
+    end
+    object actSendChild: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSendChild
+      StoredProcList = <
+        item
+          StoredProc = spSendChild
+        end>
+      Caption = 'actSendChild'
+      ImageIndex = 41
+    end
+    object macSendChild: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendChild
+        end>
+      View = cxGridDBTableView1
+      QuestionBeforeExecute = 
+        #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090 +
+        #1086#1074#1072#1088#1091'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090#1086#1074#1072#1088#1091' '#1089#1086#1079#1076#1072#1085#1099
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090#1086#1074#1072#1088#1091' '
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090#1086#1074#1072#1088#1091' '
       ImageIndex = 41
     end
   end
@@ -1054,8 +1082,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   end
   inherited MasterCDS: TClientDataSet
     MasterFields = 'GoodsId'
-    Left = 296
-    Top = 256
+    Left = 272
+    Top = 192
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_RemainsOverGoods'
@@ -1065,6 +1093,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       item
         DataSet = ChildCDS
+      end
+      item
+        DataSet = DataSetDocs
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1162,10 +1193,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       Action = macSend
       Category = 0
     end
+    object bbSendChild: TdxBarButton
+      Action = macSendChild
+      Category = 0
+      Visible = ivNever
+      ImageIndex = 30
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 464
-    Top = 168
+    Left = 480
+    Top = 224
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 272
@@ -1213,7 +1250,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 176
+    Left = 184
     Top = 448
   end
   object ChildCDS: TClientDataSet
@@ -1245,7 +1282,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       item
         Name = 'inToId'
         Value = ''
-        Component = ChildCDS
+        Component = DataSetDocs
         ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1261,6 +1298,105 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       item
         Name = 'inGoodsId'
         Value = ''
+        Component = DataSetDocs
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemainsMCS_result'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'RemainsMCS_result'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice_from'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'PriceFrom'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice_to'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSPeriod'
+        Value = 0.000000000000000000
+        Component = edPeriod
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSDay'
+        Value = 0.000000000000000000
+        Component = edDay
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 192
+  end
+  object DataSetDocs: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    MasterFields = 'GoodsId'
+    Params = <>
+    Left = 560
+    Top = 424
+  end
+  object DataSourceDocs: TDataSource
+    DataSet = DataSetDocs
+    Left = 448
+    Top = 440
+  end
+  object spSendChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Send_Auto'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
@@ -1295,7 +1431,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       item
         Name = 'inMCSPeriod'
-        Value = 0.000000000000000000
+        Value = 30.000000000000000000
         Component = edPeriod
         DataType = ftFloat
         ParamType = ptInput
@@ -1303,14 +1439,14 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       item
         Name = 'inMCSDay'
-        Value = 0.000000000000000000
+        Value = 12.000000000000000000
         Component = edDay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 600
+    Left = 736
     Top = 192
   end
 end

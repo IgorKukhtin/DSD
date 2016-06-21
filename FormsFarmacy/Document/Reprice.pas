@@ -36,6 +36,9 @@ type
     colMakerName: TcxGridDBColumn;
     colMarginPercent: TcxGridDBColumn;
     colJuridical_Price: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edUnitForwarding: TcxButtonEdit;
+    UnitForwardingGuides: TdsdGuides;
   private
     { Private declarations }
   public
