@@ -228,6 +228,64 @@ BEGIN
        WHERE Object_Partner.Id IN (298605 -- Одесса - "ОГОРЕНКО новый дистрибьютор"
                                  , 256624 -- Никополь - "Мержиєвський О.В. ФОП м. Нікополь вул. Альпова 6"
                                   )
+      UNION ALL
+       SELECT 
+             0 :: Integer AS Id
+           , 0 :: Integer Code
+           , '<ПУСТО>' :: TVarChar AS Name
+         
+           , 0 :: Integer AS ParentId
+           , '<УДАЛИТЬ>' :: TVarChar AS ParentName 
+
+           , 0 :: Integer AS BusinessId
+           , '' :: TVarChar AS BusinessName 
+         
+           , 0 :: Integer AS BranchId
+           , '' :: TVarChar AS BranchName
+         
+           , 0 :: Integer   AS JuridicalId
+           , '' :: TVarChar AS JuridicalName
+
+           , 0 :: Integer   AS ContractId
+           , '' :: TVarChar AS InvNumber
+
+           , 0 :: Integer   AS Contract_JuridicalId
+           , '' :: TVarChar AS Contract_JuridicalName
+         
+           , 0 :: Integer   AS Contract_InfomoneyId
+           , '' :: TVarChar AS Contract_InfomoneyName
+
+           , 0 :: Integer   AS AccountGroupCode
+           , '' :: TVarChar AS AccountGroupName
+           , 0 :: Integer   AS AccountDirectionCode
+           , '' :: TVarChar AS AccountDirectionName
+         
+           , 0 :: Integer   AS ProfitLossGroupCode
+           , '' :: TVarChar AS ProfitLossGroupName
+           , 0 :: Integer   AS ProfitLossDirectionCode
+           , '' :: TVarChar AS ProfitLossDirectionName
+
+           , CAST (0 as Integer)    AS RouteId
+           , CAST ('' as TVarChar)  AS RouteName
+
+           , CAST (0 as Integer)    AS RouteSortingId
+           , CAST ('' as TVarChar)  AS RouteSortingName
+
+           , CAST (0 as Integer)    AS AreaId
+           , CAST ('' as TVarChar)  AS AreaName
+
+           , CAST (0 as Integer)    AS PersonalSheetWorkTimeId
+           , CAST ('' as TVarChar)  AS PersonalSheetWorkTimeName
+
+           , CAST (0 as Integer)    AS PartnerCode
+           , CAST ('' as TVarChar)  AS PartnerName
+
+           , CAST (0 as Integer)    AS UnitCode_HistoryCost
+           , CAST ('' as TVarChar)  AS UnitName_HistoryCost
+
+           , TRUE AS isLeaf
+           , FALSE AS isPartionDate
+           , FALSE AS isErased
       ;
 
 END;

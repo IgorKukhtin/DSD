@@ -1610,6 +1610,7 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+// exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));

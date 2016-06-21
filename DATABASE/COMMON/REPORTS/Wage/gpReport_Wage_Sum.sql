@@ -1,37 +1,25 @@
-DROP FUNCTION IF EXISTS gpSelect_Report_Wage_2(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Integer,   --подразделение 
-    Integer,   --сотрудник
-    Integer,   --должность
-    TVarChar   --сессия пользователя
-);
-DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Sum(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Integer,   --подразделение 
-    Integer,   --сотрудник
-    Integer,   --должность
-    TVarChar   --сессия пользователя
-);
+-- По штатному расписанию - Тип суммы ИЛИ по часам - из Табеля
+-- Function: gpSelect_Report_Wage_Sum ()
+
+DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Sum (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_Sum(
-    IN inDateStart      TDateTime, --дата начала периода
-    IN inDateFinal      TDateTime, --дата окончания периода
+    IN inStartDate      TDateTime, --дата начала периода
+    IN inEndDate        TDateTime, --дата окончания периода
     IN inUnitId         Integer,   --подразделение 
     IN inMemberId       Integer,   --сотрудник
     IN inPositionId     Integer,   --должность
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
-     StaffList                      Integer
+     StaffListId                    Integer
     ,UnitId                         Integer
     ,UnitName                       TVarChar
     ,PositionId                     Integer
     ,PositionName                   TVarChar
     ,PositionLevelId                Integer
     ,PositionLevelName              TVarChar
-    ,PersonalCount                  Integer
+    ,Count_Member                   Integer   -- Кол-во человек (все)
     ,HoursPlan                      TFloat
     ,HoursDay                       TFloat
     ,StaffListSummId                Integer
@@ -42,10 +30,9 @@ RETURNS TABLE(
     ,PersonalGroupName              TVarChar
     ,MemberId                       Integer
     ,MemberName                     TVarChar
-    ,SUM_MemberHours                TFloat
-    ,SheetWorkTime_Amount           TFloat
-    ,Count_Day                      Integer
-    ,Count_MemberDay                Integer
+    ,SUM_MemberHours                TFloat    -- итого часов всех сотрудников (с этой должностью+...)
+    ,SheetWorkTime_Amount           TFloat    -- итого часов сотрудника
+    ,Count_Day                      Integer   -- Отраб. дн. 1 чел (инф.)
     ,Summ                           TFloat
 )
 AS
@@ -56,8 +43,9 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := inSession::Integer;
 
+    -- Таблица - Данные для расчета
     CREATE TEMP TABLE Setting_Wage_2(
-        StaffList             Integer
+        StaffListId             Integer
        ,UnitId                Integer
        ,UnitName              TVarChar
        ,PositionId            Integer 
@@ -65,7 +53,7 @@ BEGIN
        ,isPositionLevel_all   Boolean
        ,PositionLevelId       Integer
        ,PositionLevelName     TVarChar
-       ,PersonalCount         Integer
+       ,Count_Member         Integer
        ,HoursPlan             TFloat
        ,HoursDay              TFloat
        ,StaffListSummId       Integer
@@ -74,10 +62,10 @@ BEGIN
        ,StaffListSummKindName TVarChar) ON COMMIT DROP;
 
     -- Настройки
-    INSERT INTO Setting_Wage_2 (StaffList,UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName
-                               , PersonalCount,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName)
+    INSERT INTO Setting_Wage_2 (StaffListId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName
+                               , Count_Member,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName)
     SELECT
-        Object_StaffList.Id                                      AS StaffList
+        Object_StaffList.Id                                      AS StaffListId
        ,ObjectLink_StaffList_Unit.ChildObjectId                  AS UnitId
        ,Object_Unit.ValueData                                    AS UnitName
        ,ObjectLink_StaffList_Position.ChildObjectId              AS PositionId
@@ -85,7 +73,7 @@ BEGIN
        ,COALESCE (ObjectBoolean_PositionLevel.ValueData, FALSE)  AS isPositionLevel_all
        ,CASE WHEN ObjectBoolean_PositionLevel.ValueData = TRUE THEN 0 ELSE ObjectLink_StaffList_PositionLevel.ChildObjectId END AS PositionLevelId
        ,Object_PositionLevel.ValueData                           AS PositionLevelName
-       ,ObjectFloat_PersonalCount.ValueData::Integer             AS PersonalCount
+       ,ObjectFloat_PersonalCount.ValueData::Integer             AS Count_Member
        ,ObjectFloat_HoursPlan.ValueData                          AS HoursPlan
        ,ObjectFloat_HoursDay.ValueData                           AS HoursDay
        ,ObjectLink_StaffListSumm_StaffList.ChildObjectId         AS StaffListSummId
@@ -162,7 +150,7 @@ BEGIN
                , COALESCE (MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
                , MI_SheetWorkTime.Amount                        AS SheetWorkTime_Amount
                , 1                                              AS Count_Day
-               -- , COUNT(*) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_MemberDay
+               -- , COUNT(*) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_Member
                -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
                , CASE WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day() -- Доплата за 1 день на всех
                            THEN Setting.StaffListSumm_Value / NULLIF ((SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId)), 0)
@@ -198,7 +186,7 @@ BEGIN
                 LEFT OUTER JOIN Setting_Wage_2 AS Setting ON COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (Setting.PositionId, 0)
                                                          AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (Setting.PositionLevelId, 0)
            WHERE Movement.DescId = zc_Movement_SheetWorkTime()
-             AND Movement.OperDate BETWEEN inDateStart AND inDateFinal
+             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
              /*AND (MIObject_Position.ObjectId       = inPositionId OR inPositionId = 0)
              AND (MI_SheetWorkTime.ObjectId        = inMemberId   OR inMemberId = 0)*/
           )
@@ -210,12 +198,12 @@ BEGIN
            , SheetWorkTime.PersonalGroupId
            , SheetWorkTime.PositionId
            , SheetWorkTime.PositionLevelId
-           , SheetWorkTime.SUM_MemberHours            AS SUM_MemberHours
-           , SUM (SheetWorkTime.SheetWorkTime_Amount) AS SheetWorkTime_Amount
-           , SUM (SheetWorkTime.Count_Day)            AS Count_Day
-           , SheetWorkTime.Count_MemberDay::Integer   AS Count_MemberDay
+           , SheetWorkTime.SUM_MemberHours              AS SUM_MemberHours
+           , SUM (SheetWorkTime.SheetWorkTime_Amount)   AS SheetWorkTime_Amount
+           , SUM (SheetWorkTime.Count_Day)              AS Count_Day
+           , SheetWorkTime.Count_MemberInDay            AS Count_MemberInDay
            , COUNT (*) OVER (PARTITION BY SheetWorkTime.PositionId, SheetWorkTime.PositionLevelId) AS Count_Member
-           , SUM (SummaAdd)::TFloat                   AS SummaADD
+           , SUM (SummaAdd)                             AS SummaADD
         FROM (SELECT MI_SheetWorkTime.MemberId
                    , MI_SheetWorkTime.MemberName
                    , MI_SheetWorkTime.PersonalGroupId
@@ -223,7 +211,7 @@ BEGIN
                    , MI_SheetWorkTime.PositionLevelId
                    , MI_SheetWorkTime.SheetWorkTime_Amount
                    , MI_SheetWorkTime.Count_Day
-                   , COUNT(*) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS Count_MemberDay
+                   , COUNT(*) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS Count_MemberInDay
                    , SUM (MI_SheetWorkTime.SheetWorkTime_Amount) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS SUM_MemberHours
                    , MI_SheetWorkTime.SummaAdd
               FROM
@@ -255,21 +243,21 @@ BEGIN
            , SheetWorkTime.PersonalGroupId
            , SheetWorkTime.PositionId
            , SheetWorkTime.PositionLevelId
-           , SheetWorkTime.Count_MemberDay
+           , SheetWorkTime.Count_MemberInDay
            , SheetWorkTime.SUM_MemberHours
        )
 
    -- Результат
    SELECT 
-        Setting.StaffList
+        Setting.StaffListId
        ,Setting.UnitId
        ,Setting.UnitName
        ,Setting.PositionId
        ,Setting.PositionName
        ,Setting.PositionLevelId
        ,Setting.PositionLevelName
-       -- ,Setting.PersonalCount
-       ,Movement_SheetWorkTime.Count_Member :: Integer AS PersonalCount
+       -- ,Setting.Count_Member
+       ,Movement_SheetWorkTime.Count_Member :: Integer AS Count_Member
        ,Setting.HoursPlan
        ,Setting.HoursDay
        ,Setting.StaffListSummId
@@ -283,14 +271,13 @@ BEGIN
        ,Movement_SheetWorkTime.SUM_MemberHours      :: TFloat AS SUM_MemberHours
        ,Movement_SheetWorkTime.SheetWorkTime_Amount :: TFloat AS SheetWorkTime_Amount
        ,Movement_SheetWorkTime.Count_Day::Integer
-       ,Movement_SheetWorkTime.Count_MemberDay::Integer
        ,CASE 
             -- Фонд за месяц
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
                 THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_Member, 0))
             -- Фонд за месяц (по дням)
-            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_MemberDay,0) * Movement_SheetWorkTime.Count_Day)
+            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_MonthDay()
+                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_MemberInDay,0) * Movement_SheetWorkTime.Count_Day)
             -- Доплата за 1 день на всех
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day()
                 THEN Movement_SheetWorkTime.SummaADD
@@ -305,7 +292,9 @@ BEGIN
                 THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursDay,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
             -- Фонд постоянный для факт часов в месяц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlanConst()
-                THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.SUM_MemberHours,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
+                THEN Setting.StaffListSumm_Value
+                   / NULLIF (Setting.Count_Member, 0) * Movement_SheetWorkTime.Count_Member
+                   / NULLIF (Movement_SheetWorkTime.SUM_MemberHours, 0) * Movement_SheetWorkTime.SheetWorkTime_Amount
         END :: TFloat AS Summ
     FROM Setting_Wage_2 AS Setting
         LEFT OUTER JOIN Movement_SheetWorkTime ON COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
@@ -317,12 +306,5 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-/*
-Select * from gpSelect_Report_Wage_Sum(
-    inDateStart      := '20150701'::TDateTime, --дата начала периода
-    inDateFinal      := '20150731'::TDateTime, --дата окончания периода
-    inUnitId         := 8448::Integer,   --подразделение 
-    inMemberId     := 0::Integer,   --сотрудник
-    inPositionId     := 0::Integer,   --должность
-    inSession        := '5');
-*/
+-- тест
+-- SELECT * FROM gpSelect_Report_Wage_Sum (inStartDate:= '01.04.2016', inEndDate:= '01.04.2016', inUnitId:= 8439, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
