@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_Income()
+-- Function: gpReport_RemainsOverGoods()
 
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TVarChar);
 

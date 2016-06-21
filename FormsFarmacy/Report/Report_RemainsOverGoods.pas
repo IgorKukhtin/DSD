@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxButtonEdit, dsdGuides, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCheckBox;
+  cxCheckBox, cxSplitter;
 
 type
   TReport_RemainsOverGoodsForm = class(TAncestorReportForm)
@@ -53,6 +53,11 @@ type
     chSummaMCSValue: TcxGridDBColumn;
     chRemainsMCS_result: TcxGridDBColumn;
     chSummaRemainsMCS_result: TcxGridDBColumn;
+    spSend: TdsdStoredProc;
+    actSend: TdsdExecStoredProc;
+    macSend: TMultiAction;
+    bbSend: TdxBarButton;
+    cxSplitterChild: TcxSplitter;
   private
     { Private declarations }
   public

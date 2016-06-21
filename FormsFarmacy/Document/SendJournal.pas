@@ -41,6 +41,8 @@ type
     colTotalSumm: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     colisAuto: TcxGridDBColumn;
+    colMCSDay: TcxGridDBColumn;
+    colMCSPeriod: TcxGridDBColumn;
   private
     { Private declarations }
   public

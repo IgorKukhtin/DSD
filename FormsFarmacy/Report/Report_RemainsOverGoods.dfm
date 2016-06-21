@@ -1,30 +1,30 @@
 inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'>'
-  ClientHeight = 631
+  ClientHeight = 557
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1082
-  ExplicitHeight = 666
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 61
     Width = 1066
-    Height = 570
+    Height = 496
     TabOrder = 3
     ExplicitTop = 61
     ExplicitWidth = 1066
-    ExplicitHeight = 570
-    ClientRectBottom = 570
+    ExplicitHeight = 496
+    ClientRectBottom = 496
     ClientRectRight = 1066
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1066
-      ExplicitHeight = 570
+      ExplicitHeight = 496
       inherited cxGrid: TcxGrid
         Width = 1066
-        Height = 304
+        Height = 259
         ExplicitWidth = 1066
-        ExplicitHeight = 304
+        ExplicitHeight = 259
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -486,9 +486,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 304
+        Top = 264
         Width = 1066
-        Height = 266
+        Height = 232
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -765,6 +765,14 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           GridView = cxGridDBTableView1
         end
       end
+      object cxSplitterChild: TcxSplitter
+        Left = 0
+        Top = 259
+        Width = 1066
+        Height = 5
+        AlignSplitter = salBottom
+        Control = cxGrid1
+      end
     end
   end
   inherited Panel: TPanel
@@ -1014,6 +1022,31 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actSend: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSend
+      StoredProcList = <
+        item
+          StoredProc = spSend
+        end>
+      ImageIndex = 41
+    end
+    object macSend: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSend
+        end>
+      DataSource = ChildDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1089#1086#1079#1076#1072#1085#1099
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1102,6 +1135,14 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbSend'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1115,6 +1156,10 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbSend: TdxBarButton
+      Action = macSend
       Category = 0
     end
   end
@@ -1181,5 +1226,91 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Params = <>
     Left = 104
     Top = 448
+  end
+  object spSend: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Send_Auto'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inFromId'
+        Value = '0'
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = ChildCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        Component = ChildCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemainsMCS_result'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'RemainsMCS_result'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice_from'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice_to'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSPeriod'
+        Value = 0.000000000000000000
+        Component = edPeriod
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSDay'
+        Value = 0.000000000000000000
+        Component = edDay
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 192
   end
 end
