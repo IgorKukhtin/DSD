@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSplitter;
 
 type
   TPersonalServiceForm = class(TAncestorDocumentForm)
@@ -74,6 +74,29 @@ type
     SummPhone: TcxGridDBColumn;
     SummTransportAddLong: TcxGridDBColumn;
     SummTransportTaxi: TcxGridDBColumn;
+    ChildCDS: TClientDataSet;
+    ChildDs: TDataSource;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxMemberName: TcxGridDBColumn;
+    cxAmount: TcxGridDBColumn;
+    cxMemberCount: TcxGridDBColumn;
+    cxDayCount: TcxGridDBColumn;
+    cxWorkTimeHoursOne: TcxGridDBColumn;
+    cxWorkTimeHours: TcxGridDBColumn;
+    cxPrice: TcxGridDBColumn;
+    cxHoursPlan: TcxGridDBColumn;
+    cxHoursDay: TcxGridDBColumn;
+    cxPersonalCount: TcxGridDBColumn;
+    cxGrossOne: TcxGridDBColumn;
+    cxModelServiceName: TcxGridDBColumn;
+    cxStaffListSummKindName: TcxGridDBColumn;
+    cxisErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitterChild: TcxSplitter;
+    DBViewAddOnChild: TdsdDBViewAddOn;
+    spSelectChild: TdsdStoredProc;
+    edIsAuto: TcxCheckBox;
   private
     { Private declarations }
   public

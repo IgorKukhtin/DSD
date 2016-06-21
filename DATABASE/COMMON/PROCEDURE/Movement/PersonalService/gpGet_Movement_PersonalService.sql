@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
+             , isAuto Boolean
               )
 AS
 $BODY$
@@ -40,6 +41,7 @@ BEGIN
 
              , 0                     	AS JuridicalId
              , CAST ('' AS TVarChar) 	AS JuridicalName
+             ,  False                   AS isAuto
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -58,6 +60,7 @@ BEGIN
            , Object_PersonalServiceList.ValueData AS PersonalServiceListName
            , Object_Juridical.Id                  AS JuridicalId
            , Object_Juridical.ValueData           AS JuridicalName
+           , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -69,6 +72,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
    
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
@@ -94,6 +101,7 @@ ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.06.16         *
  01.10.14         * add Juridical
  11.09.14         *
 */

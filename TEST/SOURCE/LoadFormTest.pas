@@ -1501,6 +1501,8 @@ procedure TLoadFormTest.LoadReportWageFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportBankAccountCashFormTest;

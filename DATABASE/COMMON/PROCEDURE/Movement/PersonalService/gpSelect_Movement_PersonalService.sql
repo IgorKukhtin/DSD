@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
+             , isAuto Boolean
               )
 AS
 $BODY$
@@ -92,6 +93,8 @@ BEGIN
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
            , Object_Juridical.Id                        AS JuridicalId
            , Object_Juridical.ValueData                 AS JuridicalName
+         
+           , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -181,6 +184,11 @@ BEGIN
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
             ;
 
 END;
@@ -191,6 +199,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.06.16         *
  20.04.16         *
  05.04.15                                        * all
  01.10.14         * add Juridical
