@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Comment TVarChar
              , isErased Boolean
+             , isAuto Boolean
               )
 AS
 $BODY$
@@ -166,6 +167,7 @@ BEGIN
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
+            , COALESCE(MIBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
          
        FROM tmpAll 
             LEFT JOIN MovementItemString AS MIString_Comment
@@ -226,6 +228,10 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                          ON MIBoolean_isAuto.MovementItemId = tmpAll.MovementItemId
+                                         AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
                                                    
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
@@ -256,6 +262,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.06.16         *
  20.04.16         * add SummHoliday
  25.03.16         * add Card
  07.05.15         * add PersonalServiceList

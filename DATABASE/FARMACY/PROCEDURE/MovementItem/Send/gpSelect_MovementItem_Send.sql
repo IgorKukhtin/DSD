@@ -157,8 +157,8 @@ BEGIN
               , MovementItem_Send.Amount
               , tmpRemains.Amount
               , tmpRemains.PriceIn
-              , Object_Price_From.Price
-              , Object_Price_To.Price
+              , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END
+              , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END
               , MovementItem_Send.IsErased;
     ELSE
         -- Результат другой

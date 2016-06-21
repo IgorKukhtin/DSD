@@ -63,6 +63,8 @@ type
     StaffListName: TcxGridDBColumn;
     Count_Day: TcxGridDBColumn;
     PriceName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

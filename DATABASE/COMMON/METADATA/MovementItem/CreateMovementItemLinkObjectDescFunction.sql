@@ -180,9 +180,26 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_ReasonDifferences() RETURNS Integer A
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_ReasonDifferences', 'Причина разногласия' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_ReasonDifferences');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_StaffList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_StaffList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_StaffList', 'Штатное расписание' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_StaffList');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_ModelService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_ModelService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_ModelService', 'Модели начисления' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_ModelService');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_StaffListSummKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_StaffListSummKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_StaffListSummKind', 'Типы сумм для штатного расписания' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_StaffListSummKind');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.06.16         * zc_MILinkObject_StaffList
+                    zc_MILinkObject_ModelService
+                    zc_MILinkObject_StaffListSummKind
  07.05.15                                        * add zc_MILinkObject_PersonalServiceList
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  09.10.14                                                       * add zc_MIFloat_BoxCount

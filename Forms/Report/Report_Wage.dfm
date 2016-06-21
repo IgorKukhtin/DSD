@@ -1,10 +1,12 @@
 inherited Report_WageForm: TReport_WageForm
+  AlphaBlend = True
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1091' '#1079#1072#1088#1086#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
   ClientHeight = 401
   ClientWidth = 991
   AddOnFormData.RefreshAction = nil
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1007
-  ExplicitHeight = 436
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -547,6 +549,137 @@ inherited Report_WageForm: TReport_WageForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_WageDialogForm'
+      FormNameParam.Value = 'TReport_WageDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'chkDetailDay'
+          Value = Null
+          Component = chkDetailDay
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'chkDetailModelService'
+          Value = Null
+          Component = chkDetailModelService
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'chkDetailModelServiceItemChild'
+          Value = Null
+          Component = chkDetailModelServiceItemChild
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'chkDetailModelServiceItemMaster'
+          Value = Null
+          Component = chkDetailModelServiceItemMaster
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelServiceId'
+          Value = Null
+          Component = ModelServiceGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelServiceName'
+          Value = Null
+          Component = ModelServiceGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = PositionGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = PositionGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = MemberGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = MemberGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -658,6 +791,14 @@ inherited Report_WageForm: TReport_WageForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -699,6 +840,10 @@ inherited Report_WageForm: TReport_WageForm
     end
     object dxBarButton2: TdxBarButton
       Action = actPrint2
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
