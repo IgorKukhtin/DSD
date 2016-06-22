@@ -147,27 +147,32 @@ BEGIN
       SELECT MovementItem.Id 
       INTO vbMIChildId
       FROM MovementItem
-         INNER JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
                                            ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
                                           AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-                                          AND MILinkObject_PositionLevel.ObjectId = inPositionLevelId
-         INNER JOIN MovementItemLinkObject AS MILinkObject_StaffList
+                                          --AND (MILinkObject_PositionLevel.ObjectId = inPositionLevelId OR inPositionLevelId = 0)
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffList
                                            ON MILinkObject_StaffList.MovementItemId = MovementItem.Id
                                           AND MILinkObject_StaffList.DescId = zc_MILinkObject_StaffList()
-                                          AND MILinkObject_StaffList.ObjectId = inStaffListId
-         INNER JOIN MovementItemLinkObject AS MILinkObject_ModelService
+                                          --AND (MILinkObject_StaffList.ObjectId = inStaffListId OR inStaffListId = 0)
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_ModelService
                                            ON MILinkObject_ModelService.MovementItemId = MovementItem.Id
                                           AND MILinkObject_ModelService.DescId = zc_MILinkObject_ModelService()
-                                          AND MILinkObject_ModelService.ObjectId = inModelServiceId
-         INNER JOIN MovementItemLinkObject AS MILinkObject_StaffListSummKind
+                                          --AND (MILinkObject_ModelService.ObjectId = inModelServiceId OR inModelServiceId = 0)
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffListSummKind
                                           ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
                                          AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()                                                           
-                                         AND MILinkObject_StaffListSummKind.ObjectId = inStaffListSummKindId
+                                         --AND (MILinkObject_StaffListSummKind.ObjectId = inStaffListSummKindId OR inStaffListSummKindId=0)
       WHERE MovementItem.MovementId = vbMovementId
         AND MovementItem.ParentId = vbMIMasterId
         AND MovementItem.DescId = zc_MI_Child()
         AND MovementItem.isErased = False
-        AND MovementItem.ObjectId = inMemberId;
+        AND MovementItem.ObjectId = inMemberId
+        AND (MILinkObject_PositionLevel.ObjectId = inPositionLevelId OR inPositionLevelId = 0)
+        AND (MILinkObject_StaffList.ObjectId = inStaffListId OR inStaffListId = 0)
+        AND (MILinkObject_ModelService.ObjectId = inModelServiceId OR inModelServiceId = 0)
+        AND (MILinkObject_StaffListSummKind.ObjectId = inStaffListSummKindId OR inStaffListSummKindId=0)
+       ;
 
      -- получаем данные из спр. Штатное расписание
      SELECT ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
