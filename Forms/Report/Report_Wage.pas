@@ -69,6 +69,7 @@ type
     actPersonalService: TdsdExecStoredProc;
     macPersonalService: TMultiAction;
     DocumentKindName: TcxGridDBColumn;
+    bbPersonalService: TdxBarButton;
   private
     { Private declarations }
   public

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_PersonalService_Child(
 )
 RETURNS TABLE (Id Integer, ParentId Integer, MemberId Integer, MemberName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
-             , StaffListId Integer, StaffListName TVarChar
+             , StaffListId Integer, StaffListCode Integer, StaffListName TVarChar
              , ModelServiceId Integer, ModelServiceName TVarChar
              , StaffListSummKindId Integer, StaffListSummKindName TVarChar
              
@@ -59,8 +59,8 @@ BEGIN
                        )
                        
        -- Результат
-       SELECT tmpMI .MovementItemId                    AS Id
-            , tmpMI .MovementItemId                    AS ParentId
+       SELECT tmpMI.MovementItemId                     AS Id
+            , tmpMI.ParentId                           AS ParentId
 
             , Object_Member.Id                         AS MemberId
             , Object_Member.ValueData                  AS MemberName
@@ -69,7 +69,12 @@ BEGIN
             , Object_PositionLevel.ValueData           AS PositionLevelName
 
             , Object_StaffList.Id                      AS StaffListId
-            , Object_StaffList.ValueData               AS StaffListName
+            , Object_StaffList.ObjectCode              AS StaffListCode
+            , ('(' || COALESCE (Object_Unit_StaffList.ObjectCode, 0) :: TVarChar || ') ' || COALESCE (Object_Unit_StaffList.ValueData, '')
+            || CASE WHEN Object_PositionLevel_StaffList.ValueData      <> '' THEN ' - ' || Object_PositionLevel_StaffList.ValueData ELSE '' END
+            || CASE WHEN Object_Position_StaffList.ValueData           <> '' THEN ' - ' || Object_Position_StaffList.ValueData      ELSE '' END
+            || CASE WHEN ObjectFloat_PersonalCount.ValueData           <> 0  THEN ' - ' || zfConvert_FloatToString (ObjectFloat_PersonalCount.ValueData) ELSE ' - ???' END ||  ' чел.'
+              ) :: TVarChar AS StaffListName
 
             , Object_ModelService.Id                   AS ModelServiceId
             , Object_ModelService.ValueData            AS ModelServiceName
@@ -127,9 +132,25 @@ BEGIN
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI .MemberId
             
             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpMI .PositionLevelId
-            LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = tmpMI .StaffListId
+            LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = tmpMI.StaffListId
             LEFT JOIN Object AS Object_ModelService ON Object_ModelService.Id = tmpMI .ModelServiceId
             LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = tmpMI .StaffListSummKindId
+  -- для штатного рпасписания
+            LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
+                                 ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
+                                AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
+            LEFT JOIN Object AS Object_Unit_StaffList ON Object_Unit_StaffList.Id = ObjectLink_StaffList_Unit.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
+                                 ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                                AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
+            LEFT JOIN Object AS Object_Position_StaffList ON Object_Position_StaffList.Id = ObjectLink_StaffList_Position.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
+                                 ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
+                                AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
+            LEFT JOIN Object AS Object_PositionLevel_StaffList ON Object_PositionLevel_StaffList.Id = ObjectLink_StaffList_PositionLevel.ChildObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount
+                                  ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id
+                                 AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
 
       ;
 

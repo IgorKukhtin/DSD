@@ -1,12 +1,10 @@
 inherited Report_WageForm: TReport_WageForm
-  AlphaBlend = True
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1091' '#1079#1072#1088#1086#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
   ClientHeight = 401
   ClientWidth = 991
-  AddOnFormData.RefreshAction = nil
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1007
-  ExplicitHeight = 436
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -860,6 +858,14 @@ inherited Report_WageForm: TReport_WageForm
         end
         item
           Visible = True
+          ItemName = 'bbPersonalService'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -877,6 +883,10 @@ inherited Report_WageForm: TReport_WageForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbPersonalService: TdxBarButton
+      Action = macPersonalService
       Category = 0
     end
   end
@@ -1012,68 +1022,168 @@ inherited Report_WageForm: TReport_WageForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inFromId'
+        Name = 'inUnitId'
         Value = ''
+        Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inToId'
+        Name = 'inPersonalServiceListId'
         Value = Null
-        ComponentItem = 'UnitId'
+        Component = MasterCDS
+        ComponentItem = 'PersonalServiceListId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
-        Value = 42370d
+        Name = 'inMemberId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
-        Value = Null
-        ComponentItem = 'GoodsId'
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRemainsMCS_result'
+        Name = 'inPositionId'
         Value = Null
-        ComponentItem = 'RemainsMCS_result'
+        Component = MasterCDS
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionLevelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffListId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inModelServiceId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ModelServiceId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffListSummKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffListSummKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountOnOneMember'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice_from'
+        Name = 'inMemberCount'
         Value = Null
-        ComponentItem = 'PriceFrom'
+        Component = MasterCDS
+        ComponentItem = 'Count_Member'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice_to'
+        Name = 'inDayCount'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count_Day'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWorkTimeHoursOne'
+        Value = 30.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'SheetWorkTime_Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWorkTimeHours'
+        Value = 12.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'SUM_MemberHours'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMCSPeriod'
-        Value = 30.000000000000000000
+        Name = 'inHoursPlan'
+        Value = Null
+        Component = MasterCDS
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMCSDay'
-        Value = 12.000000000000000000
+        Name = 'inHoursDay'
+        Value = Null
+        Component = MasterCDS
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalCount'
+        Value = Null
+        Component = MasterCDS
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGrossOne'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GrossOnOneMember'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
