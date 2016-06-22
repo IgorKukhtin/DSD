@@ -20,7 +20,8 @@ RETURNS TABLE (
     GoodsName           TVarChar,   --Наименование товара
     LastPrice           TFloat,     --Текущая цена
     LastPrice_to        TFloat,     --Текущая цена - inUnitId_to
-    RemainsCount        TFloat,     --Остаток
+    RemainsCount        TFloat,     -- Остаток
+    RemainsCount_to     TFloat,     -- Остаток - Подразделение (с которым есть сравнение цен)
     NDS                 TFloat,     --ставка НДС
     NewPrice            TFloat,     --Новая цена
     MinMarginPercent    TFloat,     --минимальный % отклонения
@@ -38,6 +39,7 @@ RETURNS TABLE (
     MidPriceSale        TFloat,     --средняя цена остатка
     MidPriceDiff        TFloat,     --отклонение от средняя цена остатка
     MinExpirationDate   TDateTime,  --Минимальный срок годности препарата на точке
+    MinExpirationDate_to TDateTime, --Минимальный срок годности препарата на точке  - Подразделение (с которым есть сравнение цен)
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
     isPriceFix          Boolean ,   -- фиксированная цена
     isIncome            Boolean ,   -- приход сегодня
@@ -86,8 +88,46 @@ BEGIN
             COALESCE(D2.MinPrice, 1000000) AS MaxPrice 
         FROM DD AS D1
             LEFT OUTER JOIN DD AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1
-    ), 
-    ResultSet AS
+    )
+  , RemainsTo AS
+       (SELECT
+            -- !!!временно захардкодил, будет всегда товар НеБолей!!!
+            ObjectLink_Child_NB.ChildObjectId AS GoodsId         -- здесь товар
+          , Container.ObjectId                AS GoodsId_retail  -- здесь товар "сети"
+          , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- Срок годности
+          , SUM (Container.Amount)  :: TFloat AS Amount
+        FROM Container
+            LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
+                                                ON CLO_PartionMovementItem.ContainerId = Container.Id
+                                               AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+            LEFT OUTER JOIN Object AS Object_PartionMovementItem 
+                                   ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                              ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = Container.ObjectID
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
+
+        WHERE Container.DescId = zc_Container_Count()
+          AND Container.WhereObjectId = inUnitId_to
+          AND Container.Amount <> 0
+        GROUP BY ObjectLink_Child_NB.ChildObjectId
+               , Container.ObjectId
+        HAVING SUM (Container.Amount) > 0
+       )
+  , ResultSet AS
     (
         SELECT
             SelectMinPrice_AllGoods.GoodsId AS Id,
@@ -98,6 +138,7 @@ BEGIN
             Object_Price_to.Price             AS LastPrice_to,
             Object_Price.Fix                  AS isPriceFix,
             SelectMinPrice_AllGoods.Remains   AS RemainsCount,
+            RemainsTo.Amount                  AS RemainsCount_to,
             Object_Goods.NDS                  AS NDS,
             CASE 
                 WHEN SelectMinPrice_AllGoods.isTop = TRUE
@@ -118,6 +159,7 @@ BEGIN
             SelectMinPrice_AllGoods.MakerName                AS ProducerName,
             Object_Contract.ValueData                        AS ContractName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
+            RemainsTo.MinExpirationDate                      AS MinExpirationDate_to,
             SelectMinPrice_AllGoods.MidPriceSale             AS MidPriceSale,
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
@@ -131,6 +173,9 @@ BEGIN
                                     , inUserId   := vbUserId
                                     ) AS SelectMinPrice_AllGoods
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
+
+
+            LEFT OUTER JOIN RemainsTo ON RemainsTo.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price_to
                                               ON Object_Price_to.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
@@ -173,6 +218,7 @@ BEGIN
         ResultSet.LastPrice,
         ResultSet.LastPrice_to,
         ResultSet.RemainsCount,
+        ResultSet.RemainsCount_to,
         ResultSet.NDS,
         ResultSet.NewPrice,
         COALESCE(MarginCondition.MarginPercent,inMinPercent)::TFloat AS MinMarginPercent,
@@ -191,10 +237,14 @@ BEGIN
         ResultSet.Partner_GoodsName      AS Juridical_GoodsName,
         ResultSet.ProducerName           AS ProducerName,
         ResultSet.ContractName,
-        ROUND(((ResultSet.NewPrice - ResultSet.LastPrice)*ResultSet.RemainsCount),2)::TFloat AS SumReprice,
+        ROUND ((CASE WHEN inUnitId_to <> 0 THEN CASE WHEN ResultSet.LastPrice_to > 0 THEN (ResultSet.LastPrice_to - ResultSet.LastPrice) ELSE 0 END ELSE (ResultSet.NewPrice - ResultSet.LastPrice) END
+               * ResultSet.RemainsCount
+               )
+           , 2) :: TFloat AS SumReprice,
         ResultSet.MidPriceSale,
         CAST (CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceSale) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS MidPriceDiff, 
         ResultSet.MinExpirationDate,
+        ResultSet.MinExpirationDate_to,
         ResultSet.isOneJuridical,
         ResultSet.isPriceFix,
         ResultSet.isIncome,
@@ -251,8 +301,9 @@ BEGIN
                 END) >= COALESCE (MarginCondition.MarginPercent, inMinPercent)
         )
         ))
-        AND
-        COALESCE(ResultSet.RemainsCount,0) > 0
+
+        AND ResultSet.RemainsCount > 0 AND (ResultSet.RemainsCount_to > 0 OR COALESCE (inUnitId_to, 0) = 0)
+
         ;
 
 END;

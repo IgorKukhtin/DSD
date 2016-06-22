@@ -10,8 +10,8 @@ inherited MainCashForm: TMainCashForm
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 773
-  ExplicitHeight = 442
+  ExplicitWidth = 781
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1552,5 +1552,21 @@ inherited MainCashForm: TMainCashForm
     OnTimer = TimerMoneyInCashTimer
     Left = 408
     Top = 56
+  end
+  object spUpdate_UnitForFarmacyCash: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_UnitForFarmacyCash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 136
+    Top = 176
   end
 end

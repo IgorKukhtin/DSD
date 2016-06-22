@@ -156,11 +156,11 @@ BEGIN
                , Object_Remains.RemainsStart                       AS RemainsStart
                , (Object_Remains.RemainsStart * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) AS SummaRemainsStart
                
-               , CASE WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN Object_Remains.RemainsStart - tmpMCS.MCSValue ELSE 0 END AS RemainsMCS_from
-               , CASE WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN (Object_Remains.RemainsStart - tmpMCS.MCSValue) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END AS RemainsMCS_from
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN FLOOR (Object_Remains.RemainsStart - tmpMCS.MCSValue) ELSE 0 END AS RemainsMCS_from
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN FLOOR (Object_Remains.RemainsStart - tmpMCS.MCSValue) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END AS RemainsMCS_from
 
-               , CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) ELSE 0 END AS RemainsMCS_to
-               , CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN (tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END AS RemainsMCS_to
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN CEIL (tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) ELSE 0 END AS RemainsMCS_to
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN CEIL (tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END AS RemainsMCS_to
                
                , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE)   AS isClose
                , COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)     AS isTOP
@@ -306,6 +306,7 @@ BEGIN
                , Object_Goods.isErased                        AS isErased
                , Object_GoodsGroup.ValueData                  AS GoodsGroupName
                , Object_NDSKind.ValueData                     AS NDSKindName
+               , Object_Measure.ValueData                     AS MeasureName
              
      FROM tmpData
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
@@ -318,6 +319,11 @@ BEGIN
                                      ON ObjectLink_Goods_NDSKind.ObjectId = tmpData.GoodsId
                                     AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
                 LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId     
+
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                     ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
+                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId     
 
                 LEFT JOIN tmpChild ON tmpChild.GoodsId = tmpData.GoodsId
                 LEFT JOIN tmpChildTo ON tmpChildTo.GoodsId = tmpData.GoodsId
@@ -364,10 +370,9 @@ BEGIN
      
      RETURN NEXT Cursor2;
 
-      -- Результат 2
-
+     -- Результат 3
+     -- !!!дублируем Cursor2!!!
      OPEN Cursor3 FOR
-
        SELECT    Object_Unit.Id        AS UnitId
                , Object_Unit.ValueDAta AS UnitName 
                , tmpData.GoodsId
@@ -399,7 +404,6 @@ BEGIN
        AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
      --LIMIT 50000
     ;
-     
      RETURN NEXT Cursor3;
   
 END;

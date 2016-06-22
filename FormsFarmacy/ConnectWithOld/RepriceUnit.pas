@@ -118,6 +118,10 @@ type
     cdsResultPriceDiff_to: TFloatField;
     colLastPrice_to: TcxGridDBColumn;
     colPriceDiff_to: TcxGridDBColumn;
+    colRemainsCount_to: TcxGridDBColumn;
+    cdsResultRemainsCount_to: TCurrencyField;
+    cdsResultMinExpirationDate_to: TDateField;
+    MinExpirationDate_to: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -182,8 +186,12 @@ begin
           except ShowMessage('2.1.');exit;end;
 
           try
-          spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value :=
-            GuidesUnit.Params.ParamByName('Key').Value;
+          if edUnit.Text <> ''
+          then
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value :=
+                 GuidesUnit.Params.ParamByName('Key').Value
+          else
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value := 0;
           except ShowMessage('2.2.');exit;end;
 
           try
@@ -220,7 +228,7 @@ begin
           except ShowMessage('8');exit;end;
 
           try
-          if GuidesUnit.Params.ParamByName('Key').Value > 0
+          if edUnit.Text <> ''
           then spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
                   AllGoodsPriceGridTableView.DataController.Values[RecIndex,colLastPrice_to.Index]
           else spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
@@ -365,6 +373,7 @@ begin
             cdsResult.FieldByName('LastPrice').AsCurrency := AllGoodsPriceCDS.FieldByName('LastPrice').AsCurrency;
             cdsResult.FieldByName('LastPrice_to').AsCurrency := AllGoodsPriceCDS.FieldByName('LastPrice_to').AsCurrency;
           cdsResult.FieldByName('RemainsCount').AsCurrency := AllGoodsPriceCDS.FieldByName('RemainsCount').AsCurrency;
+          cdsResult.FieldByName('RemainsCount_to').AsCurrency := AllGoodsPriceCDS.FieldByName('RemainsCount_to').AsCurrency;
           cdsResult.FieldByName('NDS').AsCurrency := AllGoodsPriceCDS.FieldByName('NDS').AsCurrency;
           if AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime <> 0 then
             cdsResult.FieldByName('ExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime;
@@ -383,6 +392,7 @@ begin
           cdsResult.FieldByName('ContractName').AsString := AllGoodsPriceCDS.FieldByName('ContractName').AsString;
           cdsResult.FieldByName('SumReprice').AsCurrency := AllGoodsPriceCDS.FieldByName('SumReprice').AsCurrency;
           cdsResult.FieldByName('MinExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('MinExpirationDate').AsDateTime;
+          cdsResult.FieldByName('MinExpirationDate_to').AsDateTime := AllGoodsPriceCDS.FieldByName('MinExpirationDate_to').AsDateTime;
           cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;
           cdsResult.FieldByName('JuridicalId').AsInteger := AllGoodsPriceCDS.FieldByName('JuridicalId').AsInteger;
           cdsResult.FieldByName('isPriceFix').AsBoolean := AllGoodsPriceCDS.FieldByName('isPriceFix').AsBoolean;
