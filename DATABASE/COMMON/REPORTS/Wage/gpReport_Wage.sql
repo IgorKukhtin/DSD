@@ -19,6 +19,8 @@ RETURNS TABLE(
      StaffListId                    Integer
     ,StaffListCode                  Integer
     ,StaffListName                  TVarChar
+    ,DocumentKindId                 Integer
+    ,DocumentKindName               TVarChar
     ,PriceName                      TVarChar
     ,HoursPlan_StaffList            TFloat
     ,HoursDay_StaffList             TFloat
@@ -53,11 +55,14 @@ RETURNS TABLE(
     ,AmountOnOneMember              TFloat
     ,PersonalServiceListId          Integer
     ,PersonalServiceListName        TVarChar
-    ,Ord                Integer
+    ,Ord                            Integer
     ,ServiceModelName_1             TVarChar
     ,ServiceModelName_2             TVarChar
     ,ServiceModelName_3             TVarChar
     ,ServiceModelName_4             TVarChar
+
+    ,ModelServiceId                 Integer
+    ,StaffListSummKindId            Integer
     )
 AS
 $BODY$
@@ -70,6 +75,7 @@ BEGIN
     -- Таблица - Данные результат
     CREATE TEMP TABLE Res(
           StaffListId                    Integer
+        , DocumentKindId                 Integer
         , UnitId                         Integer
         , UnitName                       TVarChar
         , PositionId                     Integer
@@ -86,7 +92,6 @@ BEGIN
         , SheetWorkTime_Date             TDateTime
         , SUM_MemberHours                TFloat
         , SheetWorkTime_Amount           TFloat
-        , ServiceModelId                 Integer
         , ServiceModelCode               Integer
         , ServiceModelName               TVarChar
         , Price                          TFloat
@@ -114,6 +119,10 @@ BEGIN
         , AmountOnOneMember              TFloat
         , PersonalServiceListId          Integer
         , PersonalServiceListName        TVarChar
+
+        , ModelServiceId                 Integer
+        , StaffListSummKindId            Integer
+
          ) ON COMMIT DROP;
 
     -- Таблица - Список Моделей
@@ -125,18 +134,20 @@ BEGIN
     
 
     -- Report_1 - По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
-    Insert Into Res (StaffListId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
-                   , ServiceModelId,ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
+    Insert Into Res (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
+                   , ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    , ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
                    , OperDate, Count_Day, Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember
+                   , ModelServiceId, StaffListSummKindId
                     )
-    SELECT Report_1.StaffListId,Report_1.UnitId,Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.Count_Member,Report_1.HoursPlan,Report_1.HoursDay
-         , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date, Report_1.SUM_MemberHours, Report_1.SheetWorkTime_Amount, Report_1.ServiceModelId,Report_1.ServiceModelCode,Report_1.ServiceModelName,Report_1.Price
+    SELECT Report_1.StaffListId, Report_1.DocumentKindId, Report_1.UnitId, Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.Count_Member,Report_1.HoursPlan,Report_1.HoursDay
+         , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date, Report_1.SUM_MemberHours, Report_1.SheetWorkTime_Amount, Report_1.ServiceModelCode, Report_1.ServiceModelName, Report_1.Price
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
          , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId
          , Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
          , Report_1.OperDate, Report_1.Count_Day, Report_1.Count_MemberInDay, Report_1.Gross,Report_1.GrossOnOneMember
          , Report_1.Amount,Report_1.AmountOnOneMember
+         , Report_1.ServiceModelId AS ModelServiceId, 0 AS StaffListSummKindId
     FROM gpSelect_Report_Wage_Model (inStartDate      := inStartDate,
                                      inEndDate        := inEndDate, --дата окончания периода
                                      inUnitId         := inUnitId,   --подразделение 
@@ -149,8 +160,9 @@ BEGIN
 
     -- Report_2 - По штатному расписанию - Тип суммы ИЛИ по часам - из Табеля
     INSERT INTO Res (StaffListId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName
-                   , SUM_MemberHours, SheetWorkTime_Amount, ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember
+                   , SUM_MemberHours, SheetWorkTime_Amount, ServiceModelCode, ServiceModelName, Price, AmountOnOneMember
                    , Count_Day
+                   , ModelServiceId, StaffListSummKindId
                     )
     SELECT
         Report_2.StaffListId
@@ -169,12 +181,12 @@ BEGIN
        ,Report_2.MemberName
        ,Report_2.SUM_MemberHours
        ,Report_2.SheetWorkTime_Amount
-       ,Report_2.StaffListSummKindId   AS ServiceModelId
        ,Report_2.StaffListSummKindId   AS ServiceModelCode
        ,Report_2.StaffListSummKindName AS ServiceModelName
        ,Report_2.StaffListSumm_Value   AS Price
        ,Report_2.Summ
        ,Report_2.Count_Day
+       ,0 AS ModelServiceId, Report_2.StaffListSummKindId
     FROM gpSelect_Report_Wage_Sum (inStartDate      := inStartDate,
                                    inEndDate        := inEndDate, --дата окончания периода
                                    inUnitId         := inUnitId,   --подразделение 
@@ -208,10 +220,13 @@ BEGIN
                                        )
            , tmpRes AS (
             SELECT
-                CASE WHEN inDetailModelService = TRUE
-                     THEN Res.ServiceModelId
-                END AS ServiceModelId
-               ,Res.StaffListId
+                Res.StaffListId
+
+               ,CASE WHEN inDetailModelService = TRUE OR inDetailModelServiceItemMaster = TRUE
+                          THEN Res.DocumentKindId
+                     ELSE NULL
+                END AS DocumentKindId
+
                ,Res.UnitId
                ,Res.UnitName
                ,Res.PositionId
@@ -269,13 +284,22 @@ BEGIN
                      THEN Res.Amount
                 ELSE NULL::TFloat END                     AS Amount
                ,SUM(Res.AmountOnOneMember)::TFloat        AS AmountOnOneMember
+
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.ModelServiceId
+                END AS ModelServiceId
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.StaffListSummKindId
+                END AS StaffListSummKindId
+
             FROM Res
             WHERE Res.MemberId > 0
             GROUP BY
-                CASE WHEN inDetailModelService = TRUE
-                     THEN Res.ServiceModelId
+                Res.StaffListId
+               ,CASE WHEN inDetailModelService = TRUE OR inDetailModelServiceItemMaster = TRUE
+                          THEN Res.DocumentKindId
+                     ELSE NULL
                 END
-               ,Res.StaffListId
                ,Res.UnitId
                ,Res.UnitName
                ,Res.PositionId
@@ -329,6 +353,13 @@ BEGIN
                ,CASE WHEN inDetailDay = TRUE 
                      THEN Res.Amount
                 ELSE NULL::TFloat END
+
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.ModelServiceId
+                END
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.StaffListSummKindId
+                END
         )
         SELECT
             tmpRes.StaffListId
@@ -339,11 +370,14 @@ BEGIN
           || CASE WHEN ObjectFloat_PersonalCount.ValueData           <> 0  THEN ' - ' || zfConvert_FloatToString (ObjectFloat_PersonalCount.ValueData) ELSE ' - ???' END ||  ' чел.'
             ) :: TVarChar AS StaffListName
 
+          , Object_DocumentKind.Id        AS DocumentKindId
+          , Object_DocumentKind.ValueData AS DocumentKindName
+
           , (CASE 
                   WHEN inDetailModelService = FALSE            THEN ''
-                  WHEN Object_ServiceModel.DescId <> zc_Object_StaffListSummKind() THEN '1 кг.'
-                  WHEN tmpRes.HoursDay      <> 0 THEN zfConvert_FloatToString (tmpRes.HoursDay) || ' час.'
-                  WHEN tmpRes.HoursPlan     <> 0 THEN zfConvert_FloatToString (tmpRes.HoursPlan) || ' час.'
+                  WHEN tmpRes.ModelServiceId <> 0 THEN '1 кг.'
+                  WHEN tmpRes.HoursDay       <> 0 THEN zfConvert_FloatToString (tmpRes.HoursDay) || ' час.'
+                  WHEN tmpRes.HoursPlan      <> 0 THEN zfConvert_FloatToString (tmpRes.HoursPlan) || ' час.'
                   WHEN ObjectFloat_PersonalCount.ValueData <> 0 THEN zfConvert_FloatToString (ObjectFloat_PersonalCount.ValueData) || ' чел.'
                   ELSE ''
              END) :: TVarChar AS PriceName
@@ -389,6 +423,10 @@ BEGIN
            ,tmpListServiceModel_2.ServiceModelName as ServiceModelName_2
            ,tmpListServiceModel_3.ServiceModelName as ServiceModelName_3
            ,tmpListServiceModel_4.ServiceModelName as ServiceModelName_4
+
+           ,tmpRes.ModelServiceId      :: Integer AS ModelServiceId
+           ,tmpRes.StaffListSummKindId :: Integer AS StaffListSummKindId
+
         FROM
             tmpRes
             LEFT JOIN Object_Personal_View AS Object_Personal
@@ -401,6 +439,9 @@ BEGIN
                                       AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
             LEFT JOIN tmpPersonalServiceList ON tmpPersonalServiceList.MemberId = tmpRes.MemberId
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, tmpPersonalServiceList.PersonalServiceListId)
+
+
+            LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = tmpRes.DocumentKindId
 
             LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = tmpRes.StaffListId
             LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
@@ -418,8 +459,6 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount
                                   ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id
                                  AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
-
-            LEFT JOIN Object AS Object_ServiceModel ON Object_ServiceModel.Id = tmpRes.ServiceModelId
 
             LEFT JOIN tmpListServiceModel ON tmpListServiceModel.ServiceModelCode = tmpRes.ServiceModelCode
             LEFT JOIN tmpListServiceModel AS tmpListServiceModel_1 ON tmpListServiceModel_1.Ord = 1

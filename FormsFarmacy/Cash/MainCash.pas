@@ -440,6 +440,10 @@ begin
   //временно будем без парол€
   //if InputBox('ѕароль','¬ведите пароль:','') <> spGet_Password_MoneyInCash.ParamByName('outPassword').AsString then exit;
   //
+  spGetMoneyInCash.ParamByName('inDate').Value := Date;
+  spGetMoneyInCash.Execute;
+  lblMoneyInCash.Caption := FormatFloat(',0.00',spGetMoneyInCash.ParamByName('outTotalSumm').AsFloat);
+  //
   TimerMoneyInCash.Enabled:=True;
 end;
 procedure TMainCashForm.TimerMoneyInCashTimer(Sender: TObject);

@@ -68,6 +68,7 @@ type
     spPersonalService: TdsdStoredProc;
     actPersonalService: TdsdExecStoredProc;
     macPersonalService: TMultiAction;
+    DocumentKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -59,11 +59,13 @@ BEGIN
        ,StaffListSummId       Integer
        ,StaffListSumm_Value   TFloat
        ,StaffListSummKindId   Integer
-       ,StaffListSummKindName TVarChar) ON COMMIT DROP;
+       ,StaffListSummKindName TVarChar
+       ) ON COMMIT DROP;
 
     -- Настройки
     INSERT INTO Setting_Wage_2 (StaffListId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName
-                               , Count_Member,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName)
+                              , Count_Member,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName
+                               )
     SELECT
         Object_StaffList.Id                                      AS StaffListId
        ,ObjectLink_StaffList_Unit.ChildObjectId                  AS UnitId

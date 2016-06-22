@@ -6,7 +6,7 @@ inherited Report_WageForm: TReport_WageForm
   AddOnFormData.RefreshAction = nil
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1007
-  ExplicitHeight = 439
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -90,6 +90,13 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 130
+          end
+          object DocumentKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DocumentKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object PersonalGroupName: TcxGridDBColumn
             Caption = #1041#1088#1080#1075#1072#1076#1072
