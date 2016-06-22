@@ -65,6 +65,9 @@ type
     PriceName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    spPersonalService: TdsdStoredProc;
+    actPersonalService: TdsdExecStoredProc;
+    macPersonalService: TMultiAction;
   private
     { Private declarations }
   public
