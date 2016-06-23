@@ -39,8 +39,9 @@ $BODY$
    DECLARE vbMIMasterId Integer;
    DECLARE vbMIChildId Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbInfoMoneyId_def Integer;
+   DECLARE vbisMain Boolean;
 
+   DECLARE vbInfoMoneyId_def Integer;
    DECLARE ioId Integer;
    
    DECLARE vbHoursPlan TFloat;
@@ -113,14 +114,24 @@ BEGIN
 
       IF COALESCE (vbMIMasterId,0) = 0 THEN 
        vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата
-       vbPersonalId := (SELECT ObjectLink.ObjectId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Personal_Member() AND ObjectLink.ChildObjectId = inMemberId);
+       --vbPersonalId := (SELECT ObjectLink.ObjectId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Personal_Member() AND ObjectLink.ChildObjectId = inMemberId);
+       SELECT ObjectLink.ObjectId 
+            , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE)::Boolean
+       INTO vbPersonalId, vbisMain
+       FROM ObjectLink
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                    ON ObjectBoolean_Personal_Main.ObjectId = ObjectLink.ObjectId
+                                   AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main() 
+       WHERE ObjectLink.DescId = zc_ObjectLink_Personal_Member() 
+         AND ObjectLink.ChildObjectId = inMemberId;
+         
          -- записываем строку документа
          SELECT tmp.ioId
          INTO vbMIMasterId
          FROM lpInsertUpdate_MovementItem_PersonalService            (ioId                 := COALESCE(vbMIMasterId,0) ::Integer
                                                                     , inMovementId         := vbMovementId
                                                                     , inPersonalId         := vbPersonalId
-                                                                    , inIsMain             := True
+                                                                    , inIsMain             := vbisMain
                                                                     , inSummService        := 0 ::TFloat--inSummService
                                                                     , inSummCardRecalc     := 0 ::TFloat--inSummCardRecalc
                                                                     , inSummMinus          := 0 ::TFloat--inSummMinus
