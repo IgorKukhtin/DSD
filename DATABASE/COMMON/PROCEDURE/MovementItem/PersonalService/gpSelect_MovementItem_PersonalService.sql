@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
+             , TotalSummChild TFloat, SummDiff TFloat
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
@@ -87,6 +88,15 @@ BEGIN
                                                             ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList() 
                      )
+          , tmpMIChild AS (SELECT  MovementItem.ParentId    AS ParentId
+                                 , SUM(MovementItem.Amount) AS Amount
+                           FROM tmpIsErased
+                              INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                     AND MovementItem.DescId = zc_MI_Child()
+                                                     AND MovementItem.isErased = tmpIsErased.isErased
+                           GROUP BY MovementItem.ParentId                                                               
+                       )
+
           , tmpUserAll AS (SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()/*, 293449*/) AND UserId = vbUserId/* AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В.
           , tmpPersonal AS (SELECT 0 AS MovementItemId
                                  , 0 AS Amount
@@ -164,6 +174,9 @@ BEGIN
             , MIFloat_SummTransportAddLong.ValueData AS SummTransportAddLong
             , MIFloat_SummTransportTaxi.ValueData    AS SummTransportTaxi
             , MIFloat_SummPhone.ValueData            AS SummPhone
+
+            , COALESCE(tmpMIChild.Amount,0)                                 :: TFloat  AS TotalSummChild
+            , (COALESCE(tmpMIChild.Amount,0) - MIFloat_SummToPay.ValueData) :: TFloat  AS SummDiff
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
@@ -252,6 +265,7 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+            LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
       ;
 
 END;
