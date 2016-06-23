@@ -40,18 +40,43 @@ $BODY$
    DECLARE vbMIChildId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbisMain Boolean;
-
+   DECLARE vbisAuto Boolean;
+   
    DECLARE vbInfoMoneyId_def Integer;
    DECLARE ioId Integer;
    
    DECLARE vbHoursPlan TFloat;
    DECLARE vbHoursDay TFloat;
    DECLARE vbPersonalCount TFloat;
+   DECLARE vbsummservice TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
 
+    vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата 
+
+
+    --выбираем сотрудников по физ.лицу
+     CREATE TEMP TABLE tmpMember (PersonalId Integer, MemberId Integer, PositionId Integer, UnitId Integer) ON COMMIT DROP;
+     INSERT INTO tmpMember (PersonalId, MemberId, PositionId, UnitId)
+           SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
+                , ObjectLink_Personal_Member.ChildObjectId  AS MemberId
+                , COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId
+                , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
+           FROM ObjectLink AS ObjectLink_Personal_Member
+                LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                     ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                     AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                     ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                    AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+           WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+             AND ObjectLink_Personal_Member.ChildObjectId = inMemberId   -- 13129;   
+             AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
+             AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId;         
+
+     
     -- ищем ИД документа (ключ - дата, подразделение, ведомость)
     SELECT MovementDate_ServiceDate.MovementId  AS Id
          , ObjectLink_PersonalServiceList_Juridical.ChildObjectId AS JuridicalId
@@ -91,8 +116,9 @@ BEGIN
       
       -- Ищеи ИД строки мастера (ключ - ид документа, сотрудник, подразделение)
       SELECT MovementItem.Id AS MovementItemId
-           , ObjectLink_Personal_Member.ObjectId AS PersonalId
-      INTO vbMIMasterId, vbPersonalId
+           , COALESCE(tmpMember.PersonalId,0) AS PersonalId
+           , COALESCE(MIBoolean_isAuto.ValueData, False) :: Boolean AS isAuto
+      INTO vbMIMasterId, vbPersonalId, vbisAuto
       FROM MovementItem
           INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -103,18 +129,19 @@ BEGIN
                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                                            AND MILinkObject_Position.ObjectId = inPositionId
                                                                                  
-          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
-                                ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
-                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                               AND ObjectLink_Personal_Member.ChildObjectId = inMemberId
-                                                             
+          LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                        ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                       AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
+                                       
+          INNER JOIN tmpMember ON tmpMember.PersonalId = MovementItem.ObjectId
+                              AND tmpMember.UnitId = MILinkObject_Unit.ObjectId
+                              AND tmpMember.PositionId = MILinkObject_Position.ObjectId
+                                         
       WHERE MovementItem.MovementId = vbMovementId
         AND MovementItem.DescId = zc_MI_Master()
         AND MovementItem.isErased = False;
 
       IF COALESCE (vbMIMasterId,0) = 0 THEN 
-       vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата
-       --vbPersonalId := (SELECT ObjectLink.ObjectId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Personal_Member() AND ObjectLink.ChildObjectId = inMemberId);
        SELECT ObjectLink.ObjectId 
             , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE)::Boolean
        INTO vbPersonalId, vbisMain
@@ -132,7 +159,7 @@ BEGIN
                                                                     , inMovementId         := vbMovementId
                                                                     , inPersonalId         := vbPersonalId
                                                                     , inIsMain             := vbisMain
-                                                                    , inSummService        := 0 ::TFloat--inSummService
+                                                                    , inSummService        := COALESCE(inAmount, 0) ::TFloat--inSummService
                                                                     , inSummCardRecalc     := 0 ::TFloat--inSummCardRecalc
                                                                     , inSummMinus          := 0 ::TFloat--inSummMinus
                                                                     , inSummAdd            := 0 ::TFloat--inSummAdd
@@ -229,7 +256,69 @@ BEGIN
                                                      , inGrossOne             := COALESCE(inGrossOne, 0) ::TFloat
                                                      , inUserId               := vbUserId
                                                      );
-  
+
+    IF vbisAuto = True THEN 
+       vbSummService := (SELECT SUM(MovementItem.Amount) AS Amount
+                         FROM MovementItem 
+                         WHERE MovementItem.ParentId = vbMIMasterId --41547225--inMovementId
+                           AND MovementItem.DescId = zc_MI_Child()
+                           AND MovementItem.isErased = False
+                         );
+
+       -- обновляем сумму мастера = итого по чайлд
+       PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := COALESCE(vbMIMasterId,0) ::Integer
+                                                          , inMovementId         := vbMovementId
+                                                          , inPersonalId         := vbPersonalId
+                                                          , inIsMain             := COALESCE(MIBoolean_Main.ValueData,FAlse) ::Boolean
+                                                          , inSummService        := vbSummService ::TFloat
+                                                          , inSummCardRecalc     := COALESCE(MIFloat_SummCard.ValueData,0) ::TFloat--inSummCardRecalc
+                                                          , inSummMinus          := COALESCE(MIFloat_SummMinus.ValueData,0) ::TFloat
+                                                          , inSummAdd            := COALESCE(MIFloat_SummAdd.ValueData,0) ::TFloat
+                                                          , inSummHoliday        := COALESCE(MIFloat_SummHoliday.ValueData,0) ::TFloat
+                                                          , inSummSocialIn       := COALESCE(MIFloat_SummSocialIn.ValueData,0) ::TFloat
+                                                          , inSummSocialAdd      := COALESCE(MIFloat_SummSocialAdd.ValueData,0) ::TFloat
+                                                          , inSummChild          := COALESCE(MIFloat_SummChild.ValueData,0) ::TFloat
+                                                          , inComment            := ''::TVarChar--inComment
+                                                          , inInfoMoneyId        := MILinkObject_InfoMoney.ObjectId --vbInfoMoneyId_def --inInfoMoneyId
+                                                          , inUnitId             := inUnitId
+                                                          , inPositionId         := inPositionId
+                                                          , inMemberId           := inMemberId
+                                                          , inPersonalServiceListId  := inPersonalServiceListId
+                                                          , inUserId             := vbUserId
+                                                          ) 
+       FROM MovementItem 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                                        ON MIFloat_SummCard.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
+                                        ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                        ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                        ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
+                                        ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
+                                        ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
+            LEFT JOIN MovementItemFloat AS MIFloat_SummChild
+                                        ON MIFloat_SummChild.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Main
+                                          ON MIBoolean_Main.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()                                         
+       WHERE MovementItem.Id = vbMIMasterId
+         AND MovementItem.DescId = zc_MI_Master()
+         AND MovementItem.isErased = False;
+         
+    END IF;
 
 END;
 $BODY$
