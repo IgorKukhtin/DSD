@@ -1,5 +1,5 @@
 <?php
-  $connectstring = "port=5432 dbname=farmacy host=91.210.37.210 user=postgres password=postgres";
-  $host = "http://91.210.37.210/dsd/index.php";
+  $connectstring = "port=5432 dbname=project host=192.168.0.209 user=admin password=vas6ok";
+  $host = "http://localhost/alan_test/index.php";
   $isArchive = true;
 ?>
