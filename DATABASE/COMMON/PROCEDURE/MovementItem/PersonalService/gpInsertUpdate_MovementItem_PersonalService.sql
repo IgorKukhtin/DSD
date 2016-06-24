@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
     IN inIsMain              Boolean   , -- Основное место работы
+   OUT outisAuto             Boolean   , -- создан автоматически
    OUT outAmount             TFloat    , -- ***Сумма (затраты)
    OUT outAmountToPay        TFloat    , -- ***Сумма к выплате (итог)
    OUT outAmountCash         TFloat    , -- ***Сумма к выплате из кассы
@@ -67,6 +68,11 @@ BEGIN
                                                      , inPersonalServiceListId  := inPersonalServiceListId
                                                      , inUserId             := vbUserId
                                                       ) AS tmp;
+
+     -- сохранили свойство строки <создан автоматически>
+     outisAuto := False;
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, False);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
