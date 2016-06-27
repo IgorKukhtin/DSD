@@ -1027,6 +1027,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ContactPerson_ContactPersonKind() RETUR
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ContactPerson_ContactPersonKind', 'Ссылка на Вид контакта', zc_Object_ContactPerson(), zc_Object_ContactPersonKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_ContactPersonKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContactPerson_Email() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Email'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContactPerson_Email', 'Почтовый ящик', zc_Object_ContactPerson(), zc_Object_Email() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Email');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ArticleLoss_InfoMoney() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ArticleLoss_InfoMoney'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ArticleLoss_InfoMoney', 'Ссылка на Статьи назначения', zc_Object_ArticleLoss(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ArticleLoss_InfoMoney');
@@ -1286,6 +1291,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ImportSettings_EmailKind() RETURNS Inte
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ImportSettings_EmailKind', 'Типы установок для почты', zc_Object_ImportSettings(), zc_Object_EmailKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportSettings_EmailKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ImportSettings_Email() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportSettings_Email'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ImportSettings_Email', 'Почтовый ящик', zc_Object_ImportSettings(), zc_Object_Email() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportSettings_Email');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ImportSettingsItems_ImportSettings() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportSettingsItems_ImportSettings'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -1422,9 +1430,18 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_EmailSettings_EmailKind', 'Типы установок для почты', zc_Object_EmailSettings(), zc_Object_EmailKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailKind');
 --update  ObjectLinkDesc set ItemName = 'Вид почты' where Id = zc_ObjectLink_EmailSettings_EmailKind()  -- ДЛЯ ПРОДЖЕКТА
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_EmailSettings_Email() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_Email'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_EmailSettings_Email', 'Почтовый ящик', zc_Object_EmailSettings(), zc_Object_Email() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_Email');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_EmailSettings_EmailTools() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailTools'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_EmailSettings_EmailTools', 'Параметры установок для почты', zc_Object_EmailSettings(), zc_Object_EmailTools() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_EmailSettings_EmailTools');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Email_EmailKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Email_EmailKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Email_EmailKind', 'Тип почтового ящика', zc_Object_Email(), zc_Object_EmailKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Email_EmailKind');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

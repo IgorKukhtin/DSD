@@ -73,7 +73,7 @@ type
     actProtocolMaster: TdsdOpenForm;
     bbProtocolMaster: TdxBarButton;
     clEmailKindName: TcxGridDBColumn;
-    EmailKindChoiceForm: TOpenChoiceForm;
+    EmailChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -4,7 +4,7 @@ inherited ContactPersonForm: TContactPersonForm
   ClientWidth = 936
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 952
-  ExplicitHeight = 370
+  ExplicitHeight = 373
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -93,6 +93,13 @@ inherited ContactPersonForm: TContactPersonForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object clEmailName: TcxGridDBColumn
+            Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1103#1097#1080#1082
+            DataBinding.FieldName = 'EmailName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -114,6 +121,7 @@ inherited ContactPersonForm: TContactPersonForm
         item
           Name = 'Id'
           Value = '0'
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -122,8 +130,10 @@ inherited ContactPersonForm: TContactPersonForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
@@ -133,6 +143,7 @@ inherited ContactPersonForm: TContactPersonForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -140,6 +151,7 @@ inherited ContactPersonForm: TContactPersonForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Mail'
@@ -147,6 +159,7 @@ inherited ContactPersonForm: TContactPersonForm
           Component = MasterCDS
           ComponentItem = 'Mail'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
   end
