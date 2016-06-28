@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1055#1086#1095#1090#1086#1074#1099#1081' '#1103#1097#1080#1082
-  ClientHeight = 183
-  ClientWidth = 375
+  ClientHeight = 252
+  ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 150
+    Top = 207
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 150
+    Top = 207
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -82,6 +82,17 @@
     Left = 40
     Top = 97
     Caption = #1058#1080#1087' '#1087#1086#1095#1090#1086#1074#1086#1075#1086' '#1103#1097#1080#1082#1072' '#9
+  end
+  object cxLabel3: TcxLabel
+    Left = 40
+    Top = 147
+    Caption = 'Email ('#1086#1096#1080#1073#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080')'
+  end
+  object ceErrorTo: TcxTextEdit
+    Left = 40
+    Top = 167
+    TabOrder = 10
+    Width = 296
   end
   object ActionList: TActionList
     Left = 272
@@ -140,6 +151,14 @@
         Name = 'inName'
         Value = ''
         Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inErrorTo'
+        Value = Null
+        Component = ceErrorTo
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -205,6 +224,13 @@
         Value = ''
         Component = EmailKindGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ErrorTo'
+        Value = Null
+        Component = ceErrorTo
         DataType = ftString
         MultiSelectSeparator = ','
       end>

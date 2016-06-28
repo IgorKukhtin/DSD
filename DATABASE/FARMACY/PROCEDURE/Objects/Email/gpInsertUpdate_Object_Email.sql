@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_Object_Email()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Email (Integer, Integer, TVarChar, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Email (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Email(
  INOUT ioId                            Integer   , -- ключ объекта
     IN inCode                          Integer   , -- код объекта 
     IN inName                          TVarChar  , -- значение
+    IN inErrorTo                       TVarChar  , -- Кому отправлять сообщение об ошибке при загрузке данных с п/я
     IN inEmailKindId                   Integer   , -- Тип почтового ящика
     IN inSession                       TVarChar    -- сессия пользователя
 )
@@ -28,6 +29,10 @@ BEGIN
 
    -- сохранили связь с <
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Email_EmailKind(), ioId, inEmailKindId);
+   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Email_ErrorTo(), ioId, inErrorTo);
+ 
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -3,7 +3,7 @@ object EmailForm: TEmailForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1086#1095#1090#1086#1074#1099#1081' '#1103#1097#1080#1082
   ClientHeight = 332
-  ClientWidth = 440
+  ClientWidth = 534
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object EmailForm: TEmailForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 440
+    Width = 534
     Height = 306
     Align = alClient
     TabOrder = 0
@@ -70,6 +70,15 @@ object EmailForm: TEmailForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 104
+      end
+      object clErrorTo: TcxGridDBColumn
+        Caption = 'Email ('#1086#1096#1080#1073#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080')'
+        DataBinding.FieldName = 'ErrorTo'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1084#1091' '#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1086#1096#1080#1073#1082#1077' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1076#1072#1085#1085#1099#1093' '#1089' '#1087'/'#1103' '#9
+        Options.Editing = False
+        Width = 149
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

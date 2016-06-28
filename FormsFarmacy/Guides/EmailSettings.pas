@@ -20,15 +20,16 @@ type
     colValue: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
-    EmailKindGuides: TdsdGuides;
+    EmailGuides: TdsdGuides;
     bbLabel: TdxBarControlContainerItem;
     bbGuides: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
     Panel: TPanel;
     cxLabel4: TcxLabel;
-    ceEmailKind: TcxButtonEdit;
+    ceEmail: TcxButtonEdit;
     colEmailKindName: TcxGridDBColumn;
     colEmailToolsName: TcxGridDBColumn;
+    colEmailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

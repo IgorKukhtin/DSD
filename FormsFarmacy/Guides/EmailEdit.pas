@@ -34,6 +34,8 @@ type
     ceEmailKind: TcxButtonEdit;
     EmailKindGuides: TdsdGuides;
     cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
+    ceErrorTo: TcxTextEdit;
   private
     { Private declarations }
   public
