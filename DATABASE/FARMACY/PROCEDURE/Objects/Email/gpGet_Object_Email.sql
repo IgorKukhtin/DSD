@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Email(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
+             , ErrorTo TVarChar
 )
 AS
 $BODY$
@@ -25,7 +26,9 @@ BEGIN
            , CAST ('' AS TVarChar)  AS Name
           
            , CAST (0 AS Integer)    AS EmailKindId
-           , CAST ('' AS TVarChar)  AS EmailKindName;
+           , CAST ('' AS TVarChar)  AS EmailKindName
+           , CAST ('' AS TVarChar)  AS ErrorTo
+;
    ELSE
        RETURN QUERY
        SELECT
@@ -36,11 +39,17 @@ BEGIN
            , Object_EmailKind.Id         AS EmailKindId
            , Object_EmailKind.ValueData  AS EmailKindName
 
+           , ObjectString_ErrorTo.ValueData  AS ErrorTo
+
        FROM Object AS Object_Email
            LEFT JOIN ObjectLink AS ObjectLink_Email_EmailKind
                                 ON ObjectLink_Email_EmailKind.ObjectId = Object_Email.Id
                                AND ObjectLink_Email_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
            LEFT JOIN Object AS Object_EmailKind ON Object_EmailKind.Id = ObjectLink_Email_EmailKind.ChildObjectId
+
+           LEFT JOIN ObjectString AS ObjectString_ErrorTo
+                                  ON ObjectString_ErrorTo.ObjectId = Object_Email.Id 
+                                 AND ObjectString_ErrorTo.DescId = zc_ObjectString_Email_ErrorTo()
 
        WHERE Object_Email.Id = inId;
    END IF;
