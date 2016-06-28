@@ -75,4 +75,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_EmailSettings ('2')
+-- SELECT * FROM gpSelect_Object_EmailSettings (0, '2')

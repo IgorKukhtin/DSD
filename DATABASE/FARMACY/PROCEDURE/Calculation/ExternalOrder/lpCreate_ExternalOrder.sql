@@ -30,36 +30,41 @@ BEGIN
    SELECT  Movement.Id INTO vbMovementId
      FROM  Movement 
      
-                 JOIN MovementLinkMovement 
+           INNER JOIN MovementLinkMovement 
                    ON MovementLinkMovement.MovementId = Movement.Id
                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
-                  AND ((MovementLinkMovement.MovementChildId = inInternalOrder AND inInternalOrder <> 0) OR 
-                       (MovementLinkMovement.MovementChildId IS NULL AND inInternalOrder = 0))
+                  AND ((MovementLinkMovement.MovementChildId = inInternalOrder AND inInternalOrder <> 0)
+                    OR (MovementLinkMovement.MovementChildId IS NULL AND COALESCE (inInternalOrder, 0) = 0)
+                      )
 
-                 JOIN MovementLinkObject 
+            LEFT JOIN MovementLinkObject 
                    ON MovementLinkObject.MovementId = Movement.Id
                   AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
-                  AND ((MovementLinkObject.ObjectId = inJuridicalId AND COALESCE(inJuridicalId, 0) <> 0) OR 
-                       (MovementLinkObject.ObjectId IS NULL AND COALESCE(inJuridicalId, 0) = 0))
 
             LEFT JOIN MovementLinkObject AS Movement_Contract
                    ON Movement_Contract.MovementId = Movement.Id
                   AND Movement_Contract.DescId = zc_MovementLinkObject_Contract()
 
     WHERE  Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate = CURRENT_DATE
-           AND ((Movement_Contract.ObjectId = inContractId AND COALESCE(inContractId, 0) <> 0) OR 
-                (Movement_Contract.ObjectId IS NULL AND COALESCE(inContractId, 0) = 0));
+           AND ((MovementLinkObject.ObjectId = inJuridicalId AND inJuridicalId <> 0)
+             OR (MovementLinkObject.ObjectId IS NULL AND COALESCE (inJuridicalId, 0) = 0)
+               )
+           AND ((Movement_Contract.ObjectId = inContractId AND inContractId <> 0)
+             OR (Movement_Contract.ObjectId IS NULL AND COALESCE (inContractId, 0) = 0)
+               )
+           ;
    
-    IF COALESCE(vbMovementId, 0) = 0 THEN
+    IF COALESCE (vbMovementId, 0) = 0
+    THEN
        vbMovementId := lpInsertUpdate_Movement_OrderExternal(
-                     ioId := 0  , -- Ключ объекта <Документ Перемещение>
-              inInvNumber := '' , -- Номер документа
-               inOperDate := CURRENT_DATE , -- Дата документа
-                 inFromId := inJuridicalId , -- От кого (в документе)
-                   inToId := inUnitId , -- Кому
-             inContractId := inContractId , -- Кому
-        inInternalOrderId := inInternalOrder, -- Сыылка на внутренний заказ
-                 inUserId := inUserId);
+                          ioId := 0  , -- Ключ объекта <Документ Перемещение>
+                   inInvNumber := '' , -- Номер документа
+                    inOperDate := CURRENT_DATE , -- Дата документа
+                      inFromId := inJuridicalId , -- От кого (в документе)
+                        inToId := inUnitId , -- Кому
+                  inContractId := inContractId , -- Кому
+             inInternalOrderId := inInternalOrder, -- Сыылка на внутренний заказ
+                      inUserId := inUserId);
     END IF;
  
     SELECT MovementItem.id INTO vbMovementItemId

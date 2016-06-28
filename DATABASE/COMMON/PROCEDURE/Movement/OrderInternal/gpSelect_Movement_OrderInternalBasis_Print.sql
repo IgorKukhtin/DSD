@@ -88,7 +88,12 @@ BEGIN
                                 , SUM (tmpMI.AmountOut)                  AS AmountOut
                                 , SUM (tmpMI.AmountP)                    AS AmountP
                            FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
-                                      , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                      , CASE -- !!!временно захардкодил!!!
+                                             WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                              AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                  THEN 8338 -- морож.
+                                             ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                        END AS GoodsKindId
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) AS AmountIn
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() THEN MIContainer.Amount ELSE 0 END) AS AmountP
@@ -104,7 +109,12 @@ BEGIN
                                        )
                                    -- AND MIContainer.isActive = TRUE
                                  GROUP BY MIContainer.ObjectId_Analyzer
-                                        , MIContainer.ObjectIntId_Analyzer
+                                        , CASE -- !!!временно захардкодил!!!
+                                               WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                                AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                    THEN 8338 -- морож.
+                                               ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                          END
                                  HAVING SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) <> 0
                                      OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
                                      OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() THEN MIContainer.Amount ELSE 0 END) <> 0
