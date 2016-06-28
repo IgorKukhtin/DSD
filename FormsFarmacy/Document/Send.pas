@@ -14,7 +14,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxBarBuiltInMenu,
-  cxNavigator;
+  cxNavigator, cxCalc;
 
 type
   TSendForm = class(TAncestorDocumentForm)
@@ -70,6 +70,7 @@ type
     cxLabel6: TcxLabel;
     edPeriod: TcxCurrencyEdit;
     edDay: TcxCurrencyEdit;
+    ceChecked: TcxCheckBox;
   private
     { Private declarations }
   public

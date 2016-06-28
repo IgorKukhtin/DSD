@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
+             , Checked Boolean
               )
 
 AS
@@ -67,6 +68,7 @@ BEGIN
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
            , MovementFloat_MCSPeriod.ValueData      AS MCSPeriod
            , MovementFloat_MCSDay.ValueData         AS MCSDay
+           , COALESCE(MovementBoolean_Checked.ValueData, false)  ::Boolean  AS Checked
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -111,6 +113,10 @@ BEGIN
            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+           LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                     ON MovementBoolean_Checked.MovementId =  Movement.Id
+                                    AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
            LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                    ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
                                   AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
@@ -131,6 +137,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 28.06.16         *
  05.05.16         *
  29.07.15                                                                        *
 

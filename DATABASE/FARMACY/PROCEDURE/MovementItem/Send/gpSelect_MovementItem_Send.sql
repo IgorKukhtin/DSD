@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat, AmountRemains TFloat, PriceIn TFloat, SumPriceIn TFloat
              , PriceUnitFrom TFloat, PriceUnitTo TFloat
              , Price TFloat, Summa TFloat, PriceWithVAT TFloat, SummaWithVAT TFloat
+             , AmountManual TFloat, AmountDiff TFloat
+             , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
              , isErased Boolean
               )
 AS
@@ -105,6 +107,11 @@ BEGIN
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)   ::TFloat  AS PriceWithVAT
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT
 
+              , COALESCE(MIFloat_AmountManual.ValueData,0)     ::TFloat     AS AmountManual
+              , (COALESCE(MIFloat_AmountManual.ValueData,0) - COALESCE(MovementItem_Send.Amount,0))::TFloat as AmountDiff
+              , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+              , Object_ReasonDifferences.ValueData      AS ReasonDifferencesName
+
               , COALESCE(MovementItem_Send.IsErased,FALSE)        AS isErased
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
@@ -128,6 +135,15 @@ BEGIN
                                                       ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
                                                      AND MIContainer_Count.DescId = zc_Container_Count()
                                                      AND MIContainer_Count.isActive = True
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                            ON MIFloat_AmountManual.MovementItemId = MovementItem_Send.Id
+                                           AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                                 ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem_Send.Id
+                                                AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+                LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MILinkObject_ReasonDifferences.ObjectId
+                                  
+
                 LEFT OUTER  JOIN ContainerLinkObject AS CLI_MI 
                                                     ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
                                                    AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -159,7 +175,10 @@ BEGIN
               , tmpRemains.PriceIn
               , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END
               , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END
-              , MovementItem_Send.IsErased;
+              , MovementItem_Send.IsErased
+              , COALESCE(MIFloat_AmountManual.ValueData,0) 
+              , MILinkObject_ReasonDifferences.ObjectId 
+              , Object_ReasonDifferences.ValueData ;
     ELSE
         -- Результат другой
         RETURN QUERY
@@ -215,6 +234,11 @@ BEGIN
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)   ::TFloat  AS PriceWithVAT
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT
 
+           , COALESCE(MIFloat_AmountManual.ValueData,0)     ::TFloat     AS AmountManual
+           , (COALESCE(MIFloat_AmountManual.ValueData,0) - COALESCE(MovementItem_Send.Amount,0))::TFloat as AmountDiff
+           , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+           , Object_ReasonDifferences.ValueData      AS ReasonDifferencesName
+
            , MovementItem_Send.IsErased                        AS isErased
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
@@ -233,11 +257,19 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceTo
                                               ON MIFloat_PriceTo.MovementItemId = MovementItem_Send.ID
                                              AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                        ON MIFloat_AmountManual.MovementItemId = MovementItem_Send.Id
+                                       AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                             ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem_Send.Id
+                                            AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+            LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MILinkObject_ReasonDifferences.ObjectId
 
             LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
                                                   ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
                                                  AND MIContainer_Count.DescId = zc_Container_Count()
                                                  AND MIContainer_Count.isActive = True
+
             LEFT OUTER  JOIN ContainerLinkObject AS CLI_MI 
                                                  ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
                                                 AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -267,7 +299,10 @@ BEGIN
            , tmpRemains.PriceIn
            , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END 
            , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END     
-           , MovementItem_Send.IsErased;
+           , MovementItem_Send.IsErased
+           , COALESCE(MIFloat_AmountManual.ValueData,0)
+           , MILinkObject_ReasonDifferences.ObjectId 
+           , Object_ReasonDifferences.ValueData       ;
 
      END IF;
 

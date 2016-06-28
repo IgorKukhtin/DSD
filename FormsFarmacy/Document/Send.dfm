@@ -21,6 +21,8 @@ inherited SendForm: TSendForm
       inherited cxGrid: TcxGrid
         Width = 1002
         Height = 408
+        ExplicitLeft = 288
+        ExplicitTop = 3
         ExplicitWidth = 1002
         ExplicitHeight = 408
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -73,6 +75,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -126,6 +138,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountDiff
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -260,6 +282,30 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 102
           end
+          object colAmountManual: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountManual'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
+          object colAmountDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object colReasonDifferencesName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
+            DataBinding.FieldName = 'ReasonDifferencesName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 123
+          end
         end
       end
     end
@@ -383,6 +429,13 @@ inherited SendForm: TSendForm
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 37
+  end
+  object ceChecked: TcxCheckBox [8]
+    Left = 706
+    Top = 63
+    Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+    TabOrder = 12
+    Width = 74
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -966,6 +1019,13 @@ inherited SendForm: TSendForm
         Component = edDay
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Checked'
+        Value = Null
+        Component = ceChecked
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1022,9 +1082,11 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inChecked'
         Value = 'False'
+        Component = ceChecked
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1128,6 +1190,7 @@ inherited SendForm: TSendForm
         Control = edComment
       end
       item
+        Control = ceChecked
       end
       item
       end
@@ -1215,18 +1278,28 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountManual'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'AmountManual'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outAmountDiff'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'AmountDiff'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReasonDifferencesId'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'ReasonDifferencesId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
