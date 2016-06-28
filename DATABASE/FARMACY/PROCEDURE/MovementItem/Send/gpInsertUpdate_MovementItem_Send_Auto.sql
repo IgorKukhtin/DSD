@@ -88,7 +88,7 @@ BEGIN
                                                            , inMovementId         := vbMovementId
                                                            , inGoodsId            := inGoodsId
                                                            , inAmount             := inRemainsMCS_result
-                                                           , inAmountManual       := inRemainsMCS_result
+                                                           , inAmountManual       := 0 ::TFloat
                                                            , inReasonDifferencesId:= 0
                                                            , inUserId             := vbUserId
                                                             );
