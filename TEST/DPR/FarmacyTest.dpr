@@ -289,7 +289,6 @@ uses
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
   Report_RemainGoods in '..\..\FormsFarmacy\Report\Report_RemainGoods.pas' {Report_GoodsRemainsForm: TParentForm},
   Report_GoodsPartionMove in '..\..\FormsFarmacy\Report\Report_GoodsPartionMove.pas' {Report_GoodsPartionMoveForm: TParentForm},
-  Price in '..\..\Forms\Guides\Price.pas' {PriceForm: TParentForm},
   PriceTest in '..\SOURCE\Objects\All\Farmacy\PriceTest.pas',
   AlternativeGroupTest in '..\SOURCE\Objects\All\Farmacy\AlternativeGroupTest.pas',
   AlternativeGroup in '..\..\FormsFarmacy\Guides\AlternativeGroup.pas' {AlternativeGroupForm: TParentForm},
@@ -426,7 +425,8 @@ uses
   UnitForFarmacyCash in '..\..\FormsFarmacy\Guides\UnitForFarmacyCash.pas' {UnitForFarmacyCashForm: TParentForm},
   Report_GoodsPartionMoveDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveDialog.pas' {Report_GoodsPartionMoveDialogForm: TParentForm},
   Email in '..\..\FormsFarmacy\Guides\Email.pas' {EmailForm: TParentForm},
-  EmailEdit in '..\..\FormsFarmacy\Guides\EmailEdit.pas' {EmailEditForm: TParentForm};
+  EmailEdit in '..\..\FormsFarmacy\Guides\EmailEdit.pas' {EmailEditForm: TParentForm},
+  Price in '..\..\FormsFarmacy\Guides\Price.pas' {PriceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
