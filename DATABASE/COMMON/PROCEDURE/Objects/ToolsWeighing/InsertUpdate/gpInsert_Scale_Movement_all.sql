@@ -131,7 +131,7 @@ BEGIN
      END IF;
 
      -- проверка + исправление <От кого (Склад)>
-     IF vbMovementDescId = zc_Movement_Sale()
+     /*IF vbMovementDescId = zc_Movement_Sale()
     AND EXISTS (SELECT 1
                 FROM MovementLinkMovement AS MovementLinkMovement_Order
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To_find
@@ -156,7 +156,7 @@ BEGIN
                 WHERE MovementLinkMovement_Order.MovementId = inMovementId
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkObject_From.ObjectId <> MovementLinkObject_To_find.ObjectId;
-     END IF;
+     END IF;*/
 
      -- проверка + исправление <Кому (Покупатель)>
      IF vbMovementDescId = zc_Movement_Sale()

@@ -61,6 +61,8 @@ type
     clGoodsKindName: TcxGridDBColumn;
     clChildGoodsKindName: TcxGridDBColumn;
     clMainPrice: TcxGridDBColumn;
+    isPeresort: TcxGridDBColumn;
+    DocumentKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

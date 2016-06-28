@@ -83,8 +83,7 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -92,8 +91,7 @@ LANGUAGE plpgsql VOLATILE;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  28.06.16         *
  03.03.16         *
-
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_EmailSettings ('2')
+-- SELECT * FROM gpSelect_Object_EmailSettings ('2')

@@ -43,38 +43,6 @@ BEGIN
    -- Результат
    RETURN QUERY 
      WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= 0, inSession:= inSession) AS tmp WHERE tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO()))
-        , tmp_IncomeMMO_ AS (SELECT tmp.Id
-                                 , tmp.EmailKindId
-                                 , Object_ContactPerson.Id            AS ContactPersonId
-                                 , Object_ContactPerson.ValueData     AS ContactPersonName
-                                 , ObjectString_Mail.ValueData        AS ContactPersonMail
-                            FROM (SELECT tmp.*
-                                  FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS tmp
-                                  WHERE tmp.isErased = FALSE
-                                    AND tmp.Directory <> ''
-                                    AND tmp.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
-                                    AND tmp.ContactPersonId IS NOT NULL
-                                  LIMIT 1
-                                 ) AS tmp
-                                 INNER JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
-                                                       ON ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
-                                                      AND ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = zc_Enum_ContactPersonKind_IncomeMMO()
-                                 INNER JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = ObjectLink_ContactPerson_ContactPersonKind.ObjectId
-                                 INNER JOIN ObjectString AS ObjectString_Mail
-                                                         ON ObjectString_Mail.ObjectId  = Object_ContactPerson.Id
-                                                        AND ObjectString_Mail.DescId    = zc_ObjectString_ContactPerson_Mail()
-                                                        AND ObjectString_Mail.ValueData <> ''
-
-                            WHERE Object_ContactPerson.Id NOT IN (SELECT tmp.ContactPersonId
-                                                                  FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS tmp
-                                                                  WHERE tmp.isErased = FALSE
-                                                                    AND tmp.Directory <> ''
-                                                                    AND tmp.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
-                                                                    AND tmp.ContactPersonId IS NOT NULL
-                                                                 )
-                           )
-
-
         , tmp_IncomeMMO AS (SELECT tmp.Id
                                  , tmp.EmailKindId
                                  , Object_ContactPerson.Id            AS ContactPersonId

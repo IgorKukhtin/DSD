@@ -715,7 +715,7 @@ BEGIN
 
 if inUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end   %', outMessageText;
+    RAISE EXCEPTION 'Admin - Errr _end   % %', outMessageText, (SELECT MAX (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar || ' _ ' || MIN (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar FROM _tmpResult_ReturnIn_Auto WHERE _tmpResult_ReturnIn_Auto.ParentId = 53690064);
     -- 'Повторите действие через 3 мин.'
 end if;
 
