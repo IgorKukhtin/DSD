@@ -4,7 +4,7 @@
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1314
-  ExplicitHeight = 680
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -854,15 +854,15 @@
     Width = 81
   end
   object cxLabel22: TcxLabel [8]
-    Left = 535
+    Left = 683
     Top = 85
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [9]
-    Left = 535
+    Left = 683
     Top = 103
     TabOrder = 13
-    Width = 409
+    Width = 261
   end
   object cxLabel23: TcxLabel [10]
     Left = 1156
@@ -927,6 +927,23 @@
     Properties.ReadOnly = True
     TabOrder = 21
     Width = 128
+  end
+  object cxLabel26: TcxLabel [18]
+    Left = 535
+    Top = 85
+    Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+  end
+  object edReestrKind: TcxButtonEdit [19]
+    Left = 535
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 144
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -4065,7 +4082,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 408
+    Left = 416
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -4967,5 +4984,36 @@
     PackSize = 1
     Left = 984
     Top = 256
+  end
+  object ReestrKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReestrKind
+    Key = '0'
+    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTransportJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 588
+    Top = 88
   end
 end

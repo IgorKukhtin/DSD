@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ Перемещение>
@@ -23,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inDocumentTaxKindId_inf Integer    , -- Тип формирования налогового документа
     IN inMovementId_Order      Integer    , -- ключ Документа
+    IN inReestrKindId          Integer    , -- Состояние по реестру
  INOUT ioPriceListId           Integer    , -- Прайс лист
    OUT outPriceListName        TVarChar   , -- Прайс лист
    OUT outCurrencyValue        TFloat     , -- Курс для перевода в валюту баланса
@@ -77,6 +80,9 @@ BEGIN
 
     -- Комментарий
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+    -- сохранили связь с <Состояние по реестру>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), ioId, inReestrKindId);
+
 
     -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
     PERFORM lpUpdate_Movement_Sale_Edi_byOrder (ioId, inMovementId_Order, vbUserId);
@@ -114,6 +120,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.06.16         * add ReestrKind
  24.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId
  17.04.14                                        * add восстановить/удалить Налоговую 

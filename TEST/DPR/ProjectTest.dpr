@@ -825,7 +825,8 @@ uses
   Report_CheckTaxDialog in '..\..\Forms\Report\Report_CheckTaxDialog.pas' {Report_CheckTaxDialogForm: TParentForm},
   DocumentKind in '..\..\Forms\Kind\DocumentKind.pas' {DocumentKindForm: TParentForm},
   DocumentKindEdit in '..\..\Forms\Kind\DocumentKindEdit.pas' {DocumentKindEditForm: TParentForm},
-  Report_WageDialog in '..\..\Forms\Report\Report_WageDialog.pas' {Report_WageDialogForm: TParentForm};
+  Report_WageDialog in '..\..\Forms\Report\Report_WageDialog.pas' {Report_WageDialogForm: TParentForm},
+  ReestrKind in '..\..\Forms\Kind\ReestrKind.pas' {ReestrKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
