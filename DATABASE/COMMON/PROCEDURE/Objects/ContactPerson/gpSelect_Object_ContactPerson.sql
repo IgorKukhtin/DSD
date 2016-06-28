@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ContractId Integer, ContractName TVarChar
              , UnitId Integer, UnitName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
+             , EmailId Integer, EmailName TVarChar
+             , EmailKindId Integer, EmailKindName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -75,6 +77,10 @@ BEGIN
            , Object_ContactPersonKind.Id         AS ContactPersonKindId
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
 
+           , Object_Email.Id             AS EmailId
+           , Object_Email.ValueData      AS EmailName
+           , Object_EmailKind.Id         AS EmailKindId
+           , Object_EmailKind.ValueData  AS EmailKindName
            
            , Object_ContactPerson.isErased    AS isErased
            
@@ -101,6 +107,16 @@ BEGIN
                                 AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
             LEFT JOIN Object AS Object_ContactPersonKind ON Object_ContactPersonKind.Id = ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId
             
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Email
+                                 ON ObjectLink_ContactPerson_Email.ObjectId = Object_ContactPerson.Id
+                                AND ObjectLink_ContactPerson_Email.DescId = zc_ObjectLink_ContactPerson_Email()
+            LEFT JOIN Object AS Object_Email ON Object_Email.Id = ObjectLink_ContactPerson_Email.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Email_EmailKind
+                                 ON ObjectLink_Email_EmailKind.ObjectId = Object_Email.Id
+                                AND ObjectLink_Email_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
+            LEFT JOIN Object AS Object_EmailKind ON Object_EmailKind.Id = ObjectLink_Email_EmailKind.ChildObjectId
+
      WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
        --AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
     ;

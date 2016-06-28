@@ -5,7 +5,7 @@ inherited ImportSettingsForm: TImportSettingsForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1200
-  ExplicitHeight = 374
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -195,19 +195,27 @@ inherited ImportSettingsForm: TImportSettingsForm
             Options.Editing = False
             Width = 70
           end
-          object clEmailKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1087#1086#1095#1090#1099
-            DataBinding.FieldName = 'EmailKindName'
+          object clEmailName: TcxGridDBColumn
+            Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1103#1097#1080#1082
+            DataBinding.FieldName = 'EmailName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = EmailKindChoiceForm
+                Action = EmailChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clEmailKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1087#1086#1095#1090#1099
+            DataBinding.FieldName = 'EmailKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object clisErased: TcxGridDBColumn
@@ -642,13 +650,13 @@ inherited ImportSettingsForm: TImportSettingsForm
         end>
       isShowModal = False
     end
-    object EmailKindChoiceForm: TOpenChoiceForm
+    object EmailChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'EmailKindForm'
-      FormName = 'TEmailKindForm'
-      FormNameParam.Value = 'TEmailKindForm'
+      Caption = 'EmailForm'
+      FormName = 'TEmailForm'
+      FormNameParam.Value = 'TEmailForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -656,11 +664,26 @@ inherited ImportSettingsForm: TImportSettingsForm
           Name = 'key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'EmailKindId'
+          ComponentItem = 'EmailId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EmailName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EmailKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EmailKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EmailKindName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'EmailKindName'
@@ -849,10 +872,10 @@ inherited ImportSettingsForm: TImportSettingsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEmailKindId'
+        Name = 'inEmailId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'EmailKindId'
+        ComponentItem = 'EmailId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

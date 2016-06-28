@@ -10,12 +10,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ContractId Integer, ContractName TVarChar,
                FileTypeId Integer, FileTypeName TVarChar,
                ImportTypeId Integer, ImportTypeName TVarChar,
-               EmailKindId Integer, EmailKindName TVarChar,
                StartRow Integer, HDR Boolean, 
                Directory TVarChar, Query TBlob,
                StartTime TVarChar, EndTime TVarChar, CheckTime TFloat,
                ContactPersonId Integer, ContactPersonName TVarChar,
                ContactPersonMail TVarChar,
+               EmailId Integer, EmailName TVarChar,
+               EmailKindId Integer, EmailKindName TVarChar,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -41,9 +42,6 @@ BEGIN
            , Object_ImportSettings_View.ImportTypeId
            , Object_ImportSettings_View.ImportTypeName 
 
-           , Object_ImportSettings_View.EmailKindId
-           , Object_ImportSettings_View.EmailKindName 
-
            , Object_ImportSettings_View.StartRow
            , Object_ImportSettings_View.HDR
            , Object_ImportSettings_View.Directory
@@ -55,6 +53,11 @@ BEGIN
            , Object_ContactPerson.Id            AS ContactPersonId
            , Object_ContactPerson.ValueData     AS ContactPersonName
            , COALESCE(ObjectString_Mail.ValueData,'')::TVarChar  AS ContactPersonMail
+
+           , Object_Email.Id             AS EmailId
+           , Object_Email.ValueData      AS EmailName
+           , Object_EmailKind.Id         AS EmailKindId
+           , Object_EmailKind.ValueData  AS EmailKindName
 
            , Object_ImportSettings_View.isErased
            
@@ -76,6 +79,16 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Mail
                                   ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
                                  AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
+
+           LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_Email
+                                ON ObjectLink_ImportSettings_Email.ObjectId = Object_ImportSettings_View.Id
+                               AND ObjectLink_ImportSettings_Email.DescId = zc_ObjectLink_ImportSettings_Email()
+           LEFT JOIN Object AS Object_Email ON Object_Email.Id = ObjectLink_ImportSettings_Email.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Email_EmailKind
+                                ON ObjectLink_Email_EmailKind.ObjectId = Object_Email.Id
+                               AND ObjectLink_Email_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
+           LEFT JOIN Object AS Object_EmailKind ON Object_EmailKind.Id = ObjectLink_Email_EmailKind.ChildObjectId
           ;
   
 END;
