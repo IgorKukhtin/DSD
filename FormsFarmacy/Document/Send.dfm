@@ -319,6 +319,7 @@ inherited SendForm: TSendForm
     Width = 1002
     Height = 100
     TabOrder = 3
+    ExplicitTop = 4
     ExplicitWidth = 1002
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit

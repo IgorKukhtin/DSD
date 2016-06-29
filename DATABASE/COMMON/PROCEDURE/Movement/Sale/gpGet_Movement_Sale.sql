@@ -164,7 +164,7 @@ BEGIN
            , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
 
            , Movement_Transport.Id                     AS MovementId_Transport
-           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
+           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ||' ('||Object_Car.ValueData ||' / '|| Object_PersonalDriver.ValueData ||')') :: TVarChar AS InvNumber_Transport
 
 
            , Object_ReestrKind.Id             		    AS ReestrKindId
@@ -284,6 +284,16 @@ BEGIN
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                         ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement.Id

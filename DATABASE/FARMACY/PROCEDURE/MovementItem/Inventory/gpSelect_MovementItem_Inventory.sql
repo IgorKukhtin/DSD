@@ -11,9 +11,11 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat
              , isErased Boolean
-             , Remains_Amount TFloat, Deficit TFloat, DeficitSumm TFloat
+             , Remains_Amount TFloat, Remains_Summ TFloat
+             , Deficit TFloat, DeficitSumm TFloat
              , Proficit TFloat, ProficitSumm TFloat, Diff TFloat, DiffSumm TFloat
-             , MIComment TVarChar             
+             , MIComment TVarChar      
+             , isAuto Boolean      
              )
 AS
 $BODY$
@@ -85,6 +87,7 @@ BEGIN
               , MIFloat_Summ.ValueData                                              AS Summ
               , MovementItem.isErased                                               AS isErased
               , REMAINS.Amount                                                      AS Remains_Amount
+              , (COALESCE(REMAINS.Amount,0) * MIFloat_Price.ValueData) ::TFloat     AS Remains_Summ
               , CASE 
                   WHEN COALESCE(REMAINS.Amount,0)>MovementItem.Amount
                     THEN COALESCE(REMAINS.Amount,0)-COALESCE(MovementItem.Amount,0)
@@ -105,6 +108,7 @@ BEGIN
               , ((MovementItem.Amount-COALESCE(REMAINS.Amount,0))
                   *MIFloat_Price.ValueData)::TFloat                                 AS DiffSumm
               , MIString_Comment.ValueData                                          AS MIComment
+              , COALESCE(MIBoolean_isAuto.ValueData, FALSE) ::Boolean                          AS isAuto
             FROM MovementItem
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                 LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -117,6 +121,9 @@ BEGIN
                 LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                    ON MIString_Comment.MovementItemId = MovementItem.Id
                                                   AND MIString_Comment.DescId = zc_MIString_Comment()
+                LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                              ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                             AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
             WHERE
                 MovementItem.MovementId = inMovementId
                 AND 
@@ -172,6 +179,7 @@ BEGIN
               , MIFloat_Summ.ValueData                                              AS Summ
               , MovementItem.isErased                                               AS isErased
               , REMAINS.Amount                                                      AS Remains_Amount
+              , (COALESCE(REMAINS.Amount,0) * COALESCE(MIFloat_Price.ValueData,tmpPrice.Price))::TFloat  AS Remains_Summ
               , CASE 
                   WHEN COALESCE(REMAINS.Amount,0)>MovementItem.Amount
                     THEN COALESCE(REMAINS.Amount,0)-COALESCE(MovementItem.Amount,0)
@@ -188,10 +196,11 @@ BEGIN
                   WHEN COALESCE(REMAINS.Amount,0)<MovementItem.Amount
                     THEN COALESCE(MovementItem.Amount,0)-COALESCE(REMAINS.Amount,0)
                 END * COALESCE(MIFloat_Price.ValueData,tmpPrice.Price))::TFloat     AS ProficitSumm
-              , (MovementItem.Amount-COALESCE(REMAINS.Amount,0))::TFloat             AS DIff
+              , (MovementItem.Amount-COALESCE(REMAINS.Amount,0))::TFloat            AS DIff
               , ((MovementItem.Amount-COALESCE(REMAINS.Amount,0))
-                  *COALESCE(MIFloat_Price.ValueData,tmpPrice.Price))::TFloat         AS DiffSumm
+                  *COALESCE(MIFloat_Price.ValueData,tmpPrice.Price))::TFloat        AS DiffSumm
               , MIString_Comment.ValueData                                          AS MIComment
+              , COALESCE(MIBoolean_isAuto.ValueData, FALSE) ::Boolean                          AS isAuto
             FROM 
                 Object_Goods_View AS Object_Goods 
                 LEFT JOIN MovementItem ON Object_Goods.Id = MovementItem.ObjectId 
@@ -211,6 +220,10 @@ BEGIN
                 LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                    ON MIString_Comment.MovementItemId = MovementItem.Id
                                                   AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                              ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                             AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
             WHERE
                 Object_Goods.ObjectId = vbObjectId
                 AND
@@ -229,6 +242,7 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarC
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.A.   Âîðîáêàëî À.À.
+ 29.06.16         *
  11.07.15                                                                        *
 */
 

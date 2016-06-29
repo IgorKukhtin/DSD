@@ -21,6 +21,8 @@ inherited InventoryForm: TInventoryForm
       inherited cxGrid: TcxGrid
         Width = 898
         Height = 557
+        ExplicitLeft = 288
+        ExplicitTop = 24
         ExplicitWidth = 898
         ExplicitHeight = 557
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -195,8 +197,19 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 56
           end
-          object colSumm: TcxGridDBColumn [5]
-            Caption = #1057#1091#1084#1084#1072
+          object colRemains_Summ: TcxGridDBColumn [5]
+            Caption = 'C'#1091#1084#1084#1072' '#1088#1072#1089#1095'. '#1086#1089#1090'.'
+            DataBinding.FieldName = 'Remains_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object colSumm: TcxGridDBColumn [6]
+            Caption = 'C'#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1086#1089#1090'.'
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -274,6 +287,14 @@ inherited InventoryForm: TInventoryForm
             DataBinding.FieldName = 'MIComment'
             HeaderAlignmentVert = vaCenter
             Width = 150
+          end
+          object clisAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
           end
         end
       end
@@ -604,6 +625,7 @@ inherited InventoryForm: TInventoryForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       ReportNameParam.Value = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -633,12 +655,14 @@ inherited InventoryForm: TInventoryForm
       FormName = 'TStoragePlace_ObjectForm'
       FormNameParam.Value = 'TStoragePlace_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'StorageId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -646,6 +670,7 @@ inherited InventoryForm: TInventoryForm
           Component = MasterCDS
           ComponentItem = 'StorageName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -657,12 +682,14 @@ inherited InventoryForm: TInventoryForm
       FormName = 'TAssetForm'
       FormNameParam.Value = 'TAssetForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AssetId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -670,6 +697,7 @@ inherited InventoryForm: TInventoryForm
           Component = MasterCDS
           ComponentItem = 'AssetName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -701,12 +729,14 @@ inherited InventoryForm: TInventoryForm
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -714,6 +744,7 @@ inherited InventoryForm: TInventoryForm
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -725,12 +756,14 @@ inherited InventoryForm: TInventoryForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -738,6 +771,7 @@ inherited InventoryForm: TInventoryForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -802,12 +836,14 @@ inherited InventoryForm: TInventoryForm
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
           Name = 'inMovementId'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
     end
     object actSelect: TdsdExecStoredProc
@@ -839,6 +875,7 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -846,6 +883,7 @@ inherited InventoryForm: TInventoryForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -853,16 +891,19 @@ inherited InventoryForm: TInventoryForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -995,6 +1036,7 @@ inherited InventoryForm: TInventoryForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
     Left = 558
@@ -1016,12 +1058,14 @@ inherited InventoryForm: TInventoryForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -1029,28 +1073,33 @@ inherited InventoryForm: TInventoryForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameInventory'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameInventoryTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameInventoryBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ImportSettingId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FullInvent'
@@ -1058,6 +1107,7 @@ inherited InventoryForm: TInventoryForm
         Component = chbFullInvent
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 144
@@ -1080,11 +1130,13 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1093,12 +1145,14 @@ inherited InventoryForm: TInventoryForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1106,6 +1160,7 @@ inherited InventoryForm: TInventoryForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1113,12 +1168,14 @@ inherited InventoryForm: TInventoryForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -1126,6 +1183,7 @@ inherited InventoryForm: TInventoryForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FullInvent'
@@ -1133,96 +1191,116 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'FullInvent'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1236,6 +1314,7 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1243,6 +1322,7 @@ inherited InventoryForm: TInventoryForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1250,6 +1330,7 @@ inherited InventoryForm: TInventoryForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1257,6 +1338,7 @@ inherited InventoryForm: TInventoryForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFullInvent'
@@ -1265,62 +1347,75 @@ inherited InventoryForm: TInventoryForm
         ComponentItem = 'FullInvent'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1407,6 +1502,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1414,6 +1510,7 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1421,6 +1518,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmount'
@@ -1429,6 +1527,7 @@ inherited InventoryForm: TInventoryForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1437,6 +1536,7 @@ inherited InventoryForm: TInventoryForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1445,6 +1545,7 @@ inherited InventoryForm: TInventoryForm
         ComponentItem = 'MIComment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSumma'
@@ -1452,6 +1553,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outRemains'
@@ -1459,6 +1561,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'Remains_Amount'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDeficit'
@@ -1466,6 +1569,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'Deficit'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDeficitSumm'
@@ -1473,6 +1577,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'DeficitSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outProficit'
@@ -1480,6 +1585,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'Proficit'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outProficitSumm'
@@ -1487,6 +1593,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'ProficitSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDiff'
@@ -1494,6 +1601,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'Diff'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDiffSumm'
@@ -1501,6 +1609,7 @@ inherited InventoryForm: TInventoryForm
         Component = MasterCDS
         ComponentItem = 'DiffSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1516,6 +1625,7 @@ inherited InventoryForm: TInventoryForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <>
     Left = 512
@@ -1551,6 +1661,7 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -1561,6 +1672,7 @@ inherited InventoryForm: TInventoryForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1570,6 +1682,7 @@ inherited InventoryForm: TInventoryForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1578,6 +1691,7 @@ inherited InventoryForm: TInventoryForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 8
@@ -1593,6 +1707,7 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 330
@@ -1610,11 +1725,13 @@ inherited InventoryForm: TInventoryForm
         Value = 'TInventoryForm;zc_Object_ImportSetting_Inventory'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserKeyId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_DefaultValue'
@@ -1622,6 +1739,7 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'ImportSettingId'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -1638,6 +1756,7 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 322
@@ -1668,6 +1787,7 @@ inherited InventoryForm: TInventoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 842
