@@ -175,6 +175,9 @@ type
     actShowMessage: TShowMessageAction;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReport: TdxBarButton;
+    cxLabel26: TcxLabel;
+    edReestrKind: TcxButtonEdit;
+    ReestrKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
