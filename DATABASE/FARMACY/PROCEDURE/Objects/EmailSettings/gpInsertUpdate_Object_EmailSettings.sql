@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_EmailSettings (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_EmailSettings(
  INOUT ioId                            Integer   , -- ключ объекта
     IN inCode                          Integer   , -- код объекта 
@@ -19,6 +18,15 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_EmailSettings());
+
+   -- Проверка
+   IF COALESCE (inEmailId, 0) = 0 THEN
+      RAISE EXCEPTION 'Не определен <Почтовый ящик>';
+   END IF;
+   -- Проверка
+   IF COALESCE (inEmailToolsId, 0) = 0 THEN
+      RAISE EXCEPTION 'Не определен <Параметр установки для почты>';
+   END IF;
 
    -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_EmailSettings());

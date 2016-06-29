@@ -5,8 +5,10 @@ DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettings_Email (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_ImportSettings_Email(
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (EmailKindId                  Integer
-             , EmailKindname                TVarChar
+RETURNS TABLE (EmailId          Integer
+             , EmailName        TVarChar
+             , EmailKindId      Integer
+             , EmailKindName    TVarChar
              , Id               Integer
              , Code             Integer
              , Name             TVarChar
@@ -42,40 +44,48 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-     WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= 0, inSession:= inSession) AS tmp WHERE tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO()))
+     WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inSession:= inSession) AS tmp WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO()))
+        , tmp_ImportSettings AS (SELECT *
+                                 FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS tmp
+                                 WHERE tmp.isErased    = FALSE
+                                   AND tmp.Directory   <> ''
+                                   AND tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO())
+                                )
         , tmp_IncomeMMO AS (SELECT tmp.Id
-                                 , tmp.EmailKindId
+                                 , tmp.EmailId
                                  , Object_ContactPerson.Id            AS ContactPersonId
                                  , Object_ContactPerson.ValueData     AS ContactPersonName
                                  , ObjectString_Mail.ValueData        AS ContactPersonMail
-                            FROM (SELECT tmp.*
-                                  FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS tmp
-                                  WHERE tmp.isErased = FALSE
-                                    AND tmp.Directory <> ''
-                                    AND tmp.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
+                            FROM (SELECT MIN (tmp.Id) AS Id, tmp.EmailId
+                                  FROM tmp_ImportSettings AS tmp
+                                  WHERE tmp.EmailKindId     = zc_Enum_EmailKind_IncomeMMO()
                                     AND tmp.ContactPersonId IS NULL
-                                  LIMIT 1
+                                  -- LIMIT 1
+                                  GROUP BY tmp.EmailId
                                  ) AS tmp
-                                 INNER JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
+                                 INNER JOIN ObjectLink AS ObjectLink_ContactPerson_Email
+                                                       ON ObjectLink_ContactPerson_Email.ChildObjectId = tmp.EmailId
+                                                      AND ObjectLink_ContactPerson_Email.DescId        = zc_ObjectLink_ContactPerson_Email()
+                                 /*INNER JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                                        ON ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
-                                                      AND ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = zc_Enum_ContactPersonKind_IncomeMMO()
-                                 INNER JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = ObjectLink_ContactPerson_ContactPersonKind.ObjectId
+                                                      AND ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = zc_Enum_ContactPersonKind_IncomeMMO()*/
+                                 INNER JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = ObjectLink_ContactPerson_Email.ObjectId
                                  INNER JOIN ObjectString AS ObjectString_Mail
                                                          ON ObjectString_Mail.ObjectId  = Object_ContactPerson.Id
                                                         AND ObjectString_Mail.DescId    = zc_ObjectString_ContactPerson_Mail()
                                                         AND ObjectString_Mail.ValueData <> ''
 
                             WHERE Object_ContactPerson.Id NOT IN (SELECT tmp.ContactPersonId
-                                                                  FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS tmp
-                                                                  WHERE tmp.isErased = FALSE
-                                                                    AND tmp.Directory <> ''
-                                                                    AND tmp.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
+                                                                  FROM tmp_ImportSettings AS tmp
+                                                                  WHERE tmp.EmailKindId     = zc_Enum_EmailKind_IncomeMMO()
                                                                     AND tmp.ContactPersonId IS NOT NULL
                                                                  )
                            )
      SELECT 
-            gpGet_Host.EmailKindId
-          , gpGet_Host.EmailKindname
+            gpGet_Host.EmailId
+          , gpGet_Host.EmailName
+          , gpGet_Host.EmailKindId
+          , gpGet_Host.EmailKindName
 
           , gpSelect.Id
           , gpSelect.Code
@@ -84,9 +94,9 @@ BEGIN
           , Object_Juridical.ObjectCode AS JuridicalCode
           , gpSelect.JuridicalName
 
-          , COALESCE (gpSelect_two.ContactPersonMail, gpSelect.ContactPersonMail) :: TVarChar AS JuridicalMail
-          , COALESCE (gpSelect_two.ContactPersonId,   gpSelect.ContactPersonId)   :: Integer  AS ContactPersonId
-          , COALESCE (gpSelect_two.ContactPersonName, gpSelect.ContactPersonName) :: TVarChar AS ContactPersonName
+          , gpSelect.ContactPersonMail AS JuridicalMail
+          , gpSelect.ContactPersonId   AS ContactPersonId
+          , gpSelect.ContactPersonName AS ContactPersonName
 
           , gpSelect.ContractId
           , gpSelect.ContractName
@@ -121,21 +131,15 @@ BEGIN
           , TRUE AS isBeginMove -- !!!захардкодил!!! переносить прайс в актуальные цены и "другие" данные (а сама загрузка выполняется всегда)
 
      FROM tmpEmail AS gpGet_Host
-          LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailKindId      = gpGet_Host.EmailKindId AND gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
-          LEFT JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailKindId      = gpGet_Host.EmailKindId AND gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
-          LEFT JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailKindId      = gpGet_Host.EmailKindId AND gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
-          LEFT JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailKindId  = gpGet_Host.EmailKindId AND gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
-          LEFT JOIN tmpEmail AS gpGet_Directory ON gpGet_Directory.EmailKindId = gpGet_Host.EmailKindId AND gpGet_Directory.EmailToolsId = zc_Enum_EmailTools_Directory()
+          INNER JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailId      = gpGet_Host.EmailId AND gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
+          INNER JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailId      = gpGet_Host.EmailId AND gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
+          INNER JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailId      = gpGet_Host.EmailId AND gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
+          INNER JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailId  = gpGet_Host.EmailId AND gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
+          INNER JOIN tmpEmail AS gpGet_Directory ON gpGet_Directory.EmailId = gpGet_Host.EmailId AND gpGet_Directory.EmailToolsId = zc_Enum_EmailTools_Directory()
 
-          LEFT JOIN tmp_IncomeMMO AS gpSelect_two ON gpSelect_two.EmailKindId = gpGet_Host.EmailKindId AND 1=0
-          INNER JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect
-                                                                            ON gpSelect.EmailKindId = gpGet_Host.EmailKindId
-                                                                           AND ((gpSelect.isErased = FALSE
-                                                                             AND gpSelect.ContactPersonMail <> ''
-                                                                             AND gpSelect.Directory <> ''
-                                                                                )
-                                                                             --OR (gpSelect.Id = gpSelect_two.Id)
-                                                                               )
+          INNER JOIN tmp_ImportSettings AS gpSelect
+                                        ON gpSelect.EmailId           = gpGet_Host.EmailId
+                                       AND gpSelect.ContactPersonMail <> ''
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
           LEFT JOIN ObjectDate AS ObjectDate_StartTime 
@@ -150,8 +154,10 @@ BEGIN
      WHERE gpGet_Host.EmailToolsId = zc_Enum_EmailTools_Host()
 UNION ALL
      SELECT 
-            gpGet_Host.EmailKindId
-          , gpGet_Host.EmailKindname
+            gpGet_Host.EmailId
+          , gpGet_Host.EmailName
+          , gpGet_Host.EmailKindId
+          , gpGet_Host.EmailKindName
 
           , gpSelect.Id
           , gpSelect.Code
@@ -186,14 +192,14 @@ UNION ALL
           , TRUE AS isBeginMove -- !!!захардкодил!!! переносить прайс в актуальные цены и "другие" данные (а сама загрузка выполняется всегда)
 
      FROM tmpEmail AS gpGet_Host
-          LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailKindId      = gpGet_Host.EmailKindId AND gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
-          LEFT JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailKindId      = gpGet_Host.EmailKindId AND gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
-          LEFT JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailKindId      = gpGet_Host.EmailKindId AND gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
-          LEFT JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailKindId  = gpGet_Host.EmailKindId AND gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
-          LEFT JOIN tmpEmail AS gpGet_Directory ON gpGet_Directory.EmailKindId = gpGet_Host.EmailKindId AND gpGet_Directory.EmailToolsId = zc_Enum_EmailTools_Directory()
+          INNER JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailId      = gpGet_Host.EmailId AND gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
+          INNER JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailId      = gpGet_Host.EmailId AND gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
+          INNER JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailId      = gpGet_Host.EmailId AND gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
+          INNER JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailId  = gpGet_Host.EmailId AND gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
+          INNER JOIN tmpEmail AS gpGet_Directory ON gpGet_Directory.EmailId = gpGet_Host.EmailId AND gpGet_Directory.EmailToolsId = zc_Enum_EmailTools_Directory()
 
-          LEFT JOIN tmp_IncomeMMO AS gpSelect_two ON gpSelect_two.EmailKindId = gpGet_Host.EmailKindId
-          INNER JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect ON gpSelect.Id = gpSelect_two.Id
+          LEFT JOIN tmp_IncomeMMO AS gpSelect_two ON gpSelect_two.EmailId = gpGet_Host.EmailId
+          INNER JOIN tmp_ImportSettings AS gpSelect ON gpSelect.Id = gpSelect_two.Id
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
           LEFT JOIN ObjectDate AS ObjectDate_StartTime 
@@ -206,10 +212,7 @@ UNION ALL
                                 ON ObjectFloat_Time.ObjectId = gpSelect.Id
                                AND ObjectFloat_Time.DescId = zc_ObjectFloat_ImportSettings_Time()
      WHERE gpGet_Host.EmailToolsId = zc_Enum_EmailTools_Host()
-
-
-
-     -- ORDER BY gpGet_Host.EmailKindId, gpSelect.Name, COALESCE (gpSelect_two.ContactPersonName, gpSelect.ContactPersonName)
+     -- ORDER BY gpGet_Host.EmailId, gpGet_Host.EmailKindId, gpSelect.Name, COALESCE (gpSelect_two.ContactPersonName, gpSelect.ContactPersonName)
      ORDER BY 1, 5, 11
     ;
   

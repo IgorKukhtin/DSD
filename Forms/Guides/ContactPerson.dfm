@@ -3,8 +3,9 @@ inherited ContactPersonForm: TContactPersonForm
   ClientHeight = 335
   ClientWidth = 936
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitLeft = -146
   ExplicitWidth = 952
-  ExplicitHeight = 373
+  ExplicitHeight = 370
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,6 +24,9 @@ inherited ContactPersonForm: TContactPersonForm
         ExplicitWidth = 936
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.Footer = False
           OptionsView.GroupByBox = True
@@ -99,6 +103,14 @@ inherited ContactPersonForm: TContactPersonForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object clEmailKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1087#1086#1095#1090#1099
+            DataBinding.FieldName = 'EmailKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
