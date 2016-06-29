@@ -2915,6 +2915,21 @@
         Component = cbPrinted
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindId'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindName'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -3069,6 +3084,14 @@
         Name = 'inMovementId_Order'
         Value = Null
         Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestrKindId'
+        Value = Null
+        Component = ReestrKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','

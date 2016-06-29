@@ -71,6 +71,7 @@ type
     edPeriod: TcxCurrencyEdit;
     edDay: TcxCurrencyEdit;
     ceChecked: TcxCheckBox;
+    ChoiceReasonDifferences: TOpenChoiceForm;
   private
     { Private declarations }
   public

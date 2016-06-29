@@ -31,6 +31,9 @@ AS
       
       , COALESCE(Price_Fix.ValueData,False)     AS Fix
       , Fix_DateChange.valuedata                AS FixDateChange
+
+      , COALESCE(Price_Top.ValueData,False)     AS isTop
+      , Price_TOPDateChange.ValueData           AS TopDateChange
     FROM Object AS Object_Price
         LEFT JOIN ObjectFloat       AS Price_Value
                                     ON Price_Value.ObjectId = Object_Price.Id
@@ -73,7 +76,12 @@ AS
         LEFT JOIN ObjectDate        AS Fix_DateChange
                                     ON Fix_DateChange.ObjectId = Object_Price.Id
                                    AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
-        
+        LEFT JOIN ObjectBoolean     AS Price_Top
+                                    ON Price_Top.ObjectId = Object_Price.Id
+                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+        LEFT JOIN ObjectDate        AS Price_TOPDateChange
+                                    ON Price_TOPDateChange.ObjectId = Object_Price.Id
+                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()        
     WHERE 
         Object_Price.DescId = zc_Object_Price();
 
@@ -84,7 +92,8 @@ ALTER TABLE Object_Price_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
-29.08.15                                                         * + isClose, NotRecalc
+ 29.06.16         *
+ 29.08.15                                                       * + isClose, NotRecalc
  23.07.14                         *
 */
 

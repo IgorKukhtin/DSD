@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
@@ -18,12 +19,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
     IN inMCSIsClose               Boolean   ,    -- НТЗ закрыт
     IN inMCSNotRecalc             Boolean   ,    -- НТЗ не пересчитывается
     IN inFix                      Boolean   ,    -- Фиксированная цена
+    IN inisTop                    Boolean   ,    -- ТОП позиция
    OUT outDateChange              TDateTime ,    -- Дата изменения цены
    OUT outMCSDateChange           TDateTime ,    -- Дата изменения неснижаемого товарного запаса
    OUT outMCSIsCloseDateChange    TDateTime ,    -- Дата изменения признака "Убить код"
    OUT outMCSNotRecalcDateChange  TDateTime ,    -- Дата изменения признака "Спецконтроль кода"
    OUT outFixDateChange           TDateTime ,    -- Дата изменения признака "Фиксированная цена"
    OUT outStartDate               TDateTime ,    -- Дата
+   OUT outTopDateChange           TDateTime ,    -- Дата изменения признака "ТОП позиция"
     IN inSession                  TVarChar       -- сессия пользователя
 )
 AS
@@ -35,6 +38,7 @@ $BODY$
         vbMCSIsClose Boolean;
         vbMCSNotRecalc Boolean;
         vbFix Boolean;
+        vbTop Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -62,7 +66,8 @@ BEGIN
            MCSDateChange, 
            MCSIsClose, 
            MCSNotRecalc,
-           Fix
+           Fix,
+           isTop
       INTO ioId, 
            vbPrice, 
            vbMCSValue, 
@@ -70,7 +75,8 @@ BEGIN
            outMCSDateChange,
            vbMCSIsClose, 
            vbMCSNotRecalc,
-           vbFix
+           vbFix,
+           vbTop
     FROM Object_Price_View
     WHERE GoodsId = inGoodsId
       AND UnitId = inUnitID;
@@ -123,6 +129,15 @@ BEGIN
         -- сохранили дату изменения <фиксированная цена>
         outFixDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_FixDateChange(), ioId, outFixDateChange);
+    END IF;    
+
+    IF vbTop is null or (vbTop <> COALESCE(inisTop,FALSE))
+    THEN
+        -- сохранили свойство <ТОп позиция>
+        PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_Top(), ioId, inisTop);
+        -- сохранили дату изменения <ТОп позиция>
+        outTopDateChange := CURRENT_DATE;
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_TopDateChange(), ioId, outTopDateChange);
     END IF;    
 
     -- сохранили св-во < Цена >
