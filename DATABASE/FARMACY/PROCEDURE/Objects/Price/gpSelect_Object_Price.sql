@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
              , isPromo boolean
+             , isTop boolean, TOPDateChange TDateTime
              ) AS
 $BODY$
 DECLARE
@@ -81,6 +82,8 @@ BEGIN
                ,NULL::Boolean                    AS isFirst 
                ,NULL::Boolean                    AS isSecond 
                ,NULL::Boolean                    AS isPromo 
+               ,NULL::Boolean                    AS isTop 
+               ,NULL::TDateTime                  AS TOPDateChange
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -149,6 +152,10 @@ BEGIN
                , Object_Goods_View.isFirst
                , Object_Goods_View.isSecond
                , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+
+               , Object_Price_View.isTop                AS isTop
+               , Object_Price_View.TopDateChange        AS TopDateChange
+
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
                                      AND ObjectLink.ChildObjectId = vbObjectId
@@ -243,6 +250,10 @@ BEGIN
                , Object_Goods_View.isFirst
                , Object_Goods_View.isSecond
                , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+
+               , Object_Price_View.isTop                AS isTop
+               , Object_Price_View.TopDateChange        AS TopDateChange
+               
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains

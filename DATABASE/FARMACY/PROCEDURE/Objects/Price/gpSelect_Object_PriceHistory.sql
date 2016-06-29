@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , PriceEnd TFloat, MCSValueEnd TFloat
              , RemainsEnd TFloat, SummaRemainsEnd TFloat
              , RemainsNotMCSEnd TFloat, SummaNotMCSEnd TFloat
+             , isTop boolean, TOPDateChange TDateTime
 
              , isErased boolean
              ) AS
@@ -85,6 +86,9 @@ BEGIN
                , NULL::TFloat AS RemainsNotMCSEnd
                , NULL::TFloat AS SummaNotMCSEnd
                               
+               ,NULL::Boolean                    AS isTop 
+               ,NULL::TDateTime                  AS TOPDateChange
+
                ,NULL::Boolean                    AS isErased
             WHERE 1=0;
     ELSEIF inisShowAll = True
@@ -149,6 +153,9 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) THEN COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) ELSE 0 END :: TFloat AS RemainsNotMCSEnd
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) THEN (COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0)) * COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0) ELSE 0 END :: TFloat AS SummaNotMCSEnd
                
+               , Object_Price_View.isTop                AS isTop
+               , Object_Price_View.TopDateChange        AS TopDateChange
+
                , Object_Goods_View.isErased                      AS isErased 
                
             FROM Object_Goods_View
@@ -277,6 +284,9 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) THEN COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) ELSE 0 END :: TFloat AS RemainsNotMCSEnd
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) THEN (COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0)) * COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0) ELSE 0 END :: TFloat AS SummaNotMCSEnd
                               
+               , Object_Price_View.isTop                   AS isTop
+               , Object_Price_View.TopDateChange           AS TopDateChange
+
                , Object_Goods_View.isErased                AS isErased 
                
             FROM Object_Price_View
@@ -344,6 +354,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 29.06.16         *
  13.03.16         *
 */
 

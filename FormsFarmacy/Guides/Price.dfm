@@ -154,6 +154,22 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 67
           end
+          object clisTop: TcxGridDBColumn
+            Caption = #1058#1054#1055' '#1087#1086#1079#1080#1094#1080#1103
+            DataBinding.FieldName = 'isTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 60
+          end
+          object colTOPDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1058#1054#1055' '#1087#1086#1079#1080#1094#1080#1080
+            DataBinding.FieldName = 'TOPDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
           object clisFirst: TcxGridDBColumn
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
@@ -1022,6 +1038,15 @@ inherited PriceForm: TPriceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisTop'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTop'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outDateChange'
         Value = 'NULL'
         Component = MasterCDS
@@ -1066,6 +1091,14 @@ inherited PriceForm: TPriceForm
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTOPDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'TOPDateChange'
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
@@ -1145,8 +1178,8 @@ inherited PriceForm: TPriceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 312
-    Top = 216
+    Left = 344
+    Top = 264
   end
   object spRecalcMCS: TdsdStoredProc
     StoredProcName = 'gpRecalcMCS'

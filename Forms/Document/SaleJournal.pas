@@ -198,6 +198,7 @@ type
     actShowMessage: TShowMessageAction;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    clReestrKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

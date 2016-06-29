@@ -21,8 +21,6 @@ inherited SendForm: TSendForm
       inherited cxGrid: TcxGrid
         Width = 1002
         Height = 408
-        ExplicitLeft = 288
-        ExplicitTop = 3
         ExplicitWidth = 1002
         ExplicitHeight = 408
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -301,9 +299,16 @@ inherited SendForm: TSendForm
           object colReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
             DataBinding.FieldName = 'ReasonDifferencesName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ChoiceReasonDifferences
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 123
           end
         end
@@ -314,6 +319,7 @@ inherited SendForm: TSendForm
     Width = 1002
     Height = 100
     TabOrder = 3
+    ExplicitTop = 4
     ExplicitWidth = 1002
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
@@ -690,6 +696,35 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object ChoiceReasonDifferences: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1086#1088' '#1087#1088#1080#1095#1080#1085#1099' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
+      FormName = 'TReasonDifferencesForm'
+      FormNameParam.Value = 'TReasonDifferencesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReasonDifferencesId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReasonDifferencesName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource

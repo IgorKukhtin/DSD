@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
              , isCOMDOC Boolean
              , isPrinted Boolean
              , isPromo Boolean
@@ -92,6 +93,8 @@ BEGIN
              , inOperDate                                   AS OperDate_TransportGoods
              , 0                   			    AS MovementId_Transport
              , '' :: TVarChar                     	    AS InvNumber_Transport 
+             , 0                   			    AS ReestrKindId
+             , '' :: TVarChar                     	    AS ReestrKindName 
              , FALSE                                        AS isCOMDOC
              , CAST (FALSE AS Boolean)                      AS isPrinted
              , CAST (FALSE AS Boolean)                      AS isPromo 
@@ -161,7 +164,11 @@ BEGIN
            , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
 
            , Movement_Transport.Id                     AS MovementId_Transport
-           , ('π ' || Movement_Transport.InvNumber || ' ÓÚ ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
+           , ('π ' || Movement_Transport.InvNumber || ' ÓÚ ' || Movement_Transport.OperDate  :: Date :: TVarChar ||' ('||Object_Car.ValueData ||' / '|| Object_PersonalDriver.ValueData ||')') :: TVarChar AS InvNumber_Transport
+
+
+           , Object_ReestrKind.Id             		    AS ReestrKindId
+           , Object_ReestrKind.ValueData       		    AS ReestrKindName
 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
            , COALESCE (MovementBoolean_Print.ValueData, FALSE)            AS isPrinted
@@ -278,6 +285,21 @@ BEGIN
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                         ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
 --add Tax
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -317,6 +339,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 28.06.16         * add ReestrKind
  21.12.15         * add Print
  26.06.15         * add inChangePercentAmount
  24.07.14         * add zc_MovementFloat_CurrencyValue
