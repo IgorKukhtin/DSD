@@ -2,7 +2,6 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 359
   ClientWidth = 763
-  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 779
   ExplicitHeight = 397
@@ -712,8 +711,8 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       item
         Component = GuidesGoods
       end>
-    Left = 424
-    Top = 136
+    Left = 456
+    Top = 160
   end
   object rdParty: TRefreshDispatcher
     IdParam.Value = Null
