@@ -651,6 +651,8 @@ var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
     fErr:Boolean;//09.06.2016
+    E: Exception;
+    TextMessage:String;
 begin
   case ImportSettings.FileType of
     dtXLS, dtDBF, dtMMO: begin
@@ -691,12 +693,18 @@ begin
                   // Загрузили if + в try с 09.06.2016 - Konstantin
                   if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('isNext_aftErr')) and (ExternalParams.ParamByName('isNext_aftErr').Value = TRUE)
                   then try Load; fErr:= false;
-                       except fErr:= true;
+                       except
+                           on E: Exception do begin
+                              fErr:= true;
+                              TextMessage:=trim (Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1));
+                              if TextMessage <> ''
+                              then TextMessage := ' - ' + ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
                               //добавили в список не загруженных файлов
                               if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('outMsgText'))
                               then if ExternalParams.ParamByName('outMsgText').Value <> ''
-                                   then ExternalParams.ParamByName('outMsgText').Value:=ExternalParams.ParamByName('outMsgText').Value + #10 + #13 + saFound[i]
-                                   else ExternalParams.ParamByName('outMsgText').Value:=saFound[i];
+                                   then ExternalParams.ParamByName('outMsgText').Value:=ExternalParams.ParamByName('outMsgText').Value + #10 + #13 + saFound[i] + TextMessage
+                                   else ExternalParams.ParamByName('outMsgText').Value:=saFound[i] + TextMessage;
+                           end;
                        end
                   else begin Load; fErr:= false; end;
                   // Перенесли в Archive

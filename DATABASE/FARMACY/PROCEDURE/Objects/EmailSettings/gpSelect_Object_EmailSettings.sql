@@ -1,25 +1,24 @@
 -- Function: gpSelect_Object_EmailSettings()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_EmailSettings(Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpSelect_Object_EmailSettings (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_EmailSettings(
     IN inEmailId   Integer   ,
     IN inSession       TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Value TVarChar,
-               EmailId Integer, EmailName TVarChar,
-               EmailKindId Integer, EmailKindName TVarChar,
-               EmailToolsId Integer, EmailToolsName TVarChar
-               ) AS
+RETURNS TABLE (Id Integer, Code Integer, Value TVarChar
+             , EmailId Integer, EmailName TVarChar
+             , EmailKindId Integer, EmailKindName TVarChar
+             , EmailToolsId Integer, EmailToolsName TVarChar
+               )
+AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_EmailSettings());
 
    RETURN QUERY 
-    WITH 
+   WITH 
     tmpEnum AS (SELECT Object_EmailKind.Id           AS EmailKindId
                      , Object_EmailKind.ValueData    AS EmailKindName
                      , Object_EmailTools.Id          AS EmailToolsId
@@ -29,8 +28,8 @@ BEGIN
                 WHERE Object_EmailKind.DEscId = zc_Object_EmailKind()
                 )
    ,tmpEmail AS (SELECT Object_Email.Id                    AS EmailId
-                     , Object_Email.ValueData             AS EmailName
-                     , ObjectLink_EmailKind.ChildObjectId AS EmailKindId
+                      , Object_Email.ValueData             AS EmailName
+                      , ObjectLink_EmailKind.ChildObjectId AS EmailKindId
                 FROM Object AS Object_Email
                    LEFT JOIN ObjectLink AS ObjectLink_EmailKind
                                         ON ObjectLink_EmailKind.ObjectId = Object_Email.Id
@@ -38,15 +37,15 @@ BEGIN
                 WHERE Object_Email.DescId = zc_Object_Email()
                 )
  , tmpEnumEmail AS (SELECT tmpEnum.*
-                         , tmpEmail.EmailId
+                         , COALESCE (tmpEmail.EmailId, 0) AS EmailId
                          , tmpEmail.EmailName
                      FROM tmpEnum
-                         LEFT JOIN tmpEmail ON tmpEmail.EmailKindId = tmpEnum.EmailKindId
+                          LEFT JOIN tmpEmail ON tmpEmail.EmailKindId = tmpEnum.EmailKindId
                     )
   , tmpObject AS (SELECT Object_EmailSettings.Id             AS EmailSettingsId
                        , Object_EmailSettings.ObjectCode     AS EmailSettingsCode
                        , Object_EmailSettings.ValueData      AS EmailSettingsValue
-                       , Object_Email.Id                     AS EmailId
+                       , COALESCE (Object_Email.Id, 0)       AS EmailId
                        , Object_Email.ValueData              AS EmailName
                        , Object_EmailTools.Id                AS EmailToolsId
                        , Object_EmailTools.ValueData         AS EmailToolsName 
@@ -63,8 +62,8 @@ BEGIN
                   WHERE Object_EmailSettings.DescId = zc_Object_EmailSettings()
                   )
 
-       SELECT tmpObject.EmailSettingsId AS Id
-            , tmpObject.EmailSettingsCode AS Code
+       SELECT tmpObject.EmailSettingsId    AS Id
+            , tmpObject.EmailSettingsCode  AS Code
             , tmpObject.EmailSettingsValue AS Value
             , tmpEnumEmail.EmailId
             , tmpEnumEmail.EmailName
@@ -74,12 +73,10 @@ BEGIN
             , tmpEnumEmail.EmailToolsName
              
        FROM tmpEnumEmail
-         LEFT JOIN tmpObject ON tmpObject.EmailId = tmpEnumEmail.EmailId
-                            AND tmpObject.EmailToolsId = tmpEnumEmail.EmailToolsId
+            LEFT JOIN tmpObject ON tmpObject.EmailId      = tmpEnumEmail.EmailId
+                               AND tmpObject.EmailToolsId = tmpEnumEmail.EmailToolsId
        WHERE tmpEnumEmail.EmailId = inEmailId OR inEmailId = 0
-
-
-;
+      ;
   
 END;
 $BODY$

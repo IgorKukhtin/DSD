@@ -502,7 +502,7 @@ begin
                                           {fError_SendEmail(vbArrayImportSettings[JurPos].Id
                                                          , vbArrayImportSettings[JurPos].ContactPersonId
                                                          , IdMessage.Date
-                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , vbArrayMail[ii].Mail + ' * ' + vbArrayImportSettings[JurPos].JuridicalMail
                                                          , '44');}
                                       end;
                                  end;
@@ -521,7 +521,7 @@ begin
                                           fError_SendEmail(vbArrayImportSettings[JurPos].Id
                                                          , vbArrayImportSettings[JurPos].ContactPersonId
                                                          , IdMessage.Date
-                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , vbArrayMail[ii].Mail + ' * ' + vbArrayImportSettings[JurPos].JuridicalMail
                                                          , '4');
                                  end;
                                  //2.2. поиск файла xlsx И это не MMO
@@ -538,7 +538,7 @@ begin
                                           fError_SendEmail(vbArrayImportSettings[JurPos].Id
                                                          , vbArrayImportSettings[JurPos].ContactPersonId
                                                          , IdMessage.Date
-                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , vbArrayMail[ii].Mail + ' * ' + vbArrayImportSettings[JurPos].JuridicalMail
                                                          , '4');
                                  end
                                  else // если не найдены файлы для копирования И не ММО
@@ -548,7 +548,7 @@ begin
                                            fError_SendEmail(vbArrayImportSettings[JurPos].Id
                                                           , vbArrayImportSettings[JurPos].ContactPersonId
                                                           , IdMessage.Date
-                                                          , vbArrayImportSettings[JurPos].JuridicalMail
+                                                          , vbArrayMail[ii].Mail + ' * ' + vbArrayImportSettings[JurPos].JuridicalMail
                                                           , '0');
                                            ;
                                   //
@@ -739,7 +739,7 @@ begin
                                     fError_SendEmail(FieldByName('Id').AsInteger
                                                    , FieldByName('ContactPersonId').AsInteger
                                                    , msgDate
-                                                   , FieldByName('JuridicalMail').AsString
+                                                   , FieldByName('Mail').AsString + ' * ' + FieldByName('JuridicalMail').AsString
                                                    , actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
                                 end;
 
@@ -751,7 +751,7 @@ begin
                              fError_SendEmail(FieldByName('Id').AsInteger
                                             , FieldByName('ContactPersonId').AsInteger
                                             , msgDate
-                                            , FieldByName('JuridicalMail').AsString
+                                            , FieldByName('Mail').AsString + ' * ' + FieldByName('JuridicalMail').AsString
                                             , searchResult.Name);
                       end;
            end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!
