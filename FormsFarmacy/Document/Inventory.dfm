@@ -21,8 +21,6 @@ inherited InventoryForm: TInventoryForm
       inherited cxGrid: TcxGrid
         Width = 898
         Height = 557
-        ExplicitLeft = 288
-        ExplicitTop = 24
         ExplicitWidth = 898
         ExplicitHeight = 557
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -60,6 +58,11 @@ inherited InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRemains_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -133,6 +136,11 @@ inherited InventoryForm: TInventoryForm
               Format = '+ ,0.00;- ,0.00; '
               Kind = skSum
               Column = colDiffSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRemains_Summ
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -302,6 +310,9 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheetReport: TcxTabSheet
       Caption = #1055#1072#1088#1090#1080#1080
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPartion: TcxGrid
         Left = 0
         Top = 0

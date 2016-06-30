@@ -198,9 +198,9 @@ BEGIN
           , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
 
           , Object_Insert.ValueData              AS InsertName
-          , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+          , MovementDate_Insert.ValueData        AS InsertDate
           , Object_Update.ValueData              AS UpdateName
-          , ObjectDate_Protocol_Update.ValueData AS UpdateDate
+          , MovementDate_Update.ValueData        AS UpdateDate
 
 
         FROM
@@ -210,21 +210,24 @@ BEGIN
             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
                                                  AND MovementItemContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
 
-            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
-                                 ON ObjectDate_Protocol_Insert.ObjectId = Movement_Income.Id
-                                AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-            LEFT JOIN ObjectLink AS ObjectLink_Insert
-                                 ON ObjectLink_Insert.ObjectId = Movement_Income.Id
-                                AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId  
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement_Income.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
-            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
-                                 ON ObjectDate_Protocol_Update.ObjectId = Movement_Income.Id
-                                AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
-            LEFT JOIN ObjectLink AS ObjectLink_Update
-                                 ON ObjectLink_Update.ObjectId = Movement_Income.Id
-                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId  
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement_Income.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+
+            LEFT JOIN MovementDate AS MovementDate_Update
+                                   ON MovementDate_Update.MovementId = Movement_Income.Id
+                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
+            LEFT JOIN MovementLinkObject AS MLO_Update
+                                         ON MLO_Update.MovementId = Movement_Income.Id
+                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+
         GROUP BY
             Movement_Income.Id
           , Movement_Income.InvNumber
@@ -256,9 +259,9 @@ BEGIN
           , Movement_Order.InvNumber
           , Movement_Order.Id 
           , Object_Insert.ValueData
-          , ObjectDate_Protocol_Insert.ValueData
+          , MovementDate_Insert.ValueData
           , Object_Update.ValueData
-          , ObjectDate_Protocol_Update.ValueData
+          , MovementDate_Update.ValueData
 ;
 END;
 $BODY$
