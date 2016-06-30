@@ -69,6 +69,7 @@ type
     ExecuteDialog: TExecuteDialog;
     StartDate: TcxGridDBColumn;
     SummaRemains: TcxGridDBColumn;
+    clGoods_isTop: TcxGridDBColumn;
   private
     { Private declarations }
   public

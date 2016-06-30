@@ -466,6 +466,15 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 70
           end
+          object clGoods_isTop: TcxGridDBColumn
+            Caption = #1058#1054#1055' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'Goods_isTop'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object clisTop: TcxGridDBColumn
             Caption = #1058#1054#1055' '#1087#1086#1079#1080#1094#1080#1103
             DataBinding.FieldName = 'isTop'
