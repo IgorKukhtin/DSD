@@ -154,6 +154,15 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 67
           end
+          object clGoods_isTop: TcxGridDBColumn
+            Caption = #1058#1054#1055' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'Goods_isTop'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object clisTop: TcxGridDBColumn
             Caption = #1058#1054#1055' '#1087#1086#1079#1080#1094#1080#1103
             DataBinding.FieldName = 'isTop'
@@ -897,8 +906,8 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 72
+    Left = 112
+    Top = 168
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1114,8 +1123,8 @@ inherited PriceForm: TPriceForm
       item
         Component = UnitGuides
       end>
-    Left = 200
-    Top = 96
+    Left = 176
+    Top = 216
   end
   object spGetImportSetting_MCS: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'

@@ -72,6 +72,7 @@ BEGIN
                                       , inCurrencyDocumentId   := inCurrencyDocumentId
                                       , inCurrencyPartnerId    := inCurrencyPartnerId
                                       , inMovementId_Order     := inMovementId_Order
+                                      , inReestrKindId         := inReestrKindId
                                       , ioPriceListId          := ioPriceListId
                                       , ioCurrencyPartnerValue := ioCurrencyPartnerValue
                                       , ioParPartnerValue      := ioParPartnerValue
@@ -81,7 +82,7 @@ BEGIN
     -- Комментарий
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
     -- сохранили связь с <Состояние по реестру>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), ioId, inReestrKindId);
+    --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), ioId, inReestrKindId);
 
 
     -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)

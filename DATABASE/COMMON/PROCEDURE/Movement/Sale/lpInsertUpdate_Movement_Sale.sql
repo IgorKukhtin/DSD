@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarCha
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ Перемещение>
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inCurrencyDocumentId    Integer    , -- Валюта (документа)
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inMovementId_Order      Integer    , -- ключ Документа
+    IN inReestrKindId          Integer    , -- Состояние по реестру
  INOUT ioPriceListId           Integer    , -- Прайс лист
    OUT outPriceListName        TVarChar   , -- Прайс лист
    OUT outCurrencyValue        TFloat     , -- курс валюты
@@ -199,6 +201,9 @@ BEGIN
      -- сохранили связь с документом <Заявки сторонние>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inMovementId_Order);
 
+     -- сохранили связь с <Состояние по реестру>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), ioId, inReestrKindId);
+
      -- !!!пересчитали!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id
                                              , CASE WHEN MIFloat_PromoMovement.ValueData > 0
@@ -231,6 +236,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.06.16         * inReestrKindId
  22.10.14                                        * add inMovementId_Order
  24.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId

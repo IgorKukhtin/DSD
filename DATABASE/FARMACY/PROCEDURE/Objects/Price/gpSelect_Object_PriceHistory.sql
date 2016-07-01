@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriodEnd TFloat, MCSDayEnd TFloat, StartDateEnd TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
+             , Goods_isTop Boolean
              , DateChange TDateTime, MCSDateChange TDateTime
              , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
@@ -64,6 +65,7 @@ BEGIN
                ,NULL::TVarChar                   AS GoodsName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
+               ,NULL::Boolean                    AS Goods_isTop
                ,NULL::TDateTime                  AS DateChange
                ,NULL::TDateTime                  AS MCSDateChange
                ,NULL::Boolean                    AS MCSIsClose
@@ -129,6 +131,7 @@ BEGIN
                , Object_Goods_View.GoodsName                     AS GoodsName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
+               , Object_Goods_View.isTop                         AS Goods_isTop
                , Object_Price_View.DateChange                    AS DateChange
                , Object_Price_View.MCSDateChange                 AS MCSDateChange
                , COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
@@ -260,6 +263,7 @@ BEGIN
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
+               , Object_Goods_View.isTop                   AS Goods_isTop
                , Object_Price_View.DateChange              AS DateChange
                , Object_Price_View.MCSDateChange           AS MCSDateChange
                , Object_Price_View.MCSIsClose              AS MCSIsClose
@@ -354,7 +358,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿. 
- 29.06.16         *
+ 30.06.16         *
  13.03.16         *
 */
 
