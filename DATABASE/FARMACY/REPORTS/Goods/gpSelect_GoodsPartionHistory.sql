@@ -1,4 +1,5 @@
 DROP FUNCTION IF EXISTS gpSelect_GoodsPartionHistory (Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsPartionHistory (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsPartionHistory(
     IN inPartyId          Integer  ,  -- Партия
@@ -6,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsPartionHistory(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inStartDate        TDateTime,  -- Дата начала периода
     IN inEndDate          TDateTime,  -- Дата окончания периода
+    IN inIsPartion        Boolean  ,  -- оказать партию да/нет
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE ( 
@@ -27,7 +29,11 @@ RETURNS TABLE (
     MCSValue         TFloat,     --НТЗ
     CheckMember      TVarChar,  --Менеджер
     Bayer            TVarChar,  --Покупатель
-    PartyId          Integer
+    PartyId          Integer,
+    PartionInvNumber TVarChar,  --№ документа партии
+    PartionOperDate  TDateTime, --Дата документа партии
+    PartionDescName  TVarChar,  --вид документа партии
+    PartionPrice     TFloat     --цена партии
   )
 AS
 $BODY$
@@ -268,6 +274,7 @@ BEGIN
             WHERE
                 Object_Goods.Id = inGoodsId
         )
+
         SELECT
             Res.MovementId::Integer,   --ИД накдалдной
             Res.OperDate::TDateTime, --Дата документа
@@ -287,22 +294,41 @@ BEGIN
             Res.MCSValue::TFloat,     --НТЗ
             Res.CheckMember::TVarChar,  --Менеджер
             Res.Bayer::TVarChar,        --Покупатель
-            Res.PartyId                 --# партии
+            Res.PartyId ,                --# партии
+            COALESCE(Movement_Party.InvNumber, NULL) ::TVarChar  AS PartionInvNumber,  -- № док.партии
+            COALESCE(Movement_Party.OperDate, NULL)  ::TDateTime AS PartionOperDate,  -- Дата док.партии
+            COALESCE(MovementDesc.ItemName, NULL)    ::TVarChar  AS PartionDescName,
+            COALESCE(MIFloat_Price.ValueData, NULL)  ::TFloat    AS PartionPrice
         FROM Res 
+           LEFT JOIN OBJECT AS Object_PartionMovementItem 
+                            ON Object_PartionMovementItem.Id = Res.PartyId --CLI_MI.ObjectId
+                            AND inIsPartion = True
+           LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+
+           LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                             ON MIFloat_Price.MovementItemId = MovementItem.ID
+                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+           LEFT JOIN Movement AS Movement_Party ON Movement_Party.Id = MovementItem.MovementId 
+                                         --     AND inIsPartion = True
+           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Party.DescId
+          
         ORDER BY 
             Res.OrdNum;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_GoodsPartionHistory (Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_GoodsPartionHistory (Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 01.07.16         * add inIsPartion
  26.08.15                                                                       *
 
 */
 
 -- тест
 -- SELECT * FROM gpSelect_GoodsPartionHistory (inPartyId := 0,inGoodsId := 0,inUnitId := 0,inStartDate := '20150801',inEndDate := '20150830', inSession := '3')
+
