@@ -58,6 +58,7 @@ type
     actInsertMaskMulti: TMultiAction;
     ExecuteDialog: TExecuteDialog;
     actShowMessage: TShowMessageAction;
+    ExecuteDialog1: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -183,6 +183,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'isPartionSumm'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object clIsErased: TcxGridDBColumn
@@ -284,6 +285,22 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbisPartionCount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbisPartionSumm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -370,6 +387,14 @@ object GoodsForm: TGoodsForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbisPartionCount: TdxBarButton
+      Action = actUpdateisPartionCount
+      Category = 0
+    end
+    object bbisPartionSumm: TdxBarButton
+      Action = actUpdateisPartionSumm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -429,12 +454,14 @@ object GoodsForm: TGoodsForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -442,6 +469,7 @@ object GoodsForm: TGoodsForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelName'
@@ -449,6 +477,7 @@ object GoodsForm: TGoodsForm
           Component = ClientDataSet
           ComponentItem = 'FuelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MeasureName'
@@ -456,6 +485,7 @@ object GoodsForm: TGoodsForm
           Component = ClientDataSet
           ComponentItem = 'MeasureName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TradeMarkName'
@@ -463,6 +493,7 @@ object GoodsForm: TGoodsForm
           Component = ClientDataSet
           ComponentItem = 'TradeMarkName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -505,6 +536,7 @@ object GoodsForm: TGoodsForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -512,6 +544,7 @@ object GoodsForm: TGoodsForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -520,6 +553,7 @@ object GoodsForm: TGoodsForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -533,6 +567,7 @@ object GoodsForm: TGoodsForm
       FormName = 'TGoodsEditForm'
       FormNameParam.Value = 'TGoodsEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -540,6 +575,7 @@ object GoodsForm: TGoodsForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -556,15 +592,49 @@ object GoodsForm: TGoodsForm
       FormName = 'TGoodsEditForm'
       FormNameParam.Value = 'TGoodsEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actUpdateisPartionSumm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateisPartionSumm
+      StoredProcList = <
+        item
+          StoredProc = spUpdateisPartionSumm
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072' ('#1076#1072'/'#1085#1077#1090')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072' ('#1076#1072'/'#1085#1077#1090')"'
+      ImageIndex = 52
+    end
+    object actUpdateisPartionCount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateisPartionCount
+      StoredProcList = <
+        item
+          StoredProc = spUpdateisPartionCount
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
+      ImageIndex = 58
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -581,6 +651,7 @@ object GoodsForm: TGoodsForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 112
@@ -601,6 +672,7 @@ object GoodsForm: TGoodsForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160
@@ -632,5 +704,57 @@ object GoodsForm: TGoodsForm
     SummaryItemList = <>
     Left = 232
     Top = 184
+  end
+  object spUpdateisPartionCount: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Goods_isPartionCount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartionCount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isPartionCount'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 328
+    Top = 259
+  end
+  object spUpdateisPartionSumm: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Goods_isPartionSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartionSumm'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isPartionSumm'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 267
   end
 end

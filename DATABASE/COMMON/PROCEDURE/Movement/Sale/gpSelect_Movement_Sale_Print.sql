@@ -303,7 +303,8 @@ BEGIN
                               )
        SELECT
              Movement.Id                                AS Id
---           , Movement.InvNumber                         AS InvNumber
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
+--         , Movement.InvNumber                         AS InvNumber
            , CASE WHEN Movement.DescId = zc_Movement_Sale()
                        THEN Movement.InvNumber
                   WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MovementString_InvNumberPartner.ValueData <> ''

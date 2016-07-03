@@ -426,7 +426,8 @@ uses
   Report_GoodsPartionMoveDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionMoveDialog.pas' {Report_GoodsPartionMoveDialogForm: TParentForm},
   Email in '..\..\FormsFarmacy\Guides\Email.pas' {EmailForm: TParentForm},
   EmailEdit in '..\..\FormsFarmacy\Guides\EmailEdit.pas' {EmailEditForm: TParentForm},
-  Price in '..\..\FormsFarmacy\Guides\Price.pas' {PriceForm: TParentForm};
+  Price in '..\..\FormsFarmacy\Guides\Price.pas' {PriceForm: TParentForm},
+  Report_GoodsPartionHistoryDialog in '..\..\FormsFarmacy\Report\Report_GoodsPartionHistoryDialog.pas' {Report_GoodsPartionHistoryDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -58,6 +58,10 @@ type
     cxLabel16: TcxLabel;
     ceWeightTransport: TcxCurrencyEdit;
     ContractConditionKindGuides: TdsdGuides;
+    cxLabel17: TcxLabel;
+    ceValue: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    ceSummAdd: TcxCurrencyEdit;
   private
     { Private declarations }
   public
