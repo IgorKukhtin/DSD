@@ -202,14 +202,14 @@ object GoodsForm: TGoodsForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 192
+    Left = 40
+    Top = 272
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 200
+    Left = 112
+    Top = 216
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

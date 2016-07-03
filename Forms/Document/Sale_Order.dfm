@@ -3132,6 +3132,9 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edReestrKind
       end>
     Left = 232
     Top = 193
@@ -4817,10 +4820,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     KeyField = 'Id'
     LookupControl = edReestrKind
     Key = '0'
-    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.Value = 'TReestrKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TTransportJournalChoiceForm'
+    FormName = 'TReestrKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
