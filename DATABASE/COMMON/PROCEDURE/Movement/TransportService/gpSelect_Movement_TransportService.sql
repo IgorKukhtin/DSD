@@ -50,23 +50,7 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
-      , tmpContractCondition AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
-                                      , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
-                                      , ObjectFloat_Value.ValueData AS Value
-                                 FROM Object AS Object_ContractCondition
-                                   LEFT JOIN ObjectFloat AS ObjectFloat_Value 
-                                                         ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
-                                                        AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-                                   LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
-                                                        ON ObjectLink_ContractCondition_Contract.ObjectId = Object_ContractCondition.Id
-                                                       AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                                   LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
-                                                        ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = Object_ContractCondition.Id
-                                                       AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                 WHERE Object_ContractCondition.DescId = zc_Object_ContractCondition()
-                                   AND Object_ContractCondition.isErased = FALSE
-                                 )
-
+      
        SELECT
              Movement.Id
            , MovementItem.Id as MIId
@@ -85,7 +69,7 @@ BEGIN
            , MIFloat_Price.ValueData               AS Price
            , MIFloat_CountPoint.ValueData          AS CountPoint
            , MIFloat_TrevelTime.ValueData          AS TrevelTime
-           , tmpContractCondition.Value            AS ContractConditionValue  
+           , MIFloat_ContractValue.ValueData       AS ContractConditionValue  
 
            , MIString_Comment.ValueData  AS Comment
 
@@ -153,6 +137,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+            LEFT JOIN MovementItemFloat AS MIFloat_ContractValue
+                                        ON MIFloat_ContractValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ContractValue.DescId = zc_MIFloat_ContractValue()
 
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id 
@@ -203,9 +190,6 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_StartRun
                                    ON MovementDate_StartRun.MovementId = Movement.Id
                                   AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
-
-            LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = View_Contract_InvNumber.ContractId
-                                          AND tmpContractCondition.ContractConditionKindId = Object_ContractConditionKind.Id
       ;
   
 END;

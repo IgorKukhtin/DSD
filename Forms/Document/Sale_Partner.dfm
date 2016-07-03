@@ -2867,6 +2867,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edReestrKind
       end>
     Left = 232
     Top = 193
@@ -4281,7 +4284,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end>
     GetStoredProc = spGet
     Left = 280
-    Top = 217
+    Top = 265
   end
   object spGetReportNameTransport: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Transport_ReportName'
@@ -4312,10 +4315,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     KeyField = 'Id'
     LookupControl = edReestrKind
     Key = '0'
-    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.Value = 'TReestrKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TTransportJournalChoiceForm'
+    FormName = 'TReestrKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
