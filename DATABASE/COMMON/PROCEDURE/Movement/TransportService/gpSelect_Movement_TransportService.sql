@@ -13,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportService(
 RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
-             , Amount TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , Amount TFloat, SummAdd TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , ContractConditionValue TFloat
              , Comment TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -49,6 +50,22 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+      , tmpContractCondition AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+                                      , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
+                                      , ObjectFloat_Value.ValueData AS Value
+                                 FROM Object AS Object_ContractCondition
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                                                         ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
+                                                        AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                   LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                                        ON ObjectLink_ContractCondition_Contract.ObjectId = Object_ContractCondition.Id
+                                                       AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                   LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                                        ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = Object_ContractCondition.Id
+                                                       AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                 WHERE Object_ContractCondition.DescId = zc_Object_ContractCondition()
+                                   AND Object_ContractCondition.isErased = FALSE
+                                 )
 
        SELECT
              Movement.Id
@@ -62,11 +79,13 @@ BEGIN
            , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
 
            , MovementItem.Amount
+           , MIFloat_SummAdd.ValueData             AS SummAdd
            , MIFloat_WeightTransport.ValueData     AS WeightTransport
            , MIFloat_Distance.ValueData            AS Distance
            , MIFloat_Price.ValueData               AS Price
            , MIFloat_CountPoint.ValueData          AS CountPoint
            , MIFloat_TrevelTime.ValueData          AS TrevelTime
+           , tmpContractCondition.Value            AS ContractConditionValue  
 
            , MIString_Comment.ValueData  AS Comment
 
@@ -131,6 +150,10 @@ BEGIN
                                         ON MIFloat_TrevelTime.MovementItemId = MovementItem.Id
                                        AND MIFloat_TrevelTime.DescId = zc_MIFloat_TrevelTime()
                                        
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                        ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id 
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -168,7 +191,7 @@ BEGIN
                                              ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
-
+      
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
@@ -180,6 +203,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_StartRun
                                    ON MovementDate_StartRun.MovementId = Movement.Id
                                   AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
+
+            LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = View_Contract_InvNumber.ContractId
+                                          AND tmpContractCondition.ContractConditionKindId = Object_ContractConditionKind.Id
       ;
   
 END;
@@ -191,6 +217,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ. 
+ 03.07.16         *
  16.12.15         * add WeightTransport
  22.09.15         * add inIsErased
  25.01.14                                        * add zc_MovementLinkObject_UnitForwarding

@@ -76,6 +76,12 @@ type
     clGoodsPlatformName: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
+    spUpdateisPartionCount: TdsdStoredProc;
+    actUpdateisPartionCount: TdsdExecStoredProc;
+    bbisPartionCount: TdxBarButton;
+    actUpdateisPartionSumm: TdsdExecStoredProc;
+    bbisPartionSumm: TdxBarButton;
+    spUpdateisPartionSumm: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -42,6 +42,7 @@ type
     StartRunPlan: TcxGridDBColumn;
     clWeightTransport: TcxGridDBColumn;
     clContractCode: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public
