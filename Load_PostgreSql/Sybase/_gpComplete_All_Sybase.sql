@@ -227,7 +227,7 @@ end if;
      IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 15
      -- IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 10 AND 15
      THEN 
-         IF EXTRACT ('MINUTES' FROM CURRENT_TIMESTAMP) BETWEEN 40 AND 59 OR EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) > 8
+         IF EXTRACT ('MINUTES' FROM CURRENT_TIMESTAMP) BETWEEN 50 AND 59 OR EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) > 8
          -- IF EXTRACT ('MINUTES' FROM CURRENT_TIMESTAMP) BETWEEN 25 AND 59 OR EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) > 10
          THEN 
              RETURN; 
@@ -278,6 +278,7 @@ end if;
              PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
              -- !!! проводим - ReturnIn !!!
              PERFORM lpComplete_Movement_ReturnIn (inMovementId     := inMovementId
+                                                 , inStartDateSale  := NULL
                                                  , inUserId         := zc_Enum_Process_Auto_PrimeCost() :: Integer
                                                  , inIsLastComplete := FALSE); -- inIsNoHistoryCost);
 

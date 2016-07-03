@@ -14,6 +14,7 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar
              , InfoMoneyGroupCode_Detail Integer, InfoMoneyDestinationCode_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar
              , DirectionObjectCode Integer, DirectionObjectName TVarChar
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
+             , MovementDescName TVarChar
              , Amount TFloat
               )
 AS
@@ -64,32 +65,41 @@ BEGIN
                               AND Container.DescId = zc_Container_Summ()
                            )
      ,*/ tmpMIContainer AS (SELECT MIContainer.ContainerId
-                                 , -1 * SUM (MIContainer.Amount) AS Amount
-                                 , 0 AS UnitId_ProfitLoss
-                                 , 0 AS RouteId_inf
---                                 , MILinkObject_Unit.ObjectId   AS UnitId_ProfitLoss
---                                 , MILinkObject_Route.ObjectId  AS RouteId_inf
+                                 , -1 * SUM (MIContainer.Amount)      AS Amount
+                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                             THEN MIContainer.ObjectIntId_Analyzer
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
+                                             THEN MIContainer.ObjectExtId_Analyzer
+                                        ELSE MIContainer.WhereObjectId_Analyzer
+                                   END AS UnitId_ProfitLoss
+                                 , MIContainer.WhereObjectId_Analyzer AS DirectionId
+                                 , MIContainer.MovementDescId
                             FROM MovementItemContainer AS MIContainer 
-                                 /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                                  ON MILinkObject_Unit.MovementItemId = MIContainer .MovementItemId
-                                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                                                                 -- AND MILinkObject_Unit.ObjectId >0
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                 /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                   ON MILinkObject_Route.MovementItemId = MIContainer .MovementItemId
                                                                  AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
-                                                                 -- AND MILinkObject_Route.ObjectId >0*/
+                                                                 AND MIContainer.MovementDescId = zc_Movement_Transport()*/
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.AccountId = zc_Enum_Account_100301()
                               AND MIContainer.isActive = FALSE
                             GROUP BY MIContainer.ContainerId
+                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                               THEN MIContainer.ObjectIntId_Analyzer
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
+                                               THEN MIContainer.ObjectExtId_Analyzer
+                                          ELSE MIContainer.WhereObjectId_Analyzer
+                                     END
+                                   , MIContainer.WhereObjectId_Analyzer
+                                   , MIContainer.MovementDescId
                            )
         , tmpProfitLoss AS (SELECT CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
                                  , CLO_ProfitLoss.ObjectId                AS ProfitLossId
                                  , CLO_Business.ObjectId                  AS BusinessId
                                  , CLO_JuridicalBasis.ObjectId            AS JuridicalId_Basis
                                  , 0                                      AS InfoMoneyId_inf
+                                 , tmpMIContainer.MovementDescId
+                                 , tmpMIContainer.DirectionId
                                  , tmpMIContainer.UnitId_ProfitLoss
-                                 , tmpMIContainer.RouteId_inf
                                  , SUM (tmpMIContainer.Amount) AS Amount
                             FROM tmpMIContainer
                                  LEFT JOIN ContainerLinkObject AS CLO_Branch
@@ -111,8 +121,9 @@ BEGIN
                                    , CLO_ProfitLoss.ObjectId
                                    , CLO_Business.ObjectId
                                    , CLO_JuridicalBasis.ObjectId
+                                   , tmpMIContainer.MovementDescId
+                                   , tmpMIContainer.DirectionId
                                    , tmpMIContainer.UnitId_ProfitLoss
-                                   , tmpMIContainer.RouteId_inf
                            )
 
       , tmpReport AS (SELECT tmpProfitLoss.ProfitLossId
@@ -120,13 +131,14 @@ BEGIN
                            , tmpProfitLoss.JuridicalId_Basis
                            , tmpProfitLoss.UnitId_ProfitLoss
                            , tmpProfitLoss.BranchId_ProfitLoss
-                           , tmpProfitLoss.RouteId_inf
                            , /*CASE WHEN tmpProfitLoss.RouteId_inf <> 0 THEN tmpProfitLoss.RouteId_inf
                                   WHEN ContainerLinkObject_Juridical.ObjectId <> 0 THEN ContainerLinkObject_Juridical.ObjectId
                                   WHEN ContainerLinkObject_Personal.ObjectId <> 0 THEN ContainerLinkObject_Personal.ObjectId
                                   WHEN ContainerLinkObject_Unit.ObjectId <> 0 THEN ContainerLinkObject_Unit.ObjectId
                                   ELSE ContainerLinkObject_Car.ObjectId
-                             END*/ 0 AS DirectionId
+                             END*/ 
+                             tmpProfitLoss.DirectionId
+                           , tmpProfitLoss.MovementDescId
                            , SUM (tmpProfitLoss.Amount) AS Amount
                            , tmpProfitLoss.InfoMoneyId_inf        AS InfoMoneyId
                            -- , ContainerLinkObject_InfoMoney.ObjectId       AS InfoMoneyId
@@ -174,9 +186,10 @@ BEGIN
                              , tmpProfitLoss.JuridicalId_Basis
                              , tmpProfitLoss.UnitId_ProfitLoss
                              , tmpProfitLoss.BranchId_ProfitLoss
-                             , tmpProfitLoss.RouteId_inf
                              -- , ContainerLinkObject_InfoMoney.ObjectId
-                           , tmpProfitLoss.InfoMoneyId_inf
+                             , tmpProfitLoss.InfoMoneyId_inf
+                             , tmpProfitLoss.DirectionId
+                             , tmpProfitLoss.MovementDescId
                              /*, ContainerLinkObject_InfoMoneyDetail.ObjectId
                              , ContainerLinkObject_Juridical.ObjectId
                              , ContainerLinkObject_Personal.ObjectId
@@ -214,6 +227,8 @@ BEGIN
            , Object_Destination.ObjectCode AS DestinationObjectCode
            , Object_Destination.ValueData  AS DestinationObjectName
 
+           , MovementDesc.ItemName         AS MovementDescName
+
            , tmpReport.Amount :: TFloat AS Amount
 
       FROM Object_ProfitLoss_View AS View_ProfitLoss
@@ -231,7 +246,9 @@ BEGIN
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
            LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.GoodsId_inf
 
-      WHERE View_ProfitLoss.ProfitLossCode <> 90101
+           LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
+
+      WHERE View_ProfitLoss.ProfitLossCode <> 90101 -- 
       ;
   
 END;
@@ -249,4 +266,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '31.07.2016', inEndDate:= '31.07.2016', inSession:= '2') WHERE Amount <> 0 ORDER BY 5

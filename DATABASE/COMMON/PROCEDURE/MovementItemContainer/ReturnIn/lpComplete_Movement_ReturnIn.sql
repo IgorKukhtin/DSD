@@ -612,6 +612,7 @@ BEGIN
 
      -- !!!запуск новой схемы - с привязкой к продажам!!!
      IF zc_isReturnIn_bySale() = TRUE -- OR inUserId = 5
+        AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
          -- Проверка ошибки
          /*outMessageText:= (SELECT tmp.MessageText FROM lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := CASE WHEN inStartDateSale IS NULL THEN DATE_TRUNC ('MONTH', vbOperDatePartner) - INTERVAL '4 MONTH' ELSE inStartDateSale END
@@ -1126,6 +1127,7 @@ BEGIN
                                                         END
                          -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
                        , AccountId_SummIn_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
+                                                         OR vbBranchId_To = zc_Branch_Basis()   -- !!!ИЛИ!!! это "Главный" филиал
                                                             THEN 0
                                                        ELSE -- если признак установлен сам в себя
                                                             lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
@@ -1140,6 +1142,7 @@ BEGIN
                                                     END
                         -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
                       , AccountId_SummOut_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
+                                                         OR vbBranchId_To = zc_Branch_Basis()   -- !!!ИЛИ!!! это "Главный" филиал
                                                             THEN 0
                                                        ELSE -- если признак установлен сам в себя
                                                             lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
@@ -1404,6 +1407,9 @@ BEGIN
           AND vbPartnerId_To = 0 -- !!!если НЕ продажа от Контрагента -> Контрагенту!!!
           AND AccountId_SummIn_60000  = 0 -- !!!если НЕ "виртуальная" прибыль текущего периода!!!
           AND AccountId_SummOut_60000 = 0 -- !!!если НЕ "виртуальная" прибыль текущего периода!!!
+          AND (vbUnitId_HistoryCost <> vbUnitId_To  -- !!!И!!! если признак НЕ установлен сам в себя
+            OR vbBranchId_To <> zc_Branch_Basis()   -- !!!ИЛИ!!! это НЕ "Главный" филиал
+              )
         GROUP BY _tmpItem.MovementItemId
                , Container_Summ.Id
                , Container_Summ.ObjectId

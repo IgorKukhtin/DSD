@@ -70,7 +70,7 @@ type
     clEducationName: TcxGridDBColumn;
     clEducationCode: TcxGridDBColumn;
     actChoiceEducationForm: TOpenChoiceForm;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }

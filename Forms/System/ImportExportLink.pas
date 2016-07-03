@@ -28,6 +28,8 @@ type
     colText: TcxGridDBColumn;
     DescMainName: TcxGridDBColumn;
     DescChildName: TcxGridDBColumn;
+    actProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,15 +1,6 @@
-/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_MMOLoad 
-          (Integer, TVarChar, TDateTime,
-           Integer, TVarChar, TVarChar, TVarChar, 
-           TFloat, TFloat,
-           TDateTime, 
-           TVarChar,
-           TDateTime, 
-           Boolean,
-           TVarChar,
-           TVarChar,
-           Boolean,
-           TVarChar); */
+-- Function: gpInsertUpdate_MovementItem_Income_MMOLoad ()
+
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_MMOLoad
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_MMOLoad(
     IN inOKPOFrom            TVarChar  , -- Юридические лица
@@ -47,47 +38,69 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbJuridicalId Integer;
+   DECLARE vbJuridicalId_from Integer;
+   DECLARE vbJuridicalId_to   Integer;
 BEGIN
 
-     SELECT JuridicalId INTO vbJuridicalId FROM ObjectHistory_JuridicalDetails_View
-            WHERE OKPO = inOKPOFrom;
-  
+     -- Проверка
+     IF 1 < (SELECT COUNT(*) FROM ObjectHistory_JuridicalDetails_View WHERE OKPO = inOKPOFrom)
+     THEN
+         RAISE EXCEPTION 'Невозможно определить Юридическое лицо, одинаковое ОКПО "%" установлено у разных Юридических лиц.', inOKPOFrom;
+     END IF;
+     -- Проверка
+     IF 1 < (SELECT COUNT(*) FROM ObjectHistory_JuridicalDetails_View WHERE OKPO = inOKPOTo)
+     THEN
+         RAISE EXCEPTION 'Невозможно определить Юридическое лицо, одинаковое ОКПО "%" установлено у разных Юридических лиц.', inOKPOTo;
+     END IF;
+
+     -- нашли Поставщика
+     vbJuridicalId_from:= (SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_View WHERE OKPO = inOKPOFrom);
      -- Если не нашли, то сразу ругнемся. 
-     IF COALESCE(vbJuridicalId, 0) = 0 THEN
-        RAISE EXCEPTION 'Не определено Юридическое лицо с ОКПО <%>', inOKPOFrom;
+     IF COALESCE (vbJuridicalId_from, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Не определено Юридическое лицо Поставщика с ОКПО "%"', inOKPOFrom;
+     END IF;
+
+     -- нашли "Наше"
+     vbJuridicalId_to:= (SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_View WHERE OKPO = inOKPOTo);
+     -- Если не нашли, то сразу ругнемся. 
+     IF COALESCE (vbJuridicalId_to, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Не определено Наше Юридическое лицо с ОКПО "%"', inOKPOTo;
      END IF;
 
 	
-    PERFORM gpInsertUpdate_MovementItem_Income_Load(inJuridicalId := vbJuridicalId, -- Юридические лица
-                                                    inInvNumber := inInvNumber  , 
-                                                    inOperDate := inOperDate    , -- Дата документа
-                                                    inCommonCode := inCommonCode, 
-                                                    inBarCode := ''             , 
-                                                    inGoodsCode := inGoodsCode  , 
-                                                    inGoodsName := inGoodsName  , 
-                                                    inAmount    := inAmount     ,  
-                                                    inPrice     := inPrice      ,  
-                                                    inExpirationDate := inExpirationDate , -- Срок годности
-                                                    inPartitionGoods := inPartitionGoods ,   
-                                                    inPaymentDate    := inPaymentDate    , -- Дата оплаты
-                                                    inPriceWithVAT   := inPriceWithVAT   ,
-                                                    inVAT            := inVAT            ,
-                                                    inUnitName       := inRemark         ,
-                                                    inMakerName      := inMakerName      ,
-                                                    inFEA            := inFEA            , -- УК ВЭД
-                                                    inMeasure        := inMeasure        , -- Ед. измерения
-                                                    inSertificatNumber := inSertificatNumber, -- Номер регистрации
-                                                    inSertificatStart  := inSertificatStart , -- Дата начала регистрации
-                                                    inSertificatEnd    := inSertificatEnd   , -- Дата окончания регистрации
+   -- сохранили
+   PERFORM gpInsertUpdate_MovementItem_Income_Load (inJuridicalId_from := vbJuridicalId_from   -- Юридические лица - Поставщик
+                                                  , inJuridicalId_to   := vbJuridicalId_to     -- Юридические лица - "Наше"
+                                                  , inInvNumber := inInvNumber   
+                                                  , inOperDate := inOperDate     -- Дата документа
+                                                  , inCommonCode := inCommonCode 
+                                                  , inBarCode := ''              
+                                                  , inGoodsCode := inGoodsCode   
+                                                  , inGoodsName := inGoodsName   
+                                                  , inAmount    := inAmount       
+                                                  , inPrice     := inPrice        
+                                                  , inExpirationDate := inExpirationDate  -- Срок годности
+                                                  , inPartitionGoods := inPartitionGoods    
+                                                  , inPaymentDate    := inPaymentDate     -- Дата оплаты
+                                                  , inPriceWithVAT   := inPriceWithVAT   
+                                                  , inVAT            := inVAT            
+                                                  , inUnitName       := inRemark         
+                                                  , inMakerName      := inMakerName      
+                                                  , inFEA            := inFEA             -- УК ВЭД
+                                                  , inMeasure        := inMeasure         -- Ед. измерения
+                                                  , inSertificatNumber := inSertificatNumber -- Номер регистрации
+                                                  , inSertificatStart  := inSertificatStart  -- Дата начала регистрации
+                                                  , inSertificatEnd    := inSertificatEnd    -- Дата окончания регистрации
 
-                                                    inisLastRecord   := inisLastRecord  ,
-                                                    inSession        := inSession);
+                                                  , inisLastRecord   := inisLastRecord  
+                                                  , inSession        := CASE WHEN inSession = '1871720' THEN '2592170' ELSE inSession END); -- Авто-загрузка прайс-поставщик => Авто-загрузка ММО
 
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

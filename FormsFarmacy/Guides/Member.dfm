@@ -342,7 +342,7 @@ object MemberForm: TMemberForm
       Category = 0
     end
     object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = actProtocolOpenForm
       Category = 0
     end
   end
@@ -373,10 +373,12 @@ object MemberForm: TMemberForm
       FormName = 'TMemberEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -392,6 +394,7 @@ object MemberForm: TMemberForm
       FormName = 'TMemberEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -399,6 +402,7 @@ object MemberForm: TMemberForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -414,12 +418,14 @@ object MemberForm: TMemberForm
       FormName = 'TEducationForm'
       FormNameParam.Value = 'TEducationForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'EducationId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -427,6 +433,7 @@ object MemberForm: TMemberForm
           Component = ClientDataSet
           ComponentItem = 'EducationName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EducationCode'
@@ -434,6 +441,7 @@ object MemberForm: TMemberForm
           Component = ClientDataSet
           ComponentItem = 'EducationCode'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -452,7 +460,7 @@ object MemberForm: TMemberForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object actProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -461,6 +469,7 @@ object MemberForm: TMemberForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -468,6 +477,7 @@ object MemberForm: TMemberForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -476,6 +486,7 @@ object MemberForm: TMemberForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -505,6 +516,7 @@ object MemberForm: TMemberForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -512,12 +524,14 @@ object MemberForm: TMemberForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -592,6 +606,7 @@ object MemberForm: TMemberForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -612,6 +627,7 @@ object MemberForm: TMemberForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -656,6 +672,7 @@ object MemberForm: TMemberForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -663,6 +680,7 @@ object MemberForm: TMemberForm
         Component = ClientDataSet
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -671,6 +689,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsOfficial'
@@ -679,6 +698,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'isOfficial'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inINN'
@@ -687,6 +707,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'INN'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDriverCertificate'
@@ -695,6 +716,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'DriverCertificate'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -703,6 +725,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPhone'
@@ -711,6 +734,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'Phone'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAddress'
@@ -719,6 +743,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPhoto'
@@ -727,6 +752,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'Photo'
         DataType = ftWideString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEducationId'
@@ -734,6 +760,7 @@ object MemberForm: TMemberForm
         Component = ClientDataSet
         ComponentItem = 'EducationId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 560
@@ -750,6 +777,7 @@ object MemberForm: TMemberForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioIsOfficial'
@@ -758,6 +786,7 @@ object MemberForm: TMemberForm
         ComponentItem = 'IsOfficial'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
