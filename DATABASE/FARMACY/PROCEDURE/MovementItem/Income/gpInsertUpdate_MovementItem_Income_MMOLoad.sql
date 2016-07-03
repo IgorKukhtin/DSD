@@ -95,7 +95,7 @@ BEGIN
                                                   , inSertificatEnd    := inSertificatEnd    -- Дата окончания регистрации
 
                                                   , inisLastRecord   := inisLastRecord  
-                                                  , inSession        := inSession);
+                                                  , inSession        := CASE WHEN inSession = '1871720' THEN '2592170' ELSE inSession END); -- Авто-загрузка прайс-поставщик => Авто-загрузка ММО
 
 
 END;

@@ -523,7 +523,7 @@ BEGIN
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inCount               := tmp.Count
-                                                        , inCuterWeight         := 0         ::TFloat
+                                                        , inCuterWeight         := 0
                                                         , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId

@@ -27,6 +27,7 @@ $BODY$
   DECLARE vbProfitLossDirectionId Integer;
   DECLARE vbJuridicalId_Basis Integer;
   DECLARE vbBusinessId_ProfitLoss Integer;
+  DECLARE vbUnitId_ProfitLoss Integer;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -43,13 +44,13 @@ BEGIN
           , _tmp.UnitId, _tmp.MemberId, _tmp.BranchId_Unit, _tmp.AccountDirectionId, _tmp.isPartionDate_Unit
           , _tmp.InfoMoneyId_ArticleLoss, _tmp.BranchId_ProfitLoss
           , _tmp.ProfitLossGroupId, _tmp.ProfitLossDirectionId
-          , _tmp.JuridicalId_Basis, _tmp.BusinessId_ProfitLoss
+          , _tmp.JuridicalId_Basis, _tmp.BusinessId_ProfitLoss, _tmp.UnitId_ProfitLoss
           , _tmp.ObjectExtId_Analyzer, _tmp.AnalyzerId
             INTO vbMovementDescId, vbOperDate
                , vbUnitId, vbMemberId, vbBranchId_Unit, vbAccountDirectionId, vbIsPartionDate_Unit
                , vbInfoMoneyId_ArticleLoss, vbBranchId_Unit_ProfitLoss
                , vbProfitLossGroupId, vbProfitLossDirectionId
-               , vbJuridicalId_Basis, vbBusinessId_ProfitLoss
+               , vbJuridicalId_Basis, vbBusinessId_ProfitLoss, vbUnitId_ProfitLoss
                , vbObjectExtId_Analyzer, vbAnalyzerId
 
      FROM (SELECT Movement.DescId AS MovementDescId
@@ -68,11 +69,11 @@ BEGIN
                 , COALESCE (ObjectLink_Branch.ChildObjectId, 0)                AS BranchId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
 
                   -- Группы ОПиУ (!!!приоритет - ArticleLoss!!!)
-                , COALESCE (View_ProfitLossDirection.ProfitLossGroupId, COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0)) AS ProfitLossGroupId
+                , COALESCE (View_ProfitLossDirection.ProfitLossGroupId, COALESCE (lfSelect.ProfitLossGroupId, 0)) AS ProfitLossGroupId
                   -- Аналитики ОПиУ - направления (!!!приоритет - ArticleLoss!!!)
                 , COALESCE (ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId, CASE WHEN COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (MovementLinkObject_ArticleLoss.ObjectId, 0)))) = 0
                                                                                                 THEN CASE /*WHEN Object_From.DescId = zc_Object_Member()
-                                                                                                               THEN COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0)*/ -- !!!исключение!!!
+                                                                                                               THEN COALESCE (lfSelect.ProfitLossDirectionId, 0)*/ -- !!!исключение!!!
                                                                                                           WHEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId IN (zc_Enum_AccountDirection_20100() -- Запасы + на складах ГП
                                                                                                                                                                     , zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                                                                                                                                     , zc_Enum_AccountDirection_20400() -- Запасы + на производстве
@@ -84,11 +85,12 @@ BEGIN
                                                                                                                THEN zc_Enum_ProfitLossDirection_40400() -- Расходы на сбыт + Прочие потери (Списание+инвентаризация)
                                                                                                           ELSE 0 -- !!!будет ошибка!!!
                                                                                                      END
-                                                                                           ELSE COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0)
+                                                                                           ELSE COALESCE (lfSelect.ProfitLossDirectionId, 0)
                                                                                       END) AS ProfitLossDirectionId
 
                 , COALESCE (ObjectLink_UnitFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
                 , COALESCE (ObjectLink_Business.ChildObjectId, 0)                              AS BusinessId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
+                , COALESCE (MovementLinkObject_ArticleLoss.ObjectId, lfSelect.UnitId)          AS UnitId_ProfitLoss
                 , MovementLinkObject_To.ObjectId          AS ObjectExtId_Analyzer
                 , MovementLinkObject_ArticleLoss.ObjectId AS AnalyzerId
            FROM Movement
@@ -149,8 +151,8 @@ BEGIN
                                      ON ObjectLink_Business.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                                     AND ObjectLink_Business.DescId = zc_ObjectLink_Unit_Business()
                 -- для затрат (!!!если не указан ArticleLoss!!!)
-                LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
-                       ON lfObject_Unit_byProfitLossDirection.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
+                LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect
+                       ON lfSelect.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                       AND MovementLinkObject_ArticleLoss.ObjectId IS NULL
 
            WHERE Movement.Id = inMovementId
@@ -427,7 +429,7 @@ BEGIN
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
             , _tmpItemSumm_group.GoodsKindId          AS ObjectIntId_Analyzer   -- вид товара
-            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Подраделение кому или...
+            , CASE WHEN vbUnitId_ProfitLoss <> 0 THEN vbUnitId_ProfitLoss ELSE vbObjectExtId_Analyzer END AS ObjectExtId_Analyzer   -- !!!замена!!! иначе - Подраделение кому или...
             , 0                                       AS ParentId
             , _tmpItemSumm_group.OperSumm
             , vbOperDate

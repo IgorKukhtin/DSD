@@ -53,6 +53,7 @@ type
     clAmount: TcxDBPivotGridField;
     clBusiness: TcxDBPivotGridField;
     clJuridicalBasis: TcxDBPivotGridField;
+    clMovementDescName: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     clBranchName_ProfitLoss: TcxDBPivotGridField;

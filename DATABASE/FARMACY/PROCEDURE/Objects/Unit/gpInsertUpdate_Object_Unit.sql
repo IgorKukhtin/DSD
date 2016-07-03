@@ -20,7 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inMarginCategoryId        Integer   ,    -- ссылка на категорию наценок
     IN inSession                 TVarChar       -- сессия пользователя
 )
-  RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
@@ -28,8 +29,8 @@ $BODY$
    DECLARE vbOldParentId integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
-   vbUserId:= inSession;
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Unit());
@@ -96,6 +97,8 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
+
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;

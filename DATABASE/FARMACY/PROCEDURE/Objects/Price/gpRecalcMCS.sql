@@ -151,6 +151,7 @@ BEGIN
                                         inMCSIsClose   := NULL::Boolean,        -- НТЗ закрыт
                                         inMCSNotRecalc := NULL::Boolean,        -- НТЗ не пересчитывается
                                         inFix          := Object_Price.Fix,     -- фиксированная цена
+                                        inisTop        := Object_Price.isTop,   -- ТОП позиция
                                         inSession      := inSession)
     FROM 
         tmp_ResultSet
@@ -164,6 +165,7 @@ BEGIN
     GROUP BY
         tmp_ResultSet.GoodsId,
         Object_Price.MCSValue,
+        Object_Price.isTop,
         Object_Price.Fix
     HAVING
         COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);

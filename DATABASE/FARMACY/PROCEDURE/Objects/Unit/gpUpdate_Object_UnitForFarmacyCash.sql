@@ -31,7 +31,7 @@ BEGIN
             -- сохранили <Дата/время последнего сеанса с FarmacyCash>
             PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_FarmacyCash(), vbUnitId, CURRENT_TIMESTAMP);
             -- сохранили <кол-во данных в синхронизации с FarmacyCash>
-            PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_TaxService(), vbUnitId, inAmount);
+            PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_FarmacyCash(), vbUnitId, inAmount);
         END IF;
 
     END IF;

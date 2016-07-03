@@ -258,15 +258,31 @@ BEGIN
 
        WHERE Goods_Juridical.GoodsId = vbPartnerGoodsId;
 
-     -- Ищем товар в документе. Пока ключи: код поставщика, документ, цена, партия, срок годности. 
-     SELECT MovementItem.Id
-            INTO vbMovementItemId
-     FROM MovementItem_Income_View AS MovementItem
-     WHERE MovementItem.MovementId     = vbMovementId
-       AND MovementItem.PartnerGoodsId = vbPartnerGoodsId
-       AND MovementItem.Price          = inPrice -- MovementItem.Price
-       AND MovementItem.PartionGoods   = inPartitionGoods
-       AND MovementItem.ExpirationDate = COALESCE (inExpirationDate, zc_DateStart());
+
+    -- Если элементов документа > 1
+    IF EXISTS (SELECT 1
+               FROM MovementItem_Income_View AS MovementItem
+               WHERE MovementItem.MovementId     = vbMovementId
+                 AND MovementItem.isErased = FALSE
+               GROUP BY MovementItem.PartnerGoodsId
+                      , MovementItem.Price
+                      , MovementItem.PartionGoods
+                      , MovementItem.ExpirationDate
+               HAVING COUNT (*) > 1
+              )
+    THEN
+        RAISE EXCEPTION 'Дублируется товар в документе № "%" от "%" Поставщик = "%" Аптека = "%".', inInvNumber, DATE (inOperDate), lfGet_Object_ValueData (inJuridicalId_from), lfGet_Object_ValueData (vbUnitId);
+    END IF;
+
+     -- Ищем элемент документа. Пока ключи: код поставщика, документ, цена, партия, срок годности. 
+     vbMovementItemId:= (SELECT MovementItem.Id
+                         FROM MovementItem_Income_View AS MovementItem
+                         WHERE MovementItem.MovementId     = vbMovementId
+                           AND MovementItem.PartnerGoodsId = vbPartnerGoodsId
+                           AND MovementItem.Price          = inPrice -- MovementItem.Price
+                           AND MovementItem.PartionGoods   = inPartitionGoods
+                           AND MovementItem.ExpirationDate = COALESCE (inExpirationDate, zc_DateStart())
+                           AND MovementItem.isErased = FALSE);
   
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;

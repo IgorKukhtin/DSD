@@ -52,16 +52,17 @@ BEGIN
                                    AND tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO())
                                 )
         , tmp_IncomeMMO AS (SELECT tmp.Id
+                                 , tmp.EmailKindId
                                  , tmp.EmailId
                                  , Object_ContactPerson.Id            AS ContactPersonId
                                  , Object_ContactPerson.ValueData     AS ContactPersonName
                                  , ObjectString_Mail.ValueData        AS ContactPersonMail
-                            FROM (SELECT MIN (tmp.Id) AS Id, tmp.EmailId
+                            FROM (SELECT MIN (tmp.Id) AS Id, tmp.EmailId, tmp.EmailKindId
                                   FROM tmp_ImportSettings AS tmp
                                   WHERE tmp.EmailKindId     = zc_Enum_EmailKind_IncomeMMO()
                                     AND tmp.ContactPersonId IS NULL
                                   -- LIMIT 1
-                                  GROUP BY tmp.EmailId
+                                  GROUP BY tmp.EmailId, tmp.EmailKindId
                                  ) AS tmp
                                  INNER JOIN ObjectLink AS ObjectLink_ContactPerson_Email
                                                        ON ObjectLink_ContactPerson_Email.ChildObjectId = tmp.EmailId
@@ -138,7 +139,8 @@ BEGIN
           INNER JOIN tmpEmail AS gpGet_Directory ON gpGet_Directory.EmailId = gpGet_Host.EmailId AND gpGet_Directory.EmailToolsId = zc_Enum_EmailTools_Directory()
 
           INNER JOIN tmp_ImportSettings AS gpSelect
-                                        ON gpSelect.EmailId           = gpGet_Host.EmailId
+                                        -- ON gpSelect.EmailId           = gpGet_Host.EmailId
+                                        ON gpSelect.EmailKindId       = gpGet_Host.EmailKindId
                                        AND gpSelect.ContactPersonMail <> ''
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
@@ -198,7 +200,8 @@ UNION ALL
           INNER JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailId  = gpGet_Host.EmailId AND gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
           INNER JOIN tmpEmail AS gpGet_Directory ON gpGet_Directory.EmailId = gpGet_Host.EmailId AND gpGet_Directory.EmailToolsId = zc_Enum_EmailTools_Directory()
 
-          LEFT JOIN tmp_IncomeMMO AS gpSelect_two ON gpSelect_two.EmailId = gpGet_Host.EmailId
+          LEFT JOIN tmp_IncomeMMO AS gpSelect_two -- ON gpSelect_two.EmailId     = gpGet_Host.EmailId
+                                                  ON gpSelect_two.EmailKindId = gpGet_Host.EmailKindId
           INNER JOIN tmp_ImportSettings AS gpSelect ON gpSelect.Id = gpSelect_two.Id
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId

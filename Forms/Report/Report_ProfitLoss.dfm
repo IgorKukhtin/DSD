@@ -27,7 +27,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -36,7 +36,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -90,7 +90,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1057#1090#1072#1090#1100#1103
     end
     object clOnComplete: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = '***'
       DataBinding.FieldName = 'OnComplete'
@@ -106,7 +106,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1041#1080#1079#1085#1077#1089
     end
     object clJuridicalBasis: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
       DataBinding.FieldName = 'JuridicalName_Basis'
@@ -130,8 +130,16 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       Visible = True
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
+    object clMovementDescName: TcxDBPivotGridField
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      DataBinding.FieldName = 'MovementDescName'
+      Visible = True
+      UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
     object clInfoMoneyCode: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1059#1055' '#1089#1090'.'
       DataBinding.FieldName = 'InfoMoneyCode'
@@ -139,7 +147,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1050#1086#1076' '#1059#1055' '#1089#1090'.'
     end
     object clInfoMoneyGroupName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyGroupName'
@@ -147,7 +155,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object clInfoMoneyDestinationName: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       DataBinding.FieldName = 'InfoMoneyDestinationName'
@@ -155,7 +163,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
     object clInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 7
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyName'
@@ -163,7 +171,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1059#1055' '#1089#1090#1072#1090#1100#1103
     end
     object clDirectionObjectName: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       DataBinding.FieldName = 'DirectionObjectName'
@@ -171,7 +179,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = 'ByObjectName'
     end
     object clDestinationObjectName: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       DataBinding.FieldName = 'DestinationObjectName'
@@ -280,7 +288,6 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -303,6 +310,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
@@ -363,24 +371,28 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = 'TReport_AccountForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -388,12 +400,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -401,12 +415,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'AccountDirectionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionName'
@@ -414,12 +430,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'AccountDirectionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -427,12 +445,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BusinessId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'BusinessId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BusinessName'
@@ -440,12 +460,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'BusinessName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossGroupId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'ProfitLossGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossGroupName'
@@ -453,12 +475,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'ProfitLossGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossDirectionId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'ProfitLossDirectionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossDirectionName'
@@ -466,12 +490,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'ProfitLossDirectionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'ProfitLossId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ProfitLossName'
@@ -479,12 +505,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'ProfitLossName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -492,6 +520,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = FormParams
           ComponentItem = 'BranchName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -515,6 +544,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       FormName = 'TReport_ProfitLossDialogForm'
       FormNameParam.Value = 'TReport_ProfitLossDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -522,6 +552,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -529,6 +560,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -548,6 +580,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -555,6 +588,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 120
@@ -575,18 +609,21 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = PivotAddOn
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RootType'
         Value = '0'
         Component = FormParams
         ComponentItem = 'RootType'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'AccountGroupId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -594,12 +631,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'AccountGroupName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'AccountDirectionId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
@@ -607,12 +646,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'AccountDirectionName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'AccountId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -620,12 +661,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'AccountName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'InfoMoneyId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -633,30 +676,35 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'InfoMoneyName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectDirectionId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'ObjectDirectionId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectDestinationId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'ObjectDestinationId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'JuridicalBasisId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'BusinessId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
@@ -664,12 +712,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'BusinessName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'ProfitLossGroupId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupName'
@@ -677,12 +727,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'ProfitLossGroupName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'ProfitLossDirectionId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionName'
@@ -690,12 +742,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'ProfitLossDirectionName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'ProfitLossId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossName'
@@ -703,12 +757,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'ProfitLossName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'BranchId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -716,6 +772,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Component = FormParams
         ComponentItem = 'BranchName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -741,47 +798,57 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       item
         Name = 'AccountId'
         Value = '0'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
         Value = '0'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
         Value = '0'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = '0'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessId'
         Value = '0'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 184

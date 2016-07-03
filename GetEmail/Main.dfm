@@ -471,7 +471,7 @@ object MainForm: TMainForm
       item
         Name = 'inByFileName'
         Value = Null
-        DataType = ftString
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
