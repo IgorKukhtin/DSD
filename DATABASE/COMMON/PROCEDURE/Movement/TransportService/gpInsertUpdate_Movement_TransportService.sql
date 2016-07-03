@@ -42,11 +42,26 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbValue TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportService());
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TransportService());
+   
+     -- получим значение из условия в договоре 
+     vbValue:=      COALESCE ((SELECT ObjectFloat_Value.ValueData
+                               FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                    JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                   AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                                                          ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                         AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                               WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+                              ), 0);
 
      -- Расчитываем Сумму
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportWeight())
@@ -207,6 +222,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TrevelTime(), ioMIId, inTrevelTime);
      -- сохранили свойство <Доплата)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd(), ioMIId, inSummAdd);
+     -- сохранили свойство <Доплата)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractValue(), ioMIId, vbValue);
 
      -- сохранили свойство <Комментарий>
      PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioMIId, inComment);
