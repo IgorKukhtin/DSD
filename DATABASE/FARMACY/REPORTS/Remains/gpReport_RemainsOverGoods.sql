@@ -163,7 +163,7 @@ BEGIN
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN CEIL (tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END AS RemainsMCS_to
                
                , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE)   AS isClose
-               , COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)     AS isTOP
+               , COALESCE (ObjectBoolean_Price_Top.ValueData, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
                , COALESCE (ObjectBoolean_First.ValueData, FALSE)         AS isFirst
                , COALESCE (ObjectBoolean_Second.ValueData, FALSE)        AS isSecond
 
@@ -181,6 +181,11 @@ BEGIN
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                              ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Price_Top
+                                        ON ObjectBoolean_Price_Top.ObjectId = tmpGoods_list.PriceId
+                                       AND ObjectBoolean_Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                       AND ObjectBoolean_Price_Top.ValueData = TRUE
 
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
                                         ON ObjectBoolean_Goods_Close.ObjectId = tmpGoods_list.GoodsId

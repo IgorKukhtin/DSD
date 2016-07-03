@@ -1,8 +1,5 @@
 -- Function: gpSelect_AllGoodsPrice()
 
-DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, TFloat, TVarChar);
--- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
@@ -55,7 +52,7 @@ $BODY$
   DECLARE vbMarginCategoryId Integer;
 BEGIN
     vbUserId := inSession;
-    vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
+    vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 
     SELECT
         COALESCE(Object_Unit_View.MarginCategoryId,0)
@@ -164,7 +161,7 @@ BEGIN
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
             CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
-            Object_Goods.IsTop,
+            SelectMinPrice_AllGoods.isTop, -- Object_Goods.IsTop,
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo
 
         FROM

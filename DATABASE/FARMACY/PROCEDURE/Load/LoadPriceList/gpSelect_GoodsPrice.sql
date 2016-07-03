@@ -39,18 +39,19 @@ BEGIN
 		 LoadPriceListItem.ExpirationDate, 
          zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
                            MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
-                           ObjectGoodsView.isTop, -- ТОП позиция
+                           COALESCE (Object_Price_View.isTop, ObjectGoodsView.isTop), -- ТОП позиция
                            ObjectGoodsView.PercentMarkup, -- % наценки у товара
                            ObjectFloat_Percent.valuedata,
                            ObjectGoodsView.Price)::TFloat AS NewPrice
 
        FROM LoadPriceListItem 
 
-            JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+            INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
             LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceClose
-                         FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId)) AS JuridicalSettings
-                    ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId 
-                   AND JuridicalSettings.ContractId = LoadPriceList.ContractId 
+                       FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId)
+                      ) AS JuridicalSettings
+                        ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId 
+                       AND JuridicalSettings.ContractId = LoadPriceList.ContractId 
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                   ON ObjectFloat_Percent.ObjectId = LoadPriceList.JuridicalId
@@ -66,13 +67,18 @@ BEGIN
                                      BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
-            LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId = LoadPriceList.JuridicalId 
-                                       AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
+            LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId  = LoadPriceList.JuridicalId 
+                                                       AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
             LEFT JOIN Object_LinkGoods_View AS LinkGoods ON LinkGoods.GoodsMainId = Object_Goods.Id 
-                                                        AND LinkGoods.GoodsId = PartnerGoods.Id
+                                                        AND LinkGoods.GoodsId     = PartnerGoods.Id
             LEFT JOIN Object_LinkGoods_View AS LinkGoodsObject ON LinkGoodsObject.GoodsMainId = Object_Goods.Id 
-                                                              AND LinkGoodsObject.ObjectId = vbObjectId
+                                                              AND LinkGoodsObject.ObjectId    = vbObjectId
             LEFT JOIN Object_Goods_View AS ObjectGoodsView ON ObjectGoodsView.Id = LinkGoodsObject.GoodsId
+
+            LEFT JOIN Object_Price_View ON Object_Price_View.GoodsId = LinkGoodsObject.GoodsId
+                                       AND Object_Price_View.UnitId  = inUnitId
+                                       AND Object_Price_View.isTop   = TRUE
+
       WHERE Object_Goods.GoodsCode = inGoodsCode
         AND COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE) AS DD)
 
@@ -86,7 +92,6 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_GoodsPrice (Integer, Integer,  TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
@@ -94,7 +99,6 @@ ALTER FUNCTION gpSelect_GoodsPrice (Integer, Integer,  TVarChar) OWNER TO postgr
  27.04.15                        *
  02.04.15                        *
  29.10.14                        *
-
 */
 
 -- тест

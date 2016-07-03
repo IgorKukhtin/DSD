@@ -8,9 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderInternal(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-
 RETURNS SETOF refcursor 
-
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -87,15 +85,20 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                   )
-
+    -- Ñïèñîê öåíû + ÒÎÏ
+  , GoodsPrice AS (SELECT Object_Price_View.GoodsId, Object_Price_View.isTOP
+                   FROM Object_Price_View
+                   WHERE Object_Price_View.UnitId = vbUnitId
+                     AND Object_Price_View.isTop  = TRUE
+                  )
 
        -- Ðåçóëüòàò 1
        SELECT
              tmpMI.Id                   AS Id
-           , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)              AS GoodsId
-           , COALESCE(tmpMI.GoodsCode, tmpGoods.GoodsCode)          AS GoodsCode
-           , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName)          AS GoodsName
-           , COALESCE(tmpMI.isTOP, tmpGoods.isTOP)                  AS isTOP
+           , COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)              AS GoodsId
+           , COALESCE (tmpMI.GoodsCode, tmpGoods.GoodsCode)          AS GoodsCode
+           , COALESCE (tmpMI.GoodsName, tmpGoods.GoodsName)          AS GoodsName
+           , COALESCE (tmpMI.isTOP, tmpGoods.isTOP)                  AS isTOP
            , COALESCE(tmpMI.GoodsGroupId, tmpGoods.GoodsGroupId)     AS GoodsGroupId
            , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName
            , COALESCE(tmpMI.NDSKindId, tmpGoods.NDSKindId)           AS NDSKindId
@@ -104,9 +107,9 @@ BEGIN
            , COALESCE(tmpMI.isClose, tmpGoods.isClose)               AS isClose
            , COALESCE(tmpMI.isFirst, tmpGoods.isFirst)               AS isFirst
            , COALESCE(tmpMI.isSecond, tmpGoods.isSecond)             AS isSecond
-           , CASE 
-               WHEN COALESCE(tmpMI.isTOP, tmpGoods.isTOP) THEN 12615935
-               ELSE 0
+           , CASE WHEN COALESCE (tmpMI.isTOP, tmpGoods.isTOP) = TRUE
+                  THEN 12615935
+                  ELSE 0
              END                                                    AS isTopColor
            , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity)    AS Multiplicity
            , tmpMI.CalcAmount
@@ -147,7 +150,7 @@ BEGIN
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
                   , Object_Goods.MinimumLot                      AS Multiplicity
-                  , Object_Goods.isTOP                           AS isTOP
+                  , COALESCE (GoodsPrice.isTop, Object_Goods.isTOP) AS isTOP
                   , Object_Goods.GoodsGroupId                    AS GoodsGroupId
                   , Object_Goods.GoodsGroupName                  AS GoodsGroupName
                   , Object_Goods.NDSKindId                       AS NDSKindId
@@ -157,8 +160,10 @@ BEGIN
                   , Object_Goods.isFirst                         AS isFirst
                   , Object_Goods.isSecond                        AS isSecond
              FROM Object_Goods_View AS Object_Goods
-             WHERE inShowAll = true AND 
-               Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
+                  LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods.Id
+             WHERE inShowAll = TRUE
+               AND Object_Goods.ObjectId = vbObjectId
+               AND Object_Goods.isErased = FALSE
             ) AS tmpGoods
 
             FULL JOIN (SELECT MovementItem.Id
@@ -190,7 +195,7 @@ BEGIN
                             , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName)        AS JuridicalName
                             , COALESCE(PriceList.ContractName, MinPrice.ContractName)          AS ContractName
                             , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
-                            , Object_Goods.isTOP                                               AS isTOP
+                            , COALESCE (GoodsPrice.isTop, Object_Goods.isTOP)                  AS isTOP
                             , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
                             , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0) AS AmountAll
                             , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(Object_Goods.MinimumLot, 1)) 
@@ -244,6 +249,7 @@ BEGIN
                                              AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
                                              
                        INNER JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
+                       LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods.Id
 
                        LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                                    ON MIFloat_Summ.MovementItemId = MovementItem.Id
@@ -317,12 +323,10 @@ BEGIN
                                         AND MIFloat_Remains.DescId = zc_MIFloat_Remains();
    RETURN NEXT Cursor2;
 
-
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -340,7 +344,6 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
  15.07.14                                                       *
  15.07.14                                                       *
  03.07.14                                                       *
-
 */
 
 -- òåñò

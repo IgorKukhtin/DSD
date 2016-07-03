@@ -122,6 +122,22 @@ BEGIN
             LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
                                             ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
        )
+    -- Список цены + ТОП
+  , GoodsPrice AS
+       (SELECT GoodsList.GoodsId, ObjectBoolean_Top.ValueData AS isTOP
+        FROM GoodsList
+             INNER JOIN ObjectLink AS ObjectLink_Price_Goods
+                                   ON ObjectLink_Price_Goods.ChildObjectId = GoodsList.GoodsId
+                                  AND ObjectLink_Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+             INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                   ON ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                                  AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                  AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+             INNER JOIN ObjectBoolean AS ObjectBoolean_Top
+                                      ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                     AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                     AND ObjectBoolean_Top.ValueData = TRUE
+       )
     -- почти финальный список
   , FinalList AS
        (SELECT 
@@ -170,7 +186,7 @@ BEGIN
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
           , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-                 WHEN Goods.isTOP = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
+                 WHEN COALESCE (GoodsPrice.isTOP, Goods.isTOP) = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
                          -- И учитывается % бонуса из Маркетинговый контракт
                        * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
@@ -188,7 +204,7 @@ BEGIN
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
-          , Goods.isTOP
+          , COALESCE (GoodsPrice.isTOP, Goods.isTOP) AS isTOP
         
         FROM -- Остатки + коды ...
              GoodsList 
@@ -214,6 +230,7 @@ BEGIN
             LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
             -- товар "сети"
             LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = GoodsList.ObjectId
+            LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = GoodsList.ObjectId
        
             -- Поставщик
             INNER JOIN Object AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId

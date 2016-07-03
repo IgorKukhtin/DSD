@@ -412,7 +412,9 @@ end if;
        ;
 
      -- Îøèáêà !!! Recycled !!!
-     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (976442, 976754); -- 06.2016
+     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (976442, 976754); -- 06.2016
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (10705, 295520); -- 06.2016
+
 
      IF inBranchId = 0 -- OR 1 = 1
      THEN
@@ -1086,3 +1088,4 @@ and CalcSumm > 1000000
 order by Price desc
 */
 -- SELECT * FROM HistoryCost where ContainerId in ( 976442, 976754) ORDER BY 1
+-- SELECT * FROM HistoryCost where ContainerId in ( 10705, 295520) ORDER BY 1

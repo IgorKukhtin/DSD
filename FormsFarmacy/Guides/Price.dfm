@@ -3,7 +3,7 @@ inherited PriceForm: TPriceForm
   ClientHeight = 385
   ClientWidth = 826
   ExplicitWidth = 842
-  ExplicitHeight = 423
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -155,7 +155,7 @@ inherited PriceForm: TPriceForm
             Width = 67
           end
           object clGoods_isTop: TcxGridDBColumn
-            Caption = #1058#1054#1055' ('#1080#1085#1092'.)'
+            Caption = #1058#1054#1055' ('#1090#1086#1074#1072#1088')'
             DataBinding.FieldName = 'Goods_isTop'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
@@ -164,7 +164,7 @@ inherited PriceForm: TPriceForm
             Width = 60
           end
           object clisTop: TcxGridDBColumn
-            Caption = #1058#1054#1055' '#1087#1086#1079#1080#1094#1080#1103
+            Caption = #1058#1054#1055' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'isTop'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -172,7 +172,7 @@ inherited PriceForm: TPriceForm
             Width = 60
           end
           object colTOPDateChange: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1058#1054#1055' '#1087#1086#1079#1080#1094#1080#1080
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1058#1054#1055' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'TOPDateChange'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
