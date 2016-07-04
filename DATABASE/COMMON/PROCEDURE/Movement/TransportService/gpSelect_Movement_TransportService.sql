@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
              , Amount TFloat, SummAdd TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
-             , ContractConditionValue TFloat
+             , ContractValue TFloat, ContractValueAdd TFloat
              , Comment TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -69,7 +69,8 @@ BEGIN
            , MIFloat_Price.ValueData               AS Price
            , MIFloat_CountPoint.ValueData          AS CountPoint
            , MIFloat_TrevelTime.ValueData          AS TrevelTime
-           , MIFloat_ContractValue.ValueData       AS ContractConditionValue  
+           , MIFloat_ContractValue.ValueData       AS ContractValue
+           , MIFloat_ContractValueAdd.ValueData    AS ContractValueAdd
 
            , MIString_Comment.ValueData  AS Comment
 
@@ -137,9 +138,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+
             LEFT JOIN MovementItemFloat AS MIFloat_ContractValue
                                         ON MIFloat_ContractValue.MovementItemId = MovementItem.Id
                                        AND MIFloat_ContractValue.DescId = zc_MIFloat_ContractValue()
+            LEFT JOIN MovementItemFloat AS MIFloat_ContractValueAdd
+                                        ON MIFloat_ContractValueAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ContractValueAdd.DescId = zc_MIFloat_ContractValueAdd()
 
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id 

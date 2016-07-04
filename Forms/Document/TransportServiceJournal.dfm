@@ -49,6 +49,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clTrevelTime
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummAdd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -75,6 +80,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clTrevelTime
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummAdd
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -140,18 +150,6 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 71
-          end
-          object clContractConditionValue: TcxGridDBColumn
-            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
-            DataBinding.FieldName = 'ContractConditionValue'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
-            Options.Editing = False
-            Width = 84
           end
           object clWeightTransport: TcxGridDBColumn
             Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
@@ -256,6 +254,30 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
+          end
+          object clContractValue: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 73
+          end
+          object clContractValueAdd: TcxGridDBColumn
+            Caption = #1044#1086#1087'. '#1079#1085#1072#1095'. '#1080#1079' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractValueAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1080#1079' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 86
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
