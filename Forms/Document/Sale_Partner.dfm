@@ -892,11 +892,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
     end
     object edReestrKind: TcxButtonEdit
-      Left = 535
+      Left = 534
       Top = 103
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -2728,14 +2729,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReestrKindId'
-        Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ioPriceListId'
         Value = ''
         Component = PriceListGuides
@@ -2787,6 +2780,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 162

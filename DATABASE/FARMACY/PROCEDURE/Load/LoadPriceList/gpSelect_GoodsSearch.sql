@@ -80,19 +80,19 @@ BEGIN
          LoadPriceListItem.ExpirationDate,
          PartnerGoods.MinimumLot,
          Object_Goods.NDS,
-         LinkGoods.Id AS LinkGoodsId, 
-         CASE 
-             WHEN COALESCE (GoodsPrice.isTop, ObjectGoodsView.isTop) = TRUE
-                 THEN  COALESCE(ObjectGoodsView.PercentMarkup, 0) -- - COALESCE(ObjectFloat_Percent.valuedata, 0)
-         ELSE COALESCE(MarginCondition.MarginPercent,0) + COALESCE(ObjectFloat_Percent.valuedata, 0)
-         END::TFloat AS MarginPercent,
+         LinkGoods.Id AS LinkGoodsId 
+       , CASE WHEN COALESCE (GoodsPrice.isTop, ObjectGoodsView.isTop) = TRUE
+                   THEN  COALESCE (ObjectGoodsView.PercentMarkup, 0) -- - COALESCE(ObjectFloat_Percent.valuedata, 0)
+              ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Percent.valuedata, 0)
+         END :: TFloat AS MarginPercent
          --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0))::TFloat,
-         zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
-                           MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
-                           COALESCE (GoodsPrice.isTop, ObjectGoodsView.isTop), -- ТОП позиция
-                           ObjectGoodsView.PercentMarkup, -- % наценки у товара
-                           0.0, --ObjectFloat_Percent.valuedata,
-                           ObjectGoodsView.Price)::TFloat AS NewPrice
+       , zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                     -- Цена С НДС
+                           MarginCondition.MarginPercent + COALESCE (ObjectFloat_Percent.valuedata, 0), -- % наценки в КАТЕГОРИИ
+                           COALESCE (GoodsPrice.isTop, ObjectGoodsView.isTop),                          -- ТОП позиция
+                           ObjectGoodsView.PercentMarkup,                                               -- % наценки у товара
+                           0.0, --ObjectFloat_Percent.valuedata,                                        -- % корректировки у Юр Лица для ТОПа
+                           ObjectGoodsView.Price                                                        -- Цена у товара (фиксированная)
+                         ) :: TFloat AS NewPrice
 
        FROM LoadPriceListItem 
 

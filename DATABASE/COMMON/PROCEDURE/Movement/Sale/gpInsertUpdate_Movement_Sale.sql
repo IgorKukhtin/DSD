@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inDocumentTaxKindId_inf Integer    , -- Тип формирования налогового документа
     IN inMovementId_Order      Integer    , -- ключ Документа
-    IN inReestrKindId          Integer    , -- Состояние по реестру
+ --   IN inReestrKindId          Integer    , -- Состояние по реестру
  INOUT ioPriceListId           Integer    , -- Прайс лист
    OUT outPriceListName        TVarChar   , -- Прайс лист
    OUT outCurrencyValue        TFloat     , -- Курс для перевода в валюту баланса
@@ -72,7 +72,7 @@ BEGIN
                                       , inCurrencyDocumentId   := inCurrencyDocumentId
                                       , inCurrencyPartnerId    := inCurrencyPartnerId
                                       , inMovementId_Order     := inMovementId_Order
-                                      , inReestrKindId         := inReestrKindId
+                                    --  , inReestrKindId         := inReestrKindId
                                       , ioPriceListId          := ioPriceListId
                                       , ioCurrencyPartnerValue := ioCurrencyPartnerValue
                                       , ioParPartnerValue      := ioParPartnerValue
@@ -81,9 +81,7 @@ BEGIN
 
     -- Комментарий
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-    -- сохранили связь с <Состояние по реестру>
-    --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), ioId, inReestrKindId);
-
+   
 
     -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
     PERFORM lpUpdate_Movement_Sale_Edi_byOrder (ioId, inMovementId_Order, vbUserId);

@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inCurrencyDocumentId    Integer    , -- Валюта (документа)
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inMovementId_Order      Integer    , -- ключ Документа
-    IN inReestrKindId          Integer    , -- Состояние по реестру
+   -- IN inReestrKindId          Integer    , -- Состояние по реестру
  INOUT ioPriceListId           Integer    , -- Прайс лист
    OUT outPriceListName        TVarChar   , -- Прайс лист
    OUT outCurrencyValue        TFloat     , -- курс валюты
@@ -201,9 +201,7 @@ BEGIN
      -- сохранили связь с документом <Заявки сторонние>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inMovementId_Order);
 
-     -- сохранили связь с <Состояние по реестру>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), ioId, inReestrKindId);
-
+     
      -- !!!пересчитали!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id
                                              , CASE WHEN MIFloat_PromoMovement.ValueData > 0

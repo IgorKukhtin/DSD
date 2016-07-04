@@ -939,6 +939,7 @@
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -3089,14 +3090,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReestrKindId'
-        Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ioPriceListId'
         Value = ''
         Component = PriceListGuides
@@ -3148,6 +3141,13 @@
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 162

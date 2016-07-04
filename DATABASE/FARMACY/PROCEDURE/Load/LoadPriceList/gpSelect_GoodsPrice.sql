@@ -1,7 +1,7 @@
 -- Function: gpSelect_Movement_Pri/ceList()      
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsPrice (Integer, Integer, TVarChar);
-
+/*
 CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice(
     IN inGoodsCode     Integer    -- поиск товаров
   , IN inUnitId        Integer     -- 
@@ -91,6 +91,7 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_GoodsPrice (Integer, Integer,  TVarChar) OWNER TO postgres;
+*/
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
