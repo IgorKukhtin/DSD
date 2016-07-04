@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , isClose boolean, isFirst boolean , isSecond boolean
              , isPromo boolean
              , isTop boolean, TOPDateChange TDateTime
+             , PercentMarkup TFloat, PercentMarkupDateChange TDateTime
              ) AS
 $BODY$
 DECLARE
@@ -86,6 +87,9 @@ BEGIN
                ,NULL::Boolean                    AS isPromo 
                ,NULL::Boolean                    AS isTop 
                ,NULL::TDateTime                  AS TOPDateChange
+               ,NULL::TFloat                     AS PercentMarkup 
+               ,NULL::TDateTime                  AS PercentMarkupDateChange
+
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -158,6 +162,9 @@ BEGIN
 
                , Object_Price_View.isTop                AS isTop
                , Object_Price_View.TopDateChange        AS TopDateChange
+
+               , Object_Price_View.PercentMarkup           AS PercentMarkup
+               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
 
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
@@ -257,6 +264,9 @@ BEGIN
 
                , Object_Price_View.isTop                AS isTop
                , Object_Price_View.TopDateChange        AS TopDateChange
+
+               , Object_Price_View.PercentMarkup           AS PercentMarkup
+               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
                
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
@@ -294,6 +304,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 04.07.16         *
  30.06.16         *
  12.04.16         *
  13.03.16         * убираем историю

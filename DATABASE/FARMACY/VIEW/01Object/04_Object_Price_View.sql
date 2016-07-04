@@ -34,6 +34,10 @@ AS
 
       , COALESCE(Price_Top.ValueData,False)     AS isTop
       , Price_TOPDateChange.ValueData           AS TopDateChange
+
+      , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
+      , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange
+
     FROM Object AS Object_Price
         LEFT JOIN ObjectFloat       AS Price_Value
                                     ON Price_Value.ObjectId = Object_Price.Id
@@ -81,7 +85,14 @@ AS
                                    AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
         LEFT JOIN ObjectDate        AS Price_TOPDateChange
                                     ON Price_TOPDateChange.ObjectId = Object_Price.Id
-                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()        
+                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
+
+        LEFT JOIN ObjectFloat       AS Price_PercentMarkup
+                                    ON Price_PercentMarkup.ObjectId = Object_Price.Id
+                                   AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+        LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
+                                    ON Price_PercentMarkupDateChange.ObjectId = Object_Price.Id
+                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
     WHERE 
         Object_Price.DescId = zc_Object_Price();
 

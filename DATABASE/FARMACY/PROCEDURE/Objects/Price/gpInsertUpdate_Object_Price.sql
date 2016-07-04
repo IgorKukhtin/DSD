@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
     IN inMCSValue                 TFloat    ,    -- Неснижаемый товарный запас
     IN inMCSPeriod                TFloat    ,    -- Количество дней для анализа НТЗ
     IN inMCSDay                   TFloat    ,    -- Страховой запас дней НТЗ
+    IN inPercentMarkup            TFloat    ,    -- % наценки
     IN inGoodsId                  Integer   ,    -- Товар
     IN inUnitId                   Integer   ,    -- подразделение
     IN inMCSIsClose               Boolean   ,    -- НТЗ закрыт
@@ -27,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
    OUT outFixDateChange           TDateTime ,    -- Дата изменения признака "Фиксированная цена"
    OUT outStartDate               TDateTime ,    -- Дата
    OUT outTopDateChange           TDateTime ,    -- Дата изменения признака "ТОП позиция"
+   OUT outPercentMarkupDateChange TDateTime ,    -- Дата изменения признака % наценки
     IN inSession                  TVarChar       -- сессия пользователя
 )
 AS
@@ -39,6 +42,7 @@ $BODY$
         vbMCSNotRecalc Boolean;
         vbFix Boolean;
         vbTop Boolean;
+        vbPercentMarkup TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -67,7 +71,8 @@ BEGIN
            MCSIsClose, 
            MCSNotRecalc,
            Fix,
-           isTop
+           isTop,
+           PercentMarkup
       INTO ioId, 
            vbPrice, 
            vbMCSValue, 
@@ -76,7 +81,8 @@ BEGIN
            vbMCSIsClose, 
            vbMCSNotRecalc,
            vbFix,
-           vbTop
+           vbTop,
+           vbPercentMarkup
     FROM Object_Price_View
     WHERE GoodsId = inGoodsId
       AND UnitId = inUnitID;
@@ -156,6 +162,17 @@ BEGIN
         outMCSDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
     END IF;
+
+    -- сохранили св-во < % наценки >
+    IF (inPercentMarkup is not null) AND (inPercentMarkup <> COALESCE(vbPercentMarkup,0))
+    THEN
+        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_PercentMarkup(), ioId, inPercentMarkup);
+        -- сохранили св-во < Дата изменения >
+        outDateChange := CURRENT_DATE;
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_PercentMarkupDateChange(), ioId, outPercentMarkupDateChange);
+    END IF;
+
+
     -- сохранили историю
     IF ((inPrice is not null) AND (inPrice <> COALESCE(vbPrice,0))) 
        OR
@@ -202,6 +219,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 04.07.16         *
  22.12.15                                                         *
  29.08.15                                                         *
  08.06.15                        *
