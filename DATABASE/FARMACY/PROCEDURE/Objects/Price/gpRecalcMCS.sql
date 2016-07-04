@@ -146,6 +146,7 @@ BEGIN
                                         inMCSValue     := MAX(Sold)::TFloat,    -- Неснижаемый товарный запас
                                         inMCSPeriod    := inPeriod::TFloat,     --
                                         inMCSDay       := inDay::TFloat,        --
+                                        inPercentMarkup:= Object_Price.PercentMarkup, -- % наценки
                                         inGoodsId      := tmp_ResultSet.GoodsId,-- Товар
                                         inUnitId       := inUnitId,             -- подразделение
                                         inMCSIsClose   := NULL::Boolean,        -- НТЗ закрыт
@@ -178,5 +179,6 @@ ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 04.07.16         * add PercentMarkup
  29.08.15                                                         *
  */

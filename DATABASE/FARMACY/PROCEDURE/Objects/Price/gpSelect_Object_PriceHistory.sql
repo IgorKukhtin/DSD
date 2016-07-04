@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , RemainsEnd TFloat, SummaRemainsEnd TFloat
              , RemainsNotMCSEnd TFloat, SummaNotMCSEnd TFloat
              , isTop boolean, TOPDateChange TDateTime
-
+             , PercentMarkup TFloat, PercentMarkupDateChange TDateTime
              , isErased boolean
              ) AS
 $BODY$
@@ -90,6 +90,9 @@ BEGIN
                               
                ,NULL::Boolean                    AS isTop 
                ,NULL::TDateTime                  AS TOPDateChange
+
+               ,NULL::TFloat                     AS PercentMarkup 
+               ,NULL::TDateTime                  AS PercentMarkupDateChange
 
                ,NULL::Boolean                    AS isErased
             WHERE 1=0;
@@ -158,6 +161,9 @@ BEGIN
                
                , Object_Price_View.isTop                AS isTop
                , Object_Price_View.TopDateChange        AS TopDateChange
+
+               , Object_Price_View.PercentMarkup           AS PercentMarkup
+               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
 
                , Object_Goods_View.isErased                      AS isErased 
                
@@ -291,6 +297,9 @@ BEGIN
                , Object_Price_View.isTop                   AS isTop
                , Object_Price_View.TopDateChange           AS TopDateChange
 
+               , Object_Price_View.PercentMarkup           AS PercentMarkup
+               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
+
                , Object_Goods_View.isErased                AS isErased 
                
             FROM Object_Price_View
@@ -358,6 +367,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 04.07.16         *
  30.06.16         *
  13.03.16         *
 */

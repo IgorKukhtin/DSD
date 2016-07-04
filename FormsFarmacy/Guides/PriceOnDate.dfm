@@ -3,9 +3,8 @@ inherited PriceOnDateForm: TPriceOnDateForm
   ClientHeight = 420
   ClientWidth = 1354
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -564
   ExplicitWidth = 1370
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -489,6 +488,26 @@ inherited PriceOnDateForm: TPriceOnDateForm
             DataBinding.FieldName = 'TOPDateChange'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object clPercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'PercentMarkup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Width = 70
+          end
+          object colPercentMarkupDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' % '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'PercentMarkupDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' % '#1085#1072#1094#1077#1085#1082#1080
             Options.Editing = False
             Width = 74
           end
@@ -1133,6 +1152,15 @@ inherited PriceOnDateForm: TPriceOnDateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPercentMarkup'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PercentMarkup'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -1229,6 +1257,14 @@ inherited PriceOnDateForm: TPriceOnDateForm
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'TOPDateChange'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPercentMarkupDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'PercentMarkupDateChange'
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
