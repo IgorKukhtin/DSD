@@ -203,33 +203,33 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 25
-    Width = 93
+    Width = 85
   end
   object cxLabel12: TcxLabel [26]
-    Left = 312
+    Left = 406
     Top = 108
     Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1095#1077#1082
   end
   object ceCountPoint: TcxCurrencyEdit [27]
-    Left = 312
+    Left = 406
     Top = 129
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 27
-    Width = 91
+    Width = 85
   end
   object cxLabel13: TcxLabel [28]
-    Left = 406
+    Left = 495
     Top = 108
     Caption = #1042#1088#1077#1084#1103' '#1074' '#1087#1091#1090#1080', '#1095'.'
   end
   object ceTrevelTime: TcxCurrencyEdit [29]
-    Left = 406
+    Left = 495
     Top = 129
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 29
-    Width = 93
+    Width = 90
   end
   object cxLabel7: TcxLabel [30]
     Left = 312
@@ -284,17 +284,17 @@
     Width = 129
   end
   object cxLabel16: TcxLabel [36]
-    Left = 503
+    Left = 495
     Top = 69
     Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
   end
   object ceWeightTransport: TcxCurrencyEdit [37]
-    Left = 503
+    Left = 495
     Top = 87
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 37
-    Width = 82
+    Width = 90
   end
   object cxLabel17: TcxLabel [38]
     Left = 200
@@ -311,17 +311,17 @@
     Width = 81
   end
   object cxLabel18: TcxLabel [40]
-    Left = 503
+    Left = 312
     Top = 111
     Caption = #1044#1086#1087#1083#1072#1090#1072', '#1075#1088#1085
   end
   object ceSummAdd: TcxCurrencyEdit [41]
-    Left = 503
+    Left = 312
     Top = 129
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 41
-    Width = 82
+    Width = 91
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
