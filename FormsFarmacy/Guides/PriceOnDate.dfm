@@ -468,7 +468,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Width = 70
           end
           object clGoods_isTop: TcxGridDBColumn
-            Caption = #1058#1054#1055' ('#1090#1086#1074#1072#1088')'
+            Caption = #1058#1054#1055' ('#1087#1086' '#1089#1077#1090#1080')'
             DataBinding.FieldName = 'Goods_isTop'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
