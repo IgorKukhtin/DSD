@@ -491,8 +491,20 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 74
           end
+          object clGoods_PercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
+            DataBinding.FieldName = 'Goods_PercentMarkup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
           object clPercentMarkup: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
@@ -503,7 +515,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Width = 70
           end
           object colPercentMarkupDateChange: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' % '#1085#1072#1094#1077#1085#1082#1080
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' % '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'PercentMarkupDateChange'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

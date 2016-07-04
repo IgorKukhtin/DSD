@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_Partner(
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inDocumentTaxKindId_inf Integer    , -- Тип формирования налогового документа
     IN inMovementId_Order      Integer    , -- ключ Документа
-    IN inReestrKindId          Integer    , -- Состояние по реестру
+ --   IN inReestrKindId          Integer    , -- Состояние по реестру
  INOUT ioPriceListId           Integer    , -- Прайс лист
    OUT outPriceListName        TVarChar   , -- Прайс лист
    OUT outCurrencyValue        TFloat     , -- Курс для перевода в валюту баланса
@@ -143,7 +143,7 @@ BEGIN
                                       , inCurrencyDocumentId   := inCurrencyDocumentId
                                       , inCurrencyPartnerId    := inCurrencyPartnerId
                                       , inMovementId_Order     := inMovementId_Order
-                                      , inReestrKindId         := inReestrKindId
+                                   --  , inReestrKindId         := inReestrKindId
                                       , ioPriceListId          := ioPriceListId
                                       , ioCurrencyPartnerValue := ioCurrencyPartnerValue
                                       , ioParPartnerValue      := ioParPartnerValue
@@ -186,6 +186,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.07.16         *
  18.07.14                                        * add inCurrencyDocumentId and inCurrencyPartnerId
  17.04.14                                        * add восстановить/удалить Налоговую 
  07.04.14                                        *
