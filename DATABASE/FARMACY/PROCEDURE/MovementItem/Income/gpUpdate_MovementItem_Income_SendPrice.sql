@@ -68,12 +68,12 @@ BEGIN
                                GROUP BY MovementItem_Income_View.GoodsId)
        
      SELECT COUNT(lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), MovementItem_Income_View.Id, 
-                         zfCalc_SalePrice(MovementItem_Income.PriceWithVAT, -- Цена С НДС
-                                          MarginCondition.MarginPercent, -- % наценки
+                         zfCalc_SalePrice(MovementItem_Income.PriceWithVAT,                            -- Цена С НДС
+                                          MarginCondition.MarginPercent,                               -- % наценки в КАТЕГОРИИ
                                           COALESCE (Object_Price_View.isTop, Object_Goods_View.isTOP), -- ТОП позиция
-                                          Object_Goods_View.PercentMarkup, -- % наценки у товара
-                                          vbJuridicalPercent, 
-                                          Object_Goods_View.Price )))
+                                          Object_Goods_View.PercentMarkup,                             -- % наценки у товара
+                                          vbJuridicalPercent,                                          -- % корректировки у Юр Лица для ТОПа
+                                          Object_Goods_View.Price )))                                  -- Цена у товара (фиксированная)
          FROM MarginCondition, MovementItem_Income_View, MovementItem_Income
               LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem_Income.GoodsId
               LEFT JOIN Object_Price_View ON Object_Price_View.GoodsId = MovementItem_Income.GoodsId
