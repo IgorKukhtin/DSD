@@ -25,7 +25,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inCurrencyDocumentId    Integer    , -- Валюта (документа)
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inMovementId_Order      Integer    , -- ключ Документа
-   -- IN inReestrKindId          Integer    , -- Состояние по реестру
  INOUT ioPriceListId           Integer    , -- Прайс лист
    OUT outPriceListName        TVarChar   , -- Прайс лист
    OUT outCurrencyValue        TFloat     , -- курс валюты
@@ -234,7 +233,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 29.06.16         * inReestrKindId
+ 29.06.16         * 
  22.10.14                                        * add inMovementId_Order
  24.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId
