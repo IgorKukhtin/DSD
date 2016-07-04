@@ -358,6 +358,4 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 1, inOperDate:=CURRENT_DATE,inSession:= '2')
--- SELECT * FROM gpGet_Movement_Sale(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
- --SELECT * FROM gpGet_Movement_Sale(inMovementId := 40874 , inOperDate := '25.01.2014',  inSession := '5');
+-- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inChangePercentAmount:= 1, inSession := '5');
