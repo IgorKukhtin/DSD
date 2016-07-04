@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriodEnd TFloat, MCSDayEnd TFloat, StartDateEnd TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
-             , Goods_isTop Boolean
+             , Goods_isTop Boolean, Goods_PercentMarkup TFloat
              , DateChange TDateTime, MCSDateChange TDateTime
              , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
@@ -66,6 +66,7 @@ BEGIN
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
                ,NULL::Boolean                    AS Goods_isTop
+               ,NULL::TFloat                     AS Goods_PercentMarkup
                ,NULL::TDateTime                  AS DateChange
                ,NULL::TDateTime                  AS MCSDateChange
                ,NULL::Boolean                    AS MCSIsClose
@@ -135,6 +136,7 @@ BEGIN
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
                , Object_Goods_View.isTop                         AS Goods_isTop
+               , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
                , Object_Price_View.DateChange                    AS DateChange
                , Object_Price_View.MCSDateChange                 AS MCSDateChange
                , COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
@@ -270,6 +272,7 @@ BEGIN
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
                , Object_Goods_View.isTop                   AS Goods_isTop
+               , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
                , Object_Price_View.DateChange              AS DateChange
                , Object_Price_View.MCSDateChange           AS MCSDateChange
                , Object_Price_View.MCSIsClose              AS MCSIsClose
