@@ -86,6 +86,7 @@ type
     SumAmount_TransportAdd: TcxGridDBColumn;
     SumAmount_TransportAddLong: TcxGridDBColumn;
     SumAmount_TransportTaxi: TcxGridDBColumn;
+    SumAmount_ServiceAdd: TcxGridDBColumn;
   private
   public
   end;
