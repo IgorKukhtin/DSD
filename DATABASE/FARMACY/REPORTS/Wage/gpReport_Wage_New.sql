@@ -138,11 +138,18 @@ BEGIN
                     )
  
 -- данные из табеля учета рабочего времени
-  , tmp1 AS    (   SELECT COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) AS OperDate1
+  , tmp1 AS    (   SELECT
+                          COALESCE (MIDate_OperDate.Valuedata, (Movement.OperDate::Date || ' '||tmpUnit.EndServiceNigth ::Time):: TDateTime ) AS OperDate1
+                        , CASE WHEN MI_SheetWorkTime.amount<>0
+                               THEN COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) + (((trunc(MI_SheetWorkTime.amount)*60+(MI_SheetWorkTime.amount-trunc(MI_SheetWorkTime.amount))*100):: TVarChar || ' minute') :: INTERVAL)
+                               ELSE ((COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate)  ::Date ) || ' '||tmpUnit.StartServiceNigth ::Time ):: TDateTime
+                          END AS OperDate2
+                         /*COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) AS OperDate1
                         , CASE WHEN MI_SheetWorkTime.amount<>0
                                THEN COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate) + (((trunc(MI_SheetWorkTime.amount)*60+(MI_SheetWorkTime.amount-trunc(MI_SheetWorkTime.amount))*100):: TVarChar || ' minute') :: INTERVAL)
                                ELSE COALESCE (MIDate_OperDate.Valuedata,Movement.OperDate)  ::Date+ interval '24 hour' 
                           END AS OperDate2
+                          */
                         , MovementLinkObject_Unit.ObjectId    AS UnitId
                         , MI_SheetWorkTime.ObjectId           AS PersonalId
                         , MIObject_Position.ObjectId          AS PositionId
