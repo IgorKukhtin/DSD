@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportService(
 RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
-             , Amount TFloat, SummAdd TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , Amount TFloat, SummAdd TFloat, SummTotal TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , ContractValue TFloat, ContractValueAdd TFloat
              , Comment TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
@@ -64,6 +64,7 @@ BEGIN
 
            , MovementItem.Amount
            , MIFloat_SummAdd.ValueData             AS SummAdd
+           , (MovementItem.Amount + COALESCE (MIFloat_SummAdd.ValueData, 0)) :: TFloat AS AmountSummTotal
            , MIFloat_WeightTransport.ValueData     AS WeightTransport
            , MIFloat_Distance.ValueData            AS Distance
            , MIFloat_Price.ValueData               AS Price
@@ -200,8 +201,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_TransportService (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
