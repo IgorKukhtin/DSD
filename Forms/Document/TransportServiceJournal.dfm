@@ -55,6 +55,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clSummAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTotal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -86,10 +91,16 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clSummAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTotal
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -130,8 +141,19 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Options.Editing = False
             Width = 62
           end
+          object SummTotal: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085
+            DataBinding.FieldName = 'SummTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object clAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086', '#1075#1088#1085
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -139,10 +161,10 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 75
           end
           object clSummAdd: TcxGridDBColumn
-            Caption = #1044#1086#1087#1083#1072#1090#1072', '#1089#1091#1084#1084#1072' '#1075#1088#1085
+            Caption = #1044#1086#1087#1083#1072#1090#1072', '#1075#1088#1085
             DataBinding.FieldName = 'SummAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -150,7 +172,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 75
           end
           object clWeightTransport: TcxGridDBColumn
             Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075

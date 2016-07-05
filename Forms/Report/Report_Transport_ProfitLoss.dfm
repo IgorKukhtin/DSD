@@ -89,6 +89,11 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Format = ',0.####'
           Kind = skSum
           Column = SumAmount_ServiceAdd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_ServiceTotal
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -150,6 +155,11 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Format = ',0.####'
           Kind = skSum
           Column = SumAmount_ServiceAdd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_ServiceTotal
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -261,8 +271,18 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
+      object SumAmount_ServiceTotal: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085'. ('#1085#1072#1077#1084' '#1080#1090#1086#1075#1086')'
+        DataBinding.FieldName = 'SumAmount_ServiceTotal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object SumAmount_TransportService: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085'. ('#1085#1072#1077#1084')'
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085'. ('#1085#1072#1077#1084' '#1085#1072#1095#1080#1089#1083'.)'
         DataBinding.FieldName = 'SumAmount_TransportService'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -422,7 +442,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 100
       end
       object One_KM: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' 1 '#1082#1084
@@ -432,7 +452,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 50
       end
       object One_KG: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' 1 '#1082#1075
@@ -442,7 +462,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel

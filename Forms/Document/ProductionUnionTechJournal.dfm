@@ -3,7 +3,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   ClientHeight = 685
   ClientWidth = 1076
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -303
   ExplicitWidth = 1092
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -1860,10 +1859,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1927,6 +1922,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     object bbEdit: TdxBarButton [18]
       Action = actUpdate
       Category = 0
@@ -1938,6 +1936,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object bbPrintReceipt: TdxBarButton [20]
       Action = actPrintReceipt
       Category = 0
+      Enabled = False
     end
     object bbReport_TaxLoss: TdxBarButton [21]
       Action = actReport_TaxLoss

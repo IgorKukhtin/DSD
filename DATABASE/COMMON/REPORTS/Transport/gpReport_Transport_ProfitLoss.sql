@@ -19,11 +19,11 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar, ProfitLossName_all TVarChar
              , SumCount_Transport TFloat, SumAmount_Transport TFloat, PriceFuel TFloat
              , SumAmount_TransportAdd TFloat, SumAmount_TransportAddLong TFloat, SumAmount_TransportTaxi TFloat
-             , SumAmount_TransportService TFloat, SumAmount_ServiceAdd TFloat, SumAmount_PersonalSendCash TFloat
+             , SumAmount_TransportService TFloat, SumAmount_ServiceAdd TFloat, SumAmount_ServiceTotal TFloat, SumAmount_PersonalSendCash TFloat
              , SumTotal TFloat
              , Distance TFloat
              , WeightTransport TFloat, WeightSale TFloat
-             ,One_KM TFloat, One_KG TFloat
+             , One_KM TFloat, One_KG TFloat
              )   
 AS
 $BODY$
@@ -311,6 +311,7 @@ BEGIN
             , SUM (tmpUnion.SumAmount_TransportTaxi)    :: TFloat AS SumAmount_TransportTaxi
             , SUM (tmpUnion.SumAmount_TransportService) :: TFloat AS SumAmount_TransportService
             , SUM (tmpUnion.SumAmount_ServiceAdd)       :: TFloat AS SumAmount_ServiceAdd
+            , SUM (tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_ServiceAdd) :: TFloat AS SumAmount_ServiceTotal
             , SUM (tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumAmount_PersonalSendCash
             , SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportAdd + tmpUnion.SumAmount_TransportAddLong + tmpUnion.SumAmount_TransportTaxi + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_ServiceAdd + tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumTotal
 
