@@ -23,6 +23,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Height = 291
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 247
     object AllGoodsPriceGridTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsResult
@@ -101,6 +102,14 @@ object RepriceUnitForm: TRepriceUnitForm
         Properties.DisplayFormat = ',0.00'
         Options.Editing = False
         Width = 82
+      end
+      object colPriceFix_Goods: TcxGridDBColumn
+        Caption = #1060#1080#1082#1089'.'#1094#1077#1085#1072' '#1089#1077#1090#1080
+        DataBinding.FieldName = 'PriceFix_Goods'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        Options.Editing = False
+        Width = 68
       end
       object colLastPrice_to: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1074' '#1072#1087#1090'. ('#1074#1099#1073#1086#1088')'
@@ -181,10 +190,10 @@ object RepriceUnitForm: TRepriceUnitForm
         Width = 40
       end
       object colisPriceFix: TcxGridDBColumn
-        Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072
+        Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072' '#1090#1086#1095#1082#1080
         DataBinding.FieldName = 'isPriceFix'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
+        HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1090#1086#1095#1082#1080
         Options.Editing = False
         Width = 40
       end
@@ -196,8 +205,9 @@ object RepriceUnitForm: TRepriceUnitForm
         Width = 60
       end
       object colisTop: TcxGridDBColumn
-        Caption = #1058#1086#1087
+        Caption = #1058#1086#1087' '#1090#1086#1095#1082#1080
         DataBinding.FieldName = 'isTop'
+        HeaderHint = #1058#1086#1087' '#1090#1086#1095#1082#1080
         Options.Editing = False
         Width = 28
       end
@@ -290,6 +300,12 @@ object RepriceUnitForm: TRepriceUnitForm
         Visible = False
         VisibleForCustomization = False
         Width = 55
+      end
+      object colIsTop_Goods: TcxGridDBColumn
+        Caption = #1058#1086#1087' '#1089#1077#1090#1080
+        DataBinding.FieldName = 'IsTop_Goods'
+        HeaderHint = #1058#1086#1087' '#1089#1077#1090#1080
+        Options.Editing = False
       end
     end
     object AllGoodsPriceGridLevel: TcxGridLevel
@@ -707,6 +723,14 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'MinExpirationDate_to'
         DataType = ftDate
+      end
+      item
+        Name = 'IsTop_Goods'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'PriceFix_Goods'
+        DataType = ftFloat
       end>
     IndexDefs = <>
     Params = <>
@@ -715,7 +739,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      070400009619E0BD010000001800000021000000000003000000070402496404
+      320400009619E0BD010000001800000023000000000003000000320402496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -747,7 +771,8 @@ object RepriceUnitForm: TRepriceUnitForm
       726963655F746F080004000000010007535542545950450200490006004D6F6E
       6579000C5072696365446966665F746F08000400000001000753554254595045
       0200490006004D6F6E657900144D696E45787069726174696F6E446174655F74
-      6F04000600000000000000}
+      6F04000600000000000B4973546F705F476F6F647302000300000000000E5072
+      6963654669785F476F6F647308000400000000000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -813,11 +838,11 @@ object RepriceUnitForm: TRepriceUnitForm
       FieldName = 'ProducerName'
       Size = 100
     end
-    object cdsResultSumReprice: TCurrencyField
-      FieldName = 'SumReprice'
-    end
     object cdsResultMinExpirationDate: TDateField
       FieldName = 'MinExpirationDate'
+    end
+    object cdsResultSumReprice: TCurrencyField
+      FieldName = 'SumReprice'
     end
     object cdsResultRealSummReprice: TCurrencyField
       FieldKind = fkCalculated
@@ -857,6 +882,12 @@ object RepriceUnitForm: TRepriceUnitForm
     end
     object cdsResultMinExpirationDate_to: TDateField
       FieldName = 'MinExpirationDate_to'
+    end
+    object cdsResultIsTop_Goods: TBooleanField
+      FieldName = 'IsTop_Goods'
+    end
+    object cdsResultPriceFix_Goods: TFloatField
+      FieldName = 'PriceFix_Goods'
     end
   end
   object UnitsCDS: TClientDataSet

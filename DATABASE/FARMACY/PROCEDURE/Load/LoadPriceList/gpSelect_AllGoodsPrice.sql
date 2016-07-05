@@ -21,6 +21,7 @@ RETURNS TABLE (
     RemainsCount_to     TFloat,     -- Остаток - Подразделение (с которым есть сравнение цен)
     NDS                 TFloat,     --ставка НДС
     NewPrice            TFloat,     --Новая цена
+    PriceFix_Goods      TFloat  ,   -- фиксированная цена сети
     MinMarginPercent    TFloat,     --минимальный % отклонения
     PriceDiff           TFloat,     --% отклонения
     PriceDiff_to        TFloat,     --% отклонения - inUnitId_to
@@ -38,9 +39,10 @@ RETURNS TABLE (
     MinExpirationDate   TDateTime,  --Минимальный срок годности препарата на точке
     MinExpirationDate_to TDateTime, --Минимальный срок годности препарата на точке  - Подразделение (с которым есть сравнение цен)
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
-    isPriceFix          Boolean ,   -- фиксированная цена
+    isPriceFix          Boolean ,   -- фиксированная цена точки
     isIncome            Boolean ,   -- приход сегодня
-    IsTop               Boolean ,   -- Топ
+    IsTop               Boolean ,   -- Топ точки
+    IsTop_Goods         Boolean ,   -- Топ сети
     IsPromo             Boolean ,   -- Акция
     Reprice             Boolean     -- 
     )
@@ -161,9 +163,11 @@ BEGIN
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
             CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
-            SelectMinPrice_AllGoods.isTop, -- Object_Goods.IsTop,
-            Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo
-
+            --SelectMinPrice_AllGoods.isTop, 
+            Object_Price.IsTop    AS IsTop,
+            Object_Goods.IsTop    AS IsTop_Goods,
+            Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
+            Object_Goods.Price    AS PriceFix_Goods
         FROM
             lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
                                     , inObjectId := -1 * vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
@@ -218,6 +222,7 @@ BEGIN
         ResultSet.RemainsCount_to,
         ResultSet.NDS,
         ResultSet.NewPrice,
+        ResultSet.PriceFix_Goods,
         COALESCE(MarginCondition.MarginPercent,inMinPercent)::TFloat AS MinMarginPercent,
         CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                    ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
@@ -246,6 +251,7 @@ BEGIN
         ResultSet.isPriceFix,
         ResultSet.isIncome,
         ResultSet.IsTop,
+        ResultSet.IsTop_Goods,
         ResultSet.IsPromo,
         CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE OR ResultSet.IsTop = TRUE OR ResultSet.isPriceFix = TRUE)
                   THEN FALSE

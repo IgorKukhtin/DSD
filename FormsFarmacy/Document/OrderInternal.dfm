@@ -333,6 +333,22 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
+          object clisTOP: TcxGridDBColumn
+            Caption = #1058#1054#1055' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isTOP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clisTOP_Price: TcxGridDBColumn
+            Caption = #1058#1054#1055' '#1090#1086#1095#1082#1080
+            DataBinding.FieldName = 'isTOP_Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object clisPromo: TcxGridDBColumn
             Caption = #1041#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPromo'
