@@ -699,11 +699,11 @@ type
     odOpenXML: TOpenDialog;
     spInsertProcedure: TdsdStoredProc;
     // обработка свойства XMLFilename
-    procedure SetXMLFilename(Value: String);
-    function GetXMLFilename: String;
+    //procedure SetXMLFilename(Value: String);
+    //function GetXMLFilename: String;
     // обработка свойства InsertProcedureName
-    procedure SetInsertProcedureName(Value: String);
-    function GetInsertProcedureName: String;
+    //procedure SetInsertProcedureName(Value: String);
+    //function GetInsertProcedureName: String;
   protected
     // основная функция - Сохранение файла в БД
     function Execute: Boolean; override;
@@ -711,8 +711,8 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property XMLFilename: String read GetXMLFilename write SetXMLFilename;
-    property InsertProcedureName: String read GetInsertProcedureName write SetInsertProcedureName;
+    property XMLFilename: String read FXMLFilename write FXMLFilename;
+    property InsertProcedureName: String read FInsertProcedureName write FInsertProcedureName;
   end;
 
   // Выгрузка результата в файл
