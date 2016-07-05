@@ -4,7 +4,7 @@ object dmMain: TdmMain
   OnDestroy = DataModuleDestroy
   Height = 258
   Width = 304
-  object ImageList1: TImageList
+  object ImageList: TImageList
     Left = 102
     Top = 60
     Bitmap = {
@@ -10203,7 +10203,7 @@ object dmMain: TdmMain
           FFFF}
       end>
   end
-  object ImageList: TcxImageList
+  object ImageList1: TcxImageList
     FormatVersion = 1
     DesignInfo = 655460
     ImageInfo = <

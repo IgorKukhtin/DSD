@@ -3,28 +3,25 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientHeight = 438
   ClientWidth = 1221
   ExplicitWidth = 1237
-  ExplicitHeight = 477
+  ExplicitHeight = 473
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1221
-    Height = 379
+    Height = 381
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1221
-    ExplicitHeight = 379
-    ClientRectBottom = 375
-    ClientRectRight = 1217
+    ExplicitHeight = 381
+    ClientRectBottom = 381
+    ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 1213
-      ExplicitHeight = 371
+      ExplicitWidth = 1221
+      ExplicitHeight = 381
       inherited cxGrid: TcxGrid
-        Width = 1213
-        Height = 371
-        ExplicitWidth = 1213
-        ExplicitHeight = 371
+        Width = 1221
+        Height = 381
+        ExplicitWidth = 1221
+        ExplicitHeight = 381
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -646,7 +643,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
