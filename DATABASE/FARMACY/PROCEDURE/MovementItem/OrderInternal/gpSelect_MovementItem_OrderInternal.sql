@@ -98,7 +98,9 @@ BEGIN
            , COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)              AS GoodsId
            , COALESCE (tmpMI.GoodsCode, tmpGoods.GoodsCode)          AS GoodsCode
            , COALESCE (tmpMI.GoodsName, tmpGoods.GoodsName)          AS GoodsName
-           , COALESCE (tmpMI.isTOP, tmpGoods.isTOP)                  AS isTOP
+           , COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP)      AS isTOP
+           , COALESCE (Object_Price_View.isTOP, False)               AS isTOP_Price
+
            , COALESCE(tmpMI.GoodsGroupId, tmpGoods.GoodsGroupId)     AS GoodsGroupId
            , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName
            , COALESCE(tmpMI.NDSKindId, tmpGoods.NDSKindId)           AS NDSKindId
@@ -107,7 +109,8 @@ BEGIN
            , COALESCE(tmpMI.isClose, tmpGoods.isClose)               AS isClose
            , COALESCE(tmpMI.isFirst, tmpGoods.isFirst)               AS isFirst
            , COALESCE(tmpMI.isSecond, tmpGoods.isSecond)             AS isSecond
-           , CASE WHEN COALESCE (tmpMI.isTOP, tmpGoods.isTOP) = TRUE
+           , CASE WHEN COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP) = TRUE
+                    OR COALESCE (Object_Price_View.isTOP, False) = TRUE
                   THEN 12615935
                   ELSE 0
              END                                                    AS isTopColor
@@ -150,7 +153,8 @@ BEGIN
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
                   , Object_Goods.MinimumLot                      AS Multiplicity
-                  , COALESCE (GoodsPrice.isTop, Object_Goods.isTOP) AS isTOP
+                  , COALESCE (Object_Goods.isTOP, False)         AS Goods_isTOP
+                  , COALESCE (GoodsPrice.isTop, False)           AS Price_isTOP
                   , Object_Goods.GoodsGroupId                    AS GoodsGroupId
                   , Object_Goods.GoodsGroupName                  AS GoodsGroupName
                   , Object_Goods.NDSKindId                       AS NDSKindId
@@ -195,9 +199,10 @@ BEGIN
                             , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName)        AS JuridicalName
                             , COALESCE(PriceList.ContractName, MinPrice.ContractName)          AS ContractName
                             , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
-                            , COALESCE (GoodsPrice.isTop, Object_Goods.isTOP)                  AS isTOP
+                            , COALESCE (Object_Goods.isTOP, False)                             AS Goods_isTOP
+                            , COALESCE (GoodsPrice.isTop, False)                               AS Price_isTOP
                             , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
-                            , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0) AS AmountAll
+                            , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)   AS AmountAll
                             , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(Object_Goods.MinimumLot, 1)) 
                                * COALESCE(Object_Goods.MinimumLot, 1)                          AS CalcAmountAll
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
