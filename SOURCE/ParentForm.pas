@@ -385,6 +385,7 @@ initialization
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);
   RegisterClass (TdsdLoadXMLKS);
+  RegisterClass (TdsdStoredProcExportToFile);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

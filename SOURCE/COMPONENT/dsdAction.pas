@@ -715,6 +715,39 @@ type
     property InsertProcedureName: String read GetInsertProcedureName write SetInsertProcedureName;
   end;
 
+  // Выгрузка результата в файл
+  TdsdStoredProcExportToFile = class(TdsdCustomAction)
+  private
+    FDataSet: TDataSet;
+    FdsdStoredProcName: TdsdStoredProc;
+    FFilename: string;
+    FFileExt: string;// = '.txt';
+    FFilenamePrefix: string;
+    sdSaveFile: TSaveDialog;
+    //FIncludeFieldNames: Boolean;
+    procedure SetdsdStoredProcName(Value: TdsdStoredProc);
+    function GetdsdStoredProcName: TdsdStoredProc;
+  protected
+    // основная функция - Сохранение файла
+    function Execute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // ДатаСет с данными
+//    property DataSet: TDataSet read FDataSet write FDataSet;
+    // Настроенный компонент процедуры
+    property dsdStoredProcName: TdsdStoredProc read GetdsdStoredProcName write SetdsdStoredProcName;
+    // Имя файла
+    property Filename: string read FFilename write FFilename;
+    // Расширение файла
+    property FileExt: string read FFileExt write FFileExt;
+    // Префикс имени файла
+    property FilenamePrefix: string read FFilenamePrefix write FFilenamePrefix;
+    // Флаг выгрузки названий полей
+    //property IncludeFieldNames: boolean read FIncludeFieldNames write FIncludeFieldNames default False;
+  end;
+
 procedure Register;
 
 implementation
@@ -756,7 +789,8 @@ begin
   RegisterActions('DSDLib', [TShellExecuteAction], TShellExecuteAction);
   RegisterActions('DSDLib', [TShowMessageAction], TShowMessageAction);
   RegisterActions('DSDLib', [TdsdLoadXMLKS], TdsdLoadXMLKS);
-
+  RegisterActions('DSDLibExport', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
+  RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
 end;
 
 { TdsdCustomDataSetAction }
@@ -2886,22 +2920,17 @@ end;
 
 destructor TdsdLoadXMLKS.Destroy;
 begin
-  odOpenXML.Free;
+  odOpenXML := nil;
   inherited;
 end;
 
-function TdsdLoadXMLKS.GetInsertProcedureName: String;
-begin
-  if FInsertProcedureName = '' then
-    Result := 'gpInsertUpdate_logBillsKS'
-  else
-    Result := FInsertProcedureName;
-end;
-
-function TdsdLoadXMLKS.GetXMLFilename: String;
-begin
-  Result := FXMLFilename;
-end;
+//function TdsdLoadXMLKS.GetInsertProcedureName: String;
+//begin
+//  if FInsertProcedureName = '' then
+//    Result := 'gpInsertUpdate_logBillsKS'
+//  else
+//    Result := FInsertProcedureName;
+//end;
 
 function TdsdLoadXMLKS.Execute: Boolean;
 var
@@ -2949,14 +2978,65 @@ begin
   //inherited;
 end;
 
-procedure TdsdLoadXMLKS.SetInsertProcedureName(Value: String);
+{ TdsdStoredProcToFile }
+
+constructor TdsdStoredProcExportToFile.Create(AOwner: TComponent);
 begin
-  FInsertProcedureName := Value;
+  inherited;
+
+  sdSaveFile := TSaveDialog.Create(Application);
+  sdSaveFile.Filter := 'Текстовый файл|*.txt|Все файлы|*.*';
+  sdSaveFile.Title := 'Укажите файл для сохранения';
+  sdSaveFile.Options := [ofFileMustExist, ofOverwritePrompt];
 end;
 
-procedure TdsdLoadXMLKS.SetXMLFilename(Value: String);
+destructor TdsdStoredProcExportToFile.Destroy;
 begin
-  FXMLFilename := Value;
+  sdSaveFile := nil;
+
+  inherited;
+end;
+
+function TdsdStoredProcExportToFile.Execute: Boolean;
+var
+  F: TextFile;
+  FieldNames, Values: string;
+  i: Integer;
+begin
+  if not Assigned(dsdStoredProcName) then
+  begin
+    Exit;
+  end;
+
+  if sdSaveFile.Execute then
+  try
+    AssignFile(F, ExtractFilePath(sdSaveFile.FileName) + '\' + FilenamePrefix + ExtractFileName(sdSaveFile.FileName) + FileExt);
+    Rewrite(F); // переписываем файл
+
+    FdsdStoredProcName.Execute();
+    TdsdStoredProc(FdsdStoredProcName).DataSet.First;
+
+    while not TdsdStoredProc(FdsdStoredProcName).DataSet.Eof do
+    begin
+      FieldNames := FieldNames + TdsdStoredProc(FdsdStoredProcName).DataSet.Fields[0].AsString +#13+#10;
+      TdsdStoredProc(FdsdStoredProcName).DataSet.Next;
+    end;
+    Writeln(F, FieldNames);
+
+  finally
+    CloseFile(F);
+  end;
+end;
+
+function TdsdStoredProcExportToFile.GetdsdStoredProcName: TdsdStoredProc;
+begin
+  Result := FdsdStoredProcName;
+end;
+
+procedure TdsdStoredProcExportToFile.SetdsdStoredProcName(
+  Value: TdsdStoredProc);
+begin
+  FdsdStoredProcName := Value;
 end;
 
 end.
