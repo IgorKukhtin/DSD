@@ -70,6 +70,7 @@ type
   procedure Create_ParamsMI(var Params:TParams);
   procedure Create_ParamsPersonal(var Params:TParams; idx:String);
   procedure Create_ParamsPersonalComplete(var Params:TParams);
+  procedure Create_ParamsWorkProgress(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
@@ -222,6 +223,9 @@ begin
      ParamAdd(Params,'PriceListCode',ftInteger);
      ParamAdd(Params,'PriceListName',ftString);
 
+     ParamAdd(Params,'DocumentKindId',ftInteger);
+     ParamAdd(Params,'DocumentKindName',ftString);
+
      ParamAdd(Params,'GoodsKindWeighingGroupId',ftInteger);
 
      ParamAdd(Params,'MovementDescName_master',ftString);
@@ -313,6 +317,21 @@ begin
      ParamAdd(Params,'MovementDescId',ftInteger);
      ParamAdd(Params,'FromName',ftString);
      ParamAdd(Params,'ToName',ftString);
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsWorkProgress(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'OperDate',ftDateTime);         //
+     ParamAdd(Params,'UnitId',ftInteger);            //
+     ParamAdd(Params,'GoodsId',ftInteger);           // Товары
+     ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
+     ParamAdd(Params,'GoodsName',ftString);          // Товары
+     ParamAdd(Params,'MeasureId',ftInteger);         //
+     ParamAdd(Params,'MeasureCode',ftInteger);       //
+     ParamAdd(Params,'MeasureName',ftString);        //
+     ParamAdd(Params,'MovementItemId',ftInteger);    //
+     ParamAdd(Params,'MovementInfo',ftString);       //
 end;
 {------------------------------------------------------------------------}
 {------------------------------------------------------------------------}

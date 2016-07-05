@@ -2657,9 +2657,24 @@
 				<Form>MobileNumbersEmployeeEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="XMLBillKS.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_MobileKS.pas">
 				<Form>Report_MobileKSForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderExternal_SendOnPriceJournalChoice.pas">
+				<Form>OrderExternal_SendOnPriceJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckTaxDialog.pas">
+				<Form>Report_CheckTaxDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\DocumentKind.pas">
+				<Form>DocumentKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\DocumentKindEdit.pas">
+				<Form>DocumentKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

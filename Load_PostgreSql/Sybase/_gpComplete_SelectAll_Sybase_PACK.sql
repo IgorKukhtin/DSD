@@ -43,7 +43,7 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
        AND inIsBefoHistoryCost = TRUE
-       AND (tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId > 0)
+       AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
        -- AND tmpUnit_To.UnitId > 0
     UNION
      SELECT Movement.Id AS MovementId

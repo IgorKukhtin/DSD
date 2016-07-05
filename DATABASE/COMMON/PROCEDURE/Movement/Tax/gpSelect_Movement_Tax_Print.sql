@@ -607,6 +607,7 @@ BEGIN
          AND MovementItem.Amount <> 0
        ORDER BY Object_Goods.ValueData
               , Object_GoodsKind.ValueData
+              , MovementItem.Id
       ;
      RETURN NEXT Cursor2;
 

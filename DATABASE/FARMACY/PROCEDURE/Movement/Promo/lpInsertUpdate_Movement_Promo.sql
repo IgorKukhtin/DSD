@@ -21,6 +21,10 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+    inOperDate  := DATE_TRUNC ('DAY', inOperDate);
+    inStartPromo:= DATE_TRUNC ('DAY', inStartPromo);
+    inEndPromo  := DATE_TRUNC ('DAY', inEndPromo);
+
     -- проверка
     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
     THEN

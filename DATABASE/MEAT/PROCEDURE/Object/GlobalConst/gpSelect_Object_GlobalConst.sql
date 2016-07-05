@@ -64,6 +64,7 @@ BEGIN
      RETURN QUERY 
        WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state = 'active' /*and UseName = 'postgres'*/)
           , tmpProcess_All AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess)
+          , tmpProcess_HistoryCost AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpInsertUpdate_HistoryCost%' OR query LIKE '%gpComplete_All_Sybase%')
           , tmpProcess_Exp AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Scale%')
           , tmpProcess_Inv AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Inventory%')
           , tmpProcess_Rep1 AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
@@ -82,6 +83,11 @@ BEGIN
               END :: TDateTime AS OperDate
             , CASE WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
                         THEN 'Кол-во АП = <' || COALESCE ((SELECT Res FROM tmpProcess_All), '0') || '> из которых :'
+
+                          || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') <> '0'
+                                       THEN ' Расчет С/С = <' || COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') || '>'
+                                  ELSE ''
+                             END
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') <> '0'
                                        THEN ' ВАКУУМ = <' || COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') || '>'

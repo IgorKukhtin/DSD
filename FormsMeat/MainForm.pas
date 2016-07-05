@@ -13,7 +13,8 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, cxLabel, frxBarcode, cxTextEdit, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxDBData, cxGridLevel, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid;
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
+  dxSkinscxPCPainter;
 
 const
   WM_ChangeKeyboard = WM_USER + 1;
@@ -694,16 +695,14 @@ type
     actMobileTariff: TdsdOpenForm;
     miMobileTariff: TMenuItem;
     miSubMobile: TMenuItem;
-    miMobileNumbersEmployeeForm: TMenuItem;
     actMobileNumbersEmployee: TdsdOpenForm;
     actReport_Check_ReturnInToSale: TdsdOpenForm;
     N107: TMenuItem;
     actReport_CheckAmount_ReturnInToSale: TdsdOpenForm;
     miReport_MobileKS: TMenuItem;
     actReport_MobileKS: TdsdOpenForm;
-    dsdOpenForm2: TdsdOpenForm;
-    dsdOpenForm3: TdsdOpenForm;
-    
+    actDocumentKind: TdsdOpenForm;
+    N109: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

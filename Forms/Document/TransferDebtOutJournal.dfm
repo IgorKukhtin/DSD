@@ -477,7 +477,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Width = 1043
     ExplicitWidth = 1043
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
       EditValue = 42370d
@@ -1368,6 +1368,23 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_TransferDebtOut'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
     Left = 80
     Top = 336
   end
@@ -1422,6 +1439,23 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_TransferDebtOut'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
     Left = 178
     Top = 349
   end

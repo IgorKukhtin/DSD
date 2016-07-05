@@ -133,7 +133,6 @@ inherited GoodsForm: TGoodsForm
             Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
             DataBinding.FieldName = 'isPromo'
             PropertiesClassName = 'TcxCheckBoxProperties'
-            Properties.AllowGrayed = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -569,6 +568,16 @@ inherited GoodsForm: TGoodsForm
       end
       item
         ColorColumn = clisPublished
+        BackGroundValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = RetailCode
+        BackGroundValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = RetailName
         BackGroundValueColumn = clColor_calc
         ColorValueList = <>
       end>

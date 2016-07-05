@@ -33,14 +33,18 @@ BEGIN
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      -- определяем Торговую сеть входящего подразделения
-     vbReteilId:= (SELECT ObjectLink_Juridical_Retail.ChildObjectId
+     vbReteilId:= CASE WHEN vbUserId = 3
+                  THEN vbObjectId
+                  ELSE
+                  (SELECT ObjectLink_Juridical_Retail.ChildObjectId
                    FROM ObjectLink AS ObjectLink_Unit_Juridical
                       INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                    WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                   );
+                   )
+                   END;
 
      RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
@@ -66,7 +70,7 @@ BEGIN
            , Movement_Check.NotMCS
         FROM Movement_Check_View AS Movement_Check 
                             JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
-       WHERE Movement_Check.OperDate BETWEEN inStartDate AND inEndDate
+       WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL 1 'DAY'
          AND (Movement_Check.UnitId = inUnitId)
          AND (vbReteilId = vbObjectId)
 ;
@@ -76,14 +80,12 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  05.05.16         *
  07.08.15                                                                        *
  08.05.15                         * 
-
 */
 
 -- тест

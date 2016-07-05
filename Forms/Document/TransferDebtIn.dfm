@@ -3,7 +3,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
   ClientHeight = 532
   ClientWidth = 1140
   ExplicitWidth = 1156
-  ExplicitHeight = 570
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,6 +34,16 @@ inherited TransferDebtInForm: TTransferDebtInForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountChildDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -49,6 +59,16 @@ inherited TransferDebtInForm: TTransferDebtInForm
             item
               Kind = skSum
               Column = colPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountChildDiff
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -61,7 +81,17 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object LineNum: TcxGridDBColumn [0]
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object colCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -69,7 +99,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn [1]
+          object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -77,7 +107,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             Options.Editing = False
             Width = 220
           end
-          object colGoodsKindName: TcxGridDBColumn [2]
+          object colGoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -92,7 +122,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colMeasureName: TcxGridDBColumn [3]
+          object colMeasureName: TcxGridDBColumn [4]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -100,7 +130,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             Options.Editing = False
             Width = 44
           end
-          object colChangePercentAmount: TcxGridDBColumn [4]
+          object colChangePercentAmount: TcxGridDBColumn [5]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             Visible = False
@@ -108,7 +138,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [5]
+          object colAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -118,7 +148,29 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPrice: TcxGridDBColumn [6]
+          object colAmountChild: TcxGridDBColumn [7]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1074#1103#1079#1082#1072')'
+            DataBinding.FieldName = 'AmountChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colAmountChildDiff: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1079#1085#1080#1094#1072')'
+            DataBinding.FieldName = 'AmountChildDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colPrice: TcxGridDBColumn [9]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -128,7 +180,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [7]
+          object colCountForPrice: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -136,7 +188,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountSumm: TcxGridDBColumn [8]
+          object colAmountSumm: TcxGridDBColumn [11]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -152,9 +204,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 342
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -162,9 +211,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Height = 244
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 3
-        ExplicitTop = -57
-        ExplicitHeight = 342
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -846,19 +892,27 @@ inherited TransferDebtInForm: TTransferDebtInForm
       OptionsCustomize.DataRowSizing = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isError: TcxGridDBColumn
+        Caption = #1054#1096#1080#1073#1082#1072
+        DataBinding.FieldName = 'isError'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object childGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object childGoodsName: TcxGridDBColumn
@@ -867,6 +921,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 209
       end
       object childGoodsKindName: TcxGridDBColumn
@@ -876,7 +931,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Options.Editing = False
+        Width = 120
       end
       object childAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1074#1103#1079#1082#1072')'
@@ -897,6 +953,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object childPrice: TcxGridDBColumn
@@ -908,22 +965,50 @@ inherited TransferDebtInForm: TTransferDebtInForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 97
+        Width = 55
+      end
+      object childDescName_Sale: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1076#1086#1082'.'
+        DataBinding.FieldName = 'DescName_Sale'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object childInvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'.'
+        Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object childInvNumberPartner: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+        Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
         DataBinding.FieldName = 'InvNumberPartner'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 89
+        Options.Editing = False
+        Width = 100
+      end
+      object childInvNumber_Master: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
+        DataBinding.FieldName = 'InvNumber_Master'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object childInvNumberPartner_Master: TcxGridDBColumn
+        Caption = #8470' '#1085#1072#1083#1086#1075'.'
+        DataBinding.FieldName = 'InvNumberPartner_Master'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object childOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
@@ -931,6 +1016,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object childOperDatePartner: TcxGridDBColumn
@@ -938,7 +1024,50 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
+      end
+      object childOperDate_Master: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+        DataBinding.FieldName = 'OperDate_Master'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object childContractCode_Sale: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+        DataBinding.FieldName = 'ContractCode_Sale'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 71
+      end
+      object childContractName_Sale: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+        DataBinding.FieldName = 'ContractName_Sale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
+      end
+      object childContractCode_Tax: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+        DataBinding.FieldName = 'ContractCode_Tax'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
+      object childContractName_Tax: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+        DataBinding.FieldName = 'ContractName_Tax'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
       end
       object childDocumentTaxKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
@@ -948,27 +1077,78 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 160
       end
-      object childInvNumber_Master: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
-        DataBinding.FieldName = 'InvNumber_Master'
+      object FromName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1076#1072#1078#1072')'
+        DataBinding.FieldName = 'FromName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Options.Editing = False
+        Width = 100
       end
-      object childInvNumberPartner_Master: TcxGridDBColumn
-        Caption = #8470' '#1085#1072#1083#1086#1075'.'
-        DataBinding.FieldName = 'InvNumberPartner_Master'
+      object ToCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
+        DataBinding.FieldName = 'ToCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 86
-      end
-      object childOperDate_Master: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
-        DataBinding.FieldName = 'OperDate_Master'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
+      end
+      object ToName: TcxGridDBColumn
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1086#1076#1072#1078#1072')'
+        DataBinding.FieldName = 'ToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object JuridicalName: TcxGridDBColumn
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1087#1088#1086#1076#1072#1078#1072')'
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object MovementId_sale: TcxGridDBColumn
+        Caption = 'Id1'
+        DataBinding.FieldName = 'MovementId_sale'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object MovementItemId_sale: TcxGridDBColumn
+        Caption = 'Id2'
+        DataBinding.FieldName = 'MovementItemId_sale'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object childIsErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
     end
     object cxGridLevel1: TcxGridLevel
@@ -1025,6 +1205,15 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = 'MedocAction'
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_Child
+        end>
     end
     object actOpenTax: TdsdOpenForm [7]
       Category = 'DSDLib'
@@ -1140,27 +1329,29 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       isShowModal = True
     end
-    object actOpenReportForm: TdsdOpenForm [9]
+    object actOpenReportCheckAmountForm: TdsdOpenForm [9]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
-      ImageIndex = 25
-      FormName = 'TReport_Goods_SalebyTransferDebtInForm'
-      FormNameParam.Value = 'TReport_Goods_SalebyTransferDebtInForm'
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      ImageIndex = 26
+      FormName = 'TReport_CheckAmount_ReturnInToSaleForm'
+      FormNameParam.Value = 'TReport_CheckAmount_ReturnInToSaleForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inStartDate'
           Value = 42181d
+          Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'inEndDate'
           Value = 42181d
+          Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1168,7 +1359,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           Name = 'inPartnerId'
           Value = ''
-          Component = GuidesFrom
+          Component = GuidesPartnerFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1176,6 +1367,197 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           Name = 'inPartnerName'
           Value = ''
+          Component = GuidesPartnerFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportCheckForm: TdsdOpenForm [10]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      ImageIndex = 24
+      FormName = 'TReport_Check_ReturnInToSaleForm'
+      FormNameParam.Value = 'TReport_Check_ReturnInToSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 42181d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42181d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesPartnerFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesPartnerFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportForm: TdsdOpenForm [11]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      ImageIndex = 25
+      FormName = 'TReport_Goods_SalebyReturnInForm'
+      FormNameParam.Value = 'TReport_Goods_SalebyReturnInForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 42181d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42181d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesPartnerFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesPartnerFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = Null
           Component = GuidesFrom
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -1185,6 +1567,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           Name = 'inPaidKindId'
           Value = ''
+          Component = PaidKindFromGuides
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1192,6 +1575,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           Name = 'inPaidKindName'
           Value = ''
+          Component = PaidKindFromGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1226,6 +1610,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           Name = 'inContractId'
           Value = ''
+          Component = ContractFromGuides
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1233,6 +1618,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           Name = 'inContractName'
           Value = ''
+          Component = ContractFromGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1289,7 +1675,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint: TMultiAction [13]
+    object mactPrint: TMultiAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1319,7 +1705,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1641,6 +2027,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
     object mactPrint_TaxCorrective_Us: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1655,9 +2045,23 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
     end
-    object actShowMessage: TShowMessageAction
+    object actUpdateAuto: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAuto
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAuto
+        end
+        item
+          StoredProc = spSelect_MI_Child
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      ImageIndex = 7
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' <'#1055#1088#1086#1076#1072#1078#1072'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' <'#1055#1088#1086#1076#1072#1078#1072'>.'
     end
     object actMedocProcedure: TdsdExecStoredProc
       Category = 'TaxLib'
@@ -1785,6 +2189,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateAuto'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbTaxCorrective'
         end
         item
@@ -1838,6 +2250,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           Visible = True
           ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportCheckForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportCheckAmountForm'
         end
         item
           Visible = True
@@ -1905,6 +2325,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1961,6 +2385,18 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
+      Category = 0
+    end
+    object bbOpenReportCheckAmountForm: TdxBarButton
+      Action = actOpenReportCheckAmountForm
+      Category = 0
+    end
+    object bbOpenReportCheckForm: TdxBarButton
+      Action = actOpenReportCheckForm
+      Category = 0
+    end
+    object bbUpdateAuto: TdxBarButton
+      Action = actUpdateAuto
       Category = 0
     end
   end
@@ -2054,6 +2490,31 @@ inherited TransferDebtInForm: TTransferDebtInForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_TransferDebtIn'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
     Left = 128
     Top = 56
   end
@@ -3602,7 +4063,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 448
   end
   object spSelect_MI_Child: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItemChild_TransferDebtIn'
+    StoredProcName = 'gpSelect_MovementItemChild_ReturnIn'
     DataSet = DetailCDS
     DataSets = <
       item
@@ -3631,6 +4092,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -3650,5 +4112,38 @@ inherited TransferDebtInForm: TTransferDebtInForm
     SearchAsFilter = False
     Left = 302
     Top = 457
+  end
+  object spUpdateAuto: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnIn_Auto'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 42181d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 364
   end
 end

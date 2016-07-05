@@ -11,7 +11,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 773
-  ExplicitHeight = 447
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1541,7 +1541,7 @@ inherited MainCashForm: TMainCashForm
   end
   object TimerSaveAll: TTimer
     Enabled = False
-    Interval = 60000
+    Interval = 360000
     OnTimer = TimerSaveAllTimer
     Left = 32
     Top = 24

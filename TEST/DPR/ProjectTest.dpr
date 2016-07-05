@@ -816,8 +816,6 @@ uses
   Report_Goods_SalebyReturnIn in '..\..\Forms\Report\Report_Goods_SalebyReturnIn.pas' {Report_Goods_SalebyReturnInForm: TParentForm},
   Report_Goods_SalebyReturnInDialog in '..\..\Forms\Report\Report_Goods_SalebyReturnInDialog.pas' {Report_Goods_SalebyReturnInDialogForm: TParentForm},
   Report_Goods_ReturnInBySale in '..\..\Forms\Report\Report_Goods_ReturnInBySale.pas' {Report_Goods_ReturnInBySaleForm: TParentForm},
-  Report_Goods_SalebyTransferDebtIn in '..\..\Forms\Report\Report_Goods_SalebyTransferDebtIn.pas' {Report_Goods_SalebyTransferDebtInForm: TParentForm},
-  Report_Goods_SalebyTransferDebtInDialog in '..\..\Forms\Report\Report_Goods_SalebyTransferDebtInDialog.pas' {Report_Goods_SalebyTransferDebtInDialogForm: TParentForm},
   Report_Check_ReturnInToSale in '..\..\Forms\Report\Report_Check_ReturnInToSale.pas' {Report_Check_ReturnInToSaleForm: TParentForm},
   Report_Check_ReturnInToSaleDialog in '..\..\Forms\Report\Report_Check_ReturnInToSaleDialog.pas' {Report_Check_ReturnInToSaleDialogForm: TParentForm},
   Report_CheckAmount_ReturnInToSaleDialog in '..\..\Forms\Report\Report_CheckAmount_ReturnInToSaleDialog.pas' {Report_CheckAmount_ReturnInToSaleDialogForm: TParentForm},
@@ -829,7 +827,9 @@ uses
   MobileNumbersEmployeeEdit in '..\..\Forms\Guides\MobileNumbersEmployeeEdit.pas' {MobileNumbersEmployeeEditForm: TParentForm},
   Report_MobileKS in '..\..\Forms\Report\Report_MobileKS.pas' {Report_MobileKSForm: TParentForm},
   OrderExternal_SendOnPriceJournalChoice in '..\..\Forms\Document\OrderExternal_SendOnPriceJournalChoice.pas' {OrderExternal_SendOnPriceJournalChoiceForm: TParentForm},
-  Report_CheckTaxDialog in '..\..\Forms\Report\Report_CheckTaxDialog.pas' {Report_CheckTaxDialogForm: TParentForm};
+  Report_CheckTaxDialog in '..\..\Forms\Report\Report_CheckTaxDialog.pas' {Report_CheckTaxDialogForm: TParentForm},
+  DocumentKind in '..\..\Forms\Kind\DocumentKind.pas' {DocumentKindForm: TParentForm},
+  DocumentKindEdit in '..\..\Forms\Kind\DocumentKindEdit.pas' {DocumentKindEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

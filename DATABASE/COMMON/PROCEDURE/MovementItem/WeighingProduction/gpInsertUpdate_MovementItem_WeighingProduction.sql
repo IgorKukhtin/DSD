@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingProduction(
     IN inWeightOther         TFloat    , -- Вес, прочее
     IN inPartionGoodsDate    TDateTime , -- Партия товара (дата)
     IN inPartionGoods        TVarChar  , -- Партия товара
+    IN inMovementItemId      Integer   , -- 
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -74,6 +75,8 @@ BEGIN
      -- сохранили свойство <Вес, прочее>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightOther(), ioId, inWeightOther);
 
+     -- сохранили свойство <MovementItemId - Партия производства>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), ioId, inMovementItemId);
 
      -- сохранили свойство <Партия товара (дата)>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);

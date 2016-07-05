@@ -1,25 +1,24 @@
 inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   ActiveControl = edGoodsSearch
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1093
-  ClientWidth = 832
+  ClientWidth = 902
   ShowHint = True
-  ExplicitWidth = 848
-  ExplicitHeight = 346
+  ExplicitWidth = 918
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 832
-    ExplicitWidth = 832
-    ClientRectRight = 832
+    Width = 902
+    ExplicitWidth = 902
+    ClientRectRight = 902
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 832
+      ExplicitWidth = 902
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Top = 27
-        Width = 832
+        Width = 902
         Height = 255
         ExplicitTop = 27
-        ExplicitWidth = 832
+        ExplicitWidth = 902
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -75,8 +74,16 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Width = 154
           end
           object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
+            Caption = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Properties.ReadOnly = True
+            Width = 62
+          end
+          object colPriceWithNDS: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' c '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithNDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             Properties.ReadOnly = True
@@ -107,7 +114,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Width = 70
           end
           object colCashPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'. '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'NewPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
@@ -154,54 +161,72 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 832
+        Width = 902
         Height = 27
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
         object edGoodsSearch: TcxTextEdit
-          Left = 83
+          Left = 76
           Top = 3
           Hint = #1053#1072#1078#1084#1080#1090#1077' Enter '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
           TabOrder = 1
-          Width = 158
+          Width = 139
         end
         object cxLabel1: TcxLabel
           Left = 3
-          Top = 4
+          Top = 5
           Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1072
         end
         object edProducerSearch: TcxTextEdit
-          Left = 413
+          Left = 337
           Top = 3
           Hint = #1053#1072#1078#1084#1080#1090#1077' Ctrl+Enter '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
           TabOrder = 2
-          Width = 158
+          Width = 123
         end
         object cxLabel2: TcxLabel
-          Left = 307
+          Left = 255
           Top = 5
-          Caption = #1055#1086#1080#1089#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
         end
         object cxLabel3: TcxLabel
-          Left = 240
-          Top = 4
+          Left = 218
+          Top = 5
           Caption = 'Enter'
           Style.TextColor = 6118749
         end
         object cxLabel4: TcxLabel
-          Left = 571
-          Top = 4
+          Left = 459
+          Top = 5
           Caption = 'Ctrl+Enter'
           Style.TextColor = 6118749
         end
         object btnClearFilter: TcxButton
-          Left = 656
+          Left = 745
           Top = 0
           Width = 153
           Height = 25
           Action = actClearFilter
           TabOrder = 6
+        end
+        object cxLabel5: TcxLabel
+          Left = 532
+          Top = 5
+          Caption = #1055#1086' '#1082#1086#1076#1091
+        end
+        object edCodeSearch: TcxTextEdit
+          Left = 580
+          Top = 3
+          Hint = #1053#1072#1078#1084#1080#1090#1077'Alt+Enter '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
+          TabOrder = 8
+          Width = 101
+        end
+        object cxLabel6: TcxLabel
+          Left = 680
+          Top = 5
+          Caption = 'Alt+Enter'
+          Style.TextColor = 6118749
         end
       end
     end
@@ -212,23 +237,29 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       MoveParams = <
         item
           FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'GoodsId'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'Code'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'Name'
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -255,18 +286,21 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       FormName = 'TGoodsMainLiteForm'
       FormNameParam.Value = 'TGoodsMainLiteForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -274,6 +308,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -333,9 +368,11 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       MoveParams = <
         item
           FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'GoodsId'
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProc = spDeleteLink
@@ -358,24 +395,51 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       Caption = 'actRefreshSearch'
       ShortCut = 16397
     end
+    object actRefreshSearch3: TdsdExecStoredProc
+      Category = 'DSDLib'
+      ActiveControl = edCodeSearch
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actRefreshSearch'
+      ShortCut = 32781
+    end
     object actClearFilter: TMultiAction
       Category = 'ClearFilter'
       MoveParams = <
         item
           FromParam.Value = ''
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = edGoodsSearch
           ToParam.DataType = ftString
           ToParam.ParamType = ptInput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = ''
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = edProducerSearch
           ToParam.DataType = ftString
           ToParam.ParamType = ptInput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = Null
+          FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = edCodeSearch
+          ToParam.DataType = ftString
+          ToParam.ParamType = ptInput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -403,6 +467,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Component = edGoodsSearch
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inProducerSearch'
@@ -410,13 +475,22 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Component = edProducerSearch
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeSearch'
+        Value = Null
+        Component = edCodeSearch
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
-    Top = 88
+    Top = 104
   end
   inherited BarManager: TdxBarManager
     Left = 112
-    Top = 88
+    Top = 104
     DockControlHeights = (
       0
       0
@@ -462,6 +536,10 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       Category = 0
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 552
+    Top = 200
+  end
   object spSetPriceListLink: TdsdStoredProc
     StoredProcName = 'gpUpdate_LoadPriceList_GoodsId'
     DataSets = <>
@@ -473,6 +551,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -480,6 +559,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
@@ -496,9 +576,10 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
+    Left = 296
     Top = 152
   end
   object spDeleteLink: TdsdStoredProc
@@ -512,9 +593,10 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Component = MasterCDS
         ComponentItem = 'LinkGoodsId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 160
+    Left = 376
+    Top = 200
   end
 end

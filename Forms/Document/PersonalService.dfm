@@ -2,26 +2,27 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 423
   ClientWidth = 1345
-  ExplicitLeft = -555
   ExplicitWidth = 1361
-  ExplicitHeight = 458
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1345
-    Height = 337
+    Height = 335
+    ExplicitTop = 88
     ExplicitWidth = 1345
-    ExplicitHeight = 337
-    ClientRectBottom = 337
-    ClientRectRight = 1345
+    ExplicitHeight = 335
+    ClientRectBottom = 331
+    ClientRectRight = 1341
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1345
-      ExplicitHeight = 313
+      ExplicitLeft = 4
+      ExplicitWidth = 1337
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1345
-        Height = 313
-        ExplicitWidth = 1345
-        ExplicitHeight = 313
+        Width = 1337
+        Height = 307
+        ExplicitWidth = 1337
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -550,7 +551,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 121
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 121
     end
     object edServiceDate: TcxDateEdit
@@ -689,6 +690,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_PersonalService'
       ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
@@ -706,12 +708,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
       FormName = 'TPersonalServiceListForm'
       FormNameParam.Value = 'TPersonalServiceListForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalServiceListId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -719,6 +723,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Component = MasterCDS
           ComponentItem = 'PersonalServiceListName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -730,12 +735,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -743,6 +750,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Component = MasterCDS
           ComponentItem = 'MemberName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -782,6 +790,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       FormName = 'TPersonalServiceJournalChoiceForm'
       FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'MaskId'
@@ -789,12 +798,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TopPersonalServiceListId'
           Value = ''
           Component = GuidesPersonalServiceList
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TopPersonalServiceListName'
@@ -802,6 +813,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Component = GuidesPersonalServiceList
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Key'
@@ -809,6 +821,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Component = FormParams
           ComponentItem = 'MaskId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -830,6 +843,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -837,6 +851,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -844,6 +859,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -854,7 +870,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -971,12 +987,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -984,28 +1002,33 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameLoss'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameLossTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameLossBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MaskId'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 552
@@ -1028,11 +1051,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1041,12 +1066,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1054,6 +1081,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1061,24 +1089,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDate'
         Value = 41640d
         Component = edServiceDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListId'
         Value = ''
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListName'
@@ -1086,12 +1118,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = GuidesJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1099,6 +1133,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1112,6 +1147,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1119,6 +1155,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1126,6 +1163,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inServiceDate'
@@ -1133,6 +1171,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = edServiceDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1140,6 +1179,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalServiceListId'
@@ -1147,6 +1187,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1154,6 +1195,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1215,6 +1257,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1222,6 +1265,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1229,6 +1273,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisMain'
@@ -1237,6 +1282,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'isMain'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmount'
@@ -1244,6 +1290,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountToPay'
@@ -1251,6 +1298,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'AmountToPay'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountCash'
@@ -1258,6 +1306,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'AmountCash'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSummTransportAdd'
@@ -1265,6 +1314,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'SummTransportAdd'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSummTransport'
@@ -1272,6 +1322,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'SummTransport'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSummPhone'
@@ -1279,6 +1330,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'SummPhone'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummService'
@@ -1287,6 +1339,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'SummService'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummCardRecalc'
@@ -1295,6 +1348,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'SummCardRecalc'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummMinus'
@@ -1303,6 +1357,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'SummMinus'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummAdd'
@@ -1311,6 +1366,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'SummAdd'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummHoliday'
@@ -1319,6 +1375,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'SummHoliday'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummSocialIn'
@@ -1327,6 +1384,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'SummSocialIn'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummSocialAdd'
@@ -1335,6 +1393,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'SummSocialAdd'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummChild'
@@ -1343,6 +1402,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'SummChild'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1351,6 +1411,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1358,6 +1419,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1365,6 +1427,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -1372,6 +1435,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId'
@@ -1379,6 +1443,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'MemberId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalServiceListId'
@@ -1386,6 +1451,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'PersonalServiceListId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1396,6 +1462,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1403,6 +1470,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1410,6 +1478,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1417,6 +1486,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'Amount'
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 272
@@ -1428,6 +1498,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <>
     Left = 512
@@ -1463,6 +1534,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -1474,6 +1546,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     isShowModal = True
     FormNameParam.Value = 'TPersonalServiceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalServiceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1482,6 +1555,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = ''
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1489,12 +1563,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = GuidesJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1502,6 +1578,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 568
     Top = 13
@@ -1511,6 +1588,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1521,6 +1599,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1529,6 +1608,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 744
     Top = 16
@@ -1544,6 +1624,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioIsMain'
@@ -1551,10 +1632,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
-    Top = 403
+    Top = 378
   end
   object spUpdateMask: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_isMask'
@@ -1567,6 +1649,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementMaskId'
@@ -1574,6 +1657,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'MaskId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 448

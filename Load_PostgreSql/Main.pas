@@ -2215,7 +2215,7 @@ begin
 
      //if not fStop then pCompleteDocument_Cash;
 
-     if (cbOnlySale.Checked = FALSE)and(cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
+     if {(cbOnlySale.Checked = FALSE)and***}(cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
      begin
           {if not fStop then pCompleteDocument_Income(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_IncomeNal(cbLastComplete.Checked);
@@ -9951,7 +9951,7 @@ begin
                   else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, 0 as BranchId, 0 as BranchCode, null as BranchName');
              //
              //
-             if isFirst = FALSE then
+             if (isFirst = FALSE){and(cbOnlySale.Checked=TRUE)***} then
              begin
                    fOpenSqToQuery (' select *'
                                   +' from gpSelect_HistoryCost_Branch ('+FormatToDateServer_notNULL(calcStartDate)

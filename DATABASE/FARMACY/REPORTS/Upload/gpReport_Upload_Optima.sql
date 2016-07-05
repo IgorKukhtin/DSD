@@ -98,12 +98,12 @@ BEGIN
     INSERT INTO _Result(RowData) Values ('<Create_Date>'||to_char(CURRENT_TIMESTAMP,'YYYY-MM-DD')||'T00:00:00</Create_Date>');
     INSERT INTO _Result(RowData) Values ('</Header>');
   
-    --Создали таблицу пустографку
+    -- Создали таблицу пустографку
     CREATE TEMP TABLE _Cross(
         GoodsId         Integer,
         GoodsCode       TVarChar,
         GoodsName       TVarChar) ON COMMIT DROP;
-    --Залили пустографку
+    -- Залили пустографку
     WITH Goods AS(
         SELECT DISTINCT
             LinkGoods_Main_Retail.GoodsId AS GoodsId,
@@ -114,28 +114,24 @@ BEGIN
             LEFT OUTER JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
                                                   ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
                                                  AND LinkGoods_Main_Retail.ObjectId = vbObjectIdRetail
-        WHERE
-            Object_Goods_View.ObjectId = inObjectId
-            AND
-            Object_Goods_View.IsUpload = TRUE
-    )
+        WHERE Object_Goods_View.ObjectId = inObjectId
+          AND Object_Goods_View.IsUpload = TRUE
+       )
     INSERT INTO _Cross (GoodsId,GoodsCode)
-    SELECT
-        Goods.GoodsId, Goods.GoodsCode
-    FROM 
-      Goods;
+      SELECT Goods.GoodsId, Goods.GoodsCode FROM  Goods;
     
-    --Остатки
+
+    -- Остатки
     WITH Remains AS(
-        SELECT
-            T0.GoodsId
-           ,SUM(T0.Amount)::TFloat AS Amount
-        FROM (
-                SELECT
+        SELECT T0.GoodsId
+             , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
+             , COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
+             , SUM (T0.Amount) :: TFloat AS Amount
+        FROM (SELECT
                     Container.Id
                    ,Container.ObjectId        AS GoodsId
                    ,Container.Amount - COALESCE(SUM(MovementItemContainer.Amount),0.0)::TFloat as Amount
-                FROM
+              FROM
                     Container
                     LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.ID
                                                          AND date_trunc('day', MovementItemContainer.OperDate) > inDate
@@ -150,32 +146,58 @@ BEGIN
                                                   ON MovementLinkObject_Income_From.MovementId = MI_Income.MovementId
                                                  AND MovementLinkObject_Income_From.DescId = zc_MovementLinkObject_From()
                                                  AND MovementLinkObject_Income_From.ObjectId = inObjectId
-                WHERE
-                    Container.DescId = zc_Container_Count()
-                    AND
-                    Container.WhereObjectId = inUnitId
-                GROUP BY
-                    Container.Id
-                   ,Container.ObjectId
-                HAVING
-                    (Container.Amount - COALESCE(SUM(MovementItemContainer.Amount),0.0)::TFloat) <> 0
+              WHERE Container.DescId = zc_Container_Count()
+                AND Container.WhereObjectId = inUnitId
+              GROUP BY Container.Id
+                     , Container.ObjectId
+              HAVING (Container.Amount - COALESCE(SUM(MovementItemContainer.Amount),0.0)::TFloat) <> 0
             ) AS T0
-        GROUP BY
-            T0.GoodsId
-        HAVING
-            COALESCE(SUM(T0.Amount),0) > 0
-    )
-    INSERT INTO _Result(RowData)
+                                    -- партия
+                                    LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                                        ON CLI_MI.ContainerId = T0.Id
+                                                                       AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                    LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                    -- элемент прихода
+                                    LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                    -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                    -- элемент прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+
+        GROUP BY T0.GoodsId
+               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
+               , COALESCE (MI_Income_find.Id,         MI_Income.Id)
+        HAVING COALESCE (SUM (T0.Amount), 0) > 0
+       )
+    INSERT INTO _Result (RowData)
     SELECT
-        '<Remains><Supplier_Code>'||vbObjectOKPO||'</Supplier_Code><Item_Code_Optima>'||_Cross.GoodsCode||'</Item_Code_Optima><Item_Code_Morion></Item_Code_Morion><Item_Code_Supplier>'||_Cross.GoodsCode||'</Item_Code_Supplier><Document_Number></Document_Number><Batch_Number></Batch_Number><Price_In></Price_In><Remains>'||COALESCE(Remains.Amount,0)::TVarChar||'</Remains></Remains>'
-    FROM
-        _Cross
-        LEFT OUTER JOIN Remains ON _Cross.GoodsId = Remains.GoodsId;
-    --Продажи
+        '<Remains>'
+     || '<Supplier_Code>' || vbObjectOKPO || '</Supplier_Code>'
+     || '<Item_Code_Optima>' || _Cross.GoodsCode ||'</Item_Code_Optima>'
+     || '<Item_Code_Morion></Item_Code_Morion>'
+     || '<Item_Code_Supplier>' || _Cross.GoodsCode || '</Item_Code_Supplier>'
+     || '<Document_Number>' || COALESCE (Movement.InvNumber, '') || '</Document_Number>'
+     || '<Batch_Number>' || COALESCE (MIString_PartionGoods.ValueData, '') || '</Batch_Number>'
+     || '<Price_In></Price_In>'
+     || '<Remains>' || COALESCE (Remains.Amount, 0) :: TVarChar || '</Remains>'
+     || '</Remains>'
+    FROM _Cross
+         LEFT JOIN Remains ON _Cross.GoodsId = Remains.GoodsId
+         LEFT JOIN Movement ON Movement.Id = Remains.MovementId
+         LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                      ON MIString_PartionGoods.MovementItemId = Remains.MovementItemId
+                                     AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+   ;
+ 
+    -- Продажи
     WITH Sale AS(
         SELECT
             MI_Check.ObjectId                        AS GoodsId
-           ,SUM(-MIContainer.Amount)::TFloat         AS Amount
+          , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
+          , COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
+          , SUM (-1 * MIContainer.Amount)  :: TFloat AS Amount
         FROM
             Movement AS Movement_Check
             INNER JOIN MovementItem AS MI_Check
@@ -195,8 +217,15 @@ BEGIN
                               ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
             INNER JOIN MovementItem AS MI_Income
                                     ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                        ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+            -- элемент прихода от поставщика (если это партия, которая была создана инвентаризацией)
+            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+
             INNER JOIN MovementLinkObject AS MovementLinkObject_Income_From
-                                          ON MovementLinkObject_Income_From.MovementId = MI_Income.MovementId
+                                          ON MovementLinkObject_Income_From.MovementId = COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
                                          AND MovementLinkObject_Income_From.DescId = zc_MovementLinkObject_From()
                                          AND MovementLinkObject_Income_From.ObjectId = inObjectId
                                          
@@ -210,31 +239,50 @@ BEGIN
             MovementLinkObject_Unit.ObjectId = inUnitId
         GROUP BY
             MI_Check.ObjectId
-        HAVING
-            SUM(MIContainer.Amount) <> 0
+          , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
+          , COALESCE (MI_Income_find.Id,         MI_Income.Id)
+        HAVING SUM (MIContainer.Amount) <> 0
     )
     INSERT INTO _Result (RowData)
     SELECT
-        '<Sales><Supplier_Code>'||vbObjectOKPO||'</Supplier_Code><Item_Code_Optima>'||_Cross.GoodsCode||'</Item_Code_Optima><Item_Code_Morion></Item_Code_Morion><Item_Code_Supplier>'||_Cross.GoodsCode||'</Item_Code_Supplier><Document_Number></Document_Number><Batch_Number></Batch_Number><Price_In></Price_In><Price_Out></Price_Out><Check_Code></Check_Code><Check_Time></Check_Time><Card_Id></Card_Id><Sales>'||COALESCE(Sale.Amount,0)::TVarChar||'</Sales></Sales>'
-    FROM
-        _Cross
-        LEFT OUTER JOIN Sale ON Sale.GoodsId = _Cross.GoodsId
+        '<Sales><Supplier_Code>'||vbObjectOKPO||'</Supplier_Code>'
+     || '<Item_Code_Optima>'||_Cross.GoodsCode||'</Item_Code_Optima>'
+     || '<Item_Code_Morion></Item_Code_Morion>'
+     || '<Item_Code_Supplier>'||_Cross.GoodsCode||'</Item_Code_Supplier>'
+     || '<Document_Number>' || COALESCE (Movement.InvNumber, '') || '</Document_Number>'
+     || '<Batch_Number>' || COALESCE (MIString_PartionGoods.ValueData, '') || '</Batch_Number>'
+     || '<Price_In></Price_In>'
+     || '<Price_Out></Price_Out>'
+     || '<Check_Code></Check_Code>'
+     || '<Check_Time></Check_Time>'
+     || '<Card_Id></Card_Id>'
+     || '<Sales>'||COALESCE(Sale.Amount,0)::TVarChar||'</Sales>'
+     || '</Sales>'
+
+    FROM _Cross
+         LEFT OUTER JOIN Sale ON Sale.GoodsId = _Cross.GoodsId
+         LEFT JOIN Movement ON Movement.Id = Sale.MovementId
+         LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                      ON MIString_PartionGoods.MovementItemId = Sale.MovementItemId
+                                     AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
         ;
     INSERT INTO _Result (RowData) Values ('</PReport>');
-        
+
+    -- РЕЗУЛЬТАТ
     RETURN QUERY
         SELECT _Result.RowData from _Result;
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION  gpReport_Upload_Optima (TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 08.07.16                                        *
  23.11.15                                                                       *
-
 */
 
 -- тест

@@ -119,6 +119,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
@@ -132,14 +133,106 @@ $BODY$
    DECLARE vbContractId Integer;
 BEGIN
 	
-   vbUserId := inSession::Integer;
-   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+     -- определяется <Пользователь>
+     vbUserId := lpGetUserBySession (inSession);
 
-   -- Ищем документ по дате, номеру, юр лицу
-      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+
+         -- Ищем подразделение и Договор. Два в одном
+         SELECT tmp.ContractId, tmp.UnitId
+                INTO vbContractId, vbUnitId
+         FROM (WITH tmpList AS (SELECT Object_ImportExportLink_View.ValueId                                       AS ContractId -- здесь Договор
+                                     , Object_ImportExportLink_View.MainId                                        AS UnitId
+                                     , LOWER (TRIM (Object_ImportExportLink_View.StringKey)) :: TVarChar          AS StringKey
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 1)) AS StringKey1
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 2)) AS StringKey2
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 3)) AS StringKey3
+                                FROM Object_Contract_View
+                                     INNER JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.ValueId = Object_Contract_View.Id
+                                WHERE Object_Contract_View.JuridicalId = inJuridicalId
+                               )
+               -- почти результат
+               SELECT tmpList.ContractId, tmpList.UnitId
+               FROM tmpList
+               WHERE (LOWER (inUnitName) = StringKey AND StringKey  <> '' AND StringKey1 = '' AND StringKey2 = '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND StringKey1 <> '' AND StringKey2 = '' AND StringKey3 = ''
+                      )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey3 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 <> ''
+                     )
+              ) AS tmp;
+
+
+     -- если не нашли - Ищем подразделение по Юрлицу, а вот Договор - будет потом...
+     IF COALESCE (vbUnitId, 0) = 0
+     THEN
+
+         SELECT tmp.UnitId
+                INTO vbUnitId
+         FROM (WITH tmpList AS (SELECT Object_ImportExportLink_View.ValueId                                       AS JuridicalId -- здесь Юр.Лицо
+                                     , Object_ImportExportLink_View.MainId                                        AS UnitId
+                                     , LOWER (TRIM (Object_ImportExportLink_View.StringKey)) :: TVarChar          AS StringKey
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 1)) AS StringKey1
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 2)) AS StringKey2
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 3)) AS StringKey3
+                                FROM Object_ImportExportLink_View
+                                WHERE Object_ImportExportLink_View.ValueId = inJuridicalId
+                               )
+               -- почти результат
+               SELECT tmpList.JuridicalId, tmpList.UnitId
+               FROM tmpList
+               WHERE (LOWER (inUnitName) = StringKey AND StringKey  <> '' AND StringKey1 = '' AND StringKey2 = '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%' AND StringKey1 <> '' AND StringKey2 = '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 = ''
+                     )
+                  OR (LOWER (inUnitName) LIKE '%' || StringKey1 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey2 || '%'
+                  AND LOWER (inUnitName) LIKE '%' || StringKey3 || '%' AND StringKey1 <> '' AND StringKey2 <> '' AND StringKey3 <> ''
+                     )
+              ) AS tmp;
+
+    END IF;
+
+
+    -- Если не нашли, то сразу ругнемся. !!!Подразделение должно быть!!!
+    IF COALESCE (vbUnitId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Для значения <%> по Юр.лицу <%> не найдено Подразделение.', inUnitName, lfGet_Object_ValueData (inJuridicalId);
+    END IF;
+
+
+     -- !!!только НЕ так определяется <Торговая сеть>!!!
+     -- vbObjectId:= lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
+     -- !!!только так - определяется <Торговая сеть>!!!
+     vbObjectId:= (SELECT ObjectLink_Juridical_Retail.ChildObjectId
+                   FROM ObjectLink AS ObjectLink_Unit_Juridical
+                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                   WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                  );
+    -- Если не нашли, то сразу ругнемся.
+    IF COALESCE (vbObjectId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'У подразделения <%> не установлено значение <Торговая сеть>.', lfGet_Object_ValueData (vbUnitId);
+    END IF;
+
+
+     -- Ищем документ по дате, номеру, юр лицу
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId)
-   SELECT Id, Movement.StatusId INTO vbMovementId, vbStatusId
-            FROM tmpStatus
+       SELECT Movement.Id, Movement.StatusId
+              INTO vbMovementId, vbStatusId
+       FROM tmpStatus
             JOIN Movement ON Movement.OperDate = inOperDate 
                          AND Movement.DescId = zc_Movement_Income() 
                          AND Movement.StatusId = tmpStatus.StatusId
@@ -150,28 +243,10 @@ BEGIN
                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
 
 
-   -- Аж вот тут мы будем менять, если документа нет или НДС определен точно
-     IF (COALESCE(vbMovementId, 0) = 0) THEN
- 
-        -- Ищем подразделение и Договор. Два в одном
-        SELECT MainId, ValueId INTO vbUnitId, vbContractId
-          FROM Object_ImportExportLink_View
-               LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = inJuridicalId
-         WHERE ValueId = Object_Contract_View.Id  AND StringKey = inUnitName;
-
-       IF COALESCE(vbUnitId, 0) = 0 THEN
-          -- Ищем подразделение по Юрлицу.
-          SELECT MainId INTO vbUnitId 
-            FROM Object_ImportExportLink_View
-           WHERE ValueId = inJuridicalId AND StringKey = inUnitName;
-       END IF;
-
-    -- Если не нашли, то сразу ругнемся. Подразделение должно быть!
-       IF COALESCE(vbUnitId, 0) = 0 THEN
-          RAISE EXCEPTION 'Не установлено Подразделение';
-       END IF;
-        
-       
+     -- Аж вот тут мы будем менять, если документа нет или НДС определен точно
+     IF COALESCE (vbMovementId, 0) = 0
+     THEN
+       -- продолжаем искать договор      
        IF COALESCE(vbContractId, 0) = 0 THEN
         -- А вот тут попытка угадать договор.
           -- Если даты не равны, то ищем любой договор с отсрочкой платежа
@@ -261,7 +336,13 @@ BEGIN
         AND MovementItem.PartionGoods = inPartitionGoods
         AND MovementItem.ExpirationDate = inExpirationDate;
   
-     vbMovementItemId := lpInsertUpdate_MovementItem_Income(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
+
+     -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem_Income (vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
+
+     -- сохранили
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
 
      -- Срок годности заодно влепим
@@ -299,7 +380,8 @@ BEGIN
 
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

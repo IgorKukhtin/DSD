@@ -75,7 +75,7 @@
 			<VerInfo_Build>10</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>3</VerInfo_Release>
-			<Debugger_RunParams>/autologin ves=22.345</Debugger_RunParams>
+			<Debugger_RunParams>/autologin Scale_CEH.ini ves=22.345</Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -203,6 +203,10 @@
 				<Form>DialogStringValueForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
+			<DCCReference Include="..\ScaleCeh\GuideWorkProgress.pas">
+				<Form>GuideWorkProgressForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\LocalWorkUnit.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

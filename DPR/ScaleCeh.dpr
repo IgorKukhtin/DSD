@@ -76,7 +76,9 @@ uses
   DialogMessage in '..\ScaleCeh\DialogMessage.pas' {DialogMessageForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
-  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
+  GuideWorkProgress in '..\ScaleCeh\GuideWorkProgress.pas' {GuideWorkProgressForm},
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas';
 
 {$R *.res}
 
@@ -109,6 +111,7 @@ begin
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
+         Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
   end
   else
 
@@ -136,6 +139,7 @@ begin
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
+         Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
   end;
   //
   Application.Run;

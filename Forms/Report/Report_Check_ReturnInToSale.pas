@@ -54,6 +54,11 @@ type
     edInvNumber: TcxTextEdit;
     edOperDate: TcxDateEdit;
     cxLabel4: TcxLabel;
+    ContractName: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    isDiffContract: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

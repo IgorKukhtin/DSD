@@ -43,6 +43,7 @@ type
     isAuto: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    colDocumentKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isProductionIn Boolean
              , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
+             , DocumentKindName TVarChar
              , UserName TVarChar
               )
 AS
@@ -80,6 +81,8 @@ BEGIN
              , Object_From.ValueData              AS FromName
              , Object_To.ValueData                AS ToName
 
+             , Object_DocumentKind.ValueData   AS DocumentKindName
+
              , Object_User.ValueData              AS UserName
 
        FROM tmpStatus
@@ -141,6 +144,11 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                         ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+            LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
        ORDER BY COALESCE (MovementDate_EndWeighing.ValueData, MovementDate_StartWeighing.ValueData) DESC
               , MovementDate_StartWeighing.ValueData DESC
       ;
@@ -157,4 +165,4 @@ ALTER FUNCTION gpSelect_Scale_MovementCeh (TDateTime, TDateTime, Boolean, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_MovementCeh (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsComlete:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_MovementCeh (inStartDate:= '01.05.2016', inEndDate:= '01.05.2016', inIsComlete:= TRUE, inSession:= zfCalc_UserAdmin())

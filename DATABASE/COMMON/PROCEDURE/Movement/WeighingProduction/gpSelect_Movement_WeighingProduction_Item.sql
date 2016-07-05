@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
+             , DocumentKindId Integer, DocumentKindName TVarChar
 
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
@@ -108,6 +109,9 @@ BEGIN
              
              , Object_User.ValueData           AS UserName
 
+             , Object_DocumentKind.Id          AS DocumentKindId
+             , Object_DocumentKind.ValueData   AS DocumentKindName
+
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -194,6 +198,12 @@ BEGIN
                                          ON MovementLinkObject_User.MovementId = Movement.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                         ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+            LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                              AND MovementItem.DescId     = zc_MI_Master()

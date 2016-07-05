@@ -422,6 +422,32 @@ BEGIN
      IF inIsUpdate = TRUE
      THEN
 
+     -- Проверка - элементы - Master
+     IF EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0)
+     THEN
+         RAISE EXCEPTION 'Error. Master.Amount < 0 : (%) <%>  <%> Amount = <%> + <%> Count = <%> <%>'
+                               , (SELECT _tmpResult.ContainerId   FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1)
+                               , lfGet_Object_ValueData ((SELECT _tmpResult.GoodsId FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1))
+                               , lfGet_Object_ValueData ((SELECT CLO_GoodsKind.ObjectId FROM _tmpResult LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpResult.ContainerId AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind() WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1))
+                               , (SELECT _tmpResult.OperCount     FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1)
+                               , (SELECT _tmpResult.OperCount_two FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0 ORDER BY _tmpResult.GoodsId LIMIT 1)
+                               , (SELECT COUNT (*) FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount + _tmpResult.OperCount_two < 0)
+                               , DATE (inStartDate)
+                                ;
+     END IF;
+     -- Проверка - элементы - Child
+     IF EXISTS (SELECT 1 FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0)
+     THEN
+         RAISE EXCEPTION 'Error. Child.Amount < 0 : (%) <%>  <%> Amount = <%> Count = <%> <%>'
+                               , (SELECT _tmpResult_child.ContainerId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
+                               , lfGet_Object_ValueData ((SELECT _tmpResult_child.GoodsId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1))
+                               , lfGet_Object_ValueData ((SELECT CLO_GoodsKind.ObjectId FROM _tmpResult_child LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpResult_child.ContainerId AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind() WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1))
+                               , (SELECT _tmpResult_child.OperCount   FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
+                               , (SELECT COUNT (*) FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0)
+                               , DATE (inStartDate)
+                                ;
+     END IF;
+
      -- Распроводим
      PERFORM lpUnComplete_Movement (inMovementId     := tmp.MovementId
                                   , inUserId         := inUserId)
@@ -466,6 +492,7 @@ BEGIN
                                                          , inOperDate              := tmp.OperDate
                                                          , inFromId                := inUnitId
                                                          , inToId                  := inUnitId
+                                                         , inDocumentKindId        := 0
                                                          , inIsPeresort            := FALSE
                                                          , inUserId                := inUserId
                                                           ) AS MovementId
@@ -696,10 +723,11 @@ END;$BODY$
 */
 
 -- тест
--- select * from lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '02.07.2015', inEndDate:= '02.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- select * from lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '04.05.2016', inEndDate:= '04.05.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer)
 
 -- where ContainerId = 568111
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '04.05.2016', inEndDate:= '04.05.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
+-- where ContainerId = 119808 119834 -- select * from MovementItemContainer where MovementItemId = 50132454 
 -- where (DescId_mi < 0 and GoodsCode in (101, 2207)) or (DescId_mi IN (  1,  zc_MI_Child())   and (GoodsCode in (101, 2207) or GoodsCode_master = 101))
 -- where GoodsCode in (101, 2207) or GoodsCode_master in (101, 2207)
 -- order by DescId_mi desc, GoodsName_master, GoodsKindName_master, GoodsName, GoodsKindName, OperDate

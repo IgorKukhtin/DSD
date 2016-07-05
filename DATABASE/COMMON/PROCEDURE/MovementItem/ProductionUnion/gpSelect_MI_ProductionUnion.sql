@@ -35,7 +35,10 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS Comment
             , CAST (NULL AS TFloat)                 AS Count
             , CAST (NULL AS TFloat)                 AS RealWeight
+
             , CAST (NULL AS TFloat)                 AS CuterCount
+            , CAST (NULL AS TFloat)                 AS CuterWeight
+
             , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
             , CAST (NULL AS TVarchar)               AS GoodsKindName
@@ -106,6 +109,7 @@ BEGIN
             , MIFloat_Count.ValueData           AS Count
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
+            , MIFloat_CuterWeight.ValueData     AS CuterWeight
 
             , Object_GoodsKind.Id                 AS GoodsKindId
             , Object_GoodsKind.ObjectCode         AS GoodsKindCode
@@ -165,6 +169,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                          ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
                                         AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+             LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
+                                         ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id
@@ -221,6 +228,7 @@ BEGIN
             , MIFloat_Count.ValueData           AS Count
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
+            , MIFloat_CuterWeight.ValueData     AS CuterWeight
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -281,6 +289,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                          ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
                                         AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+             LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
+                                         ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id

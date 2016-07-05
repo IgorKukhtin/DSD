@@ -650,6 +650,7 @@ class procedure TExecuteImportSettings.Execute(ImportSettings: TImportSettings; 
 var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
+    fErr:Boolean;//09.06.2016
 begin
   case ImportSettings.FileType of
     dtXLS, dtDBF, dtMMO: begin
@@ -679,17 +680,33 @@ begin
                dtDBF: FilesInDir('*.dbf', ImportSettings.Directory, iFilesCount, saFound, false);
             end;
           end;
+          //сначала - очистили список не загруженных файлов
+          if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('outMsgText'))
+          then ExternalParams.ParamByName('outMsgText').Value:= '';
+
           TStringList(saFound).Sort;
           for I := 0 to saFound.Count - 1 do
               with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.FileType, saFound[i], ImportSettings, ExternalParams) do
                 try
-                  // Загрузили
-                  Load;
+                  // Загрузили if + в try с 09.06.2016 - Konstantin
+                  if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('isNext_aftErr')) and (ExternalParams.ParamByName('isNext_aftErr').Value = TRUE)
+                  then try Load; fErr:= false;
+                       except fErr:= true;
+                              //добавили в список не загруженных файлов
+                              if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('outMsgText'))
+                              then if ExternalParams.ParamByName('outMsgText').Value <> ''
+                                   then ExternalParams.ParamByName('outMsgText').Value:=ExternalParams.ParamByName('outMsgText').Value + #10 + #13 + saFound[i]
+                                   else ExternalParams.ParamByName('outMsgText').Value:=saFound[i];
+                       end
+                  else begin Load; fErr:= false; end;
                   // Перенесли в Archive
-                  ForceDirectories(ExtractFilePath(saFound[i]) + cArchive);
-                  RenameFile(saFound[i], ExtractFilePath(saFound[i]) + cArchive + '\' + FormatDateTime('yyyy_mm_dd_', Date) + ExtractFileName(saFound[i]));
-                  if FileExists(saFound[i]) then
-                     SysUtils.DeleteFile(saFound[i]);
+                  if fErr = false then
+                  begin
+                      ForceDirectories(ExtractFilePath(saFound[i]) + cArchive);
+                      RenameFile(saFound[i], ExtractFilePath(saFound[i]) + cArchive + '\' + FormatDateTime('yyyy_mm_dd_', Date) + ExtractFileName(saFound[i]));
+                      if FileExists(saFound[i]) then
+                         SysUtils.DeleteFile(saFound[i]);
+                  end;
                 finally
                   Free;
                 end;

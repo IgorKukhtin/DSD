@@ -10,7 +10,12 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbInvNumber TVarChar;
 BEGIN
-     
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
+     vbUserId := lpGetUserBySession (inSession);
+
+
+    -- определяется
     SELECT 
         StatusId
       , InvNumber 
@@ -27,11 +32,8 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
     END IF;
-
-    vbUserId := inSession::Integer;
     
-    
-    --Сохранили <кол-во ручное>
+    -- Сохранили <кол-во ручное>
     PERFORM 
         lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), MovementItem.Id, MovementItem.Amount),
         lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReasonDifferences(), MovementItem.Id, 0)
@@ -40,16 +42,17 @@ BEGIN
     WHERE
         MovementItem.MovementId = inMovementId;
 
-    -- сохранили протокол
-    -- PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId);
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId;
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
  17.11.15                                                                       *
 */
-
-        

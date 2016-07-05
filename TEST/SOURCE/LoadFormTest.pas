@@ -50,6 +50,7 @@ type
     procedure LoadCurrencyFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadDefaultFormTest;
+    procedure LoadDocumentKindFormTest;
     procedure LoadDocumentTaxKindFormTest;
     procedure LoadEDIForm;
     procedure LoadEmailForm;
@@ -803,10 +804,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
 
-  //מעקוע
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_ReturnInBySaleForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_ReturnInBySaleForm');
-
 end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
@@ -861,6 +858,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
+
+  //מעקוע
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_ReturnInBySaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_ReturnInBySaleForm');
 
   //מעקוע ןמ ןנמהאזאל עמגאנא
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyReturnInForm'));
@@ -1047,12 +1048,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInJournalForm');
-  //
-  //מעקוע ןמ ןנמהאזאל עמגאנא
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyTransferDebtInForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyTransferDebtInForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyTransferDebtInDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyTransferDebtInDialogForm');
 end;
 
 procedure TLoadFormTest.LoadPriceCorrectiveFormTest;
@@ -1116,6 +1111,14 @@ procedure TLoadFormTest.LoadPaidKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
+end;
+
+procedure TLoadFormTest.LoadDocumentKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDocumentKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDocumentKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDocumentKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDocumentKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadDocumentTaxKindFormTest;
@@ -1238,7 +1241,6 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
 // exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');

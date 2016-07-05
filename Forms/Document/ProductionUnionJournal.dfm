@@ -155,6 +155,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object colDocumentKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DocumentKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCount'
@@ -226,17 +234,20 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actPrint: TdsdPrintAction
@@ -247,11 +258,13 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -277,11 +290,13 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint1: TdsdPrintAction
       Category = 'DSDLib'
@@ -291,11 +306,13 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint1
       StoredProcList = <
@@ -321,12 +338,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ProductionUnion'
       ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = 'PrintMovement_ProductionUnion'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -337,6 +356,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -344,6 +364,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -351,6 +372,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -373,6 +395,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -380,6 +403,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -387,12 +411,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPeresort'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -532,12 +558,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -551,6 +579,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -564,6 +593,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -574,30 +604,35 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameProductionUnion'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameProductionUnionTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -635,11 +670,13 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -663,6 +700,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 503

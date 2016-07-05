@@ -47,6 +47,7 @@ type
     colSumPriceIn: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
+    edIsAuto: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -15,10 +15,10 @@ AS
 $BODY$
 BEGIN
      -- !!!Замена!!!
-     IF inIsSale = TRUE
+     /*IF inIsSale = TRUE
      THEN 
          inIsBefoHistoryCost:= FALSE;
-     END IF;
+     END IF;*/
 
 
      -- Результат
@@ -102,7 +102,7 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Sale()) -- , zc_Movement_SendOnPrice()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
-       AND inIsSale            = TRUE
+       --*** AND inIsSale            = TRUE
        AND (tmpUnit_from.UnitId > 0/* OR tmpUnit_To.UnitId > 0*/)
 
     UNION
@@ -298,7 +298,7 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
-       AND (inIsSale           = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
+       --*** AND (inIsSale           = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
     UNION
      -- 4.2. From: Loss
      SELECT Movement.Id AS MovementId
@@ -338,7 +338,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       -- AND inIsBefoHistoryCost = TRUE -- *****
+       AND inIsBefoHistoryCost = FALSE -- *****?????
     UNION
      -- 4.4. To: Peresort
      SELECT Movement.Id AS MovementId

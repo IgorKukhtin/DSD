@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSumm TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , Comment TVarChar
+             , isAuto Boolean
               )
 
 AS
@@ -62,7 +63,8 @@ BEGIN
            , Object_From.ValueData                  AS FromName
            , Object_To.Id                           AS ToId
            , Object_To.ValueData                    AS ToName
-           , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+           , COALESCE(MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
+           , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -103,6 +105,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+           LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                     ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                    AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
         

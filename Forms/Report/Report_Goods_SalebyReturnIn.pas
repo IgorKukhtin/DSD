@@ -58,6 +58,9 @@ type
     edGoodsKind: TcxButtonEdit;
     GoodsKindGuides: TdsdGuides;
     bbChoiceGuides: TdxBarButton;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    MovementDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

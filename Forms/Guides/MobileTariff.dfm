@@ -505,6 +505,7 @@ object MobileTariffForm: TMobileTariffForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    NeedResetData = True
     Left = 172
     Top = 142
   end

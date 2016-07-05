@@ -18,13 +18,19 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
-     vbUserId := inSession;
+     vbUserId := lpGetUserBySession (inSession);
 
-     ioId := lpInsertUpdate_MovementItem_Income(ioId, inMovementId, inGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+     -- сохранили <Элемент документа>
+     ioId := lpInsertUpdate_MovementItem_Income (ioId, inMovementId, inGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inSalePrice);
                   
@@ -33,6 +39,8 @@ BEGIN
 
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
 
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$

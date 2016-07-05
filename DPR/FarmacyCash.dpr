@@ -87,7 +87,7 @@ begin
   with TLoginForm.Create(Application) do
   Begin
     //≈сли все хорошо создаем главную форму Application.CreateForm();
-    AllowLocalConnect := True;
+    AllowLocalConnect := False; //True;
     if ShowModal = mrOk then
     begin
       if not gc_User.Local then

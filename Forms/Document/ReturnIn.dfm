@@ -1,26 +1,26 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
-  ClientHeight = 650
+  ClientHeight = 648
   ClientWidth = 1244
   ExplicitWidth = 1260
-  ExplicitHeight = 685
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1244
-    Height = 484
+    Height = 482
     ExplicitTop = 166
     ExplicitWidth = 1244
     ExplicitHeight = 484
-    ClientRectBottom = 484
+    ClientRectBottom = 482
     ClientRectRight = 1244
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1244
       ExplicitHeight = 460
       inherited cxGrid: TcxGrid
         Width = 1244
-        Height = 344
+        Height = 342
         ExplicitWidth = 1244
         ExplicitHeight = 344
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -252,7 +252,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 75
           end
           object Price_Pricelist_vat: TcxGridDBColumn [14]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
@@ -331,12 +331,13 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 352
+        Top = 350
         Width = 1244
         Height = 108
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 352
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -379,6 +380,14 @@ inherited ReturnInForm: TReturnInForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object childGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -405,7 +414,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 120
           end
           object childAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1074#1103#1079#1082#1072')'
@@ -438,10 +447,19 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 55
+          end
+          object childDescName_Sale: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DescName_Sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object childInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
+            Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'InvNumber'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -456,13 +474,30 @@ inherited ReturnInForm: TReturnInForm
             Width = 80
           end
           object childInvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 100
+          end
+          object childInvNumber_Master: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber_Master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object childInvNumberPartner_Master: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object childOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
@@ -481,31 +516,6 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object childDocumentTaxKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
-            DataBinding.FieldName = 'DocumentTaxKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 160
-          end
-          object childInvNumber_Master: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'InvNumber_Master'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object childInvNumberPartner_Master: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'InvNumberPartner_Master'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 86
-          end
           object childOperDate_Master: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'OperDate_Master'
@@ -514,37 +524,111 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object FromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
+          object childContractCode_Sale: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ContractCode_Sale'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 71
+          end
+          object childContractName_Sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ContractName_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object childContractCode_Tax: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'ContractCode_Tax'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object childContractName_Tax: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'ContractName_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object childDocumentTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentTaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 160
+          end
+          object FromName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'FromName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object ToCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1082#1086#1084#1091')'
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'ToCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object ToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object JuridicalName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 100
+          end
+          object MovementId_sale: TcxGridDBColumn
+            Caption = 'Id1'
+            DataBinding.FieldName = 'MovementId_sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object MovementItemId_sale: TcxGridDBColumn
+            Caption = 'Id2'
+            DataBinding.FieldName = 'MovementItemId_sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object childIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -552,6 +636,7 @@ inherited ReturnInForm: TReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
         end
@@ -561,12 +646,13 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 344
+        Top = 342
         Width = 1244
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 344
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
@@ -576,7 +662,7 @@ inherited ReturnInForm: TReturnInForm
         Left = 0
         Top = 0
         Width = 1244
-        Height = 460
+        Height = 458
         Align = alClient
         TabOrder = 0
         object lDBTableView: TcxGridDBTableView
@@ -1616,6 +1702,23 @@ inherited ReturnInForm: TReturnInForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inJuridicalId'
+          Value = Null
+          Component = JuridicalFromGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = Null
+          Component = JuridicalFromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inPaidKindId'
           Value = 'False'
           Component = PaidKindGuides
@@ -1688,23 +1791,6 @@ inherited ReturnInForm: TReturnInForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inJuridicalId'
-          Value = Null
-          Component = JuridicalFromGuides
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inJuridicalName'
-          Value = Null
-          Component = JuridicalFromGuides
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3209,8 +3295,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 184
+    Left = 16
+    Top = 72
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn'
@@ -5138,6 +5224,7 @@ inherited ReturnInForm: TReturnInForm
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -5155,8 +5242,8 @@ inherited ReturnInForm: TReturnInForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
-    Left = 1094
-    Top = 393
+    Left = 414
+    Top = 569
   end
   object spUpdateAuto: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_ReturnIn_Auto'
@@ -5199,6 +5286,7 @@ inherited ReturnInForm: TReturnInForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 425
     Top = 16
@@ -5258,7 +5346,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
+    Left = 320
     Top = 576
   end
 end

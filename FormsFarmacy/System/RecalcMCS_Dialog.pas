@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog, cxGraphics,
   cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dsdDB, Vcl.ActnList,
   dsdAction, cxClasses, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
-  cxControls, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit, cxLabel;
+  cxControls, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit, cxLabel,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TRecalcMCS_DialogForm = class(TAncestorDialogForm)

@@ -167,6 +167,7 @@ BEGIN
                                                          , inOperDate              := tmp.OperDate
                                                          , inFromId                := inUnitId
                                                          , inToId                  := inUnitId
+                                                         , inDocumentKindId        := 0
                                                          , inIsPeresort            := FALSE
                                                          , inUserId                := inUserId
                                                           ) AS MovementId

@@ -53,6 +53,7 @@ type
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     AmountDiff: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

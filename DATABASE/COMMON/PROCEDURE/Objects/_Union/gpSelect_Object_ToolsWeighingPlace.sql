@@ -77,6 +77,16 @@ BEGIN
        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
     UNION ALL
+     SELECT Object_DocumentKind.Id
+          , Object_DocumentKind.ObjectCode AS Code
+          , Object_DocumentKind.ValueData  AS Name
+          , ObjectDesc.ItemName
+          , Object_DocumentKind.isErased
+     FROM Object AS Object_DocumentKind
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_DocumentKind.DescId
+     WHERE Object_DocumentKind.DescId = zc_Object_DocumentKind()
+
+    UNION ALL
      SELECT MovementDesc.Id
           , MovementDesc.Id       AS Code     
           , MovementDesc.ItemName AS Name

@@ -14,7 +14,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , AccountId_From Integer, AccountId_To Integer, ContainerId_From Integer, ContainerId_To Integer
                                , ContainerId_Summ Integer, GoodsId Integer, GoodsKindId Integer
-                               , tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
+                               , OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
                                , AccountId_Summ Integer, InfoMoneyId_Summ Integer) ON COMMIT DROP;
 
 END;$BODY$

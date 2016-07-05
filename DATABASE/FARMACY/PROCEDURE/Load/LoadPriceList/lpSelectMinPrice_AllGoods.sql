@@ -33,7 +33,13 @@ RETURNS TABLE (
 AS
 $BODY$
   DECLARE vbMainJuridicalId Integer;
+  DECLARE vbIsGoodsPromo Boolean;
 BEGIN
+    -- !!!так "криво" определятся НАДО ЛИ учитывать маркет. контракт!!!
+    vbIsGoodsPromo:= inObjectId >=0;
+    -- !!!меняется параметр в нормальное значение!!!
+    inObjectId:= ABS (inObjectId);
+
 
     -- Нашли у Аптеки "Главное юр лицо"
     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
@@ -53,6 +59,7 @@ BEGIN
                         , tmp.GoodsId        -- здесь товар "сети"
                         , tmp.ChangePercent
                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+                   WHERE vbIsGoodsPromo = TRUE -- !!!т.е. только в этом случае учитывается маркет. контракт!!!
                   )
     -- Остатки
   , Remains AS

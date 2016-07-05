@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalCountChild TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
               )
 AS
@@ -51,6 +52,9 @@ BEGIN
          , Object_To.Id                             AS ToId
          , Object_To.ValueData                      AS ToName
 
+         , Object_DocumentKind.Id                   AS DocumentKindId
+         , Object_DocumentKind.ValueData            AS DocumentKindName
+
          , COALESCE(MovementBoolean_isAuto.ValueData, False)          AS isAuto
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
  
@@ -82,6 +86,11 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                       ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                      AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+          LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
           INNER JOIN MovementBoolean AS MovementBoolean_Peresort
                                      ON MovementBoolean_Peresort.MovementId = Movement.Id
                                     AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
@@ -103,6 +112,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.06.16         * DocumentKind
  26.12.14                                        * add inIsPeresort
  26.12.14                                        * del inArticleLossId
  11.12.14         * add inArticleLossId

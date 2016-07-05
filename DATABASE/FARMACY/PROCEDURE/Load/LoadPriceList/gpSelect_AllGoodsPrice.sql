@@ -270,9 +270,10 @@ BEGIN
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo
 
         FROM
-            lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
-                                     inObjectId := vbObjectId, 
-                                     inUserId := vbUserId) as SelectMinPrice_AllGoods
+            lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
+                                    , inObjectId := -1 * vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
+                                    , inUserId   := vbUserId
+                                    ) AS SelectMinPrice_AllGoods
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price

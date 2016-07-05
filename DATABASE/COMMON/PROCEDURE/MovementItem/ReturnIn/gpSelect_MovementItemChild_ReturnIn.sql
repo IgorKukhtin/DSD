@@ -1,5 +1,6 @@
 -- Function: gpSelect_MovementItem_SalePartion()
 
+DROP FUNCTION IF EXISTS gpSelect_MovementItemChild_TransferDebtIn (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItemChild_ReturnIn (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItemChild_ReturnIn(
@@ -12,45 +13,69 @@ RETURNS TABLE (Id Integer, ParentId Integer, Amount TFloat
              , GoodsKindId Integer, GoodsKindName TVarChar
              , AmountPartner TFloat, Price TFloat
              , MovementItemId_sale Integer, MovementId_sale Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+             , ContractCode_Sale Integer, ContractName_Sale TVarChar
              , MovementId_tax Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime
              , DocumentTaxKindName TVarChar
+             , ContractCode_Tax Integer, ContractName_Tax TVarChar
              , FromName TVarChar
              , ToCode Integer
              , ToName TVarChar
              , JuridicalName TVarChar
+             , DescName_Sale TVarChar
+             , isError  Boolean
+             , isErased Boolean
               )
 AS
 $BODY$
-    DECLARE vbUserId Integer;
+    DECLARE vbUserId     Integer;
+    DECLARE vbPartnerId  Integer;
+    DECLARE vbContractId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
     vbUserId:= lpGetUserBySession (inSession);
 
-    RETURN QUERY
 
-   WITH tmpMI_all AS (SELECT MovementItem.Id                              AS MI_Id
-                           , MovementItem.ParentId                        AS MI_ParentId
-                           , MovementItem.ObjectId                        AS GoodsId
+    -- Контрагент
+    vbPartnerId:= (SELECT CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MLO.ObjectId ELSE MLO_Partner.ObjectId END FROM Movement LEFT JOIN MovementLinkObject AS MLO ON MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() LEFT JOIN MovementLinkObject AS MLO_Partner ON MLO_Partner.MovementId = inMovementId AND MLO_Partner.DescId = zc_MovementLinkObject_PartnerFrom() WHERE Movement.Id = inMovementId);
+    -- Договор
+    vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom()));
+
+
+
+    -- РЕЗУЛЬТАТ
+    RETURN QUERY
+   WITH tmpMI_all AS (SELECT MovementItem.Id                               AS MI_Id
+                           , MovementItem.ParentId                         AS MI_ParentId
+                           , MovementItem.ObjectId                         AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+
                            , MovementItem.Amount                          AS Amount
                            , MIFloat_MovementId.ValueData      :: Integer AS MovementId_sale
                            , MIFloat_MovementItemId.ValueData  :: Integer AS MovementItemId_sale
                            , CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN TRUE ELSE MovementItem.isErased END :: Boolean AS isErased
-                      FROM MovementItem ON 
+                      FROM MovementItem  
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                         
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                        ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                       AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.ParentId
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.ParentId
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
                       )
-          , tmpMI AS (SELECT *
+          , tmpMI AS (SELECT tmpMI_all.*
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            LEFT JOIN tmpMI_all ON tmpMI_all.isErased = tmpIsErased.isErased
                       )
-
        -- результат
        SELECT tmpMI.MI_Id                                    AS Id
             , tmpMI.MI_ParentId                              AS ParentId
@@ -69,42 +94,78 @@ BEGIN
             , Movement_Sale.InvNumber
             , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
             , Movement_Sale.OperDate
-            , MD_OperDatePartner.ValueData                   AS OperDatePartner
+            , CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN MD_OperDatePartner.ValueData ELSE Movement_Sale.OperDate END :: TDateTime AS OperDatePartner
+            , View_Contract_InvNumber_Sale.ContractCode      AS ContractCode_Sale
+            , View_Contract_InvNumber_Sale.InvNumber         AS ContractName_Sale
 
-            , Movement_DocumentMaster.Id                     AS MovementId_tax
-            , Movement_DocumentMaster.InvNumber              AS InvNumber_Master
-            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
-            , Movement_DocumentMaster.OperDate               AS OperDate_Master
-            , Object_TaxKind_Master.ValueData                AS DocumentTaxKindName
+            , Movement_Tax.Id                                AS MovementId_tax
+            , Movement_Tax.InvNumber                         AS InvNumber_Master
+            , MS_InvNumberPartner_Tax.ValueData              AS InvNumberPartner_Master
+            , Movement_Tax.OperDate                          AS OperDate_Master
+            , Object_TaxKind.ValueData                       AS DocumentTaxKindName
+            , View_Contract_InvNumber_Tax.ContractCode       AS ContractCode_Tax
+            , View_Contract_InvNumber_Tax.InvNumber          AS ContractName_Tax
                            
-           , Object_From.ValueData                      AS FromName
-           , Object_To.ObjectCode                       AS ToCode
-           , Object_To.ValueData                        AS ToName
-           , Object_Juridical.ValueData                 AS JuridicalName
+            , Object_From.ValueData                          AS FromName
+            , Object_To.ObjectCode                           AS ToCode
+            , Object_To.ValueData                            AS ToName
+            , Object_Juridical.ValueData                     AS JuridicalName
+
+            , MovementDesc_Sale.ItemName                     AS DescName_Sale
+            , CASE WHEN MISale.Id > 0
+                   AND (MISale.isErased = TRUE
+                     OR MISale.ObjectId                               <> tmpMI.GoodsId
+                     OR COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId
+                     OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.Price
+                     OR COALESCE (vbPartnerId, 0)                     <> COALESCE (Object_To.Id, 0)
+                     OR COALESCE (vbContractId, 0)                    <> COALESCE (MLO_Contract_Sale.ObjectId, 0)
+                     OR (COALESCE (vbContractId, 0)                   <> COALESCE (MLO_Contract_Tax.ObjectId, 0) AND Movement_Tax.Id > 0)
+                     OR Movement_Sale.StatusId                        <> zc_Enum_Status_Complete()
+                     OR (Movement_Tax.StatusId                        <> zc_Enum_Status_Complete() AND Movement_Tax.Id > 0)
+                       )
+                        THEN TRUE
+                   ELSE FALSE
+              END :: Boolean AS isError
+            , CASE WHEN MISale.isErased = TRUE
+                     OR MISale.ObjectId <> tmpMI.GoodsId
+                     OR COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId
+                     OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.Price
+                     OR COALESCE (vbPartnerId, 0)                     <> COALESCE (Object_To.Id, 0)
+                     OR COALESCE (vbContractId, 0)                    <> COALESCE (MLO_Contract_Sale.ObjectId, 0)
+                     OR (COALESCE (vbContractId, 0)                   <> COALESCE (MLO_Contract_Tax.ObjectId, 0) AND Movement_Tax.Id > 0)
+                     OR Movement_Sale.StatusId                        <> zc_Enum_Status_Complete()
+                     OR (Movement_Tax.StatusId                        <> zc_Enum_Status_Complete() AND Movement_Tax.Id > 0)
+                        THEN TRUE
+                   ELSE tmpMI.isErased
+              END :: Boolean AS isErased
 
        FROM tmpMI
-          LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpMI.MovementId_sale 
-          LEFT JOIN MovementDate AS MD_OperDatePartner ON MD_OperDatePartner.MovementId = Movement_Sale.Id
-                                                      AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpMI.MovementId_sale 
+            LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = Movement_Sale.DescId
+
+            LEFT JOIN MovementDate AS MD_OperDatePartner
+                                   ON MD_OperDatePartner.MovementId = Movement_Sale.Id
+                                  AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN MovementLinkObject_To.ObjectId ELSE MovementLinkObject_Partner.ObjectId END
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
-
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE MovementLinkObject_To.ObjectId END
 
           LEFT JOIN MovementItem AS MISale ON MISale.Id = tmpMI.MovementItemId_sale
              
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-                                       -- AND MISale.ObjectId = tmpMI.GoodsId
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (MISale.ObjectId, tmpMI.GoodsId)
 
           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                            ON MILinkObject_GoodsKind.MovementItemId = MISale.Id
@@ -121,21 +182,30 @@ BEGIN
           LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                    ON MovementString_InvNumberPartner.MovementId = Movement_Sale.Id 
                                   AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                         ON MovementLinkMovement_Master.MovementId = Movement_Sale.Id
-                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-          LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
-          LEFT JOIN MovementString AS MS_InvNumberPartner_Master
-                                   ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
-                                  AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                         ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
+                                        AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+          LEFT JOIN MovementString AS MS_InvNumberPartner_Tax
+                                   ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
+                                  AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
-                                       ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id 
+                                       ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_Tax.Id 
                                       AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
-          LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
-                                                   AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete() 
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
+                                                   AND Movement_Tax.StatusId = zc_Enum_Status_Complete() 
 
-;
+          LEFT JOIN MovementLinkObject AS MLO_Contract_Sale
+                                       ON MLO_Contract_Sale.MovementId = Movement_Sale.Id
+                                      AND MLO_Contract_Sale.DescId = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_Contract() ELSE zc_MovementLinkObject_ContractTo() END
+          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_Sale ON View_Contract_InvNumber_Sale.ContractId = MLO_Contract_Sale.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MLO_Contract_Tax
+                                       ON MLO_Contract_Tax.MovementId = Movement_Tax.Id 
+                                      AND MLO_Contract_Tax.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_Tax ON View_Contract_InvNumber_Tax.ContractId = MLO_Contract_Tax.ObjectId
+        ;
                      
 END;
 $BODY$

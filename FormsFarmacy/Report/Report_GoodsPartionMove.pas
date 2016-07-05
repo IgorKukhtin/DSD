@@ -12,7 +12,8 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxButtonEdit, dsdGuides, dxBarBuiltInMenu, cxNavigator;
+  cxButtonEdit, dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TReport_GoodsPartionMoveForm = class(TAncestorReportForm)
@@ -34,6 +35,8 @@ type
     colIncomeAmount: TcxGridDBColumn;
     colOutcomeAmount: TcxGridDBColumn;
     colEndRemainsAmount: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

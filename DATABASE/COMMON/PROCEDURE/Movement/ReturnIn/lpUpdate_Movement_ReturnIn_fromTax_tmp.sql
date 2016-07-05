@@ -40,7 +40,7 @@ $BODY$
 BEGIN
 
      -- таблица - возвратов
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount_Partner TFloat, Price_original TFloat)  ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat)  ON COMMIT DROP;
      -- таблица - корректировки
      CREATE TEMP TABLE _tmpMI_corr (LineNum Integer, LineNum3 Integer, LineNum1 Integer, LineNum2 Integer, MovementId_corr Integer, MovementId_tax Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_tax Integer, Amount TFloat, Price_original TFloat) ON COMMIT DROP;
      -- таблица - продаж
@@ -48,13 +48,15 @@ BEGIN
 
 
      -- таблица - возвратов
-     INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount_Partner, Price_original)
+     INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount, OperCount_Partner, Price_original)
         SELECT (MovementItem.Id)
-             , MovementItem.ObjectId
+             , MovementItem.ObjectId AS GoodsId
              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-             , MIFloat_AmountPartner.ValueData
-             , COALESCE (MIFloat_Price.ValueData, 0)
+             , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIFloat_AmountPartner.ValueData ELSE MovementItem.Amount END AS OperCount
+             , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIFloat_AmountPartner.ValueData ELSE MovementItem.Amount END AS OperCount_Partner
+             , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
         FROM MovementItem
+             LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -67,7 +69,7 @@ BEGIN
         WHERE MovementItem.MovementId  = inMovementId
           AND MovementItem.isErased = FALSE
           AND MovementItem.DescId   = zc_MI_Master()
-          AND MIFloat_AmountPartner.ValueData <> 0
+          AND CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIFloat_AmountPartner.ValueData ELSE MovementItem.Amount END <> 0
        ;
 
 
@@ -152,7 +154,7 @@ BEGIN
                                                                ON MovementLinkMovement_Master.MovementChildId = _tmpMI_corr.MovementId_tax
                                                               AND MovementLinkMovement_Master.DescId          = zc_MovementLinkMovement_Master()
                                INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Master.MovementId
-                                                  AND Movement.DescId   = zc_Movement_Sale()
+                                                  AND Movement.DescId   IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut())
                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                           GROUP BY _tmpMI_corr.MovementId_tax
                           )

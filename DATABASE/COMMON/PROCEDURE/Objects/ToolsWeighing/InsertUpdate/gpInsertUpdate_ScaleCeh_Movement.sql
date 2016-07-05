@@ -21,10 +21,25 @@ RETURNS TABLE (Id        Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbDocumentKindId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- определили <Тип документа>
+     vbDocumentKindId:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
+                         FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                               , inLevel2      := 'Movement'
+                                                               , inLevel3      := 'MovementDesc_' || CASE WHEN inMovementDescNumber < 10 THEN '0' ELSE '' END || (inMovementDescNumber :: Integer) :: TVarChar
+                                                               , inItemName    := 'DocumentKindId'
+                                                               , inDefaultValue:= '0'
+                                                               , inSession     := inSession
+                                                                ) AS RetV
+                              ) AS tmp
+                        );
+
 
      -- сохранили
      inId:= gpInsertUpdate_Movement_WeighingProduction (ioId                  := inId
@@ -61,6 +76,7 @@ BEGIN
                                                                               END :: Integer
                                                       , inFromId              := inFromId
                                                       , inToId                := inToId
+                                                      , inDocumentKindId      := CASE WHEN vbDocumentKindId = 0 THEN NULL ELSE vbDocumentKindId END
                                                       , inPartionGoods        := (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inId AND MovementString.DescId = zc_MovementString_PartionGoods())
                                                       , inIsProductionIn      := inIsProductionIn
                                                       , inSession             := inSession

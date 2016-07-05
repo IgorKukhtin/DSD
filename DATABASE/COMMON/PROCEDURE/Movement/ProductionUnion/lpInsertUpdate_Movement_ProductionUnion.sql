@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, Boolean, Integer)
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProductionUnion(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProductionUnion(
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inDocumentKindId      Integer   , -- Тип документа (в документе)
     IN inIsPeresort          Boolean   , -- пересорт
     IN inUserId              Integer     -- пользователя
 )
@@ -29,6 +31,9 @@ BEGIN
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
    -- сохранили связь с <Кому (в документе)>
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+   -- сохранили связь с <Тип документа (в документе)>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentKind(), ioId, inDocumentKindId);
+
 
    -- сохранили свойство <пересорт>
    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Peresort(), ioId, inIsPeresort);
@@ -55,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.06.16         * DocumentKind
  20.03.15                                        * set lp
  25.12.14                                        * add inIsPeresort
  03.06.14                                                        *

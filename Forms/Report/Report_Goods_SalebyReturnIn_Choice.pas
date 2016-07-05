@@ -59,6 +59,9 @@ type
     GoodsKindGuides: TdsdGuides;
     bbChoiceGuides: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    MovementDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -130,6 +130,9 @@ type
     colCountSkewer2: TcxGridDBColumn;
     colWeightSkewer2: TcxGridDBColumn;
     colWeightOther: TcxGridDBColumn;
+    cxLabel13: TcxLabel;
+    edDocumentKind: TcxButtonEdit;
+    GuidesDocumentKind: TdsdGuides;
   private
   public
   end;

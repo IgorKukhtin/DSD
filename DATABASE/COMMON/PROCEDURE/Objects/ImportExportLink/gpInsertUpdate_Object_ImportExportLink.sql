@@ -1,69 +1,65 @@
-п»ї-- Function: gpInsertUpdate_Object_GoodsKind()
+-- Function: gpInsertUpdate_Object_GoodsKind()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, Integer, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportExportLink(
- INOUT ioId	                 Integer   ,    -- РІРЅСѓС‚СЂРµРЅРЅРёР№ РєР»СЋС‡ РѕР±СЉРµРєС‚Р°  
-    IN inIntegerKey              Integer   ,    -- С†РёС„СЂРѕРІРѕР№ РєР»СЋС‡ РѕР±СЉРµРєС‚Р°  
-    IN inStringKey               TVarChar  ,    -- СЃС‚СЂРѕРєРѕРІС‹Р№ РєР»СЋС‡ РѕР±СЉРµРєС‚Р°
-    IN inObjectMainId            Integer   ,    -- РїРµСЂРІС‹Р№ РѕР±СЉРµРєС‚ СЃРІСЏР·Рё 
-    IN inObjectChildId           Integer   ,    -- РІС‚РѕСЂРѕР№ РѕР±СЉРµРєС‚ СЃРІСЏР·Рё
-    IN inImportExportLinkTypeId  Integer   ,    -- С‚РёРї СЃРІСЏР·Рё
-    IN inText                    TBlob     ,    -- С‚РµРєСЃС‚РѕРІРѕРµ РїРѕР»Рµ
-    IN inSession                 TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	                 Integer   ,    -- внутренний ключ объекта  
+    IN inIntegerKey              Integer   ,    -- цифровой ключ объекта  
+    IN inStringKey               TVarChar  ,    -- строковый ключ объекта
+    IN inObjectMainId            Integer   ,    -- первый объект связи 
+    IN inObjectChildId           Integer   ,    -- второй объект связи
+    IN inImportExportLinkTypeId  Integer   ,    -- тип связи
+    IN inText                    TBlob     ,    -- текстовое поле
+    IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;   
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsKind());
    vbUserId := inSession;
 
-   --РїСЂРѕРІРµСЂРёС‚СЊ С‡С‚Рѕ Р±С‹ СЃРІСЏР·Рё С‚РёРїР° zc_Enum_ImportExportLinkType_UploadCompliance СЂРµРґР°РєС‚РёСЂРѕРІР°Р»РёСЃСЊ С‚РѕР»СЊРєРѕ Р°РґРјРёРЅРѕРј
+   --проверить что бы связи типа zc_Enum_ImportExportLinkType_UploadCompliance редактировались только админом
    IF (inImportExportLinkTypeId = zc_Enum_ImportExportLinkType_UploadCompliance())
    THEN
        IF NOT EXISTS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
        THEN
-           RAISE EXCEPTION 'РћС€РёР±РєР°. РЎРІСЏР·Рё С‚РёРїР° <%> РјРѕР¶РµС‚ СЃРѕР·РґР°РІР°С‚СЊ/СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ', (Select ValueData from Object Where Id = zc_Enum_ImportExportLinkType_UploadCompliance());
+           RAISE EXCEPTION 'Ошибка. Связи типа <%> может создавать/редактировать только администратор', (Select ValueData from Object Where Id = zc_Enum_ImportExportLinkType_UploadCompliance());
        END IF;
    END IF;
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ImportExportLink(), inIntegerKey, inStringKey);
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <>
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ImportExportLink_ObjectMain(), ioId, inObjectMainId);   
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <>
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ImportExportLink_ObjectChild(), ioId, inObjectChildId);  
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <>
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ImportExportLink_LinkType(), ioId, inImportExportLinkTypeId);  
 
    PERFORM lpInsertUpdate_ObjectBlob (zc_ObjectBlob_ImportExportLink_Text(), ioId, inText);  
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);   
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE
-  COST 100;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, Integer, TBlob, TVarChar) OWNER TO postgres;
-  
-  
+
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.  Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
  02.12.15                                                         *IF (inImportExportLinkTypeId = zc_Enum_ImportExportLinkType_UploadCompliance())
  23.12.14                         *
  09.12.14                         *
  08.12.14                         *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_GoodsKind()
-                          

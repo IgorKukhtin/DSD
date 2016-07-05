@@ -355,8 +355,10 @@ CREATE OR REPLACE FUNCTION zc_Enum_ReceiptKind_Complete() RETURNS Integer AS $BO
 CREATE OR REPLACE FUNCTION zc_Enum_ReceiptKind_Separate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ReceiptKind_Separate' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ReceiptKind_CompleteEtalon() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ReceiptKind_CompleteEtalon' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-
-
+-- !!!
+-- !!! Типы документов - !!! Элементы справочника добавляет Пользователь!!!
+-- !!!
+CREATE OR REPLACE FUNCTION zc_Enum_DocumentKind_CuterWeight() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_DocumentKind_CuterWeight' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
 -- !!!

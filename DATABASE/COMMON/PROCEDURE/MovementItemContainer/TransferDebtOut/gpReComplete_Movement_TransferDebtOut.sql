@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS gpReComplete_Movement_TransferDebtOut (Integer, TVarChar
 
 CREATE OR REPLACE FUNCTION gpReComplete_Movement_TransferDebtOut(
     IN inMovementId        Integer               , -- ключ Документа
+   OUT outMessageText      Text                  ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Text
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -25,8 +26,8 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_TransferDebt_all_CreateTemp();
      -- Проводим Документ
-     PERFORM lpComplete_Movement_TransferDebt_all (inMovementId     := inMovementId
-                                                 , inUserId         := vbUserId);
+     outMessageText:= lpComplete_Movement_TransferDebt_all (inMovementId     := inMovementId
+                                                          , inUserId         := vbUserId);
 
 END;
 $BODY$

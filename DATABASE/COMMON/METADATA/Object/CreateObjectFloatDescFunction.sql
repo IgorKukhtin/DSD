@@ -477,10 +477,15 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_TaxServiceNigth() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_TaxServiceNigth'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_TaxServiceNigth', '% от выручки в ночную смену' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_TaxServiceNigth');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_FarmacyCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_FarmacyCash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_FarmacyCash', 'кол-во данных в синхронизации с FarmacyCash' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_FarmacyCash');
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 13.03.16         * zc_ObjectFloat_Unit_FarmacyCash
  03.03.16         * zc_ObjectFloat_ImportSettings_Time
  27.09.15                                                                       *zc_ObjectFloat_ReportSoldParams_PlanAmount
  17.09.15         * add zc_ObjectFloat_GoodsPropertyValue_BoxCount

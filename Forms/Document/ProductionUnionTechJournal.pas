@@ -136,6 +136,8 @@ type
     actGoodsKindCompleteChoiceChild: TOpenChoiceForm;
     ExecuteDialog: TExecuteDialog;
     isOrderSecond: TcxGridDBColumn;
+    colDocumentKindName: TcxGridDBColumn;
+    colCuterWeight: TcxGridDBColumn;
   private
     { Private declarations }
   public

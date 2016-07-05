@@ -1,25 +1,25 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 558
-  ClientWidth = 780
-  ExplicitWidth = 796
+  ClientWidth = 782
+  ExplicitWidth = 798
   ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 780
+    Width = 782
     Height = 432
     ExplicitTop = 126
     ExplicitWidth = 780
     ExplicitHeight = 432
     ClientRectBottom = 432
-    ClientRectRight = 780
+    ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 780
       ExplicitHeight = 408
       inherited cxGrid: TcxGrid
-        Width = 780
+        Width = 782
         Height = 408
         ExplicitWidth = 780
         ExplicitHeight = 408
@@ -265,7 +265,7 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 780
+    Width = 782
     Height = 100
     TabOrder = 3
     ExplicitWidth = 780
@@ -328,7 +328,7 @@ inherited SendForm: TSendForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 270
+      Width = 303
     end
     object cxLabel4: TcxLabel
       Left = 477
@@ -337,16 +337,24 @@ inherited SendForm: TSendForm
     end
   end
   object cxLabel7: TcxLabel [2]
-    Left = 241
+    Left = 477
     Top = 45
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit [3]
-    Left = 241
-    Top = 63
+    Left = 477
+    Top = 64
     Properties.ReadOnly = False
     TabOrder = 7
-    Width = 506
+    Width = 303
+  end
+  object edIsAuto: TcxCheckBox [4]
+    Left = 245
+    Top = 64
+    Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 192
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -908,6 +916,13 @@ inherited SendForm: TSendForm
         Value = 0d
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = edIsAuto
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216

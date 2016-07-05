@@ -205,6 +205,10 @@ type
     bbMIChildProtocol: TdxBarButton;
     childIsErased: TcxGridDBColumn;
     edJuridicalFrom: TcxButtonEdit;
+    childDescName_Sale: TcxGridDBColumn;
+    MovementItemId_sale: TcxGridDBColumn;
+    MovementId_sale: TcxGridDBColumn;
+    isError: TcxGridDBColumn;
   private
     { Private declarations }
   public

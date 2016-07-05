@@ -63,6 +63,7 @@ type
     MovementDescNumber: TcxGridDBColumn;
     isProductionIn: TcxGridDBColumn;
     TotalCountTare: TcxGridDBColumn;
+    DocumentKindName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsSearch(
     IN inGoodsSearch    TVarChar    -- поиск товаров
   , IN inProducerSearch TVarChar    -- поиск производителя
+  , IN inCodeSearch     TVarChar    -- поиск товаров по коду
   , IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, 
@@ -110,11 +112,15 @@ BEGIN
         upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') 
         AND
         upper(LoadPriceListItem.ProducerName) LIKE UPPER('%'||inProducerSearch||'%')
+        AND 
+        upper(CAST(Object_Goods.GoodsCode AS TVarChar)) LIKE UPPER('%'||inCodeSearch||'%')
         AND
         (
             inGoodsSearch <> ''
             or
             inProducerSearch <> ''
+            or
+            inCodeSearch <> ''
         )
         AND 
         COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE; 
@@ -122,12 +128,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 13.06.16         *
  18.08.15                                                                        * inProducerSearch
  27.04.15                        *
  02.04.15                        *
@@ -137,3 +144,5 @@ ALTER FUNCTION gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar) OWNER TO post
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_PriceList (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+--select * from gpSelect_GoodsSearch(inGoodsSearch := '' , inProducerSearch := '' , inCodeSearch := '1197' ,  inSession := '3');
+--select * from gpSelect_GoodsSearch(inGoodsSearch := 'крем' , inProducerSearch := 'фар' , inCodeSearch := '1534' ,  inSession := '3');

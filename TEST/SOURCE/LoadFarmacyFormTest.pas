@@ -400,8 +400,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  // отчет распределение остатков
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
 // exit;
-
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
@@ -430,6 +434,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckDialogForm'));
@@ -442,6 +449,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
@@ -575,6 +583,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForFarmacyCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitForFarmacyCashForm');
 end;
 
 procedure TLoadFormTest.LoadEnumFormTest;
@@ -978,6 +989,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkForm');
@@ -999,8 +1012,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
   }

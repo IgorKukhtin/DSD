@@ -1,5 +1,6 @@
 -- View: Object_Bank_View
---DROP VIEW CASCADE IF EXISTS Object_Bank_View;
+
+--DROP VIEW IF EXISTS Object_Bank_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_Bank_View AS
      SELECT

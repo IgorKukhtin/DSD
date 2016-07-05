@@ -166,6 +166,13 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clUnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
             DataBinding.FieldName = 'UnitCode'
@@ -526,9 +533,6 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
     TabOrder = 7
     Width = 159
   end
-  inherited cxPropertiesStore: TcxPropertiesStore
-    Components = <>
-  end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -866,6 +870,131 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1055#1088#1086#1076#1072#1078#1080'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1055#1088#1086#1076#1072#1078#1080'>'
+      ImageIndex = 25
+      FormName = 'TReport_Goods_ReturnInBySaleForm'
+      FormNameParam.Value = 'TReport_Goods_ReturnInBySaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inPartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -998,6 +1127,14 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1012,6 +1149,10 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
       Category = 0
     end
   end

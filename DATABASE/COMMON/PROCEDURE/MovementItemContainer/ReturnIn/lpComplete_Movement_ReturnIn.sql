@@ -611,7 +611,7 @@ BEGIN
 
 
      -- !!!запуск новой схемы - с привязкой к продажам!!!
-     IF zc_isReturnIn_bySale() = TRUE OR inUserId = 5
+     IF zc_isReturnIn_bySale() = TRUE -- OR inUserId = 5
      THEN
          -- Проверка ошибки
          /*outMessageText:= (SELECT tmp.MessageText FROM lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := CASE WHEN inStartDateSale IS NULL THEN DATE_TRUNC ('MONTH', vbOperDatePartner) - INTERVAL '4 MONTH' ELSE inStartDateSale END
@@ -627,7 +627,6 @@ BEGIN
          IF outMessageText = '-1' THEN outMessageText:= 'Важно.У пользователя <%> нет прав формировать привязку накладной <Возврат от покупателя> к накладной <Продажи>.', lfGet_Object_ValueData (inUserId); END IF;
 
      END IF;
-     -- !!!временно!!!
 
 
      -- !!! только НЕ для Админа проверка что ParentId заполнен!!!
@@ -2309,6 +2308,19 @@ BEGIN
      FROM _tmpItem;
 
 
+     -- !!!6.0.5. синхронизируем zc_MI_Master и zc_MI_Child!!!
+     UPDATE MovementItem SET ObjectId = tmp.ObjectId
+                           , isErased = tmp.isErased
+     FROM (SELECT MI_Master.Id, MI_Master.ObjectId, MI_Master.isErased FROM MovementItem AS MI_Master WHERE MI_Master.MovementId = inMovementId AND MI_Master.DescId = zc_MI_Master()
+          ) AS tmp
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Child()
+       AND MovementItem.ParentId   = tmp.Id
+       AND (MovementItem.ObjectId  <> tmp.ObjectId
+         OR MovementItem.isErased  <> tmp.isErased)
+      ;
+
+
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
@@ -2349,6 +2361,21 @@ $BODY$
  01.02.14                                        *
 */
 
+/*
+     UPDATE MovementItem SET ObjectId = tmp.ObjectId
+                           , isErased = tmp.isErased
+     FROM (SELECT MI_Child.Id, MI_Master.ObjectId, MI_Master.isErased 
+           FROM Movement 
+                inner JOIN MovementItem AS MI_Child
+                                        ON MI_Child.MovementId = Movement .Id
+                                       AND MI_Child.DescId = zc_MI_Child()
+                inner JOIN MovementItem AS MI_Master ON MI_Master.Id = MI_Child.ParentId
+                                                   and (MI_Master.ObjectId <> MI_Child.ObjectId
+                                                     or MI_Master.isErased <> MI_Child.isErased)
+           where Movement .DescId = zc_Movement_ReturnIn()
+          ) AS tmp
+     WHERE MovementItem.Id   = tmp.Id
+*/
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 10154, inSession:= '2')
 -- SELECT * FROM gpComplete_Movement_ReturnIn (inMovementId:= 602578, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())

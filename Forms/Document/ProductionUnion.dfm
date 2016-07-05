@@ -1,7 +1,6 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1020
-  ExplicitLeft = -247
   ExplicitWidth = 1036
   PixelsPerInch = 96
   TextHeight = 13
@@ -136,8 +135,19 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 60
           end
-          object colRealWeight: TcxGridDBColumn [7]
-            Caption = #1060#1072#1082#1090' '#1074#1077#1089
+          object colCuterWeight: TcxGridDBColumn [7]
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
+            DataBinding.FieldName = 'CuterWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colRealWeight: TcxGridDBColumn [8]
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
             DataBinding.FieldName = 'RealWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -147,7 +157,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object colCount: TcxGridDBColumn [8]
+          object colCount: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -158,7 +168,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colAmount: TcxGridDBColumn [9]
+          object colAmount: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -168,7 +178,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colPartionGoodsDate: TcxGridDBColumn [10]
+          object colPartionGoodsDate: TcxGridDBColumn [11]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -179,14 +189,14 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colPartionGoods: TcxGridDBColumn [11]
+          object colPartionGoods: TcxGridDBColumn [12]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colReceiptCode: TcxGridDBColumn [12]
+          object colReceiptCode: TcxGridDBColumn [13]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
             DataBinding.FieldName = 'ReceiptCode'
             HeaderAlignmentHorz = taCenter
@@ -194,7 +204,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 80
           end
-          object colReceiptName: TcxGridDBColumn [13]
+          object colReceiptName: TcxGridDBColumn [14]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
             DataBinding.FieldName = 'ReceiptName'
             HeaderAlignmentHorz = taCenter
@@ -202,7 +212,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 120
           end
-          object colIsPartionClose: TcxGridDBColumn [14]
+          object colIsPartionClose: TcxGridDBColumn [15]
             Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1088#1099#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPartionClose'
             Visible = False
@@ -211,7 +221,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 60
           end
-          object colComment: TcxGridDBColumn [15]
+          object colComment: TcxGridDBColumn [16]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             Visible = False
@@ -220,7 +230,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 150
           end
-          object clInfoMoneyCode: TcxGridDBColumn [16]
+          object clInfoMoneyCode: TcxGridDBColumn [17]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -229,7 +239,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn [17]
+          object clInfoMoneyGroupName: TcxGridDBColumn [18]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -238,7 +248,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn [18]
+          object clInfoMoneyDestinationName: TcxGridDBColumn [19]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -247,7 +257,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn [19]
+          object clInfoMoneyName: TcxGridDBColumn [20]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -256,7 +266,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 100
           end
-          object clInfoMoneyName_all: TcxGridDBColumn [20]
+          object clInfoMoneyName_all: TcxGridDBColumn [21]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -460,6 +470,23 @@ inherited ProductionUnionForm: TProductionUnionForm
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088'. '#1089#1086#1079#1076'. '#1082#1083#1072#1076#1086#1074#1097'.'
     end
+    object cxLabel6: TcxLabel
+      Left = 646
+      Top = 43
+      Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    end
+    object edDocumentKind: TcxButtonEdit
+      Left = 646
+      Top = 61
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 270
+    end
   end
   object edIsAuto: TcxCheckBox [2]
     Left = 216
@@ -483,8 +510,8 @@ inherited ProductionUnionForm: TProductionUnionForm
     Width = 145
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 787
-    Top = 64
+    Left = 523
+    Top = 56
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -538,12 +565,14 @@ inherited ProductionUnionForm: TProductionUnionForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ProductionUnion'
       ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = 'PrintMovement_ProductionUnion'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actGoodsKindChoiceChild: TOpenChoiceForm [20]
       Category = 'DSDLib'
@@ -553,12 +582,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ChildCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -566,6 +597,7 @@ inherited ProductionUnionForm: TProductionUnionForm
           Component = ChildCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -577,12 +609,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -590,6 +624,7 @@ inherited ProductionUnionForm: TProductionUnionForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -601,12 +636,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ChildCDS
           ComponentItem = 'GoodsKindCompleteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -614,6 +651,7 @@ inherited ProductionUnionForm: TProductionUnionForm
           Component = ChildCDS
           ComponentItem = 'GoodsKindCompleteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -625,12 +663,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId_Complete'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -638,6 +678,7 @@ inherited ProductionUnionForm: TProductionUnionForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName_Complete'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -800,6 +841,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -808,24 +850,28 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -833,12 +879,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -846,12 +894,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -859,21 +909,39 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DocumentKindId'
+        Value = Null
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DocumentKindName'
+        Value = Null
+        Component = GuidesDocumentKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IsAuto'
         Value = ''
         Component = edIsAuto
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InsertDate'
         Value = 'Null'
         Component = edInsert
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 168
+    Left = 328
+    Top = 176
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProductionUnion'
@@ -884,6 +952,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -891,6 +960,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -898,6 +968,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -905,6 +976,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -912,12 +984,22 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentKindId'
+        Value = Null
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPeresort'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 498
     Top = 192
@@ -944,6 +1026,9 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Control = edTo
+      end
+      item
+        Control = edDocumentKind
       end>
   end
   inherited spErasedMIMaster: TdsdStoredProc
@@ -963,6 +1048,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -970,6 +1056,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -977,6 +1064,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -985,6 +1073,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCount'
@@ -993,6 +1082,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'Count'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
@@ -1001,6 +1091,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -1009,6 +1100,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1016,6 +1108,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 592
     Top = 200
@@ -1027,6 +1120,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1034,6 +1128,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1041,18 +1136,21 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
@@ -1061,6 +1159,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -1069,6 +1168,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1076,6 +1176,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spErasedMIChild: TdsdStoredProc
@@ -1101,6 +1202,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1108,6 +1210,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1115,6 +1218,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1123,6 +1227,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -1130,6 +1235,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = ChildCDS
         ComponentItem = 'ParentId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
@@ -1138,6 +1244,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -1146,6 +1253,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1153,6 +1261,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = ChildCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindCompleteId'
@@ -1160,6 +1269,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = ChildCDS
         ComponentItem = 'GoodsKindCompleteId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 512
@@ -1190,11 +1300,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 495
@@ -1218,9 +1330,39 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 383
     Top = 176
+  end
+  object GuidesDocumentKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentKind
+    FormNameParam.Value = 'TDocumentKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDocumentKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDocumentKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 792
+    Top = 48
   end
 end
