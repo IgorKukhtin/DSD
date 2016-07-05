@@ -52,22 +52,24 @@ uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs, dsdAddOn, CommonData;
 
 // Процедура по символьно переводит строку в набор цифр
 function ConvertConvert(S: String): String;
-var i: integer;
+var i, l: integer;
     ArcS: Ansistring;
 begin
   ArcS := ZCompressStr(S);
   result := '';
-  for I := 1 to Length(ArcS) do
-      result := result + IntToHex(byte(ArcS[i]),2);
+  l := Length(ArcS); // чтобы каждый не вычислять в цикле
+  for I := 1 to l do
+    result := result + IntToHex(byte(ArcS[i]),2);
 end;
 
   // Процедура по символьно переводит строку в набор цифр
 function ReConvertConvert(S: Ansistring): AnsiString;
-var i: integer;
+var i, l: integer;
 begin
   i := 1;
   result := '';
-  while i <= Length(S) do begin
+  l := Length(S); // чтобы каждый не вычислять в цикле
+  while i <= l do begin
     result := result + Ansichar(StrToInt('$' + s[i] + s[i+1]));
     i := i + 2;
   end;
@@ -84,6 +86,7 @@ begin
         Free;
     end;
 end;
+
 { TdsdFormStorage }
 
 class function TdsdFormStorage.NewInstance: TObject;

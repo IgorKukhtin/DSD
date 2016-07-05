@@ -1,4 +1,4 @@
--- Function: gpGet_Movement_Email_FileName()
+п»ї-- Function: gpGet_Movement_Email_FileName()
 
 -- DROP FUNCTION IF EXISTS gpGet_Movement_XML_FileName (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Email_FileName (Integer, TVarChar);
@@ -8,19 +8,19 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Email_FileName(
    OUT outDefaultFileExt      TVarChar  ,
    OUT outEncodingANSI         Boolean   ,
     IN inMovementId           Integer   ,
-    IN inSession              TVarChar    -- сессия пользователя
+    IN inSession              TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 )
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
+     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_XML_Mida());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- Результат
+     -- Р РµР·СѓР»СЊС‚Р°С‚
      SELECT tmp.outFileName, tmp.outDefaultFileExt, tmp.outEncodingANSI
             INTO outFileName, outDefaultFileExt, outEncodingANSI
      FROM
@@ -33,7 +33,7 @@ BEGIN
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
                       THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
                  || '_' || Movement.InvNumber
-                 || '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
+                 || '_' || COALESCE (Object_Retail.ValueData, 'РўРѕСЂРіРѕРІР°СЏ СЃРµС‚СЊ') || ' в„–' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
                                                                                                     THEN Object_Partner.Id :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
                                                                                                ELSE COALESCE (ObjectString_RoomNumber.ValueData, '0')
                                                                                           END
@@ -101,13 +101,17 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  23.03.16                                        *
  25.02.16                                        *
 */
 
--- тест
+-- С‚РµСЃС‚
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
+
+
+
+--select * from gpGet_Movement_Email_FileName(inMovementId := 3770859 ,  inSession := '602006');

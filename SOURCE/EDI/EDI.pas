@@ -339,7 +339,7 @@ begin
           begin
             // если первые буквы файла comdoc, а последние .p7s. Реализация
             if (copy(List[i], 1, 6) = 'comdoc') and
-              (copy(List[i], Length(List[i]) - 3, 4) = '.p7s') then
+              (ExtractFileExt(List[i]) = '.p7s') then
             begin
               DocData := gfStrFormatToDate(copy(List[i], 8, 8), 'yyyymmdd');
               if (StartDate <= DocData) and (DocData <= EndDate) then

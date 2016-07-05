@@ -1,27 +1,30 @@
 inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 438
-  ClientWidth = 1070
-  ExplicitWidth = 1086
-  ExplicitHeight = 476
+  ClientWidth = 1221
+  ExplicitWidth = 1237
+  ExplicitHeight = 477
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1070
-    Height = 381
+    Width = 1221
+    Height = 379
     TabOrder = 3
-    ExplicitWidth = 1070
-    ExplicitHeight = 381
-    ClientRectBottom = 381
-    ClientRectRight = 1070
+    ExplicitTop = 59
+    ExplicitWidth = 1221
+    ExplicitHeight = 379
+    ClientRectBottom = 375
+    ClientRectRight = 1217
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1070
-      ExplicitHeight = 381
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 1213
+      ExplicitHeight = 371
       inherited cxGrid: TcxGrid
-        Width = 1070
-        Height = 381
-        ExplicitWidth = 1070
-        ExplicitHeight = 381
+        Width = 1213
+        Height = 371
+        ExplicitWidth = 1213
+        ExplicitHeight = 371
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -433,8 +436,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1070
-    ExplicitWidth = 1070
+    Width = 1221
+    ExplicitWidth = 1221
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -550,6 +553,47 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actExportTXTVostok: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <>
+      Caption = #1047#1055' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1042#1086#1089#1090#1086#1082
+    end
+    object actExportTXTVostokSelect: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spExportTXTVostok
+      StoredProcList = <
+        item
+          StoredProc = spExportTXTVostok
+        end>
+      Caption = 'actExportTXTVostokSelect'
+      QuestionBeforeExecute = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1084#1091' '#1087#1091#1085#1082#1090#1091' '#1074' '#1092#1086#1088#1084#1072#1090' '#1073#1072#1085#1082#1072' '#1042#1086#1089#1090#1086#1082'?'
+    end
+    object FileDialogAction1: TFileDialogAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      FileOpenDialog.FavoriteLinks = <>
+      FileOpenDialog.FileTypes = <>
+      FileOpenDialog.Options = []
+      Param.Value = Null
+      Param.MultiSelectSeparator = ','
+    end
+    object ExportGrid1: TExportGrid
+      Category = 'DSDLib'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Caption = 'ExportGrid1'
+      OpenAfterCreate = False
+    end
+    object actExportToFile: TdsdStoredProcExportToFile
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      dsdStoredProcName = spExportTXTVostok
+      FileExt = '.txt'
+      FilenamePrefix = 'Vostok_'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -602,7 +646,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -679,6 +723,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bExportToFile'
         end>
     end
     object bbTax: TdxBarButton
@@ -712,6 +761,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Hint = #1057#1095#1077#1090
       Visible = ivAlways
       ImageIndex = 21
+    end
+    object bExportToFile: TdxBarButton
+      Action = actExportToFile
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1042#1086#1089#1090#1086#1082
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -861,5 +915,58 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     PackSize = 1
     Left = 535
     Top = 248
+  end
+  object spExportTXTVostok: TdsdStoredProc
+    StoredProcName = 'gpExport_TXTBankVostokPayroll'
+    DataSet = dsExportTXTVostok
+    DataSets = <
+      item
+        DataSet = dsExportTXTVostok
+      end>
+    Params = <
+      item
+        Name = 'inPayrollID'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumDoc'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'InvNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'TotalSummCardRecalc'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateDoc'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 685
+    Top = 5
+  end
+  object dsExportTXTVostok: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 688
+    Top = 56
   end
 end

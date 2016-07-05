@@ -16,12 +16,12 @@ $BODY$
    DECLARE vbGoodsPropertyId_basis Integer;
    DECLARE vbExportKindId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
+     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- Таблица для результата
+     -- РўР°Р±Р»РёС†Р° РґР»СЏ СЂРµР·СѓР»СЊС‚Р°С‚Р°
      CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
 
 
@@ -378,20 +378,7 @@ BEGIN
      -- INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
      INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
      INSERT INTO _Result(RowData) VALUES ('<root>');
-
-
-     -- первая строчка CSV  - Шапка
---     INSERT INTO _Result(RowData)
---        SELECT 'KOD'       -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом) 
---            || ';KOL'      -- количество 
---            || ';CEN'      -- цена с НДС (Ваша) 
---            || ';NAM'      -- имя товара на всяк случай если забыли сообщить штрихкод 
---            || ';KLN'      -- клиент (константа, код поставщика в нашей базе )  - 9990057 
---            || ';MAG'      -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
---            || ';NAM_TT'   -- название адрес ТТ
---            || ';DAT'      -- дата дока
---            || ';NAK'      -- номер накладной (мало знаков - расширяйте на свое усмотрение)
---       ;
+     INSERT INTO _Result(RowData) VALUES ('<Export Provider="9990074" />');
 
      -- Строчная часть
      INSERT INTO _Result(RowData)
@@ -475,17 +462,20 @@ BEGIN
                  WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                 )
         -- результат
-        SELECT 
+        SELECT
         -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом)
       '    <tov KOD="' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
                -- количество
      || '" KOL="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
                -- цена с НДС (Ваша) 
-     || '" CEN="' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar
+     || '" CEN="' || CAST(((CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END)
+		     +
+		     ((CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END)
+		      * (select ValueData/100 from movementfloat where descid = 3 and movementid = inmovementid))) AS NUMERIC(16, 2))/*СЃРєРёРґРєР°/РЅР°РєСЂСѓС‚РєР°*/ :: TVarChar
                -- имя товара на всяк случай если забыли сообщить штрихкод
      || '" NAM="' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
-               -- клиент (константа, код поставщика в нашей базе )  - 9990057
-     || '" KLN="9990057"'
+               -- клиент (константа, код поставщика в нашей базе )  - 9990074
+     || '"'-- KLN="9990074"'
                -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
      || ' MAG="' || tmpMovement.PartnerId -- tmpMovement.RoomNumber
                -- название адрес ТТ
@@ -533,7 +523,7 @@ BEGIN
           AND MovementItem.isErased = FALSE
           AND MIFloat_AmountPartner.ValueData <> 0
        ;
-       
+
      -- послние строчки XML
      --INSERT INTO _Result(RowData) VALUES ('</head>');
      INSERT INTO _Result(RowData) VALUES ('</root>');
@@ -548,7 +538,7 @@ BEGIN
      THEN
          -- Результат
          RETURN QUERY
-            SELECT STRING_AGG (_Result.RowData, CHR(13)) :: TBlob FROM _Result;
+            SELECT STRING_AGG (_Result.RowData, CHR(13)||CHR(10)) :: TBlob FROM _Result;
      ELSE
          -- Результат
          RETURN QUERY
@@ -558,18 +548,25 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION gpselect_movement_email_send(integer, tvarchar)
+  OWNER TO admin;
+GRANT EXECUTE ON FUNCTION gpselect_movement_email_send(integer, tvarchar) TO public;
+GRANT EXECUTE ON FUNCTION gpselect_movement_email_send(integer, tvarchar) TO admin;
+GRANT EXECUTE ON FUNCTION gpselect_movement_email_send(integer, tvarchar) TO project;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Левицкий Б.
- 27.05.16                                        *
- 05.04.16                                                         * Допилена выгрузка для Шери - XML формат
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А., Левицкий Б.
  23.03.16                                        *
  25.02.16                                        *
+ 05.05.16 Допилена выгрузка для Шери - XML формат*
+ 10.05.16 Шери - XML формат : не учитывалась скидка/накрутка при формировании цены в колонке " KOL="*
 */
 
--- тест
+-- С‚РµСЃС‚
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()

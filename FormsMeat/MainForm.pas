@@ -692,10 +692,15 @@ type
     N105: TMenuItem;
     actExportJuridical: TdsdOpenForm;
     N106: TMenuItem;
+    actMobileTariff: TdsdOpenForm;
+    miMobileTariff: TMenuItem;
+    miSubMobile: TMenuItem;
+    actMobileNumbersEmployee: TdsdOpenForm;
     actReport_Check_ReturnInToSale: TdsdOpenForm;
     N107: TMenuItem;
     actReport_CheckAmount_ReturnInToSale: TdsdOpenForm;
-    N108: TMenuItem;
+    miReport_MobileKS: TMenuItem;
+    actReport_MobileKS: TdsdOpenForm;
     actDocumentKind: TdsdOpenForm;
     N109: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);

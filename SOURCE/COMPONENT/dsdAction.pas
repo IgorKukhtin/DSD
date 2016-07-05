@@ -689,6 +689,65 @@ type
   published
     property MessageText: String read GetMessageText write SetMessageText;
   end;
+
+  // Загрузка XML Киевстара в БД
+  TdsdLoadXMLKS = class(TdsdCustomAction)
+  private
+    FXMLFilename: String;
+    FXMLFilenameDev: Boolean; // признак указано при разработке - не открывать odOpenXML
+    FInsertProcedureName: string;
+    odOpenXML: TOpenDialog;
+    spInsertProcedure: TdsdStoredProc;
+    // обработка свойства XMLFilename
+    procedure SetXMLFilename(Value: String);
+    function GetXMLFilename: String;
+    // обработка свойства InsertProcedureName
+    procedure SetInsertProcedureName(Value: String);
+    function GetInsertProcedureName: String;
+  protected
+    // основная функция - Сохранение файла в БД
+    function Execute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property XMLFilename: String read GetXMLFilename write SetXMLFilename;
+    property InsertProcedureName: String read GetInsertProcedureName write SetInsertProcedureName;
+  end;
+
+  // Выгрузка результата в файл
+  TdsdStoredProcExportToFile = class(TdsdCustomAction)
+  private
+    FDataSet: TDataSet;
+    FdsdStoredProcName: TdsdStoredProc;
+    FFilename: string;
+    FFileExt: string;// = '.txt';
+    FFilenamePrefix: string;
+    sdSaveFile: TSaveDialog;
+    //FIncludeFieldNames: Boolean;
+    procedure SetdsdStoredProcName(Value: TdsdStoredProc);
+    function GetdsdStoredProcName: TdsdStoredProc;
+  protected
+    // основная функция - Сохранение файла
+    function Execute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // ДатаСет с данными
+//    property DataSet: TDataSet read FDataSet write FDataSet;
+    // Настроенный компонент процедуры
+    property dsdStoredProcName: TdsdStoredProc read GetdsdStoredProcName write SetdsdStoredProcName;
+    // Имя файла
+    property Filename: string read FFilename write FFilename;
+    // Расширение файла
+    property FileExt: string read FFileExt write FFileExt;
+    // Префикс имени файла
+    property FilenamePrefix: string read FFilenamePrefix write FFilenamePrefix;
+    // Флаг выгрузки названий полей
+    //property IncludeFieldNames: boolean read FIncludeFieldNames write FIncludeFieldNames default False;
+  end;
+
 procedure Register;
 
 implementation
@@ -729,7 +788,9 @@ begin
   RegisterActions('DSDLib', [TUpdateRecord], TUpdateRecord);
   RegisterActions('DSDLib', [TShellExecuteAction], TShellExecuteAction);
   RegisterActions('DSDLib', [TShowMessageAction], TShowMessageAction);
-
+  RegisterActions('DSDLib', [TdsdLoadXMLKS], TdsdLoadXMLKS);
+  RegisterActions('DSDLibExport', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
+  RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
 end;
 
 { TdsdCustomDataSetAction }
@@ -2561,9 +2622,9 @@ begin
   Stream := TStringStream.Create;
   OldFieldIndexList := TStringList.Create;
   ExpandedStr := '';
-  try //mainTry
+  try // mainTry
     FReport.PreviewOptions.Maximized := APreviewWindowMaximized;
-    for i := 0 to ADataSets.Count - 1 do //залить источники данных
+    for i := 0 to ADataSets.Count - 1 do // залить источники данных
     begin
       DataSetList.Add(TfrxDBDataset.Create(nil));
       with TfrxDBDataset(DataSetList[DataSetList.Count - 1]) do
@@ -2587,7 +2648,7 @@ begin
         begin
           TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).BeginUpdate;
           try
-            //сохранили состояние разворотов до сортировки
+            // сохранили состояние разворотов до сортировки
             for ExpandedIdx := 0 to TAddOnDataSet(ADataSets[i]).GridView.ViewData.RowCount - 1 do
               if TAddOnDataSet(ADataSets[i]).GridView.ViewData.Rows[ExpandedIdx].Expanded then
                 ExpandedStr := ExpandedStr + INtToStr(ExpandedIdx)+';';
@@ -2629,17 +2690,17 @@ begin
 //              end;
 //            end;
 
-            //развернули все строки, что бы ChildTableView загрузил все данные в клоны
+            // развернули все строки, что бы ChildTableView загрузил все данные в клоны
 
             TAddOnDataSet(ADataSets[i]).GridView.ViewData.Expand(True);
 
-            //перегрузили отсортированные данные в dxMemData
-            //MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
+            // перегрузили отсортированные данные в dxMemData
+            // MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
             MemTableList.Add(ViewToMemTable.LoadData2(TAddOnDataSet(ADataSets[i]).GridView));
             TClientDataSet(MemTableList.Items[MemTableList.Count-1]).IndexFieldNames :=
                 TAddOnDataSet(ADataSets[i]).IndexFieldNames
 
-            //вернули сортировку наместо
+            // вернули сортировку наместо
 //            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then
 //              TAddOnDataSet(ADataSets[i]).GridView.DataController.ClearSorting(false);
 //            if OldSort <> '' then
@@ -2843,6 +2904,139 @@ begin
   FMessageText := Value;
   if not (csDesigning in ComponentState) then
     LocalExecute;
+end;
+
+{ TdsdLoadXMLKS }
+
+constructor TdsdLoadXMLKS.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  odOpenXML := TOpenDialog.Create(Application);
+  odOpenXML.Filter := 'XML файл|*.xml|ZIP файл|*.zip';
+  odOpenXML.Title := 'Укажите файл для загрузки';
+  odOpenXML.Options := [ofReadOnly, ofFileMustExist];
+end;
+
+destructor TdsdLoadXMLKS.Destroy;
+begin
+  odOpenXML := nil;
+  inherited;
+end;
+
+//function TdsdLoadXMLKS.GetInsertProcedureName: String;
+//begin
+//  if FInsertProcedureName = '' then
+//    Result := 'gpInsertUpdate_logBillsKS'
+//  else
+//    Result := FInsertProcedureName;
+//end;
+
+function TdsdLoadXMLKS.Execute: Boolean;
+var
+  XMLFileStream: TStringStream;
+
+  function UnXML(inXML: Variant): Variant;
+  begin
+    Result := inXML;
+    Result := StringReplace(Result, '<', '%', [rfReplaceAll]);
+    Result := StringReplace(Result, '>', '$', [rfReplaceAll]);
+    Result := StringReplace(Result, #9, '', [rfReplaceAll]);
+    Result := StringReplace(Result, '&quot;', '', [rfReplaceAll]);
+    Result := StringReplace(Result, '"', '^', [rfReplaceAll]);
+  end;
+begin
+  if (XMLFilename = '') or (not FileExists(FXMLFilename)) then // если не указан файл или не существует
+    if odOpenXML.Execute then // тогда спрашиваем
+      XMLFilename := odOpenXML.FileName // запоминаем
+    else                                // а если нет
+      Exit;                             // то выходим
+
+  // через поток заливаем в БД
+  XMLFileStream := TStringStream.Create;
+  XMLFileStream.LoadFromFile(XMLFilename);
+  spInsertProcedure := TdsdStoredProc.Create(Application);
+  spInsertProcedure.OutputType := otResult;
+  spInsertProcedure.StoredProcName := 'gpInsertUpdate_logBillsKS'; // FInsertProcedureName;
+  spInsertProcedure.Params.AddParam('inXMLFile', ftBlob, ptInput, null);
+  spInsertProcedure.ParamByName('inXMLFile').Value := UnXML(XMLFileStream.DataString);
+  try
+    try
+      spInsertProcedure.Execute();
+    except
+      on E:Exception do
+      begin
+        //ShowMessage(e.Message);
+      end;
+    end;
+  finally
+    spInsertProcedure.Free;
+    XMLFileStream.Free;
+  end;
+  XMLFilename := ''; // т.к. данный экшн автоматом создается и переменная запоминается - нужно обнулять
+
+  //inherited;
+end;
+
+{ TdsdStoredProcToFile }
+
+constructor TdsdStoredProcExportToFile.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  sdSaveFile := TSaveDialog.Create(Application);
+  sdSaveFile.Filter := 'Текстовый файл|*.txt|Все файлы|*.*';
+  sdSaveFile.Title := 'Укажите файл для сохранения';
+  sdSaveFile.Options := [ofFileMustExist, ofOverwritePrompt];
+end;
+
+destructor TdsdStoredProcExportToFile.Destroy;
+begin
+  sdSaveFile := nil;
+
+  inherited;
+end;
+
+function TdsdStoredProcExportToFile.Execute: Boolean;
+var
+  F: TextFile;
+  FieldNames, Values: string;
+  i: Integer;
+begin
+  if not Assigned(dsdStoredProcName) then
+  begin
+    Exit;
+  end;
+
+  if sdSaveFile.Execute then
+  try
+    AssignFile(F, ExtractFilePath(sdSaveFile.FileName) + '\' + FilenamePrefix + ExtractFileName(sdSaveFile.FileName) + FileExt);
+    Rewrite(F); // переписываем файл
+
+    FdsdStoredProcName.Execute();
+    TdsdStoredProc(FdsdStoredProcName).DataSet.First;
+
+    while not TdsdStoredProc(FdsdStoredProcName).DataSet.Eof do
+    begin
+      FieldNames := FieldNames + TdsdStoredProc(FdsdStoredProcName).DataSet.Fields[0].AsString +#13+#10;
+      TdsdStoredProc(FdsdStoredProcName).DataSet.Next;
+    end;
+    Writeln(F, FieldNames);
+
+  finally
+    CloseFile(F);
+  end;
+end;
+
+function TdsdStoredProcExportToFile.GetdsdStoredProcName: TdsdStoredProc;
+begin
+  Result := FdsdStoredProcName;
+end;
+
+procedure TdsdStoredProcExportToFile.SetdsdStoredProcName(
+  Value: TdsdStoredProc);
+begin
+  FdsdStoredProcName := Value;
 end;
 
 end.

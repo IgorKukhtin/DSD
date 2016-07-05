@@ -59,6 +59,14 @@ type
     TotalSummPhone: TcxGridDBColumn;
     TotalSummTransportAddLong: TcxGridDBColumn;
     TotalSummTransportTaxi: TcxGridDBColumn;
+    spExportTXTVostok: TdsdStoredProc;
+    dsExportTXTVostok: TClientDataSet;
+    actExportTXTVostok: TMultiAction;
+    actExportTXTVostokSelect: TdsdExecStoredProc;
+    FileDialogAction1: TFileDialogAction;
+    ExportGrid1: TExportGrid;
+    bExportToFile: TdxBarButton;
+    actExportToFile: TdsdStoredProcExportToFile;
   private
     { Private declarations }
   public
