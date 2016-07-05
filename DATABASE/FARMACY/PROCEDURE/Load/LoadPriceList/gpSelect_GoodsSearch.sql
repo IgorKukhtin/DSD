@@ -130,11 +130,11 @@ BEGIN
             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
 
       WHERE 
-        upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') 
+        upper(LoadPriceListItem.GoodsName) LIKE UPPER ('%' || inGoodsSearch || '%') 
         AND
-        upper(LoadPriceListItem.ProducerName) LIKE UPPER('%'||inProducerSearch||'%')
+        upper(LoadPriceListItem.ProducerName) LIKE UPPER ('%' || inProducerSearch || '%')
         AND 
-        upper(CAST(Object_Goods.GoodsCode AS TVarChar)) LIKE UPPER('%'||inCodeSearch||'%')
+        upper (CAST (COALESCE (Object_Goods.GoodsCode, 0) :: TVarChar)) LIKE UPPER ('%' || inCodeSearch || '%')
         AND
         (
             inGoodsSearch <> ''
