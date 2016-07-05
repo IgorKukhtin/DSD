@@ -942,17 +942,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ExplicitTop = 45
     end
     inherited ceStatus: TcxButtonEdit
-<<<<<<< HEAD
-      ExplicitWidth = 121
-      ExplicitHeight = 24
-      Width = 121
-=======
       Top = 61
       ExplicitTop = 61
       ExplicitWidth = 167
       ExplicitHeight = 22
       Width = 167
->>>>>>> origin/master
     end
     object edServiceDate: TcxDateEdit
       Left = 185
@@ -1543,8 +1537,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
-<<<<<<< HEAD
-=======
       end
       item
         Name = 'IsAuto'
@@ -1552,7 +1544,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = edIsAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
->>>>>>> origin/master
       end>
     Left = 216
     Top = 248
