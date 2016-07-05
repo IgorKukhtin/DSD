@@ -711,8 +711,8 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property XMLFilename: String read GetXMLFilename write SetXMLFilename;
-    property InsertProcedureName: String read GetInsertProcedureName write SetInsertProcedureName;
+    property XMLFilename: String read FXMLFilename write FXMLFilename;
+    property InsertProcedureName: String read FInsertProcedureName write FInsertProcedureName;
   end;
 
   // Выгрузка результата в файл
