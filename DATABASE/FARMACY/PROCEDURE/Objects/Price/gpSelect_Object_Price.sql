@@ -332,8 +332,9 @@ from tmp
      left join tmp as tmp2 on tmp2.ObjectId = tmp.ObjectId and tmp2.Ord = tmp.Ord + 1 and tmp2.DescId = tmp.DescId
      left join ObjectHistoryDesc on ObjectHistoryDesc. Id = tmp.DescId
 where tmp.EndDate <> coalesce (tmp2.StartDate, zc_DateEnd())
- order by 3-- ) as tmp where tmp.Id = ObjectHistory.Id
--- select * from ObjectHistory   where ObjectId = 558863 order by StartDate
+ order by 3
+-- ) as tmp where tmp.Id = ObjectHistory.Id
+-- select * from ObjectHistory   where ObjectId = 558863 order by EndDate, StartDate
 -- select ObjectHistoryDesc.Code, ObjectId, StartDate, count (*) from ObjectHistory  join ObjectHistoryDesc on ObjectHistoryDesc. Id = DescId group by ObjectHistoryDesc.Code, ObjectId, StartDate having count (*) > 1
 */
 -- тест
