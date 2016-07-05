@@ -27,7 +27,8 @@ RETURNS TABLE (
     Price              TFloat, 
     SuperFinalPrice    TFloat,
     isTop              Boolean,
-    isOneJuridical     Boolean
+    isOneJuridical     Boolean,
+    PercentMarkup      TFloat
 )
 
 AS
@@ -122,9 +123,9 @@ BEGIN
             LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
                                             ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
        )
-    -- Список цены + ТОП
+    -- Список цены + ТОП + % наценки
   , GoodsPrice AS
-       (SELECT GoodsList.GoodsId, ObjectBoolean_Top.ValueData AS isTOP
+       (SELECT GoodsList.GoodsId, COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP, COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup
         FROM GoodsList
              INNER JOIN ObjectLink AS ObjectLink_Price_Goods
                                    ON ObjectLink_Price_Goods.ChildObjectId = GoodsList.GoodsId
@@ -133,10 +134,13 @@ BEGIN
                                    ON ObjectLink_Price_Unit.ChildObjectId = inUnitId
                                   AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
                                   AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-             INNER JOIN ObjectBoolean AS ObjectBoolean_Top
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
                                       ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
                                      AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
-                                     AND ObjectBoolean_Top.ValueData = TRUE
+             LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                                   ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                  AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+        WHERE ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0
        )
     -- почти финальный список
   , FinalList AS
@@ -169,6 +173,7 @@ BEGIN
         END :: TFloat AS SuperFinalPrice
 
       , ddd.isTOP
+      , ddd.PercentMarkup
 
     FROM (SELECT DISTINCT 
             GoodsList.ObjectId                 AS GoodsId
@@ -186,7 +191,7 @@ BEGIN
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
           , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-                 WHEN COALESCE (GoodsPrice.isTOP, Goods.isTOP) = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
+                 WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Goods.isTOP) = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
                          -- И учитывается % бонуса из Маркетинговый контракт
                        * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
@@ -204,7 +209,8 @@ BEGIN
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
-          , COALESCE (GoodsPrice.isTOP, Goods.isTOP) AS isTOP
+          , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Goods.isTOP) AS isTOP
+          , COALESCE (GoodsPrice.PercentMarkup, 0) AS PercentMarkup
         
         FROM -- Остатки + коды ...
              GoodsList 
@@ -282,8 +288,9 @@ BEGIN
         MinPriceList.JuridicalName,
         MinPriceList.Price,
         MinPriceList.SuperFinalPrice,
-        MinPriceList.isTop,
-        CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END ::Boolean AS isOneJuridical
+        MinPriceList.isTop :: Boolean AS isTop,
+        CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END :: Boolean AS isOneJuridical,
+        MinPriceList.PercentMarkup :: TFloat AS PercentMarkup
     FROM MinPriceList
          LEFT JOIN tmpCountJuridical ON tmpCountJuridical.GoodsId = MinPriceList.GoodsId
     ;

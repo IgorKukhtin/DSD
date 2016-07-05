@@ -50,17 +50,20 @@ BEGIN
                               
           -- Список цены + ТОП
         , GoodsPrice AS
-             (SELECT ObjectLink_Price_Goods.ChildObjectId AS GoodsId, ObjectBoolean_Top.ValueData AS isTOP
+             (SELECT ObjectLink_Price_Goods.ChildObjectId AS GoodsId, COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP, COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup
               FROM ObjectLink AS ObjectLink_Price_Unit
                    INNER JOIN ObjectLink AS ObjectLink_Price_Goods
                                          ON ObjectLink_Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
                                         AND ObjectLink_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
-                   INNER JOIN ObjectBoolean AS ObjectBoolean_Top
-                                            ON ObjectBoolean_Top.ObjectId  = ObjectLink_Price_Unit.ObjectId
-                                           AND ObjectBoolean_Top.DescId    = zc_ObjectBoolean_Price_Top()
-                                           AND ObjectBoolean_Top.ValueData = TRUE
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
+                                           ON ObjectBoolean_Top.ObjectId  = ObjectLink_Price_Unit.ObjectId
+                                          AND ObjectBoolean_Top.DescId    = zc_ObjectBoolean_Price_Top()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                                         ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                        AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
               WHERE ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                 AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Goods()
+                AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0)
              )
    SELECT
          LoadPriceListItem.Id, 
@@ -81,15 +84,15 @@ BEGIN
          PartnerGoods.MinimumLot,
          Object_Goods.NDS,
          LinkGoods.Id AS LinkGoodsId 
-       , CASE WHEN COALESCE (GoodsPrice.isTop, ObjectGoodsView.isTop) = TRUE
-                   THEN  COALESCE (ObjectGoodsView.PercentMarkup, 0) -- - COALESCE(ObjectFloat_Percent.valuedata, 0)
+       , CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop) = TRUE
+                   THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectGoodsView.PercentMarkup, 0)) -- - COALESCE(ObjectFloat_Percent.valuedata, 0)
               ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Percent.valuedata, 0)
          END :: TFloat AS MarginPercent
          --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0))::TFloat,
        , zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                     -- Цена С НДС
                            MarginCondition.MarginPercent + COALESCE (ObjectFloat_Percent.valuedata, 0), -- % наценки в КАТЕГОРИИ
-                           COALESCE (GoodsPrice.isTop, ObjectGoodsView.isTop),                          -- ТОП позиция
-                           ObjectGoodsView.PercentMarkup,                                               -- % наценки у товара
+                           COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop),          -- ТОП позиция
+                           COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectGoodsView.PercentMarkup),  -- % наценки у товара
                            0.0, --ObjectFloat_Percent.valuedata,                                        -- % корректировки у Юр Лица для ТОПа
                            ObjectGoodsView.Price                                                        -- Цена у товара (фиксированная)
                          ) :: TFloat AS NewPrice

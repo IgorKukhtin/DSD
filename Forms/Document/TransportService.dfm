@@ -4,7 +4,7 @@
   ClientWidth = 597
   AddOnFormData.isSingle = False
   ExplicitWidth = 603
-  ExplicitHeight = 366
+  ExplicitHeight = 363
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -27,7 +27,7 @@
   object Код: TcxLabel [3]
     Left = 8
     Top = 11
-    Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object ceInvNumber: TcxCurrencyEdit [4]
     Left = 8
@@ -41,7 +41,7 @@
   object cxLabel3: TcxLabel [5]
     Left = 8
     Top = 108
-    Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+    Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel2: TcxLabel [6]
     Left = 312
@@ -67,7 +67,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 8
-    Width = 186
+    Width = 188
   end
   object cePaidKind: TcxButtonEdit [10]
     Left = 312
@@ -181,12 +181,12 @@
   end
   object cxLabel4: TcxLabel [22]
     Left = 312
-    Top = 69
+    Top = 61
     Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
   end
   object ceDistance: TcxCurrencyEdit [23]
     Left = 312
-    Top = 87
+    Top = 79
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 23
@@ -194,12 +194,12 @@
   end
   object cxLabel11: TcxLabel [24]
     Left = 406
-    Top = 69
+    Top = 61
     Caption = #1062#1077#1085#1072' ('#1090#1086#1087#1083#1080#1074#1072')'
   end
   object cePrice: TcxCurrencyEdit [25]
     Left = 406
-    Top = 87
+    Top = 79
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 25
@@ -285,34 +285,34 @@
   end
   object cxLabel16: TcxLabel [36]
     Left = 495
-    Top = 69
+    Top = 61
     Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
   end
   object ceWeightTransport: TcxCurrencyEdit [37]
     Left = 495
-    Top = 87
+    Top = 79
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 37
     Width = 90
   end
   object cxLabel17: TcxLabel [38]
-    Left = 200
+    Left = 210
     Top = 108
-    Caption = #1047#1085#1072#1095'. '#1091#1089#1083'. '#1076#1086#1075'.'
+    Caption = #1059#1089#1083'. '#1076#1086#1075'. '#1075#1088#1085
   end
   object ceValue: TcxCurrencyEdit [39]
-    Left = 200
+    Left = 210
     Top = 129
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 39
-    Width = 81
+    Width = 71
   end
   object cxLabel18: TcxLabel [40]
     Left = 312
-    Top = 111
+    Top = 108
     Caption = #1044#1086#1087#1083#1072#1090#1072', '#1075#1088#1085
   end
   object ceSummAdd: TcxCurrencyEdit [41]
