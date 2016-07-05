@@ -147,7 +147,8 @@ BEGIN
                           )
        SELECT MovementDescId, OperDate, ObjectId, ObjectDescId
             , -1 * MIFloat_SummAdd.ValueData AS OperSumm
-            , MovementItemId, ContainerId
+            , _tmpItem.MovementItemId
+            , ContainerId
             , AccountGroupId, AccountDirectionId, AccountId
             , ProfitLossGroupId, ProfitLossDirectionId
             , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
@@ -206,7 +207,7 @@ BEGIN
              , _tmpItem.OperDate
              , 0 AS ObjectId
              , 0 AS ObjectDescId                                                    -- !!!значит будет ОПиУ!!!
-             , -1 * SUM (_tmpItem.OperSumm)
+             , -1 * SUM (_tmpItem.OperSumm) AS OperSumm
              , _tmpItem.MovementItemId
              , 0 AS ContainerId                                                     -- сформируем позже
              , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
@@ -259,9 +260,9 @@ BEGIN
                , _tmpItem.MovementItemId
 
                  -- Группы ОПиУ (для затрат)
-               , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
+               , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0)
                  -- Аналитики ОПиУ - направления (для затрат)
-               , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) AS ProfitLossDirectionId
+               , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0)
 
                  -- Управленческие группы назначения
                , _tmpItem.InfoMoneyGroupId
@@ -279,10 +280,12 @@ BEGIN
                , _tmpItem.UnitId -- Подраделение (ОПиУ), а могло быть UnitId_Route
 
                  -- Филиал ОПиУ:
-               , _tmpItem.ObjectExtId_Analyzer AS BranchId_ProfitLoss
+               , _tmpItem.ObjectExtId_Analyzer
 
                , _tmpItem.ObjectIntId_Analyzer   -- Автомобиль !!!при формировании проводок замена с UnitId!!!
                , _tmpItem.ObjectExtId_Analyzer   -- Филиал (ОПиУ), а могло быть BranchId_Route
+               , _tmpItem.IsActive
+               , _tmpItem.IsMaster
        ;
 
 
@@ -302,7 +305,7 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Branch
                                      ON ObjectLink_UnitRoute_Branch.ObjectId = ObjectLink_Route_Unit.ChildObjectId
                                     AND ObjectLink_UnitRoute_Branch.DescId = zc_ObjectLink_Unit_Branch()
-           WHERE _tmpItem.ObjectDescId = 0 R _tmpItem.AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+           WHERE _tmpItem.ObjectDescId = 0 OR _tmpItem.AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
           ) AS tmp;*/
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки

@@ -138,16 +138,16 @@ BEGIN
             RemainsTo.Amount                  AS RemainsCount_to,
             Object_Goods.NDS                  AS NDS
           , CASE WHEN SelectMinPrice_AllGoods.isTop = TRUE
-                      THEN  COALESCE(Object_Goods.PercentMarkup, 0) /*- COALESCE(ObjectFloat_Percent.valuedata, 0)*/
-                 ELSE COALESCE(MarginCondition.MarginPercent,0) + COALESCE(ObjectFloat_Percent.valuedata, 0)
+                      THEN  COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), COALESCE (Object_Goods.PercentMarkup, 0)) /*- COALESCE(ObjectFloat_Percent.valuedata, 0)*/
+                 ELSE COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Percent.valuedata, 0)
             END::TFloat AS MarginPercent
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
-          , zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)              -- Цена С НДС
-                            , MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0) -- % наценки в КАТЕГОРИИ
-                            , SelectMinPrice_AllGoods.isTop                                              -- ТОП позиция
-                            , Object_Goods.PercentMarkup                                                 -- % наценки у товара
-                            , 0 /*ObjectFloat_Percent.valuedata*/                                        -- % корректировки у Юр Лица для ТОПа
-                            , Object_Goods.Price                                                         -- Цена у товара (фиксированная)
+          , zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
+                            , MarginCondition.MarginPercent + COALESCE (ObjectFloat_Percent.valuedata, 0) -- % наценки в КАТЕГОРИИ
+                            , SelectMinPrice_AllGoods.isTop                                               -- ТОП позиция
+                            , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
+                            , 0 /*ObjectFloat_Percent.valuedata*/                                         -- % корректировки у Юр Лица для ТОПа
+                            , Object_Goods.Price                                                          -- Цена у товара (фиксированная)
                              ) ::TFloat AS NewPrice
           , SelectMinPrice_AllGoods.PartionGoodsDate         AS ExpirationDate,
             SelectMinPrice_AllGoods.JuridicalId              AS JuridicalId,

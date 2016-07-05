@@ -71,7 +71,6 @@ BEGIN
      ELSE
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip(), zc_Enum_ContractConditionKind_TransportRoundTrip())
      THEN
-
                     -- по условиям в договоре "Ставка за маршрут..."
          vbValue:= COALESCE ((SELECT ObjectFloat_Value.ValueData
                                FROM ObjectLink AS ObjectLink_ContractCondition_Contract
@@ -84,7 +83,7 @@ BEGIN
                                                          AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
                                WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                  AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId), 0);
-
+                    -- по условиям в договоре "доплату за точку"
          vbValueAdd:= COALESCE ((SELECT ObjectFloat_Value.ValueData
                                  FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                                       JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
@@ -218,7 +217,7 @@ BEGIN
      -- сохранили свойство <Доплата)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractValue(), ioMIId, vbValue);
      -- сохранили свойство <Дополнительное значение из условия договора>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractValueAdd(), ioMIId, vbValueAdd);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractValueAdd(), ioMIId, COALESCE (vbValueAdd, 0));
 
      -- сохранили свойство <Комментарий>
      PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioMIId, inComment);

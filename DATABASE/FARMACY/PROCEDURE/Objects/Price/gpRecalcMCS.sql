@@ -167,6 +167,7 @@ BEGIN
         tmp_ResultSet.GoodsId,
         Object_Price.MCSValue,
         Object_Price.isTop,
+        Object_Price.PercentMarkup,
         Object_Price.Fix
     HAVING
         COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
