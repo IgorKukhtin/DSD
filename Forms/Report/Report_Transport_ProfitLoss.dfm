@@ -84,6 +84,16 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Format = ',0.####'
           Kind = skSum
           Column = SumAmount_TransportTaxi
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_ServiceAdd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_ServiceTotal
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -140,6 +150,16 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Format = ',0.####'
           Kind = skSum
           Column = SumAmount_TransportTaxi
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_ServiceAdd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SumAmount_ServiceTotal
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -251,8 +271,18 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
+      object SumAmount_ServiceTotal: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085'. ('#1085#1072#1077#1084' '#1080#1090#1086#1075#1086')'
+        DataBinding.FieldName = 'SumAmount_ServiceTotal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object SumAmount_TransportService: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085'. ('#1085#1072#1077#1084' '#1085#1072#1095#1080#1089#1083'.)'
         DataBinding.FieldName = 'SumAmount_TransportService'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -261,6 +291,16 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 90
+      end
+      object SumAmount_ServiceAdd: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085'. ('#1085#1072#1077#1084' '#1076#1086#1087#1083'.)'
+        DataBinding.FieldName = 'SumAmount_ServiceAdd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object SumAmount_PersonalSendCash: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085'. ('#1087#1086#1076#1086#1090#1095#1077#1090')'
@@ -402,7 +442,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 100
       end
       object One_KM: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' 1 '#1082#1084
@@ -412,7 +452,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 50
       end
       object One_KG: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' 1 '#1082#1075
@@ -422,7 +462,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -705,6 +745,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
       FormName = 'TReport_Transport_ProfitLossDialogForm'
       FormNameParam.Value = 'TReport_Transport_ProfitLossDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -712,6 +753,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -719,6 +761,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -726,6 +769,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -734,6 +778,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BusinessId'
@@ -741,6 +786,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Component = BusinessGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BusinessName'
@@ -749,6 +795,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -756,6 +803,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -764,6 +812,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarId'
@@ -771,6 +820,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Component = CarGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarName'
@@ -779,6 +829,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inisMovement'
@@ -786,6 +837,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Component = cbMovement
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -806,6 +858,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -813,6 +866,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBusinessId'
@@ -820,6 +874,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Component = BusinessGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -827,6 +882,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -834,6 +890,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
@@ -841,6 +898,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Component = CarGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsMovement'
@@ -848,6 +906,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Component = cbMovement
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -879,6 +938,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -913,6 +973,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranchForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -923,6 +984,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -931,6 +993,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 27
@@ -940,6 +1003,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
     LookupControl = edBusiness
     FormNameParam.Value = 'TBusiness_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -950,6 +1014,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -958,6 +1023,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 65535
@@ -967,6 +1033,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
     LookupControl = edCar
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -977,6 +1044,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -985,6 +1053,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 671
     Top = 38
@@ -994,6 +1063,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1004,6 +1074,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1012,6 +1083,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 591
     Top = 6

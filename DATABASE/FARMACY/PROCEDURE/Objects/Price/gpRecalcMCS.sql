@@ -146,11 +146,13 @@ BEGIN
                                         inMCSValue     := MAX(Sold)::TFloat,    -- Неснижаемый товарный запас
                                         inMCSPeriod    := inPeriod::TFloat,     --
                                         inMCSDay       := inDay::TFloat,        --
+                                        inPercentMarkup:= Object_Price.PercentMarkup, -- % наценки
                                         inGoodsId      := tmp_ResultSet.GoodsId,-- Товар
                                         inUnitId       := inUnitId,             -- подразделение
                                         inMCSIsClose   := NULL::Boolean,        -- НТЗ закрыт
                                         inMCSNotRecalc := NULL::Boolean,        -- НТЗ не пересчитывается
                                         inFix          := Object_Price.Fix,     -- фиксированная цена
+                                        inisTop        := Object_Price.isTop,   -- ТОП позиция
                                         inSession      := inSession)
     FROM 
         tmp_ResultSet
@@ -164,6 +166,8 @@ BEGIN
     GROUP BY
         tmp_ResultSet.GoodsId,
         Object_Price.MCSValue,
+        Object_Price.isTop,
+        Object_Price.PercentMarkup,
         Object_Price.Fix
     HAVING
         COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
@@ -176,5 +180,6 @@ ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 04.07.16         * add PercentMarkup
  29.08.15                                                         *
  */

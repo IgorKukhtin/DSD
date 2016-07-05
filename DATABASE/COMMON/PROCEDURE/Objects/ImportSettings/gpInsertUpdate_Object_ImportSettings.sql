@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
     IN inContractId              Integer   ,    -- ссылка на 
     IN inFileTypeId              Integer   ,    -- ссылка на 
     IN inImportTypeId            Integer   ,    -- ссылка на  
-    IN inEmailKindId             Integer   ,    -- ссылка на  
+    IN inEmailId                 Integer   ,    -- ссылка на  
     IN inContactPersonId         Integer   ,    -- ссылка на контактное лицо
     IN inStartRow                Integer   ,    -- 
     IN inHDR                     Boolean   ,    -- 
@@ -57,7 +57,7 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ImportType(), ioId, inImportTypeId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_EmailKind(), ioId, inEmailKindId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_Email(), ioId, inEmailId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ContactPerson(), ioId, inContactPersonId);
 

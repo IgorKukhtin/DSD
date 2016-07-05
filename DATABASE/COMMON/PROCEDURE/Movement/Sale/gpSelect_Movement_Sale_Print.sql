@@ -303,7 +303,8 @@ BEGIN
                               )
        SELECT
              Movement.Id                                AS Id
---           , Movement.InvNumber                         AS InvNumber
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
+--         , Movement.InvNumber                         AS InvNumber
            , CASE WHEN Movement.DescId = zc_Movement_Sale()
                        THEN Movement.InvNumber
                   WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MovementString_InvNumberPartner.ValueData <> ''
@@ -363,7 +364,11 @@ BEGIN
            , '' :: TVarChar                             AS Through     -- через кого
            , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('32516492', '39135315', '39622918') THEN 'м. Київ, вул Ольжича, 18/22' ELSE '' END :: TVarChar  AS UnitAddress -- адреса складання
 
-           , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0
+           , CASE -- !!!захардкодил временно для Запорожье!!!
+                  WHEN MovementLinkObject_From.ObjectId IN (301309) -- Склад ГП ф.Запорожье
+                   AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+                       THEN FALSE
+                  WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0
                    AND Movement.AccessKeyId <> zc_Enum_Process_AccessKey_DocumentKiev()
                        THEN TRUE
                   ELSE FALSE

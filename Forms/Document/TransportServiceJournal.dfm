@@ -2,6 +2,8 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090'>'
   ClientHeight = 336
   ClientWidth = 1212
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -422
   ExplicitWidth = 1228
   ExplicitHeight = 371
   PixelsPerInch = 96
@@ -48,6 +50,16 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clTrevelTime
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTotal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -74,10 +86,21 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clTrevelTime
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTotal
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -118,8 +141,19 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Options.Editing = False
             Width = 62
           end
+          object SummTotal: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085
+            DataBinding.FieldName = 'SummTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object clAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086', '#1075#1088#1085
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -127,7 +161,18 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 75
+          end
+          object clSummAdd: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083#1072#1090#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'SummAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
           object clWeightTransport: TcxGridDBColumn
             Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
@@ -219,7 +264,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Width = 55
           end
           object clContractConditionKindName: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractConditionKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -232,6 +277,28 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
+          end
+          object clContractValue: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'., '#1075#1088#1085
+            DataBinding.FieldName = 'ContractValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clContractValueAdd: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'., '#1075#1088#1085' ('#1076#1086#1087'.)'
+            DataBinding.FieldName = 'ContractValueAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -382,12 +449,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CarId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -395,6 +464,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'CarName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarModelName'
@@ -402,6 +472,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'CarModelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -412,12 +483,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractConditionKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -425,6 +498,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inContractId'
@@ -432,6 +506,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'ContractId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -442,12 +517,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -455,6 +532,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -467,17 +545,20 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object ContractChoiceForm: TOpenChoiceForm [8]
@@ -487,12 +568,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -500,12 +583,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -513,12 +598,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -526,11 +613,13 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inPaidKindId'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -541,12 +630,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -554,6 +645,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -564,12 +656,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -577,6 +671,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -594,6 +689,37 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -613,6 +739,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -620,6 +747,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -627,6 +755,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 120
@@ -683,12 +812,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 432
     Top = 120
@@ -704,6 +835,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'iomiid'
@@ -711,6 +843,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'MIId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ininvnumber'
@@ -719,6 +852,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'InvNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inoperdate'
@@ -727,6 +861,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartRunPlan'
@@ -735,6 +870,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'StartRunPlan'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmount'
@@ -743,6 +879,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWeightTransport'
@@ -751,6 +888,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'WeightTransport'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'indistance'
@@ -759,6 +897,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'Distance'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inprice'
@@ -767,6 +906,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incountpoint'
@@ -775,6 +915,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'CountPoint'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'intreveltime'
@@ -783,6 +924,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'treveltime'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incomment'
@@ -791,6 +933,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'injuridicalid'
@@ -798,6 +941,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'juridicalid'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incontractid'
@@ -805,6 +949,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'contractid'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ininfomoneyid'
@@ -812,6 +957,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'infomoneyid'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inpaidkindid'
@@ -819,6 +965,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'paidkindid'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inrouteid'
@@ -826,6 +973,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'routeid'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incarid'
@@ -833,6 +981,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'carid'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractConditionKindId'
@@ -840,6 +989,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitForwardingId'
@@ -847,6 +997,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'UnitForwardingId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 504

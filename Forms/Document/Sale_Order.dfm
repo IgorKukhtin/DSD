@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 408
   ClientWidth = 1261
   ExplicitWidth = 1277
-  ExplicitHeight = 443
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -631,7 +631,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object edIsChecked: TcxCheckBox
       Left = 680
-      Top = 52
+      Top = 46
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 24
       Width = 118
@@ -798,15 +798,15 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 50
     end
     object cxLabel22: TcxLabel
-      Left = 535
+      Left = 680
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 535
+      Left = 680
       Top = 103
       TabOrder = 46
-      Width = 409
+      Width = 264
     end
     object cxLabel23: TcxLabel
       Left = 1156
@@ -856,6 +856,24 @@ inherited Sale_OrderForm: TSale_OrderForm
       TabOrder = 52
       Width = 275
     end
+    object cxLabel26: TcxLabel
+      Left = 535
+      Top = 85
+      Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+    end
+    object edReestrKind: TcxButtonEdit
+      Left = 535
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 54
+      Width = 144
+    end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
     Left = 171
@@ -877,7 +895,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   end
   object cbPromo: TcxCheckBox [4]
     Left = 680
-    Top = 74
+    Top = 65
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 8
@@ -2799,6 +2817,21 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = cbPrinted
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindId'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindName'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -3010,6 +3043,13 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -3092,6 +3132,9 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edReestrKind
       end>
     Left = 232
     Top = 193
@@ -4772,5 +4815,36 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 984
     Top = 256
+  end
+  object ReestrKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReestrKind
+    Key = '0'
+    FormNameParam.Value = 'TReestrKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReestrKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 588
+    Top = 96
   end
 end

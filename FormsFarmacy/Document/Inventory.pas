@@ -77,6 +77,7 @@ type
     clAmount: TcxGridDBColumn;
     clAmountDeficit: TcxGridDBColumn;
     clSummAmount: TcxGridDBColumn;
+    clisAuto: TcxGridDBColumn;
   private
     { Private declarations }
   public

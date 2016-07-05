@@ -109,7 +109,7 @@ type
     function fInitArray : Boolean; // получает данные с сервера и на основании этих данных заполняет массивы
     function fBeginMail : Boolean; // обработка всей почты
     function fBeginXLS  : Boolean; // обработка всех XLS
-    function fBeginMMO (inImportSettingsId:Integer;msgDate:TDateTime)  : Boolean; // обработка MMO
+    function fBeginMMO (inUserName:String;inImportSettingsId:Integer;msgDate:TDateTime)  : Boolean; // обработка MMO
     function fBeginMove : Boolean; // перенос цен
   public
   end;
@@ -354,6 +354,8 @@ var
   fOK,fMMO:Boolean;
   msgDate_save:TDateTime;
 begin
+//fBeginMMO ('price_shapiro@mail.ru', 397826,now); // Приход ММО
+//fBeginMMO ('asnb_documentation@mail.ru', 397826,now); // Приход ММО
 //exit;
      if vbIsBegin = true then exit;
      // запущена обработка
@@ -422,6 +424,8 @@ begin
                    //если вытянулось из почты письмо
                    if (IdPOP3.Retrieve(i, IdMessage)) then
                    begin
+                        //IdMessage.CharSet := 'UTF-8';
+
                         //находим поставщика, который отправил на этот UserName + есть в нашем списке + время
                         JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].UserName, IdMessage.From.Address);
                         //
@@ -500,7 +504,7 @@ begin
                                           {fError_SendEmail(vbArrayImportSettings[JurPos].Id
                                                          , vbArrayImportSettings[JurPos].ContactPersonId
                                                          , IdMessage.Date
-                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , vbArrayMail[ii].Mail + ' * ' + vbArrayImportSettings[JurPos].JuridicalMail
                                                          , '44');}
                                       end;
                                  end;
@@ -519,7 +523,7 @@ begin
                                           fError_SendEmail(vbArrayImportSettings[JurPos].Id
                                                          , vbArrayImportSettings[JurPos].ContactPersonId
                                                          , IdMessage.Date
-                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , vbArrayImportSettings[JurPos].JuridicalMail + ' * ' + vbArrayMail[ii].Mail
                                                          , '4');
                                  end;
                                  //2.2. поиск файла xlsx И это не MMO
@@ -536,7 +540,7 @@ begin
                                           fError_SendEmail(vbArrayImportSettings[JurPos].Id
                                                          , vbArrayImportSettings[JurPos].ContactPersonId
                                                          , IdMessage.Date
-                                                         , vbArrayImportSettings[JurPos].JuridicalMail
+                                                         , vbArrayImportSettings[JurPos].JuridicalMail + ' * ' + vbArrayMail[ii].Mail
                                                          , '4');
                                  end
                                  else // если не найдены файлы для копирования И не ММО
@@ -546,7 +550,7 @@ begin
                                            fError_SendEmail(vbArrayImportSettings[JurPos].Id
                                                           , vbArrayImportSettings[JurPos].ContactPersonId
                                                           , IdMessage.Date
-                                                          , vbArrayImportSettings[JurPos].JuridicalMail
+                                                          , vbArrayImportSettings[JurPos].JuridicalMail + ' * ' + vbArrayMail[ii].Mail
                                                           , '0');
                                            ;
                                   //
@@ -585,7 +589,7 @@ begin
 
                    //а теперь только для ММО - обработка
                    if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
-                   then fBeginMMO (vbArrayImportSettings[JurPos].Id,msgDate_save);
+                   then fBeginMMO (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,msgDate_save);
 
                    //удаление письма
                    //***if flag then IdPOP3.Delete(i);   //POP3
@@ -593,6 +597,7 @@ begin
                    //
 
                    //все, идем дальше
+                   Sleep(500);
                    GaugeMailFrom.Progress:=GaugeMailFrom.Progress+1;
                    Application.ProcessMessages;
 
@@ -689,7 +694,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всех MMO
-function TMainForm.fBeginMMO (inImportSettingsId:Integer;msgDate:TDateTime) : Boolean;
+function TMainForm.fBeginMMO (inUserName:String;inImportSettingsId:Integer;msgDate:TDateTime) : Boolean;
 var
  searchResult : TSearchRec;
  mailFolder,StrCopyFolder: ansistring;
@@ -705,6 +710,7 @@ begin
            //2.только для zc_Enum_EmailKind_IncomeMMO!!!
            if (FieldByName('EmailKindId').asInteger = FieldByName('zc_Enum_EmailKind_IncomeMMO').asInteger)
               and (FieldByName('Id').asInteger = inImportSettingsId)
+              and (FieldByName('UserName').asString = inUserName)
            then begin
                  PanelLoadXLS.Caption:= 'Load MMO : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
                  Application.ProcessMessages;
@@ -737,7 +743,7 @@ begin
                                     fError_SendEmail(FieldByName('Id').AsInteger
                                                    , FieldByName('ContactPersonId').AsInteger
                                                    , msgDate
-                                                   , FieldByName('JuridicalMail').AsString
+                                                   , FieldByName('JuridicalMail').AsString + ' * ' + FieldByName('Mail').AsString
                                                    , actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
                                 end;
 
@@ -749,8 +755,8 @@ begin
                              fError_SendEmail(FieldByName('Id').AsInteger
                                             , FieldByName('ContactPersonId').AsInteger
                                             , msgDate
-                                            , FieldByName('JuridicalMail').AsString
-                                            , searchResult.Name);
+                                            , FieldByName('JuridicalMail').AsString + ' * ' + FieldByName('Mail').AsString
+                                            , '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
                       end;
            end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!
 

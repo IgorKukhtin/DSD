@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
     IN inPrice                    TFloat    , -- Цена (топлива)
     IN inCountPoint               TFloat    , -- Кол-во точек
     IN inTrevelTime               TFloat    , -- Время в пути, часов
+    IN inSummAdd                  TFloat    , -- Сумма доплаты, грн
 
     IN inComment                  TVarChar  , -- Примечание
     
@@ -40,18 +42,19 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbValue TFloat;
+   DECLARE vbValueAdd TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportService());
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TransportService());
-
+   
      -- Расчитываем Сумму
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportWeight())
      THEN
-                    -- по условиям в договоре "Ставка за вывоз, грн/кг"
-         ioAmount:= COALESCE (inWeightTransport, 0)
-                  * COALESCE ((SELECT ObjectFloat_Value.ValueData
+                   -- по условиям в договоре "Ставка за вывоз, грн/кг"
+         vbValue:= COALESCE ((SELECT ObjectFloat_Value.ValueData
                                FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                                     JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
@@ -63,11 +66,13 @@ BEGIN
                                WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                  AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
                               ), 0);
+
+         ioAmount:= COALESCE (inWeightTransport, 0) * vbValue;
      ELSE
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip(), zc_Enum_ContractConditionKind_TransportRoundTrip())
      THEN
                     -- по условиям в договоре "Ставка за маршрут..."
-         ioAmount:= COALESCE ((SELECT ObjectFloat_Value.ValueData
+         vbValue:= COALESCE ((SELECT ObjectFloat_Value.ValueData
                                FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                                     JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
@@ -77,32 +82,31 @@ BEGIN
                                                           ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                          AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
                                WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
-                              ), 0)
+                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId), 0);
+                    -- по условиям в договоре "доплату за точку"
+         vbValueAdd:= COALESCE ((SELECT ObjectFloat_Value.ValueData
+                                 FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                      JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                                      ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                     AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_TransportPoint()
+                                                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                                                            ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                           AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                 WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                   AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId), 0);
+
+                    -- по условиям в договоре "Ставка за маршрут..."
+         ioAmount:= vbValue
                     -- добавляем доплату за точку
-                  + COALESCE ((SELECT ObjectFloat_Value.ValueData
-                               FROM ObjectLink AS ObjectLink_ContractCondition_Contract
-                                    JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
-                                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                                   AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_TransportPoint()
-                                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value 
-                                                          ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                                         AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-                               WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
-                              ), 0) * COALESCE (inCountPoint, 0)
-         ;
+                  + vbValueAdd * COALESCE (inCountPoint, 0);
      ELSE
           -- проверка
           IF COALESCE (inDistance, 0) = 0 THEN
              RAISE EXCEPTION 'Ошибка.Не введено значение <Пробег факт, км.>';
           END IF;
-
-                    -- Расстояние * Цена
-         ioAmount:= COALESCE (inDistance * inPrice, 0)
-                    -- по условиям в договоре "Ставка за время..."
-                  + COALESCE ((SELECT ObjectFloat_Value.ValueData
+                   -- по условиям в договоре "Ставка за время..."
+         vbValue:= COALESCE ((SELECT ObjectFloat_Value.ValueData
                                FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                                     JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
@@ -116,25 +120,30 @@ BEGIN
                                                           ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                          AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
                                WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
-                              ), 0) * COALESCE (inTrevelTime, 0)
+                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId), 0);
+                      -- по условиям в договоре "Ставка за пробег..."
+         vbValueAdd:= COALESCE ((SELECT ObjectFloat_Value.ValueData
+                                 FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                      JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                                      ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                     AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                                     AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance()
+                                                                                     , zc_Enum_ContractConditionKind_TransportDistanceInt()
+                                                                                     , zc_Enum_ContractConditionKind_TransportDistanceExt()
+                                                                                      )
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                                                            ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                           AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                 WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                   AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId), 0);
+
+                    -- Расстояние * Цена
+         ioAmount:= COALESCE (inDistance * inPrice, 0)
+                    -- по условиям в договоре "Ставка за время..."
+                  + vbValue * COALESCE (inTrevelTime, 0)
                     -- по условиям в договоре "Ставка за пробег..."
-                  + COALESCE ((SELECT ObjectFloat_Value.ValueData
-                               FROM ObjectLink AS ObjectLink_ContractCondition_Contract
-                                    JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
-                                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                                   AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
-                                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance()
-                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceInt()
-                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceExt()
-                                                                                    )
-                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value 
-                                                          ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                                         AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-                               WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
-                              ), 0) * COALESCE (inDistance, 0)
+                  + vbValueAdd * COALESCE (inDistance, 0)
          ;
      END IF;
      END IF;
@@ -203,6 +212,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPoint(), ioMIId, inCountPoint);
      -- сохранили свойство <Время в пути, часов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TrevelTime(), ioMIId, inTrevelTime);
+     -- сохранили свойство <Доплата)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd(), ioMIId, inSummAdd);
+     -- сохранили свойство <Доплата)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractValue(), ioMIId, vbValue);
+     -- сохранили свойство <Дополнительное значение из условия договора>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractValueAdd(), ioMIId, COALESCE (vbValueAdd, 0));
 
      -- сохранили свойство <Комментарий>
      PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioMIId, inComment);
@@ -242,6 +257,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.07.16         * Add inSummAdd, vbValue, vbValueAdd
  16.12.15         * add WeightTransport
  26.08.15         * add inStartRunPlan
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp

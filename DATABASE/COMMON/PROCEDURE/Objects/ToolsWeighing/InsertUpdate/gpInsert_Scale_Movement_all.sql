@@ -131,7 +131,7 @@ BEGIN
      END IF;
 
      -- проверка + исправление <От кого (Склад)>
-     IF vbMovementDescId = zc_Movement_Sale()
+     /*IF vbMovementDescId = zc_Movement_Sale()
     AND EXISTS (SELECT 1
                 FROM MovementLinkMovement AS MovementLinkMovement_Order
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To_find
@@ -156,7 +156,7 @@ BEGIN
                 WHERE MovementLinkMovement_Order.MovementId = inMovementId
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkObject_From.ObjectId <> MovementLinkObject_To_find.ObjectId;
-     END IF;
+     END IF;*/
 
      -- проверка + исправление <Кому (Покупатель)>
      IF vbMovementDescId = zc_Movement_Sale()
@@ -498,6 +498,7 @@ BEGIN
                                                   , inOperDate              := inOperDate
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
+                                                  , inDocumentKindId        := 0
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ProductionUnion()
@@ -795,6 +796,7 @@ BEGIN
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inCount               := tmp.Count
+                                                        , inCuterWeight         := 0
                                                         , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
@@ -1267,6 +1269,12 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.Документ за <%> заблокирован другим пользователем.Повторите действие через 25 сек.', DATE (inOperDate - INTERVAL '1 DAY');
           END IF;
      END IF;
+
+if inSession = '5' AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Errr _end';
+    -- 'Повторите действие через 3 мин.'
+end if;
 
 
      -- Результат

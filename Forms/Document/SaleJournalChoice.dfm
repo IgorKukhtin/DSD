@@ -561,6 +561,14 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 36
           end
+          object clReestrKindName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+            DataBinding.FieldName = 'ReestrKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+            Width = 74
+          end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'
@@ -680,17 +688,20 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
@@ -715,6 +726,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -722,37 +734,43 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FromName'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ToName'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber_Full'
@@ -760,6 +778,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber_Full'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -783,6 +802,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -790,12 +810,14 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartnerDate'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -803,6 +825,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -810,6 +833,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 171
@@ -945,12 +969,14 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -963,6 +989,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -975,6 +1002,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -983,21 +1011,24 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = Null
         Component = PartnerGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1005,6 +1036,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 288
@@ -1014,6 +1046,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
     LookupControl = edPartner
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1023,6 +1056,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1031,6 +1065,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 568
     Top = 8

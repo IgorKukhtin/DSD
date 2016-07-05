@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
     IN inShowAll      Boolean,     
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar 
+RETURNS TABLE (ContainerId Integer, Id Integer, InvNumber TVarChar 
              , OperDate TDateTime, Price TFloat
              , GoodsId Integer, GoodsName TVarChar
              , StorageId Integer, StorageName TVarChar
@@ -26,7 +26,8 @@ $BODY$BEGIN
         AS 
         (
             SELECT 
-                Container.ObjectId                      AS GoodsId
+                Container.Id                            AS ContainerId
+               ,Container.ObjectId                      AS GoodsId
                ,COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                ,CLO_Unit.ObjectId                       AS UnitId
                ,Container.Amount                        AS Amount
@@ -58,7 +59,8 @@ $BODY$BEGIN
                 )
         )
         SELECT
-            Object_PartionGoods.Id            AS Id
+            tmpContainer_Count.ContainerId
+           ,Object_PartionGoods.Id            AS Id
            ,Movement.InvNumber                AS InvNumber
            ,Movement.OperDate                 AS  OperDate
            ,MovementItemFloat_Price.ValueData AS  Price

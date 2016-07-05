@@ -29,8 +29,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
      vbUserId := inSession;
-     vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
-     vbUnitIdStr := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '0');
+     vbObjectId := COALESCE (lpGet_DefaultValue ('zc_Object_Retail', vbUserId), '0');
+     vbUnitIdStr := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), '0');
      IF vbUnitIdStr <> '' THEN 
         vbUnitId := vbUnitIdStr;
      ELSE
@@ -41,12 +41,30 @@ BEGIN
      WITH DD AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent
                                , Object_MarginCategoryItem_View.MinPrice
                                , Object_MarginCategoryItem_View.MarginCategoryId
-                 FROM Object_MarginCategoryItem_View ),
-                MarginCondition AS (SELECT DD.MarginCategoryId, DD.MarginPercent, DD.MinPrice, 
-                                    COALESCE((SELECT MIN(FF.minprice) 
-                                              FROM DD AS FF WHERE FF.MinPrice > DD.MinPrice AND FF.MarginCategoryId = DD.MarginCategoryId), 1000000) AS MaxPrice 
-                               FROM DD)
+                 FROM Object_MarginCategoryItem_View
+                )
+        , MarginCondition AS (SELECT DD.MarginCategoryId, DD.MarginPercent, DD.MinPrice
+                                   , COALESCE ((SELECT MIN (FF.minprice) FROM DD AS FF WHERE FF.MinPrice > DD.MinPrice AND FF.MarginCategoryId = DD.MarginCategoryId)
+                                             , 1000000) AS MaxPrice 
+                              FROM DD)
                               
+          -- Список цены + ТОП
+        , GoodsPrice AS
+             (SELECT ObjectLink_Price_Goods.ChildObjectId AS GoodsId, COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP, COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup
+              FROM ObjectLink AS ObjectLink_Price_Unit
+                   INNER JOIN ObjectLink AS ObjectLink_Price_Goods
+                                         ON ObjectLink_Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                        AND ObjectLink_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
+                                           ON ObjectBoolean_Top.ObjectId  = ObjectLink_Price_Unit.ObjectId
+                                          AND ObjectBoolean_Top.DescId    = zc_ObjectBoolean_Price_Top()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                                         ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                        AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+              WHERE ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Goods()
+                AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0)
+             )
    SELECT
          LoadPriceListItem.Id, 
          LoadPriceListItem.CommonCode, 
@@ -65,23 +83,23 @@ BEGIN
          LoadPriceListItem.ExpirationDate,
          PartnerGoods.MinimumLot,
          Object_Goods.NDS,
-         LinkGoods.Id AS LinkGoodsId, 
-         CASE 
-             WHEN ObjectGoodsView.isTop = TRUE
-                 THEN  COALESCE(ObjectGoodsView.PercentMarkup, 0) -- - COALESCE(ObjectFloat_Percent.valuedata, 0)
-         ELSE COALESCE(MarginCondition.MarginPercent,0) + COALESCE(ObjectFloat_Percent.valuedata, 0)
-         END::TFloat AS MarginPercent,
+         LinkGoods.Id AS LinkGoodsId 
+       , CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop) = TRUE
+                   THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectGoodsView.PercentMarkup, 0)) -- - COALESCE(ObjectFloat_Percent.valuedata, 0)
+              ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Percent.valuedata, 0)
+         END :: TFloat AS MarginPercent
          --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0))::TFloat,
-         zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
-                           MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
-                           ObjectGoodsView.isTop, -- ТОП позиция
-                           ObjectGoodsView.PercentMarkup, -- % наценки у товара
-                           0.0, --ObjectFloat_Percent.valuedata,
-                           ObjectGoodsView.Price)::TFloat AS NewPrice
+       , zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                     -- Цена С НДС
+                           MarginCondition.MarginPercent + COALESCE (ObjectFloat_Percent.valuedata, 0), -- % наценки в КАТЕГОРИИ
+                           COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop),          -- ТОП позиция
+                           COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectGoodsView.PercentMarkup),  -- % наценки у товара
+                           0.0, --ObjectFloat_Percent.valuedata,                                        -- % корректировки у Юр Лица для ТОПа
+                           ObjectGoodsView.Price                                                        -- Цена у товара (фиксированная)
+                         ) :: TFloat AS NewPrice
 
        FROM LoadPriceListItem 
 
-            JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+            INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
             LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceClose
                          FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId)) AS JuridicalSettings
                     ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId 
@@ -101,13 +119,16 @@ BEGIN
                                      BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
-            LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId = LoadPriceList.JuridicalId 
-                                       AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
+            LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId  = LoadPriceList.JuridicalId 
+                                                       AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
             LEFT JOIN Object_LinkGoods_View AS LinkGoods ON LinkGoods.GoodsMainId = Object_Goods.Id 
-                                                        AND LinkGoods.GoodsId = PartnerGoods.Id
+                                                        AND LinkGoods.GoodsId     = PartnerGoods.Id
             LEFT JOIN Object_LinkGoods_View AS LinkGoodsObject ON LinkGoodsObject.GoodsMainId = Object_Goods.Id 
-                                                              AND LinkGoodsObject.ObjectId = vbObjectId
+                                                              AND LinkGoodsObject.ObjectId    = vbObjectId
             LEFT JOIN Object_Goods_View AS ObjectGoodsView ON ObjectGoodsView.Id = LinkGoodsObject.GoodsId
+
+            LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
+
       WHERE 
         upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') 
         AND
@@ -128,8 +149,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -139,10 +158,7 @@ $BODY$
  27.04.15                        *
  02.04.15                        *
  29.10.14                        *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PriceList (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
---select * from gpSelect_GoodsSearch(inGoodsSearch := '' , inProducerSearch := '' , inCodeSearch := '1197' ,  inSession := '3');
---select * from gpSelect_GoodsSearch(inGoodsSearch := 'крем' , inProducerSearch := 'фар' , inCodeSearch := '1534' ,  inSession := '3');
+-- SELECT * FROM gpSelect_GoodsSearch (inGoodsSearch := 'крем' , inProducerSearch := 'фар' , inCodeSearch := '1534' ,  inSession := '3');

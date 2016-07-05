@@ -5,29 +5,33 @@ DROP FUNCTION IF EXISTS zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat
 
 CREATE OR REPLACE FUNCTION zfCalc_SalePrice(
     IN inPriceWithVAT        TFloat    , -- Цена С НДС
-    IN inMarginPercent       TFloat    , -- % наценки
+    IN inMarginPercent       TFloat    , -- % наценки в КАТЕГОРИИ
     IN inIsTop               Boolean   , -- ТОП позиция
     IN inPercentMarkup       TFloat    , -- % наценки у товара
-    IN inJuridicalPercent    TFloat    , -- % корректировки у Юр Лица для топа
-    IN inPrice               TFloat      -- Цена у товара
+    IN inJuridicalPercent    TFloat    , -- % корректировки у Юр Лица для ТОПа
+    IN inPrice               TFloat      -- Цена у товара (фиксированная)
 )
 RETURNS TFloat AS
 $BODY$
   DECLARE vbPercent TFloat;
 BEGIN
+     -- !!!Цена у товара (фиксированная)!!!
      IF COALESCE(inPrice, 0) <> 0 THEN 
         RETURN inPrice;
      END IF;
 
      -- расчет % наценки
-   
-     IF inIsTop THEN 
-        vbPercent := COALESCE(inPercentMarkup, 0) - COALESCE(inJuridicalPercent, 0);
+     IF inIsTop THEN
+        -- для ТОП = % наценки у товара - % корректировки у Юр Лица для топа
+        vbPercent := COALESCE (inPercentMarkup, 0) - COALESCE (inJuridicalPercent, 0);
      ELSE
-        vbPercent := COALESCE(inMarginPercent, 0);
+        -- остальные = % наценки в КАТЕГОРИИ
+        vbPercent := COALESCE (inMarginPercent, 0);
      END IF;
 
+     -- вернули цену
      RETURN (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1));
+
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;

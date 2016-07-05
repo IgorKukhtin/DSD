@@ -1,0 +1,1 @@
+copy /Y alan_init_test.php init.php

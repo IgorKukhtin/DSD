@@ -31,6 +31,13 @@ AS
       
       , COALESCE(Price_Fix.ValueData,False)     AS Fix
       , Fix_DateChange.valuedata                AS FixDateChange
+
+      , COALESCE(Price_Top.ValueData,False)     AS isTop
+      , Price_TOPDateChange.ValueData           AS TopDateChange
+
+      , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
+      , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange
+
     FROM Object AS Object_Price
         LEFT JOIN ObjectFloat       AS Price_Value
                                     ON Price_Value.ObjectId = Object_Price.Id
@@ -73,7 +80,19 @@ AS
         LEFT JOIN ObjectDate        AS Fix_DateChange
                                     ON Fix_DateChange.ObjectId = Object_Price.Id
                                    AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
-        
+        LEFT JOIN ObjectBoolean     AS Price_Top
+                                    ON Price_Top.ObjectId = Object_Price.Id
+                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+        LEFT JOIN ObjectDate        AS Price_TOPDateChange
+                                    ON Price_TOPDateChange.ObjectId = Object_Price.Id
+                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
+
+        LEFT JOIN ObjectFloat       AS Price_PercentMarkup
+                                    ON Price_PercentMarkup.ObjectId = Object_Price.Id
+                                   AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+        LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
+                                    ON Price_PercentMarkupDateChange.ObjectId = Object_Price.Id
+                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
     WHERE 
         Object_Price.DescId = zc_Object_Price();
 
@@ -84,7 +103,8 @@ ALTER TABLE Object_Price_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿.
-29.08.15                                                         * + isClose, NotRecalc
+ 29.06.16         *
+ 29.08.15                                                       * + isClose, NotRecalc
  23.07.14                         *
 */
 

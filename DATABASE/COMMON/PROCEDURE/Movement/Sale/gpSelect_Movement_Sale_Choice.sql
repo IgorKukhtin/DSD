@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isError Boolean
              , InvNumber_Full TVarChar
              , Comment TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
               )
 AS
 $BODY$
@@ -143,8 +144,11 @@ BEGIN
 
            , NULL :: Boolean                                          AS isError
 
-        , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, MovementDate_OperDatePartner.ValueData) AS InvNumber_Full
-        , MovementString_Comment.ValueData       AS Comment
+           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, MovementDate_OperDatePartner.ValueData) AS InvNumber_Full
+           , MovementString_Comment.ValueData       AS Comment
+
+           , Object_ReestrKind.Id             		    AS ReestrKindId
+           , Object_ReestrKind.ValueData       		    AS ReestrKindName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -254,6 +258,12 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
            ;
 
 END;

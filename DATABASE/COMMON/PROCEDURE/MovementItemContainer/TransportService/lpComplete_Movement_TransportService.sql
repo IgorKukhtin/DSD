@@ -19,7 +19,7 @@ BEGIN
      DELETE FROM _tmpItem;
 
 
-     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     -- 1.1. заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -134,6 +134,37 @@ BEGIN
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
        ;
 
+     -- 1.2. заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
+                         , MovementItemId, ContainerId
+                         , AccountGroupId, AccountDirectionId, AccountId
+                         , ProfitLossGroupId, ProfitLossDirectionId
+                         , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+                         , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
+                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , AnalyzerId, ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                         , IsActive, IsMaster
+                          )
+       SELECT MovementDescId, OperDate, ObjectId, ObjectDescId
+            , -1 * MIFloat_SummAdd.ValueData AS OperSumm
+            , _tmpItem.MovementItemId
+            , ContainerId
+            , AccountGroupId, AccountDirectionId, AccountId
+            , ProfitLossGroupId, ProfitLossDirectionId
+            , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+            , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
+            , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+            , zc_Enum_AnalyzerId_Transport_Add() AS AnalyzerId
+            , ObjectIntId_Analyzer, ObjectExtId_Analyzer
+            , IsActive, IsMaster
+       FROM _tmpItem
+            INNER JOIN MovementItemFloat AS MIFloat_SummAdd
+                                         ON MIFloat_SummAdd.MovementItemId = _tmpItem.MovementItemId
+                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                        AND MIFloat_SummAdd.ValueData <> 0
+      ;
+
+
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0 OR _tmpItem.ObjectDescId <> zc_Object_Juridical())
      THEN
@@ -161,7 +192,7 @@ BEGIN
      END IF;
 
 
-     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     -- 2. заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -175,8 +206,8 @@ BEGIN
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , 0 AS ObjectId
-             , 0 AS ObjectDescId
-             , -1 * _tmpItem.OperSumm
+             , 0 AS ObjectDescId                                                    -- !!!значит будет ОПиУ!!!
+             , -1 * SUM (_tmpItem.OperSumm) AS OperSumm
              , _tmpItem.MovementItemId
              , 0 AS ContainerId                                                     -- сформируем позже
              , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
@@ -224,11 +255,42 @@ BEGIN
         FROM _tmpItem
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
                     ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
+        GROUP BY _tmpItem.MovementDescId
+               , _tmpItem.OperDate
+               , _tmpItem.MovementItemId
+
+                 -- Группы ОПиУ (для затрат)
+               , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0)
+                 -- Аналитики ОПиУ - направления (для затрат)
+               , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0)
+
+                 -- Управленческие группы назначения
+               , _tmpItem.InfoMoneyGroupId
+                 -- Управленческие назначения
+               , _tmpItem.InfoMoneyDestinationId
+                 -- Управленческие статьи назначения
+               , _tmpItem.InfoMoneyId
+
+                 -- Бизнес ОПиУ: всегда по принадлежности маршрута к подразделению
+               , _tmpItem.BusinessId_ProfitLoss
+
+                 -- Главное Юр.лицо всегда из договора
+               , _tmpItem.JuridicalId_Basis
+
+               , _tmpItem.UnitId -- Подраделение (ОПиУ), а могло быть UnitId_Route
+
+                 -- Филиал ОПиУ:
+               , _tmpItem.ObjectExtId_Analyzer
+
+               , _tmpItem.ObjectIntId_Analyzer   -- Автомобиль !!!при формировании проводок замена с UnitId!!!
+               , _tmpItem.ObjectExtId_Analyzer   -- Филиал (ОПиУ), а могло быть BranchId_Route
+               , _tmpItem.IsActive
+               , _tmpItem.IsMaster
        ;
 
 
      -- !!!5.0. формируются свойства в элементах документа из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_UnitRoute(), tmp.MovementItemId, tmp.UnitId_Route)
+     /*PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_UnitRoute(), tmp.MovementItemId, tmp.UnitId_Route)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BranchRoute(), tmp.MovementItemId, tmp.BranchId_Route)
      FROM (SELECT _tmpItem.MovementItemId
                 , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) AS UnitId_Route
@@ -243,8 +305,8 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Branch
                                      ON ObjectLink_UnitRoute_Branch.ObjectId = ObjectLink_Route_Unit.ChildObjectId
                                     AND ObjectLink_UnitRoute_Branch.DescId = zc_ObjectLink_Unit_Branch()
-           WHERE AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
-          ) AS tmp;
+           WHERE _tmpItem.ObjectDescId = 0 OR _tmpItem.AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+          ) AS tmp;*/
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId

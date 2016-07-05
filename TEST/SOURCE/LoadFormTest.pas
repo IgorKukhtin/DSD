@@ -107,6 +107,7 @@ type
     procedure LoadQualityParamsFormTest;
     procedure LoadQualityDocFormTest;
     procedure LoadQualityNumberFormTest;
+    procedure LoadReestrKindFormTest;
     procedure LoadReportFormTest;
     procedure LoadReportBranchFormTest;
     procedure LoadReportSystemFormTest;
@@ -1113,6 +1114,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
 end;
 
+procedure TLoadFormTest.LoadReestrKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrKindForm');
+end;
+
 procedure TLoadFormTest.LoadDocumentKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDocumentKindForm'));
@@ -1477,6 +1484,7 @@ end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;
 begin
+//exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelDialogForm'));
@@ -1502,6 +1510,8 @@ procedure TLoadFormTest.LoadReportWageFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportBankAccountCashFormTest;
@@ -1611,6 +1621,7 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+// exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));

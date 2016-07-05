@@ -534,6 +534,7 @@ BEGIN
                                                  , inGoodsId                := _tmpResult.GoodsId
                                                  , inAmount                 := _tmpResult.OperCount + _tmpResult.OperCount_two
                                                  , inCount                  := 0
+                                                 , inCuterWeight            := 0
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inGoodsKindId            := tmp.GoodsKindId

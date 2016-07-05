@@ -667,7 +667,11 @@ BEGIN
                                 AND MovementItem.DescId     = zc_MI_Master()
                                 AND MovementItem.isErased   = FALSE
                              )
-               , MI_Child AS (SELECT MovementItem.Id, MovementItem.ParentId, COALESCE (MIFloat_MovementItemId.ValueData, 0) :: Integer AS MovementItemId_sale
+               , MI_Child AS (SELECT MovementItem.Id, MovementItem.ParentId
+                                   , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MIFloat_MovementItemId.ValueData ORDER BY MovementItem.Id)  = 1
+                                               THEN COALESCE (MIFloat_MovementItemId.ValueData, 0) 
+                                          ELSE 0
+                                     END :: Integer AS MovementItemId_sale
                               FROM MovementItem
                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                                ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
@@ -711,7 +715,7 @@ BEGIN
 
 if inUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end   %', outMessageText;
+    RAISE EXCEPTION 'Admin - Errr _end   % %', outMessageText, (SELECT MAX (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar || ' _ ' || MIN (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar FROM _tmpResult_ReturnIn_Auto WHERE _tmpResult_ReturnIn_Auto.ParentId = 53690064);
     -- 'Повторите действие через 3 мин.'
 end if;
 

@@ -8,7 +8,7 @@ uses
   Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxCheckListBox, cxDBCheckListBox,
   Vcl.Grids, Vcl.DBGrids, Data.Win.ADODB, cxTextEdit, cxCurrencyEdit, cxLabel,
-  Bde.DBTables, cxStyles, cxCustomData, cxFilter, cxData,
+  cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxNavigator, cxDBData, cxMaskEdit, cxButtonEdit, dsdAddOn,
   cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ActnList, dsdAction, dsdGuides,
@@ -112,6 +112,20 @@ type
     colMidPriceDiff: TcxGridDBColumn;
     cdsResultContractName: TStringField;
     colContractName: TcxGridDBColumn;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cdsResultLastPrice_to: TFloatField;
+    cdsResultPriceDiff_to: TFloatField;
+    colLastPrice_to: TcxGridDBColumn;
+    colPriceDiff_to: TcxGridDBColumn;
+    colRemainsCount_to: TcxGridDBColumn;
+    cdsResultRemainsCount_to: TCurrencyField;
+    cdsResultMinExpirationDate_to: TDateField;
+    MinExpirationDate_to: TcxGridDBColumn;
+    cdsResultIsTop_Goods: TBooleanField;
+    cdsResultPriceFix_Goods: TFloatField;
+    colIsTop_Goods: TcxGridDBColumn;
+    colPriceFix_Goods: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -173,7 +187,16 @@ begin
           try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colUnitId.Index];
-          except ShowMessage('2');exit;end;
+          except ShowMessage('2.1.');exit;end;
+
+          try
+          if edUnit.Text <> ''
+          then
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value :=
+                 GuidesUnit.Params.ParamByName('Key').Value
+          else
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value := 0;
+          except ShowMessage('2.2.');exit;end;
 
           try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridicalId').Value :=
@@ -209,8 +232,11 @@ begin
           except ShowMessage('8');exit;end;
 
           try
-          spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
-            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
+          if edUnit.Text <> ''
+          then spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
+                  AllGoodsPriceGridTableView.DataController.Values[RecIndex,colLastPrice_to.Index]
+          else spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
+                  AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
           except ShowMessage('9');exit;end;
 
           try
@@ -332,6 +358,7 @@ begin
       begin
         UnitId := Integer(CheckListBox.Items.Objects[I]);
         spSelect_AllGoodsPrice.ParamByName('inUnitId').Value := UnitId;
+        spSelect_AllGoodsPrice.ParamByName('inUnitId_to').Value := GuidesUnit.Params.ParamByName('Key').Value;
         spSelect_AllGoodsPrice.Execute;
         ProgressBar2.Position := 0;
         ProgressBar2.Max := AllGoodsPriceCDS.RecordCount;
@@ -348,14 +375,18 @@ begin
           cdsResult.FieldByName('GoodsName').AsString := AllGoodsPriceCDS.FieldByName('GoodsName').AsString;
           //!!!if AllGoodsPriceCDS.FieldByName('LastPrice').AsCurrency <> 0 then
             cdsResult.FieldByName('LastPrice').AsCurrency := AllGoodsPriceCDS.FieldByName('LastPrice').AsCurrency;
+            cdsResult.FieldByName('LastPrice_to').AsCurrency := AllGoodsPriceCDS.FieldByName('LastPrice_to').AsCurrency;
           cdsResult.FieldByName('RemainsCount').AsCurrency := AllGoodsPriceCDS.FieldByName('RemainsCount').AsCurrency;
+          cdsResult.FieldByName('RemainsCount_to').AsCurrency := AllGoodsPriceCDS.FieldByName('RemainsCount_to').AsCurrency;
           cdsResult.FieldByName('NDS').AsCurrency := AllGoodsPriceCDS.FieldByName('NDS').AsCurrency;
           if AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime <> 0 then
             cdsResult.FieldByName('ExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime;
           cdsResult.FieldByName('NewPrice').AsCurrency := AllGoodsPriceCDS.FieldByName('NewPrice').AsCurrency;
+          cdsResult.FieldByName('PriceFix_Goods').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceFix_Goods').AsCurrency;
           cdsResult.FieldByName('MarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MarginPercent').AsCurrency;
           cdsResult.FieldByName('MinMarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MinMarginPercent').AsCurrency;
           cdsResult.FieldByName('PriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceDiff').AsCurrency;
+          cdsResult.FieldByName('PriceDiff_to').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceDiff_to').AsCurrency;
           cdsResult.FieldByName('Reprice').AsBoolean := AllGoodsPriceCDS.FieldByName('Reprice').AsBoolean;
           cdsResult.FieldByName('UnitId').AsInteger := UnitId;
           cdsResult.FieldByName('UnitName').AsString := CheckListBox.Items[i];
@@ -366,11 +397,13 @@ begin
           cdsResult.FieldByName('ContractName').AsString := AllGoodsPriceCDS.FieldByName('ContractName').AsString;
           cdsResult.FieldByName('SumReprice').AsCurrency := AllGoodsPriceCDS.FieldByName('SumReprice').AsCurrency;
           cdsResult.FieldByName('MinExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('MinExpirationDate').AsDateTime;
+          cdsResult.FieldByName('MinExpirationDate_to').AsDateTime := AllGoodsPriceCDS.FieldByName('MinExpirationDate_to').AsDateTime;
           cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;
           cdsResult.FieldByName('JuridicalId').AsInteger := AllGoodsPriceCDS.FieldByName('JuridicalId').AsInteger;
           cdsResult.FieldByName('isPriceFix').AsBoolean := AllGoodsPriceCDS.FieldByName('isPriceFix').AsBoolean;
           cdsResult.FieldByName('isIncome').AsBoolean := AllGoodsPriceCDS.FieldByName('isIncome').AsBoolean;
           cdsResult.FieldByName('isTop').AsBoolean := AllGoodsPriceCDS.FieldByName('isTop').AsBoolean;
+          cdsResult.FieldByName('isTop_Goods').AsBoolean := AllGoodsPriceCDS.FieldByName('isTop_Goods').AsBoolean;
           cdsResult.FieldByName('isPromo').AsBoolean := AllGoodsPriceCDS.FieldByName('isPromo').AsBoolean;
           cdsResult.FieldByName('MidPriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceDiff').AsCurrency;
           cdsResult.FieldByName('MidPriceSale').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceSale').AsCurrency;

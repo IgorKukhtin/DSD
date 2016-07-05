@@ -66,8 +66,7 @@ BEGIN
                                 WHERE Container.DescId = zc_Container_count()
                                   AND Container.WhereObjectId = inUnitId)
 
-           , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END AS ContainerId
-                              , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END AS MovementId_Income
+           , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END AS MovementId_Income
                               , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END AS MovementId_find
                               , MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income
                               , MovementLinkObject_NDSKind_Income.ObjectId                                 AS NDSKindId_Income
@@ -81,8 +80,7 @@ BEGIN
                               , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END               AS ToId_Income
                               
                          FROM (
-                                 SELECT ContainerCount.ContainerId
-                                      , ContainerCount.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
+                                 SELECT ContainerCount.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
                                       , ContainerCount.GoodsId 
                                       , ContainerCount.MovementId_Income
                                       , ContainerCount.MovementId_find
@@ -128,8 +126,7 @@ BEGIN
                                                            ON MovementLinkObject_Juridical_Income.MovementId = tmpData_all.MovementId
                                                           AND MovementLinkObject_Juridical_Income.DescId = zc_MovementLinkObject_Juridical()                                 
                                                           
-                         GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END
-                                , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END
+                         GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END
                                 , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END
                                 , MovementLinkObject_From_Income.ObjectId
                                 , MovementLinkObject_NDSKind_Income.ObjectId
@@ -141,8 +138,7 @@ BEGIN
                           )
 
 
-        SELECT tmpData.ContainerId
-             , Object_Goods_View.Id                         as Id
+        SELECT Object_Goods_View.Id                         as Id
              , Object_Goods_View.GoodsCodeInt ::Integer     as GoodsCode
              , Object_Goods_View.GoodsName                  as GoodsName
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
@@ -225,6 +221,7 @@ BEGIN
            ;
 
 END;
+
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 

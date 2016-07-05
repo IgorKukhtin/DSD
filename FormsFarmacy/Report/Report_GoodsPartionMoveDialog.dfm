@@ -205,8 +205,8 @@ object Report_GoodsPartionMoveDialogForm: TReport_GoodsPartionMoveDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 14
-    Top = 190
+    Left = 30
+    Top = 166
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -300,8 +300,8 @@ object Report_GoodsPartionMoveDialogForm: TReport_GoodsPartionMoveDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 103
-    Top = 200
+    Left = 231
+    Top = 112
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'

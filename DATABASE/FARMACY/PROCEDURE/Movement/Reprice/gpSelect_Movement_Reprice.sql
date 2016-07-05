@@ -11,8 +11,8 @@ RETURNS TABLE (Id Integer
              , InvNumber TVarChar
              , OperDate TDateTime
              , TotalSumm TFloat
-             , UnitId Integer
-             , UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , UnitForwardingId Integer, UnitForwardingName TVarChar
              , GUID TVarChar
              , InsertName TVarChar, InsertDate TDateTime
               )
@@ -45,10 +45,14 @@ BEGIN
       , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
       , MovementLinkObject_Unit.ObjectId                      AS UnitId
       , Object_Unit.ValueData                                 AS UnitName
+
+      , Object_UnitForwarding.Id                              AS UnitForwardingId
+      , Object_UnitForwarding.ValueData                       AS UnitForwardingName
+
       , MovementString_GUID.ValueData                         AS GUID
 
       , Object_Insert.ValueData              AS InsertName
-      , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+      , MovementDate_Insert.ValueData        AS InsertDate
     FROM Movement 
         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                 ON MovementFloat_TotalSumm.MovementId =  Movement.Id
@@ -58,18 +62,25 @@ BEGIN
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
         INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                     ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                    AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+        LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
+
         LEFT OUTER JOIN MovementString AS MovementString_GUID
                                        ON MovementString_GUID.MovementId = Movement.Id
                                       AND MovementString_GUID.DescId = zc_MovementString_Comment()
 
-        LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
-                             ON ObjectDate_Protocol_Insert.ObjectId = Movement.Id
-                            AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-        LEFT JOIN ObjectLink AS ObjectLink_Insert
-                             ON ObjectLink_Insert.ObjectId = Movement.Id
-                            AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId  
+        LEFT JOIN MovementDate AS MovementDate_Insert
+                               ON MovementDate_Insert.MovementId = Movement.Id
+                              AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
+        LEFT JOIN MovementLinkObject AS MLO_Insert
+                                     ON MLO_Insert.MovementId = Movement.Id
+                                    AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+    
     WHERE Movement.DescId = zc_Movement_Reprice()
       AND DATE_TRUNC ('DAY', Movement.OperDate) BETWEEN inStartDate AND inEndDate
     ORDER BY Movement.InvNumber;
@@ -83,6 +94,7 @@ ALTER FUNCTION gpSelect_Movement_Reprice (TDateTime, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 21.02.16         * UnitForwarding
  02.03.16         * без вьюхи + св-ва протокола
  27.11.15                                                                        *
 */

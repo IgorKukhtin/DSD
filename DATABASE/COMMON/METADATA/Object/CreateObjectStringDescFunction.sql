@@ -415,10 +415,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Member_Address() RETURNS Integer AS $
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_Address', zc_object_Member(), 'Место проживания Физ.лица ' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Address');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Email_ErrorTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Email_ErrorTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Email_ErrorTo', zc_object_Email(), 'Кому отправлять сообщение об ошибке при загрузке данных с п/я' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Email_ErrorTo');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 28.06.16         * zc_ObjectString_Email_ErrorTo
  16.12.15                                                                      *  + zc_ObjectString_Form_HelpFile
  27.10.15                                                                      *  + zc_ObjectString_Goods_Foto,zc_ObjectString_Goods_Thumb 
  25.03.15                                        * add -- !!!временно!!! zc_ObjectString_Partner_NameInteger

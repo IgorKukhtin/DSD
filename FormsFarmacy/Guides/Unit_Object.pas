@@ -17,6 +17,8 @@ type
     ceJuridicalName: TcxGridDBColumn;
     ceParentName: TcxGridDBColumn;
     UnitId: TcxGridDBColumn;
+    actProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

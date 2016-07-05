@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , DocumentKindId Integer, DocumentKindName TVarChar
               )
 
 AS
@@ -46,7 +47,8 @@ BEGIN
            , Object_From.ValueData              AS FromName
            , Object_To.Id                       AS ToId
            , Object_To.ValueData                AS ToName
-
+           , Object_DocumentKind.Id             AS DocumentKindId
+           , Object_DocumentKind.ValueData      AS DocumentKindName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -71,6 +73,11 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                         ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+            LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
             ;
 
 END;
@@ -82,8 +89,9 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.06.16         *
  22.05.14                                                        *
- 12.07.13          *
+ 12.07.13         *
 
 */
 

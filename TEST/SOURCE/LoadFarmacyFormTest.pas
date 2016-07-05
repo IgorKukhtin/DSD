@@ -38,6 +38,7 @@ type
     procedure LoadCreateOrderFromMCSFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadEnumFormTest;
+    procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
@@ -401,11 +402,11 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
   // отчет распределение остатков
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
-// exit;
+ //exit;
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
@@ -446,9 +447,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFarmForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckFarmDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckFarmDialogForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryDialogForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
@@ -484,6 +487,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
+
+  // отчет распределение остатков
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
 
 end;
 
@@ -614,6 +623,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TEmailSettingsForm');
 end;
 
+procedure TLoadFormTest.LoadEmailFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailEditForm');
+end;
 
 procedure TLoadFormTest.LoadProfitLossGroupFormTest;
 begin

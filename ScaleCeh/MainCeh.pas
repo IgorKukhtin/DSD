@@ -276,6 +276,7 @@ type
     procedure EditGoodsKindCodeEnter(Sender: TObject);
   private
     oldGoodsId:Integer;
+    fEnterKey13:Boolean;
 
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -355,7 +356,7 @@ procedure TMainCehForm.InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
 var i,i2:Integer;
 begin
      PanelGoodsKind.Visible:=(GoodsKindWeighingGroupId>0)
-                           or((SettingMain.isGoodsComplete = TRUE)and(ParamsMovement.ParamByName('DocumentKindId').asInteger=0));
+                           or((SettingMain.isGoodsComplete = TRUE)and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_CuterWeight));
      //
      //if GoodsKindWeighingGroupId = 0 then exit;
      //
@@ -538,6 +539,8 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Save_MI:Boolean;
+var ParamsWorkProgress:TParams;
+    MovementInfo : String;
 begin
      Result:=false;
      //
@@ -596,11 +599,12 @@ begin
      // проверка
      if (PanelPartionDate.Visible) then
      begin
+          {*****
           if (ParamsMI.ParamByName('PartionGoodsDate').AsDateTime>ParamsMovement.ParamByName('OperDate').AsDateTime) then
           begin
                ShowMessage('Неверно установлена дата <Партия за>. Не может быть позже <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
                exit;
-          end;
+          end;}
           if (ParamsMI.ParamByName('PartionGoodsDate').AsDateTime<ParamsMovement.ParamByName('OperDate').AsDateTime - StrToInt(GetArrayList_Value_byName(Default_Array,'PeriodPartionGoodsDate'))) then
           begin
                ShowMessage('Неверно установлена дата <Партия за>. Не может быть раньше <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
@@ -609,7 +613,7 @@ begin
      end;
 
      // доопределили параметр
-     if ParamsMovement.ParamByName('DocumentKindId').AsInteger = 0
+     if ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_CuterWeight
      then ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
 
@@ -631,10 +635,30 @@ begin
      //
      if Result then
      begin
+          MovementInfo:= '';
+          if ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight then
+          begin
+                Create_ParamsWorkProgress(ParamsWorkProgress);
+
+                ParamsWorkProgress.ParamByName('OperDate').AsDateTime:=StrToDate(PartionDateEdit.Text);
+                try ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:=-1 * ParamsMI.ParamByName('PartionGoods').AsInteger;
+                except ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:= 0; end;
+                ParamsWorkProgress.ParamByName('GoodsCode').AsInteger:=0;
+                ParamsWorkProgress.ParamByName('UnitId').AsInteger:=ParamsMovement.ParamByName('FromId').AsInteger;
+
+                if GuideWorkProgressForm.Execute(ParamsWorkProgress)//isChoice=TRUE
+                then MovementInfo:=ParamsWorkProgress.ParamByName('MovementInfo').AsString;
+
+                ParamsWorkProgress.Free;
+          end;
+
           oldGoodsId:=ParamsMI.ParamByName('GoodsId').AsInteger;
           Initialize_afterSave_MI;
           RefreshDataSet;
           WriteParamsMovement;
+
+         if MovementInfo <> ''
+         then MemoMovementInfo.Text:=MovementInfo;
      end;
 end;
 //------------------------------------------------------------------------------------------------
@@ -691,7 +715,8 @@ begin
           InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
      end;
      //***myActiveControl;
-     if ParamsMovement.ParamByName('DocumentKindId').AsInteger > 0 then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
+     if ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight
+     then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.bbChangeCountClick(Sender: TObject);
@@ -973,8 +998,10 @@ begin
      end;
      //
      //Схема - через справочник
-     if (1=1)and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> 0) then
+     if (1=1)and(fEnterKey13=TRUE)and(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight) then
      begin
+          fEnterKey13:= FALSE;
+
           Create_ParamsWorkProgress(ParamsWorkProgress);
 
           ParamsWorkProgress.ParamByName('OperDate').AsDateTime:=StrToDate(PartionDateEdit.Text);
@@ -1164,8 +1191,10 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditGoodsCodeKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
+     fEnterKey13:=false;
      if Key = 13 then
      begin
+          fEnterKey13:=true;
           if PanelGoodsKind.Visible then ActiveControl:=EditGoodsKindCode
           else if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
                else ActiveControl:=EditCount;
@@ -1443,7 +1472,7 @@ end;
 procedure TMainCehForm.WriteParamsMovement;
 begin
   PanelPartionDate.Visible:=ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean=true;
-  PanelMovementInfo.Visible:=ParamsMovement.ParamByName('DocumentKindId').asInteger>0;
+  PanelMovementInfo.Visible:=ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight;
   //
   PanelMovementDesc.Font.Color:=clBlue;
 

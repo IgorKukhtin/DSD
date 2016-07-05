@@ -21,6 +21,8 @@ BEGIN
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
                                           , inAmount             := inAmount
+                                          , inAmountManual       := 0  ::TFloat
+                                          , inReasonDifferencesId:= 0
                                           , inUserId             := inUserId
                                            ) AS tmp);
 

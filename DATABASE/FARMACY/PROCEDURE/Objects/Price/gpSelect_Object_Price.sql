@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
+             , Goods_isTop Boolean, Goods_PercentMarkup TFloat
              , DateChange TDateTime, MCSDateChange TDateTime
              , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
@@ -28,6 +29,8 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
              , isPromo boolean
+             , isTop boolean, TOPDateChange TDateTime
+             , PercentMarkup TFloat, PercentMarkupDateChange TDateTime
              ) AS
 $BODY$
 DECLARE
@@ -63,6 +66,8 @@ BEGIN
                ,NULL::TVarChar                   AS GoodsName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
+               ,NULL::Boolean                    AS Goods_isTop
+               ,NULL::TFloat                     AS Goods_PercentMarkup
                ,NULL::TDateTime                  AS DateChange
                ,NULL::TDateTime                  AS MCSDateChange
                ,NULL::Boolean                    AS MCSIsClose
@@ -81,6 +86,11 @@ BEGIN
                ,NULL::Boolean                    AS isFirst 
                ,NULL::Boolean                    AS isSecond 
                ,NULL::Boolean                    AS isPromo 
+               ,NULL::Boolean                    AS isTop 
+               ,NULL::TDateTime                  AS TOPDateChange
+               ,NULL::TFloat                     AS PercentMarkup 
+               ,NULL::TDateTime                  AS PercentMarkupDateChange
+
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -126,6 +136,8 @@ BEGIN
                , Object_Goods_View.GoodsName                     AS GoodsName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
+               , Object_Goods_View.isTop                         AS Goods_isTop
+               , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
                , Object_Price_View.DateChange                    AS DateChange
                , Object_Price_View.MCSDateChange                 AS MCSDateChange
                , COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
@@ -149,6 +161,13 @@ BEGIN
                , Object_Goods_View.isFirst
                , Object_Goods_View.isSecond
                , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+
+               , Object_Price_View.isTop                AS isTop
+               , Object_Price_View.TopDateChange        AS TopDateChange
+
+               , Object_Price_View.PercentMarkup           AS PercentMarkup
+               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
+
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
                                      AND ObjectLink.ChildObjectId = vbObjectId
@@ -222,6 +241,8 @@ BEGIN
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
+               , Object_Goods_View.isTop                   AS Goods_isTop
+               , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
                , Object_Price_View.DateChange              AS DateChange
                , Object_Price_View.MCSDateChange           AS MCSDateChange
                , Object_Price_View.MCSIsClose              AS MCSIsClose
@@ -243,6 +264,13 @@ BEGIN
                , Object_Goods_View.isFirst
                , Object_Goods_View.isSecond
                , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+
+               , Object_Price_View.isTop                AS isTop
+               , Object_Price_View.TopDateChange        AS TopDateChange
+
+               , Object_Price_View.PercentMarkup           AS PercentMarkup
+               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
+               
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
@@ -279,6 +307,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 04.07.16         *
+ 30.06.16         *
  12.04.16         *
  13.03.16         * убираем историю
  23.02.16         *
@@ -287,6 +317,24 @@ $BODY$
  09.06.15                        *
 
 */
+/*
+-- !!!ERROR - UPDATE!!!
+-- update  ObjectHistory set EndDate = coalesce (tmp.StartDate, zc_DateEnd()) from (
+with tmp as (
+select ObjectHistory_Price.*
+     , Row_Number() OVER (PARTITION BY ObjectHistory_Price.ObjectId ORDER BY ObjectHistory_Price.StartDate Asc, ObjectHistory_Price.Id) AS Ord
+from ObjectHistory AS ObjectHistory_Price
+-- Where ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+)
 
+select  tmp.Id, tmp.ObjectId, tmp.EndDate,  tmp2.StartDate, tmp2.Ord, ObjectHistoryDesc.Code
+from tmp
+     left join tmp as tmp2 on tmp2.ObjectId = tmp.ObjectId and tmp2.Ord = tmp.Ord + 1 and tmp2.DescId = tmp.DescId
+     left join ObjectHistoryDesc on ObjectHistoryDesc. Id = tmp.DescId
+where tmp.EndDate <> coalesce (tmp2.StartDate, zc_DateEnd())
+ order by 3-- ) as tmp where tmp.Id = ObjectHistory.Id
+-- select * from ObjectHistory   where ObjectId = 558863 order by StartDate
+-- select ObjectHistoryDesc.Code, ObjectId, StartDate, count (*) from ObjectHistory  join ObjectHistoryDesc on ObjectHistoryDesc. Id = DescId group by ObjectHistoryDesc.Code, ObjectId, StartDate having count (*) > 1
+*/
 -- тест
---select * from gpSelect_Object_Price(inUnitId := 183292 , inStartDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+-- select * from gpSelect_Object_Price(inUnitId := 183292 , inStartDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

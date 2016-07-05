@@ -14,6 +14,7 @@ uses
 
 type
   TContactPersonForm = class(TAncestorGuidesForm)
+    clEmailKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

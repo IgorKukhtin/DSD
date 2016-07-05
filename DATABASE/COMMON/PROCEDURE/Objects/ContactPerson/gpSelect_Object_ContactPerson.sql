@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ContractId Integer, ContractName TVarChar
              , UnitId Integer, UnitName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
+             , EmailId Integer, EmailName TVarChar
+             , EmailKindId Integer, EmailKindName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -26,6 +28,16 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
+       WITH tmpImportSettings AS (SELECT ObjectLink_ImportSettings_ContactPerson.ChildObjectId AS ContactPersonId
+                                       , ObjectLink_ImportSettings_Email.ChildObjectId         AS EmailId
+                                  FROM ObjectLink AS ObjectLink_ImportSettings_ContactPerson
+                                       INNER JOIN Object AS Object_ImportSettings ON Object_ImportSettings.Id = ObjectLink_ImportSettings_ContactPerson.ObjectId AND Object_ImportSettings.isErased = FALSE
+                                       INNER JOIN ObjectLink AS ObjectLink_ImportSettings_Email
+                                                             ON ObjectLink_ImportSettings_Email.ObjectId = ObjectLink_ImportSettings_ContactPerson.ObjectId
+                                                            AND ObjectLink_ImportSettings_Email.DescId = zc_ObjectLink_ImportSettings_Email()
+                                  WHERE ObjectLink_ImportSettings_ContactPerson.ChildObjectId > 0
+                                    AND ObjectLink_ImportSettings_ContactPerson.DescId = zc_ObjectLink_ImportSettings_ContactPerson()
+                                 )
        SELECT 
              Object_ContactPerson.Id          AS Id
            , Object_ContactPerson.ObjectCode  AS Code
@@ -75,6 +87,10 @@ BEGIN
            , Object_ContactPersonKind.Id         AS ContactPersonKindId
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
 
+           , Object_Email.Id             AS EmailId
+           , (CASE WHEN tmpImportSettings.EmailId > 0 THEN '***' ELSE '' END || Object_Email.ValueData) :: TVarChar AS EmailName
+           , Object_EmailKind.Id         AS EmailKindId
+           , (CASE WHEN tmpImportSettings.EmailId > 0 THEN '***' ELSE '' END || Object_EmailKind.ValueData) :: TVarChar AS EmailKindName
            
            , Object_ContactPerson.isErased    AS isErased
            
@@ -101,8 +117,20 @@ BEGIN
                                 AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
             LEFT JOIN Object AS Object_ContactPersonKind ON Object_ContactPersonKind.Id = ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId
             
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Email
+                                 ON ObjectLink_ContactPerson_Email.ObjectId = Object_ContactPerson.Id
+                                AND ObjectLink_ContactPerson_Email.DescId = zc_ObjectLink_ContactPerson_Email()
+            LEFT JOIN tmpImportSettings ON tmpImportSettings.ContactPersonId = Object_ContactPerson.Id
+                                       AND ObjectLink_ContactPerson_Email.ChildObjectId IS NULL
+            LEFT JOIN Object AS Object_Email ON Object_Email.Id = COALESCE (ObjectLink_ContactPerson_Email.ChildObjectId, tmpImportSettings.EmailId)
+
+            LEFT JOIN ObjectLink AS ObjectLink_Email_EmailKind
+                                 ON ObjectLink_Email_EmailKind.ObjectId = Object_Email.Id
+                                AND ObjectLink_Email_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
+            LEFT JOIN Object AS Object_EmailKind ON Object_EmailKind.Id = ObjectLink_Email_EmailKind.ChildObjectId
+
      WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
-       --AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+       -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
     ;
 
 END;
@@ -115,7 +143,7 @@ ALTER FUNCTION gpSelect_Object_ContactPerson(TVarChar) OWNER TO postgres;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  18.14.16         *
  31.05.14         * 
-        
+       
 */
 
 -- тест

@@ -43,8 +43,8 @@ BEGIN
            , Object_Contract.Id                                 AS ContractId
            , Object_Contract.ValueData                          AS ContractName
 
-           , Object_Insert.ValueData                            AS InsertName
-           , ObjectDate_Protocol_Insert.ValueData               AS InsertDate
+           , Object_Insert.ValueData              AS InsertName
+           , MovementDate_Insert.ValueData        AS InsertDate
 
        FROM Movement 
             JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId 
@@ -61,13 +61,14 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
-                                 ON ObjectDate_Protocol_Insert.ObjectId = Movement.Id
-                                AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-            LEFT JOIN ObjectLink AS ObjectLink_Insert
-                                 ON ObjectLink_Insert.ObjectId = Movement.Id
-                                AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PriceList();
 

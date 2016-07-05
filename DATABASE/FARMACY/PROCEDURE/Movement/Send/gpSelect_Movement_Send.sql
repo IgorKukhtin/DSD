@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSumm TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , Comment TVarChar
-             , isAuto Boolean
+             , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
+             , Checked Boolean
               )
 
 AS
@@ -65,6 +66,9 @@ BEGIN
            , Object_To.ValueData                    AS ToName
            , COALESCE(MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+           , MovementFloat_MCSPeriod.ValueData      AS MCSPeriod
+           , MovementFloat_MCSDay.ValueData         AS MCSDay
+           , COALESCE(MovementBoolean_Checked.ValueData, false)  ::Boolean  AS Checked
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -109,6 +113,16 @@ BEGIN
            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+           LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                     ON MovementBoolean_Checked.MovementId =  Movement.Id
+                                    AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+           LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
+                                   ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
+                                  AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
+           LEFT JOIN MovementFloat AS MovementFloat_MCSDay
+                                   ON MovementFloat_MCSDay.MovementId =  Movement.Id
+                                  AND MovementFloat_MCSDay.DescId = zc_MovementFloat_MCSDay()
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
         
@@ -123,6 +137,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 28.06.16         *
  05.05.16         *
  29.07.15                                                                        *
 

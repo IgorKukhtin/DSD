@@ -3,7 +3,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 422
   ClientWidth = 1259
   ExplicitWidth = 1275
-  ExplicitHeight = 457
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -642,7 +642,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object edIsChecked: TcxCheckBox
       Left = 684
-      Top = 48
+      Top = 43
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 24
       Width = 118
@@ -810,15 +810,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 50
     end
     object cxLabel22: TcxLabel
-      Left = 535
+      Left = 684
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 535
+      Left = 684
       Top = 103
       TabOrder = 46
-      Width = 409
+      Width = 260
     end
     object cbCalcAmountPartner: TcxCheckBox
       Left = 8
@@ -886,10 +886,28 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 85
       Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
     end
+    object cxLabel26: TcxLabel
+      Left = 535
+      Top = 85
+      Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+    end
+    object edReestrKind: TcxButtonEdit
+      Left = 534
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 56
+      Width = 144
+    end
   end
   object cbPromo: TcxCheckBox [2]
     Left = 684
-    Top = 75
+    Top = 66
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 6
@@ -2537,6 +2555,21 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = cbPromo
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindId'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindName'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2748,6 +2781,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -2827,6 +2867,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edReestrKind
       end>
     Left = 232
     Top = 193
@@ -4241,7 +4284,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end>
     GetStoredProc = spGet
     Left = 280
-    Top = 217
+    Top = 265
   end
   object spGetReportNameTransport: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Transport_ReportName'
@@ -4267,5 +4310,36 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     PackSize = 1
     Left = 984
     Top = 256
+  end
+  object ReestrKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReestrKind
+    Key = '0'
+    FormNameParam.Value = 'TReestrKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReestrKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 588
+    Top = 88
   end
 end

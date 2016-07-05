@@ -7,7 +7,7 @@
 			<Base>True</Base>
 			<Config Condition="'$(Config)'==''">Release</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
-			<TargetedPlatforms>1</TargetedPlatforms>
+			<TargetedPlatforms>3</TargetedPlatforms>
 			<AppType>Application</AppType>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -39,6 +39,12 @@
 			<CfgParent>Base</CfgParent>
 			<Base>true</Base>
 		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win64)'!=''">
+			<Cfg_2_Win64>true</Cfg_2_Win64>
+			<CfgParent>Cfg_2</CfgParent>
+			<Cfg_2>true</Cfg_2>
+			<Base>true</Base>
+		</PropertyGroup>
 		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
 			<Cfg_2_Win32>true</Cfg_2_Win32>
 			<CfgParent>Cfg_2</CfgParent>
@@ -53,6 +59,11 @@
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<DCC_UsePackage>cxLibraryRS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;officeXPrt;cxPageControlRS16;vclimg;dxComnRS16;vcldb;dxADOServerModeRS16;cxPageControldxBarPopupMenuRS16;dxPSLnksRS16;dxBarExtItemsRS16;JclDeveloperTools;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;DBXOdbcDriver;dxPScxSSLnkRS16;vclactnband;dxServerModeRS16;bindcompvcl;Jcl;vclie;ipstudiowinclient;dsnapcon;vclx;dxFlowChartRS16;dxGDIPlusRS16;dxdborRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;dxBarRS16;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;vclib;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;webdsnap;EhLib160;adortl;ZDbc;ZPlain;Tee;JclContainers;dxSkinsCoreRS16;dxmdsRS16;dxPScxCommonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;ipstudiowin;cxSchedulerRS16;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -74,10 +85,10 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.3.25;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>25</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.5.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>2</VerInfo_Build>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
-			<VerInfo_Release>3</VerInfo_Release>
+			<VerInfo_Release>5</VerInfo_Release>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -90,13 +101,21 @@
 			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
 			<DCC_DebugInformation>false</DCC_DebugInformation>
 		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.4.20;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>20</VerInfo_Build>
-			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
+		<PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+			<VerInfo_Build>21</VerInfo_Build>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.4.21;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.5.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>3</VerInfo_Build>
+			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_MinorVer>2</VerInfo_MinorVer>
+			<VerInfo_Release>5</VerInfo_Release>
 			<DCC_DcuOutput>..\DCU\Farmacy</DCC_DcuOutput>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 		</PropertyGroup>
@@ -247,7 +266,7 @@
 				</Delphi.Personality>
 				<Deployment/>
 				<Platforms>
-					<Platform value="Win64">False</Platform>
+					<Platform value="Win64">True</Platform>
 					<Platform value="Win32">True</Platform>
 				</Platforms>
 			</BorlandProject>

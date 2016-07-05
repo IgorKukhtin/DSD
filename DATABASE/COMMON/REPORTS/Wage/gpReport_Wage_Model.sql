@@ -1,29 +1,11 @@
--- По проводкам - кол-во - из Модели
--- Function: gpSelect_Report_Wage_1 (Integer)
+-- По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
+-- Function: gpSelect_Report_Wage_Model ()
 
-DROP FUNCTION IF EXISTS gpSelect_Report_Wage_1(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Integer,   --подразделение 
-    Integer,   --модель начисления
-    Integer,   --сотрудник
-    Integer,   --должность
-    TVarChar   --сессия пользователя
-);
-
-DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Model(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Integer,   --подразделение 
-    Integer,   --модель начисления
-    Integer,   --сотрудник
-    Integer,   --должность
-    TVarChar   --сессия пользователя
-);
+DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Model (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_Model(
-    IN inDateStart      TDateTime, --дата начала периода
-    IN inDateFinal      TDateTime, --дата окончания периода
+    IN inStartDate      TDateTime, --дата начала периода
+    IN inEndDate        TDateTime, --дата окончания периода
     IN inUnitId         Integer,   --подразделение 
     IN inModelServiceId Integer,   --модель начисления
     IN inMemberId       Integer,   --сотрудник
@@ -31,14 +13,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_Model(
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
-     StaffList                      Integer
+     StaffListId                    Integer
+    ,DocumentKindId                 Integer
     ,UnitId                         Integer
     ,UnitName                       TVarChar
     ,PositionId                     Integer
     ,PositionName                   TVarChar
     ,PositionLevelId                Integer
     ,PositionLevelName              TVarChar
-    ,PersonalCount                  Integer
+    ,Count_Member                   Integer   -- Кол-во человек (все)
     ,HoursPlan                      TFloat
     ,HoursDay                       TFloat
     ,PersonalGroupId                Integer
@@ -46,8 +29,8 @@ RETURNS TABLE(
     ,MemberId                       Integer
     ,MemberName                     TVarChar
     ,SheetWorkTime_Date             TDateTime
-    ,SUM_MemberHours                TFloat
-    ,SheetWorkTime_Amount           TFloat
+    ,SUM_MemberHours                TFloat     -- итого часов всех сотрудников (с этой должностью+...) - !!!инф.!!!
+    ,SheetWorkTime_Amount           TFloat     -- итого часов сотрудника - !!!инф.!!!
     ,ServiceModelId                 Integer
     ,ServiceModelCode               Integer
     ,ServiceModelName               TVarChar
@@ -62,13 +45,14 @@ RETURNS TABLE(
     ,SelectKindName                 TVarChar
     ,Ratio                          TFloat
     ,ModelServiceItemChild_FromId   Integer
-    ,ModelServiceItemChild_FromDescId   Integer
+    ,ModelServiceItemChild_FromDescId Integer
     ,ModelServiceItemChild_FromName TVarChar
     ,ModelServiceItemChild_ToId     Integer
-    ,ModelServiceItemChild_ToDescId     Integer
+    ,ModelServiceItemChild_ToDescId Integer
     ,ModelServiceItemChild_ToName   TVarChar
     ,OperDate                       TDateTime
-    ,Count_MemberInDay              Integer
+    ,Count_Day                      Integer   -- Отраб. дн. 1 чел (инф.)
+    ,Count_MemberInDay              Integer   -- Кол-во человек (за 1 д.)
     ,Gross                          TFloat
     ,GrossOnOneMember               TFloat
     ,Amount                         TFloat
@@ -84,19 +68,20 @@ BEGIN
 
     -- список дней
     CREATE TEMP TABLE tmpOperDate ON COMMIT DROP
-       AS SELECT generate_series (inDateStart, inDateFinal, '1 DAY' :: INTERVAL) AS OperDate;
+       AS SELECT generate_series (inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate;
 
-    -- Настройки
+    -- Таблица - Данные для расчета
     CREATE TEMP TABLE Setting_Wage_1(
-        StaffListId Integer
-       ,UnitId Integer
-       ,UnitName TVarChar
+        StaffListId     Integer
+       ,DocumentKindId  Integer
+       ,UnitId          Integer
+       ,UnitName        TVarChar
        ,PositionId Integer
        ,PositionName TVarChar
        ,isPositionLevel_all Boolean
        ,PositionLevelId Integer
        ,PositionLevelName TVarChar
-       ,PersonalCount Integer
+       ,Count_Member Integer
        ,HoursPlan TFloat
        ,HoursDay TFloat
        ,ServiceModelKindId Integer
@@ -124,11 +109,12 @@ BEGIN
 
 
     -- получили Настройки
-    INSERT INTO Setting_Wage_1 (StaffListId,UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName, PersonalCount,HoursPlan,HoursDay, ServiceModelKindId, ServiceModelId,ServiceModelCode
+    INSERT INTO Setting_Wage_1 (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName, Count_Member,HoursPlan,HoursDay, ServiceModelKindId, ServiceModelId,ServiceModelCode
                               , ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName, SelectKindId, SelectKindCode, SelectKindName, isActive
                               , Ratio,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName)
     SELECT
         Object_StaffList.Id                                 AS StaffListId            -- Штатное расписание
+       ,COALESCE (ObjectLink_ModelServiceItemMaster_DocumentKind.ChildObjectId, 0) AS DocumentKindId
        ,ObjectLink_StaffList_Unit.ChildObjectId             AS UnitId                 -- Поразделение
        ,Object_Unit.ValueData                               AS UnitName
        ,ObjectLink_StaffList_Position.ChildObjectId         AS PositionId             -- Должность
@@ -136,7 +122,7 @@ BEGIN
        ,COALESCE (ObjectBoolean_PositionLevel.ValueData, FALSE) AS isPositionLevel_all
        ,CASE WHEN ObjectBoolean_PositionLevel.ValueData = TRUE THEN 0 ELSE ObjectLink_StaffList_PositionLevel.ChildObjectId END AS PositionLevelId -- Разряд должности
        ,Object_PositionLevel.ValueData                      AS PositionLevelName
-       ,ObjectFloat_PersonalCount.ValueData::Integer        AS PersonalCount          -- !!!информативно!!! кол-во сотрудников (из справочника Штатное расписание)
+       ,ObjectFloat_PersonalCount.ValueData::Integer        AS Count_Member          -- !!!информативно!!! кол-во сотрудников (из справочника Штатное расписание)
        ,ObjectFloat_HoursPlan.ValueData                     AS HoursPlan              -- !!!информативно!!! 1.Общий план часов в месяц на человека (из справочника Штатное расписание)
        ,ObjectFloat_HoursDay.ValueData                      AS HoursDay               -- !!!информативно!!! 2.Дневной план часов на человека (из справочника Штатное расписание)
        ,ObjectLink_ModelService_ModelServiceKind.ChildObjectId AS ServiceModelKindId  -- Тип модели начисления
@@ -226,10 +212,17 @@ BEGIN
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
                                    ON ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId = Object_ModelService.Id
                                   AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
+
+
         INNER JOIN Object AS Object_ModelServiceItemMaster
                           ON Object_ModelServiceItemMaster.Id       = ObjectLink_ModelServiceItemMaster_ModelService.ObjectId
                          AND Object_ModelServiceItemMaster.DescId   = zc_Object_ModelServiceItemMaster()
                          AND Object_ModelServiceItemMaster.isErased = FALSE
+
+        LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_DocumentKind
+                                   ON ObjectLink_ModelServiceItemMaster_DocumentKind.ChildObjectId = Object_ModelServiceItemMaster.Id
+                                  AND ObjectLink_ModelServiceItemMaster_DocumentKind.DescId = zc_ObjectLink_ModelServiceItemMaster_DocumentKind()
+
         --Ftom  документы от кого
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_From
                                    ON ObjectLink_ModelServiceItemMaster_From.ObjectId = Object_ModelServiceItemMaster.Id
@@ -285,13 +278,17 @@ BEGIN
 
     -- Результат    
     RETURN QUERY
-    WITH -- ВСЕ документы для расчета по Расценкам грн./кг.
-         tmpMovement AS 
+    WITH -- ВСЕ документы для расчета по Расценкам грн./кг. - по MovementId
+         tmpMovement_all AS 
        (SELECT
             MovementItemContainer.OperDate
+           ,MovementItemContainer.MovementId
            ,DATE_PART ('ISODOW', MovementItemContainer.OperDate)  AS OperDate_num
            ,MovementItemContainer.MovementDescId
            ,MovementItemContainer.IsActive
+
+           ,COALESCE (MLO_DocumentKind.ObjectId, 0) AS DocumentKindId
+
            ,CASE WHEN MovementItemContainer.IsActive = TRUE
                       THEN MovementItemContainer.ObjectExtId_Analyzer
                  ELSE MovementItemContainer.WhereObjectId_Analyzer
@@ -321,12 +318,16 @@ BEGIN
              ) AS SettingDesc
              INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
                                              AND MovementItemContainer.DescId         = zc_MIContainer_Count()
-                                             AND MovementItemContainer.OperDate BETWEEN inDateStart AND inDateFinal
+                                             AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
              LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId_Analyzer
+             LEFT OUTER JOIN MovementLinkObject AS MLO_DocumentKind ON MLO_DocumentKind.MovementId = MovementItemContainer.MovementId
+                                                                   AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
         GROUP BY
             MovementItemContainer.OperDate
+           ,MovementItemContainer.MovementId
            ,MovementItemContainer.MovementDescId
            ,MovementItemContainer.IsActive
+           ,MLO_DocumentKind.ObjectId
            ,MovementItemContainer.ObjectIntId_Analyzer
            ,CASE 
                 WHEN MovementItemContainer.IsActive = TRUE
@@ -348,6 +349,49 @@ BEGIN
                     THEN MovementItemContainer.ObjectId_Analyzer
             ELSE Container.ObjectId
             END
+       )
+         -- Документы разделения - поиск мастера
+       , tmpGoodsMaster_out AS
+       (SELECT tmpMovementList.MovementId, MAX (MovementItem.ObjectId) AS GoodsId
+        FROM (SELECT DISTINCT
+                     tmpMovement_all.MovementId
+              FROM tmpMovement_all
+              WHERE tmpMovement_all.MovementDescId = zc_Movement_ProductionSeparate()
+             ) AS tmpMovementList
+             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementList.MovementId
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+        GROUP BY tmpMovementList.MovementId
+       )
+         -- ВСЕ документы для расчета по Расценкам грн./кг. - без MovementId, но с найденным GoodsId_from
+       , tmpMovement AS 
+       (SELECT
+             tmpMovement_all.OperDate
+           , tmpMovement_all.OperDate_num
+           , tmpMovement_all.MovementDescId
+           , tmpMovement_all.IsActive
+           , tmpMovement_all.DocumentKindId
+           , tmpMovement_all.FromId
+           , tmpMovement_all.ToId
+           , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from) AS GoodsId_from
+           , tmpMovement_all.GoodsId_to
+           , SUM (tmpMovement_all.Amount) :: TFloat AS Amount
+           , tmpMovement_all.GoodsKindId
+
+        FROM tmpMovement_all
+             LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpGoodsMaster_out.MovementId
+                                         AND tmpMovement_all.IsActive      = TRUE
+        GROUP BY
+             tmpMovement_all.OperDate
+           , tmpMovement_all.OperDate_num
+           , tmpMovement_all.MovementDescId
+           , tmpMovement_all.IsActive
+           , tmpMovement_all.DocumentKindId
+           , tmpMovement_all.FromId
+           , tmpMovement_all.ToId
+           , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from)
+           , tmpMovement_all.GoodsId_to
+           , tmpMovement_all.GoodsKindId
        )
          -- Модели начисления + необходимые документы для расчета по Кол-во голов
        , tmpMovement_HeadCount AS
@@ -386,7 +430,7 @@ BEGIN
         FROM (SELECT DISTINCT Setting.MovementDescId FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())) AS tmp  -- Кол-во голов приход + Кол-во голов расход
              INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = tmp.MovementDescId
                                              AND MovementItemContainer.DescId         = zc_MIContainer_Count()
-                                             AND MovementItemContainer.OperDate BETWEEN inDateStart AND inDateFinal
+                                             AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
              LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId_Analyzer
        ) AS tmpMI
              /*INNER JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
@@ -428,6 +472,7 @@ BEGIN
            ,Setting.ModelServiceItemChild_FromId
            ,Setting.ModelServiceItemChild_ToId
            , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate) AS OperDate
+           , tmpMovement.DocumentKindId
 
            , SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
                         AND tmpMovement.OperDate_num <> 6 -- суббота
@@ -507,6 +552,7 @@ BEGIN
            , Setting.ModelServiceItemChild_FromId
            , Setting.ModelServiceItemChild_ToId
            , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate)
+           , tmpMovement.DocumentKindId
            , Setting.Price 
            , Setting.Ratio
        )
@@ -516,7 +562,7 @@ BEGIN
              Movement.OperDate                             AS OperDate
            , MI_SheetWorkTime.ObjectId                     AS MemberId
            , Object_Member.ValueData                       AS MemberName
-           , MIObject_PersonalGroup.ObjectId               AS PersonalGroupId
+           , COALESCE (MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
            , MIObject_Position.ObjectId                    AS PositionId
            , COALESCE (MIObject_PositionLevel.ObjectId, 0) AS PositionLevelId
            , MI_SheetWorkTime.Amount                       AS Amount
@@ -550,7 +596,20 @@ BEGIN
                                                    AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
             
         WHERE Movement.DescId = zc_Movement_SheetWorkTime()
-          AND Movement.OperDate BETWEEN inDateStart AND inDateFinal
+          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+       )
+         -- табель - сколько дней отработал (информативно)
+       , Movement_Sheet_Count_Day AS
+       (SELECT MI_SheetWorkTime.MemberId
+             , MI_SheetWorkTime.PersonalGroupId
+             , MI_SheetWorkTime.PositionId
+             , MI_SheetWorkTime.PositionLevelId
+             , COUNT(*) AS Count_Day
+        FROM (SELECT DISTINCT DATE_TRUNC ('DAY', MI_SheetWorkTime.OperDate), MI_SheetWorkTime.MemberId, MI_SheetWorkTime.PersonalGroupId, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId FROM MI_SheetWorkTime) AS MI_SheetWorkTime
+        GROUP BY MI_SheetWorkTime.MemberId
+               , MI_SheetWorkTime.PersonalGroupId
+               , MI_SheetWorkTime.PositionId
+               , MI_SheetWorkTime.PositionLevelId
        )
          -- табель - кто в какие дни работал
        , Movement_Sheet AS
@@ -564,6 +623,7 @@ BEGIN
              , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS SUM_MemberHours
              , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS AmountInDay
              , COUNT(*) OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS Count_MemberInDay
+             , COUNT(*) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS Count_Member
         FROM (SELECT MI_SheetWorkTime.OperDate
                    , MI_SheetWorkTime.MemberId
                    , MI_SheetWorkTime.MemberName
@@ -613,14 +673,15 @@ BEGIN
     -- Результат
     SELECT 
         Setting.StaffListId
-       ,Setting.UnitId
-       ,Setting.UnitName
+      , ServiceModelMovement.DocumentKindId :: Integer AS DocumentKindId
+      , Setting.UnitId
+      , Setting.UnitName
        ,Setting.PositionId
        ,Setting.PositionName
        ,Setting.PositionLevelId
        ,Setting.PositionLevelName
-       -- ,Setting.PersonalCount
-       , Movement_Sheet.Count_MemberInDay :: Integer AS PersonalCount
+       -- ,Setting.Count_Member
+       , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_Member) :: Integer AS Count_Member
        ,Setting.HoursPlan
        ,Setting.HoursDay
        , Object_PersonalGroup.Id        AS PersonalGroupId
@@ -649,7 +710,8 @@ BEGIN
        ,Setting.ModelServiceItemChild_ToId
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
-       , tmpOperDate.OperDate :: TDateTime
+       , tmpOperDate.OperDate               :: TDateTime  AS OperDate
+       , Movement_Sheet_Count_Day.Count_Day :: Integer    AS Count_Day
        , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay) :: Integer
        , ServiceModelMovement.Gross
        , (ServiceModelMovement.Gross
@@ -681,6 +743,11 @@ BEGIN
                                        AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
                                        AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId OR Movement_SheetGroup.MemberId IS NULL)
 
+         LEFT OUTER JOIN Movement_Sheet_Count_Day ON Movement_Sheet_Count_Day.MemberId        = COALESCE (Movement_SheetGroup.MemberId, Movement_Sheet.MemberId)
+                                                 AND Movement_Sheet_Count_Day.PersonalGroupId = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
+                                                 AND Movement_Sheet_Count_Day.PositionLevelId = COALESCE (Movement_SheetGroup.PositionLevelId, Movement_Sheet.PositionLevelId)
+                                                 AND Movement_Sheet_Count_Day.PositionId      = COALESCE (Movement_SheetGroup.PositionId, Movement_Sheet.PositionId)
+
         LEFT OUTER JOIN ServiceModelMovement ON COALESCE (Setting.StaffListId, 0)                  = COALESCE (ServiceModelMovement.StaffListId, 0)
                                             AND COALESCE (Setting.UnitId, 0)                       = COALESCE (ServiceModelMovement.UnitId, 0)
                                             AND COALESCE (Setting.PositionId, 0)                   = COALESCE (ServiceModelMovement.PositionId, 0)
@@ -694,6 +761,8 @@ BEGIN
                                             AND COALESCE (Setting.ModelServiceItemChild_FromId, 0) = COALESCE (ServiceModelMovement.ModelServiceItemChild_FromId, 0)
                                             AND COALESCE (Setting.ModelServiceItemChild_ToId, 0)   = COALESCE (ServiceModelMovement.ModelServiceItemChild_ToId, 0)
                                             AND ServiceModelMovement.OperDate                      = tmpOperDate.OperDate
+                                            AND (ServiceModelMovement.DocumentKindId               = Setting.DocumentKindId
+                                              OR Setting.DocumentKindId = 0)
 
         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
      ;
@@ -701,15 +770,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_Wage_Model (TDateTime,TDateTime,Integer,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
-/*
-Select * from gpSelect_Report_Wage_Model(
-    inDateStart      := '20150701'::TDateTime, --дата начала периода
-    inDateFinal      := '20150731'::TDateTime, --дата окончания периода
-    inUnitId         := 8448::Integer,   --подразделение 
-    inModelServiceId := 0::Integer,   --модель начисления
-    inMemberId     := 0::Integer,   --сотрудник
-    inPositionId     := 0::Integer,   --должность
-    inSession        := '5');
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.06.16                                        *
 */
+
+-- тест
+-- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '01.04.2016', inEndDate:= '01.04.2016', inUnitId:= 8439, inModelServiceId:= 633116 , inMemberId:= 0, inPositionId:= 0, inSession:= '5');

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Master(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inCount	             TFloat    , -- Количество батонов
+    IN inCuterWeight	     TFloat    , -- Фактический вес(куттера)
     IN inPartionGoodsDate    TDateTime , -- Партия товара
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -42,6 +44,8 @@ BEGIN
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount);
 
+   -- сохранили свойство <Фактический вес(куттера)>
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_CuterWeight(), ioId, inCuterWeight);
    
    -- сохранили свойство <Партия товара> у Child
    IF vbIsInsert = FALSE
@@ -74,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.06.16         * add inCuterWeight
  21.03.15                                        * all
  19.12.14                                                       * add zc_MILinkObject_???GoodsKindComplete
  11.12.14         * из gp

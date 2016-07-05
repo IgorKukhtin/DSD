@@ -1,31 +1,30 @@
 inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 359
-  ClientWidth = 763
-  AddOnFormData.RefreshAction = actRefreshStart
+  ClientWidth = 824
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 779
+  ExplicitWidth = 840
   ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 75
-    Width = 763
-    Height = 284
+    Top = 78
+    Width = 824
+    Height = 281
     TabOrder = 3
-    ExplicitTop = 75
-    ExplicitWidth = 763
-    ExplicitHeight = 284
-    ClientRectBottom = 284
-    ClientRectRight = 763
+    ExplicitTop = 78
+    ExplicitWidth = 824
+    ExplicitHeight = 281
+    ClientRectBottom = 281
+    ClientRectRight = 824
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 763
-      ExplicitHeight = 284
+      ExplicitWidth = 824
+      ExplicitHeight = 281
       inherited cxGrid: TcxGrid
-        Width = 763
-        Height = 284
-        ExplicitWidth = 763
-        ExplicitHeight = 284
+        Width = 824
+        Height = 281
+        ExplicitWidth = 824
+        ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -39,53 +38,71 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             Caption = #1048#1044' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'MovementId'
             Visible = False
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 76
           end
           object colInvNumber: TcxGridDBColumn
             Caption = #8470
             DataBinding.FieldName = 'InvNumber'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colMovementDescId: TcxGridDBColumn
             DataBinding.FieldName = 'MovementDescId'
             Visible = False
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
           end
           object colMovementDescName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'MovementDescName'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colFromId: TcxGridDBColumn
             DataBinding.FieldName = 'FromId'
             Visible = False
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 104
           end
           object colToId: TcxGridDBColumn
             DataBinding.FieldName = 'ToId'
             Visible = False
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 104
           end
           object colPrice: TcxGridDBColumn
@@ -93,7 +110,9 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00##'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 52
           end
           object colSumma: TcxGridDBColumn
@@ -101,55 +120,112 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object colAmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountIn'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 52
           end
           object colAmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colAmountInvent: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1091#1095#1077#1090
             DataBinding.FieldName = 'AmountInvent'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 54
           end
           object colSaldo: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Saldo'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 44
           end
           object colMCSValue: TcxGridDBColumn
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCSValue'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 54
           end
           object colCheckMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CheckMember'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colBayer: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' (VIP)'
             DataBinding.FieldName = 'Bayer'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 95
+          end
+          object PartionDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionDescName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PartionInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#8470
+            DataBinding.FieldName = 'PartionInvNumber'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object PartionOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionOperDate'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colPartionPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'PartionPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 763
-    Height = 49
-    ExplicitWidth = 763
-    ExplicitHeight = 49
+    Width = 824
+    Height = 52
+    ExplicitWidth = 824
+    ExplicitHeight = 52
     object cxLabel4: TcxLabel
       Left = 16
       Top = 29
@@ -201,6 +277,13 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       TabOrder = 9
       Width = 184
     end
+  end
+  object cbPartion: TcxCheckBox [2]
+    Left = 569
+    Top = 5
+    Action = actRefreshIsPartion
+    TabOrder = 6
+    Width = 160
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -313,8 +396,8 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_GoodsPartionMoveDialogForm'
-      FormNameParam.Value = 'TReport_GoodsPartionMoveDialogForm'
+      FormName = 'TReport_GoodsPartionHistoryDialogForm'
+      FormNameParam.Value = 'TReport_GoodsPartionHistoryDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -384,10 +467,31 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = Null
+          Component = cbPartion
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actRefreshIsPartion: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1072#1088#1090#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1072#1088#1090#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   inherited MasterDS: TDataSource
@@ -436,6 +540,14 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Value = 41395d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPartion'
+        Value = Null
+        Component = cbPartion
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -712,8 +824,8 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       item
         Component = GuidesGoods
       end>
-    Left = 424
-    Top = 136
+    Left = 456
+    Top = 160
   end
   object rdParty: TRefreshDispatcher
     IdParam.Value = Null

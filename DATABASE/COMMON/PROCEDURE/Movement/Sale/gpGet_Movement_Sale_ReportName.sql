@@ -17,20 +17,27 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
 
        SELECT
-            COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
-       INTO vbPrintFormName
+            CASE -- !!!захардкодил временно для Запорожье!!!
+                 WHEN MovementLinkObject_From.ObjectId IN (301309) -- Склад ГП ф.Запорожье
+                  AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                      THEN PrintForms_View_Default.PrintFormName
+                 ELSE COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
+            END
+            INTO vbPrintFormName
        FROM Movement
-       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-              ON MovementLinkObject_To.MovementId = Movement.Id
-             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
 
        LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-
-       LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-              ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-             AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
 
        LEFT JOIN PrintForms_View
               ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
@@ -65,4 +72,4 @@ ALTER FUNCTION gpGet_Movement_Sale_ReportName (Integer, TVarChar) OWNER TO postg
 */
 
 -- тест
--- SELECT gpGet_Movement_Sale_ReportName FROM gpGet_Movement_Sale_ReportName(inMovementId := 40874,  inSession := zfCalc_UserAdmin()); -- все
+-- SELECT gpGet_Movement_Sale_ReportName FROM gpGet_Movement_Sale_ReportName(inMovementId := 3924205,  inSession := zfCalc_UserAdmin()); -- все

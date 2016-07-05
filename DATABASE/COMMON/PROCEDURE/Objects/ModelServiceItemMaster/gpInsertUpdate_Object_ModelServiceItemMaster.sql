@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_ModelServiceItemMaster(Integer,  TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ModelServiceItemMaster(Integer,  TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ModelServiceItemMaster(Integer,  TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelServiceItemMaster(
  INOUT ioId                  Integer   , -- ключ объекта < Главные элементы Модели начисления>
@@ -11,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelServiceItemMaster(
     IN inFromId              Integer   , -- Подразделения(От кого)
     IN inToId                Integer   , -- Подразделения(Кому) 	
     IN inSelectKindId        Integer   , -- Тип выбора данных
+    IN inDocumentKindId      Integer   , -- Тип выбора данных
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -40,7 +43,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemMaster_To(), ioId, inToId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemMaster_SelectKind(), ioId, inSelectKindId);
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemMaster_DocumentKind(), ioId, inDocumentKindId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -49,12 +53,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ModelServiceItemMaster (Integer,  TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_ModelServiceItemMaster (Integer,  TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.06.16         * DocumentKind
  21.11.13                                        * inMovementDesc -> inMovementDescId
  19.10.13         * 
 

@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransportService(
 RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
-             , Amount TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , Amount TFloat, SummAdd TFloat
+             , WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , ContractConditionValue TFloat
              , Comment TVarChar
              , ContractId Integer, ContractName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -48,11 +50,13 @@ BEGIN
            , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun 
 
            , 0::TFloat                        AS Amount
+           , 0::TFloat                        AS SummAdd
            , 0::TFloat                        AS WeightTransport
            , 0::TFloat                        AS Distance
            , 0::TFloat                        AS Price
            , 0::TFloat                        AS CountPoint
            , 0::TFloat                        AS TrevelTime
+           , 0::TFloat                        AS ContractConditionValue  
 
            , ''::TVarChar                     AS Comment
            
@@ -88,6 +92,7 @@ BEGIN
      ELSE
 
      RETURN QUERY 
+    
        SELECT
              Movement.Id
            , MovementItem.Id AS MIId  
@@ -99,12 +104,14 @@ BEGIN
            , COALESCE (CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime), CAST (DATE_TRUNC ('MINUTE', Movement.OperDate) AS TDateTime))  AS StartRunPlan
            , COALESCE (CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime), CAST (DATE_TRUNC ('MINUTE', Movement.OperDate) AS TDateTime)) AS StartRun
 
-           , MovementItem.Amount            AS Amount
+           , MovementItem.Amount             AS Amount
+           , MIFloat_SummAdd.ValueData       AS SummAdd
            , COALESCE (MIFloat_WeightTransport.ValueData, 0)::TFloat  AS WeightTransport
-           , MIFloat_Distance.ValueData     AS Distance
-           , MIFloat_Price.ValueData        AS Price
-           , MIFloat_CountPoint.ValueData   AS CountPoint
-           , MIFloat_TrevelTime.ValueData   AS TrevelTime
+           , MIFloat_Distance.ValueData      AS Distance
+           , MIFloat_Price.ValueData         AS Price
+           , MIFloat_CountPoint.ValueData    AS CountPoint
+           , MIFloat_TrevelTime.ValueData    AS TrevelTime
+           , MIFloat_ContractValue.ValueData AS ContractConditionValue   
 
            , MIString_Comment.ValueData  AS Comment
 
@@ -160,6 +167,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_TrevelTime
                                         ON MIFloat_TrevelTime.MovementItemId = MovementItem.Id
                                        AND MIFloat_TrevelTime.DescId = zc_MIFloat_TrevelTime()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                        ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+            LEFT JOIN MovementItemFloat AS MIFloat_ContractValue
+                                        ON MIFloat_ContractValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ContractValue.DescId = zc_MIFloat_ContractValue()
                                        
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id 
@@ -221,6 +235,7 @@ ALTER FUNCTION gpGet_Movement_TransportService (Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 03.07.16         *
  16.12.15         * add WeightTransport
  26.01.14                                        * add zc_MovementLinkObject_UnitForwarding
  25.01.14                                        * add inOperDate

@@ -2,16 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, TDateTime, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, Integer, TDateTime, TVarChar, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ExportSettings_Email(
     IN inObjectId         Integer,       -- ключ объекта
     IN inContactPersonId  Integer,       -- ключ объекта
     IN inByDate           TDateTime,     -- 
     IN inByMail           TVarChar,      -- 
-    IN inByFileName       TVarChar,      -- 
+    IN inByFileName       TBlob,      -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Host TVarChar, Port TVarChar
+RETURNS TABLE (EmailId          Integer
+             , EmailName        TVarChar
+             , EmailKindId      Integer
+             , EmailKindName    TVarChar
+             , Host TVarChar, Port TVarChar
              , UserName TVarChar, PasswordValue TVarChar
              , MailFrom TVarChar, MailTo TVarChar
              , Subject TVarChar, Body TBlob
@@ -27,14 +32,19 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-     WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= zc_Enum_EmailKind_OutOrder(), inSession:= inSession))
+     WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inSession:= inSession) AS tmp WHERE tmp.EmailKindId = zc_Enum_EmailKind_OutOrder())
      SELECT 
-            gpGet_Host.Value      AS Host
+            gpGet_Host.EmailId
+          , gpGet_Host.EmailName
+          , gpGet_Host.EmailKindId
+          , gpGet_Host.EmailKindName
+
+          , gpGet_Host.Value      AS Host
           , gpGet_Port.Value      AS Port
           , gpGet_User.Value      AS UserName
           , gpGet_Password.Value  AS PasswordValue
           , gpGet_Mail.Value      AS MailFrom
-          , CASE WHEN tmp.Num = 1 THEN 'ashtu777@ua.fm' WHEN tmp.Num = 2 THEN 'pravda_6@i.ua' ELSE 'price@neboley.dp.ua' END :: TVarChar AS MailTo
+          , CASE WHEN tmp.Num = 1 THEN 'ashtu777@ua.fm' WHEN tmp.Num = 2 THEN COALESCE (ObjectString_ErrorTo.ValueData, 'pravda_6@i.ua') ELSE 'price@neboley.dp.ua' END :: TVarChar AS MailTo
 
           , CASE WHEN gpSelect.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
                       THEN 'Ошибка авто - загрузки приход ММО ' || COALESCE (Object_ContactPerson.ValueData, '') || ' - ' || TO_CHAR (CURRENT_TIMESTAMP, 'dd.mm.yyyy hh:mm:ss')
@@ -62,8 +72,12 @@ BEGIN
           LEFT JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
           LEFT JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
 
-          LEFT JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect
-                                                                           ON gpSelect.Id = inObjectId
+          LEFT JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect ON gpSelect.Id = inObjectId
+          LEFT JOIN ObjectString AS ObjectString_ErrorTo
+                                 ON ObjectString_ErrorTo.ObjectId = gpSelect.EmailId 
+                                AND ObjectString_ErrorTo.DescId = zc_ObjectString_Email_ErrorTo()
+                                AND ObjectString_ErrorTo.ValueData <> ''
+
           LEFT JOIN Object AS Object_Juridical     ON Object_Juridical.Id     = gpSelect.JuridicalId
           LEFT JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = inContactPersonId
 
@@ -81,4 +95,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 228283, inContactPersonId:= 2324911, inByDate:= CURRENT_TIMESTAMP, inByMail:= '', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3
+-- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 2367552, inContactPersonId:= 2324488, inByDate:= CURRENT_TIMESTAMP, inByMail:= 'info-fk.dp@framco.com.ua', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3

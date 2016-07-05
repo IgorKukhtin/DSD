@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat, AmountRemains TFloat, PriceIn TFloat, SumPriceIn TFloat
              , PriceUnitFrom TFloat, PriceUnitTo TFloat
              , Price TFloat, Summa TFloat, PriceWithVAT TFloat, SummaWithVAT TFloat
+             , AmountManual TFloat, AmountDiff TFloat
+             , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
              , isErased Boolean
               )
 AS
@@ -19,26 +21,29 @@ $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbUnitFromId Integer;
     DECLARE vbUnitToId Integer;
+    DECLARE vbisAuto Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
     vbUserId:= lpGetUserBySession (inSession);
 
     -- определяется подразделение
-    SELECT 
-        MovementLinkObject_From.ObjectId
-       ,MovementLinkObject_To.ObjectId
-    INTO
-        vbUnitFromId
-       ,vbUnitToId 
-    FROM 
-        Movement
-        Inner Join MovementLinkObject AS MovementLinkObject_From
+    SELECT MovementLinkObject_From.ObjectId
+         , MovementLinkObject_To.ObjectId
+         , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean
+    INTO vbUnitFromId
+       , vbUnitToId 
+       , vbisAuto
+    FROM Movement
+        INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                       ON MovementLinkObject_From.MovementId = Movement.ID
                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-        Inner Join MovementLinkObject AS MovementLinkObject_To
+        INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                       ON MovementLinkObject_To.MovementId = Movement.ID
                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+        LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                  ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                 AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
     WHERE 
         Movement.Id = inMovementId;
 
@@ -94,13 +99,18 @@ BEGIN
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData))
                         ,(MovementItem_Send.Amount
                          *tmpRemains.PriceIn))::TFloat            AS SumPriceIn
-              , Object_Price_From.Price                           AS PriceUnitFrom
-              , Object_Price_To.Price                             AS PriceUnitTo
+              , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END ::TFloat  AS PriceUnitFrom
+              , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END     ::TFloat  AS PriceUnitTo
 
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))/SUM(MIContainer_Count.Amount)),0) ::TFloat  AS Price
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)   ::TFloat  AS PriceWithVAT
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT
+
+              , COALESCE(MIFloat_AmountManual.ValueData,0)     ::TFloat     AS AmountManual
+              , (COALESCE(MIFloat_AmountManual.ValueData,0) - COALESCE(MovementItem_Send.Amount,0))::TFloat as AmountDiff
+              , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+              , Object_ReasonDifferences.ValueData      AS ReasonDifferencesName
 
               , COALESCE(MovementItem_Send.IsErased,FALSE)        AS isErased
             FROM tmpRemains
@@ -112,10 +122,28 @@ BEGIN
                 LEFT OUTER JOIN Object_Price_View AS Object_Price_To
                                                   ON Object_Price_To.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
                                                  AND Object_Price_To.UnitId = vbUnitToId
+
+               -- цена подразделений записанная при автоматическом распределении 
+               LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
+                                                 ON MIFloat_PriceFrom.MovementItemId = MovementItem_Send.ID
+                                                AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+               LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceTo
+                                                 ON MIFloat_PriceTo.MovementItemId = MovementItem_Send.ID
+                                                AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
+
                 LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
                                                       ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
                                                      AND MIContainer_Count.DescId = zc_Container_Count()
                                                      AND MIContainer_Count.isActive = True
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                            ON MIFloat_AmountManual.MovementItemId = MovementItem_Send.Id
+                                           AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                                 ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem_Send.Id
+                                                AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+                LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MILinkObject_ReasonDifferences.ObjectId
+                                  
+
                 LEFT OUTER  JOIN ContainerLinkObject AS CLI_MI 
                                                     ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
                                                    AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -145,9 +173,12 @@ BEGIN
               , MovementItem_Send.Amount
               , tmpRemains.Amount
               , tmpRemains.PriceIn
-              , Object_Price_From.Price
-              , Object_Price_To.Price
-              , MovementItem_Send.IsErased;
+              , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END
+              , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END
+              , MovementItem_Send.IsErased
+              , COALESCE(MIFloat_AmountManual.ValueData,0) 
+              , MILinkObject_ReasonDifferences.ObjectId 
+              , Object_ReasonDifferences.ValueData ;
     ELSE
         -- Результат другой
         RETURN QUERY
@@ -195,13 +226,18 @@ BEGIN
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData))
                         ,(MovementItem_Send.Amount
                          *tmpRemains.PriceIn))::TFloat         AS SumPriceIn
-           , Object_Price_From.Price                           AS PriceUnitFrom
-           , Object_Price_To.Price                             AS PriceUnitTo
+           , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END ::TFloat  AS PriceUnitFrom
+           , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END     ::TFloat  AS PriceUnitTo
 
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))/SUM(MIContainer_Count.Amount)),0) ::TFloat  AS Price
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)   ::TFloat  AS PriceWithVAT
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT
+
+           , COALESCE(MIFloat_AmountManual.ValueData,0)     ::TFloat     AS AmountManual
+           , (COALESCE(MIFloat_AmountManual.ValueData,0) - COALESCE(MovementItem_Send.Amount,0))::TFloat as AmountDiff
+           , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+           , Object_ReasonDifferences.ValueData      AS ReasonDifferencesName
 
            , MovementItem_Send.IsErased                        AS isErased
        FROM MovementItem_Send
@@ -213,10 +249,27 @@ BEGIN
             LEFT OUTER JOIN Object_Price_View AS Object_Price_To
                                               ON Object_Price_To.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
                                              AND Object_Price_To.UnitId = vbUnitToId
+
+            -- цена подразделений записанная при автоматическом распределении 
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
+                                              ON MIFloat_PriceFrom.MovementItemId = MovementItem_Send.ID
+                                             AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceTo
+                                              ON MIFloat_PriceTo.MovementItemId = MovementItem_Send.ID
+                                             AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                        ON MIFloat_AmountManual.MovementItemId = MovementItem_Send.Id
+                                       AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                             ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem_Send.Id
+                                            AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+            LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MILinkObject_ReasonDifferences.ObjectId
+
             LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
                                                   ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
                                                  AND MIContainer_Count.DescId = zc_Container_Count()
                                                  AND MIContainer_Count.isActive = True
+
             LEFT OUTER  JOIN ContainerLinkObject AS CLI_MI 
                                                  ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
                                                 AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -244,9 +297,12 @@ BEGIN
            , MovementItem_Send.Amount
            , tmpRemains.Amount
            , tmpRemains.PriceIn
-           , Object_Price_From.Price
-           , Object_Price_To.Price
-           , MovementItem_Send.IsErased;
+           , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END 
+           , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END     
+           , MovementItem_Send.IsErased
+           , COALESCE(MIFloat_AmountManual.ValueData,0)
+           , MILinkObject_ReasonDifferences.ObjectId 
+           , Object_ReasonDifferences.ValueData       ;
 
      END IF;
 
@@ -259,6 +315,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.06.16         *
  10.05.16         *
  15.10.14         * add Price, Storage_Partion
  04.08.14                                        * add Object_InfoMoney_View

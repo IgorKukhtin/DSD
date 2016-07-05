@@ -42,6 +42,8 @@ type
     StartRunPlan: TcxGridDBColumn;
     clWeightTransport: TcxGridDBColumn;
     clContractCode: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    SummTotal: TcxGridDBColumn;
   private
     { Private declarations }
   public

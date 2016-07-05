@@ -4,6 +4,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   ClientWidth = 902
   ShowHint = True
   ExplicitWidth = 918
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -203,8 +204,8 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
           Style.TextColor = 6118749
         end
         object btnClearFilter: TcxButton
-          Left = 745
-          Top = 0
+          Left = 737
+          Top = -4
           Width = 153
           Height = 25
           Action = actClearFilter
@@ -432,7 +433,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
           ToParam.MultiSelectSeparator = ','
         end
         item
-          FromParam.Value = Null
+          FromParam.Value = ''
           FromParam.DataType = ftString
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null

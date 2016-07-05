@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Send(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , DocumentKindId Integer, DocumentKindName TVarChar
               )
 AS
 $BODY$
@@ -33,10 +34,12 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (0 AS TFloat)                               AS TotalCount
-             , 0                     				            AS FromId
-             , CAST ('' AS TVarChar) 				            AS FromName
-             , 0                     				            AS ToId
-             , CAST ('' AS TVarChar) 				            AS ToName
+             , 0                     		                AS FromId
+             , CAST ('' AS TVarChar) 		                AS FromName
+             , 0                     		                AS ToId
+             , CAST ('' AS TVarChar) 		                AS ToName
+             , 0                                                AS DocumentKindId
+             , CAST ('' AS TVarChar) 		                AS DocumentKindName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -54,6 +57,8 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
+           , Object_DocumentKind.Id                             AS DocumentKindId
+           , Object_DocumentKind.ValueData                      AS DocumentKindName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -72,6 +77,10 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                         ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+            LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Send();
@@ -87,6 +96,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 17.06.16         *
  22.05.14                                                        *
  07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
  09.11.13                                        * add tmpUserTransport

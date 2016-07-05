@@ -133,6 +133,9 @@ type
     cxLabel13: TcxLabel;
     edDocumentKind: TcxButtonEdit;
     GuidesDocumentKind: TdsdGuides;
+    spSelectPrintCeh: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
   private
   public
   end;

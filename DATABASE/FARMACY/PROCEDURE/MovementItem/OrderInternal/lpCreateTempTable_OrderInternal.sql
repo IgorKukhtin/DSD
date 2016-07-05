@@ -9,15 +9,15 @@ CREATE OR REPLACE FUNCTION lpCreateTempTable_OrderInternal(
     IN inGoodsId     Integer      , 
     IN inUserId      Integer        -- сессия пользователя
 )
-
 RETURNS VOID
-
 AS
 $BODY$
   DECLARE vbMainJuridicalId Integer;
+  DECLARE vbUnitId Integer;
 BEGIN
 
-     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId
+     SELECT Object_Unit_View.JuridicalId, MovementLinkObject.ObjectId
+            INTO vbMainJuridicalId, vbUnitId
          FROM Object_Unit_View 
                JOIN  MovementLinkObject ON MovementLinkObject.ObjectId = Object_Unit_View.Id 
                 AND  MovementLinkObject.MovementId = inMovementId 
@@ -43,19 +43,21 @@ BEGIN
              , SuperFinalPrice TFloat) ON COMMIT DROP;
 
 
-       WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar)),
-            JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId),
-         MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId, PriceList_GoodsLink.GoodsId  FROM MovementItem    
-                                    JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid -- Связь товара сети с общим
-                               LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
-                                      ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+      -- Сохраниели данные
+      INSERT INTO _tmpMI 
 
-                                    WHERE movementid = inMovementId  AND ((inGoodsId = 0) OR (inGoodsId = movementItem.objectid))  
-                                    )
-       INSERT INTO _tmpMI 
-
-           -- Маркетинговый контракт
-           WITH tmpOperDate AS (SELECT date_trunc ('day', Movement.OperDate) AS OperDate FROM Movement WHERE Movement.Id = inMovementId)
+           WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar))
+              , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
+              , MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId, PriceList_GoodsLink.GoodsId
+                                      FROM MovementItem    
+                                           INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.ObjectId -- Связь товара сети с общим
+                                           LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
+                                                                           ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+                                      WHERE MovementItem.MovementId = inMovementId
+                                       AND ((inGoodsId = 0) OR (inGoodsId = MovementItem.ObjectId))
+                                  )
+                -- Маркетинговый контракт
+              , tmpOperDate AS (SELECT date_trunc ('day', Movement.OperDate) AS OperDate FROM Movement WHERE Movement.Id = inMovementId)
               , GoodsPromo AS (SELECT tmp.JuridicalId
                                     , tmp.GoodsId        -- здесь товар "сети"
                                     , tmp.ChangePercent
@@ -65,6 +67,21 @@ BEGIN
               , LastPriceList_View AS (SELECT * FROM lpSelect_LastPriceList_View_onDate (inOperDate:= (SELECT tmpOperDate.OperDate FROM tmpOperDate)
                                                                                        , inUserId  := inUserId) AS tmp
                                       )
+                -- Список цены + ТОП
+              , GoodsPrice AS (SELECT MovementItemOrder.ObjectId AS GoodsId, ObjectBoolean_Top.ValueData AS isTOP
+                               FROM MovementItemOrder
+                                    INNER JOIN ObjectLink AS ObjectLink_Price_Goods
+                                                          ON ObjectLink_Price_Goods.ChildObjectId = MovementItemOrder.ObjectId
+                                                         AND ObjectLink_Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                                          ON ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                                                         AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                                         AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                    INNER JOIN ObjectBoolean AS ObjectBoolean_Top
+                                                             ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                                            AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                                            AND ObjectBoolean_Top.ValueData = TRUE
+                              )
        SELECT row_number() OVER ()
             , ddd.Id AS MovementItemId 
             , ddd.PriceListMovementItemId
@@ -98,7 +115,7 @@ BEGIN
           , min(MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id) AS MinPrice
           , CASE 
               -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-              WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= MovementItemLastPriceList_View.Price
+              WHEN COALESCE (GoodsPrice.isTOP, ObjectBoolean_Goods_TOP.ValueData) = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= MovementItemLastPriceList_View.Price
                    THEN MovementItemLastPriceList_View.Price
                        -- И учитывается % бонуса из Маркетинговый контракт
                      * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
@@ -117,8 +134,8 @@ BEGIN
           , Juridical.ValueData AS JuridicalName
           , Contract.Id AS ContractId
           , Contract.ValueData AS ContractName
-          , COALESCE(ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
-          , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) AS isTOP
+          , COALESCE (ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
+          , COALESCE (GoodsPrice.isTOP, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
     
        FROM MovementItemOrder 
             LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
@@ -160,8 +177,9 @@ BEGIN
   LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = MovementItemOrder.GoodsMainId 
   
    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                           ON ObjectBoolean_Goods_TOP.ObjectId = MovementItemOrder.ObjectId 
+                           ON ObjectBoolean_Goods_TOP.ObjectId = MovementItemOrder.ObjectId
                           AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
+   LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = MovementItemOrder.ObjectId
                           
 --   LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
 --     ON Goods.Id = MovementItemOrder.ObjectId
@@ -180,7 +198,6 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integer) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
@@ -195,7 +212,6 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
  15.07.14                                                       *
  15.07.14                                                       *
  03.07.14                                                       *
-
 */
 
 -- тест

@@ -10,8 +10,8 @@ RETURNS TABLE (Id Integer
              , InvNumber TVarChar
              , OperDate TDateTime
              , TotalSumm TFloat
-             , UnitId Integer
-             , UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , UnitForwardingId Integer, UnitForwardingName TVarChar
              , GUID TVarChar
              )
 AS
@@ -22,17 +22,40 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Reprice());
 
     RETURN QUERY
-    SELECT
-        Movement_Reprice.Id
-      , Movement_Reprice.InvNumber
-      , Movement_Reprice.OperDate
-      , Movement_Reprice.TotalSumm
-      , Movement_Reprice.UnitId
-      , Movement_Reprice.UnitName
-      , Movement_Reprice.GUID
-    FROM
-        Movement_Reprice_View AS Movement_Reprice
-    WHERE Movement_Reprice.Id =  inMovementId;
+
+    SELECT       
+        Movement.Id
+      , Movement.InvNumber
+      , Movement.OperDate
+      , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
+      , MovementLinkObject_Unit.ObjectId                      AS UnitId
+      , Object_Unit.ValueData                                 AS UnitName
+
+      , Object_UnitForwarding.Id                              AS UnitForwardingId
+      , Object_UnitForwarding.ValueData                       AS UnitForwardingName
+
+      , MovementString_GUID.ValueData                         AS GUID
+
+    FROM Movement 
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                     ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                    AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+        LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
+
+        LEFT OUTER JOIN MovementString AS MovementString_GUID
+                                       ON MovementString_GUID.MovementId = Movement.Id
+                                      AND MovementString_GUID.DescId = zc_MovementString_Comment()
+   
+    WHERE Movement.Id = inMovementId
+      AND Movement.DescId = zc_Movement_Reprice();
 
 END;
 $BODY$
@@ -43,5 +66,6 @@ ALTER FUNCTION gpGet_Movement_Reprice (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 21.06.16         *
  27.11.15                                                                        *
 */

@@ -140,6 +140,22 @@ BEGIN
              INNER JOIN Object ON Object.Id = GoodsList_all.ObjectId
                               AND Object.DescId = zc_Object_Juridical()
        )
+    -- Список цены + ТОП
+  , GoodsPrice AS
+       (SELECT GoodsList.GoodsId, ObjectBoolean_Top.ValueData AS isTOP
+        FROM GoodsList
+             INNER JOIN ObjectLink AS ObjectLink_Price_Goods
+                                   ON ObjectLink_Price_Goods.ChildObjectId = GoodsList.GoodsId
+                                  AND ObjectLink_Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+             INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                   ON ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                                  AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                  AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+             INNER JOIN ObjectBoolean AS ObjectBoolean_Top
+                                      ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                     AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                     AND ObjectBoolean_Top.ValueData = TRUE
+       )
     -- Список Последних цен (поставщика) !!!по документам!!! (т.е. последний документ а не последняя найденная цена)
   , Movement_PriceList AS
        /*(-- выбираются с "нужным" договором из JuridicalSettings
@@ -251,7 +267,7 @@ BEGIN
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
           , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-                 WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE OR COALESCE (MI_PriceList.PriceLimit, 0) <= MI_PriceList.Price
+                 WHEN COALESCE (GoodsPrice.isTOP, ObjectBoolean_Goods_TOP.ValueData) = TRUE OR COALESCE (MI_PriceList.PriceLimit, 0) <= MI_PriceList.Price
                     THEN MI_PriceList.Price
                          -- И учитывается % бонуса из Маркетинговый контракт
                        * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
@@ -269,7 +285,7 @@ BEGIN
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
-          , COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)      AS isTOP
+          , COALESCE (GoodsPrice.isTOP, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
         
         FROM -- Последние цены (поставщика) по "нужным" товарам из GoodsList
              MI_PriceList
@@ -291,6 +307,7 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
                                     ON ObjectBoolean_Goods_TOP.ObjectId = Object_Goods.Id
                                    AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+            LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods.Id
             -- Поставщик
             INNER JOIN Object AS Juridical ON Juridical.Id = MI_PriceList.JuridicalId -- ???тоже самое что и ObjectId???
 

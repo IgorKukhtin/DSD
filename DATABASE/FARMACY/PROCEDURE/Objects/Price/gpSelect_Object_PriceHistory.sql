@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriodEnd TFloat, MCSDayEnd TFloat, StartDateEnd TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
+             , Goods_isTop Boolean, Goods_PercentMarkup TFloat
              , DateChange TDateTime, MCSDateChange TDateTime
              , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
@@ -25,7 +26,8 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , PriceEnd TFloat, MCSValueEnd TFloat
              , RemainsEnd TFloat, SummaRemainsEnd TFloat
              , RemainsNotMCSEnd TFloat, SummaNotMCSEnd TFloat
-
+             , isTop boolean, TOPDateChange TDateTime
+             , PercentMarkup TFloat, PercentMarkupDateChange TDateTime
              , isErased boolean
              ) AS
 $BODY$
@@ -63,6 +65,8 @@ BEGIN
                ,NULL::TVarChar                   AS GoodsName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
+               ,NULL::Boolean                    AS Goods_isTop
+               ,NULL::TFloat                     AS Goods_PercentMarkup
                ,NULL::TDateTime                  AS DateChange
                ,NULL::TDateTime                  AS MCSDateChange
                ,NULL::Boolean                    AS MCSIsClose
@@ -85,6 +89,12 @@ BEGIN
                , NULL::TFloat AS RemainsNotMCSEnd
                , NULL::TFloat AS SummaNotMCSEnd
                               
+               ,NULL::Boolean                    AS isTop 
+               ,NULL::TDateTime                  AS TOPDateChange
+
+               ,NULL::TFloat                     AS PercentMarkup 
+               ,NULL::TDateTime                  AS PercentMarkupDateChange
+
                ,NULL::Boolean                    AS isErased
             WHERE 1=0;
     ELSEIF inisShowAll = True
@@ -125,6 +135,8 @@ BEGIN
                , Object_Goods_View.GoodsName                     AS GoodsName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
+               , Object_Goods_View.isTop                         AS Goods_isTop
+               , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
                , Object_Price_View.DateChange                    AS DateChange
                , Object_Price_View.MCSDateChange                 AS MCSDateChange
                , COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
@@ -149,6 +161,12 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) THEN COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) ELSE 0 END :: TFloat AS RemainsNotMCSEnd
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) THEN (COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0)) * COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0) ELSE 0 END :: TFloat AS SummaNotMCSEnd
                
+               , Object_Price_View.isTop                AS isTop
+               , Object_Price_View.TopDateChange        AS TopDateChange
+
+               , Object_Price_View.PercentMarkup           AS PercentMarkup
+               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
+
                , Object_Goods_View.isErased                      AS isErased 
                
             FROM Object_Goods_View
@@ -253,6 +271,8 @@ BEGIN
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
+               , Object_Goods_View.isTop                   AS Goods_isTop
+               , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
                , Object_Price_View.DateChange              AS DateChange
                , Object_Price_View.MCSDateChange           AS MCSDateChange
                , Object_Price_View.MCSIsClose              AS MCSIsClose
@@ -277,6 +297,12 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) THEN COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) ELSE 0 END :: TFloat AS RemainsNotMCSEnd
                , CASE WHEN COALESCE (Object_Remains.RemainsEnd, 0) > COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0) THEN (COALESCE (Object_Remains.RemainsEnd, 0) - COALESCE (ObjectHistoryFloat_MCSValueEnd.ValueData, 0)) * COALESCE (ObjectHistoryFloat_PriceEnd.ValueData, 0) ELSE 0 END :: TFloat AS SummaNotMCSEnd
                               
+               , Object_Price_View.isTop                   AS isTop
+               , Object_Price_View.TopDateChange           AS TopDateChange
+
+               , Object_Price_View.PercentMarkup           AS PercentMarkup
+               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
+
                , Object_Goods_View.isErased                AS isErased 
                
             FROM Object_Price_View
@@ -344,6 +370,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 04.07.16         *
+ 30.06.16         *
  13.03.16         *
 */
 

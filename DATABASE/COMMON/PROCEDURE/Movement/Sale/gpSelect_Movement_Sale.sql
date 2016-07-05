@@ -49,6 +49,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementPromo TVarChar
              , InsertDate TDateTime
              , Comment TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
               )
 AS
 $BODY$
@@ -208,6 +209,9 @@ BEGIN
 
            , MovementDate_Insert.ValueData AS InsertDate
            , MovementString_Comment.ValueData       AS Comment
+
+           , Object_ReestrKind.Id             		    AS ReestrKindId
+           , Object_ReestrKind.ValueData       		    AS ReestrKindName
 
        FROM (SELECT Movement.Id
                   , tmpRoleAccessKey.AccessKeyId
@@ -394,6 +398,11 @@ BEGIN
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement_Transport.Id

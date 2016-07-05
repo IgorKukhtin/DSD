@@ -65,12 +65,15 @@ BEGIN
 
            , CASE WHEN tmpMI.PartionGoods <> ''
                        THEN tmpMI.PartionGoods
-                  ELSE ('кол.=<' || zfConvert_FloatToString (COALESCE (MovementItem.Amount, 0)) || '>'
+                  WHEN MI_Partion.Id > 0
+                       THEN 
+                       ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
                      || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
                      || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
-                     || ' партия=<' || DATE (Movement.OperDate) || '>'
-                     || ' № <' || Movement.InvNumber || '>'
+                     || ' партия=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
+                     || ' № <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
                        )
+                  ELSE tmpMI.MovementItemId_Partion :: TVarChar
              END :: TVarChar AS PartionGoods
            , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
 
@@ -191,15 +194,15 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-                                 LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId_Partion
-                                 LEFT JOIN Movement ON Movement.Id       = MovementItem.MovementId
-                                                   AND Movement.DescId   = zc_Movement_ProductionUnion()
+                                 LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = tmpMI.MovementItemId_Partion
+                                 LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
+                                                                       AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
                                  LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
-                                                                  ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                  ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
                                                                  AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                                  LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
                                  LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                             ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
+                                                             ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
                                                             AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
        ORDER BY tmpMI.MovementItemId DESC
      ;

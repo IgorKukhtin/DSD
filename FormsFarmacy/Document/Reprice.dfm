@@ -1,15 +1,18 @@
 inherited RepriceForm: TRepriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1086#1094#1077#1085#1082#1072'>'
-  ClientWidth = 1155
-  ExplicitWidth = 1171
+  ClientWidth = 1040
+  ExplicitWidth = 1056
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1155
-    ClientRectRight = 1155
+    Width = 1040
+    ExplicitWidth = 1040
+    ClientRectRight = 1040
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 1040
       inherited cxGrid: TcxGrid
-        Width = 1155
+        Width = 1040
+        ExplicitWidth = 1040
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -160,8 +163,9 @@ inherited RepriceForm: TRepriceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1155
+    Width = 1040
     TabOrder = 3
+    ExplicitWidth = 1040
     inherited edOperDate: TcxDateEdit
       Properties.ReadOnly = True
     end
@@ -191,18 +195,36 @@ inherited RepriceForm: TRepriceForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel3: TcxLabel
-      Left = 674
+      Left = 668
       Top = 5
       Caption = #1057#1091#1084#1084#1072
     end
     object edTotalSumm: TcxTextEdit
-      Left = 674
+      Left = 668
       Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 90
     end
+  end
+  object cxLabel4: TcxLabel [2]
+    Left = 770
+    Top = 5
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1088#1072#1074#1077#1085#1089#1090#1074#1072' '#1094#1077#1085')'
+  end
+  object edUnitForwarding: TcxButtonEdit [3]
+    Left = 770
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 270
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased
@@ -260,14 +282,17 @@ inherited RepriceForm: TRepriceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = False
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = False
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager
@@ -310,6 +335,7 @@ inherited RepriceForm: TRepriceForm
         Param.Value = Null
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
   end
@@ -322,28 +348,33 @@ inherited RepriceForm: TRepriceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = ''
         Component = edTotalSumm
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
@@ -351,6 +382,7 @@ inherited RepriceForm: TRepriceForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -358,16 +390,35 @@ inherited RepriceForm: TRepriceForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitForwardingId'
+        Value = ''
+        Component = UnitForwardingGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitForwardingName'
+        Value = Null
+        Component = UnitForwardingGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
   end
   inherited HeaderSaver: THeaderSaver
     StoredProc = nil
+    Left = 584
+    Top = 177
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -377,6 +428,7 @@ inherited RepriceForm: TRepriceForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -385,8 +437,38 @@ inherited RepriceForm: TRepriceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 440
+    Top = 16
+  end
+  object UnitForwardingGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitForwarding
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitForwardingGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitForwardingGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 880
     Top = 16
   end
 end

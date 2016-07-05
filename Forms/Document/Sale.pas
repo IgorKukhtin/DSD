@@ -213,6 +213,9 @@ type
     actShowMessage: TShowMessageAction;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    cxLabel26: TcxLabel;
+    edReestrKind: TcxButtonEdit;
+    ReestrKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

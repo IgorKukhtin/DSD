@@ -90,6 +90,9 @@ type
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
     actPrint_SendOnPrice_diff: TdsdPrintAction;
+    spSelectPrintCeh: TdsdStoredProc;
+    actPrintCeh: TdsdPrintAction;
+    spGetMovement: TdsdStoredProc;
   private
   end;
 
@@ -125,7 +128,12 @@ procedure Print_Send (MovementId,MovementId_by: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
-  UtilPrintForm.actPrint_Send.Execute;
+
+  with UtilPrintForm.spGetMovement do Execute;
+
+  if UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_CuterWeight
+  then UtilPrintForm.actPrintCeh.Execute
+  else UtilPrintForm.actPrint_Send.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Loss (MovementId: Integer);
