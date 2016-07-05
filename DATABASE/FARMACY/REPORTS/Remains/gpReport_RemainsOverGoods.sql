@@ -60,11 +60,12 @@ BEGIN
 
     -- Таблицы
     CREATE TEMP TABLE tmpGoods_list (GoodsId Integer, UnitId Integer, PriceId Integer, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsId Integer, UnitId Integer, MCSValue TFloat
-                             , Price TFloat, StartDate TDateTime, EndDate TDateTime
+                             , Price TFloat, StartDate TDateTime, EndDate TDateTime, MinExpirationDate TDateTime
                              , RemainsStart TFloat, SummaRemainsStart TFloat
                              , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
                              , RemainsMCS_to TFloat, SummaRemainsMCS_to TFloat
@@ -76,13 +77,11 @@ BEGIN
 
 
        -- Remains
-       INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart)
-                        SELECT tmp.GoodsId
-                             , tmp.UnitId
-                             , SUM (tmp.RemainsStart) AS RemainsStart
-                        FROM (SELECT Container.Objectid      AS GoodsId
+       INSERT INTO tmpRemains_1 (GoodsId, UnitId, RemainsStart, ContainerId)
+                              SELECT Container.Objectid      AS GoodsId
                                    , Container.WhereObjectId AS UnitId
                                    , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
+                                   , Container.Id  AS ContainerId
                               FROM Container
                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                          ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
@@ -90,21 +89,45 @@ BEGIN
                                    INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = 4--vbObjectId
                                    LEFT JOIN MovementItemContainer AS MIContainer
                                                                    ON MIContainer.ContainerId = Container.Id
-                                                                  AND MIContainer.OperDate >= inStartDate
+                                                                  AND MIContainer.OperDate >= '01.04.2016'--inStartDate
 
                               WHERE Container.DescId = zc_Container_Count()
                               GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
                               HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
-                              -- LIMIT 10000
-                             ) AS tmp
-                        GROUP BY tmp.GoodsId
-                               , tmp.UnitId
-                        HAVING  SUM (tmp.RemainsStart) <> 0
-                       ;
+                              ;
+       INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, MinExpirationDate)                              
+                         SELECT tmp.GoodsId
+                              , tmp.UnitId
+                              , SUM (tmp.RemainsStart) AS RemainsStart
+                              , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                          FROM tmpRemains_1 AS tmp 
+                                  -- находим партию
+                              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                            ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId
+                                                           AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                              -- элемент прихода
+                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                      
+                              LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                          GROUP BY tmp.GoodsId, tmp.UnitId
+                          HAVING  SUM (tmp.RemainsStart) <> 0
+                          ;
 
+
+
+                      
        -- MCS
        INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
                      SELECT tmp.GoodsId
@@ -138,7 +161,7 @@ BEGIN
 
         -- Result
         INSERT INTO tmpData  (GoodsId, UnitId, MCSValue 
-                            , Price, StartDate, EndDate
+                            , Price, StartDate, EndDate, MinExpirationDate
                             , RemainsStart, SummaRemainsStart
                             , RemainsMCS_from, SummaRemainsMCS_from
                             , RemainsMCS_to, SummaRemainsMCS_to
@@ -152,6 +175,7 @@ BEGIN
                , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)  AS Price
                , COALESCE (ObjectHistory_Price.StartDate, NULL)    AS StartDate
                , COALESCE (ObjectHistory_Price.EndDate, NULL)      AS EndDate
+               , Object_Remains.MinExpirationDate
 
                , Object_Remains.RemainsStart                       AS RemainsStart
                , (Object_Remains.RemainsStart * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) AS SummaRemainsStart
@@ -312,6 +336,7 @@ BEGIN
                , Object_GoodsGroup.ValueData                  AS GoodsGroupName
                , Object_NDSKind.ValueData                     AS NDSKindName
                , Object_Measure.ValueData                     AS MeasureName
+               , tmpData.MinExpirationDate
              
      FROM tmpData
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
@@ -361,7 +386,7 @@ BEGIN
 
                , tmpDataTo.RemainsMCS_result
                , (tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
-               
+               , tmpData.MinExpirationDate
                   
      FROM tmpData
           LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
@@ -398,7 +423,7 @@ BEGIN
 
                , tmpDataTo.RemainsMCS_result
                , (tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
-               
+               , tmpData.MinExpirationDate
                   
      FROM tmpData
           LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
@@ -418,6 +443,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.07.16         *
  09.06.16         *
 */
 
