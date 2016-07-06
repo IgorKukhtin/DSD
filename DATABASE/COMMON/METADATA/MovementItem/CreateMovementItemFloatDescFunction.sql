@@ -456,6 +456,10 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PriceTo() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PriceTo', 'Цена прихода' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceTo');
 
+CREATE OR REPLACE FUNCTION zc_mifloat_mcs() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_mifloat_mcs'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_mifloat_mcs', 'НТЗ' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_mifloat_mcs');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.

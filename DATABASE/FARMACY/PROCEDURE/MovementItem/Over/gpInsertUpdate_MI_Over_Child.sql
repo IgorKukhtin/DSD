@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- Главный элемент документа
-    IN inUnitId              Integer   , -- Товары
+    IN inUnitId              Integer   , -- 
     IN inAmount              TFloat    , -- Количество
     IN inRemains	     TFloat    , -- 
     IN inPrice	             TFloat    , -- 

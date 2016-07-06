@@ -62,6 +62,7 @@ type
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadObjectUnionFormTest;
+    procedure LoadOverFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPaidTypeFormTest;
     procedure LoadPaymentFormTest;
@@ -846,6 +847,14 @@ procedure TLoadFormTest.LoadCheckVIPFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIPForm');
+end;
+
+procedure TLoadFormTest.LoadOverFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverForm');
 end;
 
 procedure TLoadFormTest.LoadPaidKindFormTest;

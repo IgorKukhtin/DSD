@@ -59,7 +59,6 @@ BEGIN
            ;
 
     RETURN NEXT Cursor1;
-   END IF;
 
     OPEN Cursor2 FOR
 

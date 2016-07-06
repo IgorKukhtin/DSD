@@ -215,10 +215,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_CostTransport() RETURNS Integer AS $BODY$
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_CostTransport', 'Затрата по путевому листу' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_CostTransport');
 
+CREATE OR REPLACE FUNCTION zc_Movement_Over() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_Over'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_Over', 'Излишки (распределение по аптекам)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Over');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 06.07.16         * zc_Movement_Over
  31.10.15                                                                        *zc_Movement_Promo
  29.10.15                                                                        *zc_Movement_Payment
  05.05.15                       * add zc_Movement_Check
