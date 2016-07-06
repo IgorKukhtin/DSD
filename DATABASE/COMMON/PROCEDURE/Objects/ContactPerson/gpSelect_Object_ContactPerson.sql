@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , EmailId Integer, EmailName TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
+             , RetailId Integer, RetailName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -91,6 +92,9 @@ BEGIN
            , (CASE WHEN tmpImportSettings.EmailId > 0 THEN '***' ELSE '' END || Object_Email.ValueData) :: TVarChar AS EmailName
            , Object_EmailKind.Id         AS EmailKindId
            , (CASE WHEN tmpImportSettings.EmailId > 0 THEN '***' ELSE '' END || Object_EmailKind.ValueData) :: TVarChar AS EmailKindName
+
+           , Object_Retail.Id                    AS RetailId
+           , Object_Retail.ValueData             AS RetailName 
            
            , Object_ContactPerson.isErased    AS isErased
            
@@ -111,6 +115,13 @@ BEGIN
                                  ON ContactPerson_ContactPerson_Object.ObjectId = Object_ContactPerson.Id
                                 AND ContactPerson_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
             LEFT JOIN Object AS ContactPerson_Object ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ContactPerson_Object.Id  --Object_Juridical.Id
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                AND ContactPerson_Object.DescId = zc_Object_Juridical()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
             
             LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                  ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
@@ -141,6 +152,7 @@ ALTER FUNCTION gpSelect_Object_ContactPerson(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.07.16         * add Object_Retail
  18.14.16         *
  31.05.14         * 
        

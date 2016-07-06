@@ -986,6 +986,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRoleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleUnionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoleUnionForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));

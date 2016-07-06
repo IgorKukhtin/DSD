@@ -307,10 +307,12 @@ object RoleUnionForm: TRoleUnionForm
       FormName = 'TRoleEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -327,6 +329,7 @@ object RoleUnionForm: TRoleUnionForm
       FormName = 'TRoleMaskEditForm'
       FormNameParam.Value = 'TRoleMaskEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -334,6 +337,7 @@ object RoleUnionForm: TRoleUnionForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -350,6 +354,7 @@ object RoleUnionForm: TRoleUnionForm
       FormName = 'TRoleEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -357,6 +362,7 @@ object RoleUnionForm: TRoleUnionForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -414,6 +420,7 @@ object RoleUnionForm: TRoleUnionForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -421,6 +428,7 @@ object RoleUnionForm: TRoleUnionForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -429,25 +437,30 @@ object RoleUnionForm: TRoleUnionForm
     object UserChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1042#1099#1073#1086#1088' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
       FormName = 'TUserForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object UserUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProcList = <
         item
         end>
@@ -455,54 +468,65 @@ object RoleUnionForm: TRoleUnionForm
     object ProcessAccessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ProcessChoiceForm'
       FormName = 'TProcessForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object ProcessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ProcessChoiceForm'
       FormName = 'TProcessForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object ActionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ActionChoiceForm'
       FormName = 'TActionForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ActionCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -510,12 +534,14 @@ object RoleUnionForm: TRoleUnionForm
           Component = ActionCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object ProcessAccessUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProcList = <
         item
         end>
@@ -524,6 +550,7 @@ object RoleUnionForm: TRoleUnionForm
     object ProcessUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProcList = <
         item
         end>
@@ -532,6 +559,7 @@ object RoleUnionForm: TRoleUnionForm
     object ActionUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateRoleAction
       StoredProcList = <
         item
@@ -553,6 +581,7 @@ object RoleUnionForm: TRoleUnionForm
         Name = 'inValue'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 56
@@ -597,6 +626,7 @@ object RoleUnionForm: TRoleUnionForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
@@ -618,6 +648,7 @@ object RoleUnionForm: TRoleUnionForm
         Name = 'inValue'
         Value = '1'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 528
@@ -662,6 +693,7 @@ object RoleUnionForm: TRoleUnionForm
         Component = ActionCDS
         ComponentItem = 'RoleActionId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRoleId'
@@ -669,6 +701,7 @@ object RoleUnionForm: TRoleUnionForm
         Component = ActionCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inActionId'
@@ -676,6 +709,7 @@ object RoleUnionForm: TRoleUnionForm
         Component = ActionCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 608
