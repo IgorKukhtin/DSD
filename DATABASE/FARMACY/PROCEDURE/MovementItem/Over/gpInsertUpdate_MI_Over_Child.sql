@@ -33,7 +33,7 @@ BEGIN
                                       , inPrice            := inPrice
                                       , inMCS              := inMCS
                                       , inMinExpirationDate:= inMinExpirationDate
-                                      , inComment          :=  inComment
+                                      , inComment          := inComment
                                       , inUserId           := vbUserId
                                       );
    

@@ -54,7 +54,9 @@ BEGIN
       SELECT MovementItem.Id
        INTO vbMovementItemId
       FROM MovementItem
-      WHERE MovementItem.MovementId = vbMovementId AND MovementItem.ObjectId = inGoodsId;
+      WHERE MovementItem.MovementId = vbMovementId 
+        AND MovementItem.DescId = zc_MI_Master()
+        AND MovementItem.ObjectId = inGoodsId;
 
        -- сохранили строку документа
        vbMovementItemId := lpInsertUpdate_MI_Over_Master    (ioId                 := COALESCE(vbMovementItemId,0) ::Integer
