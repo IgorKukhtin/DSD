@@ -62,6 +62,7 @@ type
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadObjectUnionFormTest;
+    procedure LoadOverFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPaidTypeFormTest;
     procedure LoadPaymentFormTest;
@@ -402,13 +403,13 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
   // отчет распределение остатков
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
- //exit;
+ exit;
   //Отчет Приход на точку
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeDialogForm');
@@ -848,6 +849,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIPForm');
 end;
 
+procedure TLoadFormTest.LoadOverFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverForm');
+end;
+
 procedure TLoadFormTest.LoadPaidKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
@@ -977,6 +986,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRoleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleUnionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoleUnionForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));

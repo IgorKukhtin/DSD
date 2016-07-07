@@ -265,7 +265,12 @@ type
     FarmacyCash1: TMenuItem;
     actEmail: TdsdOpenForm;
     N71: TMenuItem;
+    actOver: TdsdOpenForm;
+    N84: TMenuItem;
+    actRoleUnion: TdsdOpenForm;
+    N85: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
+
     procedure miRepriceClick(Sender: TObject);
   private
     { Private declarations }
