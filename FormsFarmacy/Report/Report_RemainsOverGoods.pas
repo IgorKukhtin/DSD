@@ -65,6 +65,13 @@ type
     actSendChild: TdsdExecStoredProc;
     bbSendChild: TdxBarButton;
     MeasureName: TcxGridDBColumn;
+    spSetErased_Over: TdsdStoredProc;
+    actSetErased_Over: TdsdExecStoredProc;
+    spOver: TdsdStoredProc;
+    macOver: TMultiAction;
+    actOver: TdsdExecStoredProc;
+    macOverAll: TMultiAction;
+    bbmacOverAll: TdxBarButton;
   private
     { Private declarations }
   public
