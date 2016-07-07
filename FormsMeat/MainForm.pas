@@ -701,8 +701,6 @@ type
     actReport_CheckAmount_ReturnInToSale: TdsdOpenForm;
     miReport_MobileKS: TMenuItem;
     actReport_MobileKS: TdsdOpenForm;
-    actDocumentKind: TdsdOpenForm;
-    N109: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

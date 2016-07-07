@@ -1,16 +1,16 @@
 inherited MainForm: TMainForm
   ClientHeight = 207
-  ClientWidth = 1398
+  ClientWidth = 1366
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1414
-  ExplicitHeight = 265
+  ExplicitWidth = 1382
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
     Left = 0
     Top = 0
-    Width = 1398
+    Width = 1366
     Height = 81
     Align = alTop
     BevelInner = bvNone
@@ -84,6 +84,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'inOperDate'
+          Value = 'NULL'
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
@@ -267,8 +268,8 @@ inherited MainForm: TMainForm
           MultiSelectSeparator = ','
         end
         item
-          DataType = ftString
           Value = '0'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -956,7 +957,7 @@ inherited MainForm: TMainForm
     object actReport_GoodsMI_SaleReturnInUnitNew: TdsdOpenForm [55]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
-      Caption = #1057#1082#1083#1072#1076' '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1076#1072#1090#1077' '#1089#1082#1083#1072#1076
+      Caption = #1057#1082#1083#1072#1076' '#1055#1088#1080#1093#1086#1076' / '#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1076#1072#1090#1077' '#1089#1082#1083#1072#1076
       FormName = 'TReport_GoodsMI_SaleReturnInUnitNewForm'
       FormNameParam.Value = 'TReport_GoodsMI_SaleReturnInUnitNewForm'
       FormNameParam.DataType = ftString
@@ -4184,7 +4185,7 @@ inherited MainForm: TMainForm
     object actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
-      Caption = #1057#1082#1083#1072#1076' '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
+      Caption = #1057#1082#1083#1072#1076' '#1055#1088#1080#1093#1086#1076' / '#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
       FormName = 'TReport_GoodsMI_SaleReturnInUnitForm'
       FormNameParam.Value = 'TReport_GoodsMI_SaleReturnInUnitForm'
       FormNameParam.DataType = ftString

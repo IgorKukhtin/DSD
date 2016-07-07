@@ -23,28 +23,52 @@ $BODY$
 
    DECLARE vbItearation Integer;
    DECLARE vbCountDiff Integer;
+
    DECLARE vb11 TFloat;
    DECLARE vb12 TFloat;
+   DECLARE vb13 TFloat;
+   DECLARE vb14 TFloat;
+
    DECLARE vb21 TFloat;
    DECLARE vb22 TFloat;
+   DECLARE vb23 TFloat;
+   DECLARE vb24 TFloat;
+
    DECLARE vb31 TFloat;
    DECLARE vb32 TFloat;
+   DECLARE vb33 TFloat;
+   DECLARE vb34 TFloat;
+
    DECLARE vb41 TFloat;
    DECLARE vb42 TFloat;
+   DECLARE vb43 TFloat;
+   DECLARE vb44 TFloat;
+
    DECLARE vb51 TFloat;
    DECLARE vb52 TFloat;
+   DECLARE vb53 TFloat;
+   DECLARE vb54 TFloat;
+
    DECLARE vb61 TFloat;
    DECLARE vb62 TFloat;
+   DECLARE vb63 TFloat;
+   DECLARE vb64 TFloat;
+
    DECLARE vb71 TFloat;
    DECLARE vb72 TFloat;
+   DECLARE vb73 TFloat;
+   DECLARE vb74 TFloat;
+
    DECLARE vb81 TFloat;
    DECLARE vb82 TFloat;
+   DECLARE vb83 TFloat;
+   DECLARE vb84 TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
 -- !!!ВРЕМЕННО!!!
--- inItearationCount:=50;
+-- inItearationCount:=700;
 -- !!!ВРЕМЕННО!!!
 
      -- !!!если не филиал, тогда начальная дата всегда 1-ое число месяца!!!
@@ -268,12 +292,12 @@ end if;
                    + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                    - CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.ParentId IS NULL AND MovementLinkObject_User.ObjectId = zc_Enum_Process_Auto_Defroster() THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcSumm
-                     -- Calc_external, т.е. ObjectExtId_Analyzer <> UnitId
-                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.ObjectExtId_Analyzer, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     -- Calc_external, т.е. AnalyzerId <> UnitId
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                    + CASE WHEN Container.DescId = zc_Container_CountSupplier() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) + COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcCount_external
-                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.ObjectExtId_Analyzer, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
-                   + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND COALESCE (MIContainer.ObjectExtId_Analyzer, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcSumm_external
                      -- ReturnIn
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS ReturnInCount
@@ -335,12 +359,12 @@ end if;
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                    + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcSumm
-                     -- Calc_external, т.е. ObjectExtId_Analyzer <> UnitId
-                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.ObjectExtId_Analyzer, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     -- Calc_external, т.е. AnalyzerId <> UnitId
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                    + CASE WHEN Container.DescId = zc_Container_CountSupplier() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) + COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcCount_external
-                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.ObjectExtId_Analyzer, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
-                   + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND COALESCE (MIContainer.ObjectExtId_Analyzer, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcSumm_external
                      -- ReturnIn
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS ReturnInCount
@@ -412,8 +436,8 @@ end if;
        ;
 
      -- Ошибка !!! Recycled !!!
-     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (976442, 976754); -- 06.2016
-     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (10705, 295520); -- 06.2016
+     --- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (976442, 976754); -- 06.2016
+     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (10705, 295520); -- 06.2016
 
 
 
@@ -553,10 +577,8 @@ end if;
      END IF;
 
 
-     -- тест 
-     -- RAISE EXCEPTION '%     %', (SELECT _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431), (SELECT _tmpMaster.CalcSumm_external FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431);
      -- тест***
-     -- SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb11, vb12 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431;
+     -- SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb11, vb12, vb13, vb14 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 252866;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -605,7 +627,7 @@ end if;
 
 
      -- тест***
-     -- SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb21, vb22 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431;
+     -- SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb21, vb22, vb23, vb24 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 252866;
 
 
      -- !!! остальные итерации без Упаковки !!!
@@ -618,7 +640,7 @@ end if;
                -- Расчет суммы всех составляющих
          FROM (SELECT _tmpChild.MasterContainerId AS ContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
-                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
+                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * CASE WHEN _tmpPrice.OperPrice_external > 12345 THEN 1.2345 ELSE _tmpPrice.OperPrice_external END ELSE 0 END) AS TFloat) AS CalcSumm_external
                FROM 
                     -- Расчет цены
                     (SELECT _tmpMaster.ContainerId
@@ -656,12 +678,12 @@ end if;
         ;
 
          -- тест***
-         -- IF vbItearation = 0 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb31, vb32 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
-         -- IF vbItearation = 1 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb41, vb42 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
-         -- IF vbItearation = 2 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb51, vb52 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
-         -- IF vbItearation = 3 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb61, vb62 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
-         -- IF vbItearation = 4 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb71, vb72 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
-         -- IF vbItearation = 5 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb81, vb82 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
+         -- IF vbItearation = 0 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb31, vb32, vb33, vb34 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 252866; END IF;
+         -- IF vbItearation = 1 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb41, vb42, vb43, vb44 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 252866; END IF;
+         -- IF vbItearation = 32 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb51, vb52, vb53, vb54 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 252866; END IF;
+         -- IF vbItearation = 43 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb61, vb62, vb63, vb64 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 252866; END IF;
+         -- IF vbItearation = 54 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb71, vb72, vb73, vb74 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 252866; END IF;
+         -- IF vbItearation = 65 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb81, vb82, vb83, vb84 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 252866; END IF;
 
          -- сколько записей с еще неправильной с/с
          SELECT Count(*) INTO vbCountDiff
@@ -702,7 +724,15 @@ end if;
 
 
      -- тест***
-     -- RAISE EXCEPTION '%   % ; %   % ; %   % ; %   % ; %   % ; %   % ; %   % ; %   % ; ', vb11, vb12, vb21, vb22, vb31, vb32, vb41, vb42, vb51, vb52, vb61, vb62, vb71, vb72, vb81, vb82;
+     /*RAISE EXCEPTION '%   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; '
+                                                                                       , vb11, vb12, vb13, vb14
+                                                                                       , vb21, vb22, vb23, vb24
+                                                                                       , vb31, vb32, vb33, vb34
+                                                                                       , vb41, vb42, vb43, vb44
+                                                                                       , vb51, vb52, vb53, vb54
+                                                                                       , vb61, vb62, vb63, vb64
+                                                                                       , vb71, vb72, vb73, vb74
+                                                                                       , vb81, vb82, vb83, vb84;*/
 
 
 

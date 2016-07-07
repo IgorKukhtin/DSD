@@ -12,6 +12,7 @@ AS
 $BODY$
   DECLARE vbMovementDescId Integer;
   DECLARE vbStatusId Integer;
+  DECLARE vbOperDate TDateTime;
 BEGIN
 /*
  -- 1.1.
@@ -208,7 +209,7 @@ end if;
 
 
      -- нашли
-     SELECT DescId, StatusId INTO vbMovementDescId, vbStatusId FROM Movement WHERE Id = inMovementId;
+     SELECT DescId, StatusId, OperDate INTO vbMovementDescId, vbStatusId, vbOperDate FROM Movement WHERE Id = inMovementId;
      -- !!!выход!!!
      IF vbStatusId <> zc_Enum_Status_Complete() THEN RETURN; END IF;
 
@@ -222,6 +223,10 @@ end if;
          RAISE EXCEPTION 'NOT FIND, inMovementId = %', inMovementId;
      END IF;
 
+
+     -- !!!выход - Инвентаризация!!!
+     IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 20 AND 23 AND EXTRACT ('MONTH' FROM vbOperDate) <> EXTRACT ('MONTH' FROM CURRENT_DATE) THEN RETURN; END IF;
+     IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 0  AND 4  AND EXTRACT ('MONTH' FROM vbOperDate) <> EXTRACT ('MONTH' FROM CURRENT_DATE) THEN RETURN; END IF;
 
      -- !!!выход - Инвентаризация!!!
      IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 15

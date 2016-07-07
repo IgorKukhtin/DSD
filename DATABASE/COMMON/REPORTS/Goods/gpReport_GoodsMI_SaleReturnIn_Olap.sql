@@ -44,7 +44,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Promo_SummCost TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat
              , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
-             , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
+             , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_Summ_10700 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
              , Sale_Amount_40200_Weight TFloat
@@ -124,6 +124,7 @@ BEGIN
                               , SUM (SoldTable.Sale_Summ_10250)   AS Sale_Summ_10250
                               , SUM (SoldTable.Sale_Summ_10300)   AS Sale_Summ_10300
                               , SUM (SoldTable.Return_Summ_10300) AS Return_Summ_10300
+                              , SUM (SoldTable.Return_Summ_10700) AS Return_Summ_10700
 
                               , SUM (SoldTable.Sale_Amount_Weight)   AS Sale_Amount_Weight
                               , SUM (SoldTable.Sale_Amount_Sh)       AS Sale_Amount_Sh
@@ -206,6 +207,7 @@ BEGIN
                              OR SUM (SoldTable.Sale_Summ_10250)   <> 0
                              OR SUM (SoldTable.Sale_Summ_10300)   <> 0
                              OR SUM (SoldTable.Return_Summ_10300) <> 0
+                             OR SUM (SoldTable.Return_Summ_10700) <> 0
 
                              OR SUM (SoldTable.Sale_Amount_Weight)   <> 0
                              OR SUM (SoldTable.Sale_Amount_Sh)       <> 0
@@ -303,6 +305,7 @@ BEGIN
 
          , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
          , tmpOperationGroup.Return_Summ_10300    :: TFloat AS Return_Summ_10300
+         , tmpOperationGroup.Return_Summ_10700    :: TFloat AS Return_Summ_10700
          , tmpOperationGroup.Return_SummCost      :: TFloat AS Return_SummCost
          , tmpOperationGroup.Return_SummCost_40200:: TFloat AS Return_SummCost_40200
 

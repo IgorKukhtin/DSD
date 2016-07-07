@@ -75,6 +75,7 @@ CREATE TABLE SoldTable
 
  , Return_Summ                 TFloat
  , Return_Summ_10300           TFloat
+ , Return_Summ_10700           TFloat
  , Return_SummCost             TFloat
  , Return_SummCost_40200       TFloat
  , Return_Amount_Weight        TFloat

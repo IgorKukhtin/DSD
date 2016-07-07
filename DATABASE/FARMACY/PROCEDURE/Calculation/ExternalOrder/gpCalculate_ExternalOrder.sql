@@ -53,20 +53,20 @@ BEGIN
          FROM  MovementItem 
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
                                                         ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-                                                       AND MILinkObject_Juridical.MovementItemId = MovementItem.id  
+                                                       AND MILinkObject_Juridical.MovementItemId = MovementItem.Id  
                                                        
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
                                                         ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                       AND MILinkObject_Contract.MovementItemId = MovementItem.id  
+                                                       AND MILinkObject_Contract.MovementItemId = MovementItem.Id  
 
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
                                                         ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                                       AND MILinkObject_Goods.MovementItemId = MovementItem.id  
+                                                       AND MILinkObject_Goods.MovementItemId = MovementItem.Id  
 
                        LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
                                                     AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
                                                     AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
-                                                    AND PriceList.MovementItemId = MovementItem.id 
+                                                    AND PriceList.MovementItemId = MovementItem.Id 
                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
@@ -112,14 +112,56 @@ BEGIN
                     inUserId := vbUserId)
     FROM(
         WITH DDD AS(
+                    /* кривой поиск
                     SELECT DISTINCT MovementItem.Id 
                     FROM MovementItem  
                         JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid
                         JOIN MovementItem AS PriceList ON Object_LinkGoods_View.GoodsMainId = PriceList.objectid
                         JOIN LastPriceList_View ON LastPriceList_View.MovementId =  PriceList.MovementId
-                    WHERE MovementItem.MovementId = inInternalOrder
-                    )
+                    WHERE MovementItem.MovementId = inInternalOrder*/
+                    SELECT DISTINCT MovementItem.Id 
+                    FROM MovementItem 
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
+                                                        ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+                                                       AND MILinkObject_Juridical.MovementItemId = MovementItem.Id  
+                                                       
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
+                                                        ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                                       AND MILinkObject_Contract.MovementItemId = MovementItem.Id  
 
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
+                                                        ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                       AND MILinkObject_Goods.MovementItemId = MovementItem.Id  
+
+                       LEFT JOIN _tmpMI AS PriceList ON COALESCE (PriceList.ContractId, 0) = COALESCE (MILinkObject_Contract.ObjectId, 0)
+                                                    AND PriceList.JuridicalId              = MILinkObject_Juridical.ObjectId
+                                                    AND PriceList.GoodsId                  = MILinkObject_Goods.ObjectId
+                                                    AND PriceList.MovementItemId           = MovementItem.Id
+                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                                             
+                       LEFT JOIN (SELECT *
+                                  FROM (SELECT *
+                                             , MIN (Id) OVER (PARTITION BY MovementItemId) AS MinId
+                                        FROM (SELECT *
+                                                   , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                              FROM _tmpMI
+                                             ) AS DDD
+                                       WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
+                                      ) AS DDD
+                                  WHERE Id = MinId
+                                 ) AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
+
+            WHERE MovementItem.MovementId = ininternalorder
+              AND MovementItem.DescId     = zc_MI_Master()
+              AND MovementItem.isErased   = FALSE
+              AND COALESCE (MIFloat_AmountManual.ValueData, (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
+              AND COALESCE (COALESCE (PriceList.Price, MinPrice.Price), 0) <> 0
+                    )
         SELECT MovementItem.*, MIFloat_AmountSecond.ValueData AS AmountSecond, MIFloat_AmountManual.ValueData AS AmountManual, MIString_Comment.ValueData as Comment
         FROM MovementItem 
             LEFT OUTER JOIN MovementItemString AS MIString_Comment

@@ -31,7 +31,7 @@ BEGIN
    SELECT mail, JuridicalName INTO vbMail, vbJuridicalName
    FROM MovementLinkObject
         LEFT JOIN Object_ContactPerson_View ON Object_ContactPerson_View.JuridicalId = MovementLinkObject.ObjectId
-                                           AND Object_ContactPerson_View.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+                                            AND Object_ContactPerson_View.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_From()
      AND MovementLinkObject.MovementId = inId;
 
