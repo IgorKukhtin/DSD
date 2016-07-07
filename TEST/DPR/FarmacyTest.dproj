@@ -1313,10 +1313,6 @@
 				<Form>Unit_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas">
-				<Form>Report_RemainsOverGoodsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoodsDialog.pas">
 				<Form>Report_RemainsOverGoodsDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1359,6 +1355,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\RoleUnion.pas">
 				<Form>RoleUnionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas">
+				<Form>Report_RemainsOverGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

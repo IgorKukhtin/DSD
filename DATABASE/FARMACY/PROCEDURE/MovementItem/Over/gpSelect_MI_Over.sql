@@ -19,6 +19,7 @@ BEGIN
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.GoodsCodeInt         AS GoodsCode
             , Object_Goods.GoodsName            AS GoodsName
+            , Object_Goods.GoodsGroupName
 
             , MovementItem.Amount               AS Amount
 

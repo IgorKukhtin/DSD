@@ -37,6 +37,11 @@ $BODY$
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
    DECLARE Cursor3 refcursor;
+
+   DECLARE vbMovementId Integer;
+   DECLARE vbMovementItemId Integer;
+   DECLARE vbMovementItemChildId Integer;
+   
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -63,6 +68,8 @@ BEGIN
     CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Invnumber TVarChar,PRIMARY KEY (GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsId Integer, Amount TFloat, PRIMARY KEY (UnitId,GoodsId)) ON COMMIT DROP;
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsId Integer, UnitId Integer, MCSValue TFloat
                              , Price TFloat, StartDate TDateTime, EndDate TDateTime, MinExpirationDate TDateTime
@@ -74,6 +81,43 @@ BEGIN
                               ) ON COMMIT DROP;
     -- Таблица - Результат
     CREATE TEMP TABLE tmpDataTo (GoodsId Integer, UnitId Integer, RemainsMCS_result TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+
+
+    -- ищем ИД документа Распределений остатков (ключ - дата, Подразделение) 
+      SELECT Movement.Id  
+      INTO vbMovementId
+      FROM Movement
+        Inner Join MovementLinkObject AS MovementLinkObject_Unit
+                                      ON MovementLinkObject_Unit.MovementId = Movement.ID
+                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                     AND MovementLinkObject_Unit.ObjectId = inUnitId
+      WHERE Movement.DescId = zc_Movement_Over() AND Movement.OperDate = inStartDate
+          AND Movement.StatusId <> zc_Enum_Status_Erased();
+
+
+      -- Ищеи cтроки мастера (ключ - ид документа, товар)
+      INSERT INTO tmpMIMaster (GoodsId, Amount, Invnumber)
+      SELECT  MovementItem.ObjectId             AS GoodsId
+            , MovementItem.Amount               AS Amount
+            , Movement.Invnumber
+      FROM MovementItem 
+           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+      WHERE MovementItem.MovementId = vbMovementId 
+        AND MovementItem.DescId = zc_MI_Master()
+        AND MovementItem.isErased = False;
+
+      -- Ищеи cтроки чайлда (ключ - ид документа, товар)
+      INSERT INTO tmpMIChild (UnitId, GoodsId, Amount)
+      SELECT  MovementItem.ObjectId             AS UnitId
+            , MI_Master.ObjectId                AS GoodsId
+            , MovementItem.Amount               AS Amount
+      FROM MovementItem 
+           LEFT JOIN MovementItem AS MI_Master ON MI_Master.Id = MovementItem.ParentId
+      WHERE MovementItem.MovementId = vbMovementId 
+        AND MovementItem.DescId = zc_MI_Child()
+        AND MovementItem.isErased = False;
+------------------------------------------------
+
 
 
        -- Remains
@@ -337,6 +381,10 @@ BEGIN
                , Object_NDSKind.ValueData                     AS NDSKindName
                , Object_Measure.ValueData                     AS MeasureName
                , tmpData.MinExpirationDate
+
+               , tmpMIMaster.Invnumber        AS Invnumber_Over
+               , COALESCE(tmpMIMaster.Amount,0)  :: TFloat   AS Amount_Over
+               , (tmpChildTo.RemainsMCS_result - COALESCE(tmpMIMaster.Amount,0)) :: TFloat AS Amount_OverDiff
              
      FROM tmpData
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
@@ -358,6 +406,7 @@ BEGIN
                 LEFT JOIN tmpChild ON tmpChild.GoodsId = tmpData.GoodsId
                 LEFT JOIN tmpChildTo ON tmpChildTo.GoodsId = tmpData.GoodsId
 
+                LEFT JOIN tmpMIMaster ON tmpMIMaster.GoodsId = tmpData.GoodsId
      WHERE tmpData.UnitId = inUnitId;
 
      RETURN NEXT Cursor1;
@@ -387,11 +436,16 @@ BEGIN
                , tmpDataTo.RemainsMCS_result
                , (tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
                , tmpData.MinExpirationDate
-                  
+
+               , COALESCE(tmpMIChild.Amount,0)  :: TFloat   AS Amount_Over
+               , (tmpDataTo.RemainsMCS_result - COALESCE(tmpMIChild.Amount,0)) :: TFloat AS Amount_OverDiff
      FROM tmpData
           LEFT JOIN Object AS Object_Unit  on Object_Unit.Id = tmpData.UnitId
           LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId AND tmpDataTo.UnitId = tmpData.UnitId
           LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId AND tmpDataFrom.UnitId = inUnitId
+
+          LEFT JOIN tmpMIChild ON tmpMIChild.GoodsId = tmpData.GoodsId
+                              AND tmpMIChild.UnitId = tmpData.UnitId
      WHERE tmpData.UnitId <> inUnitId
        -- AND tmpDataTo.RemainsMCS_result > 0
        AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
