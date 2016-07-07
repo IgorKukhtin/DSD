@@ -115,13 +115,6 @@ BEGIN
                                  ON ContactPerson_ContactPerson_Object.ObjectId = Object_ContactPerson.Id
                                 AND ContactPerson_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
             LEFT JOIN Object AS ContactPerson_Object ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                 ON ObjectLink_Juridical_Retail.ObjectId = ContactPerson_Object.Id  --Object_Juridical.Id
-                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                AND ContactPerson_Object.DescId = zc_Object_Juridical()
-            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-
             
             LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                  ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
@@ -139,6 +132,11 @@ BEGIN
                                  ON ObjectLink_Email_EmailKind.ObjectId = Object_Email.Id
                                 AND ObjectLink_Email_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
             LEFT JOIN Object AS Object_EmailKind ON Object_EmailKind.Id = ObjectLink_Email_EmailKind.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Retail
+                                 ON ObjectLink_ContactPerson_Retail.ObjectId = Object_ContactPerson.Id 
+                                AND ObjectLink_ContactPerson_Retail.DescId = zc_ObjectLink_ContactPerson_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_ContactPerson_Retail.ChildObjectId
 
      WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
        -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)

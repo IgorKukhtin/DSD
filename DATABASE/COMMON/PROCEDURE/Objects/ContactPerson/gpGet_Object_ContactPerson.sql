@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , EmailId Integer, EmailName TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
+             , RetailId Integer, RetailName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -59,6 +60,9 @@ BEGIN
            , CAST (0 as Integer)    AS EmailKindId
            , CAST ('' as TVarChar)  AS EmailKindName
 
+           , CAST (0 as Integer)    AS RetailId
+           , CAST ('' as TVarChar)  AS RetailName 
+           
            , CAST (NULL AS Boolean) AS isErased
 
        FROM Object AS Object_ContactPerson
@@ -117,7 +121,10 @@ BEGIN
            , Object_Email.ValueData      AS EmailName
            , Object_EmailKind.Id         AS EmailKindId
            , Object_EmailKind.ValueData  AS EmailKindName
-
+           
+           , Object_Retail.Id                    AS RetailId
+           , Object_Retail.ValueData             AS RetailName 
+           
            , Object_ContactPerson.isErased AS isErased
            
        FROM Object AS Object_ContactPerson
@@ -151,7 +158,12 @@ BEGIN
                                  ON ObjectLink_Email_EmailKind.ObjectId = Object_Email.Id
                                 AND ObjectLink_Email_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
             LEFT JOIN Object AS Object_EmailKind ON Object_EmailKind.Id = ObjectLink_Email_EmailKind.ChildObjectId
-                               
+
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Retail
+                                 ON ObjectLink_ContactPerson_Retail.ObjectId = Object_ContactPerson.Id 
+                                AND ObjectLink_ContactPerson_Retail.DescId = zc_ObjectLink_ContactPerson_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_ContactPerson_Retail.ChildObjectId                               
+
        WHERE Object_ContactPerson.Id = inId;
       
    END IF;
@@ -164,6 +176,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.07.16         *
  18.04.16         *
  31.05.14         *         
 */
