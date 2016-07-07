@@ -25,7 +25,7 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
     vbUserId := inSession;
 
-    IF COALESCE(inAmount, 0) <> 0 THEN
+   -- IF COALESCE(inAmount, 0) <> 0 THEN
       -- ищем ИД документа (ключ - дата, Подразделение) 
       SELECT Movement.Id  
       INTO vbMovementId
@@ -51,15 +51,15 @@ BEGIN
       
    
       -- Ищеи ИД строки (ключ - ид документа, товар)
-      SELECT MovementItem.Id
+     /* SELECT MovementItem.Id
        INTO vbMovementItemId
       FROM MovementItem
       WHERE MovementItem.MovementId = vbMovementId 
         AND MovementItem.DescId = zc_MI_Master()
         AND MovementItem.ObjectId = inGoodsId;
-
+*/
        -- сохранили строку документа
-       vbMovementItemId := lpInsertUpdate_MI_Over_Master    (ioId                 := COALESCE(vbMovementItemId,0) ::Integer
+       vbMovementItemId := lpInsertUpdate_MI_Over_Master    (ioId                 := 0 --COALESCE(vbMovementItemId,0) ::Integer
                                                            , inMovementId         := vbMovementId
                                                            , inGoodsId            := inGoodsId
                                                            , inAmount             := inAmount
@@ -71,7 +71,7 @@ BEGIN
                                                            , inUserId             := vbUserId
                                                             );
   
-   END IF;
+ --  END IF;
 
 END;
 $BODY$

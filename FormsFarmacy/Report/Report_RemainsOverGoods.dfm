@@ -1058,6 +1058,29 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       ImageIndex = 41
       QuestionBeforeExecute = #1056#1072#1085#1077#1077' '#1089#1086#1079#1076#1072#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1073#1091#1076#1077#1090' '#1091#1076#1072#1083#1077#1085'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
     end
+    object actOverChild: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spOverChild
+      StoredProcList = <
+        item
+          StoredProc = spOverChild
+        end>
+      Caption = 'actOver'
+      ImageIndex = 41
+    end
+    object macOverChild: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOverChild
+        end>
+      DataSource = DataSourceDocs
+      Hint = #1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074
+      ImageIndex = 41
+    end
     object actOver: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1079,8 +1102,13 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         end
         item
           Action = macOver
+        end
+        item
+          Action = macOverChild
         end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081'>'
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'>? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'> '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'>'
       ImageIndex = 30
     end
     object macOver: TMultiAction
@@ -1091,9 +1119,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           Action = actOver
         end>
       View = cxGridDBTableView
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081'>? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081'> '#1089#1086#1079#1076#1072#1085
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081'>'
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081'>'
       ImageIndex = 41
     end
@@ -1642,5 +1667,93 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     PackSize = 1
     Left = 816
     Top = 168
+  end
+  object spOverChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Child_Over_Auto'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitFromId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitToId'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'RemainsMCS_result'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemains'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'RemainsStart'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCS'
+        Value = 30.000000000000000000
+        Component = DataSetDocs
+        ComponentItem = 'MCSValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinExpirationDate'
+        Value = 12.000000000000000000
+        Component = DataSetDocs
+        ComponentItem = 'MinExpirationDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 800
+    Top = 216
   end
 end

@@ -53,6 +53,16 @@ inherited OverForm: TOverForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colMCS
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,6 +112,16 @@ inherited OverForm: TOverForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colMCS
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -121,7 +141,9 @@ inherited OverForm: TOverForm
           object colGoodsGroupName: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
             DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 163
           end
@@ -144,9 +166,9 @@ inherited OverForm: TOverForm
           object colAmount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCalcEditProperties'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.Precision = 4
             HeaderAlignmentHorz = taCenter
             Options.IncSearch = False
             Width = 97
@@ -154,6 +176,9 @@ inherited OverForm: TOverForm
           object colRemains: TcxGridDBColumn [4]
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086' '#1076#1085#1103
             Options.Editing = False
@@ -162,6 +187,9 @@ inherited OverForm: TOverForm
           object colMCS: TcxGridDBColumn [5]
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -170,6 +198,9 @@ inherited OverForm: TOverForm
           object coPrice: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -238,6 +269,21 @@ inherited OverForm: TOverForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chMCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chRemains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -270,6 +316,21 @@ inherited OverForm: TOverForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chMCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chRemains
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -299,7 +360,8 @@ inherited OverForm: TOverForm
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####; ; '
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -308,6 +370,9 @@ inherited OverForm: TOverForm
           object chPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -317,7 +382,8 @@ inherited OverForm: TOverForm
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####; ; '
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -327,7 +393,8 @@ inherited OverForm: TOverForm
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.#### ; ; '
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 81

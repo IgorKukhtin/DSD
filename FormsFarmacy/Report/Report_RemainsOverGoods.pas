@@ -72,6 +72,9 @@ type
     actOver: TdsdExecStoredProc;
     macOverAll: TMultiAction;
     bbmacOverAll: TdxBarButton;
+    spOverChild: TdsdStoredProc;
+    actOverChild: TdsdExecStoredProc;
+    macOverChild: TMultiAction;
   private
     { Private declarations }
   public

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_Child_Over_Auto()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Child_Over_Auto (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Child_Over_Auto (Integer, Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Child_Over_Auto(
     IN inUnitFromId          Integer   , -- от кого
@@ -41,7 +41,7 @@ BEGIN
           AND Movement.StatusId <> zc_Enum_Status_Erased();
     
       IF COALESCE (vbMovementId,0) = 0 THEN
-       -- ошибка док не создан
+          RAISE EXCEPTION 'Ошибка.Документ не определен.';
       END IF;
       
       -- Ищеи ИД строки (ключ - ид документа, товар)
@@ -52,33 +52,37 @@ BEGIN
         AND MovementItem.DescId = zc_MI_Master()
         AND MovementItem.ObjectId = inGoodsId;
 
-      IF COALESCE (vbMovementItemId,0) = 0 THEN
-       -- ошибка строка не найдена
+
+
+   --   IF COALESCE (vbMovementItemId,0) = 0 THEN
+   --       RAISE EXCEPTION 'Ошибка.Строка мастера не определена.';
+   --   END IF;
+
+     IF COALESCE (vbMovementItemId,0) <> 0 THEN
+       -- Ищем строку Чайлд
+    /*   SELECT MovementItem.Id
+        INTO vbMovementItemChildId
+       FROM MovementItem
+       WHERE MovementItem.MovementId = vbMovementId 
+         AND MovementItem.DescId = zc_MI_Child()
+         AND MovementItem.ParentId = vbMovementItemId
+         AND MovementItem.ObjectId = inUnitToId;
+    */
+        -- сохранили строку документа
+        vbMovementItemId := lpInsertUpdate_MI_Over_Child(ioId               := 0 --COALESCE(vbMovementItemChildId,0) ::Integer
+                                                       , inMovementId       := vbMovementId
+                                                       , inParentId         := vbMovementItemId                                
+                                                       , inUnitId           := inUnitToId
+                                                       , inAmount           := inAmount
+                                                       , inRemains          := inRemains
+                                                       , inPrice            := inPrice
+                                                       , inMCS              := inMCS
+                                                       , inMinExpirationDate:= inMinExpirationDate
+                                                       , inComment          := Null :: TVarChar
+                                                       , inUserId           := vbUserId
+                                                       );
+      
       END IF;
-
-      -- Ищем строку Чайлд
-     SELECT MovementItem.Id
-       INTO vbMovementItemChildId
-      FROM MovementItem
-      WHERE MovementItem.MovementId = vbMovementId 
-        AND MovementItem.DescId = zc_MI_Child()
-        AND MovementItem.ParentId = vbMovementItemId
-        AND MovementItem.ObjectId = inUnitToId;
-
-
-       -- сохранили строку документа
-       vbMovementItemId := lpInsertUpdate_MI_Over_Child(ioId               := COALESCE(vbMovementItemChildId,0) ::Integer
-                                                      , inMovementId       := vbMovementId
-                                                      , inParentId         := vbMovementItemId                                
-                                                      , inUnitId           := inUnitToId
-                                                      , inAmount           := inAmount
-                                                      , inRemains          := inRemains
-                                                      , inPrice            := inPrice
-                                                      , inMCS              := inMCS
-                                                      , inMinExpirationDate:= inMinExpirationDate
-                                                      , inComment          := Null :: TVarChar
-                                                      , inUserId           := vbUserId
-                                                      );
   
    END IF;
 
