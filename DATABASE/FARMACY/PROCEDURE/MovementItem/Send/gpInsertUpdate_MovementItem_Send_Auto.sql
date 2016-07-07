@@ -58,6 +58,7 @@ BEGIN
                                                    , inFromId           := inFromId
                                                    , inToId             := inToId
                                                    , inComment          := '' :: TVarChar
+                                                   , inChecked          := FALSE
                                                    , inUserId           := vbUserId
                                                    );
     
