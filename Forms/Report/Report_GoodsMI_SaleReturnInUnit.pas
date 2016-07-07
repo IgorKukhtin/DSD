@@ -113,6 +113,7 @@ type
     bbExecuteDialog: TdxBarButton;
     GoodsPlatformName: TcxGridDBColumn;
     Sale_Summ_10250: TcxGridDBColumn;
+    Return_Summ_10700: TcxGridDBColumn;
   private
     { Private declarations }
   public

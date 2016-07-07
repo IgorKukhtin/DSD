@@ -38,7 +38,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Promo_Summ TFloat, Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
              , Promo_SummCost TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat, Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
-             , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
+             , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_Summ_10700 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
              , Sale_Amount_40200_Weight TFloat
@@ -287,7 +287,7 @@ BEGIN
                                                                       AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
                                WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                               ) AS tmpListContainer
-                              JOIN MovementItem Report AS MIReport ON MIReport.ReportContainerId = tmpListContainer.ReportContainerId
+                              JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpListContainer.ReportContainerId
                                                                  AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
 
                               JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
@@ -393,6 +393,7 @@ BEGIN
 
          , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
          , 0                                      :: TFloat AS Return_Summ_10300
+         , 0                                      :: TFloat AS Return_Summ_10700
          , tmpOperationGroup.Return_SummCost      :: TFloat AS Return_SummCost
          , tmpOperationGroup.Return_SummCost_40200:: TFloat AS Return_SummCost_40200
 

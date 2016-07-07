@@ -253,7 +253,7 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        -- AND inIsBefoHistoryCost = TRUE -- !!!***
-       AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
+       --***** AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
 
     UNION
      -- 3. !!!Inventory!!!

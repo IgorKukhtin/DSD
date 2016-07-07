@@ -38,7 +38,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
              , Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
-             , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
+             , Return_Summ TFloat, Return_Summ_10200 TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
              , Sale_Amount_40200_Weight TFloat
@@ -469,6 +469,7 @@ BEGIN
 
 
                                  , SUM (CASE WHEN isSale = FALSE THEN SummOut_branch ELSE 0 END) AS Return_Summ
+                                 , 0                                                             AS Return_Summ_10200
                                  , 0                                                             AS Return_Summ_10300
 
                                  , SUM (CASE WHEN isSale = FALSE THEN SummOut_zavod ELSE 0 END) AS Return_SummCost
@@ -517,6 +518,7 @@ BEGIN
                                      , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendCount_40200() THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount_40200 -- !!! Не меняется знак, т.к. надо показать +/-!!!
 
                                      , 0 AS Return_Summ
+                                     , 0 AS Return_Summ_10200
                                      , 0 AS Return_Summ_10300
 
                                      , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ() THEN MIContainer.Amount ELSE 0 END) AS Return_SummCost
@@ -575,6 +577,10 @@ BEGIN
                                                  THEN COALESCE (MIFloat_Summ.ValueData, 0)
                                                  ELSE 0
                                             END) AS Return_Summ
+                                     , SUM (CASE WHEN tmp_Unit_To.UnitId > 0
+                                                 THEN COALESCE (MIFloat_Summ.ValueData, 0) - COALESCE (MIFloat_SummPriceList.ValueData, 0)
+                                                 ELSE 0
+                                            END) AS Return_Summ_10200
                                      , 0 AS Return_Summ_10300
 
                                      , 0 AS Return_SummCost
@@ -655,6 +661,7 @@ BEGIN
                                      , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Sale_AmountPartner ELSE 0 END) AS Sale_AmountPartner_Sh
 
                                      , tmp_Send.Return_Summ
+                                     , tmp_Send.Return_Summ_10200
                                      , tmp_Send.Return_Summ_10300
 
                                      , tmp_Send.Return_SummCost
@@ -689,6 +696,7 @@ BEGIN
                                            , SUM (tmpMISendOnPrice.Sale_Amount_40200)  AS Sale_Amount_40200
 
                                            , SUM (tmpMISendOnPrice.Return_Summ) AS Return_Summ
+                                           , SUM (tmpMISendOnPrice.Return_Summ_10200) AS Return_Summ_10200
                                            , SUM (tmpMISendOnPrice.Return_Summ_10300) AS Return_Summ_10300
 
                                            , SUM (tmpMISendOnPrice.Return_SummCost) AS Return_SummCost
@@ -954,6 +962,7 @@ BEGIN
          , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
 
          , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
+         , tmpOperationGroup.Return_Summ_10200    :: TFloat AS Return_Summ_10200
          , tmpOperationGroup.Return_Summ_10300    :: TFloat AS Return_Summ_10300
          , tmpOperationGroup.Return_SummCost      :: TFloat AS Return_SummCost
          , tmpOperationGroup.Return_SummCost_40200:: TFloat AS Return_SummCost_40200
@@ -1125,6 +1134,7 @@ BEGIN
          , tmpSendOnPrice_group.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
 
          , tmpSendOnPrice_group.Return_Summ          :: TFloat AS Return_Summ
+         , tmpSendOnPrice_group.Return_Summ_10200    :: TFloat AS Return_Summ_10200
          , tmpSendOnPrice_group.Return_Summ_10300    :: TFloat AS Return_Summ_10300
          , tmpSendOnPrice_group.Return_SummCost      :: TFloat AS Return_SummCost
          , tmpSendOnPrice_group.Return_SummCost_40200:: TFloat AS Return_SummCost_40200

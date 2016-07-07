@@ -30,7 +30,7 @@ BEGIN
                        , Actions_Weight, Actions_Sh, Actions_SummCost, Actions_Summ
                        , Sale_Summ, Sale_Summ_10200, Sale_Summ_10250, Sale_Summ_10300, Sale_SummCost, Sale_SummCost_10500, Sale_SummCost_40200
                        , Sale_Amount_Weight, Sale_Amount_Sh, Sale_AmountPartner_Weight, Sale_AmountPartner_Sh, Sale_Amount_10500_Weight, Sale_Amount_40200_Weight
-                       , Return_Summ, Return_Summ_10300, Return_SummCost, Return_SummCost_40200
+                       , Return_Summ, Return_Summ_10300, Return_Summ_10700, Return_SummCost, Return_SummCost_40200
                        , Return_Amount_Weight, Return_Amount_Sh, Return_AmountPartner_Weight, Return_AmountPartner_Sh, Return_Amount_40200_Weight
                        , SaleReturn_Summ, SaleReturn_Summ_10300, SaleReturn_SummCost, SaleReturn_SummCost_40200, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
                        , BonusBasis, Bonus, Plan_Weight, Plan_Summ
@@ -59,6 +59,7 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10250() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ_10250
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ_10300
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount ELSE 0 END) AS Return_Summ_10300
+                              , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10700() THEN 1 * MIContainer.Amount ELSE 0 END) AS Return_Summ_10700
 
                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
                               , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_Amount
@@ -216,6 +217,7 @@ BEGIN
                  , (tmpOperation_SaleReturn.Sale_Summ_10250)   AS Sale_Summ_10250
                  , (tmpOperation_SaleReturn.Sale_Summ_10300)   AS Sale_Summ_10300
                  , (tmpOperation_SaleReturn.Return_Summ_10300) AS Return_Summ_10300
+                 , (tmpOperation_SaleReturn.Return_Summ_10700) AS Return_Summ_10700
 
                  , (tmpOperation_SaleReturn.Sale_Amount)    AS Sale_Amount
                  , (tmpOperation_SaleReturn.Return_Amount)  AS Return_Amount
@@ -268,6 +270,7 @@ BEGIN
                  , 0 AS Sale_Summ_10250
                  , 0 AS Sale_Summ_10300
                  , 0 AS Return_Summ_10300
+                 , 0 AS Return_Summ_10700
 
                  , 0 AS Sale_Amount
                  , 0 AS Return_Amount
@@ -313,6 +316,7 @@ BEGIN
                  , SUM (tmpOperation_all.Sale_Summ_10250)   AS Sale_Summ_10250
                  , SUM (tmpOperation_all.Sale_Summ_10300)   AS Sale_Summ_10300
                  , SUM (tmpOperation_all.Return_Summ_10300) AS Return_Summ_10300
+                 , SUM (tmpOperation_all.Return_Summ_10700) AS Return_Summ_10700
 
                  , SUM (tmpOperation_all.Sale_Amount)   AS Sale_Amount
                  , SUM (tmpOperation_all.Return_Amount) AS Return_Amount
@@ -415,6 +419,7 @@ BEGIN
 
            , tmpResult.Return_Summ
            , tmpResult.Return_Summ_10300
+           , tmpResult.Return_Summ_10700
            , tmpResult.Return_SummCost
            , tmpResult.Return_SummCost_40200
 
@@ -457,6 +462,7 @@ BEGIN
                  , SUM (tmpOperation.Sale_Summ_10250)   AS Sale_Summ_10250
                  , SUM (tmpOperation.Sale_Summ_10300)   AS Sale_Summ_10300
                  , SUM (tmpOperation.Return_Summ_10300) AS Return_Summ_10300
+                 , SUM (tmpOperation.Return_Summ_10700) AS Return_Summ_10700
 
                  , SUM (tmpOperation.Sale_Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_Weight
                  , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpOperation.Sale_Amount ELSE 0 END) AS Sale_Amount_Sh
@@ -593,7 +599,7 @@ BEGIN
            , 0 AS Actions_Weight, 0 AS Actions_Sh, 0 AS Actions_SummCost, 0 AS Actions_Summ
            , 0 AS Sale_Summ, 0 AS Sale_Summ_10200, 0 AS Sale_Summ_10250, 0 AS Sale_Summ_10300, 0 AS Sale_SummCost, 0 AS Sale_SummCost_10500, 0 AS Sale_SummCost_40200
            , 0 AS Sale_Amount_Weight, 0 AS Sale_Amount_Sh, 0 AS Sale_AmountPartner_Weight, 0 AS Sale_AmountPartner_Sh, 0 AS Sale_Amount_10500_Weight, 0 AS Sale_Amount_40200_Weight
-           , 0 AS Return_Summ, 0 AS Return_Summ_10300, 0 AS Return_SummCost, 0 AS Return_SummCost_40200
+           , 0 AS Return_Summ, 0 AS Return_Summ_10300, 0 AS Return_Summ_10700, 0 AS Return_SummCost, 0 AS Return_SummCost_40200
            , 0 AS Return_Amount_Weight, 0 AS Return_Amount_Sh, 0 AS Return_AmountPartner_Weight, 0 AS Return_AmountPartner_Sh, 0 AS Return_Amount_40200_Weight
            , 0 AS SaleReturn_Summ, 0 AS SaleReturn_Summ_10300, 0 AS SaleReturn_SummCost, 0 AS SaleReturn_SummCost_40200, 0 AS SaleReturn_Amount_Weight, 0 AS SaleReturn_Amount_Sh
            , 0 AS BonusBasis, 0 AS Bonus

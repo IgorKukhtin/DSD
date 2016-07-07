@@ -163,7 +163,7 @@ BEGIN
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
             CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
-            --SelectMinPrice_AllGoods.isTop, 
+            SelectMinPrice_AllGoods.isTop AS isTop_calc, 
             Object_Price.IsTop    AS IsTop,
             Object_Goods.IsTop    AS IsTop_Goods,
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
@@ -253,7 +253,7 @@ BEGIN
         ResultSet.IsTop,
         ResultSet.IsTop_Goods,
         ResultSet.IsPromo,
-        CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE OR ResultSet.IsTop = TRUE OR ResultSet.isPriceFix = TRUE)
+        CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE OR ResultSet.isTop_calc = TRUE OR ResultSet.isPriceFix = TRUE)
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE

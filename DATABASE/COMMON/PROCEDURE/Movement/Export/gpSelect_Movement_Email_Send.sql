@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_Email_Send(integer, tvarchar)
+ -- Function: gpSelect_Movement_Email_Send(integer, tvarchar)
 
 -- DROP FUNCTION gpSelect_Movement_Email_Send(integer, tvarchar);
 

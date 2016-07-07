@@ -38,7 +38,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
              , Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
-             , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
+             , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_Summ_10700 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
              , Sale_Amount_40200_Weight TFloat
@@ -142,6 +142,7 @@ BEGIN
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                       END * 1.2
                                      ) AS Amount_Summ
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_SummPriceList.ValueData, 0) ELSE 0 END) AS Sale_Summ_10100
 
                                , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END) AS Amount_CountRet
                                , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END
@@ -150,6 +151,8 @@ BEGIN
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                       END * 1.2
                                      ) AS Amount_SummRet
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_SummPriceList.ValueData, 0) ELSE 0 END) AS Return_Summ_10700
+
 
                           FROM Movement
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -179,6 +182,11 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummPriceList
+                                                           ON MIFloat_SummPriceList.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummPriceList.DescId = zc_MIFloat_SummPriceList()
+
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -225,7 +233,7 @@ BEGIN
              , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName, tmp.InfoMoneyCode, tmp.InfoMoneyName, tmp.InfoMoneyName_all
              , tmp.Sale_Summ, tmp.Sale_Summ_10200, tmp.Sale_Summ_10250, tmp.Sale_Summ_10300, tmp.Sale_SummCost, tmp.Sale_SummCost_10500, tmp.Sale_SummCost_40200
              , tmp.Sale_Amount_Weight , tmp.Sale_Amount_Sh, tmp.Sale_AmountPartner_Weight , tmp.Sale_AmountPartner_Sh
-             , tmp.Return_Summ, tmp.Return_Summ_10300, tmp.Return_SummCost, tmp.Return_SummCost_40200
+             , tmp.Return_Summ, tmp.Return_Summ_10300, tmp.Return_Summ_10700, tmp.Return_SummCost, tmp.Return_SummCost_40200
              , tmp.Return_Amount_Weight, tmp.Return_Amount_Sh, tmp.Return_AmountPartner_Weight, tmp.Return_AmountPartner_Sh
              , tmp.Sale_Amount_10500_Weight
              , tmp.Sale_Amount_40200_Weight
@@ -306,8 +314,8 @@ BEGIN
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
-         , tmpOperationGroup.Amount_Summ          :: TFloat  AS Sale_Summ
-         , 0 :: TFloat  AS Sale_Summ_10200
+         , tmpOperationGroup.Amount_Summ         :: TFloat AS Sale_Summ
+         , (tmpOperationGroup.Sale_Summ_10100 - tmpOperationGroup.Amount_Summ) :: TFloat AS Sale_Summ_10200
          , 0 :: TFloat  AS Sale_Summ_10250
          , 0 :: TFloat  AS Sale_Summ_10300
          , 0 :: TFloat  AS Sale_SummCost
@@ -322,6 +330,7 @@ BEGIN
 
          , tmpOperationGroup.Amount_SummRet :: TFloat AS Return_Summ
          , 0 :: TFloat AS Return_Summ_10300
+         , tmpOperationGroup.Return_Summ_10700 :: TFloat AS Return_Summ_10700
          , 0 :: TFloat AS Return_SummCost
          , 0 :: TFloat AS Return_SummCost_40200
 
@@ -344,10 +353,12 @@ BEGIN
                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_Count ELSE 0 END)                                AS Amount_CountSh
                 , SUM (tmp_Send.Amount_Count * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_CountWeight
                 , SUM (tmp_Send.Amount_Summ) AS Amount_Summ
+                , SUM (tmp_Send.Sale_Summ_10100) AS Sale_Summ_10100
 
                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_CountRet ELSE 0 END)                                AS Amount_CountRetSh
                 , SUM (tmp_Send.Amount_CountRet * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_CountRetWeight
                 , SUM (tmp_Send.Amount_SummRet) AS Amount_SummRet
+                , SUM (tmp_Send.Return_Summ_10700) AS Return_Summ_10700
            FROM tmp_Send
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmp_Send.GoodsId
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
