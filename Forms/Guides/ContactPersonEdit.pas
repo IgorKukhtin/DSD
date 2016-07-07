@@ -63,6 +63,9 @@ type
     cxLabel10: TcxLabel;
     ceEmail: TcxButtonEdit;
     EmailGuides: TdsdGuides;
+    cxLabel19: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    RetailGuides: TdsdGuides;
   private
     { Private declarations }
   public

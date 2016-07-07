@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 501
-  ClientWidth = 377
+  ClientHeight = 563
+  ClientWidth = 380
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 87
-    Top = 472
+    Top = 523
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 237
-    Top = 472
+    Top = 523
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -136,13 +136,13 @@
   end
   object edComment: TcxTextEdit
     Left = 41
-    Top = 434
+    Top = 485
     TabOrder = 16
     Width = 294
   end
   object cxLabel7: TcxLabel
     Left = 41
-    Top = 414
+    Top = 465
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxLabel8: TcxLabel
@@ -195,6 +195,23 @@
     Properties.ReadOnly = True
     TabOrder = 23
     Width = 294
+  end
+  object cxLabel19: TcxLabel
+    Left = 42
+    Top = 418
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+  end
+  object ceRetail: TcxButtonEdit
+    Left = 42
+    Top = 438
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 293
   end
   object ActionList: TActionList
     Left = 272
@@ -328,6 +345,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -342,7 +367,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 32
-    Top = 446
+    Top = 497
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ContactPerson'
@@ -493,6 +518,21 @@
         Name = 'EmailName'
         Value = Null
         Component = EmailGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = Null
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -693,5 +733,35 @@
       end>
     Left = 191
     Top = 372
+  end
+  object RetailGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 432
   end
 end

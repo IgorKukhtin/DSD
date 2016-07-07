@@ -1,8 +1,8 @@
--- Function: lpInsertUpdate_MI_ProductionUnion_Master()
+-- Function: lpInsertUpdate_MI_Over_Master()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Over_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Master(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Over_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары

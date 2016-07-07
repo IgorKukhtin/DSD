@@ -92,7 +92,7 @@ BEGIN
                                                         AND ObjectLink_Juridical_Retail.ChildObjectId = 4--vbObjectId
                                    LEFT JOIN MovementItemContainer AS MIContainer
                                                                    ON MIContainer.ContainerId = Container.Id
-                                                                  AND MIContainer.OperDate >= '01.04.2016'--inStartDate
+                                                                  AND MIContainer.OperDate >= inStartDate
 
                               WHERE Container.DescId = zc_Container_Count()
                               GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
