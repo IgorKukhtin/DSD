@@ -118,8 +118,6 @@ BEGIN
         AND MovementItem.isErased = False;
 ------------------------------------------------
 
-
-
        -- Remains
        INSERT INTO tmpRemains_1 (GoodsId, UnitId, RemainsStart, ContainerId)
                               SELECT Container.Objectid      AS GoodsId
