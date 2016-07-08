@@ -4,6 +4,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
   ClientWidth = 832
   ShowHint = True
   ExplicitWidth = 848
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -155,6 +156,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1090#1086#1074#1072#1088#1072' '#1074' '#1087#1091#1090#1080') '
             Options.Editing = False
             Width = 98
+          end
+          object colMinExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'MinExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077

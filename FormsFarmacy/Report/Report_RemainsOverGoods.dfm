@@ -106,6 +106,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_OverDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -192,6 +202,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_OverDiff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -498,11 +518,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Width = 112
           end
           object Invnumber_Over: TcxGridDBColumn
-            Caption = #1053#1086#1084'. '#1076#1086#1082'.'
+            Caption = #8470' '#1076#1086#1082'. '#1048#1079#1083#1080#1096#1082#1086#1074
             DataBinding.FieldName = 'Invnumber_Over'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 74
           end
           object Amount_Over: TcxGridDBColumn
             Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076' ('#1076#1086#1082')'
@@ -512,10 +532,10 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 75
           end
           object Amount_OverDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1072' '#1088#1072#1089#1093#1086#1076' '#1089' '#1076#1086#1082#1091#1084'.'
             DataBinding.FieldName = 'Amount_OverDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -821,7 +841,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Width = 70
           end
           object chAmount_OverDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1072' '#1087#1088#1080#1093#1086#1076' '#1089' '#1076#1086#1082#1091#1084'.'
             DataBinding.FieldName = 'Amount_OverDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
