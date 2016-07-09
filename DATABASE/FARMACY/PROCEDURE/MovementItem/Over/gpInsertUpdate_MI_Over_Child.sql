@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Child(
     IN inPrice	             TFloat    , -- 
     IN inMCS                 TFloat    , -- 
    OUT outAmountMaster       TFloat    ,
+   OUT outSummaMaster        TFloat    ,
+   OUT outSummaChild         TFloat    ,
     IN inMinExpirationDate   TDateTime , -- 
     IN inComment             TVarChar  , --  
     IN inSession             TVarChar    -- сессия пользователя
@@ -40,9 +42,17 @@ BEGIN
                                       , inUserId           := vbUserId
                                       );
    
+   outSummaChild := inPrice * inAmount;
    -- автомат изменение инфы в мастере (кол-во и сумма)
-   outAmountMaster:= (SELECT  Sum(MI.Amount)::TFloat FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.ParentId = inParentId AND MI.DescId = zc_MI_Child() AND MI.isErased = False);
-   
+   SELECT Sum(MI.Amount)::TFloat
+        , Sum( COALESCE(MIFloat_Price.ValueData,0) * MI.Amount)  ::TFloat
+   INTO outAmountMaster, outSummaMaster
+   FROM MovementItem AS MI 
+        LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                    ON MIFloat_Price.MovementItemId = MI.ParentId
+                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
+   WHERE MI.MovementId = inMovementId AND MI.ParentId = inParentId AND MI.DescId = zc_MI_Child() AND MI.isErased = False;
+
    PERFORM lpInsertUpdate_MovementItem (inParentId, zc_MI_Master(), MI_Master.ObjectId, inMovementId, outAmountMaster, NULL)
    FROM MovementItem AS MI_Master 
    WHERE MI_Master.MovementId = inMovementId AND MI_Master.Id = inParentId AND MI_Master.DescId = zc_MI_Master() AND MI_Master.isErased = False

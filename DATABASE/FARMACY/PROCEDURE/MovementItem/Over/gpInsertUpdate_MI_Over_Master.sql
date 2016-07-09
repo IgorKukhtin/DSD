@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Master(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
  INOUT ioAmount              TFloat    , -- Количество
+   OUT outSumma              TFloat    , -- 
     IN inRemains	     TFloat    , -- 
     IN inPrice	             TFloat    , -- 
     IN inMCS                 TFloat    , -- 
@@ -31,6 +32,7 @@ BEGIN
    THEN 
    --ругаемся
    ioAmount:= vbAmountChild;
+   outSumma = (vbAmountChild * inPrice) ::TFloat;
    END IF;
 
    IF COALESCE(ioAmount,0) = 0  -- в чайлде все кол-во перемещение = 0
@@ -50,6 +52,7 @@ BEGIN
          AND MI.DescId = zc_MI_Child() 
          AND MI.isErased = False;
 
+       outSumma = (vbAmountChild * inPrice) ::TFloat;
    END IF;
    
    -- сохранили <Элемент документа>

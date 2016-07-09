@@ -1132,6 +1132,14 @@ inherited OverForm: TOverForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outSumma'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inRemains'
         Value = Null
         Component = MasterCDS
@@ -1176,8 +1184,8 @@ inherited OverForm: TOverForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
-    Top = 384
+    Left = 296
+    Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 472
@@ -1387,6 +1395,22 @@ inherited OverForm: TOverForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaMaster'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaChild'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Summa'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
