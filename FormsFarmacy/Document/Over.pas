@@ -23,11 +23,9 @@ type
     GuidesUnit: TdsdGuides;
     colCode: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
@@ -46,15 +44,9 @@ type
     DBViewChildAddOn: TdsdDBViewAddOn;
     chMCS: TcxGridDBColumn;
     coPrice: TcxGridDBColumn;
-    spUpdatePrioritetPartner: TdsdStoredProc;
-    actUpdatePrioritetPartner: TdsdExecStoredProc;
     bbPrioritetPartner: TdxBarButton;
     chComment: TcxGridDBColumn;
-    actSetLinkGoodsForm: TdsdOpenForm;
     bbSetGoodsLink: TdxBarButton;
-    spDelete_Object_LinkGoodsByGoods: TdsdStoredProc;
-    mactDeleteLink: TMultiAction;
-    actDeleteLink: TdsdExecStoredProc;
     bbDeleteLink: TdxBarButton;
     chMinExpirationDate: TcxGridDBColumn;
     mactDeleteLinkGroup: TMultiAction;
@@ -67,6 +59,8 @@ type
     actShowMessage: TShowMessageAction;
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    spInsertUpdateMIChild: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -33,14 +33,11 @@ type
     coTotalSummTo: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colTotalSummFrom: TcxGridDBColumn;
-    spSelectPrint1: TdsdStoredProc;
     bbPrint1: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
-    spSelectPrintCeh: TdsdStoredProc;
     bbPrintCeh: TdxBarButton;
   private
     { Private declarations }

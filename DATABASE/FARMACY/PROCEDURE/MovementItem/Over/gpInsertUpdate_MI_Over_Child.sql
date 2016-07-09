@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_Over_Child()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Child(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -11,18 +11,21 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Child(
     IN inRemains	     TFloat    , -- 
     IN inPrice	             TFloat    , -- 
     IN inMCS                 TFloat    , -- 
+   OUT outAmountMaster       TFloat    ,
     IN inMinExpirationDate   TDateTime , -- 
     IN inComment             TVarChar  , --  
     IN inSession             TVarChar    -- сесси€ пользовател€
 
 )                              
-RETURNS Integer AS
+RETURNS record AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользовател€ на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
+   --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
+   vbUserId:= lpGetUserBySession (inSession);
 
+   
    -- сохранили 
    ioId := lpInsertUpdate_MI_Over_Child(ioId               := ioId
                                       , inMovementId       := inMovementId
@@ -37,6 +40,15 @@ BEGIN
                                       , inUserId           := vbUserId
                                       );
    
+   -- автомат изменение инфы в мастере (кол-во и сумма)
+   outAmountMaster:= (SELECT  Sum(MI.Amount)::TFloat FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.ParentId = inParentId AND MI.DescId = zc_MI_Child() AND MI.isErased = False);
+   
+   PERFORM lpInsertUpdate_MovementItem (inParentId, zc_MI_Master(), MI_Master.ObjectId, inMovementId, outAmountMaster, NULL)
+   FROM MovementItem AS MI_Master 
+   WHERE MI_Master.MovementId = inMovementId AND MI_Master.Id = inParentId AND MI_Master.DescId = zc_MI_Master() AND MI_Master.isErased = False
+   ;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

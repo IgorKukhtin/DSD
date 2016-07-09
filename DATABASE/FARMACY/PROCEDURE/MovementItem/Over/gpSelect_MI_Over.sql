@@ -22,6 +22,7 @@ BEGIN
             , Object_Goods.GoodsGroupName
 
             , MovementItem.Amount               AS Amount
+            , (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0)) :: TFloat AS Summa
 
             , MIDate_MinExpirationDate.ValueData AS MinExpirationDate
 
@@ -70,6 +71,7 @@ BEGIN
             , Object_Unit.ValueData             AS UnitName
             
             , MovementItem.Amount               AS Amount
+            , (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0)) :: TFloat AS Summa
 
             , MIDate_MinExpirationDate.ValueData AS MinExpirationDate
 

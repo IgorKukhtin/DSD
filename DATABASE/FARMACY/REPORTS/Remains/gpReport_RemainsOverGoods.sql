@@ -68,8 +68,8 @@ BEGIN
     CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Invnumber TVarChar,PRIMARY KEY (GoodsId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsId Integer, Amount TFloat, PRIMARY KEY (UnitId,GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Invnumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsId Integer, Amount TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsId Integer, UnitId Integer, MCSValue TFloat
                              , Price TFloat, StartDate TDateTime, EndDate TDateTime, MinExpirationDate TDateTime
@@ -96,10 +96,12 @@ BEGIN
 
 
       -- Ищеи cтроки мастера (ключ - ид документа, товар)
-      INSERT INTO tmpMIMaster (GoodsId, Amount, Invnumber)
+      INSERT INTO tmpMIMaster (GoodsId, Amount, Invnumber, MovementId, MIMaster_Id)
       SELECT  MovementItem.ObjectId             AS GoodsId
             , MovementItem.Amount               AS Amount
             , Movement.Invnumber
+            , Movement.Id                       AS MovementId
+            , MovementItem.Id                   AS MIMaster_Id
       FROM MovementItem 
            LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
       WHERE MovementItem.MovementId = vbMovementId 
@@ -107,10 +109,11 @@ BEGIN
         AND MovementItem.isErased = False;
 
       -- Ищеи cтроки чайлда (ключ - ид документа, товар)
-      INSERT INTO tmpMIChild (UnitId, GoodsId, Amount)
+      INSERT INTO tmpMIChild (UnitId, GoodsId, Amount, MIChild_Id)
       SELECT  MovementItem.ObjectId             AS UnitId
             , MI_Master.ObjectId                AS GoodsId
             , MovementItem.Amount               AS Amount
+            , MovementItem.Id                   AS MIChild_Id
       FROM MovementItem 
            LEFT JOIN MovementItem AS MI_Master ON MI_Master.Id = MovementItem.ParentId
       WHERE MovementItem.MovementId = vbMovementId 
@@ -131,7 +134,7 @@ BEGIN
                                    INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = 4--vbObjectId
+                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                                    LEFT JOIN MovementItemContainer AS MIContainer
                                                                    ON MIContainer.ContainerId = Container.Id
                                                                   AND MIContainer.OperDate >= inStartDate
@@ -380,7 +383,9 @@ BEGIN
                , Object_Measure.ValueData                     AS MeasureName
                , tmpData.MinExpirationDate
 
-               , tmpMIMaster.Invnumber        AS Invnumber_Over
+               , tmpMIMaster.Invnumber                       AS Invnumber_Over
+               , tmpMIMaster.MovementId                      AS MovementId_Over
+               , tmpMIMaster.MIMaster_Id                     AS MIMaster_Id_Over
                , COALESCE(tmpMIMaster.Amount,0)  :: TFloat   AS Amount_Over
                , (tmpChildTo.RemainsMCS_result - COALESCE(tmpMIMaster.Amount,0)) :: TFloat AS Amount_OverDiff
              
@@ -435,6 +440,7 @@ BEGIN
                , (tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
                , tmpData.MinExpirationDate
 
+               , tmpMIChild.MIChild_Id                      AS MIChild_Id_Over
                , COALESCE(tmpMIChild.Amount,0)  :: TFloat   AS Amount_Over
                , (tmpDataTo.RemainsMCS_result - COALESCE(tmpMIChild.Amount,0)) :: TFloat AS Amount_OverDiff
      FROM tmpData
