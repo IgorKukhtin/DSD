@@ -58,6 +58,11 @@ BEGIN
      END IF;
 
 
+     -- Параметры из Документа
+     SELECT ToId, InvNumberBranch INTO vbToId, vbInvNumberPoint FROM Movement_Income_View WHERE Id = inMovementId;
+
+
+    -- Сохранили новую цену
     PERFORM (WITH DD AS (SELECT DISTINCT MarginPercent, MinPrice FROM Object_MarginCategoryItem_View 
                                                         WHERE MarginCategoryId = vbMarginCategoryId), 
          MarginCondition AS (SELECT MarginPercent, MinPrice, 
@@ -85,7 +90,6 @@ BEGIN
            AND MovementItem_Income.GoodsId = MovementItem_Income_View.GoodsId
            AND MovementItem_Income_View.MovementId = inMovementId);
 
-     SELECT ToId, InvNumberBranch INTO vbToId, vbInvNumberPoint FROM Movement_Income_View WHERE Id = inMovementId;
 
      IF COALESCE(vbInvNumberPoint, '') = '' THEN 
         -- Определяем, что приход идет на последнее подразделение в ветке
@@ -116,5 +120,5 @@ $BODY$
  13.05.15                        *   
  26.01.15                        *   
 */
--- select * from gpUpdate_MovementItem_Income_GoodsId(inMovementId := 12474 ,  inSession := '3');  
+-- select * from gpUpdate_MovementItem_Income_SendPrice (inMovementId := 2524720 ,  inSession := '3');  
 -- vbJuridicalId = 183312

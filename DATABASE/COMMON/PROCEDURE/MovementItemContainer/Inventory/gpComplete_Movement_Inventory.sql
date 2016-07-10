@@ -449,7 +449,7 @@ BEGIN
                                        , tmpContainerList.ObjectId AS GoodsId
                                        , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN (vbOperDate + INTERVAL '1 DAY') AND (DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-                                                        THEN MIContainer.Amount
+                                                        THEN ABS (MIContainer.Amount)
                                                    ELSE 0
                                               END) AS OperCount_find -- здесь только движение до конца месяца
                                   FROM tmpContainerList

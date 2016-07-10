@@ -30,7 +30,7 @@ BEGIN
          RAISE EXCEPTION 'NOT FIND, inMovementId = %', inMovementId;
      END IF;
 
-
+/*
      -- !!!выход - Инвентаризация!!!
      IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 20 AND 23 AND EXTRACT ('MONTH' FROM vbOperDate) <> EXTRACT ('MONTH' FROM CURRENT_DATE) THEN RETURN; END IF;
      IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 0  AND 4  AND EXTRACT ('MONTH' FROM vbOperDate) <> EXTRACT ('MONTH' FROM CURRENT_DATE) THEN RETURN; END IF;
@@ -45,7 +45,7 @@ BEGIN
              RETURN; 
          END IF;
      END IF;
-
+*/
 
 
      -- !!! распроведение!!!

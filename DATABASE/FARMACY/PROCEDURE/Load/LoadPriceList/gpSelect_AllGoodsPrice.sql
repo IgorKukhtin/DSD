@@ -253,7 +253,7 @@ BEGIN
         ResultSet.IsTop,
         ResultSet.IsTop_Goods,
         ResultSet.IsPromo,
-        CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE OR ResultSet.isTop_calc = TRUE OR ResultSet.isPriceFix = TRUE)
+        CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE /*OR ResultSet.isTop_calc = TRUE*/ OR ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE
