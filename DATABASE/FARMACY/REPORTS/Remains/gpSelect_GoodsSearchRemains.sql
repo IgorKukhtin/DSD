@@ -16,7 +16,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , PriceSale  TFloat
              , SummaSale TFloat
              , PriceSaleIncome  TFloat
-             
+             , MinExpirationDate TDateTime
              )
 AS
 $BODY$
@@ -52,17 +52,47 @@ BEGIN
                                 WHERE Container.descid = zc_container_count()
                                 )
 
+         , tmpcontainerCount AS (SELECT ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS Amount
+                                      , ContainerCount.GoodsId 
+                                      , ContainerCount.UnitId 
+                                      , ContainerCount.ContainerId
+                                 FROM ContainerCount
+                                     LEFT JOIN MovementItemContainer AS MIContainer 
+                                                                     ON MIContainer.ContainerId = ContainerCount.ContainerId
+                                                                    AND MIContainer.OperDate >= vbRemainsDate
+                                 GROUP BY ContainerCount.ContainerId, ContainerCount.Amount, ContainerCount.GoodsId , ContainerCount.UnitId 
+                                )
+
+
            , tmpData AS (SELECT tmpData_all.UnitId
                               , tmpData_all.GoodsId
                               , SUM (tmpData_all.Amount)   AS Amount
-                         FROM (  SELECT ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS Amount
-                                      , ContainerCount.GoodsId 
-                                      , ContainerCount.UnitId 
-                                 FROM ContainerCount
-                                      LEFT JOIN MovementItemContainer AS MIContainer 
-                                                                      ON MIContainer.ContainerId = ContainerCount.ContainerId
-                                                                     AND MIContainer.OperDate >= vbRemainsDate
-                                 GROUP BY ContainerCount.ContainerId, containerCount.GoodsId, containerCount.Amount, ContainerCount.GoodsId , ContainerCount.UnitId 
+                              , min (tmpData_all.MinExpirationDate) AS MinExpirationDate
+                         FROM (  SELECT SUM(tmpcontainerCount.Amount)    AS Amount
+                                      , tmpcontainerCount.GoodsId 
+                                      , tmpcontainerCount.UnitId 
+                                      , min (COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности 
+                                 FROM tmpcontainerCount
+                                    
+                                     -- находим партию для определения срока годности остатка
+                                     LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                   ON ContainerLinkObject_MovementItem.Containerid =  tmpcontainerCount.ContainerId 
+                                                                  AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                     -- элемент прихода
+                                     LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                     -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                     LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                 ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                     -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                             
+                                     LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                       ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                                                                                                                           
+                                 GROUP BY tmpcontainerCount.GoodsId, tmpcontainerCount.UnitId 
                                  ) AS tmpData_all
                          GROUP BY tmpData_all.GoodsId
                                 , tmpData_all.UnitId
@@ -113,7 +143,7 @@ BEGIN
              , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                    :: TFloat AS PriceSale
              , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) :: TFloat AS SummaSale
              , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
-              
+             , tmpData.MinExpirationDate  ::TDateTime
         FROM tmpGoods
             LEFT JOIN Object AS Object_Unit ON Object_Unit.DescId = zc_Object_Unit()
             LEFT JOIN tmpData ON tmpData.GoodsId = tmpGoods.Id
@@ -157,6 +187,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.07.16         *
  11.05.16         *
  18.04.16         *
 */

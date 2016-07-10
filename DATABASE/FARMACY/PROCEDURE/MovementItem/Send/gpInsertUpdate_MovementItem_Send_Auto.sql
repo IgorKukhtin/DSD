@@ -52,7 +52,7 @@ BEGIN
     
       IF COALESCE (vbMovementId,0) = 0 THEN
        -- записываем новый <Документ>
-       vbMovementId := lpInsertUpdate_Movement_Send (ioId               := 0
+       vbMovementId := lpInsertUpdate_Movement_Send (ioId               := COALESCE(vbMovementId,0) ::Integer
                                                    , inInvNumber        := CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar) --inInvNumber
                                                    , inOperDate         := inOperDate
                                                    , inFromId           := inFromId

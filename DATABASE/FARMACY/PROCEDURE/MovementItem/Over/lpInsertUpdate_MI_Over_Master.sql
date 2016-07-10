@@ -45,7 +45,7 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
 
    -- пересчитали Итоговые суммы по накладной
-   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+   PERFORM lpInsertUpdate_MovementFloat_TotalSummOver (inMovementId);
 
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

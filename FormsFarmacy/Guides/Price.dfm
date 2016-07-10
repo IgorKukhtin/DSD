@@ -739,6 +739,36 @@ inherited PriceForm: TPriceForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object dsdOpenForm: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 144
@@ -865,6 +895,14 @@ inherited PriceForm: TPriceForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -906,6 +944,10 @@ inherited PriceForm: TPriceForm
     end
     object dxBarButton7: TdxBarButton
       Action = actPriceHistoryOpen
+      Category = 0
+    end
+    object bbOpenForm: TdxBarButton
+      Action = dsdOpenForm
       Category = 0
     end
   end

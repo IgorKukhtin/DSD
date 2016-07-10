@@ -75,6 +75,14 @@ type
     spOverChild: TdsdStoredProc;
     actOverChild: TdsdExecStoredProc;
     macOverChild: TMultiAction;
+    spInsertUpdateMIMaster: TdsdStoredProc;
+    spInsertUpdateMIChild: TdsdStoredProc;
+    actUpdateMainDS: TdsdUpdateDataSet;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    spSendOver: TdsdStoredProc;
+    actSendOver: TdsdExecStoredProc;
+    macSendOver: TMultiAction;
+    bbSendOver: TdxBarButton;
   private
     { Private declarations }
   public

@@ -27,7 +27,7 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
     vbUserId := inSession;
 
-    IF COALESCE(inAmount, 0) <> 0 THEN
+   -- IF COALESCE(inAmount, 0) <> 0 THEN
       -- ищем ИД документа (ключ - дата, Подразделение) 
       SELECT Movement.Id  
       INTO vbMovementId
@@ -84,7 +84,7 @@ BEGIN
       
       END IF;
   
-   END IF;
+  -- END IF;
 
 END;
 $BODY$

@@ -29,7 +29,7 @@ BEGIN
 
 
    -- пересчитали Итоговые суммы по накладной
-   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+   PERFORM lpInsertUpdate_MovementFloat_TotalSummOver (ioId);
 
    -- сохранили протокол
    PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

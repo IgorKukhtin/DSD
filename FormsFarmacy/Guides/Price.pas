@@ -70,6 +70,8 @@ type
     StartDate: TcxGridDBColumn;
     SummaRemains: TcxGridDBColumn;
     clGoods_isTop: TcxGridDBColumn;
+    dsdOpenForm: TdsdOpenForm;
+    bbOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

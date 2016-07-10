@@ -63,6 +63,16 @@ inherited OverForm: TOverForm
               Format = ',0.####'
               Kind = skSum
               Column = colMCS
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSumma
+            end
+            item
+              Position = spFooter
+              Column = colSumma
+              Sorted = True
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -122,6 +132,11 @@ inherited OverForm: TOverForm
               Format = ',0.####'
               Kind = skSum
               Column = colMCS
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSumma
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -163,39 +178,7 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 227
           end
-          object colAmount: TcxGridDBColumn [3]
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            Options.IncSearch = False
-            Width = 97
-          end
-          object colRemains: TcxGridDBColumn [4]
-            Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086' '#1076#1085#1103
-            Options.Editing = False
-            Width = 70
-          end
-          object colMCS: TcxGridDBColumn [5]
-            Caption = #1053#1058#1047
-            DataBinding.FieldName = 'MCS'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 56
-          end
-          object coPrice: TcxGridDBColumn [6]
+          object coPrice: TcxGridDBColumn [3]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -207,7 +190,52 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 60
           end
-          object clMinExpirationDate: TcxGridDBColumn [7]
+          object colRemains: TcxGridDBColumn [4]
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086' '#1076#1085#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object colAmount: TcxGridDBColumn [5]
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            Options.IncSearch = False
+            Width = 97
+          end
+          object colSumma: TcxGridDBColumn [6]
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colMCS: TcxGridDBColumn [7]
+            Caption = #1053#1058#1047
+            DataBinding.FieldName = 'MCS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object clMinExpirationDate: TcxGridDBColumn [8]
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
             HeaderAlignmentHorz = taCenter
@@ -216,7 +244,7 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 111
           end
-          object colComment: TcxGridDBColumn [8]
+          object colComment: TcxGridDBColumn [9]
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -284,6 +312,11 @@ inherited OverForm: TOverForm
               Format = ',0.####'
               Kind = skSum
               Column = chRemains
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = chSumma
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -331,6 +364,11 @@ inherited OverForm: TOverForm
               Format = ',0.####'
               Kind = skSum
               Column = chRemains
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = chSumma
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -356,17 +394,6 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 297
           end
-          object chAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 113
-          end
           object chPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'Price'
@@ -377,6 +404,39 @@ inherited OverForm: TOverForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 107
+          end
+          object chRemains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object chAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 113
+          end
+          object chSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
           end
           object chMCS: TcxGridDBColumn
             Caption = #1053#1058#1047
@@ -389,21 +449,12 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 92
           end
-          object chRemains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 81
-          end
           object chMinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object chComment: TcxGridDBColumn
@@ -566,7 +617,6 @@ inherited OverForm: TOverForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actDeleteLink
         end>
       DataSource = ChildDS
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
@@ -583,6 +633,21 @@ inherited OverForm: TOverForm
         end>
       RefreshOnTabSetChanges = True
     end
+    object actUpdateChildDS: TdsdUpdateDataSet [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = ChildDS
+    end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
         item
@@ -592,6 +657,7 @@ inherited OverForm: TOverForm
           StoredProc = spGetTotalSumm
         end
         item
+          StoredProc = spSelect
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -639,97 +705,6 @@ inherited OverForm: TOverForm
         end
         item
         end>
-    end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actRefreshPrice: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actUpdatePrioritetPartner: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdatePrioritetPartner
-      StoredProcList = <
-        item
-          StoredProc = spUpdatePrioritetPartner
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1091#1102' '#1094#1077#1085#1091
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1091#1102' '#1094#1077#1085#1091
-      ImageIndex = 55
-      ShortCut = 114
-    end
-    object actSetLinkGoodsForm: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100
-      ShortCut = 9
-      FormName = 'TChoiceGoodsFromPriceListForm'
-      FormNameParam.Value = 'TChoiceGoodsFromPriceListForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object mactDeleteLink: TMultiAction
-      Category = 'DeleteLink'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actDeleteLink
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
-      ImageIndex = 72
-    end
-    object actDeleteLink: TdsdExecStoredProc
-      Category = 'DeleteLink'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spDelete_Object_LinkGoodsByGoods
-      StoredProcList = <
-        item
-          StoredProc = spDelete_Object_LinkGoodsByGoods
-        end>
-      Caption = 'actDeleteLink'
     end
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
@@ -794,30 +769,14 @@ inherited OverForm: TOverForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
           BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -873,16 +832,25 @@ inherited OverForm: TOverForm
       ImageIndex = 41
     end
     object bbPrioritetPartner: TdxBarButton
-      Action = actUpdatePrioritetPartner
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1091#1102' '#1094#1077#1085#1091
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1091#1102' '#1094#1077#1085#1091
+      Visible = ivAlways
+      ImageIndex = 55
+      ShortCut = 114
     end
     object bbSetGoodsLink: TdxBarButton
-      Action = actSetLinkGoodsForm
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100
       Category = 0
+      Visible = ivAlways
+      ShortCut = 9
     end
     object bbDeleteLink: TdxBarButton
-      Action = mactDeleteLink
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
+      Visible = ivAlways
+      ImageIndex = 72
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -969,9 +937,9 @@ inherited OverForm: TOverForm
     Top = 160
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_OrderInternal'
-    Left = 152
-    Top = 160
+    StoredProcName = 'gpUpdate_Status_Over'
+    Left = 176
+    Top = 192
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Over'
@@ -1039,7 +1007,7 @@ inherited OverForm: TOverForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_OrderInternal'
+    StoredProcName = 'gpInsertUpdate_Movement_Over'
     Params = <
       item
         Name = 'ioId'
@@ -1072,9 +1040,17 @@ inherited OverForm: TOverForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 162
-    Top = 312
+    Left = 170
+    Top = 336
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -1083,7 +1059,7 @@ inherited OverForm: TOverForm
       item
         Guides = GuidesUnit
       end>
-    Left = 208
+    Left = 200
     Top = 152
   end
   inherited HeaderSaver: THeaderSaver
@@ -1110,12 +1086,12 @@ inherited OverForm: TOverForm
     Top = 161
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderInternal_SetErased'
+    StoredProcName = ''
     Left = 710
-    Top = 360
+    Top = 392
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased'
+    StoredProcName = ''
     Left = 710
     Top = 312
   end
@@ -1147,10 +1123,27 @@ inherited OverForm: TOverForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumma'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemains'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1165,29 +1158,11 @@ inherited OverForm: TOverForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRemains'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Remains'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inMCS'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MCS'
         DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1199,13 +1174,22 @@ inherited OverForm: TOverForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 296
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 368
-    Top = 272
+    Left = 472
+    Top = 440
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 420
@@ -1214,12 +1198,11 @@ inherited OverForm: TOverForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefreshPrice
     ComponentList = <
       item
       end>
-    Left = 512
-    Top = 328
+    Left = 504
+    Top = 352
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1240,7 +1223,6 @@ inherited OverForm: TOverForm
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1335,13 +1317,29 @@ inherited OverForm: TOverForm
     Left = 926
     Top = 145
   end
-  object spUpdatePrioritetPartner: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_OrderInternal_PrioritetPartner'
+  object spInsertUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Over_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'ioId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -1349,70 +1347,27 @@ inherited OverForm: TOverForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inUnitId'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalName'
+        Name = 'inAmount'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'JuridicalName'
-        DataType = ftString
+        ComponentItem = 'Amount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inContractId'
+        Name = 'inRemains'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'ContractId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractName'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'ContractName'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsCode'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'GoodsCode'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsName'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'GoodsName'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSuperPrice'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'SuperFinalPrice'
+        ComponentItem = 'Remains'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1427,72 +1382,58 @@ inherited OverForm: TOverForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'JuridicalName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ContractName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsCode'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartnerGoodsCode'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartnerGoodsName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SuperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SuperFinalPrice'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Price'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 944
-    Top = 240
-  end
-  object spDelete_Object_LinkGoodsByGoods: TdsdStoredProc
-    StoredProcName = 'gpDelete_Object_LinkGoodsByGoods'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsId'
+        Name = 'inMCS'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'MCS'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountMaster'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaMaster'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaChild'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinExpirationDate'
+        Value = 'NULL'
+        Component = ChildCDS
+        ComponentItem = 'MinExpirationDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 592
-    Top = 144
+    Left = 376
+    Top = 392
   end
 end
