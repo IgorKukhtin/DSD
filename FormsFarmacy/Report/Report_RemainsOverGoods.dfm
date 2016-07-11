@@ -1812,7 +1812,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 1
+    PackSize = 100
     Left = 816
     Top = 168
   end
@@ -1900,7 +1900,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 1
+    PackSize = 100
     Left = 800
     Top = 216
   end

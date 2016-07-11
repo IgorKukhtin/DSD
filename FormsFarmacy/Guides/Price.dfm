@@ -1,9 +1,9 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
-  ClientHeight = 385
+  ClientHeight = 386
   ClientWidth = 826
   ExplicitWidth = 842
-  ExplicitHeight = 423
+  ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -42,18 +42,18 @@ inherited PriceForm: TPriceForm
   inherited PageControl: TcxPageControl
     Top = 58
     Width = 826
-    Height = 327
+    Height = 328
     ExplicitTop = 58
     ExplicitWidth = 826
     ExplicitHeight = 327
-    ClientRectBottom = 327
+    ClientRectBottom = 328
     ClientRectRight = 826
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 826
       ExplicitHeight = 327
       inherited cxGrid: TcxGrid
         Width = 826
-        Height = 327
+        Height = 328
         ExplicitWidth = 826
         ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -184,7 +184,7 @@ inherited PriceForm: TPriceForm
             DataBinding.FieldName = 'Goods_PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
@@ -195,8 +195,8 @@ inherited PriceForm: TPriceForm
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
