@@ -149,7 +149,7 @@ BEGIN
                             , SelectMinPrice_AllGoods.isTop                                               -- ТОП позиция
                             , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
                             , 0 /*ObjectFloat_Percent.valuedata*/                                         -- % корректировки у Юр Лица для ТОПа
-                            , Object_Goods.Price                                                          -- Цена у товара (фиксированная)
+                            , CASE WHEN Object_Price.Fix = TRUE THEN Object_Price.Price ELSE Object_Goods.Price END -- Цена у товара (почти фиксированная)
                              ) ::TFloat AS NewPrice
           , SelectMinPrice_AllGoods.PartionGoodsDate         AS ExpirationDate,
             SelectMinPrice_AllGoods.JuridicalId              AS JuridicalId,
