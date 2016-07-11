@@ -67,31 +67,47 @@ BEGIN
      vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата 
 
 
-           -- поиск сотрудника (ключ - физ.лицо + сотрудник + подразделение)
-           SELECT ObjectLink_Personal_Member.ObjectId
-                , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE)
-                  INTO vbPersonalId, vbIsMain
-           FROM ObjectLink AS ObjectLink_Personal_Member
-                INNER JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ObjectId
-                                                    AND Object_Personal.isErased = FALSE
-                LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                     ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
-                                     AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                     ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
+     -- поиск сотрудника (ключ - физ.лицо + сотрудник + подразделение)
+     WITH 
+         tmp AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                      , Object_Personal.Id AS PersonalId
+                      , ObjectLink_Personal_Unit.ChildObjectId  AS UnitId
+                      , ObjectLink_Personal_Position.ChildObjectId AS PositionId
+                 FROM ObjectLink AS ObjectLink_Personal_Member
+                      LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ObjectId
+                                                          AND Object_Personal.isErased = FALSE
+                      LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                     ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
-                                        ON ObjectBoolean_Personal_Main.ObjectId = ObjectLink.ObjectId
+                      LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                     ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                  
+                 WHERE ObjectLink_Personal_Member.ChildObjectId   = inMemberId
+                   AND ObjectLink_Personal_Member.DescId          = zc_ObjectLink_Personal_Member()
+                 )
+
+           SELECT COALESCE (tmp.PersonalId, COALESCE (tmp1.PersonalId, tmp2.PersonalId))  
+                , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE)
+          INTO vbPersonalId, vbIsMain
+           FROM Object AS Object_Member 
+              LEFT JOIN tmp ON tmp.MemberId = Object_Member.Id
+                            AND tmp.UnitId = inUnitId
+                            AND tmp.PositionId = inPositionId
+              LEFT JOIN tmp AS tmp1 ON tmp1.MemberId = Object_Member.Id
+                            AND tmp1.UnitId = inUnitId
+              LEFT JOIN tmp AS tmp2 ON tmp2.MemberId = Object_Member.Id
+                            AND tmp2.PositionId = inPositionId
+              LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                        ON ObjectBoolean_Personal_Main.ObjectId = COALESCE (tmp.PersonalId, COALESCE (tmp1.PersonalId, tmp2.PersonalId))
                                        AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main() 
-           WHERE ObjectLink_Personal_Member.ChildObjectId   = inMemberId
-             AND ObjectLink_Personal_Member.DescId          = zc_ObjectLink_Personal_Member()
-             AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
-             AND ObjectLink_Personal_Unit.ChildObjectId     = inUnitId
-           ORDER BY CASE WHEN ObjectBoolean_Personal_Main.ValueData = TRUE THEN 0 ELSE 1 END, ObjectLink_Personal_Member.ObjectId
-           LIMIT 1
+            WHERE Object_Member.DescId = zc_Object_Member()
+              AND Object_Member.Id =  inMemberId
+            ORDER BY CASE WHEN ObjectBoolean_Personal_Main.ValueData = TRUE THEN 0 ELSE 1 END, COALESCE (tmp.PersonalId, COALESCE (tmp1.PersonalId, tmp2.PersonalId))
+            LIMIT 1
           ;
 
-     
+         
     -- поиск документа (ключ - Месяц начислений + ведомость)
     SELECT MovementDate_ServiceDate.MovementId
          , ObjectLink_PersonalServiceList_Juridical.ChildObjectId AS JuridicalId -- на которое происходит начисление(соц выплаты)
