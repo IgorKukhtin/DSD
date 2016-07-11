@@ -3,7 +3,7 @@
   ClientHeight = 516
   ClientWidth = 946
   ExplicitWidth = 962
-  ExplicitHeight = 551
+  ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -211,6 +211,9 @@
             DataBinding.FieldName = 'MarginPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
           end
           object colSaleSumm: TcxGridDBColumn
@@ -383,6 +386,44 @@
             HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
             Options.Editing = False
             Width = 60
+          end
+          object clisTop: TcxGridDBColumn
+            Caption = #1058#1054#1055' ('#1072#1087#1090#1077#1082#1072')'
+            DataBinding.FieldName = 'isTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colFix_Price: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'Fix_Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clPercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
+            DataBinding.FieldName = 'PercentMarkup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object mainColor_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 40
           end
         end
       end
@@ -1197,6 +1238,186 @@
       end
       item
         ValueColumn = colWarningColor
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisTop
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = JuridicalPriceWithVAT
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = JuridicalPrice
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSumm
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSertificatStart
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSertificatNumber
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSertificatEnd
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSaleSumm
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSalePrice
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPriceWithVAT
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colReasonDifferencesName
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPrice
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPersentDiff
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPercent
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPartnerGoodsName
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPartnerGoodsCode
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPartitionGoods
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colOrderSumm
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colOrderPrice
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colOrderAmount
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colName
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colMeasure
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colMakerName
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colisSummDiff
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colisAmountDiff
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colFix_Price
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colFEA
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colExpirationDate
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colDublePriceColour
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colCode
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAVGIncomePriceWarning
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAVGIncomePrice
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAmountManual
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAmountDiff
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAmount
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clPercentMarkup
+        BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end>
     SummaryItemList = <

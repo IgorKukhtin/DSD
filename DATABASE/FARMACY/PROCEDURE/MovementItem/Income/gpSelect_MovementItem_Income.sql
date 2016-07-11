@@ -44,6 +44,11 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , isAmountDiff Boolean
              , isSummDiff Boolean
 
+             , isTop  Boolean
+             , PercentMarkup TFloat
+             , Fix_Price TFloat
+             , Color_calc Integer
+
              )
 AS
 $BODY$
@@ -54,6 +59,7 @@ $BODY$
   DECLARE vbVAT TFloat;
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbOrderId Integer;
+  DECLARE vbUnitId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -66,11 +72,13 @@ BEGIN
       , Movement_Income_View.NDS
       , Movement_Income_View.OperDate
       , Movement_Income_View.OperDate - INTERVAL '30 day'
+      , Movement_Income_View.ToId
     INTO 
         vbPriceWithVAT
       , vbVAT
       , vbAVGDateEnd
       , vbAVGDateStart
+      , vbUnitId 
     FROM 
         Movement_Income_View 
     WHERE
@@ -192,8 +200,16 @@ BEGIN
               , NULL::TFloat               AS PersentDiff
               , FALSE                      AS isAmountDiff
               , FALSE                      AS isSummDiff
+
+              , COALESCE (Object_Price_View.isTop,FALSE)          ::Boolean  AS isTop 
+              , Object_Price_View.PercentMarkup  ::TFloat   AS PercentMarkup
+              , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END  ::TFloat AS Fix_Price
+
+              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
+                LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = tmpGoods.GoodsId
+                                                 AND Object_Price_View.UnitId = vbUnitId
             WHERE tmpMI.GoodsId IS NULL
 
             UNION ALL
@@ -254,6 +270,14 @@ BEGIN
                      ELSE 
                          CASE WHEN COALESCE (tmpOrderMI.Price,0) <> CAST (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)) AS NUMERIC (16, 2)) THEN TRUE ELSE FALSE END
                 END  AS isSummDiff
+
+
+              , COALESCE (Object_Price_View.isTop,FALSE)          ::Boolean AS isTop 
+              , Object_Price_View.PercentMarkup  ::TFloat  AS PercentMarkup
+              , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END  ::TFloat  AS Fix_Price
+
+              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
+
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -268,7 +292,10 @@ BEGIN
 
                 LEFT JOIN DublePrice ON MovementItem.GoodsId = DublePrice.GoodsId
                 LEFT JOIN AVGIncome ON AVGIncome.ObjectId = MovementItem.GoodsId
-                LEFT JOIN tmpOrderMI ON tmpOrderMI.GoodsId =  MovementItem.GoodsId;
+                LEFT JOIN tmpOrderMI ON tmpOrderMI.GoodsId =  MovementItem.GoodsId
+                LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = MovementItem.GoodsId
+                                                 AND Object_Price_View.UnitId = vbUnitId
+               ;
     ELSE
        RETURN QUERY
        WITH 
@@ -384,6 +411,13 @@ BEGIN
                      ELSE 
                          CASE WHEN COALESCE (tmpOrderMI.Price,0) <> CAST (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)) AS NUMERIC (16, 2)) THEN TRUE ELSE FALSE END
                 END  AS isSummDiff
+
+              , COALESCE (Object_Price_View.isTop,FALSE)   ::Boolean AS isTop 
+              , Object_Price_View.PercentMarkup  ::TFloat  AS PercentMarkup
+              , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END ::TFloat AS Fix_Price
+
+              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
+
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -399,6 +433,8 @@ BEGIN
                 LEFT JOIN DublePrice ON MovementItem.GoodsId = DublePrice.GoodsId
                 LEFT JOIN AVGIncome ON AVGIncome.ObjectId = MovementItem.GoodsId
                 LEFT JOIN tmpOrderMI ON tmpOrderMI.GoodsId =  MovementItem.GoodsId
+                LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = MovementItem.GoodsId
+                                                 AND Object_Price_View.UnitId = vbUnitId
                 ;
     END IF;
 END;
