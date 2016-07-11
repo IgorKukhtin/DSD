@@ -63,6 +63,27 @@ BEGIN
                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                  );
 
+
+    -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    -- !!!Временно исправлются ошибки с датами в ценах!!!
+    -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    UPDATE  ObjectHistory set EndDate = coalesce (tmp.StartDate, zc_DateEnd())
+    FROM (with tmp as (select ObjectHistory_Price.*
+                            , Row_Number() OVER (PARTITION BY ObjectHistory_Price.ObjectId ORDER BY ObjectHistory_Price.StartDate Asc, ObjectHistory_Price.Id) AS Ord
+                       from ObjectHistory AS ObjectHistory_Price
+                       -- Where ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                      )
+          select  tmp.Id, tmp.ObjectId, tmp.EndDate,  tmp2.StartDate, tmp2.Ord, ObjectHistoryDesc.Code
+          from tmp
+               left join tmp as tmp2 on tmp2.ObjectId = tmp.ObjectId and tmp2.Ord = tmp.Ord + 1 and tmp2.DescId = tmp.DescId
+               left join ObjectHistoryDesc on ObjectHistoryDesc. Id = tmp.DescId
+          where tmp.EndDate <> coalesce (tmp2.StartDate, zc_DateEnd())
+          order by 3
+         ) as tmp
+    WHERE tmp.Id = ObjectHistory.Id;
+    -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
     -- Таблицы
     CREATE TEMP TABLE tmpGoods_list (GoodsId Integer, UnitId Integer, PriceId Integer, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
@@ -490,6 +511,7 @@ BEGIN
      WHERE tmpData.UnitId <> inUnitId
        -- AND tmpDataTo.RemainsMCS_result > 0
        AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
+       AND 1=0
      --LIMIT 50000
     ;
      RETURN NEXT Cursor3;
@@ -506,4 +528,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_RemainsOverGoods (inUnitId:= 183292, inStartDate:= '01.06.2016', inPeriod:= 30, inDay:= 5, inSession:= '3');  -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpReport_RemainsOverGoods (inUnitId:= 183292, inStartDate:= '12.07.2016', inPeriod:= 30, inDay:= 28, inSession:= '3');  -- Аптека_1 пр_Правды_6

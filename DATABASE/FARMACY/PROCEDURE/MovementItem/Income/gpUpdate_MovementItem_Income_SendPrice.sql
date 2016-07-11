@@ -78,13 +78,13 @@ BEGIN
                                         , COALESCE (NULLIF (View_Price.isTop, FALSE), Object_Goods_View.isTOP)             -- ТОП позиция
                                         , COALESCE (NULLIF (View_Price.PercentMarkup, 0), Object_Goods_View.PercentMarkup) -- % наценки у товара
                                         , vbJuridicalPercent                                          -- % корректировки у Юр Лица для ТОПа
-                                        , Object_Goods_View.Price)))                                  -- Цена у товара (фиксированная)
+                                        , CASE WHEN View_Price.Fix = TRUE AND View_Price.Price <> 0 /*AND COALESCE (Object_Goods_View.Price, 0) = 0*/ THEN View_Price.Price ELSE Object_Goods_View.Price END))) -- Цена у товара (фиксированная)
          FROM MarginCondition, MovementItem_Income_View, MovementItem_Income
               LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem_Income.GoodsId
               LEFT JOIN Object_Price_View AS View_Price
                                           ON View_Price.GoodsId = MovementItem_Income.GoodsId
                                          AND View_Price.UnitId  = vbToId
-                                         AND (View_Price.isTop   = TRUE OR View_Price.PercentMarkup <> 0)
+                                         AND (View_Price.isTop  = TRUE OR View_Price.Fix = TRUE OR View_Price.PercentMarkup <> 0)
 
          WHERE MarginCondition.MinPrice < MovementItem_Income.PriceWithVAT AND MovementItem_Income.PriceWithVAT <= MarginCondition.MaxPrice 
            AND MovementItem_Income.GoodsId = MovementItem_Income_View.GoodsId
