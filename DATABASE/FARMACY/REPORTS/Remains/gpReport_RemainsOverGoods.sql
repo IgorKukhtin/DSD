@@ -208,8 +208,8 @@ BEGIN
        -- Goods_list
        INSERT INTO tmpGoods_list (GoodsId, UnitId, PriceId)
          SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId FROM tmpRemains
-        UNION
-         SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId FROM tmpMCS
+        /*UNION
+         SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId FROM tmpMCS*/
         ;
   
        -- Goods_list - PriceId
@@ -474,7 +474,8 @@ BEGIN
      WHERE tmpData.UnitId <> inUnitId
        -- AND tmpDataTo.RemainsMCS_result > 0
        AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
-     -- LIMIT 50000
+       -- AND 1=0
+       -- LIMIT 50000
     ;
      
      RETURN NEXT Cursor2;
@@ -509,10 +510,10 @@ BEGIN
           LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId AND tmpDataTo.UnitId = tmpData.UnitId
           LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId AND tmpDataFrom.UnitId = inUnitId
      WHERE tmpData.UnitId <> inUnitId
-       -- AND tmpDataTo.RemainsMCS_result > 0
-       AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
-       AND 1=0
-     --LIMIT 50000
+       AND tmpDataTo.RemainsMCS_result > 0
+       -- AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
+       -- AND 1=0
+       -- LIMIT 50000
     ;
      RETURN NEXT Cursor3;
   

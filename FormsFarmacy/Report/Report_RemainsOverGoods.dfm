@@ -3,8 +3,10 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   ClientHeight = 557
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -293
+  ExplicitTop = -135
   ExplicitWidth = 1082
-  ExplicitHeight = 595
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1529,7 +1531,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     DataSets = <
       item
       end>
-    OutputType = otResult
+    OutputType = otMultiExecute
     Params = <
       item
         Name = 'inFromId'
@@ -1606,14 +1608,13 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 100
+    PackSize = 1000
     Left = 672
     Top = 160
   end
   object DataSetDocs: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    MasterFields = 'GoodsId'
     Params = <>
     Left = 560
     Top = 424
@@ -1628,7 +1629,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     DataSets = <
       item
       end>
-    OutputType = otResult
+    OutputType = otMultiExecute
     Params = <
       item
         Name = 'inFromId'
@@ -1705,7 +1706,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 100
+    PackSize = 1000
     Left = 672
     Top = 216
   end
@@ -1741,7 +1742,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     DataSets = <
       item
       end>
-    OutputType = otResult
+    OutputType = otMultiExecute
     Params = <
       item
         Name = 'inUnitId'
@@ -1812,7 +1813,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 100
+    PackSize = 1000
     Left = 816
     Top = 168
   end
@@ -1821,7 +1822,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     DataSets = <
       item
       end>
-    OutputType = otResult
+    OutputType = otMultiExecute
     Params = <
       item
         Name = 'inUnitFromId'
@@ -1900,7 +1901,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 100
+    PackSize = 1000
     Left = 800
     Top = 216
   end
@@ -2095,7 +2096,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     DataSets = <
       item
       end>
-    OutputType = otResult
+    OutputType = otMultiExecute
     Params = <
       item
         Name = 'inFromId'
@@ -2155,7 +2156,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 100
+    PackSize = 1000
     Left = 584
     Top = 168
   end

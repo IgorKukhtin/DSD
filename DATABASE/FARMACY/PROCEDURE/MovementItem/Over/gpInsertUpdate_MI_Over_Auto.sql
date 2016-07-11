@@ -25,7 +25,9 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
     vbUserId := inSession;
 
-   -- IF COALESCE(inAmount, 0) <> 0 THEN
+
+   -- IF COALESCE(inAmount, 0) <> 0
+   -- THEN
       -- ищем ИД документа (ключ - дата, Подразделение) 
       SELECT Movement.Id  
       INTO vbMovementId
@@ -34,11 +36,11 @@ BEGIN
                                       ON MovementLinkObject_Unit.MovementId = Movement.ID
                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                      AND MovementLinkObject_Unit.ObjectId = inUnitId
-        
       WHERE Movement.DescId = zc_Movement_Over() AND Movement.OperDate = inOperDate
           AND Movement.StatusId <> zc_Enum_Status_Erased();
     
-      IF COALESCE (vbMovementId,0) = 0 THEN
+      IF COALESCE (vbMovementId,0) = 0
+      THEN
        -- записываем новый <Документ>
        vbMovementId := lpInsertUpdate_Movement_Over (ioId               := 0
                                                    , inInvNumber        := CAST (NEXTVAL ('Movement_Over_seq') AS TVarChar) --inInvNumber
@@ -50,14 +52,6 @@ BEGIN
        END IF;
       
    
-      -- Ищеи ИД строки (ключ - ид документа, товар)
-     /* SELECT MovementItem.Id
-       INTO vbMovementItemId
-      FROM MovementItem
-      WHERE MovementItem.MovementId = vbMovementId 
-        AND MovementItem.DescId = zc_MI_Master()
-        AND MovementItem.ObjectId = inGoodsId;
-*/
        -- сохранили строку документа
        vbMovementItemId := lpInsertUpdate_MI_Over_Master    (ioId                 := 0 --COALESCE(vbMovementItemId,0) ::Integer
                                                            , inMovementId         := vbMovementId
@@ -71,7 +65,7 @@ BEGIN
                                                            , inUserId             := vbUserId
                                                             );
   
- --  END IF;
+  -- END IF;
 
 END;
 $BODY$
