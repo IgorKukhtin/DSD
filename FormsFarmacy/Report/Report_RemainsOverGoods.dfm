@@ -1206,7 +1206,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         item
           Action = actOver
         end>
-      DataSource = MasterDS
+      View = cxGridDBTableView
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081'>'
       ImageIndex = 41
     end
@@ -1606,7 +1606,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 1
+    PackSize = 100
     Left = 672
     Top = 160
   end
@@ -1705,7 +1705,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 1
+    PackSize = 100
     Left = 672
     Top = 216
   end
@@ -2155,7 +2155,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    PackSize = 1
+    PackSize = 100
     Left = 584
     Top = 168
   end

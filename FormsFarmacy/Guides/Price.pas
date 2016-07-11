@@ -72,6 +72,10 @@ type
     clGoods_isTop: TcxGridDBColumn;
     dsdOpenForm: TdsdOpenForm;
     bbOpenForm: TdxBarButton;
+    cxLabel2: TcxLabel;
+    ceGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

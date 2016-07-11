@@ -430,7 +430,8 @@ uses
   Over in '..\..\FormsFarmacy\Document\Over.pas' {OverForm: TParentForm},
   OverJournal in '..\..\FormsFarmacy\Document\OverJournal.pas' {OverJournalForm: TParentForm},
   RoleUnion in '..\..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
-  Report_RemainsOverGoods in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas' {Report_RemainsOverGoodsForm: TParentForm};
+  Report_RemainsOverGoods in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas' {Report_RemainsOverGoodsForm: TParentForm},
+  PriceGoodsDialog in '..\..\FormsFarmacy\Guides\PriceGoodsDialog.pas' {PriceGoodsDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

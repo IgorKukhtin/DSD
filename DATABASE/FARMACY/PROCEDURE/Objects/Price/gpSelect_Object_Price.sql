@@ -7,9 +7,11 @@
 */
 DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, TDateTime, Boolean,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Integer, Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
     IN inUnitId      Integer,       -- подразделение
+    IN inGoodsId     Integer,       -- NJdfh
     IN inisShowAll   Boolean,        --True - показать все товары, False - показать только с ценами
     IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
     IN inSession     TVarChar       -- сессия пользователя
@@ -96,14 +98,41 @@ BEGIN
     THEN
         RETURN QUERY
         With 
-        tmpRemeins AS (SELECT container.objectid ,
-                              Sum(COALESCE(container.Amount,0)) ::TFloat AS Remains
-                       FROM container
-                       WHERE container.descid = zc_container_count() 
-                         AND Amount<>0
-                         AND Container.WhereObjectId = inUnitId
-                       GROUP BY container.objectid
+        tmpContainerRemeins AS (SELECT container.objectid
+                                     , Sum(COALESCE(container.Amount,0)) ::TFloat AS Remains
+                                     , Container.Id   AS  ContainerId
+                                FROM container
+                                WHERE container.descid = zc_container_count() 
+                                  AND Amount<>0
+                                  AND Container.WhereObjectId = inUnitId
+                                  AND (Container.objectid = inGoodsId OR inGoodsId = 0)
+                                GROUP BY container.objectid, Container.Id
+                                HAVING SUM(COALESCE (Container.Amount, 0)) <> 0
+                                )
+      , tmpRemeins AS (SELECT tmp.Objectid
+                            , Sum(tmp.Remains)  ::TFloat  AS Remains
+                            , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                       FROM tmpContainerRemeins AS tmp
+                              -- находим партию
+                              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                            ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId
+                                                           AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                              -- элемент прихода
+                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                      
+                              LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                       GROUP BY tmp.Objectid
                        )
+           
         -- Маркетинговый контракт
       , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
                          --   , tmp.ChangePercent
@@ -124,7 +153,7 @@ BEGIN
                          )
         
             SELECT
-                Object_Price_View.Id                                                AS Id
+                 Object_Price_View.Id                                               AS Id
                , COALESCE (Object_Price_View.Price,0)                     :: TFloat AS Price
                , COALESCE (Object_Price_View.MCSValue,0)                  :: TFloat AS MCSValue
                , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData, 0)     :: TFloat AS MCSPeriod
@@ -147,7 +176,7 @@ BEGIN
                , COALESCE(Object_Price_View.Fix,False)           AS Fix
 
                , Object_Price_View.FixDateChange                 AS FixDateChange
-               , SelectMinPrice_AllGoods.MinExpirationDate       AS MinExpirationDate
+               , Object_Remains.MinExpirationDate                AS MinExpirationDate   --SelectMinPrice_AllGoods.MinExpirationDate AS MinExpirationDate
 
                , Object_Remains.Remains                          AS Remains
                , (Object_Remains.Remains * COALESCE (Object_Price_View.Price,0)) ::TFloat AS SummaRemains
@@ -176,11 +205,6 @@ BEGIN
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
                                            ON Object_Remains.ObjectId = Object_Goods_View.Id
    
-                LEFT JOIN lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
-                                                    inObjectId := vbObjectId, 
-                                                    inUserId := vbUserId) AS SelectMinPrice_AllGoods
-                                                                          ON SelectMinPrice_AllGoods.GoodsId = Object_Goods_View.Id
-
                 -- получаем значения цены и НТЗ из истории значений на дату                                                           
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = Object_Price_View.Id 
@@ -197,19 +221,47 @@ BEGIN
                                             AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
                 LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id                             
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
+              AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
     ELSE
         RETURN QUERY
         WITH 
-        tmpRemeins AS (SELECT container.objectid ,
-                              SUM(COALESCE(container.Amount,0)) ::TFloat AS Remains
-                       FROM container
-                       WHERE container.descid = zc_container_count() 
-                         AND Amount<>0
-                         AND Container.WhereObjectId = inUnitId
-                       GROUP BY container.objectid
+tmpContainerRemeins AS (SELECT container.objectid
+                                     , Sum(COALESCE(container.Amount,0)) ::TFloat AS Remains
+                                     , Container.Id   AS  ContainerId
+                                FROM container
+                                WHERE container.descid = zc_container_count() 
+                                  AND Amount<>0
+                                  AND Container.WhereObjectId = inUnitId
+                                  AND (Container.objectid = inGoodsId OR inGoodsId = 0)
+                                GROUP BY container.objectid, Container.Id
+                                HAVING SUM(COALESCE (Container.Amount, 0)) <> 0
+                                )
+      , tmpRemeins AS (SELECT tmp.Objectid
+                            , Sum(tmp.Remains)  ::TFloat  AS Remains
+                            , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                       FROM tmpContainerRemeins AS tmp
+                              -- находим партию
+                              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                            ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId
+                                                           AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                              -- элемент прихода
+                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                      
+                              LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                       GROUP BY tmp.Objectid
                        )
-           -- Маркетинговый контракт
+                     
+        -- Маркетинговый контракт
       , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
                          --   , tmp.ChangePercent
                        FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
@@ -251,7 +303,7 @@ BEGIN
                , Object_Price_View.MCSNotRecalcDateChange  AS MCSNotRecalcDateChange
                , Object_Price_View.Fix                     AS Fix
                , Object_Price_View.FixDateChange           AS FixDateChange
-               , SelectMinPrice_AllGoods.MinExpirationDate AS MinExpirationDate
+               , Object_Remains.MinExpirationDate                AS MinExpirationDate   --, CASE WHEN inGoodsId = 0 THEN SelectMinPrice_AllGoods.MinExpirationDate ELSE SelectMinPrice_List.PartionGoodsDate END AS MinExpirationDate
                , Object_Remains.Remains                    AS Remains
                , (Object_Remains.Remains * COALESCE (Object_Price_View.Price,0)) ::TFloat AS SummaRemains
 
@@ -276,11 +328,6 @@ BEGIN
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
                                            ON Object_Remains.ObjectId = Object_Price_View.GoodsId
 
-                LEFT JOIN lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
-                                                     inObjectId := vbObjectId, 
-                                                     inUserId := vbUserId) AS SelectMinPrice_AllGoods 
-                                                                           ON SelectMinPrice_AllGoods.GoodsId = Object_Goods_View.Id
-                --
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = Object_Price_View.Id 
                                        AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
@@ -297,6 +344,7 @@ BEGIN
                 LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
             WHERE Object_Price_View.unitid = inUnitId
               AND (inisShowDel = True OR Object_Goods_View.isErased = False)
+              AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
     END IF;
 END;
@@ -307,6 +355,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 11.07.16         *
  04.07.16         *
  30.06.16         *
  12.04.16         *

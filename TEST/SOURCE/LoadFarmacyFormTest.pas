@@ -835,6 +835,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceGoodsDialogForm');
 end;
 
 procedure TLoadFormTest.LoadAlternativeGroupFormTest;

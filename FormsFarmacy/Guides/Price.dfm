@@ -1,20 +1,21 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
   ClientHeight = 386
-  ClientWidth = 826
-  ExplicitWidth = 842
+  ClientWidth = 846
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 862
   ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
     Left = 0
     Top = 0
-    Width = 826
+    Width = 846
     Height = 32
     Align = alTop
     TabOrder = 6
     object deOperDate: TcxDateEdit
-      Left = 531
+      Left = 800
       Top = 5
       EditValue = 42460d
       Properties.DateOnError = deToday
@@ -25,37 +26,42 @@ inherited PriceForm: TPriceForm
       Properties.ShowTime = False
       TabOrder = 0
       Visible = False
-      Width = 154
+      Width = 42
     end
     object cxLabel3: TcxLabel
-      Left = 25
-      Top = 7
+      Left = 1
+      Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object cxLabel1: TcxLabel
-      Left = 426
+      Left = 760
       Top = 6
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1094#1077#1085' '#1085#1072':'
+      Caption = #1094#1077#1085#1072' '#1085#1072':'
       Visible = False
+    end
+    object cxLabel2: TcxLabel
+      Left = 389
+      Top = 6
+      Caption = #1058#1086#1074#1072#1088':'
     end
   end
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 826
+    Width = 846
     Height = 328
     ExplicitTop = 58
-    ExplicitWidth = 826
-    ExplicitHeight = 327
+    ExplicitWidth = 846
+    ExplicitHeight = 328
     ClientRectBottom = 328
-    ClientRectRight = 826
+    ClientRectRight = 846
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 826
-      ExplicitHeight = 327
+      ExplicitWidth = 846
+      ExplicitHeight = 328
       inherited cxGrid: TcxGrid
-        Width = 826
+        Width = 846
         Height = 328
-        ExplicitWidth = 826
-        ExplicitHeight = 327
+        ExplicitWidth = 846
+        ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -429,7 +435,7 @@ inherited PriceForm: TPriceForm
     end
   end
   object ceUnit: TcxButtonEdit [2]
-    Left = 116
+    Left = 90
     Top = 5
     Properties.Buttons = <
       item
@@ -441,7 +447,22 @@ inherited PriceForm: TPriceForm
     Properties.UseNullString = True
     TabOrder = 5
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Width = 293
+    Width = 290
+  end
+  object ceGoods: TcxButtonEdit [3]
+    Left = 427
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1074#1072#1088'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 7
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1074#1072#1088'>'
+    Width = 294
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -455,6 +476,12 @@ inherited PriceForm: TPriceForm
       end
       item
         Component = UnitGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GoodsGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -706,8 +733,8 @@ inherited PriceForm: TPriceForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      FormName = 'TPriceDialogForm'
-      FormNameParam.Value = 'TPriceDialogForm'
+      FormName = 'TPriceGoodsDialogForm'
+      FormNameParam.Value = 'TPriceGoodsDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -731,6 +758,23 @@ inherited PriceForm: TPriceForm
           Name = 'UnitName'
           Value = Null
           Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GoodsGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -785,6 +829,14 @@ inherited PriceForm: TPriceForm
         Value = Null
         Component = FormParams
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -980,8 +1032,8 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 168
+    Left = 120
+    Top = 192
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1330,5 +1382,47 @@ inherited PriceForm: TPriceForm
     PackSize = 1
     Left = 504
     Top = 136
+  end
+  object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoods
+    FormNameParam.Value = 'TGoodsLiteForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsLiteForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 552
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GoodsGuides
+      end
+      item
+        Component = UnitGuides
+      end>
+    Left = 656
+    Top = 184
   end
 end
