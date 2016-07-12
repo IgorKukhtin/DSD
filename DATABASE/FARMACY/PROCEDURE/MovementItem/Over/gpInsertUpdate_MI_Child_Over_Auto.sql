@@ -27,7 +27,7 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
     vbUserId := inSession;
 
-   -- IF COALESCE(inAmount, 0) <> 0 THEN
+   IF COALESCE(inAmount, 0) <> 0 THEN
       -- ищем ИД документа (ключ - дата, Подразделение) 
       SELECT Movement.Id  
       INTO vbMovementId
@@ -54,20 +54,11 @@ BEGIN
 
 
 
-   --   IF COALESCE (vbMovementItemId,0) = 0 THEN
-   --       RAISE EXCEPTION 'Ошибка.Строка мастера не определена.';
-   --   END IF;
+      --   IF COALESCE (vbMovementItemId,0) = 0 THEN
+      --       RAISE EXCEPTION 'Ошибка.Строка мастера не определена.';
+      --   END IF;
 
      IF COALESCE (vbMovementItemId,0) <> 0 THEN
-       -- Ищем строку Чайлд
-    /*   SELECT MovementItem.Id
-        INTO vbMovementItemChildId
-       FROM MovementItem
-       WHERE MovementItem.MovementId = vbMovementId 
-         AND MovementItem.DescId = zc_MI_Child()
-         AND MovementItem.ParentId = vbMovementItemId
-         AND MovementItem.ObjectId = inUnitToId;
-    */
         -- сохранили строку документа
         vbMovementItemId := lpInsertUpdate_MI_Over_Child(ioId               := 0 --COALESCE(vbMovementItemChildId,0) ::Integer
                                                        , inMovementId       := vbMovementId
@@ -84,7 +75,7 @@ BEGIN
       
       END IF;
   
-  -- END IF;
+  END IF;
 
 END;
 $BODY$
