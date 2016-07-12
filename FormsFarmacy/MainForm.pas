@@ -269,6 +269,8 @@ type
     N84: TMenuItem;
     actRoleUnion: TdsdOpenForm;
     N85: TMenuItem;
+    actColor: TdsdOpenForm;
+    N97: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

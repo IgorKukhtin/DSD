@@ -11,11 +11,12 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCurrencyEdit, cxTextEdit;
 
 type
   TColorForm = class(TAncestorEnumForm)
     colName: TcxGridDBColumn;
+    ColorValue: TcxGridDBColumn;
   private
     { Private declarations }
   public

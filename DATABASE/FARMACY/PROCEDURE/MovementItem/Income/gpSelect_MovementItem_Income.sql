@@ -49,6 +49,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Fix_Price TFloat
              , Color_calc Integer
 
+             , Goods_isTop Boolean
+             , Goods_PercentMarkup  TFloat
+             , Goods_Price TFloat
+
              )
 AS
 $BODY$
@@ -98,6 +102,10 @@ BEGIN
       , tmpGoods AS (SELECT Object_Goods.Id           AS GoodsId
                           , Object_Goods.GoodsCodeInt AS GoodsCode
                           , Object_Goods.GoodsName    AS GoodsName
+                          , Object_Goods_View.isTop            AS Goods_isTop
+                          , Object_Goods_View.PercentMarkup    AS Goods_PercentMarkup
+                          , Object_Goods_View.Price            AS Goods_Price
+
                      FROM Object_Goods_View AS Object_Goods
                      WHERE Object_Goods.isErased = FALSE 
                        AND Object_Goods.ObjectId = vbObjectId
@@ -206,6 +214,10 @@ BEGIN
               , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END  ::TFloat AS Fix_Price
 
               , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
+
+              , tmpGoods.Goods_isTop          ::Boolean
+              , tmpGoods.Goods_PercentMarkup  ::TFloat 
+              , tmpGoods.Goods_Price          ::TFloat 
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = tmpGoods.GoodsId
@@ -278,6 +290,10 @@ BEGIN
 
               , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
 
+              , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) ::Boolean AS Goods_isTop          
+              , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
+              , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price          
+
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -295,6 +311,16 @@ BEGIN
                 LEFT JOIN tmpOrderMI ON tmpOrderMI.GoodsId =  MovementItem.GoodsId
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = MovementItem.GoodsId
                                                  AND Object_Price_View.UnitId = vbUnitId
+
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                        ON ObjectBoolean_Goods_TOP.ObjectId = MovementItem.GoodsId
+                                       AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PercentMarkup
+                                      ON ObjectFloat_Goods_PercentMarkup.ObjectId = MovementItem.GoodsId
+                                     AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
+                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
+                                      ON ObjectFloat_Goods_Price.ObjectId = MovementItem.GoodsId
+                                     AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()   
                ;
     ELSE
        RETURN QUERY
@@ -418,6 +444,10 @@ BEGIN
 
               , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
 
+              , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) ::Boolean AS Goods_isTop          
+              , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
+              , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price   
+
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -435,6 +465,17 @@ BEGIN
                 LEFT JOIN tmpOrderMI ON tmpOrderMI.GoodsId =  MovementItem.GoodsId
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = MovementItem.GoodsId
                                                  AND Object_Price_View.UnitId = vbUnitId
+
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                        ON ObjectBoolean_Goods_TOP.ObjectId = MovementItem.GoodsId
+                                       AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PercentMarkup
+                                      ON ObjectFloat_Goods_PercentMarkup.ObjectId = MovementItem.GoodsId
+                                     AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
+                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
+                                      ON ObjectFloat_Goods_Price.ObjectId = MovementItem.GoodsId
+                                     AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()     
+
                 ;
     END IF;
 END;
