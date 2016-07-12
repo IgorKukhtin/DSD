@@ -318,6 +318,7 @@
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '+,0.###;-,0.###; ;'
             Options.Editing = False
+            Width = 63
           end
           object colReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
@@ -397,7 +398,7 @@
             Width = 60
           end
           object colFix_Price: TcxGridDBColumn
-            Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072
+            Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'Fix_Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -409,6 +410,37 @@
           object clPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'PercentMarkup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object clGoods_isTop: TcxGridDBColumn
+            Caption = #1058#1054#1055' ('#1087#1086' '#1089#1077#1090#1080')'
+            DataBinding.FieldName = 'Goods_isTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colGoods_Price: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072' ('#1087#1086' '#1089#1077#1090#1080')'
+            DataBinding.FieldName = 'Goods_Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clGoods_PercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
+            DataBinding.FieldName = 'Goods_PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -2078,7 +2110,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 420
-    Top = 188
+    Top = 220
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2280,8 +2312,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 152
+    Left = 280
+    Top = 232
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -2526,7 +2558,7 @@
         Control = edInvNumberOrder
       end>
     GetStoredProc = spGet
-    Left = 232
-    Top = 145
+    Left = 192
+    Top = 241
   end
 end

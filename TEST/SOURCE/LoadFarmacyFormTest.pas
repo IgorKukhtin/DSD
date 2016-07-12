@@ -382,6 +382,9 @@ begin
   // отчет поиск товара по всей сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemainsForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TColorForm');
 
 end;
 

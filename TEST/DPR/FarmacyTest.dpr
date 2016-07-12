@@ -431,7 +431,8 @@ uses
   OverJournal in '..\..\FormsFarmacy\Document\OverJournal.pas' {OverJournalForm: TParentForm},
   RoleUnion in '..\..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
   Report_RemainsOverGoods in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas' {Report_RemainsOverGoodsForm: TParentForm},
-  PriceGoodsDialog in '..\..\FormsFarmacy\Guides\PriceGoodsDialog.pas' {PriceGoodsDialogForm: TParentForm};
+  PriceGoodsDialog in '..\..\FormsFarmacy\Guides\PriceGoodsDialog.pas' {PriceGoodsDialogForm: TParentForm},
+  Color in '..\..\FormsFarmacy\System\Color.pas' {ColorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
