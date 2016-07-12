@@ -115,12 +115,12 @@ type
     procedure SetStoredProcName(const Value: String);
     function GetDataSetType: string;
     property CurrentPackSize: integer read FCurrentPackSize write FCurrentPackSize;
-    procedure MultiExecute(ExecPack: boolean);
+    procedure MultiExecute(ExecPack, AnyExecPack: boolean); //***12.07.2016 add AnyExecPack
     procedure ResetData;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    function Execute(ExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
+    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; //***12.07.2016 add AnyExecPack
     function ParamByName(const Value: string): TdsdParam;
     // XML для вызова на сервере
     function GetXML: String;
@@ -242,7 +242,7 @@ begin
   inherited;
 end;
 
-function TdsdStoredProc.Execute(ExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
+function TdsdStoredProc.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
 var TickCount: cardinal;
 begin
   result := '';
@@ -259,7 +259,7 @@ begin
     if (OutputType = otBlob) then
         result := TStorageFactory.GetStorage.ExecuteProc(GetXML);
     if (OutputType = otMultiExecute) then
-        MultiExecute(ExecPack);
+        MultiExecute(ExecPack, AnyExecPack); //***12.07.2016 add AnyExecPack
   finally
     if ACursorHourGlass then
       Screen.Cursor := crDefault;
@@ -479,10 +479,10 @@ begin
   end;
 end;
 
-procedure TdsdStoredProc.MultiExecute(ExecPack: boolean);
+procedure TdsdStoredProc.MultiExecute(ExecPack, AnyExecPack: boolean);
 begin
-  // Заполняем значение Data
-  if not ExecPack then
+  // Заполняем значение Data + 12.07.2016 а если AnyExecPack - то Всегда
+  if (not ExecPack) or (AnyExecPack = true) then
      FDataXML := FDataXML + '<dataitem>' + FillParams + '</dataitem>';
   // Увеличиваем счетчик
   CurrentPackSize := CurrentPackSize + 1;

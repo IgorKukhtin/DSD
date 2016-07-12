@@ -76,6 +76,7 @@ type
   // Общий класс нужен для некороторых общих операций. Например учитывать TabSheet
   TdsdCustomAction = class(TCustomAction)
   private
+    fExecPack:Boolean; //12.07.2016 - Передали параметр в StoredProc, нужен для otMultiExecute
     FOnPageChanging: TOnPageChanging;
     FTabSheet: TcxTabSheet;
     FPostDataSetBeforeExecute: Boolean;
@@ -159,6 +160,7 @@ type
 
   TMultiAction = class(TdsdCustomAction)
   private
+    fExecPack:Boolean;//12.07.2016 - Передали параметр в StoredProc, нужен для otMultiExecute
     FActionList: TOwnedCollection;
     FDataSource: TDataSource;
     FQuestionBeforeExecuteList: TStringList;
@@ -827,7 +829,9 @@ begin
           (Assigned(StoredProcList[i].TabSheet) and
           (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i]
           .TabSheet)) then
-          StoredProcList[i].StoredProc.Execute
+          if StoredProcList[i].StoredProc.OutputType = otMultiExecute
+          then StoredProcList[i].StoredProc.Execute(fExecPack, true)//12.07.2016 - Передали параметр в StoredProc, нужен для otMultiExecute
+          else StoredProcList[i].StoredProc.Execute
       end;
 end;
 
@@ -1904,7 +1908,7 @@ begin
   inherited;
 end;
 
-function TdsdCustomAction.Execute: Boolean;
+function TdsdCustomAction.Execute : Boolean;
 var
   i: Integer;
 begin
@@ -2247,6 +2251,7 @@ begin
         begin
           View.DataController.FocusedRecordIndex :=
             View.DataController.FilteredRecordIndex[i];
+          fExecPack:= (i = View.DataController.FilteredRecordCount - 1);//***12.07.2016 - Определили параметр для StoredProc, нужен для otMultiExecute
           ListExecute;
           IncProgress(1);
           Application.ProcessMessages;
@@ -2258,11 +2263,11 @@ begin
   end
   else
   begin
-
     if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and
       (DataSource.DataSet.RecordCount > 0) then
     begin
       // DataSource.DataSet.DisableControls;
+      i:=DataSource.DataSet.RecordCount;//***12.07.2016
       try
         DataSource.DataSet.First;
         with TGaugeFactory.GetGauge(Caption, 0,
@@ -2271,7 +2276,9 @@ begin
             Start;
             while not DataSource.DataSet.Eof do
             begin
+              fExecPack:= (i = 1);//***12.07.2016 - Определили параметр для StoredProc, нужен для otMultiExecute
               ListExecute;
+              i:=i-1;//***12.07.2016
               IncProgress(1);
               Application.ProcessMessages;
               if not WithoutNext then
@@ -2307,6 +2314,11 @@ begin
     begin
       //если экшин не активен - не выполняем его
       if not TActionItem(ActionList.Items[i]).Action.Enabled then continue;
+
+      //***12.07.2016 - Передали параметр в StoredProc, нужен для otMultiExecute
+      if (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction)
+      then TdsdCustomAction (TActionItem(ActionList.Items[i]).Action).fExecPack:=fExecPack;
+
       State := TActionItem(ActionList.Items[i]).Action.Execute;
       if (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) and
         (not State) then

@@ -4,7 +4,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitLeft = -293
-  ExplicitTop = -135
   ExplicitWidth = 1082
   ExplicitHeight = 592
   PixelsPerInch = 96
@@ -353,6 +352,36 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 80
           end
+          object Invnumber_Over: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1048#1079#1083#1080#1096#1082#1086#1074
+            DataBinding.FieldName = 'Invnumber_Over'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object Amount_Over: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076' ('#1076#1086#1082')'
+            DataBinding.FieldName = 'Amount_Over'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object Amount_OverDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1076#1086#1082'./'#1086#1090#1095#1077#1090
+            DataBinding.FieldName = 'Amount_OverDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object RemainsMCS_result: TcxGridDBColumn
             Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'RemainsMCS_result'
@@ -526,35 +555,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 112
-          end
-          object Invnumber_Over: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1048#1079#1083#1080#1096#1082#1086#1074
-            DataBinding.FieldName = 'Invnumber_Over'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 74
-          end
-          object Amount_Over: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076' ('#1076#1086#1082')'
-            DataBinding.FieldName = 'Amount_Over'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object Amount_OverDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1072' '#1088#1072#1089#1093#1086#1076' '#1089' '#1076#1086#1082#1091#1084'.'
-            DataBinding.FieldName = 'Amount_OverDiff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
           end
         end
       end
@@ -869,6 +869,24 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object chGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'.'
+            DataBinding.FieldName = 'GoodsCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object chPriceFrom: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1072#1089#1093'.'
+            DataBinding.FieldName = 'PriceFrom'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
         end
         object cxGridLevel1: TcxGridLevel

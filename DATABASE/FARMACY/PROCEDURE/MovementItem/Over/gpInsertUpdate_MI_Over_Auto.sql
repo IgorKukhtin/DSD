@@ -46,17 +46,23 @@ BEGIN
                                                    , inInvNumber        := CAST (NEXTVAL ('Movement_Over_seq') AS TVarChar) --inInvNumber
                                                    , inOperDate         := inOperDate
                                                    , inUnitId           := inUnitId
-                                                   , inComment          := 'Создан автоматически' :: TVarChar
+                                                   , inComment          := '' :: TVarChar
                                                    , inUserId           := vbUserId
                                                    );
        END IF;
       
    
+       -- проверка
+       IF EXISTS (SELECT ObjectId FROM MovementItem WHERE MovementId = vbMovementId AND ObjectId = inGoodsId AND isErased = FALSE AND DescId = zc_MI_Master())
+       THEN
+          RAISE EXCEPTION 'Ошибка.Дублируется "главный" товар = <%> партия = <%> кол-во = <%>  остаток = <%> цена = <%>', lfGet_Object_ValueData (inGoodsId), DATE (inMinExpirationDate), zfConvert_FloatToString (inAmount), zfConvert_FloatToString (inRemains), zfConvert_FloatToString (inPrice);
+       END IF;
+
        -- сохранили строку документа
-       vbMovementItemId := lpInsertUpdate_MI_Over_Master    (ioId                 := 0 --COALESCE(vbMovementItemId,0) ::Integer
+       vbMovementItemId := lpInsertUpdate_MI_Over_Master    (ioId                 := 0 -- COALESCE (vbMovementItemId, 0)
                                                            , inMovementId         := vbMovementId
                                                            , inGoodsId            := inGoodsId
-                                                           , inAmount             := inAmount
+                                                           , inAmount             := 0 -- inAmount !!!автоматом = сумме в zc_MI_Child!!!
                                                            , inRemains            := inRemains
                                                            , inPrice              := inPrice
                                                            , inMCS                := inMCS
@@ -66,6 +72,13 @@ BEGIN
                                                             );
   
   -- END IF;
+
+       -- проверка
+       IF EXISTS (SELECT ObjectId FROM MovementItem WHERE MovementId = vbMovementId AND isErased = FALSE AND DescId = zc_MI_Master() GROUP BY ObjectId HAVING COUNT(*) > 1)
+       THEN
+          RAISE EXCEPTION 'Ошибка.Дублируется "главный" товар <%>', lfGet_Object_ValueData ((SELECT ObjectId FROM MovementItem WHERE MovementId = vbMovementId AND isErased = FALSE AND DescId = zc_MI_Master() GROUP BY ObjectId HAVING COUNT(*) > 1 LIMIT 1));
+       END IF;
+
 
 END;
 $BODY$
