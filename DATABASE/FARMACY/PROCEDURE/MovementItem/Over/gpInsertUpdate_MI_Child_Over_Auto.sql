@@ -27,51 +27,75 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
     vbUserId := inSession;
 
-   IF COALESCE(inAmount, 0) <> 0 THEN
-      -- ищем ИД документа (ключ - дата, Подразделение) 
-      SELECT Movement.Id  
-      INTO vbMovementId
-      FROM Movement
-        Inner Join MovementLinkObject AS MovementLinkObject_Unit
-                                      ON MovementLinkObject_Unit.MovementId = Movement.ID
-                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                     AND MovementLinkObject_Unit.ObjectId = inUnitFromId
-        
-      WHERE Movement.DescId = zc_Movement_Over() AND Movement.OperDate = inOperDate
-          AND Movement.StatusId <> zc_Enum_Status_Erased();
-    
-      IF COALESCE (vbMovementId,0) = 0 THEN
+    IF COALESCE (inAmount, 0) <> 0
+    THEN
+      -- поиск документа (ключ - дата, Подразделение)
+      vbMovementId:= (SELECT Movement.Id  
+                      FROM Movement
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                         ON MovementLinkObject_Unit.MovementId = Movement.ID
+                                                        AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                        AND MovementLinkObject_Unit.ObjectId   = inUnitFromId
+                      WHERE Movement.OperDate = inOperDate
+                        AND Movement.DescId = zc_Movement_Over()
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                     );
+      -- проверка
+      IF COALESCE (vbMovementId, 0) = 0 THEN
           RAISE EXCEPTION 'Ошибка.Документ не определен.';
       END IF;
+
       
-      -- Ищеи ИД строки (ключ - ид документа, товар)
-      SELECT MovementItem.Id
-       INTO vbMovementItemId
-      FROM MovementItem
-      WHERE MovementItem.MovementId = vbMovementId 
-        AND MovementItem.DescId = zc_MI_Master()
-        AND MovementItem.ObjectId = inGoodsId;
+      -- поиск строки Master (ключ - ид документа, товар)
+      vbMovementItemId:= (SELECT MovementItem.Id
+                          FROM MovementItem
+                          WHERE MovementItem.MovementId = vbMovementId 
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.ObjectId   = inGoodsId
+                            AND MovementItem.isErased   = FALSE
+                         );
+      /*-- проверка
+      IF COALESCE (vbMovementItemId, 0) = 0
+      THEN
+          RAISE EXCEPTION 'Ошибка.Строка мастера не определена.';
+      END IF;*/
 
 
+     IF vbMovementItemId <> 0
+     THEN
+        -- проверка
+        IF EXISTS (SELECT ObjectId FROM MovementItem WHERE ParentId = vbMovementItemId AND MovementId = vbMovementId AND ObjectId = inUnitToId AND isErased = FALSE AND DescId = zc_MI_Child())
+        THEN
+           RAISE EXCEPTION 'Ошибка.Дублируется "подчиненный" товар <%> для аптеки <%>', lfGet_Object_ValueData ((SELECT ObjectId FROM MovementItem WHERE ParentId = vbMovementItemId)), lfGet_Object_ValueData (inUnitToId);
+        END IF;
 
-      --   IF COALESCE (vbMovementItemId,0) = 0 THEN
-      --       RAISE EXCEPTION 'Ошибка.Строка мастера не определена.';
-      --   END IF;
-
-     IF COALESCE (vbMovementItemId,0) <> 0 THEN
         -- сохранили строку документа
-        vbMovementItemId := lpInsertUpdate_MI_Over_Child(ioId               := 0 --COALESCE(vbMovementItemChildId,0) ::Integer
-                                                       , inMovementId       := vbMovementId
-                                                       , inParentId         := vbMovementItemId                                
-                                                       , inUnitId           := inUnitToId
-                                                       , inAmount           := inAmount
-                                                       , inRemains          := inRemains
-                                                       , inPrice            := inPrice
-                                                       , inMCS              := inMCS
-                                                       , inMinExpirationDate:= inMinExpirationDate
-                                                       , inComment          := Null :: TVarChar
-                                                       , inUserId           := vbUserId
-                                                       );
+        vbMovementItemChildId := lpInsertUpdate_MI_Over_Child(ioId               := 0 --COALESCE (vbMovementItemChildId, 0)
+                                                            , inMovementId       := vbMovementId
+                                                            , inParentId         := vbMovementItemId                                
+                                                            , inUnitId           := inUnitToId
+                                                            , inAmount           := inAmount
+                                                            , inRemains          := inRemains
+                                                            , inPrice            := inPrice
+                                                            , inMCS              := inMCS
+                                                            , inMinExpirationDate:= inMinExpirationDate
+                                                            , inComment          := Null :: TVarChar
+                                                            , inUserId           := vbUserId
+                                                            );
+
+        -- сохранили в Master - сумму из Child
+        PERFORM lpInsertUpdate_MovementItem (ioId           := MovementItem.Id
+                                           , inDescId       := MovementItem.DescId
+                                           , inObjectId     := MovementItem.ObjectId
+                                           , inMovementId   := MovementItem.MovementId
+                                           , inAmount       := COALESCE ((SELECT SUM (Amount) FROM MovementItem WHERE MovementId = vbMovementId AND ParentId = vbMovementItemId AND isErased = FALSE AND DescId = zc_MI_Child()), 0)
+                                           , inParentId     := MovementItem.ParentId
+                                           , inUserId       := vbUserId
+                                            )
+        FROM MovementItem
+        WHERE MovementItem.Id = vbMovementItemId
+       ;
+
       
       END IF;
   

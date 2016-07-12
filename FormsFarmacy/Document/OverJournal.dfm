@@ -4,7 +4,7 @@ inherited OverJournalForm: TOverJournalForm
   ClientWidth = 969
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 985
-  ExplicitHeight = 528
+  ExplicitHeight = 525
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -221,6 +221,7 @@ inherited OverJournalForm: TOverJournalForm
     Left = 23
     Top = 258
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TOverForm'
       FormNameParam.Value = 'TOverForm'
       GuiParams = <
@@ -398,7 +399,7 @@ inherited OverJournalForm: TOverJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -433,18 +434,6 @@ inherited OverJournalForm: TOverJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

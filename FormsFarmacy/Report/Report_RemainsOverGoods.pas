@@ -83,6 +83,8 @@ type
     actSendOver: TdsdExecStoredProc;
     macSendOver: TMultiAction;
     bbSendOver: TdxBarButton;
+    chGoodsCode: TcxGridDBColumn;
+    chPriceFrom: TcxGridDBColumn;
   private
     { Private declarations }
   public

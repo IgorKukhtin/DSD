@@ -3,7 +3,7 @@ inherited OverForm: TOverForm
   ClientHeight = 532
   ClientWidth = 1002
   ExplicitWidth = 1018
-  ExplicitHeight = 570
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -144,7 +144,6 @@ inherited OverForm: TOverForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupSummaryLayout = gslStandard
           OptionsView.HeaderHeight = 32
           OptionsView.Indicator = False
@@ -179,7 +178,7 @@ inherited OverForm: TOverForm
             Width = 227
           end
           object coPrice: TcxGridDBColumn [3]
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' '#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -188,7 +187,7 @@ inherited OverForm: TOverForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 60
+            Width = 55
           end
           object colRemains: TcxGridDBColumn [4]
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -203,14 +202,14 @@ inherited OverForm: TOverForm
             Width = 70
           end
           object colAmount: TcxGridDBColumn [5]
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             Options.IncSearch = False
-            Width = 97
+            Width = 70
           end
           object colSumma: TcxGridDBColumn [6]
             Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076
@@ -222,7 +221,7 @@ inherited OverForm: TOverForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 60
+            Width = 80
           end
           object colMCS: TcxGridDBColumn [7]
             Caption = #1053#1058#1047
@@ -233,7 +232,7 @@ inherited OverForm: TOverForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 56
+            Width = 55
           end
           object clMinExpirationDate: TcxGridDBColumn [8]
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
@@ -242,15 +241,15 @@ inherited OverForm: TOverForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 111
+            Width = 100
           end
           object colComment: TcxGridDBColumn [9]
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 136
+            Width = 200
           end
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
@@ -379,7 +378,6 @@ inherited OverForm: TOverForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -395,7 +393,7 @@ inherited OverForm: TOverForm
             Width = 297
           end
           object chPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093'.'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -403,7 +401,7 @@ inherited OverForm: TOverForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 107
+            Width = 55
           end
           object chRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -417,14 +415,14 @@ inherited OverForm: TOverForm
             Width = 81
           end
           object chAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 113
+            Width = 70
           end
           object chSumma: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
@@ -436,7 +434,7 @@ inherited OverForm: TOverForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 60
+            Width = 80
           end
           object chMCS: TcxGridDBColumn
             Caption = #1053#1058#1047
@@ -447,7 +445,7 @@ inherited OverForm: TOverForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 92
+            Width = 55
           end
           object chMinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
@@ -455,14 +453,14 @@ inherited OverForm: TOverForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 100
           end
           object chComment: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 148
+            Width = 200
           end
         end
         object cxGridLevel1: TcxGridLevel
