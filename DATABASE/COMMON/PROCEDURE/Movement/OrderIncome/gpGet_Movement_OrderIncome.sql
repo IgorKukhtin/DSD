@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderIncome(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat, 
+             , TotalCount TFloat, TotalSumm TFloat 
              , PartnerId Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar

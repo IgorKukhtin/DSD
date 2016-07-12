@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_OrderIncome()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderIncome(Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderIncome(Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderIncome(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderIncome(
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;

@@ -1,21 +1,22 @@
 -- Function: gpInsertUpdate_MI_OrderIncome()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderIncome (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderIncome (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncome(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
+    IN inMeasureId           Integer   , -- 
     IN inAmount              TFloat    , -- Количество
     IN inCountForPrice       TFloat    , -- 
     IN inPrice               TFloat    , -- 
     IN inOrderIncomeId       Integer   , --
+    IN inGoodsId             Integer   , -- Товары
     IN inAssetId             Integer   ,
-    IN inAUnitId             Integer   ,
-    IN inComment             TVarChar    -- 
+    IN inUnitId              Integer   ,
+    IN inComment             TVarChar ,   -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -32,7 +33,7 @@ BEGIN
      END IF;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inMeasureId, inMovementId, inAmount, NULL);
 
 
 
@@ -46,11 +47,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
+     -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_OrderIncome(), ioId, inOrderIncomeId);
-
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
 
