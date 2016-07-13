@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
  INOUT ioId                  Integer   ,    -- ключ объекта < Основные средства>
@@ -19,7 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
     IN inAssetGroupId        Integer   ,    -- ссылка на группу основных средств
     IN inJuridicalId         Integer   ,    -- ссылка на Юридические лица
     IN inMakerId             Integer   ,    -- ссылка на Производитель (ОС)
-    
+
+    IN inPeriodUse           TFloat   ,     -- период эксплуатации
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -56,6 +58,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Juridical(), ioId, inJuridicalId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Maker(), ioId, inMakerId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Asset_PeriodUse(), ioId, inPeriodUse);
+
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Asset_Release(), ioId, inRelease);
@@ -67,8 +72,6 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

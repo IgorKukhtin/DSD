@@ -60,6 +60,8 @@ type
     ceMaker: TcxButtonEdit;
     cxLabel10: TcxLabel;
     MakerGuides: TdsdGuides;
+    edPeriodUse: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
   private
     { Private declarations }
   public

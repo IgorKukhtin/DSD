@@ -1,9 +1,9 @@
-п»ї-- Function: gpSelect_Object_Asset()
+-- Function: gpSelect_Object_Asset()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Asset(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Asset(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AssetGroupId Integer, AssetGroupCode Integer, AssetGroupName TVarChar
@@ -11,11 +11,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
+             , PeriodUse TFloat
              , isErased boolean) AS
 $BODY$
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Asset());
 
      RETURN QUERY 
@@ -43,6 +44,8 @@ BEGIN
          , ObjectString_SerialNumber.ValueData   AS SerialNumber
          , ObjectString_PassportNumber.ValueData AS PassportNumber
          , ObjectString_Comment.ValueData        AS Comment
+
+         , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
 
          , Object_Asset.isErased            AS isErased
          
@@ -85,6 +88,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Asset.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Asset_Comment()  
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_PeriodUse
+                                ON ObjectFloat_PeriodUse.ObjectId = Object_Asset.Id
+                               AND ObjectFloat_PeriodUse.DescId = zc_ObjectFloat_Asset_PeriodUse()
                                 
      WHERE Object_Asset.DescId = zc_Object_Asset();
   
@@ -96,11 +103,11 @@ ALTER FUNCTION gpSelect_Object_Asset(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.02.14         * add wiki  
  02.07.13          *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_Asset('2')
