@@ -70,6 +70,8 @@ BEGIN
 
     END IF;
       
+    --проводим док. распред.излишков
+    PERFORM gpComplete_Movement_Over (inMovementId := vbMovementId, inislastcomplete := 'True',  inSession := inSession);
 
 END;
 $BODY$
