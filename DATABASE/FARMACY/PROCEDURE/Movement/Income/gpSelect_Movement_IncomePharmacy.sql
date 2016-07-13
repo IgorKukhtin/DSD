@@ -72,27 +72,29 @@ BEGIN
            , Movement_Income_View.isDocument
 
            , Object_Insert.ValueData              AS InsertName
-           , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+           , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
-           , ObjectDate_Protocol_Update.ValueData AS UpdateDate
+           , MovementDate_Update.ValueData        AS UpdateDate
+
        FROM Movement_Income_View 
             JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
 
-            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
-                                 ON ObjectDate_Protocol_Insert.ObjectId = Movement_Income_View.Id
-                                AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-            LEFT JOIN ObjectLink AS ObjectLink_Insert
-                                 ON ObjectLink_Insert.ObjectId = Movement_Income_View.Id
-                                AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId  
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement_Income_View.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement_Income_View.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
 
-            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
-                                 ON ObjectDate_Protocol_Update.ObjectId = Movement_Income_View.Id
-                                AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
-            LEFT JOIN ObjectLink AS ObjectLink_Update
-                                 ON ObjectLink_Update.ObjectId = Movement_Income_View.Id
-                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId  
+            LEFT JOIN MovementDate AS MovementDate_Update
+                                   ON MovementDate_Update.MovementId = Movement_Income_View.Id
+                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
+            LEFT JOIN MovementLinkObject AS MLO_Update
+                                         ON MLO_Update.MovementId = Movement_Income_View.Id
+                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+
 
        WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate 
          AND Movement_Income_View.ToId = vbUnitId

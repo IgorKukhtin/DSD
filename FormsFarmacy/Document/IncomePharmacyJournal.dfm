@@ -367,10 +367,12 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -396,12 +398,14 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintForManager: TdsdPrintAction
       Category = 'DSDLib'
@@ -428,6 +432,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actisDocument: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -455,7 +460,9 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       MoveParams = <
         item
           FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -485,12 +492,14 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       FormName = 'TIncome_AmountTroubleForm'
       FormNameParam.Value = 'TIncome_AmountTroubleForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -503,6 +512,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -510,6 +520,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -517,6 +528,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -539,6 +551,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -546,6 +559,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -553,11 +567,13 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -724,6 +740,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -737,6 +754,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -750,6 +768,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -760,30 +779,35 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncome'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncomeTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -818,6 +842,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -840,15 +865,18 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ConnectionString'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'QueryText'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 440
@@ -865,15 +893,18 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ConnectionString'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'QueryText'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 440
@@ -890,6 +921,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -898,10 +930,11 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 594
-    Top = 104
+    Left = 578
+    Top = 136
   end
   object spGet_Movement_ManualAmountTrouble: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ManualAmountTrouble'
@@ -914,12 +947,14 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReverce'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioChecked'
@@ -928,6 +963,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outTrouble'
@@ -935,6 +971,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = actaOpen_Income_AmountTroubleForm
         ComponentItem = 'Enabled'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 408
@@ -951,6 +988,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisDocument'
@@ -959,6 +997,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         ComponentItem = 'isDocument'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 760
