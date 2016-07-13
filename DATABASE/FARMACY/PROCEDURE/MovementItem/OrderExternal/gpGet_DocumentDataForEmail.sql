@@ -12,6 +12,7 @@ RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVa
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
+
   DECLARE vbUnitId Integer;
   DECLARE vbContractId Integer;
   DECLARE vbMail TVarChar;
@@ -22,18 +23,42 @@ $BODY$
   DECLARE vbJuridicalName TVarChar;
   DECLARE vbZakazName TVarChar;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
    vbUserId := lpGetUserBySession (inSession);
 
+
    -- еще
-   SELECT mail, JuridicalName INTO vbMail, vbJuridicalName
-   FROM MovementLinkObject
-        LEFT JOIN Object_ContactPerson_View ON Object_ContactPerson_View.JuridicalId = MovementLinkObject.ObjectId
-                                            AND Object_ContactPerson_View.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
-   WHERE MovementLinkObject.DescId = zc_MovementLinkObject_From()
-     AND MovementLinkObject.MovementId = inId;
+   SELECT tmp.Mail, tmp.JuridicalName
+          INTO vbMail, vbJuridicalName
+   FROM (WITH tmpMovement AS (SELECT MLO_From.ObjectId AS FromId, ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                              FROM MovementLinkObject AS MLO_From
+                                   -- !!!только так - определяется <Торговая сеть>!!!
+                                   LEFT JOIN MovementLinkObject AS MLO_To
+                                                                ON MLO_To.MovementId = MLO_From.MovementId
+                                                               AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                        ON ObjectLink_Unit_Juridical.ObjectId = MLO_To.ObjectId
+                                                       AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                        ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                       AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                              WHERE MLO_From.MovementId = inId
+                                AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                             )
+         SELECT COALESCE (View_ContactPerson.Mail,          View_ContactPerson_two.Mail)          AS Mail
+              , COALESCE (View_ContactPerson.JuridicalName, View_ContactPerson_two.JuridicalName) AS JuridicalName
+         FROM tmpMovement
+              LEFT JOIN Object_ContactPerson_View AS View_ContactPerson
+                                                  ON View_ContactPerson.JuridicalId         = tmpMovement.FromId
+                                                 AND View_ContactPerson.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+                                                 AND View_ContactPerson.RetailId            = tmpMovement.RetailId
+              LEFT JOIN Object_ContactPerson_View AS View_ContactPerson_two
+                                                  ON View_ContactPerson_two.JuridicalId         = tmpMovement.FromId
+                                                 AND View_ContactPerson_two.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+                                                 AND View_ContactPerson.JuridicalId IS NULL
+        ) AS tmp;
+
 
    -- еще
    SELECT object_unit_view.juridicalname||' от '||object_unit_view.name, SomeText, MovementLinkObject.ObjectId INTO vbZakazName, vbUnitSign, vbUnitId 

@@ -276,7 +276,7 @@ begin
   FreeAndNil(FParams);
   FreeAndNil(FPopupMenu);
   FreeAndNil(FFormNameParam);
-  //inherited; -- здесь вываливается access violation, без этого - нет
+  inherited;
 end;
 
 procedure TdsdGuides.Notification(AComponent: TComponent;
