@@ -39,7 +39,7 @@ BEGIN
              , Object_Status.Name                         AS StatusName
              
              , CURRENT_TIMESTAMP ::TDateTime              AS InsertDate
-             , Object_Insert.ValueData                    AS InsertName
+             , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
                           
              , CAST (True as Boolean)                     AS PriceWithVAT
              , CAST (20 as TFloat)                        AS VATPercent
@@ -60,7 +60,7 @@ BEGIN
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
-               JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.descid= zc_Object_CurrencyDocument()
+               JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.descid= zc_Object_Currency()
                                              AND Object_CurrencyDocument.id = 14461	             -- грн
           ;
 

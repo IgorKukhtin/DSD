@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderIncome(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа (формирование заказа)
-    IN inPartnerId           Integer   , -- Поставщик
+    IN inJuridicalId         Integer   , -- Поставщик
     IN inContractId          Integer   , -- Договор 
     IN inPaidKindId          Integer   , -- Форма оплаты
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
@@ -42,7 +42,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_InsertDate(), ioId, outInsertDate);
 
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <>
@@ -69,7 +69,7 @@ BEGIN
                                     JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
                                                                 ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                                               AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
+                                                               AND MILinkObject_CurrencyTo.ObjectId = inCurrencyJuridicalId
                                WHERE Movement.DescId = zc_Movement_Currency()
                                  AND Movement.OperDate <= inOperDate
                                  AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   

@@ -23,7 +23,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
+  cxImageComboBox;
 
 type
   TOrderIncomeForm = class(TParentForm)
@@ -37,6 +38,13 @@ type
     actRefresh: TdsdDataSetRefresh;
     MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
+    DataPanel: TPanel;
+    edInvNumber: TcxTextEdit;
+    cxLabel1: TcxLabel;
+    edOperDate: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    edFrom: TcxButtonEdit;
+    cxLabel3: TcxLabel;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -53,15 +61,18 @@ type
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colAmountPartner: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spInsertUpdateMovement: TdsdStoredProc;
+    edPriceWithVAT: TcxCheckBox;
+    edVATPercent: TcxCurrencyEdit;
+    edChangePercent: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
     HeaderSaver: THeaderSaver;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
@@ -70,6 +81,10 @@ type
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
+    cxLabel9: TcxLabel;
+    edContract: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    edPaidKind: TcxButtonEdit;
     ContractGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     SetErased: TdsdUpdateErased;
@@ -78,6 +93,7 @@ type
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
+    cxLabel11: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
@@ -86,54 +102,38 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
+    ceStatus: TcxButtonEdit;
     colMeasureName: TcxGridDBColumn;
-    JuridicalGuides: TdsdGuides;
+    GuidesFrom: TdsdGuides;
     spGetTotalSumm: TdsdStoredProc;
-    CurrencyPartnerGuides: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edCurrencyDocument: TcxButtonEdit;
+    CurrencyDocumentGuides: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clInfoMoneyName_all: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
+    actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
-    bbAddMask: TdxBarButton;
     actAddMask: TdsdExecStoredProc;
+    bbAddMask: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
-    DataPanel: TPanel;
-    edInvNumber: TcxTextEdit;
-    cxLabel1: TcxLabel;
-    edOperDate: TcxDateEdit;
-    cxLabel2: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    edPriceWithVAT: TcxCheckBox;
-    edVATPercent: TcxCurrencyEdit;
-    cxLabel6: TcxLabel;
-    edDateInsert: TcxDateEdit;
-    edChangePercent: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
-    edContract: TcxButtonEdit;
-    cxLabel10: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    cxLabel11: TcxLabel;
-    ceStatus: TcxButtonEdit;
-    cxLabel12: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
-    cxLabel15: TcxLabel;
-    edCurrencyPartner: TcxButtonEdit;
-    edUserInsert: TcxTextEdit;
-    cxLabel4: TcxLabel;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
+    InsertRecord1: TInsertRecord;
+    CostJournalChoiceForm: TOpenChoiceForm;
+    bbInsertRecord: TdxBarButton;
+    bbCompleteCost: TdxBarButton;
+    bbactUnCompleteCost: TdxBarButton;
+    bbactSetErasedCost: TdxBarButton;
+    actShowErasedCost: TBooleanStoredProcAction;
+    bbShowErasedCost: TdxBarButton;
   private
   public
   end;

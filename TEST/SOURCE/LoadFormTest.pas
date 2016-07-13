@@ -81,6 +81,7 @@ type
     procedure LoadMemberExternalFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
+    procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadOrderTypeFormTest;
@@ -620,6 +621,14 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
+end;
+
+procedure TLoadFormTest.LoadOrderIncomeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;

@@ -7,7 +7,15 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderIncome(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS SETOF REFCURSOR
+RETURNS TABLE (Id Integer, Amount TFloat, Price TFloat, CountForPrice TFloat, AmountSumm TFloat
+             , Comment TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , MeasureId Integer, MeasureName TVarChar
+, NameBeforeId Integer, NameBeforeName TVarChar
+, UnitId Integer, UnitCode Integer, UnitName TVarChar
+, AssetId Integer, AssetName TVarChar
+             , isErased Boolean
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -18,13 +26,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
        --
-       OPEN Cursor1 FOR
+      RETURN QUERY
         SELECT
              MovementItem.Id     AS Id
            , MovementItem.Amount               :: TFloat AS Amount  
            , MIFloat_Price.ValueData           :: TFloat AS Price
            , MIFloat_CountForPrice.ValueData   :: TFloat AS CountForPrice 
-           , (MIFloat_Price.ValueData * MovementItem.Amount) :: TFloat AS Summa
+           , (MIFloat_Price.ValueData * MovementItem.Amount) :: TFloat AS AmountSumm
 
            , MIString_Comment.ValueData        :: TVarChar AS Comment
 
@@ -85,7 +93,7 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
           ;
 
-       RETURN NEXT Cursor1;
+   
 
 END;
 $BODY$

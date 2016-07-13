@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CurrencyValue TFloat
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
               )
@@ -66,6 +66,7 @@ BEGIN
            , Object_Juridical.ValueData             AS JuridicalName
 
            , Object_Contract.Id                     AS ContractId
+           , Object_Contract.ObjectCode             AS ContractCode
            , Object_Contract.ValueData              AS ContractName
 
            , Object_PaidKind.Id                     AS PaidKindId
