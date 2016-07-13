@@ -700,6 +700,9 @@ CREATE OR REPLACE FUNCTION zc_object_reestrkind() RETURNS integer AS $BODY$BEGIN
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_object_reestrkind', 'Типы состояния по реестру' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_object_reestrkind');
 
+CREATE OR REPLACE FUNCTION zc_Object_NameBefore() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_NameBefore'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_NameBefore', 'Товар/ОС/работы (предварительное название)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_NameBefore');
 
 
 --!!! Аптека

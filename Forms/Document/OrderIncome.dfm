@@ -224,14 +224,12 @@ object OrderIncomeForm: TOrderIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 369
     ClientRectBottom = 354
     ClientRectRight = 956
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 345
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -239,7 +237,6 @@ object OrderIncomeForm: TOrderIncomeForm
         Height = 330
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 345
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -306,9 +303,16 @@ object OrderIncomeForm: TOrderIncomeForm
           object colMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = MeasureChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 45
           end
           object colAmount: TcxGridDBColumn
@@ -358,7 +362,6 @@ object OrderIncomeForm: TOrderIncomeForm
             DataBinding.FieldName = 'NameBeforeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object clUnitCode: TcxGridDBColumn
@@ -370,19 +373,33 @@ object OrderIncomeForm: TOrderIncomeForm
             Width = 45
           end
           object clUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076'.'
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = UnitChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object clAssetName: TcxGridDBColumn
             Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086
             DataBinding.FieldName = 'AssetName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = AssetChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 90
           end
           object colIsErased: TcxGridDBColumn
@@ -392,6 +409,13 @@ object OrderIncomeForm: TOrderIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -411,7 +435,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'ShowAll'
         Value = False
-        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -582,8 +605,11 @@ object OrderIncomeForm: TOrderIncomeForm
       Category = 0
     end
     object bbShowAll: TdxBarButton
-      Action = actShowAll
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Category = 0
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Visible = ivAlways
+      ImageIndex = 63
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
@@ -652,8 +678,12 @@ object OrderIncomeForm: TOrderIncomeForm
       ImageIndex = 13
     end
     object bbShowErasedCost: TdxBarButton
-      Action = actShowErasedCost
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Category = 0
+      Enabled = False
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Visible = ivAlways
+      ImageIndex = 64
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -689,24 +719,6 @@ object OrderIncomeForm: TOrderIncomeForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object actShowErasedCost: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
-    end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -726,26 +738,6 @@ object OrderIncomeForm: TOrderIncomeForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
-    end
-    object actShowAll: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      StoredProc = spSelectMI
-      StoredProcList = <
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1017,51 +1009,97 @@ object OrderIncomeForm: TOrderIncomeForm
         end>
       isShowModal = True
     end
-    object CostJournalChoiceForm: TOpenChoiceForm
+    object AssetChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'CostJournalChoiceForm'
-      FormName = 'TCostJournalChoiceForm'
-      FormNameParam.Value = 'TCostJournalChoiceForm'
+      Caption = 'AssetChoiceForm'
+      FormName = 'TAssetForm'
+      FormNameParam.Value = 'TAssetForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object UnitChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'UnitChoiceForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperDate'
-          Value = 'NULL'
-          DataType = ftDateTime
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MeasureChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'MeasureChoiceForm'
+      FormName = 'TMeasureForm'
+      FormNameParam.Value = 'TMeasureForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'StatusCode'
+          Name = 'TextValue'
           Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterUnitId'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterUnitName'
-          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1206,14 +1244,6 @@ object OrderIncomeForm: TOrderIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNameBeforeId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'NameBeforeId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -1234,6 +1264,15 @@ object OrderIncomeForm: TOrderIncomeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNameBeforeName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NameBeforeName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1721,7 +1760,7 @@ object OrderIncomeForm: TOrderIncomeForm
     Top = 40
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Income'
+    StoredProcName = 'gpUpdate_Status_OrderIncome'
     DataSets = <>
     OutputType = otResult
     Params = <

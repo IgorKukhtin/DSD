@@ -64,7 +64,6 @@ type
     colCountForPrice: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
-    actShowAll: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spInsertUpdateMovement: TdsdStoredProc;
@@ -127,13 +126,15 @@ type
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     InsertRecord1: TInsertRecord;
-    CostJournalChoiceForm: TOpenChoiceForm;
+    MeasureChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
-    actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
+    Comment: TcxGridDBColumn;
+    UnitChoiceForm: TOpenChoiceForm;
+    AssetChoiceForm: TOpenChoiceForm;
   private
   public
   end;

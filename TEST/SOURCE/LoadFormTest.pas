@@ -131,6 +131,7 @@ type
     procedure LoadRouteGroupFormTest;
     procedure LoadRouteSortingFormTest;
     procedure LoadRateFuelKindFormTest;
+    procedure LoadNameBeforeFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendDebtFormTest;
@@ -790,6 +791,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeAddRecordForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
 end;
+
+procedure TLoadFormTest.LoadNameBeforeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TNameBeforeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TNameBeforeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TNameBeforeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TNameBeforeEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
