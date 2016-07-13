@@ -18,307 +18,13 @@ object OrderIncomeForm: TOrderIncomeForm
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object DataPanel: TPanel
-    Left = 0
-    Top = 0
-    Width = 1080
-    Height = 100
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 0
-    object edInvNumber: TcxTextEdit
-      Left = 5
-      Top = 23
-      Properties.ReadOnly = True
-      TabOrder = 0
-      Width = 74
-    end
-    object cxLabel1: TcxLabel
-      Left = 8
-      Top = 5
-      Caption = #8470' '#1076#1086#1082'.'
-    end
-    object edOperDate: TcxDateEdit
-      Left = 171
-      Top = 23
-      EditValue = 42160d
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 1
-      Width = 94
-    end
-    object cxLabel2: TcxLabel
-      Left = 171
-      Top = 5
-      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
-    end
-    object edFrom: TcxButtonEdit
-      Left = 271
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = False
-      TabOrder = 3
-      Width = 193
-    end
-    object edTo: TcxButtonEdit
-      Left = 467
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = False
-      TabOrder = 2
-      Width = 193
-    end
-    object cxLabel3: TcxLabel
-      Left = 271
-      Top = 5
-      Caption = #1054#1090' '#1082#1086#1075#1086
-    end
-    object cxLabel4: TcxLabel
-      Left = 467
-      Top = 5
-      Caption = #1050#1086#1084#1091
-    end
-    object edPriceWithVAT: TcxCheckBox
-      Left = 797
-      Top = 18
-      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 9
-      Width = 129
-    end
-    object edVATPercent: TcxCurrencyEdit
-      Left = 666
-      Top = 23
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
-      TabOrder = 10
-      Width = 40
-    end
-    object cxLabel5: TcxLabel
-      Left = 85
-      Top = 5
-      Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
-    end
-    object cxLabel6: TcxLabel
-      Left = 171
-      Top = 45
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
-    end
-    object edOperDatePartner: TcxDateEdit
-      Left = 171
-      Top = 63
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 7
-      Width = 94
-    end
-    object edInvNumberPartner: TcxTextEdit
-      Left = 85
-      Top = 23
-      TabOrder = 6
-      Width = 81
-    end
-    object edChangePercent: TcxCurrencyEdit
-      Left = 666
-      Top = 63
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
-      TabOrder = 8
-      Width = 124
-    end
-    object cxLabel7: TcxLabel
-      Left = 666
-      Top = 5
-      Caption = '% '#1053#1044#1057
-    end
-    object cxLabel8: TcxLabel
-      Left = 666
-      Top = 45
-      Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1057#1058'.'
-    end
-    object cxLabel9: TcxLabel
-      Left = 351
-      Top = 45
-      Caption = #1044#1086#1075#1086#1074#1086#1088
-    end
-    object edContract: TcxButtonEdit
-      Left = 351
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Enabled = False
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 4
-      Width = 113
-    end
-    object cxLabel10: TcxLabel
-      Left = 271
-      Top = 45
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-    end
-    object edPaidKind: TcxButtonEdit
-      Left = 271
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 5
-      Width = 77
-    end
-    object cxLabel11: TcxLabel
-      Left = 8
-      Top = 45
-      Caption = #1057#1090#1072#1090#1091#1089
-    end
-    object ceStatus: TcxButtonEdit
-      Left = 9
-      Top = 63
-      Properties.Buttons = <
-        item
-          Action = CompleteMovement
-          Kind = bkGlyph
-        end
-        item
-          Action = UnCompleteMovement
-          Default = True
-          Kind = bkGlyph
-        end
-        item
-          Action = DeleteMovement
-          Kind = bkGlyph
-        end>
-      Properties.Images = dmMain.ImageList
-      Properties.ReadOnly = True
-      TabOrder = 22
-      Width = 157
-    end
-    object cxLabel12: TcxLabel
-      Left = 1023
-      Top = 45
-      Caption = #1050#1091#1088#1089
-    end
-    object edCurrencyValue: TcxCurrencyEdit
-      Left = 1023
-      Top = 63
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Properties.ReadOnly = True
-      TabOrder = 24
-      Width = 44
-    end
-    object cxLabel14: TcxLabel
-      Left = 940
-      Top = 45
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
-    end
-    object edCurrencyDocument: TcxButtonEdit
-      Left = 940
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Enabled = False
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 26
-      Width = 77
-    end
-    object cxLabel15: TcxLabel
-      Left = 940
-      Top = 5
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
-    end
-    object edCurrencyPartner: TcxButtonEdit
-      Left = 940
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 28
-      Width = 127
-    end
-    object cxLabel16: TcxLabel
-      Left = 797
-      Top = 45
-      Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1050#1059#1055'.'
-    end
-    object edChangePercentTo: TcxCurrencyEdit
-      Left = 797
-      Top = 63
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
-      TabOrder = 30
-      Width = 132
-    end
-    object cxLabel17: TcxLabel
-      Left = 467
-      Top = 45
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-    end
-    object edPaidKindTo: TcxButtonEdit
-      Left = 467
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 32
-      Width = 77
-    end
-    object cxLabel18: TcxLabel
-      Left = 547
-      Top = 45
-      Caption = #1044#1086#1075#1086#1074#1086#1088
-    end
-    object edContractTo: TcxButtonEdit
-      Left = 547
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Enabled = False
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 34
-      Width = 113
-    end
-  end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
     Width = 1080
     Height = 336
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
@@ -582,9 +288,222 @@ object OrderIncomeForm: TOrderIncomeForm
     Enabled = False
     Properties.ReadOnly = False
     State = cbsChecked
-    TabOrder = 6
+    TabOrder = 5
     Visible = False
     Width = 220
+  end
+  object DataPanel: TPanel
+    Left = 0
+    Top = 26
+    Width = 1080
+    Height = 100
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 6
+    ExplicitTop = 23
+    object edInvNumber: TcxTextEdit
+      Left = 5
+      Top = 23
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 164
+    end
+    object cxLabel1: TcxLabel
+      Left = 8
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'.'
+    end
+    object edOperDate: TcxDateEdit
+      Left = 175
+      Top = 23
+      EditValue = 42160d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 1
+      Width = 88
+    end
+    object cxLabel2: TcxLabel
+      Left = 175
+      Top = 5
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+    end
+    object ceJuridical: TcxButtonEdit
+      Left = 270
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = False
+      TabOrder = 2
+      Width = 251
+    end
+    object cxLabel3: TcxLabel
+      Left = 270
+      Top = 5
+      Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+    end
+    object edPriceWithVAT: TcxCheckBox
+      Left = 270
+      Top = 63
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      State = cbsChecked
+      TabOrder = 7
+      Width = 125
+    end
+    object edVATPercent: TcxCurrencyEdit
+      Left = 219
+      Top = 63
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      TabOrder = 8
+      Width = 44
+    end
+    object cxLabel6: TcxLabel
+      Left = 768
+      Top = 5
+      Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1076#1086#1082'.'
+    end
+    object edDateInsert: TcxDateEdit
+      Left = 768
+      Top = 23
+      EditValue = 42564d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 5
+      Width = 106
+    end
+    object edChangePercent: TcxCurrencyEdit
+      Left = 397
+      Top = 63
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 124
+    end
+    object cxLabel7: TcxLabel
+      Left = 175
+      Top = 63
+      Caption = '% '#1053#1044#1057
+    end
+    object cxLabel8: TcxLabel
+      Left = 397
+      Top = 45
+      Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1057#1058'.'
+    end
+    object cxLabel9: TcxLabel
+      Left = 529
+      Top = 5
+      Caption = #1044#1086#1075#1086#1074#1086#1088
+    end
+    object edContract: TcxButtonEdit
+      Left = 529
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 134
+    end
+    object cxLabel10: TcxLabel
+      Left = 672
+      Top = 5
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 672
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 77
+    end
+    object cxLabel11: TcxLabel
+      Left = 8
+      Top = 45
+      Caption = #1057#1090#1072#1090#1091#1089
+    end
+    object ceStatus: TcxButtonEdit
+      Left = 9
+      Top = 63
+      Properties.Buttons = <
+        item
+          Action = CompleteMovement
+          Kind = bkGlyph
+        end
+        item
+          Action = UnCompleteMovement
+          Default = True
+          Kind = bkGlyph
+        end
+        item
+          Action = DeleteMovement
+          Kind = bkGlyph
+        end>
+      Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 160
+    end
+    object cxLabel12: TcxLabel
+      Left = 672
+      Top = 45
+      Caption = #1050#1091#1088#1089
+    end
+    object edCurrencyValue: TcxCurrencyEdit
+      Left = 672
+      Top = 63
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 77
+    end
+    object cxLabel15: TcxLabel
+      Left = 529
+      Top = 45
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+    end
+    object edCurrencyPartner: TcxButtonEdit
+      Left = 529
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 22
+      Width = 134
+    end
+    object edUserInsert: TcxTextEdit
+      Left = 880
+      Top = 23
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 150
+    end
+    object cxLabel4: TcxLabel
+      Left = 880
+      Top = 5
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -959,7 +878,6 @@ object OrderIncomeForm: TOrderIncomeForm
         item
           Name = 'InvNumber'
           Value = ''
-          Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -967,7 +885,7 @@ object OrderIncomeForm: TOrderIncomeForm
         item
           Name = 'From'
           Value = ''
-          Component = GuidesFrom
+          Component = JuridicalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -976,7 +894,6 @@ object OrderIncomeForm: TOrderIncomeForm
         item
           Name = 'OperDate'
           Value = 0d
-          Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1202,63 +1119,6 @@ object OrderIncomeForm: TOrderIncomeForm
     Left = 16
     Top = 303
   end
-  object GuidesTo: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractChoicePartnerForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'PartnerId'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerName'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = Null
-        Component = PaidKindToGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        Component = PaidKindToGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuidesTo
-        ComponentItem = 'Key'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 504
-  end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 768
@@ -1449,7 +1309,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inInvNumber'
         Value = ''
-        Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1457,7 +1316,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inOperDate'
         Value = 0d
-        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1465,7 +1323,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inOperDatePartner'
         Value = 0d
-        Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1473,7 +1330,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inInvNumberPartner'
         Value = ''
-        Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1481,7 +1337,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inPriceWithVAT'
         Value = 'False'
-        Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1489,7 +1344,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inVATPercent'
         Value = 0.000000000000000000
-        Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1497,7 +1351,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1505,7 +1358,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inFromId'
         Value = ''
-        Component = GuidesFrom
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1513,8 +1366,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inToId'
         Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1543,8 +1394,6 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inCurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1559,30 +1408,24 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'outCurrencyValue'
         Value = 0.000000000000000000
-        Component = edCurrencyValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'inContractToId'
         Value = Null
-        Component = ContractGuidesTo
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindToId'
         Value = Null
-        Component = PaidKindToGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inChangePercentTo'
         Value = Null
-        Component = edChangePercentTo
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1606,62 +1449,45 @@ object OrderIncomeForm: TOrderIncomeForm
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
-        Control = edInvNumber
       end
       item
-        Control = edInvNumberPartner
       end
       item
-        Control = edOperDate
       end
       item
-        Control = edOperDatePartner
       end
       item
-        Control = edFrom
       end
       item
-        Control = edTo
       end
       item
-        Control = edPaidKind
       end
       item
-        Control = edContract
       end
       item
-        Control = edPaidKindTo
       end
       item
-        Control = edContractTo
       end
       item
-        Control = edPriceWithVAT
       end
       item
-        Control = edVATPercent
       end
       item
-        Control = edChangePercent
       end
       item
-        Control = edChangePercentTo
       end
       item
-        Control = edCurrencyDocument
       end
       item
-        Control = edCurrencyPartner
       end
       item
-        Control = edCurrencyValue
       end>
     GetStoredProc = spGet
     Left = 264
     Top = 201
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Income'
+    StoredProcName = 'gpGet_Movement_OrderIncome'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1685,70 +1511,46 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'InvNumber'
         Value = ''
-        Component = edInvNumber
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
-        Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDatePartner'
+        Name = 'InsertDate'
         Value = 0d
-        Component = edOperDatePartner
+        Component = edDateInsert
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumberPartner'
+        Name = 'InsertName'
         Value = ''
-        Component = edInvNumberPartner
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
+        Component = edUserInsert
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ToId'
+        Name = 'JuridicalId'
         Value = ''
-        Component = GuidesTo
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ToName'
+        Name = 'JuridicalName'
         Value = ''
-        Component = GuidesTo
+        Component = JuridicalGuides
         ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToParentId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'ParentId'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = 'True'
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1763,14 +1565,12 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercent
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyValue'
         Value = 0.000000000000000000
-        Component = edCurrencyValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1818,15 +1618,11 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'CurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentName'
         Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1863,37 +1659,28 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'ContractToId'
         Value = Null
-        Component = ContractGuidesTo
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractToName'
         Value = Null
-        Component = ContractGuidesTo
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindToId'
         Value = Null
-        Component = PaidKindToGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindToName'
         Value = Null
-        Component = PaidKindToGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'ChangePercentTo'
         Value = Null
-        Component = edChangePercentTo
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1916,10 +1703,9 @@ object OrderIncomeForm: TOrderIncomeForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
-        Guides = GuidesFrom
+        Guides = JuridicalGuides
       end
       item
-        Guides = GuidesTo
       end>
     ActionItemList = <
       item
@@ -1930,7 +1716,6 @@ object OrderIncomeForm: TOrderIncomeForm
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1955,12 +1740,10 @@ object OrderIncomeForm: TOrderIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 48
+    Left = 600
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1985,8 +1768,8 @@ object OrderIncomeForm: TOrderIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 304
-    Top = 56
+    Left = 688
+    Top = 24
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2040,7 +1823,6 @@ object OrderIncomeForm: TOrderIncomeForm
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2071,12 +1853,12 @@ object OrderIncomeForm: TOrderIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 76
-    Top = 48
+    Left = 36
+    Top = 80
   end
-  object GuidesFrom: TdsdGuides
+  object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edFrom
+    LookupControl = ceJuridical
     FormNameParam.Value = 'TContractChoicePartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2086,14 +1868,14 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'PartnerId'
         Value = ''
-        Component = GuidesFrom
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
         Value = ''
-        Component = GuidesFrom
+        Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2131,19 +1913,17 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercent
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'ChangePercentPartner'
         Value = Null
-        Component = edChangePercentTo
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 8
+    Left = 400
+    Top = 32
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -2170,38 +1950,8 @@ object OrderIncomeForm: TOrderIncomeForm
     Left = 500
     Top = 204
   end
-  object CurrencyDocumentGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edCurrencyDocument
-    FormNameParam.Value = 'TCurrency_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCurrency_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 1024
-    Top = 88
-  end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edCurrencyPartner
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2226,7 +1976,7 @@ object OrderIncomeForm: TOrderIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 960
+    Left = 584
     Top = 72
   end
   object PrintHeaderCDS: TClientDataSet
@@ -2264,66 +2014,6 @@ object OrderIncomeForm: TOrderIncomeForm
     PackSize = 1
     Left = 471
     Top = 368
-  end
-  object PaidKindToGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKindTo
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindToGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindToGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 488
-    Top = 48
-  end
-  object ContractGuidesTo: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edContractTo
-    FormNameParam.Value = 'TContractForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuidesTo
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 576
-    Top = 48
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Income'
