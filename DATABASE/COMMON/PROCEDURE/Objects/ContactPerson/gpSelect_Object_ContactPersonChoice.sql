@@ -110,13 +110,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Object_ContactPersonChoice(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  22.10.14         * 
-        
 */
 
 -- тест

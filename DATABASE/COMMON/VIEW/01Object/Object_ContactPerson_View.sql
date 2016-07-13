@@ -1,5 +1,7 @@
 -- View: Object_Contract_ContractKey_View
 
+-- DROP VIEW IF EXISTS Object_ContactPerson_View;
+
 CREATE OR REPLACE VIEW Object_ContactPerson_View
 AS
 SELECT 
@@ -43,6 +45,9 @@ SELECT
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
 
            
+           , Object_Retail.Id                    AS RetailId
+           , Object_Retail.ValueData             AS RetailName 
+
            , Object_ContactPerson.isErased    AS isErased
            
        FROM Object AS Object_ContactPerson
@@ -68,6 +73,11 @@ SELECT
                                 AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
             LEFT JOIN Object AS Object_ContactPersonKind ON Object_ContactPersonKind.Id = ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId
             
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Retail
+                                 ON ObjectLink_ContactPerson_Retail.ObjectId = Object_ContactPerson.Id 
+                                AND ObjectLink_ContactPerson_Retail.DescId = zc_ObjectLink_ContactPerson_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_ContactPerson_Retail.ChildObjectId
+
      WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson();
      
 ALTER TABLE Object_ContactPerson_View  OWNER TO postgres;
@@ -81,4 +91,4 @@ ALTER TABLE Object_ContactPerson_View  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_Contract_ContractKey_View
+-- SELECT * FROM Object_ContactPerson_View

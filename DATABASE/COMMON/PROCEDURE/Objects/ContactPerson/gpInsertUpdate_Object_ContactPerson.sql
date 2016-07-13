@@ -1,12 +1,6 @@
 -- Function: gpInsertUpdate_Object_ContactPerson  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
  INOUT ioId                       Integer   ,    -- ключ объекта < Улица/проспект> 
@@ -57,12 +51,12 @@ BEGIN
 	vbObjectId = COALESCE (inObjectId_Juridical, 0);
    END IF;
 
-   IF COALESCE (inObjectId_Contract, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0)=0 AND COALESCE (inObjectId_Juridical, 0)=0 AND COALESCE (inObjectId_Unit, 0) = 0) 
+   IF COALESCE (inObjectId_Contract, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0) = 0 AND COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Unit, 0) = 0) 
    THEN
 	vbObjectId = COALESCE (inObjectId_Contract, 0);
    END IF;
 
-   IF COALESCE (inObjectId_Unit, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0)=0 AND COALESCE (inObjectId_Juridical, 0)=0 AND COALESCE (inObjectId_Contract, 0) = 0) 
+   IF COALESCE (inObjectId_Unit, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0) = 0 AND COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0) 
    THEN
 	vbObjectId = COALESCE (inObjectId_Unit, 0);
    END IF;
