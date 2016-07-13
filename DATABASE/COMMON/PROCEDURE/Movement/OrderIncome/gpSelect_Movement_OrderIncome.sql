@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderIncome(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
              , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
-             , TotalSumm TFloat, 
+             , TotalSumm TFloat 
              , PartnerId Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar

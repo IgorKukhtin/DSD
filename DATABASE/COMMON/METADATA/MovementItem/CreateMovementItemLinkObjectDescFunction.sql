@@ -192,11 +192,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_StaffListSummKind() RETURNS Integer A
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_StaffListSummKind', 'Типы сумм для штатного расписания' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_StaffListSummKind');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_NameBefore() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_NameBefore'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_NameBefore', 'Товар/ОС/работы (предварительное название)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_NameBefore');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.07.16         *
  21.06.16         * zc_MILinkObject_StaffList
                     zc_MILinkObject_ModelService
                     zc_MILinkObject_StaffListSummKind

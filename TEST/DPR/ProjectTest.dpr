@@ -831,7 +831,8 @@ uses
   DocumentKind in '..\..\Forms\Kind\DocumentKind.pas' {DocumentKindForm: TParentForm},
   DocumentKindEdit in '..\..\Forms\Kind\DocumentKindEdit.pas' {DocumentKindEditForm: TParentForm},
   Report_WageDialog in '..\..\Forms\Report\Report_WageDialog.pas' {Report_WageDialogForm: TParentForm},
-  ReestrKind in '..\..\Forms\Kind\ReestrKind.pas' {ReestrKindForm: TParentForm};
+  ReestrKind in '..\..\Forms\Kind\ReestrKind.pas' {ReestrKindForm: TParentForm},
+  OrderIncomeJournal in '..\..\Forms\Document\OrderIncomeJournal.pas' {OrderIncomeJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
