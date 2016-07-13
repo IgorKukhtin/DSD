@@ -35,8 +35,8 @@ BEGIN
            , Object_Measure.Id                   AS MeasureId
            , Object_Measure.ValueData            AS MeasureName
 
-           , Object_OrderIncome.Id               AS OrderIncomeId
-           , Object_OrderIncome.ValueData        AS OrderIncomeName
+           , Object_NameBefore.Id                AS NameBeforeId
+           , Object_NameBefore.ValueData         AS NameBeforeName
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ObjectCode              AS UnitCode
            , Object_Unit.ValueData               AS UnitName
@@ -64,10 +64,10 @@ BEGIN
                                          ON MIString_Comment.MovementItemId =  MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_OrderIncome
-                                             ON MILinkObject_OrderIncome.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_OrderIncome.DescId = zc_MILinkObject_OrderIncome()
-            LEFT JOIN Object AS Object_OrderIncome ON Object_OrderIncome.Id = MILinkObject_OrderIncome.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_NameBefore
+                                             ON MILinkObject_NameBefore.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_NameBefore.DescId = zc_MILinkObject_NameBefore()
+            LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = MILinkObject_NameBefore.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id

@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TIncomePartnerForm = class(TParentForm)
+  TOrderIncomeForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -45,8 +45,6 @@ type
     edFrom: TcxButtonEdit;
     edTo: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    GuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -72,7 +70,6 @@ type
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spInsertUpdateMovement: TdsdStoredProc;
-    cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edOperDatePartner: TcxDateEdit;
     edPriceWithVAT: TcxCheckBox;
@@ -81,7 +78,6 @@ type
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
     HeaderSaver: THeaderSaver;
-    edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
     GridToExcel: TdsdGridToExcel;
@@ -143,7 +139,6 @@ type
     cxLabel18: TcxLabel;
     edContractTo: TcxButtonEdit;
     ContractGuidesTo: TdsdGuides;
-    cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     spInsertMaskMIMaster: TdsdStoredProc;
     bbAddMask: TdxBarButton;
@@ -158,6 +153,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomePartnerForm);
+  RegisterClass(TOrderIncomeForm);
 
 end.

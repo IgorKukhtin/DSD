@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncome(
     IN inAmount              TFloat    , -- Количество
     IN inCountForPrice       TFloat    , -- 
     IN inPrice               TFloat    , -- 
-    IN inOrderIncomeId       Integer   , --
+    IN inNameBeforeId        Integer   , --
     IN inGoodsId             Integer   , -- Товары
     IN inAssetId             Integer   ,
     IN inUnitId              Integer   ,
@@ -49,7 +49,7 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_OrderIncome(), ioId, inOrderIncomeId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NameBefore(), ioId, inNameBeforeId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
      -- сохранили связь с <>
