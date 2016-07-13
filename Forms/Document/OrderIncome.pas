@@ -23,11 +23,10 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TOrderIncomeForm = class(TParentForm)
+  TIncomePartnerForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -49,6 +48,7 @@ type
     cxLabel4: TcxLabel;
     GuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
+    N1: TMenuItem;
     cxPageControl: TcxPageControl;
     cxTabSheetMain: TcxTabSheet;
     cxGrid: TcxGrid;
@@ -64,13 +64,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colAmountPartner: TcxGridDBColumn;
-    colAmountPacker: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colLiveWeight: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -140,38 +135,20 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    bbCalcAmountPartner: TdxBarControlContainerItem;
-    actGoodsKindChoice: TOpenChoiceForm;
-    spInsertMaskMIMaster: TdsdStoredProc;
-    actAddMask: TdsdExecStoredProc;
-    bbAddMask: TdxBarButton;
-    actGoodsChoiceForm: TOpenChoiceForm;
-    colAmountRemains: TcxGridDBColumn;
     cxLabel16: TcxLabel;
-    ceComment: TcxTextEdit;
-    colAmount_unit: TcxGridDBColumn;
-    colAmount_diff: TcxGridDBColumn;
-    edInvNumberTransport: TcxButtonEdit;
-    TransportChoiceGuides: TdsdGuides;
-    HeaderSaver2: THeaderSaver;
-    cxTabSheet1: TcxTabSheet;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    cxGridLevel1: TcxGridLevel;
-    ClientDataCost: TClientDataSet;
-    DataSourceCost: TDataSource;
-    InsertRecord1: TInsertRecord;
-    CostJournalChoiceForm: TOpenChoiceForm;
-    bbInsertRecord: TdxBarButton;
-    actUpdateClientDataCost: TdsdUpdateDataSet;
-    actCompleteCost: TdsdChangeMovementStatus;
-    actSetErasedCost: TdsdChangeMovementStatus;
-    actUnCompleteCost: TdsdChangeMovementStatus;
-    bbCompleteCost: TdxBarButton;
-    bbactUnCompleteCost: TdxBarButton;
-    bbactSetErasedCost: TdxBarButton;
-    actShowErasedCost: TBooleanStoredProcAction;
-    bbShowErasedCost: TdxBarButton;
+    edChangePercentTo: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edPaidKindTo: TcxButtonEdit;
+    PaidKindToGuides: TdsdGuides;
+    cxLabel18: TcxLabel;
+    edContractTo: TcxButtonEdit;
+    ContractGuidesTo: TdsdGuides;
+    cbCalcAmountPartner: TcxCheckBox;
+    bbCalcAmountPartner: TdxBarControlContainerItem;
+    spInsertMaskMIMaster: TdsdStoredProc;
+    bbAddMask: TdxBarButton;
+    actAddMask: TdsdExecStoredProc;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
   public
   end;
@@ -181,6 +158,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderIncomeForm);
+  RegisterClass(TIncomePartnerForm);
 
 end.

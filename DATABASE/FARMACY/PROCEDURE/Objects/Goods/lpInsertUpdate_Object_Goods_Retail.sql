@@ -23,10 +23,13 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbObjectId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- определяется <Торговая сеть>
      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', inUserId);
 
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Товар Торговой сети>
      ioId:= lpInsertUpdate_Object_Goods (ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inObjectId, inUserId, 0, '');
@@ -54,6 +57,19 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), ioId, inTOP);
      END IF;
 
+
+    IF vbIsInsert = TRUE THEN
+       -- сохранили свойство <Дата создания>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
+       -- сохранили свойство <Пользователь (создание)>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, inUserId);
+    ELSE 
+       -- сохранили свойство <Дата корр.>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
+       -- сохранили свойство <Пользователь (корр.)>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, inUserId);
+    END IF;
+
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
 
@@ -65,6 +81,7 @@ ALTER FUNCTION lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.07.16         * protocol
  25.03.16                                        *
 */
 /*

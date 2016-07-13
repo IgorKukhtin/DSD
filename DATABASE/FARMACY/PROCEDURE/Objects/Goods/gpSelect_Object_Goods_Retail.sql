@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
              , isPromo boolean
+             , InsertName TVarChar, InsertDate TDateTime 
+             , UpdateName TVarChar, UpdateDate TDateTime
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -80,10 +82,32 @@ BEGIN
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+
+           , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
+           , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
+           , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
+           , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
+
     FROM Object AS Object_Retail
          INNER JOIN Object_Goods_View ON Object_Goods_View.ObjectId = Object_Retail.Id
          LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
                              AND GoodsPromo.ObjectId = Object_Goods_View.ObjectId 
+         LEFT JOIN ObjectDate AS ObjectDate_Insert
+                              ON ObjectDate_Insert.ObjectId = Object_Goods_View.Id
+                             AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+         LEFT JOIN ObjectLink AS ObjectLink_Insert
+                              ON ObjectLink_Insert.ObjectId = Object_Goods_View.Id
+                             AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+
+         LEFT JOIN ObjectDate AS ObjectDate_Update
+                              ON ObjectDate_Update.ObjectId = Object_Goods_View.Id
+                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
+         LEFT JOIN ObjectLink AS ObjectLink_Update
+                              ON ObjectLink_Update.ObjectId = Object_Goods_View.Id
+                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+         LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
+
     WHERE Object_Retail.DescId = zc_Object_Retail();
 
    ELSE
@@ -135,9 +159,32 @@ BEGIN
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+
+           , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
+           , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
+           , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
+           , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
+
     FROM Object_Goods_View
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
          LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
+
+         LEFT JOIN ObjectDate AS ObjectDate_Insert
+                              ON ObjectDate_Insert.ObjectId = Object_Goods_View.Id
+                             AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+         LEFT JOIN ObjectLink AS ObjectLink_Insert
+                              ON ObjectLink_Insert.ObjectId = Object_Goods_View.Id
+                             AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+
+         LEFT JOIN ObjectDate AS ObjectDate_Update
+                              ON ObjectDate_Update.ObjectId = Object_Goods_View.Id
+                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
+         LEFT JOIN ObjectLink AS ObjectLink_Update
+                              ON ObjectLink_Update.ObjectId = Object_Goods_View.Id
+                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+         LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
+
     WHERE Object_Goods_View.ObjectId = vbObjectId;
 
    END IF;
@@ -151,6 +198,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.07.16         * protocol
  30.04.16         *
  12.04.16         *
  25.03.16                                        *
