@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxButtonEdit, dsdGuides, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCheckBox, cxSplitter;
+  cxCheckBox, cxSplitter, cxImageComboBox;
 
 type
   TReport_RemainsOverGoodsForm = class(TAncestorReportForm)
@@ -85,6 +85,9 @@ type
     bbSendOver: TdxBarButton;
     chGoodsCode: TcxGridDBColumn;
     chPriceFrom: TcxGridDBColumn;
+    TotalCDS: TClientDataSet;
+    TotalDS: TDataSource;
+    DBViewAddOnTotal: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
