@@ -57,6 +57,7 @@ type
     cxLabel6: TcxLabel;
     edDocumentKind: TcxButtonEdit;
     GuidesDocumentKind: TdsdGuides;
+    edIsAuto: TcxCheckBox;
   private
     { Private declarations }
   public
