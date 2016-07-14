@@ -148,6 +148,11 @@ type
     actReCompleteList: TMultiAction;
     N7: TMenuItem;
     ExecuteDialog: TExecuteDialog;
+    spUpdate_ChangePrice: TdsdStoredProc;
+    actUpdate_ChangePrice: TdsdExecStoredProc;
+    macSUpdate_ChangePrice: TMultiAction;
+    bbUpdate_ChangePrice: TdxBarButton;
+    macUpdate_ChangePrice: TMultiAction;
   private
   public
   end;

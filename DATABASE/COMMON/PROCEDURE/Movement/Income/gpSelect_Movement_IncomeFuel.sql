@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
-             , ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteName TVarChar
              , PersonalDriverName TVarChar
@@ -95,6 +95,7 @@ BEGIN
            , Object_From.ValueData             AS FromName
            , Object_To.ValueData               AS ToName
            , Object_PaidKind.ValueData         AS PaidKindName
+           , View_Contract_InvNumber.ContractId
            , View_Contract_InvNumber.InvNumber AS ContractName
            , View_InfoMoney.InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName
