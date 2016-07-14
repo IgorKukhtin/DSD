@@ -4,7 +4,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1082
-  ExplicitHeight = 592
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -116,6 +116,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_OverDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa_Over
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -212,6 +217,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_OverDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa_Over
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -369,6 +379,17 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
+          end
+          object Summa_Over: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1089#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076' ('#1076#1086#1082')'
+            DataBinding.FieldName = 'Summa_Over'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object Amount_OverDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1076#1086#1082'./'#1086#1090#1095#1077#1090
@@ -619,6 +640,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = chSummaRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Over
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -674,6 +705,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = chSummaRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Over
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -849,13 +890,24 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Width = 112
           end
           object chAmount_Over: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' ('#1076#1086#1082')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044' ('#1076#1086#1082')'
             DataBinding.FieldName = 'Amount_Over'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object chSumma_Over: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' ('#1076#1086#1082')'
+            DataBinding.FieldName = 'Summa_Over'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object chAmount_OverDiff: TcxGridDBColumn
@@ -2086,6 +2138,22 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount_Over'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaMaster'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa_Over'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaChild'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Summa_Over'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

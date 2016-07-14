@@ -9,8 +9,12 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderIncome(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat 
-             , PartnerId Integer, PartnerName TVarChar
+
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , CurrencyValue TFloat
+             , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
+
+             , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
@@ -35,10 +39,18 @@ BEGIN
              , Object_Status.Name                         AS StatusName
              
              , CURRENT_TIMESTAMP ::TDateTime              AS InsertDate
-             , Object_Insert.ValueData                    AS InsertName
+             , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
                           
-             , 0                                          AS PartnerId
-             , CAST ('' as TVarChar)                      AS PartnerName
+             , CAST (True as Boolean)                     AS PriceWithVAT
+             , CAST (20 as TFloat)                        AS VATPercent
+             , CAST (0 as TFloat)                         AS ChangePercent
+             , CAST (1 as TFloat)                         AS CurrencyValue
+
+             , Object_CurrencyDocument.Id                         AS CurrencyDocumentId	-- грн
+             , Object_CurrencyDocument.ValueData                  AS CurrencyDocumentName
+
+             , 0                                          AS JuridicalId
+             , CAST ('' as TVarChar)                      AS JuridicalName
              , 0                                          AS ContractId
              , CAST ('' as TVarChar)                      AS ContractName
              , 0                                          AS PaidKindId
@@ -48,6 +60,8 @@ BEGIN
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+               JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.descid= zc_Object_Currency()
+                                             AND Object_CurrencyDocument.id = 14461	             -- грн
           ;
 
      ELSE
@@ -62,11 +76,17 @@ BEGIN
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
            
-           , MovementFloat_TotalCount.ValueData     AS TotalCount
-           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData     AS VATPercent
+           , MovementFloat_ChangePercent.ValueData  AS ChangePercent
+           , MovementFloat_CurrencyValue.ValueData  AS CurrencyValue
 
-           , Object_Partner.Id                      AS PartnerId
-           , Object_Partner.ValueData               AS PartnerName
+           , Object_CurrencyDocument.Id                     AS CurrencyDocumentId
+           , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
+
+
+           , Object_Juridical.Id                    AS JuridicalId
+           , Object_Juridical.ValueData             AS JuridicalName
 
            , Object_Contract.Id                     AS ContractId
            , Object_Contract.ValueData              AS ContractName
@@ -79,7 +99,7 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-LEFT JOIN MovementDate AS MovementDate_Insert
+            LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
@@ -92,13 +112,18 @@ LEFT JOIN MovementDate AS MovementDate_Insert
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -110,10 +135,16 @@ LEFT JOIN MovementDate AS MovementDate_Insert
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderIncome();

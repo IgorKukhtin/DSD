@@ -92,8 +92,8 @@ BEGIN
     CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, InvNumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsId Integer, Amount TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Summa TFloat, InvNumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsId Integer, UnitId Integer, MCSValue TFloat
                              , Price TFloat, StartDate TDateTime, EndDate TDateTime, MinExpirationDate TDateTime
@@ -121,26 +121,34 @@ BEGIN
 
 
       -- Ищеи cтроки мастера (ключ - ид документа, товар)
-      INSERT INTO tmpMIMaster (GoodsId, Amount, InvNumber, MovementId, MIMaster_Id)
+      INSERT INTO tmpMIMaster (GoodsId, Amount, Summa, InvNumber, MovementId, MIMaster_Id)
          SELECT  MovementItem.ObjectId             AS GoodsId
                , MovementItem.Amount               AS Amount
+               , (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0)) :: TFloat AS Summa
                , Movement.InvNumber
                , Movement.Id                       AS MovementId
                , MovementItem.Id                   AS MIMaster_Id
          FROM MovementItem 
               LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
          WHERE MovementItem.MovementId = vbMovementId 
            AND MovementItem.DescId = zc_MI_Master()
            AND MovementItem.isErased = FALSE;
 
       -- Ищеи cтроки чайлда (ключ - ид документа, товар)
-      INSERT INTO tmpMIChild (UnitId, GoodsId, Amount, MIChild_Id)
+      INSERT INTO tmpMIChild (UnitId, GoodsId, Amount, Summa, MIChild_Id)
       SELECT  MovementItem.ObjectId             AS UnitId
             , MI_Master.ObjectId                AS GoodsId
             , MovementItem.Amount               AS Amount
+            , (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0)) :: TFloat AS Summa
             , MovementItem.Id                   AS MIChild_Id
       FROM MovementItem 
            LEFT JOIN MovementItem AS MI_Master ON MI_Master.Id = MovementItem.ParentId
+           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
       WHERE MovementItem.MovementId = vbMovementId 
         AND MovementItem.DescId = zc_MI_Child()
         AND MovementItem.isErased = FALSE;
@@ -412,6 +420,7 @@ BEGIN
                , tmpMIMaster.MovementId                       AS MovementId_Over
                , tmpMIMaster.MIMaster_Id                      AS MIMaster_Id_Over
                , COALESCE (tmpMIMaster.Amount, 0) :: TFloat   AS Amount_Over
+               , COALESCE (tmpMIMaster.Summa, 0)  :: TFloat   AS Summa_Over
                , (COALESCE (tmpChildTo.RemainsMCS_result, 0) - COALESCE (tmpMIMaster.Amount, 0)) :: TFloat AS Amount_OverDiff
              
      FROM tmpData
@@ -469,6 +478,7 @@ BEGIN
 
                , tmpMIChild.MIChild_Id                      AS MIChild_Id_Over
                , COALESCE (tmpMIChild.Amount, 0) :: TFloat  AS Amount_Over
+               , COALESCE (tmpMIChild.Summa, 0)  :: TFloat  AS Summa_Over
                , (COALESCE (tmpDataTo.RemainsMCS_result, 0) - COALESCE (tmpMIChild.Amount, 0)) :: TFloat AS Amount_OverDiff
      FROM tmpData
           LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId

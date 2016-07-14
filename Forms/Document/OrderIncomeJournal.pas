@@ -47,7 +47,7 @@ type
     colStatus: TcxGridDBColumn;
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
-    colPartnerName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;

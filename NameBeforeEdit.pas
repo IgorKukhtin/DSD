@@ -1,4 +1,4 @@
-unit AssetEdit;
+unit NameBeforeEdit;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
 
 type
-  TAssetEditForm = class(TParentForm)
+  TRegionEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -39,29 +39,6 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    ceInvNumber: TcxTextEdit;
-    cxLabel2: TcxLabel;
-    cxLabel4: TcxLabel;
-    AssetGroupGuides: TdsdGuides;
-    ceAssetGroup: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    ceSerialNumber: TcxTextEdit;
-    cxLabel5: TcxLabel;
-    edRelease: TcxDateEdit;
-    cxLabel6: TcxLabel;
-    cePassportNumber: TcxTextEdit;
-    cxLabel7: TcxLabel;
-    ceFullName: TcxTextEdit;
-    cxLabel8: TcxLabel;
-    ceComment: TcxTextEdit;
-    cxLabel9: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    ceMaker: TcxButtonEdit;
-    cxLabel10: TcxLabel;
-    MakerGuides: TdsdGuides;
-    edPeriodUse: TcxCurrencyEdit;
-    cxLabel11: TcxLabel;
   private
     { Private declarations }
   public
@@ -72,6 +49,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TAssetEditForm);
+  RegisterClass(TRegionEditForm);
 
 end.

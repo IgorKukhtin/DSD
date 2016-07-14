@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_OrderIncome()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderIncome (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderIncome (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncome(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,10 +10,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncome(
     IN inAmount              TFloat    , -- Количество
     IN inCountForPrice       TFloat    , -- 
     IN inPrice               TFloat    , -- 
-    IN inNameBeforeId        Integer   , --
     IN inGoodsId             Integer   , -- Товары
     IN inAssetId             Integer   ,
     IN inUnitId              Integer   ,
+    IN inNameBeforeName      TVarChar  ,
     IN inComment             TVarChar ,   -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -22,6 +23,7 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbMovementItemId Integer;
+   DECLARE vbNameBeforeId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderIncome());
@@ -34,6 +36,20 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inMeasureId, inMovementId, inAmount, NULL);
+
+
+     -- ищем Товар/ОС/работы
+     vbNameBeforeId:= (SELECT tmp.Id FROM gpSelect_Object_NameBefore (inSession) AS tmp WHERE tmp.name = inNameBeforeName);
+
+     IF COALESCE (vbNameBeforeId, 0) = 0
+     THEN
+         -- создание
+         vbNameBeforeId:= gpInsertUpdate_Object_NameBefore  (ioId              := 0
+                                                            , inCode            := lfGet_ObjectCode(0, zc_Object_NameBefore()) 
+                                                            , inName            := inNameBeforeName
+                                                            , inSession         := inSession
+                                                              );
+     END IF;
 
 
 
@@ -49,7 +65,7 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NameBefore(), ioId, inNameBeforeId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NameBefore(), ioId, vbNameBeforeId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
      -- сохранили связь с <>

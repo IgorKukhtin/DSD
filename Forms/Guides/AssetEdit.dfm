@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 296
+    Width = 138
   end
   object ceInvNumber: TcxTextEdit
     Left = 40
@@ -113,15 +113,15 @@
     Width = 100
   end
   object cxLabel6: TcxLabel
-    Left = 211
+    Left = 189
     Top = 192
     Caption = #1053#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
   end
   object cePassportNumber: TcxTextEdit
-    Left = 198
+    Left = 189
     Top = 211
     TabOrder = 15
-    Width = 138
+    Width = 147
   end
   object cxLabel7: TcxLabel
     Left = 43
@@ -177,6 +177,21 @@
     Top = 361
     Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1054#1057')'
   end
+  object edPeriodUse: TcxCurrencyEdit
+    Left = 189
+    Top = 26
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 24
+    Width = 147
+  end
+  object cxLabel11: TcxLabel
+    Left = 189
+    Top = 3
+    Caption = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1080' ('#1083#1077#1090')'
+  end
   object ActionList: TActionList
     Left = 344
     Top = 204
@@ -196,6 +211,7 @@
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -206,6 +222,7 @@
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -219,12 +236,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -232,6 +251,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRelease'
@@ -239,6 +259,7 @@
         Component = edRelease
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -246,6 +267,7 @@
         Component = ceInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFullName'
@@ -253,6 +275,7 @@
         Component = ceFullName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSerialNumber'
@@ -260,6 +283,7 @@
         Component = ceSerialNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPassportNumber'
@@ -267,6 +291,7 @@
         Component = cePassportNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -274,6 +299,7 @@
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAssetGroupId'
@@ -281,6 +307,7 @@
         Component = AssetGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -288,6 +315,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMakerId'
@@ -295,6 +323,15 @@
         Component = MakerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodUse'
+        Value = Null
+        Component = edPeriodUse
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -306,6 +343,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 160
@@ -321,71 +359,83 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Release'
         Value = 0d
         Component = edRelease
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = ceInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FullName'
         Value = ''
         Component = ceFullName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SerialNumber'
         Value = ''
         Component = ceSerialNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PassportNumber'
         Value = ''
         Component = cePassportNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AssetGroupId'
         Value = ''
         Component = AssetGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AssetGroupName'
         Value = ''
         Component = AssetGroupGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -393,12 +443,14 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MakerId'
         Value = ''
         Component = MakerGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MakerName'
@@ -406,6 +458,14 @@
         Component = MakerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodUse'
+        Value = Null
+        Component = edPeriodUse
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -435,6 +495,7 @@
     LookupControl = ceAssetGroup
     FormNameParam.Value = 'TAssetGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAssetGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -444,6 +505,7 @@
         Component = AssetGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -452,6 +514,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 292
@@ -461,6 +524,7 @@
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -470,6 +534,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -478,6 +543,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 332
@@ -487,6 +553,7 @@
     LookupControl = ceMaker
     FormNameParam.Value = 'TMakerForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMakerForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -496,6 +563,7 @@
         Component = MakerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -504,6 +572,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 372

@@ -244,9 +244,9 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 74
       end
-      object colPartnerName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
-        DataBinding.FieldName = 'PartnerName'
+        DataBinding.FieldName = 'JuridicalName'
         DateTimeGrouping = dtgRelativeToToday
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -578,12 +578,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         item
           Name = 'Id'
           Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
