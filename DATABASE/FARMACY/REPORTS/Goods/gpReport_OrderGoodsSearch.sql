@@ -92,6 +92,7 @@ BEGIN
                     ON Status.Id = Movement.StatusId 
                    AND Status.Id <> zc_Enum_Status_Erased()
         JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                         AND MovementItem.isErased = FALSE
         JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
 
@@ -162,7 +163,6 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
@@ -176,4 +176,4 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PriceList (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 0, inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inSession:= '2')

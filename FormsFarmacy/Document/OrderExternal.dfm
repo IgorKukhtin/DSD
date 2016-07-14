@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 668
   ClientWidth = 844
   ExplicitWidth = 860
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -650,6 +650,10 @@ inherited OrderExternalForm: TOrderExternalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True

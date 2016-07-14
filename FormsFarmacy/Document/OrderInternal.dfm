@@ -2,8 +2,9 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
+  ExplicitLeft = -456
   ExplicitWidth = 1245
-  ExplicitHeight = 570
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -16,7 +17,6 @@ inherited OrderInternalForm: TOrderInternalForm
     ClientRectBottom = 457
     ClientRectRight = 1229
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1229
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
@@ -308,17 +308,14 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 33
           end
-          inherited colIsErased: TcxGridDBColumn
-            VisibleForCustomization = False
-          end
-          object clIsClose: TcxGridDBColumn
+          object clIsClose: TcxGridDBColumn [28]
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
           end
-          object clisFirst: TcxGridDBColumn
+          object clisFirst: TcxGridDBColumn [29]
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
             HeaderAlignmentHorz = taCenter
@@ -326,7 +323,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object clisSecond: TcxGridDBColumn
+          object clisSecond: TcxGridDBColumn [30]
             Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isSecond'
             HeaderAlignmentHorz = taCenter
@@ -334,7 +331,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object clisTOP: TcxGridDBColumn
+          object clisTOP: TcxGridDBColumn [31]
             Caption = #1058#1054#1055' '#1089#1077#1090#1080
             DataBinding.FieldName = 'isTOP'
             HeaderAlignmentHorz = taCenter
@@ -342,7 +339,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object clisTOP_Price: TcxGridDBColumn
+          object clisTOP_Price: TcxGridDBColumn [32]
             Caption = #1058#1054#1055' '#1090#1086#1095#1082#1080
             DataBinding.FieldName = 'isTOP_Price'
             HeaderAlignmentHorz = taCenter
@@ -350,7 +347,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object clisPromo: TcxGridDBColumn
+          object clisPromo: TcxGridDBColumn [33]
             Caption = #1041#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPromo'
             HeaderAlignmentHorz = taCenter
@@ -358,7 +355,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 50
           end
-          object OperDatePromo: TcxGridDBColumn
+          object OperDatePromo: TcxGridDBColumn [34]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085' .'#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'OperDatePromo'
             HeaderAlignmentHorz = taCenter
@@ -366,13 +363,16 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 80
           end
-          object InvNumberPromo: TcxGridDBColumn
+          object InvNumberPromo: TcxGridDBColumn [35]
             Caption = #8470' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'InvNumberPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          inherited colIsErased: TcxGridDBColumn
+            VisibleForCustomization = False
           end
         end
       end
@@ -562,7 +562,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = -3
+        Top = 205
         Width = 1229
         Height = 3
         AlignSplitter = salBottom
@@ -881,6 +881,36 @@ inherited OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actMovementItemProtocolChild: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1017,6 +1047,22 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocolChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1068,6 +1114,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbDeleteLink: TdxBarButton
       Action = mactDeleteLink
+      Category = 0
+    end
+    object bbMovementItemProtocolChild: TdxBarButton
+      Action = actMovementItemProtocolChild
       Category = 0
     end
   end
