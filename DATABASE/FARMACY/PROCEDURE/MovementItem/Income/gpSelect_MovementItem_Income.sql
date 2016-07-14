@@ -102,10 +102,9 @@ BEGIN
       , tmpGoods AS (SELECT Object_Goods.Id           AS GoodsId
                           , Object_Goods.GoodsCodeInt AS GoodsCode
                           , Object_Goods.GoodsName    AS GoodsName
-                          , Object_Goods_View.isTop            AS Goods_isTop
-                          , Object_Goods_View.PercentMarkup    AS Goods_PercentMarkup
-                          , Object_Goods_View.Price            AS Goods_Price
-
+                          , Object_Goods.isTop            AS Goods_isTop
+                          , Object_Goods.PercentMarkup    AS Goods_PercentMarkup
+                          , Object_Goods.Price            AS Goods_Price
                      FROM Object_Goods_View AS Object_Goods
                      WHERE Object_Goods.isErased = FALSE 
                        AND Object_Goods.ObjectId = vbObjectId

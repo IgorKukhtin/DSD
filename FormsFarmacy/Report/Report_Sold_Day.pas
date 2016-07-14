@@ -14,7 +14,8 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, cxPivotGridChartConnection,
   cxCustomPivotGrid, cxDBPivotGrid, cxGridChartView, cxGridDBChartView,
-  cxSplitter;
+  cxSplitter, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TReport_Sold_DayForm = class(TAncestorReportForm)
@@ -60,6 +61,8 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     actQuasiSchedule: TBooleanStoredProcAction;
     bbQuasiSchedule: TdxBarButton;
+    actGridToExcelPivot: TdsdGridToExcel;
+    bbGridToExcelPivot: TdxBarButton;
   private
     { Private declarations }
   public

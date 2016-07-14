@@ -4,7 +4,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
   ClientWidth = 797
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 813
-  ExplicitHeight = 613
+  ExplicitHeight = 610
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -334,6 +334,12 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      Enabled = False
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      TabSheet = tsMain
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -384,6 +390,17 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       ImageIndexTrue = 35
       ImageIndexFalse = 40
     end
+    object actGridToExcelPivot: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = tsPivot
+      MoveParams = <>
+      Enabled = False
+      Grid = cxDBPivotGrid1
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   inherited MasterDS: TDataSource
     Top = 128
@@ -400,6 +417,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -407,6 +425,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inQuasiSchedule'
@@ -414,6 +433,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Component = actQuasiSchedule
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 128
   end
@@ -441,6 +461,10 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcelPivot'
         end
         item
           Visible = True
@@ -501,6 +525,10 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       Action = actQuasiSchedule
       Category = 0
     end
+    object bbGridToExcelPivot: TdxBarButton
+      Action = actGridToExcelPivot
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
@@ -521,6 +549,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -530,6 +559,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -538,12 +568,14 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 120
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -562,6 +594,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -569,6 +602,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 272

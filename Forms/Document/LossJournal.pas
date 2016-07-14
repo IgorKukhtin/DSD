@@ -38,6 +38,8 @@ type
     bbPrint: TdxBarButton;
     ArticleLossName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    ItemName_from: TcxGridDBColumn;
+    ItemName_to: TcxGridDBColumn;
   private
     { Private declarations }
   public

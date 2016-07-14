@@ -99,6 +99,8 @@ type
     clisPromo: TcxGridDBColumn;
     OperDatePromo: TcxGridDBColumn;
     InvNumberPromo: TcxGridDBColumn;
+    actMovementItemProtocolChild: TdsdOpenForm;
+    bbMovementItemProtocolChild: TdxBarButton;
   private
     { Private declarations }
   public
