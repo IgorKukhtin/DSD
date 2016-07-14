@@ -516,11 +516,15 @@ object OrderIncomeForm: TOrderIncomeForm
           ItemName = 'bbShowErased'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'bbShowErasedCost'
+          ItemName = 'bbStatic'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'bbInsertRecord'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -531,14 +535,6 @@ object OrderIncomeForm: TOrderIncomeForm
         item
           Visible = True
           ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -1244,6 +1240,14 @@ object OrderIncomeForm: TOrderIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -1631,6 +1635,7 @@ object OrderIncomeForm: TOrderIncomeForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesFrom
       end>
     ActionItemList = <
       item

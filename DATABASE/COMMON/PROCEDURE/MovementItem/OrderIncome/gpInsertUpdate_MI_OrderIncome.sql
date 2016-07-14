@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncome(
     IN inAmount              TFloat    , -- Количество
     IN inCountForPrice       TFloat    , -- 
     IN inPrice               TFloat    , -- 
+  OUT outAmountSumm          TFloat    , -- Сумма расчетная
     IN inGoodsId             Integer   , -- Товары
     IN inAssetId             Integer   ,
     IN inUnitId              Integer   ,
@@ -17,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncome(
     IN inComment             TVarChar ,   -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -71,7 +72,11 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
 
-
+     -- расчитали сумму по элементу, для грида
+     outAmountSumm := CASE WHEN inCountForPrice > 0
+                                THEN CAST (inAmount * inPrice / inCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmount * inPrice AS NUMERIC (16, 2))
+                      END;
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
