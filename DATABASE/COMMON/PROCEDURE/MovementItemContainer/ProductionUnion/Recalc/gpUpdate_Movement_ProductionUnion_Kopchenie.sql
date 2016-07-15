@@ -25,6 +25,15 @@ BEGIN
                                                        , inUserId    := zc_Enum_Process_Auto_Kopchenie()
                                                         );
 
+
+    -- Пересчет, !!!Временно здесь, потом надо будет независимо!!!
+    PERFORM lpUpdate_Movement_Send_DocumentKind (inIsUpdate  := TRUE
+                                               , inStartDate := inStartDate
+                                               , inEndDate   := inEndDate
+                                               , inUnitId    := inUnitId
+                                               , inUserId    := zc_Enum_Process_Auto_Send()
+                                                );
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

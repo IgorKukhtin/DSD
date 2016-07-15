@@ -199,7 +199,7 @@ BEGIN
                            );
       IF COALESCE (vbContactPersonId, 0) = 0
       THEN
-          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inOrderName, inOrderPhone, inOrderMail, '+', ioId, 0, 0, vbContactPersonKindId, inSession);
+          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inOrderName, inOrderPhone, inOrderMail, '+', ioId, 0, 0, vbContactPersonKindId, 0, 0, inSession);
           
       END IF;
 

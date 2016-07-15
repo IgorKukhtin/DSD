@@ -4,6 +4,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_PrimeCost()    RETURNS Integer A
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Defroster()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Defroster'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Pack()         RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Pack'         AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Kopchenie()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Kopchenie'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Send()         RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Send'         AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -47,9 +48,14 @@ BEGIN
                                    , inName:= 'Приход/расход цех Копчения'
                                    , inEnumName:= 'zc_Enum_Process_Auto_Kopchenie');
 
+ -- для 
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Auto_Send()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1007
+                                   , inName:= 'Приход/расход схема Нарезка'
+                                   , inEnumName:= 'zc_Enum_Process_Auto_Send');
  
 END $$;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
