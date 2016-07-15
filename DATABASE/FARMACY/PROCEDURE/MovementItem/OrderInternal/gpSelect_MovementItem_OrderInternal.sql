@@ -14,8 +14,10 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbObjectId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbStatusId Integer;
   DECLARE vbOperDate TDateTime;
   DECLARE vbOperDateEnd TDateTime;
+  DECLARE vbisDocument Boolean;
   DECLARE vbDate180 TDateTime;
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
@@ -34,14 +36,25 @@ BEGIN
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
     -- определим дату документа
-    SELECT date_trunc('day', Movement.OperDate)  INTO vbOperDate
+    SELECT date_trunc('day', Movement.OperDate) , Movement.StatusId, COALESCE(MovementBoolean_Document.ValueData,FALSE) ::Boolean
+  INTO vbOperDate, vbStatusId, vbisDocument
     FROM Movement
+       LEFT JOIN MovementBoolean AS MovementBoolean_Document
+                                 ON MovementBoolean_Document.MovementId = Movement.Id
+                                AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
     WHERE Movement.Id = inMovementId;
     
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
     vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
      PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
+
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() THEN
+
+    SELECT *
+    FROM lpSelect_MovementItem_OrderInternal (inMovementId, inIsErased, inSession);
+
+    ELSE
 
      OPEN Cursor1 FOR
      WITH  tmpCheck AS (SELECT MI_Check.ObjectId                  AS GoodsId
@@ -327,6 +340,8 @@ BEGIN
                                          ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
                                         AND MIFloat_Remains.DescId = zc_MIFloat_Remains();
    RETURN NEXT Cursor2;
+
+  END IF;
 
 END;
 $BODY$

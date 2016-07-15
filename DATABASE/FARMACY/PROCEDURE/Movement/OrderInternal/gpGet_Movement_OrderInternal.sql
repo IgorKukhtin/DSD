@@ -77,7 +77,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TVarChar) OWNER TO postgres;
 
 
 /*

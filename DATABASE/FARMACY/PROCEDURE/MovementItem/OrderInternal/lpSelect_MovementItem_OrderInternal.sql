@@ -111,9 +111,9 @@ BEGIN
            , MIString_Maker.ValueData                               AS Maker--
            , tmpMI.SuperFinalPrice 
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
-           , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN 456
+           , CASE WHEN MIDate_PartionGoods.ValueData < vbDate180 THEN 456
                      ELSE 0
-                END AS PartionGoodsDateColor   
+                END                                                 AS PartionGoodsDateColor   
            , MIFloat_Remains.ValueData                              AS RemainsInUnit--
            , MIFloat_MCS.ValueData                                  AS MCS--
 
@@ -247,10 +247,6 @@ BEGIN
                                           ON MIBoolean_Second.DescId = zc_MIBoolean_Second()
                                          AND MIBoolean_Second.MovementItemId = tmpMI.Id 
             --
-            LEFT JOIN MovementItemBoolean AS MIBoolean_First
-                                          ON MIBoolean_First.DescId = zc_MIBoolean_First()
-                                         AND MIBoolean_First.MovementItemId = tmpMI.Id 
-            --
             LEFT JOIN MovementItemBoolean AS MIBoolean_TOP
                                           ON MIBoolean_TOP.DescId = zc_MIBoolean_TOP()
                                          AND MIBoolean_TOP.MovementItemId = tmpMI.Id 
@@ -273,59 +269,84 @@ BEGIN
 
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId 
            
-            LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
+           /* LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
                                        AND Object_Price_View.UnitId = vbUnitId
-           
+           */
                     
-             LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
+          --   LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
              LEFT JOIN (SELECT _tmpMI.MovementItemId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
                         FROM _tmpMI
                         GROUP BY _tmpMI.MovementItemId
                        ) AS SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
              LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
-                                 AND GoodsPromo.GoodsId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
+                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId 
              LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
            ;
      RETURN NEXT Cursor1;
 
      -- Ðåçóëüòàò 2
      OPEN Cursor2 FOR
-        SELECT *, CASE WHEN PartionGoodsDate < vbDate180 THEN 456
+        SELECT  _tmpMI.MovementItemId
+              , _tmpMI.GoodsCode
+              , _tmpMI.GoodsName
+              , _tmpMI.Bonus
+              , _tmpMI.Deferment
+              , _tmpMI.Percent
+              , _tmpMI.SuperFinalPrice
+              , Object_Juridical.ValueData     AS JuridicalName
+              , MIString_Maker.ValueData       AS MakerName
+              , Object_Contract.ValueData      AS ContractName
+              , CASE WHEN MIDate_PartionGoods.ValueData < vbDate180 THEN 456
                      ELSE 0
-                END AS PartionGoodsDateColor      
+                END                            AS PartionGoodsDateColor      
               , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
-              , MIFloat_Remains.ValueData          AS Remains
+              , MIFloat_Remains.ValueData      AS Remains
+              , MIFloat_Price                  AS Price 
 
         FROM _tmpMI
              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
                                    ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId 
                                   AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                           
+                                       ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                      AND MIDate_PartionGoods.MovementItemId = _tmpMI.PriceListMovementItemId
+
              LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                          ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
-                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains();
+                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+             
+            LEFT JOIN MovementItemFloat AS MIFloat_Price                                           
+                                        ON MIFloat_Price.DescId = zc_MIFloat_Price()
+                                       AND MIFloat_Price.MovementItemId = _tmpMI.PriceListMovementItemId
+
+             LEFT JOIN MovementItemString AS MIString_Maker 
+                                          ON MIString_Maker.DescId = zc_MIString_Maker()
+                                         AND MIString_Maker.MovementItemId = _tmpMI.PriceListMovementItemId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
+                                              ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+                                             AND MILinkObject_Juridical.MovementItemId = _tmpMI.PriceListMovementItemId
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
+                                              ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                             AND MILinkObject_Contract.MovementItemId = _tmpMI.PriceListMovementItemId
+             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+                                                                        
+                  
+;
    RETURN NEXT Cursor2;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
- 28.04.16         *
- 12.04.16         *
- 23.03.16         *
- 03.02.16         *
- 23.03.15                         * 
- 05.02.15                         * 
- 12.11.14                         * add MinimumLot
- 05.11.14                         * add MakerName
- 22.10.14                         *
- 13.10.14                         *
- 15.07.14                                                       *
- 15.07.14                                                       *
- 03.07.14                                                       *
+ 15.07.16         *
+
 */
 
 -- òåñò

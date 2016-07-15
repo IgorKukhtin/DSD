@@ -1287,6 +1287,13 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsDocument'
+        Value = Null
+        Component = edIsDocument
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
