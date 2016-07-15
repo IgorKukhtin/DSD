@@ -222,12 +222,14 @@ inherited ContractChoiceForm: TContractChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -235,12 +237,14 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -248,12 +252,14 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -261,18 +267,21 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -280,6 +289,7 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName_all'
@@ -287,12 +297,14 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalBasisId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalBasisId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalBasisName'
@@ -300,12 +312,14 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'JuridicalBasisName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractTagId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagName'
@@ -313,6 +327,7 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'ContractTagName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChangePercent'
@@ -320,15 +335,18 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction
@@ -366,6 +384,7 @@ inherited ContractChoiceForm: TContractChoiceForm
         Component = FormParams
         ComponentItem = 'inPaidKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -373,6 +392,7 @@ inherited ContractChoiceForm: TContractChoiceForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -380,6 +400,7 @@ inherited ContractChoiceForm: TContractChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 82
   end
@@ -464,12 +485,14 @@ inherited ContractChoiceForm: TContractChoiceForm
         Name = 'inPaidKindId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -477,6 +500,7 @@ inherited ContractChoiceForm: TContractChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 152
@@ -486,6 +510,7 @@ inherited ContractChoiceForm: TContractChoiceForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -495,6 +520,7 @@ inherited ContractChoiceForm: TContractChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -503,12 +529,14 @@ inherited ContractChoiceForm: TContractChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 88
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

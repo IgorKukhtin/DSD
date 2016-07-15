@@ -30,8 +30,9 @@ BEGIN
             , MIFloat_Remains.ValueData         AS Remains
             , MIFloat_Price.ValueData           AS Price
             , MIFloat_MCS.ValueData             AS MCS
-
+            
             , MovementItem.isErased             AS isErased
+            , CASE WHEN MovementItem.Amount > MIFloat_Remains.ValueData THEN TRUE ELSE FALSE END ::Boolean AS isError
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId

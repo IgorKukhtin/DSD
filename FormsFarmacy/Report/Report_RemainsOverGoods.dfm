@@ -584,6 +584,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 112
           end
+          object clisError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1054#1096#1080#1073#1082#1072' '#1076#1072'/'#1085#1077#1090
+            Options.Editing = False
+            Width = 63
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -964,6 +974,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1176,6 +1189,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -2546,6 +2562,15 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRemeinsMaster'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RemainsStart'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outAmountMaster'
         Value = Null
         Component = MasterCDS
@@ -2567,6 +2592,14 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Component = ChildCDS
         ComponentItem = 'Summa_Over'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisError'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isError'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item

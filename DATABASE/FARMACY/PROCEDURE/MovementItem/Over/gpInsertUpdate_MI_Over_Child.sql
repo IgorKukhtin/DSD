@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_Over_Child()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Child(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -11,9 +12,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Child(
     IN inRemains	     TFloat    , -- 
     IN inPrice	             TFloat    , -- 
     IN inMCS                 TFloat    , -- 
+    IN inRemeinsMaster       TFloat    , -- 
    OUT outAmountMaster       TFloat    ,
    OUT outSummaMaster        TFloat    ,
    OUT outSummaChild         TFloat    ,
+   OUT outisError            Boolean   , -- ошибка
     IN inMinExpirationDate   TDateTime , -- 
     IN inComment             TVarChar  , --  
     IN inSession             TVarChar    -- сесси€ пользовател€
@@ -55,8 +58,10 @@ BEGIN
 
    PERFORM lpInsertUpdate_MovementItem (inParentId, zc_MI_Master(), MI_Master.ObjectId, inMovementId, outAmountMaster, NULL)
    FROM MovementItem AS MI_Master 
-   WHERE MI_Master.MovementId = inMovementId AND MI_Master.Id = inParentId AND MI_Master.DescId = zc_MI_Master() AND MI_Master.isErased = False
-   ;
+   WHERE MI_Master.MovementId = inMovementId AND MI_Master.Id = inParentId AND MI_Master.DescId = zc_MI_Master() AND MI_Master.isErased = False;
+
+   --
+   outisError := (CASE WHEN outAmountMaster > inRemeinsMaster THEN TRUE ELSE FALSE END) ::Boolean;
 
 
 END;

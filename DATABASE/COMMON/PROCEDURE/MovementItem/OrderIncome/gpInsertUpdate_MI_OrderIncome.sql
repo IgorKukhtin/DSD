@@ -40,12 +40,12 @@ BEGIN
 
 
      -- ищем Товар/ОС/работы
-     vbNameBeforeId:= (SELECT tmp.Id FROM gpSelect_Object_NameBefore (inSession) AS tmp WHERE tmp.name = inNameBeforeName);
+     vbNameBeforeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_NameBefore() and Object.ValueData = inNameBeforeName);
 
      IF COALESCE (vbNameBeforeId, 0) = 0
      THEN
          -- создание
-         vbNameBeforeId:= gpInsertUpdate_Object_NameBefore  (ioId              := 0
+         vbNameBeforeId:= gpInsertUpdate_Object_NameBefore   (ioId              := 0
                                                             , inCode            := lfGet_ObjectCode(0, zc_Object_NameBefore()) 
                                                             , inName            := inNameBeforeName
                                                             , inSession         := inSession

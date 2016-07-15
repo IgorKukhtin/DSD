@@ -135,6 +135,7 @@ type
     Comment: TcxGridDBColumn;
     UnitChoiceForm: TOpenChoiceForm;
     AssetChoiceForm: TOpenChoiceForm;
+    NameBeforeChoiceForm: TOpenChoiceForm;
   private
   public
   end;

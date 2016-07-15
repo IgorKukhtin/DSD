@@ -118,7 +118,6 @@ object OrderIncomeForm: TOrderIncomeForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -357,12 +356,27 @@ object OrderIncomeForm: TOrderIncomeForm
             Options.Editing = False
             Width = 91
           end
+          object clNameBeforeCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'./'#1086#1089'/'#1088#1072#1073'.'
+            DataBinding.FieldName = 'NameBeforeCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
           object clNameBeforeName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088'/'#1054#1057'/'#1088#1072#1073#1086#1090#1099
             DataBinding.FieldName = 'NameBeforeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = NameBeforeChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 121
           end
           object clUnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
@@ -1034,6 +1048,43 @@ object OrderIncomeForm: TOrderIncomeForm
         end>
       isShowModal = False
     end
+    object NameBeforeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'NameBeforeChoiceForm'
+      FormName = 'TNameBeforeForm'
+      FormNameParam.Value = 'TNameBeforeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object UnitChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1647,11 +1698,11 @@ object OrderIncomeForm: TOrderIncomeForm
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
-    FormNameParam.Value = 'TContractForm'
+    FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1670,8 +1721,47 @@ object OrderIncomeForm: TOrderIncomeForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 696
+    Left = 592
     Top = 8
   end
   object PaidKindGuides: TdsdGuides
@@ -1792,62 +1882,25 @@ object OrderIncomeForm: TOrderIncomeForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractChoicePartnerForm'
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        Component = edChangePercent
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 336
@@ -1904,8 +1957,8 @@ object OrderIncomeForm: TOrderIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 568
-    Top = 48
+    Left = 592
+    Top = 72
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

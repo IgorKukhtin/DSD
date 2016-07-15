@@ -423,6 +423,8 @@ BEGIN
                , COALESCE (tmpMIMaster.Amount, 0) :: TFloat   AS Amount_Over
                , COALESCE (tmpMIMaster.Summa, 0)  :: TFloat   AS Summa_Over
                , (COALESCE (tmpChildTo.RemainsMCS_result, 0) - COALESCE (tmpMIMaster.Amount, 0)) :: TFloat AS Amount_OverDiff
+               
+               , CASE WHEN COALESCE (tmpMIMaster.Amount, 0) > tmpData.RemainsStart THEN TRUE ELSE FALSE END ::Boolean AS isError
              
      FROM tmpData
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId

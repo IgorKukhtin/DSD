@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Amount TFloat, Price TFloat, CountForPrice TFloat, Am
              , Comment TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , MeasureId Integer, MeasureName TVarChar
-             , NameBeforeId Integer, NameBeforeName TVarChar
+             , NameBeforeId Integer, NameBeforeCode Integer, NameBeforeName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , AssetId Integer, AssetName TVarChar
              , isErased Boolean
@@ -47,6 +47,7 @@ BEGIN
            , Object_Measure.ValueData            AS MeasureName
 
            , Object_NameBefore.Id                AS NameBeforeId
+           , Object_NameBefore.ObjectCode        AS NameBeforeCode
            , Object_NameBefore.ValueData         AS NameBeforeName
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ObjectCode              AS UnitCode
