@@ -32,8 +32,14 @@ BEGIN
    
     IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() THEN
 
-    SELECT *
-    FROM lpSelect_MovementItem_OrderInternal (inMovementId, inIsErased, inSession);
+     OPEN Cursor1 FOR
+     SELECT $1 FROM lpSelect_MovementItem_OrderInternal (inMovementId, inIsErased, inSession) AS tmp;
+     RETURN NEXT Cursor1;
+
+     OPEN Cursor2 FOR
+     SELECT $2 FROM lpSelect_MovementItem_OrderInternal (inMovementId, inIsErased, inSession) AS tmp;
+     RETURN NEXT Cursor2;
+
 
     ELSE
 
