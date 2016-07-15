@@ -29,7 +29,15 @@ BEGIN
 
     --
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-    --
+   
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() THEN
+
+    SELECT *
+    FROM lpSelect_MovementItem_OrderInternal (inMovementId, inIsErased, inSession);
+
+    ELSE
+
+ --
     SELECT MovementLinkObject.ObjectId INTO vbUnitId
     FROM MovementLinkObject
     WHERE MovementLinkObject.MovementId = inMovementId
@@ -48,13 +56,6 @@ BEGIN
     vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
      PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
-
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() THEN
-
-    SELECT *
-    FROM lpSelect_MovementItem_OrderInternal (inMovementId, inIsErased, inSession);
-
-    ELSE
 
      OPEN Cursor1 FOR
      WITH  tmpCheck AS (SELECT MI_Check.ObjectId                  AS GoodsId
