@@ -1177,7 +1177,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
           OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -1340,7 +1339,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             DataBinding.FieldName = 'Rersent_from'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1351,7 +1350,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             DataBinding.FieldName = 'Rersent_to'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1858,8 +1857,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Top = 168
   end
   inherited BarManager: TdxBarManager
-    Left = 152
-    Top = 144
+    Left = 168
+    Top = 168
     DockControlHeights = (
       0
       0
@@ -1950,7 +1949,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Top = 224
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 272
+    Left = 264
     Top = 152
   end
   inherited RefreshDispatcher: TRefreshDispatcher
@@ -2092,8 +2091,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1000
-    Left = 672
-    Top = 160
+    Left = 696
+    Top = 184
   end
   object DataSetDocs: TClientDataSet
     Aggregates = <>
