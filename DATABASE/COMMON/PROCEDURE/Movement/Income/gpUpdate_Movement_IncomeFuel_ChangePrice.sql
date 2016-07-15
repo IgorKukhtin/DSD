@@ -1,10 +1,10 @@
 -- Function: gpUpdate_Movement_IncomeFuel_ChangePrice()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_IncomeFuel_ChangePrice (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_IncomeFuel_ChangePrice (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_IncomeFuel_ChangePrice(
     IN inId                  Integer   , -- Ключ объекта <Документ>
-    IN inContractId          Integer   , -- Договора
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Void
@@ -17,11 +17,17 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_IncomeFuel());
 
-     vbStatusId := (SELECT  Movement.StatusId FROM Movement Where Movement.Id = inId);
-     vbChangePrice := (SELECT Object_Contract_View.ChangePrice FROM Object_Contract_View WHERE Object_Contract_View.ContractId = inContractId);
 
+     SELECT  Movement.StatusId, View_ContractCondition_Value.ChangePrice
+    INTO vbStatusId, vbChangePrice
+     FROM Movement
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+         LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = MovementLinkObject_Contract.ObjectId 
+     WHERE Movement.Id = inId;
 
-
+   
      -- сохранили свойство <скидка в цене>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePrice(), inId, vbChangePrice);
    

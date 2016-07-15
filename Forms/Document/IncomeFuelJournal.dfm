@@ -62,7 +62,6 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1599,14 +1598,6 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Value = 42370d
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = False
-        Component = ClientDataSet
-        ComponentItem = 'ContractId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
