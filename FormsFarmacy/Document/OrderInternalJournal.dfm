@@ -4,7 +4,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   ClientWidth = 828
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 844
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -120,30 +120,30 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 103
+            Width = 95
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 94
+            Width = 88
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 103
+            Width = 95
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 169
+            Width = 156
           end
           object colOrderKind: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OrderKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 83
+            Width = 77
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -153,7 +153,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 130
+            Width = 121
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
@@ -163,7 +163,16 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 132
+            Width = 122
+          end
+          object colisDocument: TcxGridDBColumn
+            Caption = #1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1099
+            DataBinding.FieldName = 'isDocument'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1099
+            Options.Editing = False
+            Width = 60
           end
         end
       end
