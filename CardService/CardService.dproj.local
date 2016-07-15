@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.719,=C:\Users\1\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2016.07.15 10:20:40.747,=C:\Users\1\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2016.07.15 10:21:46.059,=C:\Users\1\Documents\RAD Studio\Projects\CardService.pas</Transaction>
+    <Transaction>2016.07.15 10:27:55.384,D:\work\CardService\uMain.pas=C:\Users\1\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2016.07.15 10:27:55.384,D:\work\CardService\uMain.dfm=C:\Users\1\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2016.07.15 10:28:02.456,D:\work\CardService\uCardService.pas=C:\Users\1\Documents\RAD Studio\Projects\CardService.pas</Transaction>
+    <Transaction>2016.07.15 10:28:08.972,D:\work\CardService\CardService.dproj=C:\Users\1\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
