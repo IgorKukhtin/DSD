@@ -118,4 +118,4 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= '9818')
