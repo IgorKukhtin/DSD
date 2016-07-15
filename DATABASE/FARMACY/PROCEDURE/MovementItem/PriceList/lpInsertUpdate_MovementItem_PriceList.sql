@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_PriceList()
+-- Function: lpInsertUpdate_MovementItem_PriceList()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList(Integer, Integer, Integer, Integer, TFloat, TDateTime, Integer);
--- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList(Integer, Integer, Integer, Integer, TFloat, TDateTime, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList(Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList (Integer, Integer, Integer, Integer, TFloat, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList (Integer, Integer, Integer, Integer, TFloat, TDateTime, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PriceList(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Goods_IsSpecCondition(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbisSpecCondition Boolean;
+   DECLARE vbIsSpecCondition Boolean;
 BEGIN
 
    IF COALESCE(inId, 0) = 0 THEN
@@ -20,13 +20,13 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
 
     -- Получаем сохраненное значение св-ва
-    vbisSpecCondition:=COALESCE((SELECT ObjectFloat.ValueData FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Goods_SpecCondition() AND ObjectBoolean.ObjectId = inId),0);
+    vbIsSpecCondition:= COALESCE ((SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Goods_SpecCondition() AND ObjectBoolean.ObjectId = inId), FALSE);
 
 
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SpecCondition(), inId, inisSpecCondition);
+    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SpecCondition(), inId, inisSpecCondition);
 
 
-   IF COALESCE(inisSpecCondition,0) <> vbisSpecCondition
+   IF COALESCE (inIsSpecCondition, FALSE) <> vbIsSpecCondition
    THEN
        -- сохранили свойство <Дата корр.>
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);

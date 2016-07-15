@@ -20,7 +20,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDel
 AS
 $BODY$
 BEGIN
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpresult')
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult'))
      THEN
          DELETE FROM _tmpResult;
          DELETE FROM _tmpResult_child;

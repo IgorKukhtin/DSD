@@ -151,6 +151,11 @@ BEGIN
                                 ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.Childobjectid
                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
      WHERE LoadPriceListItem.Id = inPriceListItemId; --CommonCode = 225244 OR BarCode = '8435001020030'
+
+
+    -- 
+    REFRESH MATERIALIZED VIEW MovementItemLastPriceList_View;
+
    -- сохранили протокол
    -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 

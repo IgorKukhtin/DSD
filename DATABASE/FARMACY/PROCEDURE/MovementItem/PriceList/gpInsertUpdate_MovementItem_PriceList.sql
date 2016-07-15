@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PriceList(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsMainId         Integer   , -- Товары
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
+    IN inAmount              TFloat    , -- Цена
     IN inPartionGoodsDate    TDateTime , -- Партия товара
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -22,8 +22,9 @@ BEGIN
 
      -- 
      PERFORM lpInsertUpdate_MovementItem_PriceList (ioId, inMovementId, inGoodsMainId, inGoodsId
+                                                  , inAmount
                                                   , COALESCE ((SELECT MIFloat.ValueData FROM MovementItemFloat AS MIFloat WHERE MIFloat.MovementItemId =  ioId AND MIFloat.DescId = zc_MIFloat_Price()), 0)
-                                                  , inAmount, inPartionGoodsDate, NULL, vbUserId
+                                                  , inPartionGoodsDate, NULL, vbUserId
                                                    );
 
 END;
