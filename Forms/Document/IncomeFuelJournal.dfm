@@ -62,6 +62,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -864,6 +865,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_ChangePrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -943,6 +952,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Action = actShowErased
       Category = 0
     end
+    object bbUpdate_ChangePrice: TdxBarButton
+      Action = macUpdate_ChangePrice
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -979,21 +992,25 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       FormName = 'TIncomeFuelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -1008,23 +1025,27 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       FormName = 'TIncomeFuelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1096,6 +1117,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1103,6 +1125,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1115,6 +1138,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1122,6 +1146,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
@@ -1130,6 +1155,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           ComponentItem = 'InvNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1173,6 +1199,32 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       View = cxGridDBTableView
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object macSUpdate_ChangePrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_ChangePrice
+        end>
+      View = cxGridDBTableView
+      ImageIndex = 27
+    end
+    object macUpdate_ChangePrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macSUpdate_ChangePrice
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1080#1079#1084#1077#1085#1077#1085#1080#1080' '#1089#1082#1080#1076#1082#1080' '#1074' '#1094#1077#1085#1077' '#1074#1086' '#1074#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093'? '
+      InfoAfterExecute = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077' '#1080#1079#1084#1077#1085#1077#1085#1072
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1074' '#1094#1077#1085#1077' '#1074#1086' '#1074#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1074' '#1094#1077#1085#1077' '#1074#1086' '#1074#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093
+      ImageIndex = 27
     end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -1288,6 +1340,37 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
     object actReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1304,33 +1387,16 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
-    object ExecuteDialog: TExecuteDialog
+    object actUpdate_ChangePrice: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      ImageIndex = 35
-      FormName = 'TMovement_PeriodDialogForm'
-      FormNameParam.Value = 'TMovement_PeriodDialogForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ChangePrice
+      StoredProcList = <
         item
-          Name = 'StartDate'
-          Value = 42370d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'EndDate'
-          Value = 42370d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
+          StoredProc = spUpdate_ChangePrice
         end>
-      isShowModal = True
-      RefreshDispatcher = RefreshDispatcher
-      OpenBeforeShow = True
+      Caption = 'ChangePrice'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1347,6 +1413,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1354,6 +1421,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1361,6 +1429,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 24
@@ -1377,12 +1446,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsLastComplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -1425,6 +1496,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1445,6 +1517,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1483,6 +1556,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1502,15 +1576,42 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsLastComplete'
         Value = 'True'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 225
     Top = 289
+  end
+  object spUpdate_ChangePrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_IncomeFuel_ChangePrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 42370d
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = False
+        Component = ClientDataSet
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 184
   end
 end

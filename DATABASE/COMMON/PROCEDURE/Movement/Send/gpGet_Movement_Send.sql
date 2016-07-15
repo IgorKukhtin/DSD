@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
+             , isAuto Boolean
               )
 AS
 $BODY$
@@ -41,6 +42,8 @@ BEGIN
              , 0                                                AS DocumentKindId
              , CAST ('' AS TVarChar) 		                AS DocumentKindName
 
+             , FALSE                                            AS isAuto
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -60,12 +63,18 @@ BEGIN
            , Object_DocumentKind.Id                             AS DocumentKindId
            , Object_DocumentKind.ValueData                      AS DocumentKindName
 
+           , COALESCE(MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -96,6 +105,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 14.07.16         *
  17.06.16         *
  22.05.14                                                        *
  07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View

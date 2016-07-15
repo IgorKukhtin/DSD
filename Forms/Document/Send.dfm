@@ -438,6 +438,14 @@ inherited SendForm: TSendForm
     TabOrder = 7
     Width = 270
   end
+  object edIsAuto: TcxCheckBox [4]
+    Left = 245
+    Top = 63
+    Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 187
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -1006,9 +1014,10 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isAuto'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = edIsAuto
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item

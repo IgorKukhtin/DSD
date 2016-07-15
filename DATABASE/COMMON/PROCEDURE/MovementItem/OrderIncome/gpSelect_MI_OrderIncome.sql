@@ -11,9 +11,9 @@ RETURNS TABLE (Id Integer, Amount TFloat, Price TFloat, CountForPrice TFloat, Am
              , Comment TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , MeasureId Integer, MeasureName TVarChar
-, NameBeforeId Integer, NameBeforeName TVarChar
-, UnitId Integer, UnitCode Integer, UnitName TVarChar
-, AssetId Integer, AssetName TVarChar
+             , NameBeforeId Integer, NameBeforeName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , AssetId Integer, AssetName TVarChar
              , isErased Boolean
               )
 AS
@@ -30,9 +30,12 @@ BEGIN
         SELECT
              MovementItem.Id     AS Id
            , MovementItem.Amount               :: TFloat AS Amount  
-           , MIFloat_Price.ValueData           :: TFloat AS Price
-           , MIFloat_CountForPrice.ValueData   :: TFloat AS CountForPrice 
-           , (MIFloat_Price.ValueData * MovementItem.Amount) :: TFloat AS AmountSumm
+           , COALESCE(MIFloat_Price.ValueData,0)           :: TFloat AS Price
+           , COALESCE(MIFloat_CountForPrice.ValueData, 1)   :: TFloat AS CountForPrice 
+           , CASE WHEN COALESCE(MIFloat_CountForPrice.ValueData, 1) > 0
+                  THEN CAST (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
+                  ELSE CAST (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0) AS NUMERIC (16, 2))
+             END :: TFloat AS AmountSumm
 
            , MIString_Comment.ValueData        :: TVarChar AS Comment
 

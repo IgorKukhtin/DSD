@@ -164,6 +164,15 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object colisAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086'.'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1089#1086#1079#1076#1072#1085
+            Options.Editing = False
+            Width = 39
+          end
         end
       end
     end

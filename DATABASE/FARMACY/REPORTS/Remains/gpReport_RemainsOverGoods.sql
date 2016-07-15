@@ -37,6 +37,7 @@ $BODY$
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
    DECLARE Cursor3 refcursor;
+   DECLARE Cursor4 refcursor;
 
    DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId Integer;
@@ -535,6 +536,44 @@ BEGIN
        -- LIMIT 50000
     ;
      RETURN NEXT Cursor3;
+     -- Результат 4 итоги
+     -- !!!дублируем Cursor2!!!
+     OPEN Cursor4 FOR
+      SELECT    Object_Unit.Id        AS UnitId
+               , Object_Unit.ValueDAta AS UnitName 
+               , SUM(tmpData.MCSValue)  :: TFloat  AS MCSValue
+               , SUM(tmpData.MCSValue * tmpData.Price) :: TFloat AS SummaMCSValue
+
+               , SUM(tmpData.RemainsStart) :: TFloat  AS  RemainsStart
+               , SUM(tmpData.SummaRemainsStart) :: TFloat  AS SummaRemainsStart
+               , SUM(tmpData.RemainsMCS_from) :: TFloat  AS RemainsMCS_from
+               , SUM(tmpData.SummaRemainsMCS_from) :: TFloat  AS SummaRemainsMCS_from
+               , SUM(tmpData.RemainsMCS_to) :: TFloat  AS RemainsMCS_to
+               , SUM(tmpData.SummaRemainsMCS_to) :: TFloat  AS SummaRemainsMCS_to
+
+               , SUM(tmpDataTo.RemainsMCS_result ) :: TFloat AS RemainsMCS_result
+               , SUM(tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
+
+               , SUM(COALESCE (tmpMIChild.Amount, 0)) :: TFloat  AS Amount_Over
+               , SUM(COALESCE (tmpMIChild.Summa, 0))  :: TFloat  AS Summa_Over
+               , SUM(COALESCE (tmpDataTo.RemainsMCS_result, 0) - COALESCE (tmpMIChild.Amount, 0)) :: TFloat AS Amount_OverDiff
+
+               , (CASE WHEN SUM(COALESCE(tmpData.SummaRemainsStart,0)) <>0 THEN (SUM(tmpData.SummaRemainsMCS_to) * 100 / SUM(tmpData.SummaRemainsStart)) ELSE  0 END) :: TFloat  AS Rersent_to
+               , (CASE WHEN SUM(COALESCE(tmpData.SummaRemainsStart,0)) <>0 THEN (SUM(tmpData.SummaRemainsMCS_from) * 100 / SUM(tmpData.SummaRemainsStart)) ELSE  0 END)  :: TFloat  AS Rersent_from
+     FROM tmpData
+          LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId
+          LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId AND tmpDataTo.UnitId = tmpData.UnitId
+          LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId AND tmpDataFrom.UnitId = inUnitId
+
+          LEFT JOIN tmpMIChild ON tmpMIChild.GoodsId = tmpData.GoodsId
+                              AND tmpMIChild.UnitId = tmpData.UnitId
+     /*WHERE tmpData.UnitId <> inUnitId
+       AND tmpDataTo.RemainsMCS_result > 0 */   
+     GROUP BY Object_Unit.Id, Object_Unit.ValueDAta 
+
+       ;
+       
+     RETURN NEXT Cursor4;
   
 END;
 $BODY$
@@ -543,6 +582,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.0716          *
  05.07.16         *
  09.06.16         *
 */

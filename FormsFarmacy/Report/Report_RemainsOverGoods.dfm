@@ -11,20 +11,28 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Top = 61
     Width = 1066
     Height = 496
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 3
+    Properties.ActivateFocusedTab = False
+    Properties.Options = [pcoGradient, pcoGradientClientArea, pcoRedrawOnResize, pcoSort]
     ExplicitTop = 61
     ExplicitWidth = 1066
     ExplicitHeight = 496
     ClientRectBottom = 496
     ClientRectRight = 1066
+    ClientRectTop = 24
     inherited tsMain: TcxTabSheet
+      Caption = #1054#1089#1085#1086#1074#1085#1072#1103
+      TabVisible = True
+      ExplicitTop = 24
       ExplicitWidth = 1066
-      ExplicitHeight = 496
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1066
-        Height = 259
+        Height = 235
         ExplicitWidth = 1066
-        ExplicitHeight = 259
+        ExplicitHeight = 235
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -580,7 +588,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 264
+        Top = 240
         Width = 1066
         Height = 232
         Align = alBottom
@@ -946,11 +954,413 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 259
+        Top = 235
         Width = 1066
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
+      end
+    end
+    object cxTabSheetTotal: TcxTabSheet
+      Caption = #1048#1090#1086#1075#1080
+      ImageIndex = 2
+      object cxGridTotal: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1066
+        Height = 472
+        Align = alClient
+        TabOrder = 0
+        object cxGridTotalDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = TotalDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxRemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaRemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxMCSValue
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaMCSValue
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxRemainsMCS_from
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaRemainsMCS_from
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxRemainsMCS_to
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaRemainsMCS_to
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount_OverDiff
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxRemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaRemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxMCSValue
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaMCSValue
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxRemainsMCS_from
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaRemainsMCS_from
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxRemainsMCS_to
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSummaRemainsMCS_to
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxSumma_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxAmount_OverDiff
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object cxUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 250
+          end
+          object cxRemainsStart: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '#1085#1072#1095'.'
+            DataBinding.FieldName = 'RemainsStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object cxSummaRemainsStart: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1089#1091#1084#1084#1072' '#1085#1072#1095'.'
+            DataBinding.FieldName = 'SummaRemainsStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object cxRemainsMCS_result: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044
+            DataBinding.FieldName = 'RemainsMCS_result'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object cxSummaRemainsMCS_result: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1056#1048#1061#1054#1044
+            DataBinding.FieldName = 'SummaRemainsMCS_result'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object cxMCSValue: TcxGridDBColumn
+            AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Caption = #1050#1086#1083'-'#1074#1086' '#1053#1058#1047
+            DataBinding.FieldName = 'MCSValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object cxSummaMCSValue: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1058#1047
+            DataBinding.FieldName = 'SummaMCSValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object cxRemainsMCS_from: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' > '#1053#1058#1047
+            DataBinding.FieldName = 'RemainsMCS_from'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object cxSummaRemainsMCS_from: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' > '#1053#1058#1047
+            DataBinding.FieldName = 'SummaRemainsMCS_from'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object cxRemainsMCS_to: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' < '#1053#1058#1047
+            DataBinding.FieldName = 'RemainsMCS_to'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object cxSummaRemainsMCS_to: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' < '#1053#1058#1047
+            DataBinding.FieldName = 'SummaRemainsMCS_to'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object cxAmount_Over: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044' ('#1076#1086#1082')'
+            DataBinding.FieldName = 'Amount_Over'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object cxSumma_Over: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' ('#1076#1086#1082')'
+            DataBinding.FieldName = 'Summa_Over'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object cxAmount_OverDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1072' '#1087#1088#1080#1093#1086#1076' '#1089' '#1076#1086#1082#1091#1084'.'
+            DataBinding.FieldName = 'Amount_OverDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object cxRersent_from: TcxGridDBColumn
+            Caption = '% '#1080#1079#1083#1080#1096#1082#1086#1074
+            DataBinding.FieldName = 'Rersent_from'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object cxRersent_to: TcxGridDBColumn
+            Caption = '% '#1085#1077' '#1093#1074#1072#1090#1072#1077#1090
+            DataBinding.FieldName = 'Rersent_to'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+        end
+        object cxGridTotalLevel: TcxGridLevel
+          GridView = cxGridTotalDBTableView
+        end
       end
     end
   end
@@ -1406,6 +1816,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       item
         DataSet = DataSetDocs
+      end
+      item
+        DataSet = TotalCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -2245,5 +2658,32 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     PackSize = 1000
     Left = 584
     Top = 168
+  end
+  object TotalCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    MasterFields = 'GoodsId'
+    Params = <>
+    Left = 944
+    Top = 296
+  end
+  object TotalDS: TDataSource
+    DataSet = TotalCDS
+    Left = 904
+    Top = 304
+  end
+  object DBViewAddOnTotal: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridTotalDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 880
+    Top = 312
   end
 end
