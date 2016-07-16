@@ -27,7 +27,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 42552d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 42552d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False

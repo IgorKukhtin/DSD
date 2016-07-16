@@ -14,6 +14,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
@@ -409,7 +410,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -500,7 +501,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       Action = actShowErased
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
@@ -1003,6 +1004,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 7
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc

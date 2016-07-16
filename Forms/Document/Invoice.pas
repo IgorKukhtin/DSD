@@ -137,8 +137,9 @@ type
     AssetChoiceForm: TOpenChoiceForm;
     NameBeforeChoiceForm: TOpenChoiceForm;
     cxLabel19: TcxLabel;
-    edInvNumberSale: TcxButtonEdit;
-    SaleChoiceGuides: TdsdGuides;
+    edInvNumberOrderIncome: TcxButtonEdit;
+    OrderIncomeGuides: TdsdGuides;
+    actShowAll: TBooleanStoredProcAction;
   private
   public
   end;

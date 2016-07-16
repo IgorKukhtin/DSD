@@ -443,7 +443,7 @@ object InvoiceForm: TInvoiceForm
     Top = 45
     Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1079#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097'.)'
   end
-  object edInvNumberSale: TcxButtonEdit
+  object edInvNumberOrderIncome: TcxButtonEdit
     Left = 764
     Top = 63
     Properties.Buttons = <
@@ -490,9 +490,25 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOrderIncomeId'
+        Value = Null
+        Component = OrderIncomeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -545,6 +561,10 @@ object InvoiceForm: TInvoiceForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           BeginGroup = True
@@ -632,11 +652,8 @@ object InvoiceForm: TInvoiceForm
       Category = 0
     end
     object bbShowAll: TdxBarButton
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Action = actShowAll
       Category = 0
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Visible = ivAlways
-      ImageIndex = 63
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
@@ -1230,6 +1247,25 @@ object InvoiceForm: TInvoiceForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       ShortCut = 45
       ImageIndex = 0
+    end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
   end
   object MasterDS: TDataSource
@@ -2136,20 +2172,20 @@ object InvoiceForm: TInvoiceForm
     Left = 150
     Top = 343
   end
-  object SaleChoiceGuides: TdsdGuides
+  object OrderIncomeGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edInvNumberSale
+    LookupControl = edInvNumberOrderIncome
     Key = '0'
-    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.Value = 'TOrderIncomeJournalForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TSaleJournalChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TOrderIncomeJournalForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = '0'
-        Component = SaleChoiceGuides
+        Component = OrderIncomeGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2158,21 +2194,21 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = SaleChoiceGuides
+        Component = OrderIncomeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerId'
+        Name = 'JuridicalId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerName'
+        Name = 'JuridicalName'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'TextValue'
@@ -2180,6 +2216,6 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end>
     Left = 828
-    Top = 40
+    Top = 48
   end
 end

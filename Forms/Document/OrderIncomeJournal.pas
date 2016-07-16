@@ -102,7 +102,7 @@ type
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     dsdChoiceGuides: TdsdChoiceGuides;
-    bb: TdxBarButton;
+    bbChoiceGuides: TdxBarButton;
   private
   public
   end;
