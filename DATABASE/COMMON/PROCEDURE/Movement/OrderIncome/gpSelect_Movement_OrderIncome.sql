@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderIncome(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
+             , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
              , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
              , TotalSumm TFloat 
@@ -44,6 +45,7 @@ BEGIN
        SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
+           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
            , Movement.OperDate                      AS OperDate
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
@@ -80,7 +82,7 @@ BEGIN
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
-
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             
             LEFT JOIN MovementDate AS MovementDate_Insert

@@ -832,10 +832,12 @@ uses
   DocumentKindEdit in '..\..\Forms\Kind\DocumentKindEdit.pas' {DocumentKindEditForm: TParentForm},
   Report_WageDialog in '..\..\Forms\Report\Report_WageDialog.pas' {Report_WageDialogForm: TParentForm},
   ReestrKind in '..\..\Forms\Kind\ReestrKind.pas' {ReestrKindForm: TParentForm},
-  OrderIncomeJournal in '..\..\Forms\Document\OrderIncomeJournal.pas' {OrderIncomeJournalForm: TParentForm},
   OrderIncome in '..\..\Forms\Document\OrderIncome.pas' {OrderIncomeForm: TParentForm},
   NameBefore in '..\..\Forms\Guides\NameBefore.pas' {NameBeforeForm: TParentForm},
-  NameBeforeEdit in '..\..\Forms\Guides\NameBeforeEdit.pas' {NameBeforeEditForm: TParentForm};
+  NameBeforeEdit in '..\..\Forms\Guides\NameBeforeEdit.pas' {NameBeforeEditForm: TParentForm},
+  OrderIncomeJournal in '..\..\Forms\Document\OrderIncomeJournal.pas' {OrderIncomeJournalForm: TParentForm},
+  Invoice in '..\..\Forms\Document\Invoice.pas' {InvoiceForm: TParentForm},
+  InvoiceJournal in '..\..\Forms\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
