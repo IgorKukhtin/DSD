@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
+             , OrderIncomeId Integer, OrderIncomeName TVarChar
               )
 AS
 $BODY$
@@ -57,6 +58,8 @@ BEGIN
              , CAST ('' as TVarChar)                      AS PaidKindName  
   
              , CAST ('' as TVarChar) 	                  AS Comment
+             , 0                                          AS OrderIncomeId
+             , CAST ('' as TVarChar) 	                  AS OrderIncomeName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
@@ -67,6 +70,19 @@ BEGIN
      ELSE
 
      RETURN QUERY
+       WITH tmpMI AS (SELECT MI_OrderIncome.MovementId AS MovementId
+                      FROM MovementItem
+                           INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementItemId()
+                                                       AND MIFloat_MovementId.ValueData > 0
+                           INNER JOIN MovementItem AS MI_OrderIncome ON MI_OrderIncome.Id = MIFloat_MovementId.ValueData :: Integer
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                      ORDER BY MovementItem.Id DESC
+                      LIMIT 1
+                     )
       SELECT Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate                      AS OperDate
@@ -95,8 +111,14 @@ BEGIN
            , Object_PaidKind.ValueData              AS PaidKindName
 
            , MovementString_Comment.ValueData       AS Comment
+           , tmpMI.MovementId                       AS OrderIncomeId
+           , zfCalc_PartionMovementName (Movement_OrderIncome.DescId, MovementDesc_OrderIncome.ItemName, Movement_OrderIncome.InvNumber, Movement_OrderIncome.OperDate) AS OrderIncomeName
 
        FROM Movement
+            LEFT JOIN tmpMI ON 1 = 1
+            LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = tmpMI.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_OrderIncome ON MovementDesc_OrderIncome.Id = Movement_OrderIncome.DescId
+            
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
@@ -144,8 +166,7 @@ BEGIN
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
-
-
+    
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Invoice();
 

@@ -140,6 +140,7 @@ type
     edInvNumberOrderIncome: TcxButtonEdit;
     OrderIncomeGuides: TdsdGuides;
     actShowAll: TBooleanStoredProcAction;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
   public
   end;

@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MI_Invoice()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Invoice (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Invoice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Invoice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Invoice(
     IN inAmount              TFloat    , -- Количество
     IN inCountForPrice       TFloat    , -- 
     IN inPrice               TFloat    , -- 
+    IN inMIId_OrderIncome    TFloat    , -- элемент документа Заявка поставщику
   OUT outAmountSumm          TFloat    , -- Сумма расчетная
     IN inGoodsId             Integer   , -- Товары
     IN inAssetId             Integer   ,
@@ -58,6 +61,9 @@ BEGIN
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), ioId, inMIId_OrderIncome);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);

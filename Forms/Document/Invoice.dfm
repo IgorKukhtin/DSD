@@ -431,6 +431,10 @@ object InvoiceForm: TInvoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            DataBinding.FieldName = 'MIId_OrderIncome'
+            Width = 30
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -1344,6 +1348,15 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMIId_OrderIncome'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MIId_OrderIncome'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outAmountSumm'
         Value = Null
         Component = MasterCDS
@@ -1717,6 +1730,21 @@ object InvoiceForm: TInvoiceForm
         Name = 'Comment'
         Value = Null
         Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderIncomeId'
+        Value = Null
+        Component = OrderIncomeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderIncomeName'
+        Value = Null
+        Component = OrderIncomeGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
