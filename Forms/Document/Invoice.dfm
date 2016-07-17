@@ -236,6 +236,7 @@ object InvoiceForm: TInvoiceForm
         Height = 330
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -433,6 +434,8 @@ object InvoiceForm: TInvoiceForm
           end
           object cxGridDBTableViewColumn1: TcxGridDBColumn
             DataBinding.FieldName = 'MIId_OrderIncome'
+            Visible = False
+            VisibleForCustomization = False
             Width = 30
           end
         end
