@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Invoice(
     IN inShowAll          Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MIId_OrderIncome Integer, Amount TFloat, Price TFloat, CountForPrice TFloat, AmountSumm TFloat
+RETURNS TABLE (Id Integer, MIId_OrderIncome Integer, Amount TFloat, AmountOrderIncome TFloat, Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSummOrderIncome TFloat
              , Comment TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , MeasureId Integer, MeasureName TVarChar
@@ -109,6 +109,7 @@ BEGIN
                                 , tmpMI_parent.MovementItemId AS MIparentId
                                 , tmpMI_parent.GoodsId
                                 , tmpMI_parent.Amount
+                                , tmpMI_parent.CountForPrice 
                                 , tmpMI_parent.MeasureId
                                 , tmpMI_parent.NameBeforeId
                                 , tmpMI_parent.UnitId
@@ -127,29 +128,37 @@ BEGIN
 
    , tmpResult AS (SELECT tmpMI.MovementItemId
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent_find.GoodsId)            AS GoodsId
-                        , CASE WHEN tmpMI.Amount <> 0 THEN tmpMI.Amount ELSE tmpMI_parent_find.Amount END AS Amount
+                        , tmpMI.Amount                                                   AS Amount
+                        , tmpMI_parent_find.Amount                                       AS AmountOrderIncome
                         , COALESCE (tmpMI.MeasureId, tmpMI_parent_find.MeasureId)        AS MeasureId
                         , COALESCE (tmpMI.NameBeforeId, tmpMI_parent_find.NameBeforeId)  AS NameBeforeId
                         , COALESCE (tmpMI.UnitId, tmpMI_parent_find.UnitId)     AS UnitId
                         , COALESCE (tmpMI.AssetId, tmpMI_parent_find.AssetId)   AS AssetId
-                        , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)       AS Price
-                        , COALESCE (tmpMI.CountForPrice, 1)                     AS CountForPrice
+                        , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)       AS Price 
+                        , COALESCE (tmpMI_parent_find.Price,0)                  AS PriceOrderIncome
+                        , COALESCE (tmpMI.CountForPrice, tmpMI_parent_find.CountForPrice)  AS CountForPrice
                         , COALESCE (tmpMI.isErased, FALSE)                      AS isErased
-                        , COALESCE (tmpMI.MIId_OrderIncome, tmpMI_parent_find.MIparentId)  :: Integer      AS MIId_OrderIncome
+                        , COALESCE (tmpMI.MIId_OrderIncome, tmpMI_parent_find.MIparentId)  :: Integer AS MIId_OrderIncome
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
 
         SELECT
-             tmpResult.MovementItemId          AS Id
-           , tmpResult.MIId_OrderIncome        AS MIId_OrderIncome
-           , tmpResult.Amount        :: TFloat AS Amount  
-           , tmpResult.Price          :: TFloat AS Price
-           , tmpResult.CountForPrice  :: TFloat AS CountForPrice 
+             tmpResult.MovementItemId               AS Id
+           , tmpResult.MIId_OrderIncome             AS MIId_OrderIncome
+           , tmpResult.Amount             :: TFloat AS Amount  
+           , tmpResult.AmountOrderIncome  :: TFloat AS AmountOrderIncome
+           , tmpResult.Price              :: TFloat AS Price
+           , tmpResult.CountForPrice      :: TFloat AS CountForPrice 
            , CASE WHEN COALESCE(tmpResult.CountForPrice, 1) > 0
                   THEN CAST (tmpResult.Amount * COALESCE(tmpResult.Price,0) / COALESCE(tmpResult.CountForPrice, 1) AS NUMERIC (16, 2))
                   ELSE CAST (tmpResult.Amount * COALESCE(tmpResult.Price,0) AS NUMERIC (16, 2))
              END :: TFloat AS AmountSumm
+
+           , CASE WHEN COALESCE(tmpResult.CountForPrice, 1) > 0
+                  THEN CAST (tmpResult.AmountOrderIncome * COALESCE(tmpResult.PriceOrderIncome,0) / COALESCE(tmpResult.CountForPrice, 1) AS NUMERIC (16, 2))
+                  ELSE CAST (tmpResult.AmountOrderIncome * COALESCE(tmpResult.PriceOrderIncome,0) AS NUMERIC (16, 2))
+             END :: TFloat AS AmountSummOrderIncome
 
            , MIString_Comment.ValueData        :: TVarChar AS Comment
 
@@ -188,13 +197,19 @@ BEGIN
         SELECT
              MovementItem.Id     AS Id
            , MIFloat_OrderIncome.ValueData                  :: Integer AS MIId_OrderIncome
-           , MovementItem.Amount                            :: TFloat  AS Amount  
+           , MovementItem.Amount                            :: TFloat  AS Amount   
+           , MI_OrderIncome.Amount                          :: TFloat  AS AmountOrderIncome
            , COALESCE(MIFloat_Price.ValueData,0)            :: TFloat  AS Price
            , COALESCE(MIFloat_CountForPrice.ValueData, 1)   :: TFloat  AS CountForPrice 
            , CASE WHEN COALESCE(MIFloat_CountForPrice.ValueData, 1) > 0
                   THEN CAST (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                   ELSE CAST (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0) AS NUMERIC (16, 2))
              END :: TFloat AS AmountSumm
+
+           , CASE WHEN COALESCE(MIFloat_CountForPriceOrderIncome.ValueData, 1) > 0
+                  THEN CAST (MI_OrderIncome.Amount * COALESCE(MIFloat_PriceOrderIncome.ValueData,0) / COALESCE(MIFloat_CountForPriceOrderIncome.ValueData, 1) AS NUMERIC (16, 2))
+                  ELSE CAST (MI_OrderIncome.Amount * COALESCE(MIFloat_PriceOrderIncome.ValueData,0) AS NUMERIC (16, 2))
+             END :: TFloat AS AmountSummOrderIncome
 
            , MIString_Comment.ValueData        :: TVarChar AS Comment
 
@@ -259,6 +274,14 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_OrderIncome
                                         ON MIFloat_OrderIncome.MovementItemId = MovementItem.Id
                                        AND MIFloat_OrderIncome.DescId = zc_MIFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_OrderIncome ON MI_OrderIncome.Id = MIFloat_OrderIncome.ValueData :: Integer
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceOrderIncome
+                                        ON MIFloat_PriceOrderIncome.MovementItemId = MI_OrderIncome.Id
+                                       AND MIFloat_PriceOrderIncome.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountForPriceOrderIncome
+                                        ON MIFloat_CountForPriceOrderIncome.MovementItemId = MI_OrderIncome.Id
+                                       AND MIFloat_CountForPriceOrderIncome.DescId = zc_MIFloat_CountForPrice()  
+
               
           ;
  END IF;

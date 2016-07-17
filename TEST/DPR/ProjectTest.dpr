@@ -836,8 +836,8 @@ uses
   NameBefore in '..\..\Forms\Guides\NameBefore.pas' {NameBeforeForm: TParentForm},
   NameBeforeEdit in '..\..\Forms\Guides\NameBeforeEdit.pas' {NameBeforeEditForm: TParentForm},
   OrderIncomeJournal in '..\..\Forms\Document\OrderIncomeJournal.pas' {OrderIncomeJournalForm: TParentForm},
-  Invoice in '..\..\Forms\Document\Invoice.pas' {InvoiceForm: TParentForm},
-  InvoiceJournal in '..\..\Forms\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm};
+  InvoiceJournal in '..\..\Forms\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
+  Invoice in '..\..\Forms\Document\Invoice.pas' {InvoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
