@@ -163,6 +163,7 @@ type
     SetUnErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     bbSetUnErasedChild: TdxBarButton;
+    clInvNumber_OrderIncome: TcxGridDBColumn;
   private
   public
   end;

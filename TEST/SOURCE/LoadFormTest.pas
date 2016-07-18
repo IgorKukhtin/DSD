@@ -631,6 +631,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeJournalChoiceForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeJournalDetailChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeJournalDetailChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;

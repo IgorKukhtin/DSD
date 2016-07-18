@@ -474,11 +474,27 @@ object InvoiceForm: TInvoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object CommentOrderIncome: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'CommentOrderIncome'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object cxGridDBTableViewColumn1: TcxGridDBColumn
             DataBinding.FieldName = 'MIId_OrderIncome'
             Visible = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object clInvNumber_OrderIncome: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'InvNumber_OrderIncome'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' ('#1079#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097'.)'
+            Width = 92
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -501,7 +517,7 @@ object InvoiceForm: TInvoiceForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 188
   end
   object cxSplitter1: TcxSplitter
@@ -2073,6 +2089,9 @@ object InvoiceForm: TInvoiceForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesFrom
+      end
+      item
         Guides = OrderIncomeGuides
       end>
     ActionItemList = <
@@ -2510,10 +2529,10 @@ object InvoiceForm: TInvoiceForm
     KeyField = 'Id'
     LookupControl = edInvNumberOrderIncome
     Key = '0'
-    FormNameParam.Value = 'TOrderIncomeJournalForm'
+    FormNameParam.Value = 'TOrderIncomeJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TOrderIncomeJournalForm'
+    FormName = 'TOrderIncomeJournalChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2535,15 +2554,15 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalId'
-        Value = ''
+        Name = 'MasterJuridicalId'
+        Value = Null
         Component = GuidesFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalName'
-        Value = ''
+        Name = 'MasterJuridicalName'
+        Value = Null
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
