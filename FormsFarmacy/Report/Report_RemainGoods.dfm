@@ -3,9 +3,8 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   ClientHeight = 364
   ClientWidth = 930
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -124
   ExplicitWidth = 946
-  ExplicitHeight = 399
+  ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -114,6 +113,11 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
               Format = ',0.00'
               Kind = skSum
               Column = MP_SummaVAT
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colGoodsName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
