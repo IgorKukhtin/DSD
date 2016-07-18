@@ -1,4 +1,4 @@
-unit OrderIncomeJournal;
+unit InvoiceJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
 
 type
-  TOrderIncomeJournalForm = class(TParentForm)
+  TInvoiceJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -101,8 +101,6 @@ type
     actReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    dsdChoiceGuides: TdsdChoiceGuides;
-    bbChoiceGuides: TdxBarButton;
   private
   public
   end;
@@ -112,6 +110,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderIncomeJournalForm);
+  RegisterClass(TInvoiceJournalForm);
 
 end.

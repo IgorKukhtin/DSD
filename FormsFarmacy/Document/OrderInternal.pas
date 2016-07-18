@@ -101,6 +101,7 @@ type
     InvNumberPromo: TcxGridDBColumn;
     actMovementItemProtocolChild: TdsdOpenForm;
     bbMovementItemProtocolChild: TdxBarButton;
+    edIsDocument: TcxCheckBox;
   private
     { Private declarations }
   public

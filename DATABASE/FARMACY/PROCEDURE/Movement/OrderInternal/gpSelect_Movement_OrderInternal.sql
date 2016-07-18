@@ -10,8 +10,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
-             , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar)
-
+             , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar
+             , isDocument Boolean
+             )
+             
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -57,6 +59,7 @@ BEGIN
            , Object_Unit.ValueData                      AS UnitName
            , Object_OrderKind.Id                                AS OrderKindId
            , Object_OrderKind.ValueData                         AS OrderKindName
+           , COALESCE(MovementBoolean_Document.ValueData, False) :: Boolean AS isDocument
 
       FROM (SELECT Movement.id
                   , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -83,6 +86,11 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Document
+                                      ON MovementBoolean_Document.MovementId = Movement.Id
+                                     AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+
 /*            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -106,6 +114,7 @@ ALTER FUNCTION gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 15.07.16         *
  04.05.16         *
  15.07.14                                                        *
  03.07.14                                                        *

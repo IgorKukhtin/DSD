@@ -2681,10 +2681,6 @@
 				<Form>ReestrKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderIncomeJournal.pas">
-				<Form>OrderIncomeJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderIncome.pas">
 				<Form>OrderIncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2695,6 +2691,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\NameBeforeEdit.pas">
 				<Form>NameBeforeEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderIncomeJournal.pas">
+				<Form>OrderIncomeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\InvoiceJournal.pas">
+				<Form>InvoiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Invoice.pas">
+				<Form>InvoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

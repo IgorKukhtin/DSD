@@ -1,15 +1,14 @@
--- Function: gpSelect_Movement_OrderIncome()
+-- Function: gpSelect_Movement_Invoice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderIncome (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderIncome(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
-             , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
              , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
              , TotalSumm TFloat 
@@ -31,7 +30,7 @@ BEGIN
 -- inEndDate:= '01.01.2100';
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderIncome());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Invoice());
      vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
@@ -45,7 +44,6 @@ BEGIN
        SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
-           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
            , Movement.OperDate                      AS OperDate
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
@@ -78,11 +76,11 @@ BEGIN
 
        FROM (SELECT Movement.id
              FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderIncome() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId = tmpStatus.StatusId
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
-            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             
             LEFT JOIN MovementDate AS MovementDate_Insert
@@ -139,11 +137,7 @@ BEGIN
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
-
-/*         WHERE (Object_Contract.Id = inFromId or inFromId=0)
-           AND (Object_Juridical.Id = inJuridicalId or inJuridicalId=0)
-*/
-            ;
+           ;
 
 END;
 $BODY$
@@ -153,8 +147,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.07.16         *
+ 15.07.16         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderIncome (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')

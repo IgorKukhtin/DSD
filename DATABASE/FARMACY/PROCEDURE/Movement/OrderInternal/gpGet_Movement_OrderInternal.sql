@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderInternal(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar)
+             , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar
+             , isDocument Boolean
+)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -28,11 +30,11 @@ BEGIN
              , current_date::TDateTime                          AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-             , 0                     				            AS UnitId
-             , CAST ('' AS TVarChar) 				            AS UnitName
-             , 0                     				            AS OrderKindId
-             , CAST ('' AS TVarChar) 				            AS OrderKindName
-
+             , 0                     		                AS UnitId
+             , CAST ('' AS TVarChar) 		                AS UnitName
+             , 0                     		                AS OrderKindId
+             , CAST ('' AS TVarChar) 			        AS OrderKindName
+             , False :: Boolean                                 AS isDocument
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -48,9 +50,13 @@ BEGIN
            , Object_Unit.ValueData                              AS UnitName
            , Object_OrderKind.Id                                AS OrderKindId
            , Object_OrderKind.ValueData                         AS OrderKindName
-
+           , COALESCE(MovementBoolean_Document.ValueData, False) :: Boolean AS isDocument
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Document
+                                      ON MovementBoolean_Document.MovementId = Movement.Id
+                                     AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -71,7 +77,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TVarChar) OWNER TO postgres;
 
 
 /*

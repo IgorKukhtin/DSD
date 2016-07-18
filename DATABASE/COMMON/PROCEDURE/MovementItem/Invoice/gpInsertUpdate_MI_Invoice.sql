@@ -1,15 +1,17 @@
--- Function: gpInsertUpdate_MI_OrderIncome()
+-- Function: gpInsertUpdate_MI_Invoice()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderIncome (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderIncome (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Invoice (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Invoice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncome(
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Invoice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inMeasureId           Integer   , -- 
     IN inAmount              TFloat    , -- Количество
     IN inCountForPrice       TFloat    , -- 
     IN inPrice               TFloat    , -- 
+    IN inMIId_OrderIncome    TFloat    , -- элемент документа Заявка поставщику
   OUT outAmountSumm          TFloat    , -- Сумма расчетная
     IN inGoodsId             Integer   , -- Товары
     IN inAssetId             Integer   ,
@@ -27,7 +29,7 @@ $BODY$
    DECLARE vbNameBeforeId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderIncome());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Invoice());
 
      -- проверка
      IF COALESCE (inGoodsId, 0) = 0
@@ -61,6 +63,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
 
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), ioId, inMIId_OrderIncome);
+
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили связь с <>
@@ -92,7 +97,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.07.15         *
+ 15.07.15         *
 */
 
 -- тест

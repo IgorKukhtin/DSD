@@ -1,4 +1,4 @@
-unit OrderIncome;
+unit Invoice;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox;
 
 type
-  TOrderIncomeForm = class(TParentForm)
+  TInvoiceForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -136,6 +136,11 @@ type
     UnitChoiceForm: TOpenChoiceForm;
     AssetChoiceForm: TOpenChoiceForm;
     NameBeforeChoiceForm: TOpenChoiceForm;
+    cxLabel19: TcxLabel;
+    edInvNumberOrderIncome: TcxButtonEdit;
+    OrderIncomeGuides: TdsdGuides;
+    actShowAll: TBooleanStoredProcAction;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
   public
   end;
@@ -145,6 +150,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderIncomeForm);
+  RegisterClass(TInvoiceForm);
 
 end.

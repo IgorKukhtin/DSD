@@ -1,51 +1,90 @@
--- Function: gpSelect_Movement_OrderIncome()
+-- Function: gpGet_Movement_Invoice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderIncome (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderIncome(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice(
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime, -- дата Документа
+    IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
-             , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
-             , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
-             , TotalSumm TFloat 
+
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , CurrencyValue TFloat
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
+
              , JuridicalId Integer, JuridicalName TVarChar
-             , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
+             , OrderIncomeId Integer, OrderIncomeName TVarChar
               )
-
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+  DECLARE vbUserId Integer;
 BEGIN
 
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderIncome());
-     vbUserId:= lpGetUserBySession (inSession);
+     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Invoice());
+     vbUserId := inSession;
+
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+     RETURN QUERY
+         SELECT
+               0 AS Id
+             , CAST (NEXTVAL ('movement_invoice_seq') AS TVarChar) AS InvNumber
+             , inOperDate                                 AS OperDate
+             , Object_Status.Code                         AS StatusCode
+             , Object_Status.Name                         AS StatusName
+             
+             , CURRENT_TIMESTAMP ::TDateTime              AS InsertDate
+             , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
+                          
+             , CAST (True as Boolean)                     AS PriceWithVAT
+             , CAST (20 as TFloat)                        AS VATPercent
+             , CAST (0 as TFloat)                         AS ChangePercent
+             , CAST (1 as TFloat)                         AS CurrencyValue
+
+             , Object_CurrencyDocument.Id                 AS CurrencyDocumentId	-- грн
+             , Object_CurrencyDocument.ValueData          AS CurrencyDocumentName
+
+             , 0                                          AS JuridicalId
+             , CAST ('' as TVarChar)                      AS JuridicalName
+             , 0                                          AS ContractId
+             , CAST ('' as TVarChar)                      AS ContractName
+             , 0                                          AS PaidKindId
+             , CAST ('' as TVarChar)                      AS PaidKindName  
+  
+             , CAST ('' as TVarChar) 	                  AS Comment
+             , 0                                          AS OrderIncomeId
+             , CAST ('' as TVarChar) 	                  AS OrderIncomeName
+
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+               JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.descid= zc_Object_Currency()
+                                             AND Object_CurrencyDocument.id = 14461	             -- грн
+          ;
+
+     ELSE
 
      RETURN QUERY
-     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                       )
-        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-
-
-       SELECT
-             Movement.Id                            AS Id
+       WITH tmpMI AS (SELECT MI_OrderIncome.MovementId AS MovementId
+                      FROM MovementItem
+                           INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementItemId()
+                                                       AND MIFloat_MovementId.ValueData > 0
+                           INNER JOIN MovementItem AS MI_OrderIncome ON MI_OrderIncome.Id = MIFloat_MovementId.ValueData :: Integer
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                      ORDER BY MovementItem.Id DESC
+                      LIMIT 1
+                     )
+      SELECT Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
-           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
            , Movement.OperDate                      AS OperDate
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
@@ -53,38 +92,35 @@ BEGIN
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
            
-           , MovementFloat_TotalCount.ValueData     AS TotalCount
-           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
-
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
            , MovementFloat_ChangePercent.ValueData  AS ChangePercent
            , MovementFloat_CurrencyValue.ValueData  AS CurrencyValue
 
-           , Object_CurrencyDocument.Id                     AS CurrencyDocumentId
-           , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
+           , Object_CurrencyDocument.Id             AS CurrencyDocumentId
+           , Object_CurrencyDocument.ValueData      AS CurrencyDocumentName
+
 
            , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
 
            , Object_Contract.Id                     AS ContractId
-           , Object_Contract.ObjectCode             AS ContractCode
            , Object_Contract.ValueData              AS ContractName
 
            , Object_PaidKind.Id                     AS PaidKindId
            , Object_PaidKind.ValueData              AS PaidKindName
 
            , MovementString_Comment.ValueData       AS Comment
+           , tmpMI.MovementId                       AS OrderIncomeId
+           , zfCalc_PartionMovementName (Movement_OrderIncome.DescId, MovementDesc_OrderIncome.ItemName, Movement_OrderIncome.InvNumber, Movement_OrderIncome.OperDate) AS OrderIncomeName
 
-       FROM (SELECT Movement.id
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderIncome() AND Movement.StatusId = tmpStatus.StatusId
-            ) AS tmpMovement
-
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
-            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+       FROM Movement
+            LEFT JOIN tmpMI ON 1 = 1
+            LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = tmpMI.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_OrderIncome ON MovementDesc_OrderIncome.Id = Movement_OrderIncome.DescId
             
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -97,14 +133,6 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -138,12 +166,11 @@ BEGIN
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+    
+       WHERE Movement.Id =  inMovementId
+         AND Movement.DescId = zc_Movement_Invoice();
 
-
-/*         WHERE (Object_Contract.Id = inFromId or inFromId=0)
-           AND (Object_Juridical.Id = inJuridicalId or inJuridicalId=0)
-*/
-            ;
+       END IF;
 
 END;
 $BODY$
@@ -153,8 +180,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.07.16         *
+ 15.07.16         *                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderIncome (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- 

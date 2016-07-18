@@ -1,7 +1,7 @@
-object OrderIncomeJournalForm: TOrderIncomeJournalForm
+object InvoiceJournalForm: TInvoiceJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090'>'
   ClientHeight = 492
   ClientWidth = 998
   Color = clBtnFace
@@ -14,7 +14,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
@@ -28,7 +27,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 42552d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +37,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 42552d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -410,14 +409,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -501,10 +492,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       Action = actShowErased
       Category = 0
     end
-    object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
-      Category = 0
-    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -583,8 +570,8 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TOrderIncomeForm'
-      FormNameParam.Value = 'TOrderIncomeForm'
+      FormName = 'TInvoiceForm'
+      FormNameParam.Value = 'TInvoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -640,8 +627,8 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TOrderIncomeForm'
-      FormNameParam.Value = 'TOrderIncomeForm'
+      FormName = 'TInvoiceForm'
+      FormNameParam.Value = 'TInvoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -951,64 +938,9 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InvNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = 'NULL'
-          Component = ClientDataSet
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber_Full'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InvNumber_Full'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 7
-      DataSource = DataSource
-    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderIncome'
+    StoredProcName = 'gpSelect_Movement_Invoice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1044,7 +976,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_OrderIncome'
+    StoredProcName = 'gpComplete_Movement_Invoice'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1186,7 +1118,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Top = 24
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Income'
+    StoredProcName = 'gpCompletePeriod_Movement_Invoice'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1211,7 +1143,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Top = 288
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income_Print'
+    StoredProcName = 'gpSelect_Movement_Invoice_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1265,7 +1197,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Income'
+    StoredProcName = 'gpReComplete_Movement_Invoice'
     DataSets = <>
     OutputType = otResult
     Params = <

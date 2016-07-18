@@ -3,7 +3,7 @@ inherited OverForm: TOverForm
   ClientHeight = 532
   ClientWidth = 1002
   ExplicitWidth = 1018
-  ExplicitHeight = 567
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -243,7 +243,17 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 100
           end
-          object colComment: TcxGridDBColumn [9]
+          object clisError: TcxGridDBColumn [9]
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1054#1096#1080#1073#1082#1072' '#1076#1072'/'#1085#1077#1090
+            Options.Editing = False
+            Width = 63
+          end
+          object colComment: TcxGridDBColumn [10]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -1389,6 +1399,15 @@ inherited OverForm: TOverForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRemeinsMaster'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outAmountMaster'
         Value = Null
         Component = MasterCDS
@@ -1410,6 +1429,14 @@ inherited OverForm: TOverForm
         Component = ChildCDS
         ComponentItem = 'Summa'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisError'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isError'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
