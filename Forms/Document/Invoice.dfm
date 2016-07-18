@@ -223,14 +223,12 @@ object InvoiceForm: TInvoiceForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 354
     ClientRectBottom = 242
     ClientRectRight = 956
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 330
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -238,7 +236,6 @@ object InvoiceForm: TInvoiceForm
         Height = 218
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 330
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -504,7 +501,7 @@ object InvoiceForm: TInvoiceForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 188
   end
   object cxSplitter1: TcxSplitter
@@ -514,7 +511,6 @@ object InvoiceForm: TInvoiceForm
     Height = 3
     AlignSplitter = salBottom
     Control = cxGrid
-    ExplicitTop = 252
   end
   object cxGrid1: TcxGrid
     Left = 0
@@ -524,8 +520,6 @@ object InvoiceForm: TInvoiceForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 9
-    ExplicitLeft = 24
-    ExplicitTop = 360
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -2248,7 +2242,7 @@ object InvoiceForm: TInvoiceForm
     Top = 40
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_OrderIncome'
+    StoredProcName = 'gpUpdate_Status_Invoice'
     DataSets = <>
     OutputType = otResult
     Params = <

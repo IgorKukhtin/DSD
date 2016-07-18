@@ -1667,6 +1667,7 @@ inherited MainForm: TMainForm
       end
       object miReportGoodsOrder: TMenuItem
         Action = actReportGoodsOrder
+        Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1079#1072#1082#1072#1079#1072' '#1076#1086' '#1087#1088#1086#1076#1072#1078#1080
       end
       object miSearchGoods: TMenuItem
         Action = actSearchGoods

@@ -1106,7 +1106,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_OrderIncome'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1123,7 +1123,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_OrderIncome'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1186,7 +1186,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Top = 24
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Income'
+    StoredProcName = 'gpCompletePeriod_Movement_OrderIncome'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1265,7 +1265,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Income'
+    StoredProcName = 'gpReComplete_Movement_OrderIncome'
     DataSets = <>
     OutputType = otResult
     Params = <

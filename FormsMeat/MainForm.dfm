@@ -190,7 +190,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actInvoice: TdsdOpenForm [9]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1057#1095#1077#1090
       Hint = #1057#1095#1077#1090
@@ -4542,9 +4542,6 @@ inherited MainForm: TMainForm
       object N109: TMenuItem
         Action = actOrderIncome
       end
-      object N112: TMenuItem
-        Action = actInvoice
-      end
       object N41: TMenuItem
         Caption = '-'
       end
@@ -4680,6 +4677,9 @@ inherited MainForm: TMainForm
       end
       object miPersonalReport: TMenuItem
         Action = actPersonalReport
+      end
+      object N112: TMenuItem
+        Action = actInvoice
       end
       object N12: TMenuItem
         Caption = '-'
