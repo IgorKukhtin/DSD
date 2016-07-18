@@ -18,8 +18,9 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_IncomeFuel());
 
 
-     SELECT  Movement.StatusId, View_ContractCondition_Value.ChangePrice
-    INTO vbStatusId, vbChangePrice
+     -- параметры из документа
+     SELECT Movement.StatusId, View_ContractCondition_Value.ChangePrice
+            INTO vbStatusId, vbChangePrice
      FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -31,15 +32,16 @@ BEGIN
      -- сохранили свойство <скидка в цене>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePrice(), inId, vbChangePrice);
    
-     IF vbStatusId = zc_Enum_Status_Complete() THEN
-        --перепроводим док.
+
+     -- перепроводим док.
+     IF vbStatusId = zc_Enum_Status_Complete()
+     THEN
         PERFORM gpReComplete_Movement_Income (inMovementId := inId, inislastcomplete := 'True',  inSession := inSession);
      END IF;
 
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

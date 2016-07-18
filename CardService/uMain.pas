@@ -23,6 +23,11 @@ type
     Label3: TLabel;
     eCardNum: TEdit;
     bCheckSale: TButton;
+    LabelResult: TLabel;
+    eBarCode: TEdit;
+    Label4: TLabel;
+    eResult: TEdit;
+    eCardNumRes: TEdit;
     procedure bCheckCardClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bCheckSaleClick(Sender: TObject);
@@ -37,7 +42,7 @@ var
   frmMain: TfrmMain;
 
 implementation
-
+uses Soap.XSBuiltIns;
 {$R *.dfm}
 
 procedure TfrmMain.bCheckCardClick(Sender: TObject);
@@ -49,12 +54,15 @@ begin
 
    res := (HTTPRIO1 as CardServiceSoap).checkCard(eCardNum.Text, eLogin.Text, ePassword.Text);
 
+   eCardNumRes.Text := res;
+
    if res = 'Продажа доступна' then
      bCheckSale.Enabled := true
    else
      bCheckSale.Enabled := false;
 
    Self.Cursor := crDefault;
+
 end;
 
 procedure TfrmMain.bCheckSaleClick(Sender: TObject);
@@ -62,11 +70,44 @@ var
   SendList : ArrayOfCardCheckItem;
   ResList : ArrayOfCardCheckResultItem;
   Item : CardCheckItem;
+  ResItem : CardCheckResultItem;
+  Price, Quantity, Amount : TXSDecimal;
 begin
   Item := CardCheckItem.Create;
+  ResItem := CardCheckResultItem.Create;
+  Price := TXSDecimal.Create;
+  Quantity := TXSDecimal.Create;
+  Amount := TXSDecimal.Create;
+  try
+    Item.MdmCode := eCardNum.Text;
+    Item.ProductFormCode := eBarCode.Text;
+    Item.SaleType := '1';
 
-  ResList := (HTTPRIO1 as CardServiceSoap).checkCardSale(SendList, eLogin.Text, ePassword.Text);
+    Price.XSToNative('100');
+    Item.RequestedPrice := Price;
+    Quantity.XSToNative('1');
+    Item.RequestedQuantity := Quantity;
+    Amount.XSToNative('1');
+    Item.RequestedAmount := Amount;
+
+    SetLength(SendList, 1);
+    SendList[0] := Item;
+
+    ResList := (HTTPRIO1 as CardServiceSoap).checkCardSale(SendList, eLogin.Text, ePassword.Text);
+
+    ResItem := ResList[0];
+    LabelResult.Caption:= FloatToStr(ResItem.ResultDiscountPercent);
+    eResult.Text:= ResItem.ResultDescription;
+  finally
+    FreeAndNil(Price);
+    FreeAndNil(Quantity);
+    FreeAndNil(Amount);
+    Item := nil;
+    ResItem := nil;
+  end;
 end;
+
+
 
 procedure TfrmMain.eCardNumChange(Sender: TObject);
 begin

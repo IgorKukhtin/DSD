@@ -30,11 +30,25 @@ object frmMain: TfrmMain
     Caption = 'Password'
   end
   object Label3: TLabel
-    Left = 24
+    Left = 23
     Top = 104
     Width = 56
     Height = 16
     Caption = 'Card num'
+  end
+  object LabelResult: TLabel
+    Left = 360
+    Top = 48
+    Width = 65
+    Height = 16
+    Caption = 'LabelResult'
+  end
+  object Label4: TLabel
+    Left = 23
+    Top = 144
+    Width = 48
+    Height = 16
+    Caption = 'BarCode'
   end
   object bCheckCard: TButton
     Left = 128
@@ -67,6 +81,7 @@ object frmMain: TfrmMain
     Width = 121
     Height = 24
     TabOrder = 3
+    Text = '4820043367665'
     OnChange = eCardNumChange
   end
   object bCheckSale: TButton
@@ -77,6 +92,31 @@ object frmMain: TfrmMain
     Caption = 'Check card sale'
     TabOrder = 4
     OnClick = bCheckSaleClick
+  end
+  object eBarCode: TEdit
+    Left = 104
+    Top = 144
+    Width = 121
+    Height = 24
+    TabOrder = 5
+    Text = '4034541002175'
+  end
+  object eResult: TEdit
+    Left = 256
+    Top = 146
+    Width = 300
+    Height = 24
+    TabOrder = 6
+    Text = 'eResult'
+  end
+  object eCardNumRes: TEdit
+    Left = 256
+    Top = 100
+    Width = 300
+    Height = 24
+    TabOrder = 7
+    Text = 'eCardNumRes'
+    OnChange = eCardNumChange
   end
   object HTTPRIO1: THTTPRIO
     HTTPWebNode.UseUTF8InHeader = True

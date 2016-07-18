@@ -26,6 +26,8 @@ BEGIN
                                                         );
 
 
+    DROP TABLE _tmpResult ;
+
     -- Пересчет, !!!Временно здесь, потом надо будет независимо!!!
     PERFORM lpUpdate_Movement_Send_DocumentKind (inIsUpdate  := TRUE
                                                , inStartDate := inStartDate
