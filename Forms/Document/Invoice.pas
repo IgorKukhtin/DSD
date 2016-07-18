@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, cxSplitter;
 
 type
   TInvoiceForm = class(TParentForm)
@@ -141,6 +141,28 @@ type
     OrderIncomeGuides: TdsdGuides;
     actShowAll: TBooleanStoredProcAction;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cxSplitter1: TcxSplitter;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chUnitName: TcxGridDBColumn;
+    chAmount: TcxGridDBColumn;
+    chOperDate: TcxGridDBColumn;
+    chComment: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ChildDS: TDataSource;
+    DBViewChildAddOn: TdsdDBViewAddOn;
+    ChildCDS: TClientDataSet;
+    spInsertUpdateMIChild: TdsdStoredProc;
+    spSelectMIChild: TdsdStoredProc;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    InsertRecordChild: TInsertRecord;
+    bbInsertRecordChild: TdxBarButton;
+    spErasedMIChild: TdsdStoredProc;
+    spUnErasedMIChild: TdsdStoredProc;
+    SetErasedChild: TdsdUpdateErased;
+    SetUnErasedChild: TdsdUpdateErased;
+    bbSetErasedChild: TdxBarButton;
+    bbSetUnErasedChild: TdxBarButton;
   private
   public
   end;
