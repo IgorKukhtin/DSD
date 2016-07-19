@@ -271,6 +271,8 @@ type
     N85: TMenuItem;
     actColor: TdsdOpenForm;
     N97: TMenuItem;
+    actOverSettings: TdsdOpenForm;
+    N98: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

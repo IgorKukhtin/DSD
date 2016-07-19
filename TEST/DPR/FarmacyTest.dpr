@@ -432,7 +432,9 @@ uses
   RoleUnion in '..\..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
   Report_RemainsOverGoods in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods.pas' {Report_RemainsOverGoodsForm: TParentForm},
   PriceGoodsDialog in '..\..\FormsFarmacy\Guides\PriceGoodsDialog.pas' {PriceGoodsDialogForm: TParentForm},
-  Color in '..\..\FormsFarmacy\System\Color.pas' {ColorForm: TParentForm};
+  Color in '..\..\FormsFarmacy\System\Color.pas' {ColorForm: TParentForm},
+  OverSettingsEdit in '..\..\FormsFarmacy\Guides\OverSettingsEdit.pas' {OverSettingsEditForm: TParentForm},
+  OverSettings in '..\..\FormsFarmacy\Guides\OverSettings.pas' {OverSettingsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

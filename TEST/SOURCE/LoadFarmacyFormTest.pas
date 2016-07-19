@@ -63,6 +63,7 @@ type
     procedure LoadOrderExternalFormTest;
     procedure LoadObjectUnionFormTest;
     procedure LoadOverFormTest;
+    procedure LoadOverSettingsFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPaidTypeFormTest;
     procedure LoadPaymentFormTest;
@@ -863,6 +864,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOverJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverForm');
+end;
+
+procedure TLoadFormTest.LoadOverSettingsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverSettingsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverSettingsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverSettingsEditForm');
 end;
 
 procedure TLoadFormTest.LoadPaidKindFormTest;

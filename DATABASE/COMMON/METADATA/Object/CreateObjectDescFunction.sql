@@ -784,10 +784,14 @@ CREATE OR REPLACE FUNCTION zc_Object_Email() RETURNS Integer AS $BODY$BEGIN RETU
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Email', 'Почтовый ящик' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Email');
 
-
 CREATE OR REPLACE FUNCTION zc_Object_DocumentKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DocumentKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DocumentKind', 'Типы документов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DocumentKind');
+
+CREATE OR REPLACE FUNCTION zc_Object_OverSettings() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_OverSettings'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_OverSettings', 'Установки для формирования документа по излишкам' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_OverSettings');
+
 
   
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -806,6 +810,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.
+ 19.07.16         * zc_Object_OverSettings
  23.03.16         *
  03.03.16         * add zc_Object_EmailTools, 
                         zc_Object_EmailKind, 
