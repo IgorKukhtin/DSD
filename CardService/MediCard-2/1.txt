@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+<request_type>1</request_type>
+<id_casual>2a3712a4a5405924aff9f47f8f6fb615</id_casual>
+<inside_code>1</inside_code>
+<card_code>12345678</card_code>
+<product_code>122485</product_code>
+<qty>1</qty>
+<login></login>
+<password></password>
+</data>

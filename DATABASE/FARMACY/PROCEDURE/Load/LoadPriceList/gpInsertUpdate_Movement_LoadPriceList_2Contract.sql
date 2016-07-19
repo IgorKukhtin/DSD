@@ -182,7 +182,7 @@ BEGIN
                                 AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                                  ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                 AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
                                  ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
                                 AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()

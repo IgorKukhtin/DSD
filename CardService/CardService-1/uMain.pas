@@ -23,11 +23,18 @@ type
     Label3: TLabel;
     eCardNum: TEdit;
     bCheckSale: TButton;
-    LabelResult: TLabel;
     eBarCode: TEdit;
     Label4: TLabel;
     eResult: TEdit;
     eCardNumRes: TEdit;
+    eResultChangePercent: TEdit;
+    eResultSummChangePercent: TEdit;
+    eResultRequestedPrice: TEdit;
+    eResultRequestedQuantity: TEdit;
+    lRequestedQuantity: TLabel;
+    lRequestedPrice: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
     procedure bCheckCardClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bCheckSaleClick(Sender: TObject);
@@ -83,7 +90,7 @@ begin
     Item.ProductFormCode := eBarCode.Text;
     Item.SaleType := '1';
 
-    Price.XSToNative('100');
+    Price.XSToNative('1000');
     Item.RequestedPrice := Price;
     Quantity.XSToNative('1');
     Item.RequestedQuantity := Quantity;
@@ -96,8 +103,12 @@ begin
     ResList := (HTTPRIO1 as CardServiceSoap).checkCardSale(SendList, eLogin.Text, ePassword.Text);
 
     ResItem := ResList[0];
-    LabelResult.Caption:= FloatToStr(ResItem.ResultDiscountPercent);
     eResult.Text:= ResItem.ResultDescription;
+    eResultChangePercent.Text:= FloatToStr(ResItem.ResultDiscountPercent);
+    eResultSummChangePercent.Text:= FloatToStr(ResItem.ResultDiscountAmount);
+
+    eResultRequestedQuantity.Text:= ResItem.RequestedQuantity.DecimalString;
+    eResultRequestedPrice.Text:= ResItem.RequestedPrice.DecimalString;
   finally
     FreeAndNil(Price);
     FreeAndNil(Quantity);

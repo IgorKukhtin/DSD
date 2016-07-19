@@ -36,19 +36,40 @@ object frmMain: TfrmMain
     Height = 16
     Caption = 'Card num'
   end
-  object LabelResult: TLabel
-    Left = 360
-    Top = 48
-    Width = 65
-    Height = 16
-    Caption = 'LabelResult'
-  end
   object Label4: TLabel
     Left = 23
     Top = 144
     Width = 48
     Height = 16
     Caption = 'BarCode'
+  end
+  object lRequestedQuantity: TLabel
+    Left = 279
+    Top = 24
+    Width = 107
+    Height = 16
+    Caption = 'RequestedQuantity'
+  end
+  object lRequestedPrice: TLabel
+    Left = 416
+    Top = 24
+    Width = 91
+    Height = 16
+    Caption = 'lRequestedPrice'
+  end
+  object Label6: TLabel
+    Left = 384
+    Top = 130
+    Width = 86
+    Height = 16
+    Caption = 'ChangePercent'
+  end
+  object Label7: TLabel
+    Left = 487
+    Top = 130
+    Width = 123
+    Height = 16
+    Caption = 'SummChangePercent'
   end
   object bCheckCard: TButton
     Left = 128
@@ -89,7 +110,7 @@ object frmMain: TfrmMain
     Top = 176
     Width = 113
     Height = 41
-    Caption = 'Check card sale'
+    Caption = 'Check BarCode'
     TabOrder = 4
     OnClick = bCheckSaleClick
   end
@@ -104,7 +125,7 @@ object frmMain: TfrmMain
   object eResult: TEdit
     Left = 256
     Top = 146
-    Width = 300
+    Width = 97
     Height = 24
     TabOrder = 6
     Text = 'eResult'
@@ -117,6 +138,38 @@ object frmMain: TfrmMain
     TabOrder = 7
     Text = 'eCardNumRes'
     OnChange = eCardNumChange
+  end
+  object eResultChangePercent: TEdit
+    Left = 384
+    Top = 146
+    Width = 97
+    Height = 24
+    TabOrder = 8
+    Text = 'eResultChangePercent'
+  end
+  object eResultSummChangePercent: TEdit
+    Left = 487
+    Top = 144
+    Width = 123
+    Height = 24
+    TabOrder = 9
+    Text = 'eResultSummChangePercent'
+  end
+  object eResultRequestedPrice: TEdit
+    Left = 416
+    Top = 46
+    Width = 107
+    Height = 24
+    TabOrder = 10
+    Text = 'eResultRequestedPrice'
+  end
+  object eResultRequestedQuantity: TEdit
+    Left = 279
+    Top = 46
+    Width = 107
+    Height = 24
+    TabOrder = 11
+    Text = 'eResultRequestedQuantity'
   end
   object HTTPRIO1: THTTPRIO
     HTTPWebNode.UseUTF8InHeader = True
