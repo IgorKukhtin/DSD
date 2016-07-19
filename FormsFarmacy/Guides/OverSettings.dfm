@@ -266,9 +266,9 @@ object OverSettingsForm: TOverSettingsForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TOverSettingsForm'
+      FormName = 'TOverSettingsEditForm'
       FormNameParam.Name = 'TOverSettingsForm'
-      FormNameParam.Value = 'TOverSettingsForm'
+      FormNameParam.Value = 'TOverSettingsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

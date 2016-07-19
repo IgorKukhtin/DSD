@@ -21,8 +21,7 @@ BEGIN
    --vbObjectId := lpGet_DefaultValue('zc_Object_Unit', vbUserId);
 
    RETURN QUERY 
-   WITH tmpUnut
-       SELECT 
+        SELECT 
              Object_OverSettings.Id
            , Object_Unit.Id                 AS UnitId
            , Object_Unit.ValueData          AS UnitName
@@ -31,11 +30,11 @@ BEGIN
            , Object_OverSettings.isErased
        FROM Object AS Object_OverSettings
             LEFT JOIN ObjectFloat AS ObjectFloat_MinPrice 
-                                  ON ObjectFloat_MinPrice.ObjectId = ObjectLink_OverSettings_Unit.ObjectId
+                                  ON ObjectFloat_MinPrice.ObjectId = Object_OverSettings.Id
                                  AND ObjectFloat_MinPrice.DescId = zc_ObjectFloat_OverSettings_MinPrice()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_MinimumLot 
-                                  ON ObjectFloat_MinimumLot.ObjectId = ObjectLink_OverSettings_Unit.ObjectId
+                                  ON ObjectFloat_MinimumLot.ObjectId = Object_OverSettings.Id
                                   AND ObjectFloat_MinimumLot.DescId = zc_ObjectFloat_OverSettings_MinimumLot()
     
             LEFT JOIN ObjectLink AS ObjectLink_OverSettings_Unit 
@@ -61,5 +60,3 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_OverSettings ('2')
-
-

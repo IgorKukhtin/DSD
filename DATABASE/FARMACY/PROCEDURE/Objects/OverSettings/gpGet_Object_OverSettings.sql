@@ -29,6 +29,7 @@ BEGIN
           
            , CAST (0 AS TFloat)     AS MinPrice
            , CAST (0 AS TFloat)     AS MinimumLot
+           , False                  AS isErased
         ;
    ELSE
    RETURN QUERY 

@@ -18,7 +18,7 @@ BEGIN
    vbUserId:= inSession;
    
    -- сохранили объект
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_OverSettings(), Null, Null);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_OverSettings(), 0, '');
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OverSettings_Unit(), ioId, inUnitId);
