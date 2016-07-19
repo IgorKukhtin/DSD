@@ -27,12 +27,12 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     cxLabel5: TcxLabel;
-    edMinPrice: TcxTextEdit;
-    edMinimumLot: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    ceMinPrice: TcxCurrencyEdit;
+    ceMinimumLot: TcxCurrencyEdit;
   private
     { Private declarations }
   public
