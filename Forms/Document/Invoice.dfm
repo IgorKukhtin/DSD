@@ -459,13 +459,21 @@ object InvoiceForm: TInvoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colIsErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isErased'
+          object clInvNumber_OrderIncome: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'InvNumber_OrderIncome'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOrderIncomeJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' ('#1079#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097'.)'
+            Width = 92
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -482,19 +490,19 @@ object InvoiceForm: TInvoiceForm
             Options.Editing = False
             Width = 100
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object MIId_OrderIncome: TcxGridDBColumn
             DataBinding.FieldName = 'MIId_OrderIncome'
             Visible = False
             VisibleForCustomization = False
             Width = 30
           end
-          object clInvNumber_OrderIncome: TcxGridDBColumn
-            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'InvNumber_OrderIncome'
+          object colIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' ('#1079#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097'.)'
-            Width = 92
+            Options.Editing = False
+            Width = 70
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -517,7 +525,7 @@ object InvoiceForm: TInvoiceForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 188
   end
   object cxSplitter1: TcxSplitter
@@ -1340,6 +1348,172 @@ object InvoiceForm: TInvoiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actOrderIncomeJournalDetailChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOrderIncomeJournalDetailChoiceForm'
+      FormName = 'TOrderIncomeJournalDetailChoiceForm'
+      FormNameParam.Value = 'TOrderIncomeJournalDetailChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_OrderIncome'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MIId_OrderIncome'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountOrderIncome'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountSumm'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountSummOrderIncome'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NameBeforeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NameBeforeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AssetId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AssetName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MIComment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CommentOrderIncome'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actGoodsKindChoice: TOpenChoiceForm
       Category = 'DSDLib'

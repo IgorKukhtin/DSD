@@ -140,7 +140,7 @@ type
     edInvNumberOrderIncome: TcxButtonEdit;
     OrderIncomeGuides: TdsdGuides;
     actShowAll: TBooleanStoredProcAction;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    MIId_OrderIncome: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
@@ -164,6 +164,7 @@ type
     bbSetErasedChild: TdxBarButton;
     bbSetUnErasedChild: TdxBarButton;
     clInvNumber_OrderIncome: TcxGridDBColumn;
+    actOrderIncomeJournalDetailChoiceForm: TOpenChoiceForm;
   private
   public
   end;
