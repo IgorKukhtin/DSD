@@ -1,8 +1,8 @@
-object OrderIncomeJournalForm: TOrderIncomeJournalForm
+object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-  ClientHeight = 492
+  ClientHeight = 426
   ClientWidth = 998
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,6 +16,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -60,11 +61,12 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Left = 0
     Top = 57
     Width = 998
-    Height = 435
+    Height = 369
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -293,6 +295,23 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel5: TcxLabel
+    Left = 425
+    Top = 33
+    Caption = #1070#1088'.'#1051#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 481
+    Top = 31
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 304
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -367,32 +386,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       FloatClientHeight = 71
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -1008,7 +1001,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderIncome'
+    StoredProcName = 'gpSelect_Movement_OrderIncome_Choice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1028,6 +1021,14 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1152,7 +1153,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = actUpdate
+        Action = dsdChoiceGuides
       end>
     ActionItemList = <
       item
@@ -1171,8 +1172,8 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 488
-    Top = 24
+    Left = 472
+    Top = 88
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1181,9 +1182,12 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalGuides
       end>
-    Left = 576
-    Top = 24
+    Left = 592
+    Top = 96
   end
   object spMovementReCompleteAll: TdsdStoredProc
     StoredProcName = 'gpCompletePeriod_Movement_OrderIncome'
@@ -1255,10 +1259,18 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Key'
+        Name = 'MasterJuridicalId'
         Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1287,5 +1299,35 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     PackSize = 1
     Left = 233
     Top = 346
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 641
+    Top = 8
   end
 end

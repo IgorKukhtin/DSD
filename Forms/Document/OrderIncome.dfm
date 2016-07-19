@@ -1687,6 +1687,9 @@ object OrderIncomeForm: TOrderIncomeForm
     GuidesList = <
       item
         Guides = GuidesFrom
+      end
+      item
+        Guides = ContractGuides
       end>
     ActionItemList = <
       item

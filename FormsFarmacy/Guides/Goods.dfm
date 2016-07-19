@@ -23,6 +23,12 @@ inherited GoodsForm: TGoodsForm
         ExplicitWidth = 883
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = clName
+            end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False

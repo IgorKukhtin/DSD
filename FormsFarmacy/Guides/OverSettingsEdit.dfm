@@ -1,9 +1,9 @@
-﻿object RegionEditForm: TRegionEditForm
+object OverSettingsEditForm: TOverSettingsEditForm
   Left = 0
   Top = 0
-  Caption = #1053#1086#1074#1099#1081' '#1058#1086#1074#1072#1088'/'#1054#1057'/'#1088#1072#1073#1086#1090#1099' ('#1087#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077')'
-  ClientHeight = 157
-  ClientWidth = 386
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
+  ClientHeight = 194
+  ClientWidth = 365
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,50 +16,64 @@
   AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object edName: TcxTextEdit
-    Left = 40
-    Top = 71
-    TabOrder = 0
-    Width = 296
-  end
-  object cxLabel1: TcxLabel
-    Left = 40
-    Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-  end
   object cxButton1: TcxButton
-    Left = 79
-    Top = 122
+    Left = 71
+    Top = 159
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 229
-    Top = 122
+    Left = 221
+    Top = 159
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
+    TabOrder = 1
+  end
+  object cxLabel5: TcxLabel
+    Left = 40
+    Top = 85
+    Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
+  end
+  object edMinPrice: TcxTextEdit
+    Left = 40
+    Top = 110
     TabOrder = 3
+    Width = 114
   end
-  object Код: TcxLabel
-    Left = 40
-    Top = 3
-    Caption = #1050#1086#1076
+  object edMinimumLot: TcxTextEdit
+    Left = 176
+    Top = 110
+    TabOrder = 4
+    Width = 152
   end
-  object ceCode: TcxCurrencyEdit
+  object cxLabel1: TcxLabel
+    Left = 176
+    Top = 85
+    Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' ('#1052#1080#1085'.'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077')'
+  end
+  object cxLabel4: TcxLabel
     Left = 40
-    Top = 26
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 5
-    Width = 296
+    Top = 24
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object edUnit: TcxButtonEdit
+    Left = 40
+    Top = 47
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 7
+    Width = 273
   end
   object ActionList: TActionList
     Left = 272
@@ -95,7 +109,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Region'
+    StoredProcName = 'gpInsertUpdate_Object_OverSettings'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -108,23 +122,32 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCode'
+        Name = 'inUnitId'
         Value = 0.000000000000000000
-        Component = ceCode
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
+        Name = 'inMinPrice'
         Value = ''
-        Component = edName
-        DataType = ftString
+        Component = edMinPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinimumLot'
+        Value = ''
+        Component = edMinimumLot
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 112
+    Left = 328
+    Top = 120
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -138,7 +161,7 @@
     Top = 72
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Region'
+    StoredProcName = 'gpGet_Object_OverSettings'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -151,25 +174,41 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
+        Name = 'UnitId'
         Value = ''
-        Component = edName
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Code'
+        Name = 'MinPrice'
         Value = 0.000000000000000000
-        Component = ceCode
+        Component = edMinPrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MinimumLot'
+        Value = ''
+        Component = edMinimumLot
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
+    Left = 320
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 208
-    Top = 7
+    Left = 160
+    Top = 23
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -183,7 +222,36 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
+    Left = 328
     Top = 64
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 120
+    Top = 48
   end
 end

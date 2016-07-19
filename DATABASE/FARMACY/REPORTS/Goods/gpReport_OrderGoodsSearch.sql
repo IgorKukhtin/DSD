@@ -13,6 +13,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,Amount TFloat           --Кол-во товара в документе
               ,Code Integer            --Код товара
               ,Name TVarChar           --Наименование товара
+              ,NDSKindName TVarChar    --вид ндс
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
               ,UnitName TVarChar       --Подразделение
@@ -66,18 +67,19 @@ BEGIN
                        )
 
       SELECT Movement.Id                              AS MovementId
-            ,MovementDesc.ItemName                    AS ItemName
+            ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 'Продажи касс' ELSE MovementDesc.ItemName END   :: TVarChar AS ItemName
             ,COALESCE(MIFloat_AmountManual.ValueData,
                       MovementItem.Amount)            AS Amount
             ,Object.ObjectCode                        AS Code
             ,Object.ValueData                         AS Name
+            ,Object_NDSKind.ValueData                 AS NDSKindName
             ,Movement.OperDate                        AS OperDate
             ,Movement.InvNumber                       AS InvNumber
             ,Object_Unit.ValueData                    AS UnitName
             ,Object_From.ValueData                    AS JuridicalName
-            ,MIFloat_Price.ValueData                  AS Price
+            ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 0 ELSE MIFloat_Price.ValueData END ::TFloat AS Price
             ,Status.ValueData                         AS STatusNAme
-            ,MIFloat_PriceSale.ValueData              AS PriceSale
+            ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN MIFloat_Price.ValueData ELSE MIFloat_PriceSale.ValueData END ::TFloat AS PriceSale
             ,Object_OrderKind.Id                      AS OrderKindId
             ,Object_OrderKind.ValueData               AS OrderKindName
             ,CASE WHEN MIString_Comment.ValueData <> '' THEN MIString_Comment.ValueData WHEN MovementString_Comment.ValueData <> '' THEN MovementString_Comment.ValueData ELSE '' END :: TVarChar AS Comment
@@ -98,6 +100,11 @@ BEGIN
 
         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
         LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                             ON ObjectLink_Goods_NDSKind.ObjectId = Object.Id
+                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -152,7 +159,7 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                     ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-    WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send())
+    WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check())
       AND Movement.OperDate BETWEEN inStartDate AND inEndDate 
       AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
       -- AND Object.Id = inGoodsId
@@ -166,6 +173,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 18.07.16         * add zc_Movement_Check
  06.10.15                                                                      *MIFloat_AmountManual
  24.04.15                        *
  18.03.15                        *

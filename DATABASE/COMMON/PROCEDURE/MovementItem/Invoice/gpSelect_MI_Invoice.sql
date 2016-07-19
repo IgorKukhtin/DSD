@@ -10,8 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Invoice(
     IN inShowAll          Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MIId_OrderIncome Integer, Amount TFloat, AmountOrderIncome TFloat, Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSummOrderIncome TFloat
-             , Comment TVarChar
+RETURNS TABLE (Id Integer, MIId_OrderIncome Integer, InvNumber_OrderIncome TVarChar
+             , Amount TFloat, AmountOrderIncome TFloat, Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSummOrderIncome TFloat
+             , Comment TVarChar, CommentOrderIncome TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , NameBeforeId Integer, NameBeforeCode Integer, NameBeforeName TVarChar
@@ -146,6 +147,7 @@ BEGIN
         SELECT
              tmpResult.MovementItemId               AS Id
            , tmpResult.MIId_OrderIncome             AS MIId_OrderIncome
+           , zfCalc_PartionMovementName (Movement_OrderIncome.DescId, MovementDesc.ItemName, Movement_OrderIncome.InvNumber, Movement_OrderIncome.OperDate) AS InvNumber_OrderIncome
            , tmpResult.Amount             :: TFloat AS Amount  
            , tmpResult.AmountOrderIncome  :: TFloat AS AmountOrderIncome
            , tmpResult.Price              :: TFloat AS Price
@@ -160,7 +162,8 @@ BEGIN
                   ELSE CAST (tmpResult.AmountOrderIncome * COALESCE(tmpResult.PriceOrderIncome,0) AS NUMERIC (16, 2))
              END :: TFloat AS AmountSummOrderIncome
 
-           , MIString_Comment.ValueData        :: TVarChar AS Comment
+           , MIString_Comment.ValueData            :: TVarChar AS Comment
+           , MIString_CommentOrderIncome.ValueData :: TVarChar AS CommentOrderIncome
 
            , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
@@ -185,11 +188,19 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpResult.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN MovementItemString AS MIString_CommentOrderIncome
+                                         ON MIString_CommentOrderIncome.MovementItemId =  tmpResult.MIId_OrderIncome
+                                        AND MIString_CommentOrderIncome.DescId = zc_MIString_Comment()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id =  tmpResult.MeasureId
             LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = tmpResult.NameBeforeId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpResult.AssetId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id =tmpResult.UnitId
+            
+            LEFT JOIN MovementItem AS MI_OrderIncome ON MI_OrderIncome.Id = tmpResult.MIId_OrderIncome
+            LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = MI_OrderIncome.MovementId
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_OrderIncome.DescId
+
           ;
 
    ELSE
@@ -197,6 +208,7 @@ BEGIN
         SELECT
              MovementItem.Id     AS Id
            , MIFloat_OrderIncome.ValueData                  :: Integer AS MIId_OrderIncome
+           , zfCalc_PartionMovementName (Movement_OrderIncome.DescId, MovementDesc.ItemName, Movement_OrderIncome.InvNumber, Movement_OrderIncome.OperDate) AS InvNumber_OrderIncome
            , MovementItem.Amount                            :: TFloat  AS Amount   
            , MI_OrderIncome.Amount                          :: TFloat  AS AmountOrderIncome
            , COALESCE(MIFloat_Price.ValueData,0)            :: TFloat  AS Price
@@ -211,7 +223,8 @@ BEGIN
                   ELSE CAST (MI_OrderIncome.Amount * COALESCE(MIFloat_PriceOrderIncome.ValueData,0) AS NUMERIC (16, 2))
              END :: TFloat AS AmountSummOrderIncome
 
-           , MIString_Comment.ValueData        :: TVarChar AS Comment
+           , MIString_Comment.ValueData            :: TVarChar AS Comment
+           , MIString_CommentOrderIncome.ValueData :: TVarChar AS CommentOrderIncome
 
            , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
@@ -281,6 +294,12 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPriceOrderIncome
                                         ON MIFloat_CountForPriceOrderIncome.MovementItemId = MI_OrderIncome.Id
                                        AND MIFloat_CountForPriceOrderIncome.DescId = zc_MIFloat_CountForPrice()  
+            LEFT JOIN MovementItemString AS MIString_CommentOrderIncome
+                                         ON MIString_CommentOrderIncome.MovementItemId = MI_OrderIncome.Id
+                                        AND MIString_CommentOrderIncome.DescId = zc_MIString_Comment()
+            
+            LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = MI_OrderIncome.MovementId
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_OrderIncome.DescId
 
               
           ;

@@ -3,7 +3,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
   ClientHeight = 399
   ClientWidth = 714
   ExplicitWidth = 730
-  ExplicitHeight = 434
+  ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +22,12 @@ inherited PriceListLoadForm: TPriceListLoadForm
         ExplicitWidth = 714
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colJuridicalName
+            end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -115,12 +121,14 @@ inherited PriceListLoadForm: TPriceListLoadForm
       FormName = 'TPriceListItemsLoadForm'
       FormNameParam.Value = 'TPriceListItemsLoadForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -292,6 +300,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -308,6 +317,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -324,6 +334,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216

@@ -1038,7 +1038,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Invoice'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1055,7 +1055,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Invoice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1097,8 +1097,8 @@ object InvoiceJournalForm: TInvoiceJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 248
-    Top = 216
+    Left = 240
+    Top = 232
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

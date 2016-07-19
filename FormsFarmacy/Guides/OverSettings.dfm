@@ -1,9 +1,9 @@
-object NameBeforeForm: TNameBeforeForm
+object OverSettingsForm: TOverSettingsForm
   Left = 0
   Top = 0
-  Caption = #1058#1086#1074#1072#1088'/'#1054#1057'/'#1088#1072#1073#1086#1090#1099' ('#1087#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077')'
+  Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1086' '#1080#1079#1083#1080#1096#1082#1072#1084
   ClientHeight = 332
-  ClientWidth = 440
+  ClientWidth = 534
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object NameBeforeForm: TNameBeforeForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 440
+    Width = 534
     Height = 306
     Align = alClient
     TabOrder = 0
@@ -29,7 +29,7 @@ object NameBeforeForm: TNameBeforeForm
     LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -37,7 +37,7 @@ object NameBeforeForm: TNameBeforeForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = clUnitName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -50,22 +50,49 @@ object NameBeforeForm: TNameBeforeForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
+      object clNumber: TcxGridDBColumn
+        Caption = #8470' '#1087'.'#1087'.'
+        DataBinding.FieldName = 'Number'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 82
+        Width = 37
       end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 272
+        Width = 149
+      end
+      object clMinPrice: TcxGridDBColumn
+        Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
+        DataBinding.FieldName = 'MinPrice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
+        Options.Editing = False
+        Width = 104
+      end
+      object clMinimumLot: TcxGridDBColumn
+        Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' ('#1052#1080#1085'.'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077')'
+        DataBinding.FieldName = 'MinimumLot'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' ('#1052#1080#1085'.'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077')'
+        Options.Editing = False
+        Width = 149
+      end
+      object colPriceTo: TcxGridDBColumn
+        Caption = #1044#1086' '#1094#1077#1085#1099
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 78
@@ -75,12 +102,12 @@ object NameBeforeForm: TNameBeforeForm
       GridView = cxGridDBTableView
     end
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
     Left = 48
     Top = 96
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 40
@@ -172,14 +199,6 @@ object NameBeforeForm: TNameBeforeForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
@@ -222,15 +241,11 @@ object NameBeforeForm: TNameBeforeForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
-      Category = 0
-    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 280
-    Top = 152
+    Left = 368
+    Top = 184
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -251,8 +266,9 @@ object NameBeforeForm: TNameBeforeForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TRegionEditForm'
-      FormNameParam.Value = 'TRegionEditForm'
+      FormName = 'TOverSettingsEditForm'
+      FormNameParam.Name = 'TOverSettingsForm'
+      FormNameParam.Value = 'TOverSettingsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -262,7 +278,7 @@ object NameBeforeForm: TNameBeforeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -272,22 +288,23 @@ object NameBeforeForm: TNameBeforeForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TRegionEditForm'
-      FormNameParam.Value = 'TRegionEditForm'
+      FormName = 'TOverSettingsForm'
+      FormNameParam.Name = 'TOverSettingsForm'
+      FormNameParam.Value = 'TOverSettingsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -304,7 +321,7 @@ object NameBeforeForm: TNameBeforeForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -320,7 +337,7 @@ object NameBeforeForm: TNameBeforeForm
       ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -329,7 +346,7 @@ object NameBeforeForm: TNameBeforeForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -337,8 +354,8 @@ object NameBeforeForm: TNameBeforeForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Name'
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -355,43 +372,13 @@ object NameBeforeForm: TNameBeforeForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object ProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      ImageIndex = 34
-      FormName = 'TProtocolForm'
-      FormNameParam.Value = 'TProtocolForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Name'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Region'
-    DataSet = ClientDataSet
+    StoredProcName = 'gpSelect_Object_OverSettings'
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     PackSize = 1
@@ -410,14 +397,14 @@ object NameBeforeForm: TNameBeforeForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 208
+    Left = 456
+    Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

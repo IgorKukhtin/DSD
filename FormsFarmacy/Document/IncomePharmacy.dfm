@@ -3,7 +3,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   ClientHeight = 524
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 559
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -112,6 +112,11 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
               Format = '+,0.###;-0.###; ;'
               Kind = skSum
               Column = colAmountDiff
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -460,6 +465,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -490,12 +496,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -503,6 +511,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -542,6 +551,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ChoiceReasonDifferences: TOpenChoiceForm
       Category = 'DSDLib'
@@ -551,6 +561,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       FormName = 'TReasonDifferencesForm'
       FormNameParam.Value = 'TReasonDifferencesForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -558,6 +569,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           Component = MasterCDS
           ComponentItem = 'ReasonDifferencesId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -566,6 +578,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           ComponentItem = 'ReasonDifferencesName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -590,24 +603,30 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Amount'
           FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'AmountManual'
           ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 0
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'ReasonDifferencesId'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = ' '
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'ReasonDifferencesName'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -647,12 +666,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       FormName = 'TIncome_AmountTroubleForm'
       FormNameParam.Value = 'TIncome_AmountTroubleForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -689,6 +710,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -696,6 +718,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -703,16 +726,19 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -866,6 +892,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
     Left = 830
@@ -887,12 +914,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -900,24 +929,28 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncome'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncomeTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncomeBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 416
@@ -940,17 +973,20 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -958,6 +994,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -965,17 +1002,20 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -983,12 +1023,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -996,12 +1038,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindId'
         Value = ''
         Component = NDSKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindName'
@@ -1009,12 +1053,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = NDSKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = Null
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -1022,32 +1068,38 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaymentDate'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchDate'
         Value = Null
         Component = edPointDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberBranch'
         Value = Null
         Component = edPointNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Checked'
         Value = Null
         Component = cbFarmacyShow
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isDocument'
         Value = Null
         Component = cbisDocument
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1061,6 +1113,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -1068,6 +1121,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = cbFarmacyShow
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1115,6 +1169,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1122,6 +1177,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1129,6 +1185,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1137,6 +1194,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1145,6 +1203,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSalePrice'
@@ -1153,6 +1212,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'SalePrice'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFEA'
@@ -1161,6 +1221,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'FEA'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMeasure'
@@ -1169,35 +1230,42 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'Measure'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1208,6 +1276,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1215,6 +1284,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1222,6 +1292,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1230,6 +1301,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1238,6 +1310,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 272
@@ -1251,22 +1324,26 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummMVAT'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPVAT'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 420
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -1311,6 +1388,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -1321,6 +1399,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     LookupControl = edFrom
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1330,6 +1409,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1338,6 +1418,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 304
   end
@@ -1346,6 +1427,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     LookupControl = edTo
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1355,6 +1437,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1363,6 +1446,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 464
   end
@@ -1371,6 +1455,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     LookupControl = edNDSKind
     FormNameParam.Value = 'TNDSKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TNDSKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1381,6 +1466,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1389,6 +1475,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 464
     Top = 80
@@ -1397,6 +1484,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     KeyField = 'Id'
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1406,6 +1494,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1414,6 +1503,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 671
     Top = 200
@@ -1429,6 +1519,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -1445,6 +1536,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -1461,6 +1553,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementItemId'
@@ -1468,6 +1561,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountManual'
@@ -1476,6 +1570,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'AmountManual'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReasonDifferences'
@@ -1483,6 +1578,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = MasterCDS
         ComponentItem = 'ReasonDifferencesId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountDiff'
@@ -1490,42 +1586,52 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = MasterCDS
         ComponentItem = 'AmountDiff'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 336
@@ -1542,12 +1648,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReverce'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioChecked'
@@ -1555,6 +1663,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = cbFarmacyShow
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outTrouble'
@@ -1562,6 +1671,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = actaOpen_Income_AmountTroubleForm
         ComponentItem = 'Enabled'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 544
@@ -1578,6 +1688,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -1594,6 +1705,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisDocument'
@@ -1601,6 +1713,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = cbisDocument
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 800
