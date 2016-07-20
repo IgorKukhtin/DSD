@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1781,19 +1781,19 @@ inherited MainForm: TMainForm
           Action = actMarginCategoryLink
         end
       end
-      object miUser: TMenuItem [3]
+      object miUser: TMenuItem [2]
         Action = actUser
       end
-      object miRole: TMenuItem [4]
+      object miRole: TMenuItem [3]
         Action = actRole
       end
-      object N85: TMenuItem [5]
+      object N85: TMenuItem [4]
         Action = actRoleUnion
       end
-      object miSetDefault: TMenuItem [6]
+      object miSetDefault: TMenuItem [5]
         Action = actSetDefault
       end
-      object N92: TMenuItem [7]
+      object N92: TMenuItem [6]
         Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1055#1086#1095#1090#1099
         object N93: TMenuItem
           Action = actEmailSettings
@@ -1808,70 +1808,70 @@ inherited MainForm: TMainForm
           Action = actEmail
         end
       end
-      object N61: TMenuItem [8]
+      object N61: TMenuItem [7]
         Action = actGoodsOnUnit_ForSite
       end
-      object N7: TMenuItem [9]
+      object N7: TMenuItem [8]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [10]
+      object miSaveData: TMenuItem [9]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [11]
+      object miPriceGroupSettings: TMenuItem [10]
         Action = actPriceGroupSettings
       end
-      object miJuridicalSettings: TMenuItem [12]
+      object miJuridicalSettings: TMenuItem [11]
         Action = actJuridicalSettings
       end
-      object N6: TMenuItem [13]
+      object N6: TMenuItem [12]
         Caption = '-'
       end
-      object miMeasure: TMenuItem [14]
+      object miMeasure: TMenuItem [13]
         Action = actMeasure
       end
-      object miNDSKind: TMenuItem [15]
+      object miNDSKind: TMenuItem [14]
         Action = actNDSKind
       end
-      object miRetail: TMenuItem [16]
+      object miRetail: TMenuItem [15]
         Action = actRetail
       end
-      object miOrderKind: TMenuItem [17]
+      object miOrderKind: TMenuItem [16]
         Action = actOrderKind
       end
-      object N9: TMenuItem [18]
+      object N9: TMenuItem [17]
         Caption = '-'
       end
-      object miImportType: TMenuItem [19]
+      object miImportType: TMenuItem [18]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [20]
+      object miImportSettings: TMenuItem [19]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [21]
+      object miImportExportLink: TMenuItem [20]
         Action = actImportExportLink
       end
-      object N8: TMenuItem [22]
+      object N8: TMenuItem [21]
         Caption = '-'
       end
-      object N50: TMenuItem [23]
+      object N50: TMenuItem [22]
         Action = actCashRegister
       end
-      object FarmacyCash1: TMenuItem [28]
+      object FarmacyCash1: TMenuItem [25]
         Action = actUnitForFarmacyCash
       end
-      object N74: TMenuItem
+      object N74: TMenuItem [28]
         Action = actForms
       end
-      object N97: TMenuItem
+      object N97: TMenuItem [29]
         Action = actColor
       end
-      object N10: TMenuItem
+      object N10: TMenuItem [30]
         Caption = '-'
       end
-      object miTest: TMenuItem
+      object miTest: TMenuItem [31]
         Action = actTestFormOpen
       end
-      object miReprice: TMenuItem
+      object miReprice: TMenuItem [32]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end

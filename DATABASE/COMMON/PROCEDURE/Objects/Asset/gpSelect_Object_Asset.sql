@@ -97,17 +97,15 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Asset(TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.02.14         * add wiki  
- 02.07.13          *
+ 02.07.13         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Asset('2')
+-- SELECT * FROM gpSelect_Object_Asset (zfCalc_UserAdmin())

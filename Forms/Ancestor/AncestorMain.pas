@@ -39,6 +39,8 @@ type
     frxXLSExport: TfrxXLSExport;
     actMovementDesc: TdsdOpenForm;
     miMovementDesc: TMenuItem;
+    N116: TMenuItem;
+    N221: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure actUpdateProgramExecute(Sender: TObject);

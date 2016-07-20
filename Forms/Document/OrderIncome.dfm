@@ -2,7 +2,7 @@ object OrderIncomeForm: TOrderIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-  ClientHeight = 477
+  ClientHeight = 450
   ClientWidth = 956
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -218,12 +218,12 @@ object OrderIncomeForm: TOrderIncomeForm
     Left = 0
     Top = 123
     Width = 956
-    Height = 354
+    Height = 327
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 354
+    ClientRectBottom = 327
     ClientRectRight = 956
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -233,7 +233,7 @@ object OrderIncomeForm: TOrderIncomeForm
         Left = 0
         Top = 0
         Width = 956
-        Height = 330
+        Height = 303
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -276,9 +276,72 @@ object OrderIncomeForm: TOrderIncomeForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object clNameBeforeCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'./'#1086#1089'/'#1088'.'
+            DataBinding.FieldName = 'NameBeforeCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
+          object clNameBeforeName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057'/'#1056#1072#1073#1086#1090#1099')'
+            DataBinding.FieldName = 'NameBeforeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actNameBeforeChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 200
+          end
+          object clUnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
+            DataBinding.FieldName = 'UnitCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object clUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+            DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actUnitChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object clAssetName: TcxGridDBColumn
+            Caption = #1076#1083#1103' '#1054#1089#1085#1086#1074#1085#1086#1075#1086' '#1089#1088#1077#1076#1089#1090#1074#1072
+            DataBinding.FieldName = 'AssetName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actAssetChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
           object colCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
+            Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -297,7 +360,7 @@ object OrderIncomeForm: TOrderIncomeForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 200
+            Width = 120
           end
           object colMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -305,7 +368,7 @@ object OrderIncomeForm: TOrderIncomeForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = MeasureChoiceForm
+                Action = actMeasureChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -322,7 +385,7 @@ object OrderIncomeForm: TOrderIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 55
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -332,7 +395,7 @@ object OrderIncomeForm: TOrderIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 70
           end
           object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
@@ -340,6 +403,7 @@ object OrderIncomeForm: TOrderIncomeForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -354,82 +418,23 @@ object OrderIncomeForm: TOrderIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 91
-          end
-          object clNameBeforeCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'./'#1086#1089'/'#1088#1072#1073'.'
-            DataBinding.FieldName = 'NameBeforeCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
-          end
-          object clNameBeforeName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088'/'#1054#1057'/'#1088#1072#1073#1086#1090#1099
-            DataBinding.FieldName = 'NameBeforeName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = NameBeforeChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 121
-          end
-          object clUnitCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
-            DataBinding.FieldName = 'UnitCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object clUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = UnitChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object clAssetName: TcxGridDBColumn
-            Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086
-            DataBinding.FieldName = 'AssetName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = AssetChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object colIsErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isErased'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 200
+          end
+          object colIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -540,10 +545,6 @@ object OrderIncomeForm: TOrderIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -558,22 +559,6 @@ object OrderIncomeForm: TOrderIncomeForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -660,7 +645,7 @@ object OrderIncomeForm: TOrderIncomeForm
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = InsertRecord1
+      Action = actInsertRecord
       Category = 0
     end
     object bbCompleteCost: TdxBarButton
@@ -992,34 +977,7 @@ object OrderIncomeForm: TOrderIncomeForm
         end>
       isShowModal = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actGoodsKindChoice'
-      FormName = 'TGoodsKind_ObjectForm'
-      FormNameParam.Value = 'TGoodsKind_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object AssetChoiceForm: TOpenChoiceForm
+    object actAssetChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1048,7 +1006,7 @@ object OrderIncomeForm: TOrderIncomeForm
         end>
       isShowModal = False
     end
-    object NameBeforeChoiceForm: TOpenChoiceForm
+    object actNameBeforeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1085,7 +1043,7 @@ object OrderIncomeForm: TOrderIncomeForm
         end>
       isShowModal = False
     end
-    object UnitChoiceForm: TOpenChoiceForm
+    object actUnitChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1122,7 +1080,7 @@ object OrderIncomeForm: TOrderIncomeForm
         end>
       isShowModal = False
     end
-    object MeasureChoiceForm: TOpenChoiceForm
+    object actMeasureChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1198,19 +1156,47 @@ object OrderIncomeForm: TOrderIncomeForm
           Component = MasterCDS
           ComponentItem = 'GoodsCode'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue_two'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code_two'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object InsertRecord1: TInsertRecord
+    object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
       View = cxGridDBTableView
-      Action = actGoodsChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ShortCut = 45
       ImageIndex = 0
     end
@@ -1256,11 +1242,19 @@ object OrderIncomeForm: TOrderIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMeasureId'
+        Name = 'ioMeasureId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MeasureId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMeasureName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MeasureName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1273,12 +1267,12 @@ object OrderIncomeForm: TOrderIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountForPrice'
+        Name = 'ioCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1299,11 +1293,19 @@ object OrderIncomeForm: TOrderIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'ioGoodsId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1689,7 +1691,7 @@ object OrderIncomeForm: TOrderIncomeForm
         Guides = GuidesFrom
       end
       item
-        Guides = ContractGuides
+        Guides = PaidKindGuides
       end>
     ActionItemList = <
       item

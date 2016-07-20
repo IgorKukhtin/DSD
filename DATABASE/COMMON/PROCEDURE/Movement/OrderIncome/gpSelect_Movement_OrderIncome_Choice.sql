@@ -27,10 +27,6 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderIncome());
      vbUserId:= lpGetUserBySession (inSession);
@@ -148,7 +144,6 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
@@ -156,4 +151,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderIncome_Choice (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderIncome_Choice (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inJuridicalId:= 0, inIsErased := FALSE, inSession:= '2')

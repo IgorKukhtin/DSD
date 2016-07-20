@@ -229,7 +229,6 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
@@ -237,4 +236,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderIncome_DetailChoice (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderIncome_DetailChoice (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inJuridicalId:= 0, inIsErased := FALSE, inSession:= '2')
