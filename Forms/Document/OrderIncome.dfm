@@ -2,8 +2,8 @@ object OrderIncomeForm: TOrderIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-  ClientHeight = 450
-  ClientWidth = 956
+  ClientHeight = 431
+  ClientWidth = 972
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object OrderIncomeForm: TOrderIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 956
+    Width = 972
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 956
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -70,7 +71,7 @@ object OrderIncomeForm: TOrderIncomeForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 271
-      Top = 64
+      Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       State = cbsChecked
       TabOrder = 6
@@ -99,7 +100,7 @@ object OrderIncomeForm: TOrderIncomeForm
     end
     object cxLabel7: TcxLabel
       Left = 176
-      Top = 64
+      Top = 63
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
@@ -169,29 +170,29 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 157
     end
     object cxLabel12: TcxLabel
-      Left = 681
-      Top = 45
-      Caption = #1050#1091#1088#1089
+      Left = 851
+      Top = 5
+      Caption = #1050#1091#1088#1089' '#1059#1055
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 681
-      Top = 63
+      Left = 851
+      Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 77
+      Width = 58
     end
     object cxLabel14: TcxLabel
-      Left = 560
-      Top = 45
+      Left = 764
+      Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 560
-      Top = 63
+      Left = 764
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -200,42 +201,63 @@ object OrderIncomeForm: TOrderIncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 113
+      Width = 78
     end
     object cxLabel16: TcxLabel
-      Left = 764
-      Top = 5
+      Left = 560
+      Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 764
-      Top = 23
+      Left = 560
+      Top = 63
       TabOrder = 22
-      Width = 188
+      Width = 399
+    end
+    object edParValue: TcxCurrencyEdit
+      Left = 915
+      Top = 23
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 44
+    end
+    object cxLabel24: TcxLabel
+      Left = 915
+      Top = 5
+      Caption = #1053#1086#1084'. '#1059#1055
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 956
-    Height = 327
+    Width = 972
+    Height = 308
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 327
-    ClientRectRight = 956
+    ExplicitWidth = 956
+    ExplicitHeight = 327
+    ClientRectBottom = 308
+    ClientRectRight = 972
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 956
+      ExplicitHeight = 303
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 956
-        Height = 303
+        Width = 972
+        Height = 284
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 956
+        ExplicitHeight = 303
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -552,11 +574,11 @@ object OrderIncomeForm: TOrderIncomeForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -1469,6 +1491,13 @@ object OrderIncomeForm: TOrderIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outParValue'
+        Value = Null
+        Component = edParValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -1599,6 +1628,13 @@ object OrderIncomeForm: TOrderIncomeForm
         Name = 'CurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

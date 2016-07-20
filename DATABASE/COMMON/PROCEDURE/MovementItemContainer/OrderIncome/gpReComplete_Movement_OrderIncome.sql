@@ -1,10 +1,9 @@
 -- Function: gpReComplete_Movement_OrderIncome(integer, boolean, tvarchar)
 
-DROP FUNCTION IF EXISTS gpReComplete_Movement_OrderIncome (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReComplete_Movement_OrderIncome (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReComplete_Movement_OrderIncome(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
 RETURNS VOID
@@ -23,12 +22,9 @@ BEGIN
      END IF;
 
 
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_OrderIncome_CreateTemp();
      -- Проводим Документ
      PERFORM lpComplete_Movement_OrderIncome (inMovementId     := inMovementId
-                                       , inUserId         := vbUserId
-                                       , inIsLastComplete := inIsLastComplete);
+                                            , inUserId         := vbUserId);
 
 END;
 $BODY$

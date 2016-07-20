@@ -2,8 +2,8 @@ object InvoiceJournalForm: TInvoiceJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090'>'
-  ClientHeight = 492
-  ClientWidth = 998
+  ClientHeight = 389
+  ClientWidth = 843
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 998
+    Width = 843
     Height = 31
     Align = alTop
     TabOrder = 1
@@ -58,8 +58,8 @@ object InvoiceJournalForm: TInvoiceJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 998
-    Height = 435
+    Width = 843
+    Height = 332
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -165,7 +165,6 @@ object InvoiceJournalForm: TInvoiceJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -261,6 +260,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
       object colContractCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 68
@@ -409,14 +409,6 @@ object InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -470,10 +462,6 @@ object InvoiceJournalForm: TInvoiceJournalForm
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
-      Category = 0
-    end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -699,21 +687,6 @@ object InvoiceJournalForm: TInvoiceJournalForm
       ImageIndex = 13
       Status = mtDelete
       DataSource = DataSource
-    end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -987,13 +960,6 @@ object InvoiceJournalForm: TInvoiceJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 56
@@ -1117,31 +1083,6 @@ object InvoiceJournalForm: TInvoiceJournalForm
     Left = 576
     Top = 24
   end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Invoice'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 288
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_Print'
     DataSet = PrintHeaderCDS
@@ -1206,13 +1147,6 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = 'True'
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -1,10 +1,9 @@
 -- Function: gpReComplete_Movement_Invoice(integer, boolean, tvarchar)
 
-DROP FUNCTION IF EXISTS gpReComplete_Movement_Invoice (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReComplete_Movement_Invoice (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReComplete_Movement_Invoice(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
 RETURNS VOID
@@ -22,13 +21,9 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
-
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Invoice_CreateTemp();
      -- Проводим Документ
      PERFORM lpComplete_Movement_Invoice (inMovementId     := inMovementId
-                                        , inUserId         := vbUserId
-                                        , inIsLastComplete := inIsLastComplete);
+                                        , inUserId         := vbUserId);
 
 END;
 $BODY$

@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -16,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
    OUT outCurrencyValue      TFloat    , -- курс валюты
+   OUT outParValue           TFloat    , -- Номинал для перевода в валюту баланса
 
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
@@ -55,15 +55,21 @@ BEGIN
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
-     -- рассчитали и свойство <Курс для перевода в валюту баланса>
-     outCurrencyValue := 1.00;
+     -- рассчет курса для баланса
+     IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
+     THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId, inPaidKindId:= CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
+     ELSE outCurrencyValue:= 0;
+          outParValue:=0;
+     END IF;
   
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);
+     -- сохранили свойство <Номинал для перевода в валюту баланса>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, outParValue);
 
 
-
-     -- Комментарий
+     -- Примечание
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
 

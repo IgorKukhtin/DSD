@@ -300,8 +300,6 @@ BEGIN
             
             LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = MI_OrderIncome.MovementId
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_OrderIncome.DescId
-
-              
           ;
  END IF;
 
@@ -316,4 +314,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpSelect_MI_Invoice (0,False, '3');
+-- SELECT * from gpSelect_MI_Invoice (0, 0, False, False, '3');

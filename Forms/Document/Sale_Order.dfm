@@ -1,25 +1,26 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 408
-  ClientWidth = 1261
-  ExplicitWidth = 1277
-  ExplicitHeight = 446
+  ClientWidth = 1291
+  ExplicitLeft = -487
+  ExplicitWidth = 1307
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1261
+    Width = 1291
     Height = 242
     ExplicitTop = 166
     ExplicitWidth = 1261
     ExplicitHeight = 242
     ClientRectBottom = 242
-    ClientRectRight = 1261
+    ClientRectRight = 1291
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1261
       ExplicitHeight = 218
       inherited cxGrid: TcxGrid
-        Width = 1261
+        Width = 1291
         Height = 218
         ExplicitWidth = 1261
         ExplicitHeight = 218
@@ -446,7 +447,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1261
+    Width = 1291
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1261
@@ -597,13 +598,13 @@ inherited Sale_OrderForm: TSale_OrderForm
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel13: TcxLabel
-      Left = 1253
+      Left = 1268
       Top = 85
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1253
+      Left = 1268
       Top = 103
       Properties.Buttons = <
         item
@@ -674,7 +675,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Properties.ReadOnly = True
       TabOrder = 29
-      Width = 180
+      Width = 195
     end
     object cxLabel14: TcxLabel
       Left = 1072
@@ -728,7 +729,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = False
       TabOrder = 36
-      Width = 44
+      Width = 58
     end
     object cxLabel18: TcxLabel
       Left = 1155
@@ -783,19 +784,19 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 81
     end
     object cxLabel21: TcxLabel
-      Left = 1202
+      Left = 1220
       Top = 44
       Caption = #1053#1086#1084#1080#1085#1072#1083
     end
     object edParPartnerValue: TcxCurrencyEdit
-      Left = 1202
+      Left = 1220
       Top = 63
       EditValue = 1.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = False
       TabOrder = 44
-      Width = 50
+      Width = 47
     end
     object cxLabel22: TcxLabel
       Left = 680
@@ -822,19 +823,19 @@ inherited Sale_OrderForm: TSale_OrderForm
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       TabOrder = 48
-      Width = 44
+      Width = 58
     end
     object cxLabel24: TcxLabel
-      Left = 1205
+      Left = 1220
       Top = 5
       Caption = #1053#1086#1084'. '#1059#1055
     end
     object edParValue: TcxCurrencyEdit
-      Left = 1205
+      Left = 1220
       Top = 23
       EditValue = 1.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       TabOrder = 50
       Width = 47

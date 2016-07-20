@@ -164,6 +164,8 @@ type
     bbSetUnErasedChild: TdxBarButton;
     clInvNumber_OrderIncome: TcxGridDBColumn;
     actOrderIncomeJournalDetailChoiceForm: TOpenChoiceForm;
+    cxLabel24: TcxLabel;
+    edParValue: TcxCurrencyEdit;
   private
   public
   end;

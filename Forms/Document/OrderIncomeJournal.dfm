@@ -2,8 +2,8 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-  ClientHeight = 439
-  ClientWidth = 998
+  ClientHeight = 381
+  ClientWidth = 810
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 998
+    Width = 810
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 998
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -59,13 +60,14 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 998
-    Height = 382
+    Width = 810
+    Height = 324
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 435
+    ExplicitWidth = 998
+    ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -167,7 +169,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -467,10 +468,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       Action = dsdGridToExcel
       Category = 0
     end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
-      Category = 0
-    end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
       Category = 0
@@ -698,21 +695,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       ImageIndex = 13
       Status = mtDelete
       DataSource = DataSource
-    end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -1041,13 +1023,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 56
@@ -1171,31 +1146,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Left = 576
     Top = 24
   end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_OrderIncome'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 288
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_Print'
     DataSet = PrintHeaderCDS
@@ -1262,16 +1212,9 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = 'True'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 233
-    Top = 346
+    Left = 217
+    Top = 282
   end
 end

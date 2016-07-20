@@ -34,9 +34,9 @@ BEGIN
 
 
      -- замена
-     inNameBeforeName:= TRIM (inNameBeforeName);
+     inNameBeforeName:= COALESCE (TRIM (inNameBeforeName), '');
      -- проверка
-     IF COALESCE (ioGoodsId, 0) = 0 AND inNameBeforeName <> ''
+     IF COALESCE (ioGoodsId, 0) = 0 AND inNameBeforeName = ''
      THEN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Название (Товар/ОС/Работы)> или <Товар>.';
      END IF;
