@@ -16,7 +16,7 @@ type
   TOverSettingsForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clNumber: TcxGridDBColumn;
+    clLinenum: TcxGridDBColumn;
     clUnitName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     MasterDS: TDataSource;
@@ -45,7 +45,7 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    colPriceTo: TcxGridDBColumn;
+    colMinPriceEnd: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -50,9 +50,9 @@ object OverSettingsForm: TOverSettingsForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clNumber: TcxGridDBColumn
+      object clLinenum: TcxGridDBColumn
         Caption = #8470' '#1087'.'#1087'.'
-        DataBinding.FieldName = 'Number'
+        DataBinding.FieldName = 'Linenum'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 37
@@ -82,8 +82,9 @@ object OverSettingsForm: TOverSettingsForm
         Options.Editing = False
         Width = 149
       end
-      object colPriceTo: TcxGridDBColumn
+      object colMinPriceEnd: TcxGridDBColumn
         Caption = #1044#1086' '#1094#1077#1085#1099
+        DataBinding.FieldName = 'MinPriceEnd'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -288,9 +289,9 @@ object OverSettingsForm: TOverSettingsForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TOverSettingsForm'
-      FormNameParam.Name = 'TOverSettingsForm'
-      FormNameParam.Value = 'TOverSettingsForm'
+      FormName = 'TOverSettingsEditForm'
+      FormNameParam.Name = 'TOverSettingsEditForm'
+      FormNameParam.Value = 'TOverSettingsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

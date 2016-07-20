@@ -42,18 +42,6 @@ object OverSettingsEditForm: TOverSettingsEditForm
     Top = 85
     Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
   end
-  object edMinPrice: TcxTextEdit
-    Left = 40
-    Top = 110
-    TabOrder = 3
-    Width = 114
-  end
-  object edMinimumLot: TcxTextEdit
-    Left = 176
-    Top = 110
-    TabOrder = 4
-    Width = 152
-  end
   object cxLabel1: TcxLabel
     Left = 176
     Top = 85
@@ -72,8 +60,24 @@ object OverSettingsEditForm: TOverSettingsEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 7
+    TabOrder = 5
     Width = 273
+  end
+  object ceMinPrice: TcxCurrencyEdit
+    Left = 40
+    Top = 110
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 6
+    Width = 99
+  end
+  object ceMinimumLot: TcxCurrencyEdit
+    Left = 176
+    Top = 110
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 7
+    Width = 137
   end
   object ActionList: TActionList
     Left = 272
@@ -132,7 +136,7 @@ object OverSettingsEditForm: TOverSettingsEditForm
       item
         Name = 'inMinPrice'
         Value = ''
-        Component = edMinPrice
+        Component = ceMinPrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -140,7 +144,7 @@ object OverSettingsEditForm: TOverSettingsEditForm
       item
         Name = 'inMinimumLot'
         Value = ''
-        Component = edMinimumLot
+        Component = ceMinimumLot
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -191,14 +195,14 @@ object OverSettingsEditForm: TOverSettingsEditForm
       item
         Name = 'MinPrice'
         Value = 0.000000000000000000
-        Component = edMinPrice
+        Component = ceMinPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'MinimumLot'
         Value = ''
-        Component = edMinimumLot
+        Component = ceMinimumLot
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
