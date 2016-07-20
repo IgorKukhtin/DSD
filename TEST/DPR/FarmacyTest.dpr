@@ -434,7 +434,13 @@ uses
   PriceGoodsDialog in '..\..\FormsFarmacy\Guides\PriceGoodsDialog.pas' {PriceGoodsDialogForm: TParentForm},
   Color in '..\..\FormsFarmacy\System\Color.pas' {ColorForm: TParentForm},
   OverSettingsEdit in '..\..\FormsFarmacy\Guides\OverSettingsEdit.pas' {OverSettingsEditForm: TParentForm},
-  OverSettings in '..\..\FormsFarmacy\Guides\OverSettings.pas' {OverSettingsForm: TParentForm};
+  OverSettings in '..\..\FormsFarmacy\Guides\OverSettings.pas' {OverSettingsForm: TParentForm},
+  DiscountExternalEdit in '..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas' {DiscountExternalEditForm: TParentForm},
+  DiscountCard in '..\..\FormsFarmacy\Guides\DiscountCard.pas' {DiscountCardForm: TParentForm},
+  DiscountCardEdit in '..\..\FormsFarmacy\Guides\DiscountCardEdit.pas' {DiscountCardlEditForm: TParentForm},
+  BarCodeEdit in '..\..\FormsFarmacy\Guides\BarCodeEdit.pas' {BarCodeEditForm: TParentForm},
+  BarCode in '..\..\FormsFarmacy\Guides\BarCode.pas' {BarCodeForm: TParentForm},
+  DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
