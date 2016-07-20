@@ -839,7 +839,8 @@ uses
   InvoiceJournal in '..\..\Forms\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
   OrderIncomeJournalChoice in '..\..\Forms\Document\OrderIncomeJournalChoice.pas' {OrderIncomeJournalChoiceForm: TParentForm},
   OrderIncomeJournalDetailChoice in '..\..\Forms\Document\OrderIncomeJournalDetailChoice.pas' {OrderIncomeJournalDetailChoiceForm: TParentForm},
-  Invoice in '..\..\Forms\Document\Invoice.pas' {InvoiceForm: TParentForm};
+  Invoice in '..\..\Forms\Document\Invoice.pas' {InvoiceForm: TParentForm},
+  ProductionUnionTechReceiptJournal in '..\..\Forms\Document\ProductionUnionTechReceiptJournal.pas' {ProductionUnionTechReceiptJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

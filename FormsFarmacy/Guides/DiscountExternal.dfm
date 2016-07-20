@@ -53,6 +53,7 @@ object DiscountExternalForm: TDiscountExternalForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 37
       end
       object clName: TcxGridDBColumn
@@ -60,6 +61,7 @@ object DiscountExternalForm: TDiscountExternalForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 223
       end
       object clURL: TcxGridDBColumn
@@ -78,20 +80,12 @@ object DiscountExternalForm: TDiscountExternalForm
         Options.Editing = False
         Width = 149
       end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 78
-      end
       object clPort: TcxGridDBColumn
         Caption = #1055#1086#1088#1090
         DataBinding.FieldName = 'Port'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object clUserName: TcxGridDBColumn
@@ -99,6 +93,7 @@ object DiscountExternalForm: TDiscountExternalForm
         DataBinding.FieldName = 'UserName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object clPassword: TcxGridDBColumn
@@ -106,7 +101,18 @@ object DiscountExternalForm: TDiscountExternalForm
         DataBinding.FieldName = 'Password'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
+      end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel

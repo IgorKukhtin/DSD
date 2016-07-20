@@ -54,6 +54,7 @@ object DiscountCardForm: TDiscountCardForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 37
       end
       object clName: TcxGridDBColumn
@@ -61,6 +62,7 @@ object DiscountCardForm: TDiscountCardForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 149
       end
       object clObjectName: TcxGridDBColumn

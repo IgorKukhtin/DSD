@@ -717,6 +717,10 @@ type
     N120: TMenuItem;
     N121: TMenuItem;
     N122: TMenuItem;
+    actProductionUnionTechReceipt: TdsdOpenForm;
+    actProductionUnionTechReceiptDelic: TdsdOpenForm;
+    N115: TMenuItem;
+    N123: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
