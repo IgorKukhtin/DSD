@@ -122,8 +122,8 @@ BEGIN
            , Object_Measure.ValueData            AS MeasureName
 
            , Object_NameBefore.Id                AS NameBeforeId
-           , Object_NameBefore.ObjectCode        AS NameBeforeCode
-           , Object_NameBefore.ValueData         AS NameBeforeName
+           , CASE WHEN Object_NameBefore.ValueData <> '' THEN Object_NameBefore.ObjectCode ELSE Object_Goods.ObjectCode END :: Integer  AS NameBeforeCode
+           , CASE WHEN Object_NameBefore.ValueData <> '' THEN Object_NameBefore.ValueData  ELSE Object_Goods.ValueData  END :: TVarChar AS NameBeforeName
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ObjectCode              AS UnitCode
            , Object_Unit.ValueData               AS UnitName

@@ -12,6 +12,11 @@ RETURNS TABLE (Id Integer, ParentId integer
              , Price TFloat
              , Summ TFloat
              , NDS TFloat
+             , PriceSale TFloat
+             , ChangePercent TFloat
+             , SummChangePercent TFloat
+             , DiscountCardId Integer
+             , DiscountCardName TVarChar
              , isErased Boolean
               )
 AS
@@ -34,11 +39,16 @@ BEGIN
            , MovementItem.Price
            , MovementItem.AmountSumm
            , MovementItem.NDS
+           , MovementItem.PriceSale
+           , MovementItem.ChangePercent
+           , MovementItem.SummChangePercent
+           , MovementItem.DiscountCardId
+           , MovementItem.DiscountCardName
            , MovementItem.isErased
 
        FROM MovementItem_Check_View AS MovementItem 
-      WHERE MovementItem.MovementId = inMovementId
-        AND MovementItem.isErased   = false;
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.isErased   = FALSE;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
