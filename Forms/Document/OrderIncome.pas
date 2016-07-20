@@ -118,24 +118,23 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    InsertRecord1: TInsertRecord;
-    MeasureChoiceForm: TOpenChoiceForm;
+    actInsertRecord: TInsertRecord;
+    actMeasureChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
     bbShowErasedCost: TdxBarButton;
     Comment: TcxGridDBColumn;
-    UnitChoiceForm: TOpenChoiceForm;
-    AssetChoiceForm: TOpenChoiceForm;
-    NameBeforeChoiceForm: TOpenChoiceForm;
+    actUnitChoiceForm: TOpenChoiceForm;
+    actAssetChoiceForm: TOpenChoiceForm;
+    actNameBeforeChoiceForm: TOpenChoiceForm;
   private
   public
   end;

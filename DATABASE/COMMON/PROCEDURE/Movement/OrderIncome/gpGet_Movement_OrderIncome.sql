@@ -58,10 +58,9 @@ BEGIN
   
              , CAST ('' as TVarChar) 	                  AS Comment
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
-               JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.descid= zc_Object_Currency()
-                                             AND Object_CurrencyDocument.id = 14461	             -- грн
+               LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
           ;
 
      ELSE

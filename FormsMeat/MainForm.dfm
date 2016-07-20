@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1376
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4729,6 +4729,9 @@ inherited MainForm: TMainForm
       object N63: TMenuItem
         Action = actMedocJournal
       end
+      object N93: TMenuItem
+        Action = actGoodsExternal
+      end
       object N15: TMenuItem
         Caption = '-'
       end
@@ -4773,6 +4776,9 @@ inherited MainForm: TMainForm
       end
       object miMaker: TMenuItem
         Action = actMaker
+      end
+      object N111: TMenuItem
+        Action = actNameBefore
       end
     end
     object miHistory: TMenuItem [5]
@@ -5235,9 +5241,6 @@ inherited MainForm: TMainForm
       object N34: TMenuItem
         Caption = '-'
       end
-      object miPriceList: TMenuItem
-        Action = actPriceList
-      end
       object N80: TMenuItem
         Caption = #1040#1082#1094#1080#1080
         object N79: TMenuItem
@@ -5250,20 +5253,26 @@ inherited MainForm: TMainForm
           Action = actConditionPromo
         end
       end
+      object miPriceList: TMenuItem
+        Action = actPriceList
+      end
       object N55: TMenuItem
         Action = actGoodsPlatform
       end
       object miTradeMark: TMenuItem
         Action = actTradeMark
       end
-      object miGoodsGroup: TMenuItem
-        Action = actGoodsGroup
-      end
-      object miGoodsGroupStat: TMenuItem
-        Action = actGoodsGroupStat
-      end
-      object miGoodsGroupAnalyst: TMenuItem
-        Action = actGoodsGroupAnalyst
+      object N119: TMenuItem
+        Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
+        object miGoodsGroup: TMenuItem
+          Action = actGoodsGroup
+        end
+        object miGoodsGroupAnalyst: TMenuItem
+          Action = actGoodsGroupAnalyst
+        end
+        object miGoodsGroupStat: TMenuItem
+          Action = actGoodsGroupStat
+        end
       end
       object miGoodsTag: TMenuItem
         Action = actGoodsTag
@@ -5273,9 +5282,6 @@ inherited MainForm: TMainForm
       end
       object miGoods: TMenuItem
         Action = actGoods
-      end
-      object N93: TMenuItem
-        Action = actGoodsExternal
       end
       object miMeasure: TMenuItem
         Action = actMeasure
@@ -5294,9 +5300,6 @@ inherited MainForm: TMainForm
       end
       object miBox: TMenuItem
         Action = actBox
-      end
-      object N111: TMenuItem
-        Action = actNameBefore
       end
       object N1: TMenuItem
         Caption = '-'
@@ -5349,6 +5352,9 @@ inherited MainForm: TMainForm
           Action = actProfitLoss
         end
       end
+      object N118: TMenuItem
+        Caption = '-'
+      end
       object miSubMobile: TMenuItem
         Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
         object miMobileTariff: TMenuItem
@@ -5369,41 +5375,41 @@ inherited MainForm: TMainForm
     end
     object miJuridicalGuides: TMenuItem [14]
       Caption = #1050#1083#1080#1077#1085#1090#1099
-      object miJuridicalGroup: TMenuItem
-        Action = actJuridicalGroup
+      object N113: TMenuItem
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+        object miJuridical_List: TMenuItem
+          Action = actJuridical_List
+        end
+        object miJuridicalGroup: TMenuItem
+          Action = actJuridicalGroup
+        end
+        object miJuridical: TMenuItem
+          Action = actJuridical
+        end
+        object N66: TMenuItem
+          Action = actJuridical_PriceList
+        end
+        object miJuridicalGLN: TMenuItem
+          Action = actJuridicalGLN
+        end
       end
-      object miJuridical_List: TMenuItem
-        Action = actJuridical_List
-      end
-      object miJuridical: TMenuItem
-        Action = actJuridical
-      end
-      object N66: TMenuItem
-        Action = actJuridical_PriceList
-      end
-      object miJuridicalGLN: TMenuItem
-        Action = actJuridicalGLN
-      end
-      object N62: TMenuItem
-        Action = actJuridical_PrintKindItem
-      end
-      object miPartner: TMenuItem
-        Action = actPartner
-      end
-      object miPartnerAddress: TMenuItem
-        Action = actPartnerAddress
-      end
-      object miPartnerGLN: TMenuItem
-        Action = actPartnerGLN
-      end
-      object N65: TMenuItem
-        Action = actPartner_PriceList
-      end
-      object N67: TMenuItem
-        Action = actPartner_PriceList_view
-      end
-      object miRouteSorting: TMenuItem
-        Action = actRouteSorting
+      object N117: TMenuItem
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+        object miPartner: TMenuItem
+          Action = actPartner
+        end
+        object miPartnerAddress: TMenuItem
+          Action = actPartnerAddress
+        end
+        object N65: TMenuItem
+          Action = actPartner_PriceList
+        end
+        object N67: TMenuItem
+          Action = actPartner_PriceList_view
+        end
+        object miPartnerGLN: TMenuItem
+          Action = actPartnerGLN
+        end
       end
       object miArea: TMenuItem
         Action = actArea
@@ -5417,17 +5423,20 @@ inherited MainForm: TMainForm
       object miRetailReport: TMenuItem
         Action = actRetailReport
       end
-      object N61: TMenuItem
-        Action = actRetail_PrintKindItem
+      object miPartnerTag: TMenuItem
+        Action = actPartnerTag
+      end
+      object N114: TMenuItem
+        Caption = #1069#1083#1077#1084#1077#1085#1090#1099' '#1087#1077#1095#1072#1090#1080
+        object N62: TMenuItem
+          Action = actJuridical_PrintKindItem
+        end
+        object N61: TMenuItem
+          Action = actRetail_PrintKindItem
+        end
       end
       object miContactPerson: TMenuItem
         Action = actContactPerson
-      end
-      object miContactPersonKind: TMenuItem
-        Action = actContactPersonKind
-      end
-      object miPartnerTag: TMenuItem
-        Action = actPartnerTag
       end
       object N38: TMenuItem
         Caption = '-'
@@ -5485,46 +5494,66 @@ inherited MainForm: TMainForm
       end
     end
     inherited miService: TMenuItem
-      object miAction: TMenuItem [0]
-        Action = actAction
+      inherited N221: TMenuItem
+        object miAction: TMenuItem [0]
+          Action = actAction
+        end
+        object miProcess: TMenuItem [1]
+          Action = actProcess
+        end
+        object N121: TMenuItem [2]
+          Caption = '-'
+        end
+        object N108: TMenuItem [3]
+          Action = actDocumentKind
+        end
+        object miImportType: TMenuItem [4]
+          Action = actImportType
+        end
+        object miImportSettings: TMenuItem [5]
+          Action = actImportSettings
+        end
+        object miImportGroup: TMenuItem [6]
+          Action = actImportGroup
+        end
+        object miImportExportLink: TMenuItem [7]
+          Action = actImportExportLink
+        end
+        object miContactPersonKind: TMenuItem [8]
+          Action = actContactPersonKind
+        end
+        object miSetUserDefaults: TMenuItem [9]
+          Action = actSetUserDefaults
+        end
+        object miRouteSorting: TMenuItem [10]
+          Action = actRouteSorting
+        end
+        object N122: TMenuItem [11]
+          Caption = '-'
+        end
+        object N40: TMenuItem [12]
+          Action = actGlobalConst
+        end
       end
-      object miProcess: TMenuItem [1]
-        Action = actProcess
-      end
-      object miUser: TMenuItem [2]
+      object miUser: TMenuItem [1]
         Action = actUser
       end
-      object miRole: TMenuItem [3]
+      object miRole: TMenuItem [2]
         Action = actRole
       end
-      object miRoleUnion: TMenuItem [4]
+      object miRoleUnion: TMenuItem [3]
         Action = actRoleUnion
       end
-      object N97: TMenuItem [5]
+      object N97: TMenuItem [4]
         Action = actBranchJuridical
       end
-      object miSetUserDefaults: TMenuItem [6]
-        Action = actSetUserDefaults
-      end
-      object N108: TMenuItem [8]
-        Action = actDocumentKind
-      end
-      object miPeriodClose: TMenuItem [9]
+      object miPeriodClose: TMenuItem [5]
         Action = actPeriodClose
       end
-      object miPeriodClose_User: TMenuItem [10]
+      object miPeriodClose_User: TMenuItem [6]
         Action = actPeriodClose_User
       end
-      object miPartner1CLink: TMenuItem [11]
-        Action = actPartner1CLink
-      end
-      object miGoodsByGoodsKind1CLink: TMenuItem [12]
-        Action = actGoodsByGoodsKind1CLink
-      end
-      object miPartner1CLink_Excel: TMenuItem [13]
-        Action = actPartner1CLink_Excel
-      end
-      object miExternalSave: TMenuItem [14]
+      object miExternalSave: TMenuItem [7]
         Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' 1'#1057
         object miSaveDocumentTo1C: TMenuItem
           Action = actSaveDocumentTo1C
@@ -5533,40 +5562,34 @@ inherited MainForm: TMainForm
           Action = actSaveMarketingDocumentTo1CForm
         end
       end
-      object miEDI: TMenuItem [15]
+      object N120: TMenuItem [8]
+        Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' 1'#1057
+        object miLoad1CSale: TMenuItem
+          Action = actLoad1CSale
+        end
+        object miLoad1CMoney: TMenuItem
+          Action = actLoad1CMoney
+        end
+        object miPartner1CLink: TMenuItem
+          Action = actPartner1CLink
+        end
+        object miGoodsByGoodsKind1CLink: TMenuItem
+          Action = actGoodsByGoodsKind1CLink
+        end
+        object miPartner1CLink_Excel: TMenuItem
+          Action = actPartner1CLink_Excel
+        end
+      end
+      object miEDI: TMenuItem [9]
         Action = actEDI
       end
-      object miLoad1CSale: TMenuItem [16]
-        Action = actLoad1CSale
-      end
-      object miLoad1CMoney: TMenuItem [17]
-        Action = actLoad1CMoney
-      end
-      object miToolsWeighingTree: TMenuItem [18]
+      object miToolsWeighingTree: TMenuItem [10]
         Action = actToolsWeighingTree
       end
-      object N40: TMenuItem [19]
-        Action = actGlobalConst
-      end
-      object N90: TMenuItem [20]
-        Action = actForms
-      end
-      object N31: TMenuItem [21]
+      object N31: TMenuItem [11]
         Caption = '-'
       end
-      object miImportGroup: TMenuItem [22]
-        Action = actImportGroup
-      end
-      object miImportType: TMenuItem [23]
-        Action = actImportType
-      end
-      object miImportSettings: TMenuItem [24]
-        Action = actImportSettings
-      end
-      object miImportExportLink: TMenuItem [25]
-        Action = actImportExportLink
-      end
-      object miEmail: TMenuItem [26]
+      object miEmail: TMenuItem [12]
         Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1086#1095#1090#1099
         object N104: TMenuItem
           Action = actEmailSettings
@@ -5584,10 +5607,21 @@ inherited MainForm: TMainForm
           Action = actExportKind
         end
       end
-      object N76: TMenuItem [31]
-        Action = actReport_LoginProtocol
+      object N90: TMenuItem [13]
+        Action = actForms
       end
-      object N91: TMenuItem
+      inherited N116: TMenuItem
+        inherited miUserProtocol: TMenuItem [0]
+        end
+        object N76: TMenuItem [1]
+          Action = actReport_LoginProtocol
+        end
+        inherited miProtocol: TMenuItem [2]
+        end
+        inherited miMovementProtocol: TMenuItem [3]
+        end
+      end
+      object N91: TMenuItem [17]
         Action = mactHelp
       end
     end

@@ -288,12 +288,14 @@ object Goods_ObjectForm: TGoods_ObjectForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -301,6 +303,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelName'
@@ -308,6 +311,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'FuelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -315,6 +319,14 @@ object Goods_ObjectForm: TGoods_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'GoodsGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MeasureId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MeasureName'
@@ -322,6 +334,22 @@ object Goods_ObjectForm: TGoods_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'MeasureName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code_two'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue_two'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -370,6 +398,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 112

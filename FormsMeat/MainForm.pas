@@ -709,6 +709,14 @@ type
     N111: TMenuItem;
     actInvoice: TdsdOpenForm;
     N112: TMenuItem;
+    N113: TMenuItem;
+    N114: TMenuItem;
+    N117: TMenuItem;
+    N118: TMenuItem;
+    N119: TMenuItem;
+    N120: TMenuItem;
+    N121: TMenuItem;
+    N122: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

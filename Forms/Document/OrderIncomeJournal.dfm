@@ -2,7 +2,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-  ClientHeight = 492
+  ClientHeight = 439
   ClientWidth = 998
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -60,11 +60,12 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Left = 0
     Top = 57
     Width = 998
-    Height = 435
+    Height = 382
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -259,9 +260,17 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         VisibleForCustomization = False
         Width = 30
       end
+      object colPaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 59
+      end
       object colContractCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 68
@@ -272,13 +281,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
-      end
-      object colPaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 59
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -403,22 +405,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
         end
         item
           Visible = True

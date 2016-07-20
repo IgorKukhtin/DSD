@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
-             , MeasureName TVarChar
+             , MeasureId Integer, MeasureName TVarChar
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
              , GoodsPlatformName TVarChar
@@ -49,6 +49,8 @@ BEGIN
             , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
             , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName             
             
+
+            , Object_Measure.Id               AS MeasureId
             , Object_Measure.ValueData        AS MeasureName
 
             , Object_TradeMark.ValueData      AS TradeMarkName
@@ -179,5 +181,4 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods (inSession := zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_Goods (inSession := '9818')
+-- SELECT * FROM gpSelect_Object_Goods (FALSE, inSession := zfCalc_UserAdmin())

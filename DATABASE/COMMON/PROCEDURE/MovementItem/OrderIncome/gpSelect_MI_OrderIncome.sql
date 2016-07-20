@@ -25,8 +25,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderIncome());
      vbUserId:= lpGetUserBySession (inSession);
 
-       --
-      RETURN QUERY
+ 
+    --
+     RETURN QUERY
         SELECT
              MovementItem.Id     AS Id
            , MovementItem.Amount               :: TFloat AS Amount  
@@ -47,8 +48,8 @@ BEGIN
            , Object_Measure.ValueData            AS MeasureName
 
            , Object_NameBefore.Id                AS NameBeforeId
-           , Object_NameBefore.ObjectCode        AS NameBeforeCode
-           , Object_NameBefore.ValueData         AS NameBeforeName
+           , CASE WHEN Object_NameBefore.ValueData <> '' THEN Object_NameBefore.ObjectCode ELSE Object_Goods.ObjectCode END :: Integer  AS NameBeforeCode
+           , CASE WHEN Object_NameBefore.ValueData <> '' THEN Object_NameBefore.ValueData  ELSE Object_Goods.ValueData  END :: TVarChar AS NameBeforeName
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ObjectCode              AS UnitCode
            , Object_Unit.ValueData               AS UnitName
@@ -110,4 +111,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpSelect_MI_OrderIncome (0,False, '3');
+-- SELECT * FROM gpSelect_MI_OrderIncome (0, FALSE, zfCalc_UserAdmin());

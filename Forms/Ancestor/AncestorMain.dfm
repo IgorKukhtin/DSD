@@ -50,6 +50,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TImportSettingsForm'
       FormNameParam.Value = 'TImportSettingsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -61,6 +62,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TImportGroupForm'
       FormNameParam.Value = 'TImportGroupForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -72,6 +74,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TImportTypeForm'
       FormNameParam.Value = 'TImportTypeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -84,6 +87,7 @@ object AncestorMainForm: TAncestorMainForm
       FormNameParam.Name = 'ff'
       FormNameParam.Value = 'TImportExportLinkForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -95,6 +99,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TUserProtocolForm'
       FormNameParam.Value = 'TUserProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -106,6 +111,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -117,6 +123,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -128,6 +135,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TInfoMoneyGroupForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -139,6 +147,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TInfoMoneyDestinationForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -150,6 +159,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -161,6 +171,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TAccountGroupForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -172,6 +183,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TAccountDirectionForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -183,6 +195,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TProfitLossGroupForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -194,6 +207,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TProfitLossDirectionForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -205,6 +219,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TAccountForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -216,6 +231,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TProfitLossForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -226,6 +242,7 @@ object AncestorMainForm: TAncestorMainForm
       FormName = 'TMovementDescDataForm'
       FormNameParam.Value = 'TMovementDescDataForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -282,21 +299,27 @@ object AncestorMainForm: TAncestorMainForm
     end
     object miService: TMenuItem
       Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      object miMovementDesc: TMenuItem
-        Action = actMovementDesc
+      object N221: TMenuItem
+        Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+        object miMovementDesc: TMenuItem
+          Action = actMovementDesc
+        end
       end
       object N2: TMenuItem
         Caption = '-'
       end
-      object miProtocol: TMenuItem
-        Action = actProtocol
-        Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
-      end
-      object miMovementProtocol: TMenuItem
-        Action = actProtocolMovement
-      end
-      object miUserProtocol: TMenuItem
-        Action = actProtocolUser
+      object N116: TMenuItem
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+        object miProtocol: TMenuItem
+          Action = actProtocol
+          Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
+        end
+        object miMovementProtocol: TMenuItem
+          Action = actProtocolMovement
+        end
+        object miUserProtocol: TMenuItem
+          Action = actProtocolUser
+        end
       end
       object N3: TMenuItem
         Caption = '-'
