@@ -15,7 +15,6 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -115,6 +114,21 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummPVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummMVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummCurrency
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -158,6 +172,21 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummPVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummMVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummCurrency
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -195,6 +224,7 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 53
       end
       object colInvNumber: TcxGridDBColumn
@@ -202,6 +232,7 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 54
       end
       object colOperDate: TcxGridDBColumn
@@ -209,6 +240,7 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 68
       end
       object colInsertDate: TcxGridDBColumn
@@ -216,6 +248,7 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         DataBinding.FieldName = 'InsertDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 68
       end
       object colInsertName: TcxGridDBColumn
@@ -223,7 +256,42 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         DataBinding.FieldName = 'InsertName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 98
+      end
+      object JuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+        DataBinding.FieldName = 'JuridicalName'
+        DateTimeGrouping = dtgRelativeToToday
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 154
+      end
+      object colContractCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 68
+      end
+      object colContractName: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object colPaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 59
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -233,47 +301,80 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 65
       end
-      object colTotalSumm: TcxGridDBColumn
+      object colTotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+        DataBinding.FieldName = 'TotalSummPVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 74
+      end
+      object colTotalSummMVAT: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+        DataBinding.FieldName = 'TotalSummMVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 74
+      end
+      object colTotalSumm: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057' '#1080' '#1089#1082#1080#1076#1082#1080')'
+        Options.Editing = False
         Width = 74
       end
-      object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
-        DataBinding.FieldName = 'JuridicalName'
-        DateTimeGrouping = dtgRelativeToToday
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 154
-      end
-      object colPaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 59
-      end
-      object colContractCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1076#1086#1075'.'
-        DataBinding.FieldName = 'ContractCode'
+      object TotalSummCurrency: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077' ('#1080#1090#1086#1075')'
+        DataBinding.FieldName = 'TotalSummCurrency'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Options.Editing = False
+        Width = 80
       end
-      object colContractName: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1075'.'
-        DataBinding.FieldName = 'ContractName'
+      object colCurrencyDocumentName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
+        DataBinding.FieldName = 'CurrencyDocumentName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Options.Editing = False
+        Width = 94
+      end
+      object colParValue: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083
+        DataBinding.FieldName = 'ParValue'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1086#1084#1080#1085#1072#1083' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1091' '#1073#1072#1083#1072#1085#1089#1072
+        Options.Editing = False
+        Width = 89
+      end
+      object colCurrencyValue: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089
+        DataBinding.FieldName = 'CurrencyValue'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1091#1088#1089' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1091' '#1073#1072#1083#1072#1085#1089#1072
+        Options.Editing = False
+        Width = 74
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -977,6 +1078,74 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber_Full'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyDocumentId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CurrencyDocumentId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyDocumentName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CurrencyDocumentName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ChangePercent'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ChangePercent'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceWithVAT'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PriceWithVAT'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'VATPercent'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

@@ -837,9 +837,9 @@ uses
   NameBeforeEdit in '..\..\Forms\Guides\NameBeforeEdit.pas' {NameBeforeEditForm: TParentForm},
   OrderIncomeJournal in '..\..\Forms\Document\OrderIncomeJournal.pas' {OrderIncomeJournalForm: TParentForm},
   InvoiceJournal in '..\..\Forms\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
-  Invoice in '..\..\Forms\Document\Invoice.pas' {InvoiceForm: TParentForm},
   OrderIncomeJournalChoice in '..\..\Forms\Document\OrderIncomeJournalChoice.pas' {OrderIncomeJournalChoiceForm: TParentForm},
-  OrderIncomeJournalDetailChoice in '..\..\Forms\Document\OrderIncomeJournalDetailChoice.pas' {OrderIncomeJournalDetailChoiceForm: TParentForm};
+  OrderIncomeJournalDetailChoice in '..\..\Forms\Document\OrderIncomeJournalDetailChoice.pas' {OrderIncomeJournalDetailChoiceForm: TParentForm},
+  Invoice in '..\..\Forms\Document\Invoice.pas' {InvoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

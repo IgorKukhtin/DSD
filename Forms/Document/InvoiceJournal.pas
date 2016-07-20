@@ -63,7 +63,7 @@ type
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
     colTotalCount: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
+    colTotalSummPVAT: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
@@ -98,6 +98,11 @@ type
     actReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
+    colPriceWithVAT: TcxGridDBColumn;
+    colChangePercent: TcxGridDBColumn;
+    colCurrencyValue: TcxGridDBColumn;
+    colParValue: TcxGridDBColumn;
+    colCurrencyDocumentName: TcxGridDBColumn;
   private
   public
   end;
