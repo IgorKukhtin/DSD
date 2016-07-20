@@ -209,7 +209,11 @@ BEGIN
         
     -- Результат
     RETURN QUERY
-        WITH tmpPersonalServiceList AS (SELECT View_Personal.MemberId, MAX (ObjectLink_Personal_PersonalServiceList.ChildObjectId) AS PersonalServiceListId
+        WITH tmpPersonal AS (SELECT *
+                                  , ROW_NUMBER(*) OVER (PARTITION BY Object_Personal.MemberId, COALESCE (Object_Personal.PositionId, 0), COALESCE (Object_Personal.PositionLevelId, 0), COALESCE (Object_Personal.UnitId, 0)) AS ORD
+                             FROM Object_Personal_View AS Object_Personal
+                            )
+          , tmpPersonalServiceList AS (SELECT View_Personal.MemberId, MAX (ObjectLink_Personal_PersonalServiceList.ChildObjectId) AS PersonalServiceListId
                                         FROM Object_Personal_View AS View_Personal
                                              LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                                   ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
@@ -429,11 +433,12 @@ BEGIN
 
         FROM
             tmpRes
-            LEFT JOIN Object_Personal_View AS Object_Personal
+            LEFT JOIN tmpPersonal AS Object_Personal
                                                  ON Object_Personal.MemberId                      = tmpRes.MemberId
                                                 AND COALESCE (Object_Personal.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
                                                 AND COALESCE (Object_Personal.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                                                 AND COALESCE (Object_Personal.UnitId, 0)          = COALESCE (tmpRes.UnitId, 0)
+                                                AND Object_Personal.ORD                           = 1
             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal.PersonalId
                                       AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()

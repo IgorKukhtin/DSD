@@ -47,6 +47,7 @@ $BODY$BEGIN
            , CAST ('' as TVarChar)  AS PassportNumber
            , CAST ('' as TVarChar)  AS Comment
            
+           , 0 :: TFloat            AS PeriodUse
            , CAST (NULL AS Boolean) AS isErased
            
        FROM Object 

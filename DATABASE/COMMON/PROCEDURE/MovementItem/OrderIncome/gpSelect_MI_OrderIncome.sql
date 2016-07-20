@@ -1,4 +1,4 @@
--- Function: gpSelect_MI_OrderIncome()
+	-- Function: gpSelect_MI_OrderIncome()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_OrderIncome (Integer, Boolean, TVarChar);
 
