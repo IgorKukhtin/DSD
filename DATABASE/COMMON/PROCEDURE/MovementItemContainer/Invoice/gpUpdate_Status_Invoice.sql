@@ -13,20 +13,18 @@ BEGIN
 
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
-            -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_UnComplete_Invoice());
             --
             PERFORM gpUnComplete_Movement (inMovementId, inSession);
+
          WHEN zc_Enum_StatusCode_Complete() THEN
-            -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Invoice());
             --
-            PERFORM gpComplete_Movement_Invoice (inMovementId, FALSE, inSession);
+            PERFORM gpComplete_Movement_Invoice (inMovementId, inSession);
+
          WHEN zc_Enum_StatusCode_Erased() THEN
-            -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_SetErased_Invoice());
+
             --
             PERFORM gpSetErased_Movement (inMovementId, inSession);
+
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;
@@ -34,7 +32,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

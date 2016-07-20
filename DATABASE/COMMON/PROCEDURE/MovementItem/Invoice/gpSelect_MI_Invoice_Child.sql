@@ -15,7 +15,6 @@ RETURNS TABLE (Id Integer, OperDate TDateTime, Amount TFloat
 AS
 $BODY$
    DECLARE vbUserId Integer;
- 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Invoice());
@@ -47,7 +46,6 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId =  MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-              
           ;
 
 END;

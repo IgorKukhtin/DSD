@@ -76,9 +76,6 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     colInsertDate: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
     colInsertName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;

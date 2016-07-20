@@ -3,8 +3,9 @@
   ClientHeight = 645
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -525
   ExplicitWidth = 1314
-  ExplicitHeight = 683
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -634,13 +635,13 @@
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel13: TcxLabel
-      Left = 1253
+      Left = 1271
       Top = 85
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1253
+      Left = 1271
       Top = 103
       Properties.Buttons = <
         item
@@ -712,7 +713,7 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 29
-      Width = 180
+      Width = 195
     end
     object cxLabel14: TcxLabel
       Left = 1072
@@ -787,17 +788,17 @@
       Width = 81
     end
     object edParPartnerValue: TcxCurrencyEdit
-      Left = 1205
+      Left = 1220
       Top = 63
       EditValue = 1.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = False
       TabOrder = 39
       Width = 47
     end
     object cxLabel21: TcxLabel
-      Left = 1205
+      Left = 1220
       Top = 44
       Caption = #1053#1086#1084#1080#1085#1072#1083
     end
@@ -833,7 +834,7 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
     TabOrder = 9
-    Width = 44
+    Width = 58
   end
   object cbCalcAmountPartner: TcxCheckBox [6]
     Left = 8
@@ -878,19 +879,19 @@
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 44
+    Width = 58
   end
   object cxLabel24: TcxLabel [12]
-    Left = 1205
+    Left = 1220
     Top = 5
     Caption = #1053#1086#1084'. '#1059#1055
   end
   object edParValue: TcxCurrencyEdit [13]
-    Left = 1205
+    Left = 1220
     Top = 23
     EditValue = 1.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0.'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####;-,0.####; ;'
     Properties.ReadOnly = True
     TabOrder = 17
     Width = 47

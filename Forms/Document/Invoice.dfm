@@ -3,7 +3,7 @@ object InvoiceForm: TInvoiceForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 477
-  ClientWidth = 956
+  ClientWidth = 964
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object InvoiceForm: TInvoiceForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 956
+    Width = 964
     Height = 97
     Align = alTop
     BevelOuter = bvNone
@@ -169,29 +169,29 @@ object InvoiceForm: TInvoiceForm
       Width = 157
     end
     object cxLabel12: TcxLabel
-      Left = 681
-      Top = 45
-      Caption = #1050#1091#1088#1089
+      Left = 851
+      Top = 5
+      Caption = #1050#1091#1088#1089' '#1059#1055
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 681
-      Top = 63
+      Left = 851
+      Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 77
+      Width = 58
     end
     object cxLabel14: TcxLabel
-      Left = 560
-      Top = 45
+      Left = 764
+      Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 560
-      Top = 63
+      Left = 764
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -200,31 +200,46 @@ object InvoiceForm: TInvoiceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 113
+      Width = 78
     end
     object cxLabel16: TcxLabel
-      Left = 764
-      Top = 5
+      Left = 560
+      Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 764
-      Top = 23
+      Left = 560
+      Top = 63
       TabOrder = 22
-      Width = 188
+      Width = 198
+    end
+    object cxLabel24: TcxLabel
+      Left = 915
+      Top = 5
+      Caption = #1053#1086#1084'. '#1059#1055
+    end
+    object edParValue: TcxCurrencyEdit
+      Left = 915
+      Top = 23
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 44
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 956
+    Width = 964
     Height = 242
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 242
-    ClientRectRight = 956
+    ClientRectRight = 964
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -232,7 +247,7 @@ object InvoiceForm: TInvoiceForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 956
+        Width = 964
         Height = 218
         Align = alClient
         TabOrder = 0
@@ -531,12 +546,12 @@ object InvoiceForm: TInvoiceForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 188
+    Width = 195
   end
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 365
-    Width = 956
+    Width = 964
     Height = 3
     AlignSplitter = salBottom
     Control = cxGrid
@@ -544,7 +559,7 @@ object InvoiceForm: TInvoiceForm
   object cxGrid1: TcxGrid
     Left = 0
     Top = 368
-    Width = 956
+    Width = 964
     Height = 109
     Align = alBottom
     PopupMenu = PopupMenu
@@ -845,11 +860,11 @@ object InvoiceForm: TInvoiceForm
           ItemName = 'bbSetUnErasedChild'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -1727,7 +1742,6 @@ object InvoiceForm: TInvoiceForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
-      Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -2031,6 +2045,13 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outParValue'
+        Value = Null
+        Component = edParValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2161,6 +2182,13 @@ object InvoiceForm: TInvoiceForm
         Name = 'CurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

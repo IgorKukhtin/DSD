@@ -94,7 +94,6 @@ type
     bbShowErased: TdxBarButton;
     Comment: TcxGridDBColumn;
     spMovementReComplete: TdsdStoredProc;
-    ContractId: TcxGridDBColumn;
     spReCompete: TdsdExecStoredProc;
     actSimpleReCompleteList: TMultiAction;
     actReCompleteList: TMultiAction;

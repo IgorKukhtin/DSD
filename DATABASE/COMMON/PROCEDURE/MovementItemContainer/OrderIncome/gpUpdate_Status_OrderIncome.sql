@@ -13,20 +13,17 @@ BEGIN
 
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
-            -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_UnComplete_OrderIncome());
             --
             PERFORM gpUnComplete_Movement (inMovementId, inSession);
+
          WHEN zc_Enum_StatusCode_Complete() THEN
-            -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_OrderIncome());
             --
-            PERFORM gpComplete_Movement_OrderIncome (inMovementId, FALSE, inSession);
+            PERFORM gpComplete_Movement_OrderIncome (inMovementId, inSession);
+
          WHEN zc_Enum_StatusCode_Erased() THEN
-            -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_SetErased_OrderIncome());
             --
             PERFORM gpSetErased_Movement (inMovementId, inSession);
+
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;

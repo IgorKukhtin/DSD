@@ -1,10 +1,9 @@
 -- Function: gpComplete_Movement_Invoice()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_Invoice (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Invoice (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Invoice(
     IN inMovementId        Integer                , -- ключ Документа
-    IN inIsLastComplete    Boolean  DEFAULT False , -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''      -- сессия пользователя
 )                              
 RETURNS VOID
@@ -15,16 +14,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Invoice());
 
-     -- проверка - если <Master> Удален, то <Ошибка>
-     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Complete(), inComment:= 'провести');
-
-
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Invoice_CreateTemp();
      -- Проводим Документ
      PERFORM lpComplete_Movement_Invoice (inMovementId     := inMovementId
-                                            , inUserId         := vbUserId
-                                            , inIsLastComplete := inIsLastComplete);
+                                        , inUserId         := vbUserId);
 
 END;
 $BODY$

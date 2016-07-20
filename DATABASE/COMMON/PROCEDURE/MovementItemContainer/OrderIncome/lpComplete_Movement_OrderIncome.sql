@@ -1,23 +1,17 @@
 -- Function: lpComplete_Movement_OrderIncome()
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_OrderIncome (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpComplete_Movement_OrderIncome (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_OrderIncome(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inUserId            Integer               , -- Пользователь
-    IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
+    IN inUserId            Integer                 -- Пользователь
 )                              
 RETURNS VOID
 AS
 $BODY$
-
 BEGIN
-     -- !!!обязательно!!! очистили таблицу проводок
-     DELETE FROM _tmpMIContainer_insert;
-     DELETE FROM _tmpMIReport_insert;
 
-
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     -- ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_OrderIncome()
                                 , inUserId     := inUserId

@@ -1,25 +1,26 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 422
-  ClientWidth = 1259
-  ExplicitWidth = 1275
-  ExplicitHeight = 460
+  ClientWidth = 1275
+  ExplicitLeft = -502
+  ExplicitWidth = 1291
+  ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1259
+    Width = 1275
     Height = 256
     ExplicitTop = 166
     ExplicitWidth = 1259
     ExplicitHeight = 256
     ClientRectBottom = 256
-    ClientRectRight = 1259
+    ClientRectRight = 1275
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1259
       ExplicitHeight = 232
       inherited cxGrid: TcxGrid
-        Width = 1259
+        Width = 1275
         Height = 232
         ExplicitWidth = 1259
         ExplicitHeight = 232
@@ -454,7 +455,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1259
+    Width = 1275
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1259
@@ -739,7 +740,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = False
       TabOrder = 36
-      Width = 44
+      Width = 58
     end
     object cxLabel18: TcxLabel
       Left = 1155
@@ -795,19 +796,19 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 81
     end
     object cxLabel21: TcxLabel
-      Left = 1202
+      Left = 1220
       Top = 44
       Caption = #1053#1086#1084#1080#1085#1072#1083
     end
     object edParPartnerValue: TcxCurrencyEdit
-      Left = 1202
+      Left = 1220
       Top = 63
       EditValue = 1.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = False
       TabOrder = 44
-      Width = 50
+      Width = 48
     end
     object cxLabel22: TcxLabel
       Left = 684
@@ -844,7 +845,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1050#1091#1088#1089' '#1059#1055
     end
     object cxLabel24: TcxLabel
-      Left = 1205
+      Left = 1220
       Top = 5
       Caption = #1053#1086#1084'. '#1059#1055
     end
@@ -857,17 +858,17 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       TabOrder = 51
-      Width = 44
+      Width = 58
     end
     object edParValue: TcxCurrencyEdit
-      Left = 1205
+      Left = 1220
       Top = 23
       EditValue = 1.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       TabOrder = 52
-      Width = 47
+      Width = 48
     end
     object edInvNumberTransport: TcxButtonEdit
       Left = 255

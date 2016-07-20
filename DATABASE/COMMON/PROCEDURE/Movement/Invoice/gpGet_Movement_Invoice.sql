@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertDate TDateTime, InsertName TVarChar
 
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , CurrencyValue TFloat
+             , CurrencyValue TFloat, ParValue TFloat
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
 
              , JuridicalId Integer, JuridicalName TVarChar
@@ -45,7 +45,8 @@ BEGIN
              , CAST (True as Boolean)                     AS PriceWithVAT
              , CAST (20 as TFloat)                        AS VATPercent
              , CAST (0 as TFloat)                         AS ChangePercent
-             , CAST (1 as TFloat)                         AS CurrencyValue
+             , CAST (0 as TFloat)                         AS CurrencyValue
+             , CAST (0 as TFloat)                         AS ParValue
 
              , Object_CurrencyDocument.Id                 AS CurrencyDocumentId	-- грн
              , Object_CurrencyDocument.ValueData          AS CurrencyDocumentName
@@ -95,6 +96,7 @@ BEGIN
            , MovementFloat_VATPercent.ValueData     AS VATPercent
            , MovementFloat_ChangePercent.ValueData  AS ChangePercent
            , MovementFloat_CurrencyValue.ValueData  AS CurrencyValue
+           , MovementFloat_ParValue.ValueData       AS ParValue
 
            , Object_CurrencyDocument.Id             AS CurrencyDocumentId
            , Object_CurrencyDocument.ValueData      AS CurrencyDocumentName
@@ -145,6 +147,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -182,4 +187,4 @@ $BODY$
 */
 
 -- тест
--- 
+-- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());

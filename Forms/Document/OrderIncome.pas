@@ -135,6 +135,8 @@ type
     actUnitChoiceForm: TOpenChoiceForm;
     actAssetChoiceForm: TOpenChoiceForm;
     actNameBeforeChoiceForm: TOpenChoiceForm;
+    edParValue: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
   private
   public
   end;
