@@ -38,9 +38,13 @@ type
     GOODSCODE: Integer; //Код товара
     NDS: Currency; //НДС товара
     AMOUNT: Currency; //Кол-во
-    PRICE: Currency; //Цена
+    PRICE: Currency; //Цена, с 20.07.16 если есть скидка по Дисконтным программам, здесь будет цена с учетом скидки
+    PRICESALE: Currency;          // Цена без скидки ***20.07.16
+    CHANGEPERCENT: Currency;      // % Скидки ***20.07.16
+    SUMMCHANGEPERCENT: Currency;  // Сумма Скидки ***20.07.16
     CH_UID: String[50]; //uid чека
     GOODSNAME: String[254]; //наименование товара
+    DISCOUNTCARD: String[254]; //Дисконтная карта ***20.07.16
   end;
   TBodyArr = Array of TBodyRecord;
 
