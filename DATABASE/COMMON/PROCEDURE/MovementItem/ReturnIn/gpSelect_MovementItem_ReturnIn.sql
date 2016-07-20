@@ -84,6 +84,7 @@ BEGIN
                            , MIFloat_CountForPrice.ValueData               AS CountForPrice
                            , MIFloat_PromoMovement.ValueData :: Integer    AS MovementId_Promo
                            , MIFloat_MovementSale.ValueData  :: Integer    AS MovementId_sale
+                           , MIString_PartionGoods.ValueData               AS PartionGoods
                            , MovementItem.isErased                         AS isErased
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -101,6 +102,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                           LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                        ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
                            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                        ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
@@ -176,6 +181,7 @@ BEGIN
                         , COALESCE (tmpMI.isErased, FALSE)                            AS isErased
                         , COALESCE (tmpMI.MovementId_Promo, 0) :: Integer             AS MovementId_Promo
                         , COALESCE (tmpMI.MovementId_sale, 0)  :: Integer             AS MovementId_sale
+                        , tmpMI.PartionGoods
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
@@ -295,7 +301,7 @@ BEGIN
              END :: Boolean AS isCheck_Pricelist
 
            , 0  :: TFloat         		AS HeadCount
-           , '' :: TVarChar         		AS PartionGoods
+           , tmpResult.PartionGoods        	AS PartionGoods
            , Object_GoodsKind.Id        	AS GoodsKindId
            , Object_GoodsKind.ValueData 	AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
@@ -368,6 +374,7 @@ BEGIN
                            , MIFloat_CountForPrice.ValueData               AS CountForPrice
                            , MIFloat_PromoMovement.ValueData :: Integer    AS MovementId_Promo
                            , MIFloat_MovementSale.ValueData  :: Integer    AS MovementId_sale
+                           , MIString_PartionGoods.ValueData               AS PartionGoods
                            , MovementItem.isErased                         AS isErased
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -385,6 +392,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                           LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                        ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
                            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                        ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
@@ -460,6 +471,7 @@ BEGIN
                         , COALESCE (tmpMI.isErased, FALSE)                            AS isErased
                         , COALESCE (tmpMI.MovementId_Promo, 0) :: Integer             AS MovementId_Promo
                         , COALESCE (tmpMI.MovementId_sale, 0)  :: Integer             AS MovementId_sale
+                        , tmpMI.PartionGoods
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
@@ -500,7 +512,7 @@ BEGIN
              END :: Boolean AS isCheck_Pricelist
 
            , 0  :: TFloat         		AS HeadCount
-           , '' :: TVarChar         		AS PartionGoods
+           , tmpResult.PartionGoods        	AS PartionGoods
            , Object_GoodsKind.Id        	AS GoodsKindId
            , Object_GoodsKind.ValueData 	AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
