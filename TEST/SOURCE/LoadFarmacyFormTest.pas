@@ -37,6 +37,7 @@ type
     procedure LoadCurrencyFormTest;
     procedure LoadCreateOrderFromMCSFormTest;
     procedure LoadDefaultFormTest;
+    procedure LoadDiscountFormTest;
     procedure LoadEnumFormTest;
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
@@ -121,6 +122,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSetUserDefaultsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDefaultsKeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDefaultsKeyForm');
+end;
+
+
+procedure TLoadFormTest.LoadDiscountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBarCodeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBarCodeEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountCardForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountCardForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountCardEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountCardEditForm');
 end;
 
 procedure TLoadFormTest.LoadAccountFormTest;
