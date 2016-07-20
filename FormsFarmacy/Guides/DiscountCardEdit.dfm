@@ -1,4 +1,4 @@
-﻿object DiscountCardlEditForm: TDiscountCardlEditForm
+﻿object DiscountCardEditForm: TDiscountCardEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1044#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099

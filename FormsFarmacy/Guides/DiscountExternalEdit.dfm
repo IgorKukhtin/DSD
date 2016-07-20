@@ -64,7 +64,7 @@
   object cxLabel3: TcxLabel
     Left = 40
     Top = 147
-    Caption = 'Email ('#1086#1096#1080#1073#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080')'
+    Caption = #1057#1077#1088#1074#1080#1089
   end
   object ceService: TcxTextEdit
     Left = 40
@@ -74,8 +74,8 @@
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 100
-    Caption = 'Email ('#1086#1096#1080#1073#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080')'
+    Top = 98
+    Caption = 'URL'
   end
   object ceURL: TcxTextEdit
     Left = 40
@@ -86,7 +86,7 @@
   object cxLabel4: TcxLabel
     Left = 40
     Top = 195
-    Caption = 'Email ('#1086#1096#1080#1073#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080')'
+    Caption = #1055#1086#1088#1090
   end
   object cePort: TcxTextEdit
     Left = 40
@@ -97,7 +97,7 @@
   object cxLabel5: TcxLabel
     Left = 40
     Top = 251
-    Caption = 'Email ('#1086#1096#1080#1073#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080')'
+    Caption = #1051#1086#1075#1080#1085
   end
   object ceUserName: TcxTextEdit
     Left = 40
@@ -108,7 +108,7 @@
   object cxLabel6: TcxLabel
     Left = 40
     Top = 307
-    Caption = 'Email ('#1086#1096#1080#1073#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080')'
+    Caption = #1055#1072#1088#1086#1083#1100
   end
   object cePassword: TcxTextEdit
     Left = 40

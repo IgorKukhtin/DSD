@@ -14,7 +14,7 @@ uses
   dxSkinsDefaultPainters;
 
 type
-  TDiscountCardlEditForm = class(TParentForm)
+  TDiscountCardEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -43,6 +43,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TDiscountCardlEditForm);
+  RegisterClass(TDiscountCardEditForm);
 
 end.

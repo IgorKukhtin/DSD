@@ -33,6 +33,11 @@ BEGIN
            , CAST ('' AS TVarChar)  AS Port
            , CAST ('' AS TVarChar)  AS UserName
            , CAST ('' AS TVarChar)  AS Password
+ /*          , CAST ('http://exim.demo.mdmworld.com/CardService.asmx?WSDL' AS TVarChar)  AS URL
+           , CAST ('CardService' AS TVarChar)  AS Service
+           , CAST ('CardServiceSoap' AS TVarChar)  AS Port
+           , CAST ('PANI' AS TVarChar)  AS UserName
+           , CAST ('pass' AS TVarChar)  AS Password*/
 ;
    ELSE
        RETURN QUERY

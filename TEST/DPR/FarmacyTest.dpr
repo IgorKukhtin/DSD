@@ -437,10 +437,10 @@ uses
   OverSettings in '..\..\FormsFarmacy\Guides\OverSettings.pas' {OverSettingsForm: TParentForm},
   DiscountExternalEdit in '..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas' {DiscountExternalEditForm: TParentForm},
   DiscountCard in '..\..\FormsFarmacy\Guides\DiscountCard.pas' {DiscountCardForm: TParentForm},
-  DiscountCardEdit in '..\..\FormsFarmacy\Guides\DiscountCardEdit.pas' {DiscountCardlEditForm: TParentForm},
   BarCodeEdit in '..\..\FormsFarmacy\Guides\BarCodeEdit.pas' {BarCodeEditForm: TParentForm},
   BarCode in '..\..\FormsFarmacy\Guides\BarCode.pas' {BarCodeForm: TParentForm},
-  DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm};
+  DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm},
+  DiscountCardEdit in '..\..\FormsFarmacy\Guides\DiscountCardEdit.pas' {DiscountCardEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
