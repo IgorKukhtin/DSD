@@ -26,7 +26,6 @@ object InvoiceForm: TInvoiceForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 956
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -239,14 +238,12 @@ object InvoiceForm: TInvoiceForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 956
     ClientRectBottom = 242
     ClientRectRight = 964
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 956
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -254,7 +251,6 @@ object InvoiceForm: TInvoiceForm
         Height = 218
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 956
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -559,7 +555,6 @@ object InvoiceForm: TInvoiceForm
     Height = 3
     AlignSplitter = salBottom
     Control = cxGrid
-    ExplicitWidth = 956
   end
   object cxGrid1: TcxGrid
     Left = 0
@@ -569,7 +564,6 @@ object InvoiceForm: TInvoiceForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 9
-    ExplicitWidth = 956
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -1748,7 +1742,6 @@ object InvoiceForm: TInvoiceForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
-      Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'

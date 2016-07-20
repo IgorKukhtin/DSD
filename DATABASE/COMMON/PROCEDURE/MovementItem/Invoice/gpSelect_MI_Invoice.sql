@@ -59,16 +59,16 @@ BEGIN
                                                                    ON MILinkObject_NameBefore.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_NameBefore.DescId = zc_MILinkObject_NameBefore()
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                                   ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                                                   ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
-                                  -- это ссылка на док. "заявка поставщику"
+                                  -- это док. "заявка поставщику"
                                   LEFT JOIN MovementItemFloat AS MIFloat_OrderIncome
                                                               ON MIFloat_OrderIncome.MovementItemId = MovementItem.Id
                                                              AND MIFloat_OrderIncome.DescId = zc_MIFloat_MovementItemId()
@@ -93,14 +93,14 @@ BEGIN
                                                                    ON MILinkObject_NameBefore.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_NameBefore.DescId = zc_MILinkObject_NameBefore()
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                                   ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                                                   ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                       WHERE MovementItem.MovementId = inOrderIncomeId
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
