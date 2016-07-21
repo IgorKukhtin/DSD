@@ -466,6 +466,17 @@ object InvoiceForm: TInvoiceForm
             Options.Editing = False
             Width = 58
           end
+          object PriceOrderIncome: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'PriceOrderIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colAmountSummOrderIncome: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'AmountSummOrderIncome'
@@ -473,6 +484,7 @@ object InvoiceForm: TInvoiceForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1424,8 +1424,8 @@ inherited MainForm: TMainForm
     object actDiscountExternal: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1082' '#1087#1088#1086#1075#1088#1072#1084#1084#1077' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1093' '#1082#1072#1088#1090
-      Hint = ' '#1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1082' '#1087#1088#1086#1075#1088#1072#1084#1084#1077' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1093' '#1082#1072#1088#1090
+      Caption = #1055#1088#1086#1077#1082#1090#1099' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
+      Hint = #1055#1088#1086#1077#1082#1090#1099' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
       FormName = 'TDiscountExternalForm'
       FormNameParam.Value = 'TDiscountExternalForm'
       FormNameParam.DataType = ftString
@@ -1491,21 +1491,6 @@ inherited MainForm: TMainForm
       object N103: TMenuItem
         Caption = '-'
       end
-      object N99: TMenuItem
-        Caption = #1044#1080#1089#1082#1086#1085#1090' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
-        object N100: TMenuItem
-          Action = actBarCode
-        end
-        object N101: TMenuItem
-          Action = actDiscountCard
-        end
-        object N102: TMenuItem
-          Action = actDiscountExternal
-        end
-      end
-      object N4: TMenuItem
-        Caption = '-'
-      end
       object miUnit: TMenuItem
         Action = actUnit
       end
@@ -1537,42 +1522,6 @@ inherited MainForm: TMainForm
       object N19: TMenuItem
         Action = actReturnType
       end
-      object N20: TMenuItem
-        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-        object N21: TMenuItem
-          Action = actAccountGroup
-        end
-        object N22: TMenuItem
-          Action = actAccountDirection
-        end
-        object N23: TMenuItem
-          Action = actAccount
-        end
-        object N24: TMenuItem
-          Caption = '-'
-        end
-        object N25: TMenuItem
-          Action = actInfoMoneyGroup
-        end
-        object N26: TMenuItem
-          Action = actInfoMoneyDestination
-        end
-        object N27: TMenuItem
-          Action = actInfoMoney
-        end
-        object N28: TMenuItem
-          Caption = '-'
-        end
-        object N29: TMenuItem
-          Action = actProfitLossGroup
-        end
-        object N30: TMenuItem
-          Action = actProfitLossDirection
-        end
-        object N31: TMenuItem
-          Action = actProfitLoss
-        end
-      end
       object N52: TMenuItem
         Action = actPrice
       end
@@ -1590,6 +1539,21 @@ inherited MainForm: TMainForm
       end
       object N68: TMenuItem
         Action = actReasonDifferences
+      end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object N99: TMenuItem
+        Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+        object N102: TMenuItem
+          Action = actDiscountExternal
+        end
+        object N101: TMenuItem
+          Action = actDiscountCard
+        end
+        object N100: TMenuItem
+          Action = actBarCode
+        end
       end
     end
     object miPersonal: TMenuItem [1]
@@ -1817,8 +1781,73 @@ inherited MainForm: TMainForm
       end
     end
     inherited miService: TMenuItem
-      object miGoodsCommon: TMenuItem [0]
-        Action = actGoodsMain
+      inherited N221: TMenuItem
+        object miNDSKind: TMenuItem [0]
+          Action = actNDSKind
+        end
+        object miOrderKind: TMenuItem [1]
+          Action = actOrderKind
+        end
+        object miMeasure: TMenuItem [2]
+          Action = actMeasure
+        end
+        object miRetail: TMenuItem [3]
+          Action = actRetail
+        end
+        object N8: TMenuItem [4]
+          Caption = '-'
+        end
+        object N50: TMenuItem [5]
+          Action = actCashRegister
+        end
+        object N20: TMenuItem [6]
+          Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+          object N21: TMenuItem
+            Action = actAccountGroup
+          end
+          object N22: TMenuItem
+            Action = actAccountDirection
+          end
+          object N23: TMenuItem
+            Action = actAccount
+          end
+          object N24: TMenuItem
+            Caption = '-'
+          end
+          object N25: TMenuItem
+            Action = actInfoMoneyGroup
+          end
+          object N26: TMenuItem
+            Action = actInfoMoneyDestination
+          end
+          object N27: TMenuItem
+            Action = actInfoMoney
+          end
+          object N28: TMenuItem
+            Caption = '-'
+          end
+          object N29: TMenuItem
+            Action = actProfitLossGroup
+          end
+          object N30: TMenuItem
+            Action = actProfitLossDirection
+          end
+          object N31: TMenuItem
+            Action = actProfitLoss
+          end
+        end
+        object N6: TMenuItem [7]
+          Caption = '-'
+        end
+        object N97: TMenuItem [8]
+          Action = actColor
+        end
+        object N74: TMenuItem [9]
+          Action = actForms
+        end
+        object miTest: TMenuItem
+          Action = actTestFormOpen
+        end
       end
       object N44: TMenuItem [1]
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
@@ -1859,70 +1888,43 @@ inherited MainForm: TMainForm
           Action = actEmail
         end
       end
-      object N61: TMenuItem [7]
+      object miGoodsCommon: TMenuItem [7]
+        Action = actGoodsMain
+      end
+      object N61: TMenuItem [8]
         Action = actGoodsOnUnit_ForSite
       end
-      object N7: TMenuItem [8]
+      object N7: TMenuItem [9]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [9]
+      object miSaveData: TMenuItem [10]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [10]
+      object miPriceGroupSettings: TMenuItem [11]
         Action = actPriceGroupSettings
       end
-      object miJuridicalSettings: TMenuItem [11]
+      object miJuridicalSettings: TMenuItem [12]
         Action = actJuridicalSettings
       end
-      object N6: TMenuItem [12]
+      object N9: TMenuItem [13]
         Caption = '-'
       end
-      object miMeasure: TMenuItem [13]
-        Action = actMeasure
-      end
-      object miNDSKind: TMenuItem [14]
-        Action = actNDSKind
-      end
-      object miRetail: TMenuItem [15]
-        Action = actRetail
-      end
-      object miOrderKind: TMenuItem [16]
-        Action = actOrderKind
-      end
-      object N9: TMenuItem [17]
-        Caption = '-'
-      end
-      object miImportType: TMenuItem [18]
+      object miImportType: TMenuItem [14]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [19]
+      object miImportSettings: TMenuItem [15]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [20]
+      object miImportExportLink: TMenuItem [16]
         Action = actImportExportLink
       end
-      object N8: TMenuItem [21]
-        Caption = '-'
-      end
-      object N50: TMenuItem [22]
-        Action = actCashRegister
-      end
-      object FarmacyCash1: TMenuItem [25]
+      object FarmacyCash1: TMenuItem [18]
         Action = actUnitForFarmacyCash
       end
-      object N74: TMenuItem [28]
-        Action = actForms
-      end
-      object N97: TMenuItem [29]
-        Action = actColor
-      end
-      object N10: TMenuItem [30]
+      object N10: TMenuItem [20]
         Caption = '-'
       end
-      object miTest: TMenuItem [31]
-        Action = actTestFormOpen
-      end
-      object miReprice: TMenuItem [32]
+      object miReprice: TMenuItem [21]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end

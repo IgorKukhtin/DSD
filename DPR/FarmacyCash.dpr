@@ -63,7 +63,6 @@ uses
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   FP3141_TLB in '..\FormsFarmacy\Cash\FP3141_TLB.pas',
   CashCloseDialog in '..\FormsFarmacy\Cash\CashCloseDialog.pas' {CashCloseDialogForm: TParentForm},
-  VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
   CashWork in '..\FormsFarmacy\Cash\CashWork.pas' {CashWorkForm},
   AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
   dsdApplication in '..\SOURCE\dsdApplication.pas',
@@ -72,7 +71,11 @@ uses
   Cash_FP320 in '..\FormsFarmacy\Cash\Cash_FP320.pas',
   OposFiscalPrinter_1_11_Lib_TLB in '..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
-  Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash};
+  Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash},
+  DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm},
+  VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
+  DiscountService in '..\FormsFarmacy\DiscountService\DiscountService.pas' {DiscountServiceForm},
+  uCardService in '..\FormsFarmacy\DiscountService\uCardService.pas';
 
 {$R *.res}
 
@@ -88,7 +91,15 @@ begin
   Begin
     //Если все хорошо создаем главную форму Application.CreateForm();
     AllowLocalConnect := False; //True;
-    if ShowModal = mrOk then
+
+    if FindCmdLineSwitch('autologin', true)
+    then begin
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User);
+     gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
+    end
+    else
+        if ShowModal <> mrOk then exit;
+    //then
     begin
       if not gc_User.Local then
       Begin
@@ -97,9 +108,11 @@ begin
       End
       else
         gc_isSetDefault := True;
+      //
       Application.CreateForm(TdmMain, dmMain);
       Application.CreateForm(TMainCashForm, MainCashForm);
       Application.CreateForm(TfrmSplash, frmSplash);
+      Application.CreateForm(TDiscountServiceForm, DiscountServiceForm); //***20.07.16
       EndSplash;
     end;
   End;

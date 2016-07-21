@@ -4,7 +4,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
   ClientWidth = 1076
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1092
-  ExplicitHeight = 723
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -778,7 +778,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     object deStart: TcxDateEdit
       Left = 52
       Top = 7
-      EditValue = 42156d
+      EditValue = 42522d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
@@ -792,7 +792,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     object deEnd: TcxDateEdit
       Left = 198
       Top = 7
-      EditValue = 42156d
+      EditValue = 42522d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 13
@@ -1936,7 +1936,6 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     object bbPrintReceipt: TdxBarButton [20]
       Action = actPrintReceipt
       Category = 0
-      Enabled = False
     end
     object bbReport_TaxLoss: TdxBarButton [21]
       Action = actReport_TaxLoss

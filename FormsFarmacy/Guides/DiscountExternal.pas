@@ -48,6 +48,7 @@ type
     clPort: TcxGridDBColumn;
     clUserName: TcxGridDBColumn;
     clPassword: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
   private
     { Private declarations }
   public

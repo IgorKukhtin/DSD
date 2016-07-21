@@ -778,7 +778,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object deStart: TcxDateEdit
       Left = 52
       Top = 7
-      EditValue = 42156d
+      EditValue = 42522d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
@@ -792,7 +792,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object deEnd: TcxDateEdit
       Left = 198
       Top = 7
-      EditValue = 42156d
+      EditValue = 42522d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 13
