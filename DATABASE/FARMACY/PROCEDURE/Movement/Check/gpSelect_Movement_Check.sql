@@ -11,9 +11,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
-             , TotalCount TFloat, TotalSumm TFloat
+             , TotalCount TFloat, TotalSumm TFloat, TotalSummChangePercent TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar,FiscalCheckNumber TVarChar, NotMCS Boolean)
+             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean
+             , DiscountCardName TVarChar)
 
 AS
 $BODY$
@@ -61,6 +62,7 @@ BEGIN
            , Movement_Check.StatusCode
            , Movement_Check.TotalCount
            , Movement_Check.TotalSumm
+           , Movement_Check.TotalSummChangePercent
            , Movement_Check.UnitName
            , Movement_Check.CashRegisterName
            , Movement_Check.PaidTypeName
@@ -68,9 +70,10 @@ BEGIN
            , Movement_Check.Bayer
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
+           , Movement_Check.DiscountCardName
         FROM Movement_Check_View AS Movement_Check 
                             JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
-       WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL 1 'DAY'
+       WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
          AND (Movement_Check.UnitId = inUnitId)
          AND (vbReteilId = vbObjectId)
 ;
