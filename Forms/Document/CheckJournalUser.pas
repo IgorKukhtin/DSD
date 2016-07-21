@@ -12,10 +12,14 @@ uses
   dxBarExtItems, dxBar, cxClasses, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxButtonEdit, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
+  dxSkinsdxBarPainter;
 
 type
   TCheckJournalUserForm = class(TCheckJournalForm)
+    colTotalSummChangePercent: TcxGridDBColumn;
+    colDiscountCardName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -52,18 +52,21 @@ inherited CheckJournalForm: TCheckJournalForm
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 111
           end
           object colCashNumber: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashRegisterName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 74
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 72
           end
@@ -72,12 +75,23 @@ inherited CheckJournalForm: TCheckJournalForm
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 79
+          end
+          object clTotalSummChangePercent: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'TotalSummChangePercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
           end
           object coPaidTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidTypeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -91,18 +105,27 @@ inherited CheckJournalForm: TCheckJournalForm
           object colCashMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CashMember'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
           end
           object colFiscalCheckNumber: TcxGridDBColumn
             Caption = #8470' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072
             DataBinding.FieldName = 'FiscalCheckNumber'
+            HeaderAlignmentVert = vaCenter
             Width = 103
           end
           object colNotMCS: TcxGridDBColumn
             Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
             DataBinding.FieldName = 'NotMCS'
+            HeaderAlignmentVert = vaCenter
             Width = 51
+          end
+          object clDiscountCardName: TcxGridDBColumn
+            Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
+            DataBinding.FieldName = 'DiscountCardName'
+            Options.Editing = False
+            Width = 100
           end
         end
       end
@@ -225,6 +248,7 @@ inherited CheckJournalForm: TCheckJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -232,6 +256,7 @@ inherited CheckJournalForm: TCheckJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -239,6 +264,7 @@ inherited CheckJournalForm: TCheckJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -254,6 +280,7 @@ inherited CheckJournalForm: TCheckJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -261,6 +288,7 @@ inherited CheckJournalForm: TCheckJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -268,6 +296,7 @@ inherited CheckJournalForm: TCheckJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -275,6 +304,7 @@ inherited CheckJournalForm: TCheckJournalForm
         Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager
@@ -379,24 +409,28 @@ inherited CheckJournalForm: TCheckJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = Null
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -409,6 +443,7 @@ inherited CheckJournalForm: TCheckJournalForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -417,6 +452,7 @@ inherited CheckJournalForm: TCheckJournalForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -424,12 +460,14 @@ inherited CheckJournalForm: TCheckJournalForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 24
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -448,6 +486,7 @@ inherited CheckJournalForm: TCheckJournalForm
         Value = Null
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -455,6 +494,7 @@ inherited CheckJournalForm: TCheckJournalForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432
@@ -470,12 +510,14 @@ inherited CheckJournalForm: TCheckJournalForm
         Value = Null
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsLastComplete'
         Value = 'True'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 761

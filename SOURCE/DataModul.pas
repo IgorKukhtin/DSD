@@ -22,7 +22,7 @@ type
 
   {форма содержит компоненты с картинками}
   TdmMain = class(TDataModule)
-    ImageList1: TImageList;
+    ImageList1: TcxImageList;
     MainImageList: TImageList;
     TreeImageList: TImageList;
     frxReport: TfrxReport;
@@ -41,7 +41,7 @@ type
     cxRemainsContentStyle: TcxStyle;
     frxPDFExport1: TfrxPDFExport;
     cxImageList1: TcxImageList;
-    ImageList: TcxImageList;
+    ImageList: TImageList;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   end;

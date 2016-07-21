@@ -86,6 +86,7 @@ ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 21.07.16         *
  05.05.16         *
  07.08.15                                                                        *
  08.05.15                         * 
