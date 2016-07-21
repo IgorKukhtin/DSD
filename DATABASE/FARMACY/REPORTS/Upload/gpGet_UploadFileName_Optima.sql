@@ -27,7 +27,7 @@ BEGIN
         Object_ImportExportLink.ValueId = inObjectId
         AND
         Object_ImportExportLink.MainId = inUnitId;
-    outFileName := 'Report_'||COALESCE(vbUnitCode,'')||'_'||TO_CHAR(inDate,'YYYYMMDD');
+    outFileName := 'report_'||COALESCE(vbUnitCode,'')||'_'||TO_CHAR(inDate,'YYYYMMDD');
 END;
 $BODY$
 

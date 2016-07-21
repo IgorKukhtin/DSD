@@ -166,6 +166,7 @@ type
     actOrderIncomeJournalDetailChoiceForm: TOpenChoiceForm;
     cxLabel24: TcxLabel;
     edParValue: TcxCurrencyEdit;
+    PriceOrderIncome: TcxGridDBColumn;
   private
   public
   end;

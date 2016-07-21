@@ -21,7 +21,7 @@ type
   THeadRecord = record
     ID: Integer;//id чека
     PAIDTYPE:Integer; //тип оплаты
-    MANAGER:Integer; //Менеджер (VIP)
+    MANAGER:Integer; //Id Менеджера (VIP)
     NOTMCS:Boolean; //Не для НТЗ
     COMPL:Boolean; //Напечатан
     SAVE:Boolean; //Сохранен
@@ -31,8 +31,10 @@ type
     CASH: String[20]; //серийник аппарата
     BAYER:String[254]; //Покупатель (VIP)
     FISCID:String[50]; //Номер фискального чека
-    DISCOUNTEXTERNALID : Integer; //программа дисконтных карт ***20.07.16
-    DISCOUNTCARDNAME: String[254]; //Дисконтная карта ***20.07.16
+    //***20.07.16
+    DISCOUNTID : Integer;     //Id Проекта дисконтных карт
+    DISCOUNTN  : String[254]; //Название Проекта дисконтных карт
+    DISCOUNT   : String[50];  //№ Дисконтной карты
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -40,12 +42,13 @@ type
     GOODSCODE: Integer;     //Код товара
     NDS: Currency;          //НДС товара
     AMOUNT: Currency;       //Кол-во
-    PRICE: Currency;        //Цена, с 20.07.16 если есть скидка по Дисконтным программам, здесь будет цена с учетом скидки
-    PRICESALE: Currency;    // Цена без скидки ***20.07.16
-    CHPERCENT: Currency;    // % Скидки ***20.07.16
-    SUMMCH: Currency;       // Сумма Скидки ***20.07.16
+    PRICE: Currency;        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
     CH_UID: String[50];     //uid чека
     GOODSNAME: String[254]; //наименование товара
+    //***20.07.16
+    PRICESALE: Currency;    // Цена без скидки
+    CHPERCENT: Currency;    // % Скидки
+    SUMMCH: Currency;       // Сумма Скидки
   end;
   TBodyArr = Array of TBodyRecord;
 
@@ -196,6 +199,13 @@ type
     CheckGridColPriceSale: TcxGridDBColumn;
     CheckGridColChangePercent: TcxGridDBColumn;
     CheckGridColSummChangePercent: TcxGridDBColumn;
+    pnlDiscount: TPanel;
+    Label3: TLabel;
+    lblDiscountExternalName: TLabel;
+    Label5: TLabel;
+    lblDiscountCardNumber: TLabel;
+    VIP2: TMenuItem;
+    actSetDiscountExternal: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -236,6 +246,7 @@ type
     procedure ParentFormShow(Sender: TObject);
     procedure actSelectLocalVIPCheckExecute(Sender: TObject);
     procedure actCheckConnectionExecute(Sender: TObject);
+    procedure actSetDiscountExternalExecute(Sender: TObject); //***20.07.16
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -270,7 +281,8 @@ type
     function InitLocalStorage: Boolean;
     //Сохранение чека в локальной базе. возвращает УИД
     function SaveLocal(ADS :TClientDataSet; AManagerId: integer; AManagerName: String;
-      ABayerName: String; NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+      ABayerName: String; ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
+      NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
     //сохраняет чек в реальную базу
     procedure SaveReal(AUID: String; ANeedComplete: boolean = False);
 
@@ -285,7 +297,6 @@ type
     procedure SetWorkMode(ALocal: Boolean);
 
   public
-    { Public declarations }
   end;
 
 var
@@ -303,7 +314,7 @@ implementation
 
 {$R *.dfm}
 
-uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, CashWork, MessagesUnit,
+uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, CashWork, MessagesUnit,
   LocalWorkUnit, Splash;
 
 const
@@ -399,8 +410,14 @@ begin
   FormParams.ParamByName('CheckId').Value := 0;
   FormParams.ParamByName('ManagerId').Value := 0;
   FormParams.ParamByName('BayerName').Value := '';
+  //***20.07.16
+  FormParams.ParamByName('DiscountExternalId').Value := 0;
+  FormParams.ParamByName('DiscountExternalName').Value := '';
+  FormParams.ParamByName('DiscountCardNumber').Value := '';
+
   FiscalNumber := '';
   pnlVIP.Visible := False;
+  pnlDiscount.Visible := False;
   lblCashMember.Caption := '';
   lblBayer.Caption := '';
   chbNotMCS.Checked := False;
@@ -432,6 +449,7 @@ begin
     lblCashMember.Caption := FormParams.ParamByName('CashMember').AsString;
     lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
     pnlVIP.Visible := true;
+    pnlDiscount.Visible := False;
   End;
   if not gc_User.Local then
   Begin
@@ -508,6 +526,10 @@ begin
                    FormParams.ParamByName('ManagerId').Value,
                    FormParams.ParamByName('ManagerName').Value,
                    FormParams.ParamByName('BayerName').Value,
+                   //***20.07.16
+                   FormParams.ParamByName('DiscountExternalId').Value,
+                   FormParams.ParamByName('DiscountExternalName').Value,
+                   FormParams.ParamByName('DiscountCardNumber').Value,
                    True,
                    CheckNumber,
                    UID) then
@@ -639,6 +661,32 @@ begin
   ActiveControl := lcName;
 end;
 
+//***20.07.16
+procedure TMainCashForm.actSetDiscountExternalExecute(Sender: TObject);
+var
+  DiscountExternalId:Integer;
+  DiscountExternalName,DiscountCardNumber: String;
+begin
+  with TDiscountDialogForm.Create(nil) do
+  try
+     DiscountExternalId  := Self.FormParams.ParamByName('DiscountExternalId').Value;
+     DiscountExternalName:= Self.FormParams.ParamByName('DiscountExternalName').Value;
+     DiscountCardNumber  := Self.FormParams.ParamByName('DiscountCardNumber').Value;
+     if not DiscountDialogExecute(DiscountExternalId,DiscountExternalName,DiscountCardNumber)
+     then exit;
+  finally
+     Free;
+  end;
+  //
+  FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
+  FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
+  FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
+  //
+  pnlDiscount.Visible    := DiscountExternalId > 0;
+  lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
+  lblDiscountCardNumber.Caption  := '  ' + DiscountCardNumber + '  ';
+end;
+
 procedure TMainCashForm.actSetVIPExecute(Sender: TObject);
 var
   ManagerID:Integer;
@@ -649,8 +697,12 @@ begin
   FormParams.ParamByName('ManagerId').Value := ManagerId;
   FormParams.ParamByName('ManagerName').Value := ManagerName;
   FormParams.ParamByName('BayerName').Value := BayerName;
-  if SaveLocal(CheckCDS,ManagerId,ManagerName,BayerName,False,'',UID) then
-  begin
+  if SaveLocal(CheckCDS,ManagerId,ManagerName,BayerName
+              ,FormParams.ParamByName('DiscountExternalId').Value   //***20.07.16
+              ,FormParams.ParamByName('DiscountExternalName').Value //***20.07.16
+              ,FormParams.ParamByName('DiscountCardNumber').Value   //***20.07.16
+              ,False,'',UID)
+  then begin
     NewCheck(False);
     SaveReal(UID);
   End;
@@ -786,13 +838,17 @@ begin
     AddDateField(FLocalDataBaseHead,'DATE'); //дата/Время чека
     AddIntField(FLocalDataBaseHead,'PAIDTYPE'); //тип оплаты
     AddStrField(FLocalDataBaseHead,'CASH',20); //серийник аппарата
-    AddIntField(FLocalDataBaseHead,'MANAGER'); //Менеджер (VIP)
+    AddIntField(FLocalDataBaseHead,'MANAGER'); //Id Менеджера (VIP)
     AddStrField(FLocalDataBaseHead,'BAYER',254); //Покупатель (VIP)
     AddBoolField(FLocalDataBaseHead,'SAVE'); //Покупатель (VIP)
     AddBoolField(FLocalDataBaseHead,'COMPL'); //Покупатель (VIP)
     AddBoolField(FLocalDataBaseHead,'NEEDCOMPL'); //нужно провести документ
     AddBoolField(FLocalDataBaseHead,'NOTMCS'); //Не участвует в расчете НТЗ
     AddStrField(FLocalDataBaseHead,'FISCID',50); //Номер фискального чека
+    //***20.07.16
+    AddIntField(FLocalDataBaseHead,'DISCOUNTID');    //Id Проекта дисконтных карт
+    AddStrField(FLocalDataBaseHead,'DISCOUNTN',254); //Название Проекта дисконтных карт
+    AddStrField(FLocalDataBaseHead,'DISCOUNT',50);   //№ Дисконтной карты
     try
       FLocalDataBaseHead.CreateTable;
     except ON E: Exception do
@@ -813,11 +869,11 @@ begin
     AddStrField(FLocalDataBaseBody,'GOODSNAME',254); //наименование товара
     AddFloatField(FLocalDataBaseBody,'NDS'); //НДС товара
     AddFloatField(FLocalDataBaseBody,'AMOUNT'); //Кол-во
-    AddFloatField(FLocalDataBaseBody,'PRICE'); //Цена
+    AddFloatField(FLocalDataBaseBody,'PRICE'); //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
     //***20.07.16
     AddFloatField(FLocalDataBaseBody,'PRICESALE'); //Цена без скидки
     AddFloatField(FLocalDataBaseBody,'CHPERCENT'); //% Скидки
-    AddFloatField(FLocalDataBaseBody,'SUMMCH'); //Сумма Скидки
+    AddFloatField(FLocalDataBaseBody,'SUMMCH');    //Сумма Скидки
     try
       FLocalDataBaseBody.CreateTable;
     except ON E: Exception do
@@ -850,8 +906,12 @@ begin
      (FLocalDataBaseHead.FindField('SAVE') = nil) or
      (FLocalDataBaseHead.FindField('NEEDCOMPL') = nil) or
      (FLocalDataBaseHead.FindField('NOTMCS') = nil) or
-     (FLocalDataBaseHead.FindField('FISCID') = nil) then
-  Begin
+     (FLocalDataBaseHead.FindField('FISCID') = nil) or
+      //***20.07.16
+     (FLocalDataBaseHead.FindField('DISCOUNTID') = nil) or
+     (FLocalDataBaseHead.FindField('DISCOUNTN') = nil) or
+     (FLocalDataBaseHead.FindField('DISCOUNT') = nil)
+  then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
     Exit;
   End;
@@ -1134,8 +1194,14 @@ begin
   FormParams.ParamByName('ManagerId').Value := 0;
   FormParams.ParamByName('ManagerName').Value := '';
   FormParams.ParamByName('BayerName').Value := '';
+  //***20.07.16
+  FormParams.ParamByName('DiscountExternalId').Value := 0;
+  FormParams.ParamByName('DiscountExternalName').Value := '';
+  FormParams.ParamByName('DiscountCardNumber').Value := '';
+
   FiscalNumber := '';
   pnlVIP.Visible := False;
+  pnlDiscount.Visible := False;
   lblCashMember.Caption := '';
   lblBayer.Caption := '';
   CheckCDS.DisableControls;
@@ -1422,7 +1488,8 @@ begin
 end;
 
 function TMainCashForm.SaveLocal(ADS: TClientDataSet; AManagerId: integer; AManagerName: String;
-  ABayerName: String; NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+  ABayerName: String; ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
+  NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   CheckUID: TGUID;
   NextVIPId: integer;
@@ -1467,6 +1534,11 @@ begin
     MyVipCDS.FieldByName('CashMemberId').AsInteger := AManagerId;
     MyVipCDS.FieldByName('CashMember').AsString := AManagerName;
     MyVipCDS.FieldByName('Bayer').AsString := ABayerName;
+    //***20.07.16
+    MyVipCDS.FieldByName('DiscountExternalId').AsInteger  := ADiscountExternalId;
+    MyVipCDS.FieldByName('DiscountExternalName').AsString := ADiscountExternalName;
+    MyVipCDS.FieldByName('DiscountCardName').AsString     := ADiscountCardNumber;
+
     MyVipCDS.Post;
 
     MyVipListCDS.Filter := 'MovementId = '+MyVipCDS.FieldByName('Id').AsString;
@@ -1490,9 +1562,10 @@ begin
         MyVipListCDS.FieldByname('Price').Value := ADS.FieldByName('Price').AsFloat;
         MyVipListCDS.FieldByname('Summ').Value := GetSumm(ADS.FieldByName('Amount').AsFloat,ADS.FieldByName('Price').AsFloat);
         //***20.07.16
-        MyVipListCDS.FieldByName('PriceSale').asCurrency:=ADS.FieldByName('PriceSale').AsFloat;
-        MyVipListCDS.FieldByName('ChangePercent').asCurrency:=ADS.FieldByName('ChangePercent').AsFloat;
-        MyVipListCDS.FieldByName('SummChangePercent').asCurrency:=ADS.FieldByName('SummChangePercent').AsFloat;
+        MyVipListCDS.FieldByName('PriceSale').asCurrency         := ADS.FieldByName('PriceSale').AsFloat;
+        MyVipListCDS.FieldByName('ChangePercent').asCurrency     := ADS.FieldByName('ChangePercent').AsFloat;
+        MyVipListCDS.FieldByName('SummChangePercent').asCurrency := ADS.FieldByName('SummChangePercent').AsFloat;
+
         MyVipListCDS.Post;
         ADS.Next;
       End;
@@ -1532,13 +1605,17 @@ begin
                                          Now,                                     //дата/Время чека
                                          Integer(PaidType),                       //тип оплаты
                                          FiscalNumber,                            //серийник аппарата
-                                         AManagerId,                              //Менеджер (VIP)
+                                         AManagerId,                              //Id Менеджера (VIP)
                                          ABayerName,                              //Покупатель (VIP)
                                          False,                                   //Распечатан на фискальном регистраторе
                                          False,                                   //Сохранен в реальную базу данных
                                          NeedComplete,                            //Необходимо проведение
                                          chbNotMCS.Checked,                       //Не участвует в расчете НТЗ
-                                         FiscalCheckNumber                             //Номер фискального чека
+                                         FiscalCheckNumber,                       //Номер фискального чека
+                                         //***20.07.16
+                                         ADiscountExternalId,                     //Id Проекта дисконтных карт
+                                         ADiscountExternalName,                   //Название Проекта дисконтных карт
+                                         ADiscountCardNumber                      //№ Дисконтной карты
                                         ]);
       End
       else
@@ -1547,13 +1624,18 @@ begin
         FLocalDataBaseHead.Edit;
         FLocalDataBaseHead.FieldByName('PAIDTYPE').Value := Integer(PaidType); //тип оплаты
         FLocalDataBaseHead.FieldByName('CASH').Value := FiscalNumber; //серийник аппарата
-        FLocalDataBaseHead.FieldByName('MANAGER').Value := AManagerId; //Менеджер (VIP)
+        FLocalDataBaseHead.FieldByName('MANAGER').Value := AManagerId; //Id Менеджера (VIP)
         FLocalDataBaseHead.FieldByName('BAYER').Value := ABayerName; //Покупатель (VIP)
         FLocalDataBaseHead.FieldByName('SAVE').Value := False; //Покупатель (VIP)
         FLocalDataBaseHead.FieldByName('COMPL').Value := False; //Покупатель (VIP)
         FLocalDataBaseHead.FieldByName('NEEDCOMPL').Value := NeedComplete; //нужно провести документ
         FLocalDataBaseHead.FieldByName('NOTMCS').Value := chbNotMCS.Checked; //Не участвует в расчете НТЗ
         FLocalDataBaseHead.FieldByName('FISCID').Value := FiscalCheckNumber; //Номер фискального чека
+        //***20.07.16
+        FLocalDataBaseHead.FieldByName('DISCOUNTID').Value := ADiscountExternalId;   //Id Проекта дисконтных карт
+        FLocalDataBaseHead.FieldByName('DISCOUNTN').Value  := ADiscountExternalName; //Название Проекта дисконтных карт
+        FLocalDataBaseHead.FieldByName('DISCOUNT').Value   := ADiscountCardNumber;   //№ Дисконтной карты
+
         FLocalDataBaseHead.post;
       End;
     except ON E:Exception do
@@ -1587,11 +1669,11 @@ begin
                                            ADS.FieldByName('GoodsName').AsString,   //наименование товара
                                            ADS.FieldByName('NDS').asCurrency,          //НДС товара
                                            ADS.FieldByName('Amount').asCurrency,       //Кол-во
-                                           ADS.FieldByName('Price').asCurrency,        //Цена
+                                           ADS.FieldByName('Price').asCurrency,        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
                                            //***20.07.16
-                                           ADS.FieldByName('PriceSale').asCurrency,
-                                           ADS.FieldByName('ChangePercent').asCurrency,
-                                           ADS.FieldByName('SummChangePercent').asCurrency
+                                           ADS.FieldByName('PriceSale').asCurrency,        // Цена без скидки
+                                           ADS.FieldByName('ChangePercent').asCurrency,    // % Скидки
+                                           ADS.FieldByName('SummChangePercent').asCurrency // Сумма Скидки
                                           ]);
         ADS.Next;
         End;
@@ -1815,6 +1897,10 @@ begin
               SAVE     := FieldByName('SAVE').AsBoolean;
               FISCID   := trim(FieldByName('FISCID').AsString);
               NOTMCS   := FieldByName('NOTMCS').AsBoolean;
+              //***20.07.16
+              DISCOUNTID := FieldByName('DISCOUNTID').AsInteger;
+              DISCOUNTN  := trim(FieldByName('DISCOUNTN').AsString);
+              DISCOUNT   := trim(FieldByName('DISCOUNT').AsString);
 
               FNeedSaveVIP := (MANAGER <> 0);
             end;
@@ -1887,6 +1973,10 @@ begin
                 dsdSave.Params.AddParam('inBayer',ftString,ptInput,Head.BAYER);
                 dsdSave.Params.AddParam('inFiscalCheckNumber',ftString,ptInput,Head.FISCID);
                 dsdSave.Params.AddParam('inNotMCS',ftBoolean,ptInput,Head.NOTMCS);
+                //***20.07.16
+                dsdSave.Params.AddParam('inDiscountExternalId',ftInteger,ptInputOutput,Head.DISCOUNTID);
+                dsdSave.Params.AddParam('inDiscountCardNumber',ftString,ptInput,Head.DISCOUNT);
+
                 dsdSave.Execute(False,False);
                 SetShapeState(clBlack);
                 //сохранили в локальной базе полученный номер

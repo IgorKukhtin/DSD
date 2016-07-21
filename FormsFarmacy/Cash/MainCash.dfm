@@ -58,31 +58,40 @@ inherited MainCashForm: TMainCashForm
         object CheckGridColAmount: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086
           DataBinding.FieldName = 'Amount'
-          Width = 60
+          Width = 58
         end
         object CheckGridColPrice: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
           DataBinding.FieldName = 'Price'
-          Width = 57
+          Width = 55
         end
         object CheckGridColSumm: TcxGridDBColumn
           Caption = #1057#1091#1084#1084#1072
           DataBinding.FieldName = 'Summ'
-          Width = 60
+          Width = 58
         end
         object CheckGridColPriceSale: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082'.'
           DataBinding.FieldName = 'PriceSale'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Width = 70
         end
         object CheckGridColChangePercent: TcxGridDBColumn
           Caption = '% '#1089#1082'.'
           DataBinding.FieldName = 'ChangePercent'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Width = 45
         end
         object CheckGridColSummChangePercent: TcxGridDBColumn
           Caption = #1089#1091#1084#1084#1072' '#1089#1082'.'
           DataBinding.FieldName = 'SummChangePercent'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Width = 70
         end
       end
@@ -183,19 +192,22 @@ inherited MainCashForm: TMainCashForm
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 17
+    Top = 35
     Width = 765
-    Height = 199
+    Height = 181
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 34
+    ExplicitHeight = 182
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
       Width = 765
-      Height = 166
+      Height = 148
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 149
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -509,11 +521,12 @@ inherited MainCashForm: TMainCashForm
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 166
+      Top = 148
       Width = 765
       Height = 33
       Align = alBottom
       TabOrder = 1
+      ExplicitTop = 149
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -785,6 +798,69 @@ inherited MainCashForm: TMainCashForm
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = [fsItalic]
+      ParentFont = False
+    end
+  end
+  object pnlDiscount: TPanel [4]
+    Left = 0
+    Top = 17
+    Width = 765
+    Height = 18
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 4
+    Visible = False
+    object Label3: TLabel
+      Left = 16
+      Top = 2
+      Width = 37
+      Height = 13
+      Caption = #1055#1088#1086#1077#1082#1090
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblDiscountExternalName: TLabel
+      Left = 80
+      Top = 1
+      Width = 12
+      Height = 14
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object Label5: TLabel
+      Left = 432
+      Top = 2
+      Width = 111
+      Height = 13
+      Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1082#1072#1088#1090#1099
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblDiscountCardNumber: TLabel
+      Left = 550
+      Top = 1
+      Width = 12
+      Height = 14
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
       ParentFont = False
     end
   end
@@ -1065,6 +1141,12 @@ inherited MainCashForm: TMainCashForm
       Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1089#1077#1088#1074#1077#1088#1086#1084
       OnExecute = actCheckConnectionExecute
     end
+    object actSetDiscountExternal: TAction
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
+      ShortCut = 118
+      OnExecute = actSetDiscountExternalExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1201,6 +1283,9 @@ inherited MainCashForm: TMainCashForm
     object VIP1: TMenuItem
       Action = actSetVIP
     end
+    object VIP2: TMenuItem
+      Action = actSetDiscountExternal
+    end
     object N5: TMenuItem
       Caption = '-'
       Visible = False
@@ -1268,6 +1353,23 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'ManagerName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountExternalId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountExternalName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountCardNumber'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1341,6 +1443,18 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'NDS'
+        DataType = ftFloat
+      end
+      item
+        Name = 'PriceSale'
+        DataType = ftFloat
+      end
+      item
+        Name = 'ChangePercent'
+        DataType = ftFloat
+      end
+      item
+        Name = 'SummChangePercent'
         DataType = ftFloat
       end
       item

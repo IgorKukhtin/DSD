@@ -1,35 +1,20 @@
 -- Function: gpInsertUpdate_Movement_Check()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (
-  Integer   , -- Ключ объекта <Документ ЧЕК>
-  TDateTime , --Дата/время документа
-  TVarChar  , --Серийник кассового аппарата
-  Integer   , --тип оплаты
-  Integer   , --Менеджер
-  TVarChar  , --Покупатель ВИП 
-  TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (
-  Integer   , -- Ключ объекта <Документ ЧЕК>
-  TDateTime , --Дата/время документа
-  TVarChar  , --Серийник кассового аппарата
-  Integer   , --тип оплаты
-  Integer   , --Менеджер
-  TVarChar  , --Покупатель ВИП 
-  TVarChar  , --Номер фискального чека
-  Boolean  , --Не для НТЗ
-  TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar);
   
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
- INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
-    IN inDate              TDateTime , --Дата/время документа
-    IN inCashRegister      TVarChar  , --Серийник кассового аппарата
-    IN inPaidType          Integer   , --тип оплаты
-    IN inManagerId         Integer   , --Менеджер
-    IN inBayer             TVarChar  , --Покупатель ВИП 
-    IN inFiscalCheckNumber TVarChar  , --Номер фискального чека
-    IN inNotMCS            Boolean  ,  --Не участвует в расчете НТЗ
-    IN inSession           TVarChar    -- сессия пользователя
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
+    IN inDate                TDateTime , --Дата/время документа
+    IN inCashRegister        TVarChar  , --Серийник кассового аппарата
+    IN inPaidType            Integer   , --тип оплаты
+    IN inManagerId           Integer   , --Менеджер
+    IN inBayer               TVarChar  , --Покупатель ВИП 
+    IN inFiscalCheckNumber   TVarChar  , --Номер фискального чека
+    IN inNotMCS              Boolean  ,  --Не участвует в расчете НТЗ
+    IN inDiscountExternalId  Integer  DEFAULT 0,  -- Проект дисконтных карт
+    IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
+    IN inSession             TVarChar DEFAULT ''  -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -114,27 +99,30 @@ BEGIN
         END IF;
     END IF;
     
-    --сохранили связь с менеджером и продавцом
-    IF COALESCE(inManagerId,0) <> 0 THEN
+    -- сохранили связь с менеджером и покупателем
+    IF COALESCE (inManagerId,0) <> 0 THEN
         -- Приписываем менеджера
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), ioId, inManagerId);
-        --прописываем ФИО покупателя
+        -- прописываем ФИО покупателя
         PERFORM lpInsertUpdate_MovementString(zc_MovementString_Bayer(), ioId, inBayer);
-        --Отмечаем документ как отложенный
+        -- Отмечаем документ как отложенный
         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, True);      
     END IF;
  
+    -- сохранили связь с <Дисконтная карта> + здесь же и сформировали <Дисконтная карта>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DiscountCard(), ioId, lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardNumber, inUserId:= vbUserId));
+
     -- сохранили протокол
     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Movement_Check_ver2 (Integer,TDateTime,TVarChar,Integer,Integer,TVarChar,TVarChar, Boolean) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 20.07.16                                        *
  03.11.15                                                                       *
-
 */

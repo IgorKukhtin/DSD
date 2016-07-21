@@ -304,30 +304,32 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         Options.Editing = False
         Width = 65
       end
-      object colTotalSummPVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummPVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 74
-      end
       object colTotalSummMVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 74
+      end
+      object colTotalSummPVAT: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+        DataBinding.FieldName = 'TotalSummPVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 74
       end
       object colTotalSumm: TcxGridDBColumn
-        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -336,7 +338,7 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057' '#1080' '#1089#1082#1080#1076#1082#1080')'
         Options.Editing = False
-        Width = 74
+        Width = 80
       end
       object TotalSummCurrency: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077' ('#1080#1090#1086#1075')'
@@ -351,30 +353,36 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         Width = 80
       end
       object colCurrencyDocumentName: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082'.)'
         DataBinding.FieldName = 'CurrencyDocumentName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 94
-      end
-      object colParValue: TcxGridDBColumn
-        Caption = #1053#1086#1084#1080#1085#1072#1083
-        DataBinding.FieldName = 'ParValue'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1053#1086#1084#1080#1085#1072#1083' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1091' '#1073#1072#1083#1072#1085#1089#1072
-        Options.Editing = False
-        Width = 89
+        Width = 55
       end
       object colCurrencyValue: TcxGridDBColumn
-        Caption = #1050#1091#1088#1089
+        Caption = #1050#1091#1088#1089' '#1059#1055
         DataBinding.FieldName = 'CurrencyValue'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1091#1088#1089' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1091' '#1073#1072#1083#1072#1085#1089#1072
         Options.Editing = False
-        Width = 74
+        Width = 70
+      end
+      object colParValue: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083' '#1059#1055
+        DataBinding.FieldName = 'ParValue'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1086#1084#1080#1085#1072#1083' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1091' '#1073#1072#1083#1072#1085#1089#1072
+        Options.Editing = False
+        Width = 70
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -1326,8 +1334,8 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 472
-    Top = 88
+    Left = 272
+    Top = 48
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1340,8 +1348,8 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
       item
         Component = JuridicalGuides
       end>
-    Left = 592
-    Top = 96
+    Left = 568
+    Top = 160
   end
   object spMovementReCompleteAll: TdsdStoredProc
     StoredProcName = 'gpCompletePeriod_Movement_OrderIncome'

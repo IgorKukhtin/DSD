@@ -1,9 +1,9 @@
 object DiscountExternalForm: TDiscountExternalForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082'  '#1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1082' '#1087#1088#1086#1075#1088#1072#1084#1084#1077' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1093' '#1082#1072#1088#1090
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082'  <'#1055#1088#1086#1077#1082#1090#1099' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
   ClientHeight = 332
-  ClientWidth = 534
+  ClientWidth = 778
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object DiscountExternalForm: TDiscountExternalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 534
+    Width = 778
     Height = 306
     Align = alClient
     TabOrder = 0
@@ -57,7 +57,7 @@ object DiscountExternalForm: TDiscountExternalForm
         Width = 37
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -69,7 +69,7 @@ object DiscountExternalForm: TDiscountExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 104
+        Width = 250
       end
       object clService: TcxGridDBColumn
         Caption = #1057#1077#1088#1074#1080#1089
@@ -103,6 +103,13 @@ object DiscountExternalForm: TDiscountExternalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object Id: TcxGridDBColumn
+        DataBinding.FieldName = 'Id'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -208,7 +215,11 @@ object DiscountExternalForm: TDiscountExternalForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -216,7 +227,11 @@ object DiscountExternalForm: TDiscountExternalForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -363,7 +378,6 @@ object DiscountExternalForm: TDiscountExternalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
-          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -371,6 +385,47 @@ object DiscountExternalForm: TDiscountExternalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'URL'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'URL'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Service'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Service'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Port'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Port'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Password'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Password'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

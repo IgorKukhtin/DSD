@@ -73,8 +73,8 @@ BEGIN
      FROM ObjectLink AS ObjectLink_Goods_InfoMoney
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
-     WHERE ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
-       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+     WHERE /*ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
+       AND */ ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
     UNION ALL
      SELECT Object_DocumentKind.Id
