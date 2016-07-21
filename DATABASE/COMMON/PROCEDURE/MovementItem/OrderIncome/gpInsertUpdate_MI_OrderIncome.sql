@@ -65,18 +65,18 @@ BEGIN
 
 
      -- если надо ...
-     IF COALESCE (ioGoodsId, 0) = 0 AND TRIM (inNameBeforeName) <> ''
+     IF COALESCE (ioGoodsId, 0) = 0 AND inNameBeforeName <> ''
      THEN 
          -- ищем Товар/ОС/работы
          vbNameBeforeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_NameBefore() AND Object.ValueData = inNameBeforeName);
      END IF;
      -- если надо ...
-     IF COALESCE (ioGoodsId, 0) = 0 AND COALESCE (vbNameBeforeId, 0) = 0 AND TRIM (inNameBeforeName) <> ''
+     IF COALESCE (ioGoodsId, 0) = 0 AND COALESCE (vbNameBeforeId, 0) = 0 AND inNameBeforeName <> ''
      THEN
          -- сохранение
          vbNameBeforeId:= gpInsertUpdate_Object_NameBefore   (ioId              := 0
                                                             , inCode            := lfGet_ObjectCode (0, zc_Object_NameBefore()) 
-                                                            , inName            := TRIM (inNameBeforeName)
+                                                            , inName            := inNameBeforeName
                                                             , inSession         := inSession
                                                              );
      END IF;

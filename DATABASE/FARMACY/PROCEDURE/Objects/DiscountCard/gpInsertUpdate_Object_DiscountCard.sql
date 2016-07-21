@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountCard (Integer, Integer, TV
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountCard(
  INOUT ioId                  Integer   , -- ключ объекта
-    IN inCode                Integer   , -- код объекта 
-    IN inName                TVarChar  , -- значение
-    IN inObjectId            Integer   , -- Тип почтового ящика
+    IN inCode                Integer   , -- код 
+    IN inName                TVarChar  , -- № дисконтной карты
+    IN inObjectId            Integer   , -- программа дисконтных карт
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer

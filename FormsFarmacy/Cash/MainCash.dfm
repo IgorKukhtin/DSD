@@ -35,6 +35,8 @@ inherited MainCashForm: TMainCashForm
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.CancelOnExit = False
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
@@ -67,6 +69,21 @@ inherited MainCashForm: TMainCashForm
           Caption = #1057#1091#1084#1084#1072
           DataBinding.FieldName = 'Summ'
           Width = 60
+        end
+        object CheckGridColPriceSale: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082'.'
+          DataBinding.FieldName = 'PriceSale'
+          Width = 70
+        end
+        object CheckGridColChangePercent: TcxGridDBColumn
+          Caption = '% '#1089#1082'.'
+          DataBinding.FieldName = 'ChangePercent'
+          Width = 45
+        end
+        object CheckGridColSummChangePercent: TcxGridDBColumn
+          Caption = #1089#1091#1084#1084#1072' '#1089#1082'.'
+          DataBinding.FieldName = 'SummChangePercent'
+          Width = 70
         end
       end
       object CheckGridLevel: TcxGridLevel

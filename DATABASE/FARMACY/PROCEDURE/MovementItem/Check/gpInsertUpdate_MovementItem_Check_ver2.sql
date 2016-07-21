@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2(Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <строка документа>
@@ -8,11 +10,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inPriceSale           TFloat   DEFAULT 0,  -- Цена без скидки
+    IN inChangePercent       TFloat   DEFAULT 0,  -- % Скидки
+    IN inSummChangePercent   TFloat   DEFAULT 0,  -- Сумма Скидки
+    IN inDiscountExternalId  Integer  DEFAULT 0,  -- программа дисконтных карт
+    IN inDiscountCardName    TVarChar DEFAULT '', -- Дисконтная карта
+    IN inSession             TVarChar DEFAULT ''  -- сессия пользователя
 )
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
    DECLARE vbUnitId Integer;
    DECLARE vbReserve TFloat;
    DECLARE vbRemains TFloat;
@@ -47,6 +55,18 @@ BEGIN
     -- сохранили свойство <Цена>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      
+    -- сохранили свойство <Цена без скидки>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inPriceSale);
+
+    -- сохранили свойство <% Скидки>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
+
+    -- сохранили свойство <Сумма Скидки>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, inSummChangePercent);
+
+    -- сохранили свойство <Дисконтная карта>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountCard(), ioId, lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardName, inUserId:= vbUserId));
+
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSummCheck (inMovementId);
 
@@ -56,7 +76,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2(Integer, Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

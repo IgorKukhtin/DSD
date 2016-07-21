@@ -31,20 +31,21 @@ type
     CASH: String[20]; //серийник аппарата
     BAYER:String[254]; //Покупатель (VIP)
     FISCID:String[50]; //Номер фискального чека
+    DISCOUNTEXTERNALID : Integer; //программа дисконтных карт ***20.07.16
+    DISCOUNTCARDNAME: String[254]; //Дисконтная карта ***20.07.16
   end;
   TBodyRecord = record
-    ID: Integer; //ид записи
-    GOODSID: Integer; //ид товара
-    GOODSCODE: Integer; //Код товара
-    NDS: Currency; //НДС товара
-    AMOUNT: Currency; //Кол-во
-    PRICE: Currency; //Цена, с 20.07.16 если есть скидка по Дисконтным программам, здесь будет цена с учетом скидки
-    PRICESALE: Currency;          // Цена без скидки ***20.07.16
-    CHANGEPERCENT: Currency;      // % Скидки ***20.07.16
-    SUMMCHANGEPERCENT: Currency;  // Сумма Скидки ***20.07.16
-    CH_UID: String[50]; //uid чека
+    ID: Integer;            //ид записи
+    GOODSID: Integer;       //ид товара
+    GOODSCODE: Integer;     //Код товара
+    NDS: Currency;          //НДС товара
+    AMOUNT: Currency;       //Кол-во
+    PRICE: Currency;        //Цена, с 20.07.16 если есть скидка по Дисконтным программам, здесь будет цена с учетом скидки
+    PRICESALE: Currency;    // Цена без скидки ***20.07.16
+    CHPERCENT: Currency;    // % Скидки ***20.07.16
+    SUMMCH: Currency;       // Сумма Скидки ***20.07.16
+    CH_UID: String[50];     //uid чека
     GOODSNAME: String[254]; //наименование товара
-    DISCOUNTCARD: String[254]; //Дисконтная карта ***20.07.16
   end;
   TBodyArr = Array of TBodyRecord;
 
@@ -192,6 +193,9 @@ type
     N2: TMenuItem;
     N11: TMenuItem;
     spUpdate_UnitForFarmacyCash: TdsdStoredProc;
+    CheckGridColPriceSale: TcxGridDBColumn;
+    CheckGridColChangePercent: TcxGridDBColumn;
+    CheckGridColSummChangePercent: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -810,7 +814,10 @@ begin
     AddFloatField(FLocalDataBaseBody,'NDS'); //НДС товара
     AddFloatField(FLocalDataBaseBody,'AMOUNT'); //Кол-во
     AddFloatField(FLocalDataBaseBody,'PRICE'); //Цена
-
+    //***20.07.16
+    AddFloatField(FLocalDataBaseBody,'PRICESALE'); //Цена без скидки
+    AddFloatField(FLocalDataBaseBody,'CHPERCENT'); //% Скидки
+    AddFloatField(FLocalDataBaseBody,'SUMMCH'); //Сумма Скидки
     try
       FLocalDataBaseBody.CreateTable;
     except ON E: Exception do
@@ -856,8 +863,12 @@ begin
      (FLocalDataBaseBody.FindField('GOODSNAME') = nil) or
      (FLocalDataBaseBody.FindField('NDS') = nil) or
      (FLocalDataBaseBody.FindField('AMOUNT') = nil) or
-     (FLocalDataBaseBody.FindField('PRICE') = nil) then
-  Begin
+     (FLocalDataBaseBody.FindField('PRICE') = nil) or
+      //***20.07.16
+     (FLocalDataBaseBody.FindField('PRICESALE') = nil) or
+     (FLocalDataBaseBody.FindField('CHPERCENT') = nil) or
+     (FLocalDataBaseBody.FindField('SUMMCH') = nil)
+  then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseBody.DBFFileName+')');
     Exit;
   End;
@@ -907,6 +918,10 @@ begin
         checkCDS.FieldByName('Summ').asCurrency:=0;
         checkCDS.FieldByName('NDS').asCurrency:=SourceClientDataSet.FieldByName('NDS').asCurrency;
         checkCDS.FieldByName('isErased').AsBoolean:=False;
+        //***20.07.16
+        checkCDS.FieldByName('PriceSale').asCurrency:=0;
+        checkCDS.FieldByName('ChangePercent').asCurrency:=0;
+        checkCDS.FieldByName('SummChangePercent').asCurrency:=0;
         checkCDS.Post;
       End;
     finally
@@ -1474,6 +1489,10 @@ begin
         MyVipListCDS.FieldByname('Amount').Value := ADS.FieldByName('Amount').AsFloat;
         MyVipListCDS.FieldByname('Price').Value := ADS.FieldByName('Price').AsFloat;
         MyVipListCDS.FieldByname('Summ').Value := GetSumm(ADS.FieldByName('Amount').AsFloat,ADS.FieldByName('Price').AsFloat);
+        //***20.07.16
+        MyVipListCDS.FieldByName('PriceSale').asCurrency:=ADS.FieldByName('PriceSale').AsFloat;
+        MyVipListCDS.FieldByName('ChangePercent').asCurrency:=ADS.FieldByName('ChangePercent').AsFloat;
+        MyVipListCDS.FieldByName('SummChangePercent').asCurrency:=ADS.FieldByName('SummChangePercent').AsFloat;
         MyVipListCDS.Post;
         ADS.Next;
       End;
@@ -1568,7 +1587,11 @@ begin
                                            ADS.FieldByName('GoodsName').AsString,   //наименование товара
                                            ADS.FieldByName('NDS').asCurrency,          //НДС товара
                                            ADS.FieldByName('Amount').asCurrency,       //Кол-во
-                                           ADS.FieldByName('Price').asCurrency         //Цена
+                                           ADS.FieldByName('Price').asCurrency,        //Цена
+                                           //***20.07.16
+                                           ADS.FieldByName('PriceSale').asCurrency,
+                                           ADS.FieldByName('ChangePercent').asCurrency,
+                                           ADS.FieldByName('SummChangePercent').asCurrency
                                           ]);
         ADS.Next;
         End;
@@ -1811,6 +1834,10 @@ begin
                   NDS       := FieldByName('NDS').asCurrency;
                   AMOUNT    := FieldByName('AMOUNT').asCurrency;
                   PRICE     := FieldByName('PRICE').asCurrency;
+                  //***20.07.16
+                  PRICESALE := FieldByName('PRICESALE').asCurrency;
+                  CHPERCENT := FieldByName('CHPERCENT').asCurrency;
+                  SUMMCH    := FieldByName('SUMMCH').asCurrency;
                 End;
               End;
               FLocalDataBaseBody.Next;
@@ -1894,6 +1921,10 @@ begin
                 dsdSave.Params.AddParam('inGoodsId',ftInteger,ptInput,Null);
                 dsdSave.Params.AddParam('inAmount',ftFloat,ptInput,Null);
                 dsdSave.Params.AddParam('inPrice',ftFloat,ptInput,Null);
+                //***20.07.16
+                dsdSave.Params.AddParam('inPriceSale',ftFloat,ptInput,Null);
+                dsdSave.Params.AddParam('inChangePercent',ftFloat,ptInput,Null);
+                dsdSave.Params.AddParam('inSummChangePercent',ftFloat,ptInput,Null);
 
                 for I := 0 to Length(Body)-1 do
                 Begin
@@ -1901,6 +1932,10 @@ begin
                   dsdSave.ParamByName('inGoodsId').Value := Body[I].GOODSID;
                   dsdSave.ParamByName('inAmount').Value := Body[I].AMOUNT;
                   dsdSave.ParamByName('inPrice').Value :=  Body[I].PRICE;
+                  //***20.07.16
+                  dsdSave.ParamByName('inPriceSale').Value :=  Body[I].PRICESALE;
+                  dsdSave.ParamByName('inChangePercent').Value :=  Body[I].CHPERCENT;
+                  dsdSave.ParamByName('inSummChangePercent').Value :=  Body[I].SUMMCH;
                   dsdSave.Execute(False,False);
                   if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
                   Begin
