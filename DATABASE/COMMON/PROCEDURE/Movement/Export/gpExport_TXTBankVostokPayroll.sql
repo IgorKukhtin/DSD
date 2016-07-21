@@ -23,8 +23,12 @@ BEGIN
 	-- *** Шапка файла
 	-- Тип документа (из ТЗ)
 	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('Content-Type=doc/pay_sheet');
+	-- Пустая строка
+	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('');
 	-- Дата документа
-	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('DOC_DATE='||to_char(inDateDoc, 'dd.mm.yyyy'));
+	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('DATE_DOC='||to_char(NOW(), 'dd.mm.yyyy'));
+	-- Дата валютирования
+	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('VALUE_DATE='||to_char(NOW(), 'dd.mm.yyyy'));
 	-- Номер документа
 	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('NUM_DOC='||inNumDoc);
 	-- МФО банка плтельщика
@@ -35,8 +39,14 @@ BEGIN
 	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('AMOUNT='||ROUND(inAmount::numeric, 2));
 	-- Счет банка плательщика
 	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('PAYER_BANK_ACCOUNT=29244006');
-	-- Процент РКО
-	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('COMISSION_PERCENT=0.5');
+	-- Тип документа импорта
+	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('ONFLOW_TYPE=Виплата заробітної плати');
+	-- Наименование клиента
+	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CLN_NAME=ТОВ "АЛАН"');
+	-- Код ЕГРПОУ клиента
+	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CLN_OKPO=24447183');
+	-- Период начисления
+	INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('PERIOD='||to_char(NOW(), 'TMMonth yyyy'));
 
 	-- *** Строчный вывод
 	i := 0; -- обнуляем автонумерацию
