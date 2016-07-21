@@ -132,6 +132,15 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 51
           end
+          object cxDiscountCard_ObjectName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090'.'#1082#1072#1088#1090')'
+            DataBinding.FieldName = 'DiscountCard_ObjectName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
+            Options.Editing = False
+            Width = 120
+          end
           object clDiscountCardName: TcxGridDBColumn
             Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
             DataBinding.FieldName = 'DiscountCardName'

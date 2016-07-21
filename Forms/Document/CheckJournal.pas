@@ -39,6 +39,7 @@ type
     ExecuteDialog: TExecuteDialog;
     clTotalSummChangePercent: TcxGridDBColumn;
     clDiscountCardName: TcxGridDBColumn;
+    cxDiscountCard_ObjectName: TcxGridDBColumn;
   private
     { Private declarations }
   public
