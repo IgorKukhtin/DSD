@@ -13,6 +13,7 @@ SELECT
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_TotalSummChangePercent.ValueData  AS TotalSummChangePercent
            , MovementLinkObject_Unit.ObjectId           AS UnitId
            , Object_Unit.ValueData                      AS UnitName
            , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId  
@@ -27,6 +28,9 @@ SELECT
            , Object_PaidType.ValueData                  AS PaidTypeName 
            , MovementString_FiscalCheckNumber.ValueData  AS FiscalCheckNumber
            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE) AS NotMCS
+
+           , Object_DiscountCard.Id                     AS DiscountCardId 
+           , Object_DiscountCard.ValueData              AS DiscountCardName
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -37,6 +41,9 @@ SELECT
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                    ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -79,6 +86,12 @@ SELECT
                                            ON MovementBoolean_NotMCS.MovementId = Movement.ID
                                           AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
                                           
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
+                                         ON MovementLinkObject_DiscountCard.MovementId = Movement.Id
+                                        AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
+            LEFT JOIN Object AS Object_DiscountCard ON Object_DiscountCard.Id = MovementLinkObject_DiscountCard.ObjectId
+
         WHERE Movement.DescId = zc_Movement_Check();
 
 ALTER TABLE Movement_Check_View

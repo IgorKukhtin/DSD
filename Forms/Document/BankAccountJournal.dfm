@@ -367,6 +367,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object colInvNumber_Invoice: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
           object clisCopy: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
             DataBinding.FieldName = 'isCopy'
@@ -410,16 +418,19 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
@@ -429,18 +440,21 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -452,18 +466,21 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actPrint: TdsdPrintAction
@@ -473,10 +490,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -499,17 +518,20 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint1: TdsdPrintAction
       Category = 'DSDLib'
@@ -518,10 +540,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
@@ -539,17 +563,20 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
       ReportNameParam.Value = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actMasterPost: TDataSetPost
       Category = 'DSDLib'
@@ -580,11 +607,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'isCopy'
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'isCopy'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'isCopy'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_isCopy
@@ -618,11 +647,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           FromParam.Name = 'isCopy'
           FromParam.Value = False
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'isCopy'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'isCopy'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_isCopy
@@ -639,22 +670,26 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       FormName = 'TProfitLossServiceForm'
       FormNameParam.Value = 'TProfitLossServiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '-1'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       IdFieldName = 'Id'
@@ -668,6 +703,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -675,6 +711,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -682,6 +719,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -837,23 +875,27 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isCopy'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -879,6 +921,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -886,27 +929,32 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDetail'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 631
@@ -923,6 +971,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsCopy'
@@ -931,6 +980,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         ComponentItem = 'isCopy'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsCopy'
@@ -938,6 +988,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Component = MasterCDS
         ComponentItem = 'isCopy'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 464

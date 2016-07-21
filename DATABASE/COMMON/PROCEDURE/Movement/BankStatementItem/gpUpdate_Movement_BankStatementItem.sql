@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_BankStatementItem()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_BankStatementItem(Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_BankStatementItem(Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_BankStatementItem(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -8,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_BankStatementItem(
     IN inInfoMoneyId         Integer   , -- Управленческие статьи 
     IN inContractId          Integer   , -- Договор  
     IN inUnitId              Integer   , -- Подразделение
+    IN inMovementId_Invoice  Integer   , -- документ счет
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -81,6 +84,10 @@ BEGIN
      -- сохранили связь с <Подразделение>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
 
+     -- сохранили связь с документом <Счет>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
+
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -91,6 +98,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.07.16         * zc_MovementLinkMovement_Invoice
  07.03.14                                        * add zc_Enum_InfoMoney_21419
  18.03.14                                        * lpInsertUpdate_Movement
  13.03.14                                        * add Проверка установки значений

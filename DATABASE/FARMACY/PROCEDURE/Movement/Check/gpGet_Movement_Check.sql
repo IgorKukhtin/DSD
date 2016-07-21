@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidKindName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean)
+             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean
+             , DiscountCardName TVarChar
+)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -38,7 +40,8 @@ BEGIN
            , Movement_Check.Bayer
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
-        FROM Movement_Check_View AS Movement_Check 
+           , Movement_Check.DiscountCardName
+        FROM Movement_Check_View AS Movement_Check
        WHERE Movement_Check.Id =  inMovementId;
 
 END;
@@ -50,6 +53,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.07.16         *
  23.05.15                         *                 
 */
 

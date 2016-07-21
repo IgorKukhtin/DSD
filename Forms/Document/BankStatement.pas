@@ -64,6 +64,10 @@ type
     bbInsertJuridical: TdxBarButton;
     InsertJuridical: TdsdInsertUpdateAction;
     RefreshAddOn: TRefreshAddOn;
+    cxGridLevel1: TcxGridLevel;
+    clInvNumber_Invoice: TcxGridDBColumn;
+    actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
+    clMovementId_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

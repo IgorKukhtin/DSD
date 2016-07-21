@@ -5,7 +5,7 @@ inherited BankStatementForm: TBankStatementForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1100
-  ExplicitHeight = 451
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,6 +23,8 @@ inherited BankStatementForm: TBankStatementForm
       inherited cxGrid: TcxGrid
         Width = 1084
         Height = 199
+        ExplicitLeft = 136
+        ExplicitTop = 3
         ExplicitWidth = 1084
         ExplicitHeight = 199
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -263,6 +265,30 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 158
           end
+          object clInvNumber_Invoice: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object clMovementId_Invoice: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_Invoice'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 100
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
         end
       end
     end
@@ -336,6 +362,8 @@ inherited BankStatementForm: TBankStatementForm
     Height = 5
     AlignSplitter = salBottom
     Control = BottomPanel
+    ExplicitLeft = 64
+    ExplicitTop = 268
   end
   object BottomPanel: TPanel [3]
     Left = 0
@@ -396,16 +424,19 @@ inherited BankStatementForm: TBankStatementForm
     object actChoiceJuridical: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceJuridical'
       FormName = 'TMoneyPlace_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -413,12 +444,14 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
@@ -426,18 +459,21 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -445,22 +481,26 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actChoiceInfoMoney: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceInfoMoney'
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = 'TInfoMoney_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -468,22 +508,26 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actChoiceContract: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceContract'
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -491,6 +535,7 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'ContractId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -499,6 +544,7 @@ inherited BankStatementForm: TBankStatementForm
           ComponentItem = 'ContractName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
@@ -506,6 +552,7 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -514,6 +561,7 @@ inherited BankStatementForm: TBankStatementForm
           ComponentItem = 'LinkJuridicalName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -521,6 +569,7 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyCode'
@@ -528,6 +577,7 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -536,12 +586,14 @@ inherited BankStatementForm: TBankStatementForm
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
@@ -549,22 +601,26 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actChoiceUnit: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actUnitForm'
       FormName = 'TUnitForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -572,12 +628,14 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdate
       StoredProcList = <
         item
@@ -589,6 +647,7 @@ inherited BankStatementForm: TBankStatementForm
     object actSendToBankAccount: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelect
       StoredProcList = <
         item
@@ -610,11 +669,13 @@ inherited BankStatementForm: TBankStatementForm
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = 'TJuridicalEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OKPO'
@@ -622,6 +683,7 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'OKPO'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Name'
@@ -629,10 +691,56 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = MasterDS
       IdFieldName = 'Id'
+    end
+    object actInvoiceJournalDetailChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'acInvoiceJournalDetailChoiceForm'
+      FormName = 'TInvoiceJournalDetailChoiceForm'
+      FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Invoice'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Invoice'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -652,6 +760,7 @@ inherited BankStatementForm: TBankStatementForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 112
   end
@@ -735,11 +844,13 @@ inherited BankStatementForm: TBankStatementForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = '3'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 184
     Top = 208
@@ -755,30 +866,35 @@ inherited BankStatementForm: TBankStatementForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'invnumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'operdate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'bankaccountname'
         Value = ''
         Component = edBankAccount
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'bankname'
         Value = ''
         Component = edBankName
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 248
@@ -795,6 +911,7 @@ inherited BankStatementForm: TBankStatementForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'injuridicalid'
@@ -802,6 +919,7 @@ inherited BankStatementForm: TBankStatementForm
         Component = MasterCDS
         ComponentItem = 'LinkJuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ininfomoneyid'
@@ -809,6 +927,7 @@ inherited BankStatementForm: TBankStatementForm
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incontractid'
@@ -816,6 +935,7 @@ inherited BankStatementForm: TBankStatementForm
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inunitid'
@@ -823,6 +943,15 @@ inherited BankStatementForm: TBankStatementForm
         Component = MasterCDS
         ComponentItem = 'Unitid'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -839,6 +968,7 @@ inherited BankStatementForm: TBankStatementForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200

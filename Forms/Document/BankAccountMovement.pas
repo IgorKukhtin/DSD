@@ -50,6 +50,9 @@ type
     ceUnit: TcxButtonEdit;
     cxLabel14: TcxLabel;
     UnitGuides: TdsdGuides;
+    cxLabel15: TcxLabel;
+    ceInvoice: TcxButtonEdit;
+    InvoiceGuides: TdsdGuides;
   private
     { Private declarations }
   public

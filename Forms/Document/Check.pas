@@ -36,6 +36,8 @@ type
     cxLabel6: TcxLabel;
     edFiscalCheckNumber: TcxTextEdit;
     chbNotMCS: TcxCheckBox;
+    cxLabel7: TcxLabel;
+    edDiscountCard: TcxTextEdit;
   private
     { Private declarations }
   public

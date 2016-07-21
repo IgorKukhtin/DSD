@@ -42,6 +42,7 @@ BEGIN
                                                , inContractId           := MovementLinkObject_Contract.ObjectId
                                                , inInfoMoneyId          := MovementLinkObject_InfoMoney.ObjectId
                                                , inUnitId               := MovementLinkObject_Unit.ObjectId
+                                               , inMovementId_Invoice   := MLM_Invoice.MovementChildId          -- док.счет
                                                , inCurrencyId           := MovementLinkObject_Currency.ObjectId
                                                , inCurrencyValue        := MovementFloat_CurrencyValue.ValueData
                                                , inParValue             := MovementFloat_ParValue.ValueData
@@ -120,6 +121,10 @@ BEGIN
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
+            LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                           ON MLM_Invoice.MovementId = Movement.Id
+                                          AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+           
             -- !!!значение при перезаливки не меняется!!!
             LEFT JOIN MovementFloat AS MovementFloat_Amount_BankAccount
                                     ON MovementFloat_Amount_BankAccount.MovementId = Movement_BankAccount.Id
@@ -170,6 +175,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.07.16         *
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId

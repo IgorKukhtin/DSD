@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                    Integer   , -- Ключ объекта <Документ>
@@ -15,6 +18,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
     IN inContractId            Integer   , -- Договора
     IN inInfoMoneyId           Integer   , -- Статьи назначения 
     IN inUnitId                Integer   , -- Подразделение
+    IN inMovementId_Invoice    Integer   , -- документ счет
     IN inCurrencyId            Integer   , -- Валюта 
     IN inCurrencyValue         TFloat    , -- Курс для перевода в валюту баланса
     IN inParValue              TFloat    , -- Номинал для перевода в валюту баланса
@@ -143,6 +147,9 @@ BEGIN
      -- 
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), vbMovementItemId, inBankAccountPartnerId);
      
+     -- сохранили связь с документом <Счет>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
+
 
      -- данные по ЗП
      IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_PersonalServiceList())
@@ -180,6 +187,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.07.16         *
  10.05.14                                        * add lpInsert_MovementItemProtocol
  07.03.14                                        * add zc_Enum_InfoMoney_21419
  13.03.14                                        * add lpInsert_MovementProtocol

@@ -1,21 +1,25 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
-  ExplicitWidth = 845
-  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 90
-    Height = 326
-    ExplicitTop = 90
-    ExplicitHeight = 326
-    ClientRectBottom = 326
+    Top = 110
+    Height = 306
+    ExplicitTop = 110
+    ExplicitHeight = 306
+    ClientRectBottom = 306
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 302
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Height = 302
-        ExplicitHeight = 302
+        Height = 282
+        ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
             end
@@ -33,6 +37,11 @@ inherited CheckForm: TCheckForm
               Format = ',0.00'
               Kind = skSum
               Column = colSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -50,6 +59,7 @@ inherited CheckForm: TCheckForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
@@ -57,8 +67,20 @@ inherited CheckForm: TCheckForm
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 222
+          end
+          object colChangePercent: TcxGridDBColumn
+            Caption = '% c'#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -67,6 +89,7 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 73
           end
@@ -77,8 +100,31 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object colPriceSale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object colSummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
           end
           object colSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -87,6 +133,7 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
@@ -95,33 +142,33 @@ inherited CheckForm: TCheckForm
     end
   end
   inherited DataPanel: TPanel
-    Height = 64
-    ExplicitHeight = 64
+    Height = 84
+    ExplicitHeight = 84
     inherited edInvNumber: TcxTextEdit
-      Left = 159
+      Left = 150
       Top = 14
       Text = 'edInvNumber'
-      ExplicitLeft = 159
+      ExplicitLeft = 150
       ExplicitTop = 14
     end
     inherited cxLabel1: TcxLabel
-      Left = 159
+      Left = 150
       Top = -1
-      ExplicitLeft = 159
+      ExplicitLeft = 150
       ExplicitTop = -1
     end
     inherited edOperDate: TcxDateEdit
-      Left = 248
+      Left = 241
       Top = 14
       EditValue = 42261d
       Properties.ReadOnly = True
-      ExplicitLeft = 248
+      ExplicitLeft = 241
       ExplicitTop = 14
     end
     inherited cxLabel2: TcxLabel
-      Left = 248
+      Left = 241
       Top = -1
-      ExplicitLeft = 248
+      ExplicitLeft = 241
       ExplicitTop = -1
     end
     inherited cxLabel15: TcxLabel
@@ -132,10 +179,12 @@ inherited CheckForm: TCheckForm
       Top = 14
       PopupMenu = nil
       ExplicitTop = 14
+      ExplicitWidth = 141
       ExplicitHeight = 22
+      Width = 141
     end
     object edUnitName: TcxTextEdit
-      Left = 347
+      Left = 342
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 6
@@ -143,7 +192,7 @@ inherited CheckForm: TCheckForm
       Width = 121
     end
     object edCashRegisterName: TcxTextEdit
-      Left = 587
+      Left = 586
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 7
@@ -151,22 +200,22 @@ inherited CheckForm: TCheckForm
       Width = 121
     end
     object cxLabel3: TcxLabel
-      Left = 348
+      Left = 342
       Top = -1
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel4: TcxLabel
-      Left = 467
+      Left = 464
       Top = -1
       Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
     end
     object cxLabel5: TcxLabel
-      Left = 587
+      Left = 586
       Top = -1
       Caption = #1050#1072#1089#1089#1072
     end
     object edPaidTypeName: TcxTextEdit
-      Left = 467
+      Left = 464
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 11
@@ -175,27 +224,27 @@ inherited CheckForm: TCheckForm
     end
     object lblCashMember: TcxLabel
       Left = 8
-      Top = 43
+      Top = 36
       Caption = #1052#1077#1085#1077#1076#1078#1077#1088
     end
     object edCashMember: TcxTextEdit
-      Left = 72
-      Top = 42
+      Left = 8
+      Top = 52
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 276
+      Width = 232
     end
     object lblBayer: TcxLabel
-      Left = 352
-      Top = 43
+      Left = 241
+      Top = 36
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edBayer: TcxTextEdit
-      Left = 416
-      Top = 42
+      Left = 241
+      Top = 52
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 233
+      Width = 222
     end
     object cxLabel6: TcxLabel
       Left = 708
@@ -211,12 +260,24 @@ inherited CheckForm: TCheckForm
       Width = 93
     end
     object chbNotMCS: TcxCheckBox
-      Left = 663
-      Top = 41
+      Left = 477
+      Top = 52
       Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
       Properties.ReadOnly = True
       TabOrder = 18
       Width = 82
+    end
+    object cxLabel7: TcxLabel
+      Left = 586
+      Top = 36
+      Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
+    end
+    object edDiscountCard: TcxTextEdit
+      Left = 586
+      Top = 52
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 215
     end
   end
   inherited ActionList: TActionList
@@ -261,17 +322,20 @@ inherited CheckForm: TCheckForm
       FormName = 'TCashRegisterForm'
       FormNameParam.Value = 'TCashRegisterForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = FormParams
           ComponentItem = 'CashRegisterId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = edCashRegisterName
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -283,6 +347,7 @@ inherited CheckForm: TCheckForm
       FormName = 'TPaidTypeForm'
       FormNameParam.Value = 'TPaidTypeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -290,12 +355,14 @@ inherited CheckForm: TCheckForm
           Component = FormParams
           ComponentItem = 'PaidTypeId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = 'cxTextEdit3'
           Component = edPaidTypeName
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
@@ -303,6 +370,7 @@ inherited CheckForm: TCheckForm
           Component = FormParams
           ComponentItem = 'PaidTypeCode'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -346,6 +414,7 @@ inherited CheckForm: TCheckForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager
@@ -412,6 +481,7 @@ inherited CheckForm: TCheckForm
         Param.Value = Null
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
   end
@@ -421,12 +491,14 @@ inherited CheckForm: TCheckForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -434,23 +506,28 @@ inherited CheckForm: TCheckForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashRegisterId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidTypeId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidTypeCode'
         Value = Null
+        MultiSelectSeparator = ','
       end>
   end
   inherited spChangeStatus: TdsdStoredProc
@@ -465,22 +542,26 @@ inherited CheckForm: TCheckForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 42132d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -488,50 +569,66 @@ inherited CheckForm: TCheckForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = Null
         Component = edUnitName
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashRegisterName'
         Value = Null
         Component = edCashRegisterName
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidTypeName'
         Value = 'cxTextEdit3'
         Component = edPaidTypeName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashMember'
         Value = Null
         Component = edCashMember
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Bayer'
         Value = Null
         Component = edBayer
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FiscalCheckNumber'
         Value = Null
         Component = edFiscalCheckNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NotMCS'
         Value = Null
         Component = chbNotMCS
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountCardName'
+        Value = Null
+        Component = edDiscountCard
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
@@ -543,6 +640,7 @@ inherited CheckForm: TCheckForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashRegisterId'
@@ -550,13 +648,27 @@ inherited CheckForm: TCheckForm
         Component = FormParams
         ComponentItem = 'CashRegisterId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidTypeId'
         Value = Null
         Component = edOperDate
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+  end
+  inherited HeaderSaver: THeaderSaver
+    Left = 288
+    Top = 305
+  end
+  inherited spUnErasedMIMaster: TdsdStoredProc
+    Left = 390
+    Top = 208
+  end
+  inherited spInsertUpdateMIMaster: TdsdStoredProc
+    Left = 536
+    Top = 280
   end
   object spUpdate_Movement_Check: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check'
@@ -569,6 +681,7 @@ inherited CheckForm: TCheckForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidTypeId'
@@ -576,6 +689,7 @@ inherited CheckForm: TCheckForm
         Component = FormParams
         ComponentItem = 'PaidTypeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashRegisterId'
@@ -583,6 +697,7 @@ inherited CheckForm: TCheckForm
         Component = FormParams
         ComponentItem = 'CashRegisterId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 186

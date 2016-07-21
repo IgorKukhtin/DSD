@@ -294,6 +294,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Update() RETURNS Integer AS $BO
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Update', 'Пользователь корр.' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Update');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_discountcard() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_discountcard'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_discountcard', 'Дисконтные карты' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_discountcard');
+
 
 /*-------------------------------------------------------------------------------
 
@@ -301,6 +305,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 21.07.16         * zc_MovementLinkObject_discountcard
  13.06.16         * zc_MovementLinkObject_DocumentKind 
  10.12.15                                                                       *zc_MovementLinkObject_ChangeIncomePaymentKind
  31.10.15                                                                       *zc_MovementLinkObject_PromoKind, zc_MovementLinkObject_Advertising, zc_MovementLinkObject_PersonalTrade

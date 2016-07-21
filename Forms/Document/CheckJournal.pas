@@ -37,6 +37,8 @@ type
     colFiscalCheckNumber: TcxGridDBColumn;
     colNotMCS: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    clTotalSummChangePercent: TcxGridDBColumn;
+    clDiscountCardName: TcxGridDBColumn;
   private
     { Private declarations }
   public
