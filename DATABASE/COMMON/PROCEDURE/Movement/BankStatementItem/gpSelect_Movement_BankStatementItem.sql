@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BankAccount TVarChar, BankMFO TVarChar, BankName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , LinkBankId Integer, LinkBankName TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
+
 )
 AS
 $BODY$
@@ -85,6 +87,9 @@ BEGIN
            , Object_BankAccount_View.Name        AS BankAccountName
            , Object_BankAccount_View.BankId      AS LinkBankId
            , Object_BankAccount_View.BankName    AS LinkBankNameId
+
+           , Movement_Invoice.Id                 AS MovementId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -168,6 +173,12 @@ BEGIN
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.Id
                                         AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
             LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                           ON MLM_Invoice.MovementId = Movement.Id
+                                          AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
 
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;
