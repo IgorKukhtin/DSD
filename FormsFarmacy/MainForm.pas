@@ -273,6 +273,14 @@ type
     N97: TMenuItem;
     actOverSettings: TdsdOpenForm;
     N98: TMenuItem;
+    actDiscountCard: TdsdOpenForm;
+    actBarCode: TdsdOpenForm;
+    actDiscountExternal: TdsdOpenForm;
+    N99: TMenuItem;
+    N100: TMenuItem;
+    N101: TMenuItem;
+    N102: TMenuItem;
+    N103: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

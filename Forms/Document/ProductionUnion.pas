@@ -66,6 +66,7 @@ type
     actPrintCeh: TdsdPrintAction;
     spSelectPrintCeh: TdsdStoredProc;
     bbPrintCeh: TdxBarButton;
+    actGoodsChoiceMaster: TOpenChoiceForm;
   private
     { Private declarations }
   public

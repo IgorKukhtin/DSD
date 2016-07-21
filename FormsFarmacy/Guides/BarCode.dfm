@@ -54,6 +54,7 @@ object BarCodeForm: TBarCodeForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 37
       end
       object clBarCodeName: TcxGridDBColumn
@@ -61,6 +62,7 @@ object BarCodeForm: TBarCodeForm
         DataBinding.FieldName = 'BarCodeName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 149
       end
       object clGoodsName: TcxGridDBColumn

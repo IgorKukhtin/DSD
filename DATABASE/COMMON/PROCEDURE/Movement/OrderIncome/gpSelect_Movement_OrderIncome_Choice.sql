@@ -13,12 +13,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
              , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
              , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
-             , TotalSumm TFloat 
+             , TotalSummMVAT TFloat , TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummCurrency TFloat
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , CurrencyValue TFloat
+             , CurrencyValue TFloat, ParValue TFloat
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
               )
@@ -51,12 +52,16 @@ BEGIN
            , Object_Insert.ValueData                AS InsertName
            
            , MovementFloat_TotalCount.ValueData     AS TotalCount
+           , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           , MovementFloat_AmountCurrency.ValueData AS TotalSummCurrency
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
            , MovementFloat_ChangePercent.ValueData  AS ChangePercent
            , MovementFloat_CurrencyValue.ValueData  AS CurrencyValue
+           , MovementFloat_ParValue.ValueData       AS ParValue
 
            , Object_CurrencyDocument.Id                     AS CurrencyDocumentId
            , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
@@ -64,9 +69,14 @@ BEGIN
            , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
 
-           , Object_Contract.Id                     AS ContractId
-           , Object_Contract.ObjectCode             AS ContractCode
-           , Object_Contract.ValueData              AS ContractName
+           , View_Contract_InvNumber.ContractId             AS ContractId
+           , View_Contract_InvNumber.ContractCode           AS ContractCode
+           , View_Contract_InvNumber.InvNumber              AS ContractName
+
+           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
            , Object_PaidKind.Id                     AS PaidKindId
            , Object_PaidKind.ValueData              AS PaidKindName
@@ -99,9 +109,18 @@ BEGIN
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -112,14 +131,21 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            --LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id

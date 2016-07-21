@@ -26,7 +26,6 @@ object OrderIncomeForm: TOrderIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 956
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -239,16 +238,12 @@ object OrderIncomeForm: TOrderIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 956
-    ExplicitHeight = 327
     ClientRectBottom = 308
     ClientRectRight = 972
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 956
-      ExplicitHeight = 303
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -256,8 +251,6 @@ object OrderIncomeForm: TOrderIncomeForm
         Height = 284
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 956
-        ExplicitHeight = 303
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS

@@ -1385,10 +1385,6 @@
 				<Form>DiscountCardForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountCardEdit.pas">
-				<Form>DiscountCardlEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\BarCodeEdit.pas">
 				<Form>BarCodeEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1399,6 +1395,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternal.pas">
 				<Form>DiscountExternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountCardEdit.pas">
+				<Form>DiscountCardEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
