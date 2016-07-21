@@ -5,7 +5,7 @@
   ClientWidth = 612
   AddOnFormData.isSingle = False
   ExplicitWidth = 618
-  ExplicitHeight = 344
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -179,7 +179,7 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 22
-    Width = 137
+    Width = 138
   end
   object edInvNumberPartner: TcxTextEdit [23]
     Left = 447
@@ -232,7 +232,24 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 29
-    Width = 591
+    Width = 427
+  end
+  object cxLabel15: TcxLabel [30]
+    Left = 447
+    Top = 183
+    Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+  end
+  object ceInvoice: TcxButtonEdit [31]
+    Left = 447
+    Top = 203
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 31
+    Width = 152
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 14
@@ -401,6 +418,14 @@
         Name = 'inunitid'
         Value = ''
         Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = 0
+        Component = InvoiceGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -614,6 +639,21 @@
         Name = 'CostMovementInvNumber'
         Value = Null
         Component = IncomeCostGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Invoice'
+        Value = Null
+        Component = InvoiceGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Invoice'
+        Value = Null
+        Component = InvoiceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1033,5 +1073,49 @@
       end>
     Left = 272
     Top = 185
+  end
+  object InvoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInvoice
+    Key = '0'
+    FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceJournalDetailChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = InvoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = InvoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 524
+    Top = 184
   end
 end
