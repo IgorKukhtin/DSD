@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyId Integer, CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
              )
 AS
 $BODY$
@@ -66,6 +67,9 @@ BEGIN
            , 0 :: TFloat                                       AS ParValue
            , 0 :: TFloat                                       AS CurrencyPartnerValue
            , 0 :: TFloat                                       AS ParPartnerValue
+
+           , 0                                                 AS MovementId_Invoice
+           , CAST ('' as TVarChar)                             AS InvNumber_Invoice
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
       ;
@@ -120,6 +124,10 @@ BEGIN
            , MovementFloat_ParValue.ValueData                  AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData      AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData           AS ParPartnerValue
+
+           , Movement_Invoice.Id                 AS MovementId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
@@ -143,6 +151,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+            LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                           ON MLM_Invoice.MovementId = Movement.Id
+                                          AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
 
             LEFT JOIN Object_BankAccount_View AS View_BankAccount ON View_BankAccount.Id = MovementItem.ObjectId
  
@@ -185,7 +199,8 @@ ALTER FUNCTION gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. 
+ 21.07.16         *
  14.11.14                                        * add Currency...
  07.05.14                                        * add inMovementId_Value
  25.01.14                                        * add inOperDate

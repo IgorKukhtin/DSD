@@ -65,6 +65,7 @@ type
     colUnitCode: TcxGridDBColumn;
     OKPO_BankAccount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    colInvNumber_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -19,7 +19,6 @@ uses
 type
   TCheckJournalUserForm = class(TCheckJournalForm)
     colTotalSummChangePercent: TcxGridDBColumn;
-    colDiscountCardName: TcxGridDBColumn;
   private
     { Private declarations }
   public

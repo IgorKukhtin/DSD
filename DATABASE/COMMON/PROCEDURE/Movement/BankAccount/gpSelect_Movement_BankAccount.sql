@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar
              , isCopy Boolean
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
               )
 AS
 $BODY$
@@ -98,6 +99,10 @@ BEGIN
            , Partner_BankAccount_View.MFO
            , Partner_BankAccount_View.Name      AS BankAccountName
            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE) AS isCopy
+
+           , Movement_Invoice.Id                 AS MovementId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -128,6 +133,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+            LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                           ON MLM_Invoice.MovementId = Movement.Id
+                                          AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
 
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement_BankStatementItem.Id
@@ -173,8 +184,8 @@ BEGIN
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
-                                         ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+                                             ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
             LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId;
 
   
@@ -186,6 +197,7 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVa
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 21.07.16         *
  08.04.15         * add isCopy
  14.11.14                                        * add Currency...
  27.09.14                                        * add ContractTagName

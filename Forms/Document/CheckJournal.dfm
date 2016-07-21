@@ -27,11 +27,22 @@ inherited CheckJournalForm: TCheckJournalForm
         ExplicitWidth = 831
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTotalSummChangePercent
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
               Column = colTotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTotalSummChangePercent
             end>
           OptionsView.GroupByBox = True
           Styles.Content = nil
@@ -124,6 +135,8 @@ inherited CheckJournalForm: TCheckJournalForm
           object clDiscountCardName: TcxGridDBColumn
             Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
             DataBinding.FieldName = 'DiscountCardName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end

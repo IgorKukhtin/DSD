@@ -6,13 +6,41 @@ inherited CheckJournalUserForm: TCheckJournalUserForm
   inherited PageControl: TcxPageControl
     Height = 436
     TabOrder = 2
+    ExplicitHeight = 436
     ClientRectBottom = 436
     inherited tsMain: TcxTabSheet
+      ExplicitHeight = 436
       inherited cxGrid: TcxGrid
         Height = 436
-        ExplicitLeft = 3
-        ExplicitTop = -25
+        ExplicitHeight = 436
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTotalSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummChangePercent
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTotalSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummChangePercent
+            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -30,13 +58,6 @@ inherited CheckJournalUserForm: TCheckJournalUserForm
           end
           inherited colCashMember: TcxGridDBColumn
             HeaderGlyphAlignmentVert = vaTop
-          end
-          object colDiscountCardName: TcxGridDBColumn
-            Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
-            DataBinding.FieldName = 'DiscountCardName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
           end
         end
       end

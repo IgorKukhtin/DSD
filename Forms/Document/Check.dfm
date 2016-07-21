@@ -14,6 +14,12 @@ inherited CheckForm: TCheckForm
         Height = 282
         ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
             end
@@ -31,6 +37,11 @@ inherited CheckForm: TCheckForm
               Format = ',0.00'
               Kind = skSum
               Column = colSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
             end>
           Styles.Content = nil
           Styles.Inactive = nil
