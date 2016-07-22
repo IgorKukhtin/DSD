@@ -3,17 +3,16 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_CheckDeferred (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_CheckDeferred(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (
-  Id Integer,
-  MovementId integer, 
-  GoodsId integer, 
-  GoodsCode Integer, 
-  GoodsName TVarChar, 
-  Amount TFloat, 
-  Price TFloat,
-  Summ TFloat, 
-  NDS TFloat
-)
+RETURNS TABLE (Id Integer, MovementId Integer
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Amount TFloat
+             , Price TFloat
+             , Summ TFloat 
+             , NDS TFloat
+             , PriceSale TFloat
+             , ChangePercent TFloat
+             , SummChangePercent TFloat
+              )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -60,12 +59,25 @@ BEGIN
            , MIFloat_Price.ValueData  AS Price
            , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
            , ObjectFloat_NDSKind_NDS.ValueData AS NDS
+           , MIFloat_PriceSale.ValueData         AS PriceSale
+           , MIFloat_ChangePercent.ValueData     AS ChangePercent
+           , MIFloat_SummChangePercent.ValueData AS SummChangePercent
        FROM tmpMov
           INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
                                  AND MovementItem.isErased   = false
           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+          LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                      ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                      ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                     AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                      ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                     AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
+
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
           
           LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind

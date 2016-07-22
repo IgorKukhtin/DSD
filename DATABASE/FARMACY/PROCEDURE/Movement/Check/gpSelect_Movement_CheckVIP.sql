@@ -16,7 +16,10 @@ RETURNS TABLE (
   CashRegisterName TVarChar,
   CashMemberId Integer,
   CashMember TVarCHar,
-  Bayer TVarChar
+  Bayer TVarChar,
+  DiscountExternalId Integer,
+  DiscountExternalName TVarChar,
+  DiscountCardNumber TVarChar
  )
 
 AS
@@ -53,6 +56,10 @@ BEGIN
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
             , Object_CashMember.ValueData                AS CashMember
 	    , MovementString_Bayer.ValueData             AS Bayer
+	    , Object_DiscountExternal.Id                 AS DiscountExternalId
+	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
+	    , Object_DiscountCard.ValueData              AS DiscountCardNumber
+
        FROM tmpStatus
             LEFT JOIN Movement ON Movement.StatusId = tmpStatus.StatusId 
                               AND Movement.DescId = zc_Movement_Check() 
@@ -88,17 +95,24 @@ BEGIN
                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
   	    LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
   	    
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
+                                         ON MovementLinkObject_DiscountCard.MovementId = Movement.Id
+                                        AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
+            LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                 ON ObjectLink_DiscountExternal.ObjectId = MovementLinkObject_DiscountCard.ObjectId
+                                AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
+            LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
+            LEFT JOIN Object AS Object_DiscountCard ON Object_DiscountCard.Id = MovementLinkObject_DiscountCard.ObjectId
+
 	    LEFT JOIN MovementString AS MovementString_Bayer
                                      ON MovementString_Bayer.MovementId = Movement.Id
                                     AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
-                                          
-        
        ;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -106,7 +120,6 @@ ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
  07.04.16         * ушли от вьюхи
  12.09.2015                                                                   *[17:23] Кухтин Игорь: вторую кнопку закрыть и перекинуть их в запрос ВИП
  04.07.15                                                                     * 
-
 */
 
 -- тест

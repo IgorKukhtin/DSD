@@ -449,7 +449,10 @@ begin
     lblCashMember.Caption := FormParams.ParamByName('CashMember').AsString;
     lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
     pnlVIP.Visible := true;
-    pnlDiscount.Visible := False;
+    //***20.07.16
+    lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
+    lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
+    pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
   End;
   if not gc_User.Local then
   Begin
@@ -1537,7 +1540,7 @@ begin
     //***20.07.16
     MyVipCDS.FieldByName('DiscountExternalId').AsInteger  := ADiscountExternalId;
     MyVipCDS.FieldByName('DiscountExternalName').AsString := ADiscountExternalName;
-    MyVipCDS.FieldByName('DiscountCardName').AsString     := ADiscountCardNumber;
+    MyVipCDS.FieldByName('DiscountCardNumber').AsString   := ADiscountCardNumber;
 
     MyVipCDS.Post;
 

@@ -40,6 +40,8 @@ type
     actDeleteCheck: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
     colStatusCode: TcxGridDBColumn;
+    colDiscountCardNumber: TcxGridDBColumn;
+    colDiscountExternalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

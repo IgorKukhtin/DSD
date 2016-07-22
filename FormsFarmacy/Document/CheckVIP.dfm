@@ -3,8 +3,8 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientHeight = 382
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 676
-  ExplicitHeight = 414
+  ExplicitWidth = 684
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -93,6 +93,16 @@ inherited CheckVIPForm: TCheckVIPForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             Width = 80
+          end
+          object colDiscountCardNumber: TcxGridDBColumn
+            Caption = #8470' '#1082#1072#1088#1090#1099
+            DataBinding.FieldName = 'DiscountCardNumber'
+            Width = 70
+          end
+          object colDiscountExternalName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1077#1082#1090
+            DataBinding.FieldName = 'DiscountExternalName'
+            Width = 70
           end
         end
       end
@@ -185,18 +195,21 @@ inherited CheckVIPForm: TCheckVIPForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Bayer'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashMemberId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CashMemberId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashMember'
@@ -204,6 +217,30 @@ inherited CheckVIPForm: TCheckVIPForm
           Component = MasterCDS
           ComponentItem = 'CashMember'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountExternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountExternalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountCardNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountCardNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
@@ -243,6 +280,7 @@ inherited CheckVIPForm: TCheckVIPForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 88
@@ -257,6 +295,10 @@ inherited CheckVIPForm: TCheckVIPForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'dxBarButton2'
@@ -288,7 +330,14 @@ inherited CheckVIPForm: TCheckVIPForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object dxBarButton1: TdxBarButton
       Action = actShowErased
@@ -367,6 +416,7 @@ inherited CheckVIPForm: TCheckVIPForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208

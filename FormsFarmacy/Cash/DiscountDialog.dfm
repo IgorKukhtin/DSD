@@ -177,6 +177,7 @@ inherited DiscountDialogForm: TDiscountDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    OnAfterChoice = DiscountExternalGuidesAfterChoice
     Left = 200
     Top = 48
   end

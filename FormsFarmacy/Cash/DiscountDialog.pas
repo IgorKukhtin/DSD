@@ -18,6 +18,7 @@ type
     edCardNumber: TcxTextEdit;
     Label2: TLabel;
     procedure bbOkClick(Sender: TObject);
+    procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private
     { Private declarations }
   public
@@ -82,6 +83,11 @@ Begin
         ADiscountExternalName:= DiscountExternalGuides.Params.ParamByName('TextValue').Value;
         ADiscountCardNumber := trim (edCardNumber.Text);
       end;
+end;
+
+procedure TDiscountDialogForm.DiscountExternalGuidesAfterChoice(Sender: TObject);
+begin
+  ActiveControl:= edCardNumber;
 end;
 
 End.

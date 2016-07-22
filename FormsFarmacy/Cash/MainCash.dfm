@@ -198,8 +198,6 @@ inherited MainCashForm: TMainCashForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 34
-    ExplicitHeight = 182
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
@@ -207,7 +205,6 @@ inherited MainCashForm: TMainCashForm
       Height = 148
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 149
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -526,7 +523,6 @@ inherited MainCashForm: TMainCashForm
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 149
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -1012,6 +1008,29 @@ inherited MainCashForm: TMainCashForm
           ComponentItem = 'CashMember'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountExternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountExternalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountCardNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountCardNumber'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True

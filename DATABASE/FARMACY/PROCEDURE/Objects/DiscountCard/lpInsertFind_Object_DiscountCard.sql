@@ -13,6 +13,18 @@ $BODY$
    DECLARE vbDiscountCardId Integer;
 BEGIN
 
+     -- в таких случаях ничего не делаем
+     IF inValue = '' AND inObjectId = 0
+     THEN
+         vbDiscountCardId:= NULL;
+     ELSE
+
+     -- проверка
+     IF COALESCE (inObjectId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено название программы дисконтной карты <%>.', inValue;
+     END IF;
+
      -- проверка
      IF COALESCE (TRIM (inValue), '') = ''
      THEN
@@ -27,7 +39,7 @@ BEGIN
      vbDiscountCardId:= (SELECT Object.Id
                          FROM Object 
                               INNER JOIN ObjectLink AS ObjectLink_Object
-                                                    ON ObjectLink_Object.ObjectId = Object_DiscountCard.Id
+                                                    ON ObjectLink_Object.ObjectId = Object.Id
                                                    AND ObjectLink_Object.DescId = zc_ObjectLink_DiscountCard_Object()
                                                    AND ObjectLink_Object.ChildObjectId = inObjectId
                          WHERE Object.ValueData = inValue
@@ -45,7 +57,7 @@ BEGIN
                                                               , inSession := inUserId :: TVarChar
                                                                );
      END IF;
-
+     END IF;
 
      -- Возвращаем значение
      RETURN (vbDiscountCardId);

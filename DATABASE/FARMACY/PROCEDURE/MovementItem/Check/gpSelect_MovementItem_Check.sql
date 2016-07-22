@@ -15,8 +15,8 @@ RETURNS TABLE (Id Integer, ParentId integer
              , PriceSale TFloat
              , ChangePercent TFloat
              , SummChangePercent TFloat
-             , DiscountCardId Integer
-             , DiscountCardName TVarChar
+             -- , DiscountCardId Integer
+             -- , DiscountCardName TVarChar
              , isErased Boolean
               )
 AS
@@ -42,8 +42,8 @@ BEGIN
            , MovementItem.PriceSale
            , MovementItem.ChangePercent
            , MovementItem.SummChangePercent
-           , MovementItem.DiscountCardId
-           , MovementItem.DiscountCardName
+           -- , MovementItem.DiscountCardId
+           -- , MovementItem.DiscountCardName
            , MovementItem.isErased
 
        FROM MovementItem_Check_View AS MovementItem 
@@ -54,15 +54,12 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А
  03.07.15                                                                       * Добавлен НДС
  25.05.15                         *
- 
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Check (inMovementId:= 25173, inSession:= '9818')
