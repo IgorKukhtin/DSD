@@ -195,6 +195,8 @@ type
     MIChildProtocolOpenForm: TdsdOpenForm;
     bbMIChildProtocol: TdxBarButton;
     edJuridicalFrom: TcxButtonEdit;
+    SaleChoiceGuides: TdsdGuides;
+    actSaleJournalChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
