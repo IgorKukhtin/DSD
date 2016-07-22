@@ -1115,6 +1115,13 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'MovementItemId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementItemId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'GoodsId'
           Value = Null
           Component = ClientDataSet

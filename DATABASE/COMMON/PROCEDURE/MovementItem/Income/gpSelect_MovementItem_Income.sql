@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , AmountSumm TFloat
              , AmountRemains TFloat
              , isErased Boolean
+             , MIId_Invoice Integer, InvNumber_Invoice TVarChar
               )
 AS
 $BODY$
@@ -99,6 +100,9 @@ BEGIN
 
            , FALSE AS isErased
 
+           , CAST (0 AS Integer)        AS MIId_Invoice
+           , CAST (NULL AS TVarChar)    AS InvNumber_Invoice
+           
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
@@ -188,7 +192,10 @@ BEGIN
            , tmpRemains.Amount          AS AmountRemains
 
            , MovementItem.isErased
-
+     
+           , MI_Invoice.Id              AS MIId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -233,6 +240,16 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
+            -- это док. "Счет"
+            LEFT JOIN MovementItemFloat AS MIFloat_Invoice
+                                        ON MIFloat_Invoice.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Invoice.DescId = zc_MIFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id = MIFloat_Invoice.ValueData :: Integer
+                                                AND MI_Invoice.isErased = FALSE
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MI_Invoice.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            --
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
@@ -368,8 +385,21 @@ BEGIN
 
            , tmpMI_Goods.isErased               AS isErased
 
+           , MI_Invoice.Id                      AS MIId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+   
        FROM tmpMI_Goods
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
+
+            -- это док. "Счет"
+            LEFT JOIN MovementItemFloat AS MIFloat_Invoice
+                                        ON MIFloat_Invoice.MovementItemId = tmpMI_Goods.MovementItemId
+                                       AND MIFloat_Invoice.DescId = zc_MIFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id = MIFloat_Invoice.ValueData :: Integer
+                                                AND MI_Invoice.isErased = FALSE
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MI_Invoice.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            --
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
@@ -401,6 +431,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.07.16         *
  31.03.15         * add GoodsGroupNameFull, MeasureName
  12.02.14                                        * add Object_InfoMoney_View
  04.10.13                                        * add inIsErased

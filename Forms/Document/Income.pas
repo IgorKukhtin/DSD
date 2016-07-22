@@ -189,6 +189,7 @@ type
     bbactSetErasedCost: TdxBarButton;
     actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
+    actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
   private
   public
   end;

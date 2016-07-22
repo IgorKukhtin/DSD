@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
              )
 AS
 $BODY$
@@ -64,6 +65,9 @@ BEGIN
            , CAST ('' as TVarChar)            AS PaidKindName
            , CAST ('' as TVarChar)            AS CostMovementId
            , CAST ('' as TVarChar)            AS CostMovementInvNumber
+
+           , 0                                AS MovementId_Invoice
+           , CAST ('' as TVarChar)            AS InvNumber_Invoice
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
   
@@ -113,6 +117,9 @@ BEGIN
            , MovementString_MovementId.ValueData AS CostMovementId
            , tmpCost.strInvNumber    ::TVarChar  AS CostMovementInvNumber
 
+           , Movement_Invoice.Id                 AS MovementId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
             
@@ -128,6 +135,12 @@ BEGIN
                                      ON MovementString_MovementId.MovementId =  Movement.Id
                                     AND MovementString_MovementId.DescId = zc_MovementString_MovementId()
 
+            LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                           ON MLM_Invoice.MovementId = Movement.Id
+                                          AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+           --
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -183,6 +196,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.07.16         *
  30.04.16         *
  17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner              
  19.02.14         * del ContractConditionKind )))

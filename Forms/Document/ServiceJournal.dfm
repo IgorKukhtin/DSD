@@ -3,9 +3,8 @@ inherited ServiceJournalForm: TServiceJournalForm
   ClientHeight = 413
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -230
   ExplicitWidth = 1036
-  ExplicitHeight = 448
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +12,17 @@ inherited ServiceJournalForm: TServiceJournalForm
     Height = 356
     TabOrder = 3
     ExplicitWidth = 1020
-    ExplicitHeight = 592
+    ExplicitHeight = 356
     ClientRectBottom = 356
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 592
+      ExplicitHeight = 356
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 356
         ExplicitWidth = 1020
-        ExplicitHeight = 592
+        ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -218,6 +217,14 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 140
+          end
+          object colInvNumber_Invoice: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
           end
         end
       end

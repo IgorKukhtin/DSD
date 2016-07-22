@@ -2875,8 +2875,8 @@ object InvoiceForm: TInvoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 828
-    Top = 48
+    Left = 812
+    Top = 40
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS

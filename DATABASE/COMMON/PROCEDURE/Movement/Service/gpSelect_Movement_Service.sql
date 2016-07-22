@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName TVarChar
              , PaidKindName TVarChar
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
              )
 AS
 $BODY$
@@ -88,6 +89,10 @@ BEGIN
            , Object_PaidKind.ValueData        AS PaidKindName
            , MovementString_MovementId.ValueData AS CostMovementId
            , tmpCost.strInvNumber     ::TVarChar AS CostMovementInvNumber
+
+           , Movement_Invoice.Id                 AS MovementId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_Service()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -121,6 +126,13 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+            LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                           ON MLM_Invoice.MovementId = Movement.Id
+                                          AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                          ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                         AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -153,6 +165,7 @@ ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarCha
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 21.07.16         *
  30.04.16         *
  17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner
  14.01.14         * del ContractConditionKind

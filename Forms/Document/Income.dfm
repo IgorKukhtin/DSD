@@ -656,6 +656,22 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 90
           end
+          object clInvNumber_Invoice: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' ('#1089#1095#1077#1090')'
+            Width = 92
+          end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -664,6 +680,12 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object colMIId_Invoice: TcxGridDBColumn
+            DataBinding.FieldName = 'MIId_Invoice'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1696,6 +1718,51 @@ object IncomeForm: TIncomeForm
       Status = mtUncomplete
       DataSource = DataSourceCost
     end
+    object actInvoiceJournalDetailChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actInvoiceJournalDetailChoiceForm'
+      FormName = 'TInvoiceJournalDetailChoiceForm'
+      FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Invoice'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MIId_Invoice'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1813,6 +1880,15 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMIId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MIId_Invoice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
