@@ -440,7 +440,8 @@ uses
   BarCodeEdit in '..\..\FormsFarmacy\Guides\BarCodeEdit.pas' {BarCodeEditForm: TParentForm},
   BarCode in '..\..\FormsFarmacy\Guides\BarCode.pas' {BarCodeForm: TParentForm},
   DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm},
-  DiscountCardEdit in '..\..\FormsFarmacy\Guides\DiscountCardEdit.pas' {DiscountCardEditForm: TParentForm};
+  DiscountCardEdit in '..\..\FormsFarmacy\Guides\DiscountCardEdit.pas' {DiscountCardEditForm: TParentForm},
+  DiscountExternal_Object in '..\..\FormsFarmacy\Guides\DiscountExternal_Object.pas' {DiscountExternal_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -131,6 +131,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternal_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternal_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeForm');
