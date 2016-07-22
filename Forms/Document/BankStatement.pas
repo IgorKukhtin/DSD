@@ -68,6 +68,7 @@ type
     clInvNumber_Invoice: TcxGridDBColumn;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     clMovementId_Invoice: TcxGridDBColumn;
+    colComment_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

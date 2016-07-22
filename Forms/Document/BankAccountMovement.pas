@@ -53,6 +53,8 @@ type
     cxLabel15: TcxLabel;
     ceInvoice: TcxButtonEdit;
     InvoiceGuides: TdsdGuides;
+    cxLabel16: TcxLabel;
+    ceComment_Invoice: TcxTextEdit;
   private
     { Private declarations }
   public

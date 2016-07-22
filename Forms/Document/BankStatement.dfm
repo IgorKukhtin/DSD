@@ -23,8 +23,6 @@ inherited BankStatementForm: TBankStatementForm
       inherited cxGrid: TcxGrid
         Width = 1084
         Height = 199
-        ExplicitLeft = 136
-        ExplicitTop = 3
         ExplicitWidth = 1084
         ExplicitHeight = 199
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -287,6 +285,14 @@ inherited BankStatementForm: TBankStatementForm
             VisibleForCustomization = False
             Width = 100
           end
+          object colComment_Invoice: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'.'#1057#1095#1077#1090')'
+            DataBinding.FieldName = 'Comment_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
         object cxGridLevel1: TcxGridLevel
         end
@@ -362,8 +368,6 @@ inherited BankStatementForm: TBankStatementForm
     Height = 5
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitLeft = 64
-    ExplicitTop = 268
   end
   object BottomPanel: TPanel [3]
     Left = 0
@@ -738,6 +742,14 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment_Invoice'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True

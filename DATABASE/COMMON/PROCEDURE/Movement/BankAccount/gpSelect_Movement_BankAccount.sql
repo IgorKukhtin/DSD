@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
              , Comment TVarChar
              , BankAccountName TVarChar, BankName TVarChar, MFO TVarChar
              , JuridicalName TVarChar, OKPO_BankAccount TVarChar
-             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
+             , MoneyPlaceId Integer , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar
              , isCopy Boolean
-             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
               )
 AS
 $BODY$
@@ -74,7 +74,7 @@ BEGIN
            , Object_BankAccount_View.MFO       AS MFO
            , Object_BankAccount_View.JuridicalName  AS JuridicalName
            , View_JuridicalDetails_BankAccount.OKPO AS OKPO_BankAccount
-
+           , Object_MoneyPlace.Id              AS MoneyPlaceId 
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , (Object_MoneyPlace.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS MoneyPlaceName
            , ObjectDesc.ItemName
@@ -102,6 +102,7 @@ BEGIN
 
            , Movement_Invoice.Id                 AS MovementId_Invoice
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , MS_Comment_Invoice.ValueData        AS Comment_Invoice
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
@@ -139,6 +140,9 @@ BEGIN
                                           AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            LEFT JOIN MovementString AS MS_Comment_Invoice
+                                     ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
+                                    AND MS_Comment_Invoice.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement_BankStatementItem.Id

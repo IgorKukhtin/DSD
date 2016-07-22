@@ -1,22 +1,22 @@
 ﻿inherited BankAccountMovementForm: TBankAccountMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientHeight = 315
+  ClientHeight = 362
   ClientWidth = 581
   ExplicitWidth = 587
-  ExplicitHeight = 343
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 146
-    Top = 280
+    Top = 332
     ExplicitLeft = 146
-    ExplicitTop = 280
+    ExplicitTop = 332
   end
   inherited bbCancel: TcxButton
     Left = 290
-    Top = 280
+    Top = 332
     ExplicitLeft = 290
-    ExplicitTop = 280
+    ExplicitTop = 332
   end
   object Код: TcxLabel [2]
     Left = 8
@@ -97,12 +97,12 @@
     Width = 260
   end
   object cxLabel5: TcxLabel [13]
-    Left = 280
-    Top = 168
+    Left = 8
+    Top = 170
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit [14]
-    Left = 280
+    Left = 8
     Top = 190
     Properties.Buttons = <
       item
@@ -111,7 +111,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 291
+    Width = 563
   end
   object ceContract: TcxButtonEdit [15]
     Left = 280
@@ -132,12 +132,12 @@
   end
   object cxLabel10: TcxLabel [17]
     Left = 8
-    Top = 225
+    Top = 268
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [18]
     Left = 8
-    Top = 245
+    Top = 289
     TabOrder = 11
     Width = 563
   end
@@ -246,12 +246,12 @@
   end
   object cxLabel15: TcxLabel [32]
     Left = 8
-    Top = 168
+    Top = 216
     Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
   end
   object ceInvoice: TcxButtonEdit [33]
     Left = 8
-    Top = 190
+    Top = 237
     Properties.Buttons = <
       item
         Default = True
@@ -261,14 +261,29 @@
     TabOrder = 33
     Width = 259
   end
+  object cxLabel16: TcxLabel [34]
+    Left = 280
+    Top = 216
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'. '#1057#1095#1077#1090')'
+  end
+  object ceComment_Invoice: TcxTextEdit [35]
+    Left = 280
+    Top = 237
+    Properties.ReadOnly = True
+    TabOrder = 35
+    Width = 291
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
+    Top = 316
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 88
+    Top = 316
   end
   inherited ActionList: TActionList
     Left = 183
+    Top = 315
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -285,6 +300,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 88
+    Top = 284
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_BankAccount'
@@ -418,7 +434,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 456
-    Top = 228
+    Top = 280
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_BankAccount'
@@ -622,9 +638,16 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment_Invoice'
+        Value = Null
+        Component = ceComment_Invoice
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 408
-    Top = 228
+    Top = 272
   end
   object BankAccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -999,7 +1022,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 132
-    Top = 176
+    Left = 124
+    Top = 231
   end
 end

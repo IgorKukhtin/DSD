@@ -69,7 +69,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -91,6 +90,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'InvNumber_Parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 44
           end
           inherited colOperDate: TcxGridDBColumn
@@ -163,6 +163,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'CurrencyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object CurrencyPartnerValue: TcxGridDBColumn
@@ -170,6 +171,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'CurrencyPartnerValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object ParPartnerValue: TcxGridDBColumn
@@ -177,6 +179,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'ParPartnerValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object CurrencyValue: TcxGridDBColumn
@@ -185,6 +188,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object ParValue: TcxGridDBColumn
@@ -193,6 +197,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clOKPO: TcxGridDBColumn
@@ -200,6 +205,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 42
           end
           object clOKPO_Parent: TcxGridDBColumn
@@ -207,6 +213,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'OKPO_Parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 41
           end
           object colJuridical: TcxGridDBColumn
@@ -248,6 +255,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 33
           end
           object clInfoMoneyGroupName: TcxGridDBColumn
@@ -256,6 +264,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object clInfoMoneyDestinationName: TcxGridDBColumn
@@ -264,6 +273,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colInfoMoneyName: TcxGridDBColumn
@@ -280,6 +290,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colUnitCode: TcxGridDBColumn
@@ -288,6 +299,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colUnitName: TcxGridDBColumn
@@ -303,6 +315,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 95
           end
           object colPartnerBankName: TcxGridDBColumn
@@ -310,6 +323,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'PartnerBankName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colPartnerBankMFO: TcxGridDBColumn
@@ -317,6 +331,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'PartnerBankMFO'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colPartnerBankAccount: TcxGridDBColumn
@@ -325,6 +340,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 46
           end
           object clItemName: TcxGridDBColumn
@@ -333,6 +349,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clJuridicalName: TcxGridDBColumn
@@ -341,6 +358,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object clMFO: TcxGridDBColumn
@@ -349,6 +367,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 30
           end
           object OKPO_BankAccount: TcxGridDBColumn
@@ -357,6 +376,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clBankSInvNumber_Parent: TcxGridDBColumn
@@ -365,21 +385,45 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 30
           end
           object colInvNumber_Invoice: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumber_Invoice'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object colMovementId_Invoice: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_Invoice'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object colComment_Invoice: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'.'#1057#1095#1077#1090')'
+            DataBinding.FieldName = 'Comment_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 100
           end
           object clisCopy: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
             DataBinding.FieldName = 'isCopy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
         end
@@ -725,9 +769,78 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Invoice
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Invoice
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
+    object actInvoiceJournalDetailChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'acInvoiceJournalDetailChoiceForm'
+      FormName = 'TInvoiceJournalDetailChoiceForm'
+      FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Invoice'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Invoice'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment_Invoice'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+  end
+  inherited MasterDS: TDataSource
+    Top = 115
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
+    Top = 131
   end
   inherited BarManager: TdxBarManager
     Left = 128
@@ -993,5 +1106,37 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 464
     Top = 243
+  end
+  object spUpdate_Invoice: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Invoice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Invoice'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 153
   end
 end
