@@ -30,6 +30,8 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     colContractName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    actOpenPriceListLoad: TdsdInsertUpdateAction;
+    bbOpenPriceListLoad: TdxBarButton;
   private
     { Private declarations }
   public

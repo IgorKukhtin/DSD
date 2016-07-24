@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyId Integer, CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
-             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              )
 AS
 $BODY$
@@ -70,6 +70,7 @@ BEGIN
 
            , 0                                                 AS MovementId_Invoice
            , CAST ('' as TVarChar)                             AS InvNumber_Invoice
+           , CAST ('' as TVarChar)                             AS Comment_Invoice
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
       ;
@@ -127,6 +128,7 @@ BEGIN
 
            , Movement_Invoice.Id                 AS MovementId_Invoice
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , MS_Comment_Invoice.ValueData        AS Comment_Invoice
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -157,6 +159,10 @@ BEGIN
                                           AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            LEFT JOIN MovementString AS MS_Comment_Invoice
+                                     ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
+                                    AND MS_Comment_Invoice.DescId = zc_MovementString_Comment()
+
 
             LEFT JOIN Object_BankAccount_View AS View_BankAccount ON View_BankAccount.Id = MovementItem.ObjectId
  

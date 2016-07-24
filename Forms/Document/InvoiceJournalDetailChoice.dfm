@@ -412,7 +412,6 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         DataBinding.FieldName = 'Comment'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1225,6 +1224,14 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MIComment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Comment'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

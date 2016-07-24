@@ -229,10 +229,10 @@
   object DiscountExternalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceDiscountExternal
-    FormNameParam.Value = 'TDiscountExternalForm'
+    FormNameParam.Value = 'TDiscountExternal_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TDiscountExternalForm'
+    FormName = 'TDiscountExternal_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

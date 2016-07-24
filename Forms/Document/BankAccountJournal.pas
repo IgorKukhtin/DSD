@@ -13,7 +13,8 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, ClientBankLoad, cxCurrencyEdit, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns,
+  cxButtonEdit;
 
 type
   TBankAccountJournalForm = class(TAncestorJournalForm)
@@ -66,6 +67,11 @@ type
     OKPO_BankAccount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     colInvNumber_Invoice: TcxGridDBColumn;
+    colComment_Invoice: TcxGridDBColumn;
+    actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
+    colMovementId_Invoice: TcxGridDBColumn;
+    spUpdate_Invoice: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

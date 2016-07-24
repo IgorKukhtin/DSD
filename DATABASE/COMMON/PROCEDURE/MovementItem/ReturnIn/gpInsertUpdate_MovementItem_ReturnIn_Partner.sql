@@ -1,21 +1,27 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn_Partner()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ Возврат покупателя>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inPrice               TFloat    , -- Цена
- INOUT ioCountForPrice       TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Сумма расчетная
+ INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId             Integer   , -- Ключ объекта <Документ Возврат покупателя>
+    IN inGoodsId                Integer   , -- Товары
+    IN inAmountPartner          TFloat    , -- Количество у контрагента
+    IN inPrice                  TFloat    , -- Цена
+ INOUT ioCountForPrice          TFloat    , -- Цена за количество
+   OUT outAmountSumm            TFloat    , -- Сумма расчетная
    OUT outAmountSummVat         TFloat    , -- Сумма с НДС расчетная
-    IN inHeadCount           TFloat    , -- Количество голов
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inHeadCount              TFloat    , -- Количество голов
+    IN inPartionGoods           TVarChar  , -- Партия товара
+    IN inGoodsKindId            Integer   , -- Виды товаров
+    IN inAssetId                Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inMovementId_PartionTop  Integer   , -- Id документа продажи из шапки
+    IN inMovementId_PartionMI   Integer   , -- Id документа продажи строчная часть
+   OUT outMovementId_Partion    Integer   , -- 
+   OUT outPartionMovementName   TVarChar  , -- 
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
@@ -26,7 +32,25 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn_Partner());
 
-    -- Цена с НДС, % НДС 
+     -- !!!меняется параметр!!!
+     IF COALESCE (inMovementId_PartionMI, 0) = 0
+     THEN
+         inMovementId_PartionMI := COALESCE (inMovementId_PartionTop, 0);
+     END IF;
+     -- параметры документа inMovementId_PartionMI
+     SELECT Movement_PartionMovement.Id AS MovementId_Partion
+          , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
+            INTO outMovementId_Partion, outPartionMovementName
+     FROM Movement AS Movement_PartionMovement
+          LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
+                                 ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
+                                AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
+     WHERE Movement_PartionMovement.Id = inMovementId_PartionMI;
+
+
+
+     -- Цена с НДС, % НДС 
      SELECT MB_PriceWithVAT.ValueData , MF_VATPercent.ValueData
     INTO vbPriceWithVAT, vbVATPercent
      FROM MovementBoolean AS MB_PriceWithVAT 
@@ -48,7 +72,7 @@ BEGIN
                                               , inPrice              := inPrice
                                               , ioCountForPrice      := ioCountForPrice
                                               , inHeadCount          := inHeadCount
-                                              , inMovementId_Partion := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
+                                              , inMovementId_Partion := inMovementId_PartionMI   --COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
                                               , inPartionGoods       := inPartionGoods
                                               , inGoodsKindId        := inGoodsKindId
                                               , inAssetId            := inAssetId
@@ -72,6 +96,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 22.04.16         * 
  05.11.14                                        *
 */
 
