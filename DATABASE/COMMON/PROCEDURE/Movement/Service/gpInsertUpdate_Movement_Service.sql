@@ -1,10 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Service()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -128,7 +124,7 @@ BEGIN
      -- сохраняем <Документ Затрат>
      PERFORM lpInsertUpdate_Movement_Cost ( ioId         := 0
                                           , inParentId   := tmp_List.MovementId    --- док приход 
-                                          , inMovementId := ioId   ::Tfloat        --- док сервис
+                                          , inMovementId := ioId   ::TFloat        --- док сервис
                                           , inComment    := ''::TVarChar
                                           , inUserId     := vbUserId
                                           )
@@ -136,21 +132,21 @@ BEGIN
        Left Join (select Movement.Id, tmp_List.MovementId AS ParentId
                   from tmp_List
                      Inner Join Movement on tmp_List.MovementId = Movement.ParentId
-                     Inner JOIN MovementFloat AS MovementFloat_MovementId
-                                              ON MovementFloat_MovementId.MovementId = Movement.Id 
-                                             AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
-                                             AND MovementFloat_MovementId.ValueData = ioId
+                     Inner JOIN MovemenTFloat AS MovemenTFloat_MovementId
+                                              ON MovemenTFloat_MovementId.MovementId = Movement.Id 
+                                             AND MovemenTFloat_MovementId.DescId = zc_MovemenTFloat_MovementId()
+                                             AND MovemenTFloat_MovementId.ValueData = ioId
                   ) as tmp on tmp.ParentId =  tmp_List.MovementId
      WHERE tmp.Id isnull;
 
      -- метим на удаление док.затрат в  приходах не из списка  
      PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId 
                                  , inUserId     := vbUserId)
-     FROM (select Movement.ParentId, MovementFloat.MovementId
-           from MovementFloat
-              left Join Movement on Movement.id = MovementFloat.Movementid
-           where MovementFloat.DescId = zc_MovementFloat_MovementId()
-             AND MovementFloat.ValueData = ioId ) AS tmp 
+     FROM (select Movement.ParentId, MovemenTFloat.MovementId
+           from MovemenTFloat
+              left Join Movement on Movement.id = MovemenTFloat.Movementid
+           where MovemenTFloat.DescId = zc_MovemenTFloat_MovementId()
+             AND MovemenTFloat.ValueData = ioId ) AS tmp 
         LEFT JOIN tmp_List on tmp.ParentId = tmp_List.MovementId 
      WHERE tmp_List.MovementId Isnull;
 

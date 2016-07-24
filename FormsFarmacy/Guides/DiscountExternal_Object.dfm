@@ -3,7 +3,7 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082'  <'#1055#1088#1086#1077#1082#1090#1099' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
   ClientHeight = 332
-  ClientWidth = 778
+  ClientWidth = 435
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 778
+    Width = 435
     Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 778
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -45,8 +46,9 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
@@ -62,46 +64,56 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 223
+        Width = 232
       end
       object clURL: TcxGridDBColumn
         DataBinding.FieldName = 'URL'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 250
       end
       object clService: TcxGridDBColumn
         Caption = #1057#1077#1088#1074#1080#1089
         DataBinding.FieldName = 'Service'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1084#1091' '#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1086#1096#1080#1073#1082#1077' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1076#1072#1085#1085#1099#1093' '#1089' '#1087'/'#1103' '#9
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 149
       end
       object clPort: TcxGridDBColumn
         Caption = #1055#1086#1088#1090
         DataBinding.FieldName = 'Port'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object clUserName: TcxGridDBColumn
         Caption = #1051#1086#1075#1080#1085
         DataBinding.FieldName = 'UserName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object clPassword: TcxGridDBColumn
         Caption = #1055#1072#1088#1086#1083#1100
         DataBinding.FieldName = 'Password'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object Id: TcxGridDBColumn
@@ -193,7 +205,6 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
