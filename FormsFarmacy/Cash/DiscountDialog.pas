@@ -39,18 +39,21 @@ begin
   if Key > 0
   then
       if trim (edCardNumber.Text) <> ''
-      then if DiscountServiceForm.fCheckCard (lMsg
+      then // проверка карты + сохраним "текущие" параметры-Main
+           if DiscountServiceForm.fCheckCard (lMsg
                                              ,DiscountExternalGuides.Params.ParamByName('URL').Value
                                              ,DiscountExternalGuides.Params.ParamByName('Service').Value
                                              ,DiscountExternalGuides.Params.ParamByName('Port').Value
                                              ,DiscountExternalGuides.Params.ParamByName('UserName').Value
                                              ,DiscountExternalGuides.Params.ParamByName('Password').Value
                                              ,trim (edCardNumber.Text)
+                                             ,DiscountExternalGuides.Params.ParamByName('Key').Value
                                              )
            then ModalResult:=mrOk
            else // ??? еще раз ругнуться
       else begin ActiveControl:=edCardNumber;ShowMessage ('Ошибка.Значение <№ дисконтной карты> не определено');end
-  else begin ActiveControl:=ceDiscountExternal;ShowMessage ('Ошибка.Значение <Проект> не определено');
+  else begin ActiveControl:=ceDiscountExternal;
+             ShowMessage ('Внимание.Значение <Проект> не установлено.');
              ModalResult:=mrOk; // ??? может не надо закрывать
        end;
 
@@ -58,12 +61,12 @@ end;
 
 function TDiscountDialogForm.DiscountDialogExecute(var ADiscountExternalId: Integer; var ADiscountExternalName, ADiscountCardNumber: String): boolean;
 Begin
-      DiscountExternalGuides.Params.ParamByName('Key').Value:= ADiscountExternalId;
-      DiscountExternalGuides.Params.ParamByName('TextValue').Value:=ADiscountExternalName;
+      DiscountExternalGuides.Params.ParamByName('Key').Value      := ADiscountExternalId;
       edCardNumber.Text:= ADiscountCardNumber;
       if ADiscountExternalId > 0 then
       begin
           ceDiscountExternal.Text:= ADiscountExternalName;
+          DiscountExternalGuides.Params.ParamByName('TextValue').Value:=ADiscountExternalName;
           // так криво восстановим "текущие" параметры
           DiscountExternalGuides.Params.ParamByName('URL').Value       := DiscountServiceForm.gURL;
           DiscountExternalGuides.Params.ParamByName('Service').Value   := DiscountServiceForm.gService;
@@ -80,14 +83,20 @@ Begin
             ADiscountExternalId := 0;
             DiscountExternalGuides.Params.ParamByName('Key').Value:= 0;
         end;
-        ADiscountExternalName:= DiscountExternalGuides.Params.ParamByName('TextValue').Value;
-        ADiscountCardNumber := trim (edCardNumber.Text);
-      end;
+        ADiscountExternalName := DiscountExternalGuides.Params.ParamByName('TextValue').Value;
+        ADiscountCardNumber   := trim (edCardNumber.Text);
+      end
+      else begin
+            ADiscountExternalId   := 0;
+            ADiscountExternalName := '';
+            ADiscountCardNumber   := '';
+           end;
 end;
 
 procedure TDiscountDialogForm.DiscountExternalGuidesAfterChoice(Sender: TObject);
 begin
   ActiveControl:= edCardNumber;
+  inherited;
 end;
 
 End.

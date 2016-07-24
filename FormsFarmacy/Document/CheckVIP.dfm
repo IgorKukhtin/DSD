@@ -150,6 +150,30 @@ inherited CheckVIPForm: TCheckVIPForm
             DataBinding.FieldName = 'Price'
             Width = 46
           end
+          object colPriceSale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082'.'
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Width = 85
+          end
+          object colChangePercent: TcxGridDBColumn
+            Caption = '% '#1089#1082'.'
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Width = 45
+          end
+          object colSummChangePercent: TcxGridDBColumn
+            Caption = #1089#1091#1084#1084#1072' '#1089#1082'.'
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Width = 70
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1

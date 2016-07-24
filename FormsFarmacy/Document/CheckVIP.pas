@@ -11,7 +11,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, cxImageComboBox, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxCurrencyEdit;
 
 type
   TCheckVIPForm = class(TAncestorDBGridForm)
@@ -42,6 +43,9 @@ type
     colStatusCode: TcxGridDBColumn;
     colDiscountCardNumber: TcxGridDBColumn;
     colDiscountExternalName: TcxGridDBColumn;
+    colPriceSale: TcxGridDBColumn;
+    colChangePercent: TcxGridDBColumn;
+    colSummChangePercent: TcxGridDBColumn;
   private
     { Private declarations }
   public
