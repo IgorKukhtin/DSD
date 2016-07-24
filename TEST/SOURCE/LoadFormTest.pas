@@ -114,6 +114,7 @@ type
     procedure LoadReportBranchFormTest;
     procedure LoadReportSystemFormTest;
     procedure LoadReportBankAccountCashFormTest;
+    procedure LoadReportInvoiceFormTest;
     procedure LoadReportProductionAnalyzeFormTest;
     procedure LoadReportSaleAnalyzeFormTest;
     procedure LoadReportSheetWorkTimeFormTest;
@@ -1561,6 +1562,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_CashDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_CashDialogForm');
+end;
+
+procedure TLoadFormTest.LoadReportInvoiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportBranchFormTest;

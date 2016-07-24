@@ -7,20 +7,20 @@ CREATE OR REPLACE FUNCTION gpReport_Invoice(
     IN inEndDate           TDateTime ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MovementDescName TVarChar, StatusCode Integer
-             , InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
-             , PartnerCode Integer, PartnerName TVarChar
-             , BranchName TVarChar, UnitName TVarChar                        
-             , PaidKindName TVarChar
-             , ContractCode Integer, ContractName TVarChar
-
-             , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
-
-             , Amount        TFloat  -- 
-             --, AmountPartner TFloat  -- 
-             , Price         TFloat  -- 
+RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
+             , JuridicalId Integer, JuridicalName TVarChar
+             , NameBeforeName TVarChar
+             
+             , Amount TFloat  -- 
+             , Price TFloat  -- 
+             , TotalSumm TFloat  -- 
+             , ServiceSumma TFloat
+             , RemStart TFloat
+             , BankSumma TFloat
+             , RemEnd TFloat
+             , IncomeTotalSumma TFloat
+             , IncomeSumma TFloat
              ) 
-
 AS
 $BODY$
  DECLARE vbUserId Integer;
@@ -47,7 +47,7 @@ BEGIN
                                LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
                            WHERE Movement_Invoice.DescId = zc_Movement_Invoice()
                              AND Movement_Invoice.StatusId <> zc_Enum_Status_Erased()
-                             AND Movement_Invoice.Operdate BETWEEN '2016-6-01' AND '2016-8-01'
+                             AND Movement_Invoice.Operdate BETWEEN inStartDate AND '2016-8-01'
                            
                          ) 
 
@@ -87,8 +87,8 @@ BEGIN
                             )
 
          , tmpMLM AS (SELECT tmp.MovementId
-                           , SUM(CASE WHEN tmp.MLM_OperDate < '29.06.2016' /*indatestart*/ THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma_Before
-                           , SUM(CASE WHEN tmp.MLM_OperDate >= '29.06.2016' /*indatestart*/ THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma
+                           , SUM(CASE WHEN tmp.MLM_OperDate < inStartDate  THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma_Before
+                           , SUM(CASE WHEN tmp.MLM_OperDate >= inStartDate THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma
                            --, SUM(tmp.BankSumma) AS BankSumma
                            --, SUM(CASE WHEN tmp.MLM_OperDate < '01.07.2016' /*indatestart*/ THEN (tmp.ServiceSumma) ELSE 0 END) AS ServiceSumma_Before
                            --, SUM(CASE WHEN tmp.MLM_OperDate >= '01.07.2016' /*indatestart*/ THEN (tmp.ServiceSumma) ELSE 0 END) AS ServiceSumma
@@ -142,10 +142,6 @@ BEGIN
                        )
 
 
-
---SELECT tmpIncome.MovementId, SUM(IncomeSumma) AS IncomeTotalSumma FROM tmpIncome GROUP BY tmpIncome.MovementId
-
-
   SELECT tmpMIInvoice.InvNumber
        , tmpMIInvoice.OperDate
        , tmpMIInvoice.JuridicalId
@@ -166,7 +162,7 @@ BEGIN
        LEFT JOIN (SELECT tmpIncome.MovementId, SUM(IncomeSumma) AS IncomeTotalSumma FROM tmpIncome GROUP BY tmpIncome.MovementId) AS tmpIncomeGroup ON tmpIncomeGroup.MovementId = tmpMIInvoice.MovementId
        
        LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = tmpMIInvoice.NameBeforeId
-            ;
+    ;
          
 END;
 $BODY$

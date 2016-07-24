@@ -841,7 +841,9 @@ uses
   OrderIncomeJournalDetailChoice in '..\..\Forms\Document\OrderIncomeJournalDetailChoice.pas' {OrderIncomeJournalDetailChoiceForm: TParentForm},
   Invoice in '..\..\Forms\Document\Invoice.pas' {InvoiceForm: TParentForm},
   ProductionUnionTechReceiptJournal in '..\..\Forms\Document\ProductionUnionTechReceiptJournal.pas' {ProductionUnionTechReceiptJournalForm: TParentForm},
-  InvoiceJournalDetailChoice in '..\..\Forms\Document\InvoiceJournalDetailChoice.pas' {InvoiceJournalDetailChoiceForm: TParentForm};
+  InvoiceJournalDetailChoice in '..\..\Forms\Document\InvoiceJournalDetailChoice.pas' {InvoiceJournalDetailChoiceForm: TParentForm},
+  gpReport_InvoiceDialog in '..\..\Forms\Report\gpReport_InvoiceDialog.pas' {Report_InvoiceDialogForm: TParentForm},
+  gpReport_Invoice in '..\..\Forms\Report\gpReport_Invoice.pas' {Report_InvoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
