@@ -3,8 +3,6 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 
-
-
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                    Integer   , -- Ключ объекта <Документ>
     IN inInvNumber             TVarChar  , -- Номер документа

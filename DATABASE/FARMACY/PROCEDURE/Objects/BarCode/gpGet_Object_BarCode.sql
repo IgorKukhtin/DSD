@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_BarCode()
 
-DROP FUNCTION IF EXISTS gpGet_Object_BarCode(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_BarCode (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_BarCode(
     IN inId          Integer,       --
@@ -63,18 +63,15 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_BarCode (integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_BarCode (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  20.07.16         *
-
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_BarCode(0,'2')
+-- SELECT * FROM gpGet_Object_BarCode (0, '2')

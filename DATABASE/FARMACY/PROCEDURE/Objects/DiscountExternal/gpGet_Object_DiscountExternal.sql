@@ -84,4 +84,4 @@ ALTER FUNCTION gpGet_Object_DiscountExternal (Integer, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_DiscountExternal (0, '2')
+-- SELECT * FROM gpGet_Object_DiscountExternal (2488964, zfCalc_UserAdmin())
