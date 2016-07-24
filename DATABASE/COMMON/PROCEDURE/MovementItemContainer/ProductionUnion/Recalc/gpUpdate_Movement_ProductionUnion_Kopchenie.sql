@@ -26,13 +26,16 @@ BEGIN
                                                         );
 
 
+    -- !!!Удалили, временно пока Пересчет Send здесь!!!
     DROP TABLE _tmpResult ;
+    DROP TABLE _tmpItem;
+    DROP TABLE _tmpItemSumm;
 
     -- Пересчет, !!!Временно здесь, потом надо будет независимо!!!
     PERFORM lpUpdate_Movement_Send_DocumentKind (inIsUpdate  := TRUE
                                                , inStartDate := inStartDate
                                                , inEndDate   := inEndDate
-                                               , inUnitId    := inUnitId
+                                               , inUnitId    := 0
                                                , inUserId    := zc_Enum_Process_Auto_Send()
                                                 );
 

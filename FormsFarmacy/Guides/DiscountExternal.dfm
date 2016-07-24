@@ -46,7 +46,7 @@ object DiscountExternalForm: TDiscountExternalForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
@@ -205,11 +205,11 @@ object DiscountExternalForm: TDiscountExternalForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end

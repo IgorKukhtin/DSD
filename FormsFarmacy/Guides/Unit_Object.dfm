@@ -28,6 +28,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           OptionsData.Editing = False
           OptionsSelection.MultiSelect = True
           OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
