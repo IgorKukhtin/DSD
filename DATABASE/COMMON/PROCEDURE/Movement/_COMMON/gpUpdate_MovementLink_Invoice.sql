@@ -1,8 +1,8 @@
--- Function: gpUpdateMovement_Invoice()
+-- Function: gpUpdate_MovementLink_Invoice()
 
-DROP FUNCTION IF EXISTS gpUpdateMovement_Invoice (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementLink_Invoice (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdateMovement_Invoice(
+CREATE OR REPLACE FUNCTION gpUpdate_MovementLink_Invoice(
     IN inId                   Integer   , -- Ключ объекта <Документ>
     IN inMovementId_Invoice   Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
@@ -13,7 +13,7 @@ $BODY$
     DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UpdateMovement_Invoice());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_MovementLink_Invoice());
 
      -- сохранили связь с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inId, inMovementId_Invoice);
@@ -32,4 +32,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdateMovement_Invoice (ioId:= 275079, inInvoice:= 'False', inSession:= '2')
+-- SELECT * FROM gpUpdate_MovementLink_Invoice (ioId:= 275079, inInvoice:= 'False', inSession:= '2')

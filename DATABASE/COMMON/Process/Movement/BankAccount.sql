@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_BankAccount() RETURNS Intege
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_BankAccount' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_BankAccount' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 --
-CREATE OR REPLACE FUNCTION zc_Enum_Process_UpdateMovement_Invoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UpdateMovement_Invoice' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MovementLink_Invoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MovementLink_Invoice' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -64,11 +64,11 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_BankAc
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_BankAccount())||'> - Проведение за период.'
                                   , inEnumName:= 'zc_Enum_Process_CompletePeriod_BankAccount');
 --  <>
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UpdateMovement_Invoice()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_MovementLink_Invoice()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 5
                                   , inName:= 'Изменение документа Счет'
-                                  , inEnumName:= 'zc_Enum_Process_UpdateMovement_Invoice');
+                                  , inEnumName:= 'zc_Enum_Process_Update_MovementLink_Invoice');
 
  -- Документ <Транспорт>
  -- заливка прав - InsertUpdate_Movement_BankAccount + Get_Movement_BankAccount

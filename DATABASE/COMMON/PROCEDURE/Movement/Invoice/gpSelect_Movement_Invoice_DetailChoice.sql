@@ -43,6 +43,15 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Invoice());
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF COALESCE (inJuridicalId,0) <>0 THEN
+         inJuridicalId:= (SELECT CASE WHEN Object.DescId <> zc_Object_Juridical() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE inJuridicalId END  
+                          FROM Object
+                              LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                ON ObjectLink_Partner_Juridical.ObjectId = Object.Id
+                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                          WHERE Object.Id = inJuridicalId);
+     END IF;
+
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId

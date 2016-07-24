@@ -68,7 +68,7 @@ BEGIN
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                    ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                                  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+                                  --LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
                                   -- это док. "заявка поставщику"
                                   LEFT JOIN MovementItemFloat AS MIFloat_OrderIncome
                                                               ON MIFloat_OrderIncome.MovementItemId = MovementItem.Id
