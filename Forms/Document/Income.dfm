@@ -657,7 +657,7 @@ object IncomeForm: TIncomeForm
             Width = 90
           end
           object clInvNumber_Invoice: TcxGridDBColumn
-            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumber_Invoice'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <

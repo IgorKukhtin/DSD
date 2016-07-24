@@ -1108,7 +1108,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Top = 243
   end
   object spUpdate_Invoice: TdsdStoredProc
-    StoredProcName = 'gpUpdateMovement_Invoice'
+    StoredProcName = 'gpUpdate_MovementLink_Invoice'
     DataSets = <>
     OutputType = otResult
     Params = <

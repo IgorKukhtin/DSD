@@ -1105,12 +1105,14 @@
       item
         Name = 'MasterJuridicalId'
         Value = ''
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
+        Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
