@@ -1341,8 +1341,9 @@ object IncomePartnerForm: TIncomePartnerForm
       end
       item
         Name = 'inMIId_Invoice'
-        Value = Null
+        Value = '0'
         DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2391,6 +2392,13 @@ object IncomePartnerForm: TIncomePartnerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMIId_Invoice'
+        Value = '0'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

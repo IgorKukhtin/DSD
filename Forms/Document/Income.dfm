@@ -2708,8 +2708,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 500
-    Top = 204
+    Left = 492
+    Top = 260
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -2865,6 +2865,15 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMIId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MIId_Invoice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

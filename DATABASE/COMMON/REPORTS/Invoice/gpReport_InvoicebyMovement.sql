@@ -31,137 +31,142 @@ BEGIN
     RETURN QUERY
       WITH 
 
-      tmpListInvoice AS (SELECT MI_Child.ParentId
-                                , MI_Child.Amount
-                           FROM Movement
+      tmpListInvoice AS (SELECT Movement_Invoice.Id                    AS MovementId
+                              , Movement_Invoice.OperDate
+                              , Movement_Invoice.InvNumber
+                              , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+                              , Object_Juridical.Id                    AS JuridicalId
+                              , Object_Juridical.ValueData             AS JuridicalName
+                           FROM Movement AS Movement_Invoice
+                               LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                       ON MovementFloat_TotalSumm.MovementId =  Movement_Invoice.Id
+                                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()   
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                      ON MovementLinkObject_Juridical.MovementId = Movement_Invoice.Id
+                                     AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+                           WHERE Movement_Invoice.DescId = zc_Movement_Invoice()
+                             AND Movement_Invoice.StatusId <> zc_Enum_Status_Erased()
+                             AND Movement_Invoice.Operdate BETWEEN '2016-6-01' AND '2016-8-01'
+                           
                          ) 
 
+              , tmpMIInvoice AS (SELECT tmpListInvoice.MovementId
+                               , tmpListInvoice.OperDate
+                               , tmpListInvoice.InvNumber
+                               , tmpListInvoice.JuridicalId
+                               , tmpListInvoice.JuridicalName
+                               , tmpListInvoice.TotalSumm
+                               , MovementItem.Id                                 AS MovementItemId
+                               , COALESCE (MILinkObject_NameBefore.ObjectId, 0)  AS NameBeforeId
+                               , COALESCE (MovementItem.ObjectId, 0)             AS MeasureId
+                               , MovementItem.Amount                             AS Amount
+                               , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
+                                --, COALESCE (MILinkObject_Goods.ObjectId, 0)       AS GoodsId
+                                --, COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
+                                --, COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
+                           FROM tmpListInvoice
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = tmpListInvoice.MovementId 
+                                                         AND MovementItem.DescId   = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE
+                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()   
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_NameBefore
+                                                                   ON MILinkObject_NameBefore.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_NameBefore.DescId = zc_MILinkObject_NameBefore() 
+                                 /* LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice() */
+                                 /* LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                   ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()*/
+                                  /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                                   ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()*/
+                            )
 
-
-      tmpMIChildReturn AS (SELECT MI_Child.ParentId
-                                , MI_Child.Amount
-                           FROM MovementItemFloat AS MIFloat_MovementIdSale
-                                 INNER JOIN MovementItem AS MI_Child
-                                                         ON MI_Child.Id       = MIFloat_MovementIdSale.MovementItemId 
-                                                        AND MI_Child.DescId   = zc_MI_Child()
-                                                        AND MI_Child.isErased = FALSE
-                           WHERE MIFloat_MovementIdSale.ValueData = inMovementId
-                             AND MIFloat_MovementIdSale.DescId    = zc_MIFloat_MovementId()
-                             AND (MI_Child.ObjectId = inGoodsId OR inGoodsId = 0)
-                           )
-    , tmpMIReturn AS (SELECT MI_Master.MovementId
-                           --, MI_Master.Amount                              AS Amount
-                           , tmpMIChildReturn.Amount                       AS Amount
-                           , MI_Master.ObjectId                            AS GoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           --, COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
-                           , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
-                          
-                      FROM tmpMIChildReturn
-                         INNER JOIN MovementItem AS MI_Master
-                                                 ON MI_Master.Id = tmpMIChildReturn.ParentId 
-                                                AND MI_Master.DescId   = zc_MI_Master()
-                                                AND MI_Master.isErased = FALSE
-                         INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                           ON MILinkObject_GoodsKind.MovementItemId = MI_Master.Id
-                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                          AND (COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = inGoodsKindId OR inGoodsKindId = 0)
-                         INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                      ON MIFloat_Price.MovementItemId = MI_Master.Id
-                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                     AND (COALESCE (MIFloat_Price.ValueData, 0) = inPrice OR inPrice = 0)
-                         /*LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                     ON MIFloat_AmountPartner.MovementItemId = MI_Master.Id
-                                                    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()*/
+         , tmpMLM AS (SELECT tmp.MovementId
+                           , SUM(CASE WHEN tmp.MLM_OperDate < '29.06.2016' /*indatestart*/ THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma_Before
+                           , SUM(CASE WHEN tmp.MLM_OperDate >= '29.06.2016' /*indatestart*/ THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma
+                           --, SUM(tmp.BankSumma) AS BankSumma
+                           --, SUM(CASE WHEN tmp.MLM_OperDate < '01.07.2016' /*indatestart*/ THEN (tmp.ServiceSumma) ELSE 0 END) AS ServiceSumma_Before
+                           --, SUM(CASE WHEN tmp.MLM_OperDate >= '01.07.2016' /*indatestart*/ THEN (tmp.ServiceSumma) ELSE 0 END) AS ServiceSumma
+                           , SUM(tmp.ServiceSumma) AS ServiceSumma
+                      FROM (SELECT tmpListInvoice.MovementId
+                                 , Movement.OperDate AS MLM_OperDate
+                                 , CASE WHEN Movement.DescId in (zc_Movement_BankStatementItem(), zc_Movement_BankAccount()) THEN COALESCE(MovementFloat_Amount.ValueData,0) ELSE 0 END AS BankSumma 
+                                 --, CASE WHEN Movement.DescId = zc_Movement_BankAccount()THEN COALESCE(MovementItem.Amount,0) ELSE 0 END AS BankAccountSumma 
+                                 , CASE WHEN Movement.DescId = zc_Movement_Service()THEN COALESCE(MovementItem.Amount,0) ELSE 0 END AS ServiceSumma 
+                             FROM tmpListInvoice
+                                  INNER JOIN MovementLinkMovement AS MLM_Invoice
+                                                                 ON MLM_Invoice.MovementChildId = tmpListInvoice.MovementId
+                                                                AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                                  LEFT JOIN Movement ON Movement.Id = MLM_Invoice.MovementId 
+                           
+                                  LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                          ON MovementFloat_Amount.MovementId = Movement.Id
+                                                         AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+                            ) AS tmp
+                       GROUP BY tmp.MovementId, tmp.MLM_OperDate
                       )
-     , tmpMovReturn AS (SELECT Movement.Id
-                             , Movement.DescId                      AS MovementDescId
-                             , Object_From.ObjectCode               AS PartnerCode
-                             , Object_From.ValueData                AS PartnerName
-                             , Object_To.ValueData                  AS UnitName
-                             , Object_Branch.ValueData              AS BranchName
-                             , Object_PaidKind.ValueData            AS PaidKindName
-                             , View_Contract_InvNumber.ContractCode AS ContractCode
-                             , View_Contract_InvNumber.InvNumber    AS ContractName
-                             , Movement.InvNumber
-                             , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
-                             , Movement.OperDate
-                             , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementDate_OperDatePartner.ValueData ELSE Movement.OperDate END AS OperDatePartner
-                             , Object_Status.ObjectCode                  AS StatusCode
-                              
-                        FROM (SELECT DISTINCT tmpMIReturn.MovementId AS Id FROM tmpMIReturn
-                             ) AS tmpMovement
-                            LEFT JOIN Movement ON Movement.id = tmpMovement.id
-                            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-              
-                            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                     
+      , tmpIncome AS (SELECT tmpMIInvoice.MovementItemId
+                           , tmpMIInvoice.MovementId
+                           , Movement.OperDate AS Income_OperDate
+                           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                  THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                                  ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                             END AS TFloat) AS IncomeSumma
+                      FROM tmpMIInvoice
+                           INNER JOIN MovementItemFloat AS MIFloat_Income
+                                                        ON CAST(MIFloat_Income.ValueData AS integer) = tmpMIInvoice.MovementItemId   
+                                                       AND MIFloat_Income.DescId = zc_MIFloat_MovementItemId()
+                           LEFT JOIN MovementItem ON MovementItem.Id = MIFloat_Income.MovementItemId 
+                                                 AND MovementItem.isErased = FALSE
+                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                              AND Movement.DescId = zc_Movement_Income()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                                                       ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                       )
 
-                            LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
-                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                   ON MovementLinkObject_From.MovementId = Movement.Id
-                                  AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_PartnerFrom() END
-                            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                  AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_Partner() END
-                            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+--SELECT tmpIncome.MovementId, SUM(IncomeSumma) AS IncomeTotalSumma FROM tmpIncome GROUP BY tmpIncome.MovementId
 
-                            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                   ON ObjectLink_Unit_Branch.ObjectId = Object_To.Id
-                                  AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                   ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                  AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_PaidKind() ELSE zc_MovementLinkObject_PaidKindFrom() END
-                            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-                            
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                  AND MovementLinkObject_Contract.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_Contract() ELSE zc_MovementLinkObject_ContractFrom() END
-                            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
-                        )
-
-      SELECT tmpMovReturn.Id
-           , MovementDesc.ItemName AS MovementDescName
-           , tmpMovReturn.StatusCode
-           , tmpMovReturn.InvNumber
-           , tmpMovReturn.InvNumberPartner
-           , tmpMovReturn.OperDate
-           , tmpMovReturn.OperDatePartner
-           , tmpMovReturn.PartnerCode
-           , tmpMovReturn.PartnerName
-           , tmpMovReturn.BranchName
-           , tmpMovReturn.UnitName
-           , tmpMovReturn.PaidKindName
-           , tmpMovReturn.ContractCode
-           , tmpMovReturn.ContractName
-
-           , Object_Goods.ObjectCode  		AS GoodsCode
-           , Object_Goods.ValueData   		AS GoodsName
-           , Object_GoodsKind.ValueData 	AS GoodsKindName
-           , Object_Measure.ValueData           AS MeasureName
-           , tmpMIReturn.Amount         ::TFloat
-           --, tmpMIReturn.AmountPartner  ::TFloat
-           , tmpMIReturn.Price          ::TFloat
-      FROM tmpMIReturn
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIReturn.GoodsId
-          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIReturn.GoodsKindId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = tmpMIReturn.GoodsId
-                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-          LEFT JOIN tmpMovReturn ON tmpMovReturn.Id = tmpMIReturn.MovementId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMovReturn.MovementDescId
-     ;
+  SELECT tmpMIInvoice.InvNumber
+       , tmpMIInvoice.OperDate
+       , tmpMIInvoice.JuridicalId
+       , tmpMIInvoice.JuridicalName
+       , Object_NameBefore.ValueData  AS NameBeforeName
+       , tmpMIInvoice.Amount
+       , tmpMIInvoice.Price
+       , tmpMIInvoice.TotalSumm
+       , tmpMLM.ServiceSumma
+       , (tmpMIInvoice.TotalSumm - tmpMLM.BankSumma_Before)   AS RemStart                 --îñò.íà÷.ñ÷åò
+       , tmpMLM.BankSumma
+       , (tmpMIInvoice.TotalSumm - tmpMLM.BankSumma_Before - tmpMLM.BankSumma)   AS RemEnd
+       , tmpIncomeGroup.IncomeTotalSumma
+       , tmpIncome.IncomeSumma
+  FROM tmpMIInvoice 
+       LEFT JOIN tmpMLM ON tmpMLM.MovementId = tmpMIInvoice.MovementId
+       LEFT JOIN tmpIncome ON tmpIncome.MovementItemId = tmpMIInvoice.MovementItemId
+       LEFT JOIN (SELECT tmpIncome.MovementId, SUM(IncomeSumma) AS IncomeTotalSumma FROM tmpIncome GROUP BY tmpIncome.MovementId) AS tmpIncomeGroup ON tmpIncomeGroup.MovementId = tmpMIInvoice.MovementId
+       
+       LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = tmpMIInvoice.NameBeforeId
+            ;
          
 END;
 $BODY$
@@ -170,7 +175,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
- 22.07.16         * 
+ 24.07.16         * 
 */
 
 -- òåñò
