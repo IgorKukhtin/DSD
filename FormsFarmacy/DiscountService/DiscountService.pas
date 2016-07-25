@@ -45,7 +45,8 @@ var
 implementation
 {$R *.dfm}
 uses Soap.XSBuiltIns
-   , MainCash;
+   , MainCash
+   , XMLIntf, XMLDoc, OPToSOAPDomConv;
 
 // update DataSet - еще раз по всем "обновим" Дисконт
 function TDiscountServiceForm.fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lCardNumber : string; lDiscountExternalId : Integer) : Boolean;
@@ -53,6 +54,7 @@ var
   GoodsId: Integer;
 begin
   Result :=true;
+//  exit; //!!!для теста
 
   //Если пусто - ничего не делаем
   CheckCDS.DisableControls;
@@ -204,25 +206,32 @@ begin
      end;
 end;
 
+// для Теста
+procedure SaveToXMLFile_TRemotable(Source : TRemotable);
+var
+      Converter: IObjConverter;
+      NodeObject: IXMLNode;
+      NodeParent: IXMLNode;
+      NodeRoot: IXMLNode;
+      XML: IXMLDocument;
+      XMLStr: InvString;
+begin
+      XML:= NewXMLDocument;
+      NodeRoot:= XML.AddChild('Root');
+      NodeParent:= NodeRoot.AddChild('Parent');
+      Converter:= TSOAPDomConv.Create(NIL);
+      NodeObject:= Source.ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
+      XML.SaveToFile('D:\1.txt');
+end;
+
 // Commit Дисконт
 function TDiscountServiceForm.fCommitSale (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
 var
-  SendList_tmp : ArrayOfCardCheckItem;
-  Item_tmp : CardCheckItem;
-  ResList_tmp : ArrayOfCardCheckResultItem;
-  ResItem_tmp : CardCheckResultItem;
-
-
   aSaleRequest : CardSaleRequest;
-
   SendList : ArrayOfCardSaleRequestItem;
-  Item : CardSaleRequestItem; //
+  Item : CardSaleRequestItem;
   ResList : CardSaleResult;
   ResItem : CardSaleResultItem;
-
-  Price, Quantity, Amount : TXSDecimal;
-  PriceSale, AmountSale : TXSDecimal;
-  CheckDate : TXSDateTime;
   //
   BarCode_find : String;
   GoodsId : Integer;
@@ -230,7 +239,6 @@ var
 begin
   Result:=false;
   lMsg:='';
-
   //Если пусто - ничего не делаем
   CheckCDS.DisableControls;
   CheckCDS.filtered := False;
@@ -245,7 +253,7 @@ begin
   GoodsId := CheckCDS.FieldByName('GoodsId').asInteger;
 
   try
-{   aSaleRequest := CardSaleRequest.Create;
+    aSaleRequest := CardSaleRequest.Create;
     Item         := CardSaleRequestItem.Create;
     ResList      := CardSaleResult.Create;
     ResItem      := CardSaleResultItem.Create;
@@ -255,16 +263,12 @@ begin
     //Номер чека
     aSaleRequest.CheckCode := '1';
     //Дата/время чека (дата продажи)
-    CheckDate:= TXSDateTime.Create;
-    CheckDate.XSToNative (DateTimeToStr(now));
-    aSaleRequest.CheckDate :=CheckDate;
-
-            //Код карточки
-            aSaleRequest.MdmCode := lCardNumber;
-            //Штрих код товара
-            //aSaleRequest.ProductFormCode := BarCode_find;
-            //Тип продажи (0 коммерческий\1 акционный)
-            aSaleRequest.SaleType := '1'; // ???????
+    aSaleRequest.CheckDate:= TXSDateTime.Create;
+    aSaleRequest.CheckDate.AsDateTime:= now;
+    //Код карточки
+    aSaleRequest.MdmCode := lCardNumber;
+    //Тип продажи (0 коммерческий\1 акционный)
+    aSaleRequest.SaleType := '1'; // ???????
 
     //
     i := 1;
@@ -290,16 +294,7 @@ begin
       //если Штрих-код нашелся
       if BarCode_find <> '' then
       begin
-
-          PriceSale := TXSDecimal.Create;
-          AmountSale := TXSDecimal.Create;
-          Price := TXSDecimal.Create;
-          Quantity := TXSDecimal.Create;
-          Amount := TXSDecimal.Create;
           try
-            //Штрих код товара
-            aSaleRequest.ProductFormCode := BarCode_find;
-
             //ИД строки в учетной системе
             Item.ItemId:='1';
             //Код карточки
@@ -310,21 +305,21 @@ begin
             Item.SaleType := '1'; // ???????
 
             //Цена без учета скидки
-            PriceSale.XSToNative (FloatToStr (CheckCDS.FieldByName('PriceSale').AsFloat));
-            Item.PrimaryPrice := PriceSale;
+            Item.PrimaryPrice := TXSDecimal.Create;
+            Item.PrimaryPrice.XSToNative (FloatToStr (CheckCDS.FieldByName('PriceSale').AsFloat));
             //Сумма без учета скидки
-            AmountSale.XSToNative(FloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat)));
-            Item.RequestedAmount := AmountSale;
+            Item.PrimaryAmount := TXSDecimal.Create;
+            Item.PrimaryAmount.XSToNative (FloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('PriceSale').AsFloat)));
 
             //Цена товара (с учетом скидки)
-            Price.XSToNative (FloatToStr (CheckCDS.FieldByName('Price').AsFloat));
-            Item.RequestedPrice := Price;
+            Item.RequestedPrice := TXSDecimal.Create;
+            Item.RequestedPrice.XSToNative (FloatToStr (CheckCDS.FieldByName('Price').AsFloat));
             //Кол-во товара
-            Quantity.XSToNative (FloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
-            Item.RequestedQuantity := Quantity;
+            Item.RequestedQuantity := TXSDecimal.Create;
+            Item.RequestedQuantity.XSToNative (FloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
             //Сумма за кол-во товара (с учетом скидки)
-            Amount.XSToNative(FloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat)));
-            Item.RequestedAmount := Amount;
+            Item.RequestedAmount := TXSDecimal.Create;
+            Item.RequestedAmount.XSToNative(FloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat)));
 
             // Подготовили список для отправки
             SetLength(SendList, i);
@@ -342,11 +337,6 @@ begin
                 Result := false;
           end;
           //finally
-            FreeAndNil(PriceSale);
-            FreeAndNil(AmountSale);
-            FreeAndNil(Price);
-            FreeAndNil(Quantity);
-            FreeAndNil(Amount);
 
       end; // if BarCode_find <> ''
       //
@@ -357,6 +347,7 @@ begin
     end; // while
 
             aSaleRequest.Items := SendList;
+            //SaveToXMLFile_TRemotable(aSaleRequest);//!!!для теста!!!
             // Отправили запрос
             ResList := (HTTPRIO as CardServiceSoap).commitCardSale(aSaleRequest, gUserName, gPassword);
             // Получили результат
@@ -373,7 +364,6 @@ begin
             SendList:= nil;
             Item := nil;
             ResItem := nil;
-            FreeAndNil(CheckDate);}
 
   finally
     CheckCDS.Filtered := True;
@@ -393,7 +383,6 @@ var
   Item : CardCheckItem;
   ResList : ArrayOfCardCheckResultItem;
   ResItem : CardCheckResultItem;
-  Price, Quantity, Amount : TXSDecimal;
   //
   BarCode_find:String;
 begin
@@ -429,9 +418,6 @@ begin
   //
   Item := CardCheckItem.Create;
   ResItem := CardCheckResultItem.Create;
-  Price := TXSDecimal.Create;
-  Quantity := TXSDecimal.Create;
-  Amount := TXSDecimal.Create;
   try
     //Код карточки
     Item.MdmCode := lCardNumber;
@@ -440,14 +426,14 @@ begin
     //Тип продажи (0 коммерческий\1 акционный)
     Item.SaleType := '1'; // ???????
     //Предполагаемая цена товара
-    Price.XSToNative(FloatToStr(lPriceSale));
-    Item.RequestedPrice := Price;
+    Item.RequestedPrice := TXSDecimal.Create;
+    Item.RequestedPrice.XSToNative(FloatToStr(lPriceSale));
     //Предполагаемое кол-во товара
-    Quantity.XSToNative(FloatToStr(lQuantity));
-    Item.RequestedQuantity := Quantity;
+    Item.RequestedQuantity := TXSDecimal.Create;
+    Item.RequestedQuantity.XSToNative(FloatToStr(lQuantity));
     //Предполагаемая сумма за кол-во товара
-    Amount.XSToNative(FloatToStr( GetSumm(lQuantity, lPriceSale)));
-    Item.RequestedAmount := Amount;
+    Item.RequestedAmount := TXSDecimal.Create;
+    Item.RequestedAmount.XSToNative(FloatToStr( GetSumm(lQuantity, lPriceSale)));
 
     // Подготовили список для отправки
     SetLength(SendList, 1);
@@ -511,9 +497,6 @@ begin
         Result := false;
   end;
   //finally
-    FreeAndNil(Price);
-    FreeAndNil(Quantity);
-    FreeAndNil(Amount);
     Item := nil;
     ResItem := nil;
 end;

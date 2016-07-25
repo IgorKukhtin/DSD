@@ -35,10 +35,12 @@ type
     lRequestedPrice: TLabel;
     Label6: TLabel;
     Label7: TLabel;
+    bCommit: TButton;
     procedure bCheckCardClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bCheckSaleClick(Sender: TObject);
     procedure eCardNumChange(Sender: TObject);
+    procedure bCommitClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -119,6 +121,56 @@ begin
 end;
 
 
+
+procedure TfrmMain.bCommitClick(Sender: TObject);
+var
+  i : integer;
+  aSaleRequest : CardSaleRequest;
+  SendList : ArrayOfCardSaleRequestItem;
+  Item : CardSaleRequestItem;
+  SaleRes : CardSaleResult;
+begin
+  aSaleRequest := CardSaleRequest.Create;
+  Item := CardSaleRequestItem.Create;
+
+  SaleRes := CardSaleResult.Create;
+  try
+    aSaleRequest.CheckId := '1';
+    aSaleRequest.CheckCode := '1';
+    aSaleRequest.CheckDate := TXSDateTime.Create;
+    aSaleRequest.CheckDate.AsDateTime := Now();
+    aSaleRequest.MdmCode := eCardNum.Text;
+    aSaleRequest.SaleType := '0';
+
+    // products
+    Item.ItemId := '1';
+    Item.MdmCode := eCardNum.Text;
+    Item.ProductFormCode := eBarCode.Text;
+    Item.SaleType := '0';
+    Item.PrimaryPrice := TXSDecimal.Create;
+    Item.PrimaryPrice.XSToNative('100');
+    Item.RequestedPrice := TXSDecimal.Create;
+    Item.RequestedPrice.XSToNative(FloatToStr(100*(100-10)/100));
+
+    Item.PrimaryAmount := TXSDecimal.Create;
+    Item.PrimaryAmount.XSToNative('200');
+    Item.RequestedAmount := TXSDecimal.Create;
+    Item.RequestedAmount.XSToNative(FloatToStr(200 - 90));
+
+    Item.RequestedQuantity := TXSDecimal.Create;
+    Item.RequestedQuantity.XSToNative('2');
+
+    SetLength(SendList, 1);
+    SendList[0] := Item;
+
+    aSaleRequest.Items := SendList;
+
+    SaleRes := (HTTPRIO1 as CardServiceSoap).commitCardSale(aSaleRequest, eLogin.Text, ePassword.Text);
+  finally
+    FreeAndNil(aSaleRequest);
+    FreeAndNil(SaleRes);
+  end;
+end;
 
 procedure TfrmMain.eCardNumChange(Sender: TObject);
 begin
