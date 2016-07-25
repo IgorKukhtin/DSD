@@ -886,6 +886,14 @@ object InvoiceForm: TInvoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1163,8 +1171,8 @@ object InvoiceForm: TInvoiceForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_Invoice'
+      ReportNameParam.Value = 'PrintMovement_Invoice'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
@@ -2595,7 +2603,7 @@ object InvoiceForm: TInvoiceForm
     Top = 350
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income_Print'
+    StoredProcName = 'gpSelect_Movement_Invoice_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
