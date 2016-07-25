@@ -147,7 +147,7 @@ BEGIN
 
 
     OPEN Cursor2 FOR
-              WITH tmpMI AS (SELECT MovementItem.Id                                 AS MovementItemId
+              WITH tmpMI AS (SELECT MovementItem.Id                            AS MovementItemId
                              , COALESCE (MILinkObject_NameBefore.ObjectId, 0)  AS NameBeforeId
                              , COALESCE (MILinkObject_Goods.ObjectId, 0)       AS GoodsId
                              , COALESCE (MovementItem.ObjectId, 0)             AS MeasureId

@@ -42,16 +42,32 @@ BEGIN
                                , COALESCE (MILinkObject_NameBefore.ObjectId, 0)  AS NameBeforeId
                                , COALESCE (MovementItem.ObjectId, 0)             AS MeasureId
                                , MovementItem.Amount                             AS Amount
-                               , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
+                               , CASE WHEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, True) = True 
+                                      THEN CASE WHEN COALESCE(MovementFloat_ChangePercent.ValueData,0) <> 0 THEN CAST ( (1 + COALESCE(MovementFloat_ChangePercent.ValueData,0) / 100) * (COALESCE (MIFloat_Price.ValueData, 0)) AS NUMERIC (16, 2))
+                                                ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                           END
+                                      ELSE CASE WHEN COALESCE(MovementFloat_ChangePercent.ValueData,0) <> 0 THEN CAST ( (1 + COALESCE(MovementFloat_ChangePercent.ValueData,0) / 100) * (CAST ( (1 + COALESCE(MovementFloat_VATPercent.ValueData,0) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                                ELSE CAST ( (1 + COALESCE(MovementFloat_VATPercent.ValueData,0) / 100) * (COALESCE (MIFloat_Price.ValueData, 0)) AS NUMERIC (16, 2))
+                                           END
+                                 END   AS Price
                                , COALESCE (MILinkObject_Goods.ObjectId, 0)       AS GoodsId
-                               , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) > 0
-                                      THEN CAST (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                      ELSE CAST (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                 END :: TFloat AS AmountSumm
+                               , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
+
                            FROM Movement AS Movement_Invoice
                                LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                       ON MovementFloat_TotalSumm.MovementId =  Movement_Invoice.Id
-                                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()   
+                                      ON MovementFloat_TotalSumm.MovementId =  Movement_Invoice.Id
+                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()   
+
+                               LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Invoice.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                               LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                     ON MovementFloat_VATPercent.MovementId =  Movement_Invoice.Id
+                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                               LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                     ON MovementFloat_ChangePercent.MovementId =  Movement_Invoice.Id
+                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                                      
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                       ON MovementLinkObject_Juridical.MovementId = Movement_Invoice.Id
                                      AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
@@ -139,8 +155,16 @@ BEGIN
        , tmpMIInvoice.JuridicalName
        , Object_NameBefore.ValueData  AS NameBeforeName
        , tmpMIInvoice.Amount              ::TFloat
-       , tmpMIInvoice.Price               ::TFloat
-       , tmpMIInvoice.AmountSumm          ::TFloat
+       --, tmpMIInvoice.Price               ::TFloat
+       , CASE WHEN tmpMIInvoice.CountForPrice > 0
+              THEN CAST (COALESCE (tmpMIInvoice.Price, 0) / tmpMIInvoice.CountForPrice AS NUMERIC (16, 2))
+              ELSE CAST (COALESCE (tmpMIInvoice.Price, 0) AS NUMERIC (16, 2))
+         END :: TFloat AS Price
+       --, tmpMIInvoice.AmountSumm          ::TFloat
+       , CASE WHEN tmpMIInvoice.CountForPrice > 0
+              THEN CAST (tmpMIInvoice.Amount * COALESCE (tmpMIInvoice.Price, 0) / tmpMIInvoice.CountForPrice AS NUMERIC (16, 2))
+              ELSE CAST (tmpMIInvoice.Amount * COALESCE (tmpMIInvoice.Price, 0) AS NUMERIC (16, 2))
+         END :: TFloat AS AmountSumm
        , tmpMIInvoice.TotalSumm           ::TFloat
        , tmpMLM.ServiceSumma              ::TFloat
        , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0))  ::TFloat  AS RemStart                 --ост.нач.счет
