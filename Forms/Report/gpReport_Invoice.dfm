@@ -812,6 +812,7 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;NameBeforeName'
           GridView = cxGridDBTableView
         end>
       Params = <

@@ -182,6 +182,7 @@ BEGIN
        LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = COALESCE(tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId)
        LEFT JOIN tmpIncomeGroup ON tmpIncomeGroup.MovementId = tmpMIInvoice.MovementId
        LEFT JOIN tmpIncome ON tmpIncome.MovementItemId = tmpMIInvoice.MovementItemId
+  ORDER BY tmpMIInvoice.MovementId, Object_NameBefore.ValueData
     ;
          
 END;
