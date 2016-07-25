@@ -4,7 +4,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 451
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -73,7 +73,8 @@ inherited ServiceJournalForm: TServiceJournalForm
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -83,7 +84,8 @@ inherited ServiceJournalForm: TServiceJournalForm
             Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 77
@@ -233,6 +235,12 @@ inherited ServiceJournalForm: TServiceJournalForm
   inherited Panel: TPanel
     Width = 1020
     ExplicitWidth = 1020
+    inherited deStart: TcxDateEdit
+      EditValue = 42370d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42370d
+    end
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -409,10 +417,6 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbReCompleteAll'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
