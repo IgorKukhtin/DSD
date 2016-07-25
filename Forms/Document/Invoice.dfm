@@ -31,7 +31,7 @@ object InvoiceForm: TInvoiceForm
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 157
+      Width = 71
     end
     object cxLabel1: TcxLabel
       Left = 9
@@ -228,6 +228,17 @@ object InvoiceForm: TInvoiceForm
       TabOrder = 24
       Width = 44
     end
+    object cxLabel5: TcxLabel
+      Left = 85
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 85
+      Top = 23
+      TabOrder = 26
+      Width = 81
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -383,7 +394,7 @@ object InvoiceForm: TInvoiceForm
             Width = 50
           end
           object colName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+            Caption = #1058#1086#1074#1072#1088'/'#1054#1057
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -845,6 +856,14 @@ object InvoiceForm: TInvoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecordAsset'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertRecord'
         end
         item
@@ -1015,6 +1034,10 @@ object InvoiceForm: TInvoiceForm
     end
     object bbSetUnErasedChild: TdxBarButton
       Action = SetUnErasedChild
+      Category = 0
+    end
+    object bbInsertRecordAsset: TdxBarButton
+      Action = actInsertRecordAsset
       Category = 0
     end
   end
@@ -1265,7 +1288,7 @@ object InvoiceForm: TInvoiceForm
       DataSource = MasterDS
     end
     object UnCompleteMovement: TChangeGuidesStatus
-      Category = 'DSDLib'
+      Category = 'Complete'
       MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
@@ -1283,7 +1306,7 @@ object InvoiceForm: TInvoiceForm
       Guides = StatusGuides
     end
     object CompleteMovement: TChangeGuidesStatus
-      Category = 'DSDLib'
+      Category = 'Complete'
       MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
@@ -1301,7 +1324,7 @@ object InvoiceForm: TInvoiceForm
       Guides = StatusGuides
     end
     object DeleteMovement: TChangeGuidesStatus
-      Category = 'DSDLib'
+      Category = 'Complete'
       MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
@@ -1339,6 +1362,35 @@ object InvoiceForm: TInvoiceForm
         end>
       isShowModal = False
     end
+    object actAssetChoiceFormGoods: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'AssetChoiceForm'
+      FormName = 'TAssetForm'
+      FormNameParam.Value = 'TAssetForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object MovementItemProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1368,6 +1420,70 @@ object InvoiceForm: TInvoiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue_two'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code_two'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NameBeforeCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actOrderIncomeJournalDetailChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1601,6 +1717,38 @@ object InvoiceForm: TInvoiceForm
         end>
       isShowModal = False
     end
+    object actInsertRecordAsset: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actAssetChoiceFormGoods
+      Params = <>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1057
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1057
+      ImageIndex = 0
+    end
+    object actInsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object actInsertRecordChild: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView1
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
+      ImageIndex = 0
+    end
     object actUnitChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1682,91 +1830,6 @@ object InvoiceForm: TInvoiceForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
-    end
-    object actGoodsChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
-      FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = 'TGoods_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsCode'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue_two'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'NameBeforeName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code_two'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'NameBeforeCode'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MeasureId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MeasureId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MeasureName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MeasureName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actInsertRecordChild: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      View = cxGridDBTableView1
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
-      ImageIndex = 0
-    end
-    object actInsertRecord: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      View = cxGridDBTableView
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      ShortCut = 45
-      ImageIndex = 0
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -2002,6 +2065,14 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInvNumberPartner'
+        Value = Null
+        Component = edInvNumberPartner
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJuridicalId'
         Value = ''
         Component = GuidesFrom
@@ -2122,6 +2193,9 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edInvNumberPartner
       end>
     GetStoredProc = spGet
     Left = 264
@@ -2160,6 +2234,13 @@ object InvoiceForm: TInvoiceForm
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = Null
+        Component = edInvNumberPartner
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

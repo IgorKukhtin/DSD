@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , InvNumberPartner TVarChar
              , InsertDate TDateTime, InsertName TVarChar
              , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
              , TotalSummMVAT TFloat , TotalSummPVAT TFloat, TotalSumm TFloat
@@ -42,6 +43,7 @@ BEGIN
            , Movement.OperDate                      AS OperDate
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
            
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
@@ -85,6 +87,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
@@ -153,6 +159,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.07.16         * InvNumberPartner
  15.07.16         *
 */
 

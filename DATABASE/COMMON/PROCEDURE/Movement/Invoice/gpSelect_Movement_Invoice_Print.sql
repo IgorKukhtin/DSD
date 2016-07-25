@@ -16,23 +16,7 @@ $BODY$
 
     DECLARE vbDescId Integer;
     DECLARE vbStatusId Integer;
-    DECLARE vbPriceWithVAT Boolean;
-    DECLARE vbVATPercent TFloat;
-    DECLARE vbDiscountPercent TFloat;
-    DECLARE vbExtraChargesPercent TFloat;
-    DECLARE vbChangePercentTo TFloat;
-    DECLARE vbPaidKindId Integer;
-
-    DECLARE vbOperSumm_MVAT TFloat;
-    DECLARE vbOperSumm_PVAT TFloat;
-    DECLARE vbTotalCountKg  TFloat;
-    DECLARE vbTotalCountSh  TFloat;
-
-    DECLARE vbGoodsPropertyId Integer;
-    DECLARE vbGoodsPropertyId_basis Integer;
-    DECLARE vbContractId Integer;
-    DECLARE vbIsProcess_BranchIn Boolean;
-
+ 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= inSession;
@@ -41,44 +25,8 @@ BEGIN
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
-          , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
-          , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END    AS DiscountPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END     AS ExtraChargesPercent
-          , COALESCE (MovementFloat_ChangePercentTo.ValueData, 0)   AS ChangePercentTo
-          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId) AS GoodsPropertyId
-          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)     AS GoodsPropertyId_basis
-          , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
-          , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
-
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePercentTo, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
+     INTO vbDescId, vbStatusId
      FROM Movement
-          LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
-                                 AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                      AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                       ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                      AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
-
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = Movement.Id
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-
-          LEFT JOIN MovementFloat AS MovementFloat_ChangePercentTo
-                                  ON MovementFloat_ChangePercentTo.MovementId = Movement.Id
-                                 AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentPartner()                              
      WHERE Movement.Id = inMovementId
     ;
 
@@ -100,7 +48,7 @@ BEGIN
       --
     OPEN Cursor1 FOR
          
-SELECT
+         SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate                      AS OperDate
@@ -119,13 +67,10 @@ SELECT
            , MovementFloat_CurrencyValue.ValueData  AS CurrencyValue
            , MovementFloat_ParValue.ValueData       AS ParValue
 
-           , Object_CurrencyDocument.Id             AS CurrencyDocumentId
            , Object_CurrencyDocument.ValueData      AS CurrencyDocumentName
 
-           , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
 
-           , Object_Contract.Id                     AS ContractId
            , Object_Contract.ObjectCode             AS ContractCode
            , Object_Contract.ValueData              AS ContractName
 
@@ -208,10 +153,7 @@ SELECT
                              , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
                              , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                              , MovementItem.isErased
-                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                         AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.isErased   = False
+                      FROM MovementItem 
                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()    
@@ -230,6 +172,9 @@ SELECT
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                    ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId     = zc_MI_Master()
+                       AND MovementItem.isErased   = False
                      )
    
         -- Результат такой

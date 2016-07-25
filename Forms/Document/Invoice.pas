@@ -167,6 +167,11 @@ type
     cxLabel24: TcxLabel;
     edParValue: TcxCurrencyEdit;
     PriceOrderIncome: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
+    actInsertRecordAsset: TInsertRecord;
+    actAssetChoiceFormGoods: TOpenChoiceForm;
+    bbInsertRecordAsset: TdxBarButton;
   private
   public
   end;
