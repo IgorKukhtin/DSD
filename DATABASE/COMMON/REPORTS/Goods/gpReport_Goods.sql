@@ -480,7 +480,7 @@ BEGIN
                    , tmpMI_Count.ContainerId
                    , tmpMI_Count.LocationId
                    , tmpMI_Count.GoodsId
-                   , tmpMI_Count.GoodsKindId
+                   , CASE WHEN tmpMI_Count.GoodsKindId > 0 THEN tmpMI_Count.GoodsKindId ELSE MILinkObject_GoodsKind.ObjectId END AS GoodsKindId
                    , tmpMI_Count.PartionGoodsId
                    , tmpMI_Count.ContainerId_Analyzer
                    , tmpMI_Count.isActive
@@ -519,6 +519,9 @@ BEGIN
                                             ON MovementString_PartionGoods.MovementId = tmpMI_Count.MovementId
                                            AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
                                            AND tmpMI_Count.MovementDescId = zc_Movement_ProductionSeparate()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                    ON MILinkObject_GoodsKind.MovementItemId = tmpMI_Count.MovementItemId
+                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
               WHERE tmpMI_Count.Amount_Period <> 0
              UNION ALL
               -- 2.1. Остатки суммы
@@ -566,7 +569,7 @@ BEGIN
                    , tmpMI_Summ.ContainerId
                    , tmpMI_Summ.LocationId
                    , tmpMI_Summ.GoodsId
-                   , tmpMI_Summ.GoodsKindId
+                   , CASE WHEN tmpMI_Summ.GoodsKindId > 0 THEN tmpMI_Summ.GoodsKindId ELSE MILinkObject_GoodsKind.ObjectId END AS GoodsKindId
                    , tmpMI_Summ.PartionGoodsId
                    , tmpMI_Summ.ContainerId_Analyzer
                    , tmpMI_Summ.isActive
@@ -603,6 +606,9 @@ BEGIN
                                             ON MovementString_PartionGoods.MovementId = tmpMI_Summ.MovementId
                                            AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
                                            AND tmpMI_Summ.MovementDescId = zc_Movement_ProductionSeparate()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                    ON MILinkObject_GoodsKind.MovementItemId = tmpMI_Summ.MovementItemId
+                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
               WHERE tmpMI_Summ.Amount_Period <> 0
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.MovementId
@@ -650,6 +656,7 @@ BEGIN
 
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
+
         LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmpMIContainer_group.LocationId
@@ -685,4 +692,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, 
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());

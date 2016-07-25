@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.719,=C:\Users\1\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.747,=C:\Users\1\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.719,=C:\Users\1\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.456,D:\work\CardService\uCardService.pas=C:\Users\1\Documents\RAD Studio\Projects\CardService.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.384,D:\work\CardService\uMain.pas=C:\Users\1\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.972,D:\work\CardService\CardService.dproj=C:\Users\1\Documents\RAD Studio\Projects\Project1.dproj</Transaction>

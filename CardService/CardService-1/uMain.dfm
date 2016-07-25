@@ -171,6 +171,15 @@ object frmMain: TfrmMain
     TabOrder = 11
     Text = 'eResultRequestedQuantity'
   end
+  object bCommit: TButton
+    Left = 480
+    Top = 176
+    Width = 113
+    Height = 41
+    Caption = 'Commit BarCode'
+    TabOrder = 12
+    OnClick = bCommitClick
+  end
   object HTTPRIO1: THTTPRIO
     HTTPWebNode.UseUTF8InHeader = True
     HTTPWebNode.InvokeOptions = [soIgnoreInvalidCerts, soAutoCheckAccessPointViaUDDI]
