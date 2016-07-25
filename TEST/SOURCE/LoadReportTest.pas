@@ -118,7 +118,7 @@ begin
   LoadReportFromFile('Отчет по счетам', ReportPath + '\Отчеты (финансы)\Отчет по счетам.fr3');
   //  Финансовый учет
   LoadReportFromFile('Платежка Банк', ReportPath + '\Финансовый Учет\Платежка Банк.fr3');
-
+  LoadReportFromFile('PrintMovement_Invoice', ReportPath + '\Финансовый Учет\PrintMovement_Invoice.fr3');
 
   LoadReportFromFile('Продажа и возврат', ReportPath + '\Отчеты (товарные)\Продажа и возврат.fr3');
   LoadReportFromFile('Продажа и возврат по юрлицам', ReportPath + '\Отчеты (товарные)\Продажа и возврат по юрлицам.fr3');

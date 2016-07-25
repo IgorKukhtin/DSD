@@ -568,6 +568,14 @@ object InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -685,8 +693,8 @@ object InvoiceJournalForm: TInvoiceJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -706,8 +714,8 @@ object InvoiceJournalForm: TInvoiceJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_Invoice'
+      ReportNameParam.Value = 'PrintMovement_Invoice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
