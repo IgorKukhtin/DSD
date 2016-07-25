@@ -6,7 +6,7 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 442
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -750,13 +750,11 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
       Left = 97
-      EditValue = 42309d
       Properties.SaveTime = False
       ExplicitLeft = 97
     end
     inherited deEnd: TcxDateEdit
       Left = 300
-      EditValue = 42309d
       Properties.SaveTime = False
       ExplicitLeft = 300
     end
