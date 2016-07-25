@@ -856,7 +856,7 @@ object InvoiceForm: TInvoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordAsset'
+          ItemName = 'bbUpdateAsset_toGoods'
         end
         item
           Visible = True
@@ -1036,8 +1036,8 @@ object InvoiceForm: TInvoiceForm
       Action = SetUnErasedChild
       Category = 0
     end
-    object bbInsertRecordAsset: TdxBarButton
-      Action = actInsertRecordAsset
+    object bbUpdateAsset_toGoods: TdxBarButton
+      Action = actUpdateAsset_toGoods
       Category = 0
     end
   end
@@ -1357,35 +1357,6 @@ object InvoiceForm: TInvoiceForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actAssetChoiceFormGoods: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'AssetChoiceForm'
-      FormName = 'TAssetForm'
-      FormNameParam.Value = 'TAssetForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1717,16 +1688,36 @@ object InvoiceForm: TInvoiceForm
         end>
       isShowModal = False
     end
-    object actInsertRecordAsset: TInsertRecord
+    object actUpdateAsset_toGoods: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      View = cxGridDBTableView
-      Action = actAssetChoiceFormGoods
-      Params = <>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1057
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1057
-      ImageIndex = 0
+      ImageIndex = 28
+      FormName = 'TAssetForm'
+      FormNameParam.Value = 'TAssetForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actInsertRecord: TInsertRecord
       Category = 'DSDLib'

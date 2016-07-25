@@ -51,6 +51,7 @@ BEGIN
          SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
            , Movement.OperDate                      AS OperDate
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
@@ -82,7 +83,10 @@ BEGIN
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -199,8 +203,8 @@ BEGIN
            , COALESCE (Object_Measure.ValueData, '') :: TVarChar AS MeasureName
 
            , Object_NameBefore.Id                AS NameBeforeId
-           , CASE WHEN Object_NameBefore.ValueData <> '' THEN Object_NameBefore.ObjectCode ELSE Object_Goods.ObjectCode END :: Integer  AS NameBeforeCode
-           , CASE WHEN Object_NameBefore.ValueData <> '' THEN Object_NameBefore.ValueData ELSE COALESCE (Object_Goods.ValueData, '') END :: TVarChar AS NameBeforeName
+           , CASE WHEN Object_NameBefore.ValueData <> '' AND COALESCE (Object_Goods.DescId, 0) <> zc_Object_Asset() THEN Object_NameBefore.ObjectCode ELSE Object_Goods.ObjectCode END :: Integer  AS NameBeforeCode
+           , CASE WHEN Object_NameBefore.ValueData <> '' AND COALESCE (Object_Goods.DescId, 0) <> zc_Object_Asset() THEN Object_NameBefore.ValueData ELSE COALESCE (Object_Goods.ValueData, '') END :: TVarChar AS NameBeforeName
 
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ObjectCode              AS UnitCode
