@@ -179,7 +179,8 @@ BEGIN
        LEFT JOIN tmpIncomeGroup ON tmpIncomeGroup.MovementId_Invoice = tmpMIInvoice.MovementId
        LEFT JOIN tmpIncome      ON tmpIncome.MovementItemId_Invoice  = tmpMIInvoice.MovementItemId
 
-       LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = COALESCE (tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId)
+       LEFT JOIN Object AS Object_find ON Object_find.Id = tmpMIInvoice.GoodsId
+       LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = CASE WHEN Object_find.DescId = zc_Object_Asset() THEN Object_find.Id ELSE COALESCE (tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId) END
   ORDER BY tmpMIInvoice.MovementId, Object_NameBefore.ValueData
     ;
          
