@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_Invoice(
     IN inEndDate           TDateTime ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalId Integer, JuridicalName TVarChar
              , NameBeforeName TVarChar
              
@@ -20,6 +20,8 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , RemEnd TFloat
              , IncomeTotalSumma TFloat
              , IncomeSumma TFloat
+             , DebetStart TFloat
+             , DebetEnd TFloat
              ) 
 AS
 $BODY$
@@ -62,7 +64,7 @@ BEGIN
                                , COALESCE (MovementItem.ObjectId, 0)             AS MeasureId
                                , MovementItem.Amount                             AS Amount
                                , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
-                                --, COALESCE (MILinkObject_Goods.ObjectId, 0)       AS GoodsId
+                               , COALESCE (MILinkObject_Goods.ObjectId, 0)       AS GoodsId
                                 --, COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
                                 --, COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            FROM tmpListInvoice
@@ -75,28 +77,19 @@ BEGIN
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_NameBefore
                                                                    ON MILinkObject_NameBefore.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_NameBefore.DescId = zc_MILinkObject_NameBefore() 
-                                 /* LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice() */
-                                 /* LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()*/
-                                  /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                                   ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()*/
+                                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                             )
 
          , tmpMLM AS (SELECT tmp.MovementId
-                           , SUM(CASE WHEN tmp.MLM_OperDate < inStartDate  THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma_Before
-                           , SUM(CASE WHEN tmp.MLM_OperDate >= inStartDate THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma
-                           --, SUM(tmp.BankSumma) AS BankSumma
-                           --, SUM(CASE WHEN tmp.MLM_OperDate < '01.07.2016' /*indatestart*/ THEN (tmp.ServiceSumma) ELSE 0 END) AS ServiceSumma_Before
-                           --, SUM(CASE WHEN tmp.MLM_OperDate >= '01.07.2016' /*indatestart*/ THEN (tmp.ServiceSumma) ELSE 0 END) AS ServiceSumma
-                           , SUM(tmp.ServiceSumma) AS ServiceSumma
+                           , SUM(CASE WHEN tmp.MLM_OperDate < inStartDate THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma_Before
+                           , SUM(CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN (tmp.BankSumma) ELSE 0 END) AS BankSumma
+                           , SUM(CASE WHEN tmp.MLM_OperDate < inStartDate THEN (tmp.ServiceSumma) ELSE 0 END) AS ServiceSumma_Before
+                           , SUM(CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN (tmp.ServiceSumma) ELSE 0 END) AS ServiceSumma
                       FROM (SELECT tmpListInvoice.MovementId
                                  , Movement.OperDate AS MLM_OperDate
-                                 , CASE WHEN Movement.DescId in (zc_Movement_BankStatementItem(), zc_Movement_BankAccount()) THEN COALESCE(MovementFloat_Amount.ValueData,0) ELSE 0 END AS BankSumma 
-                                 --, CASE WHEN Movement.DescId = zc_Movement_BankAccount()THEN COALESCE(MovementItem.Amount,0) ELSE 0 END AS BankAccountSumma 
+                                 , CASE WHEN Movement.DescId in (zc_Movement_BankStatementItem(), zc_Movement_BankAccount()) AND COALESCE(MovementFloat_Amount.ValueData,0) >0 THEN COALESCE(MovementFloat_Amount.ValueData,0) ELSE 0 END AS BankSumma 
                                  , CASE WHEN Movement.DescId = zc_Movement_Service()THEN COALESCE(MovementItem.Amount,0) ELSE 0 END AS ServiceSumma 
                              FROM tmpListInvoice
                                   INNER JOIN MovementLinkMovement AS MLM_Invoice
@@ -107,6 +100,7 @@ BEGIN
                                   LEFT JOIN MovementFloat AS MovementFloat_Amount
                                                           ON MovementFloat_Amount.MovementId = Movement.Id
                                                          AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                                                         AND COALESCE(MovementFloat_Amount.ValueData,0) >0
                                   LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
                             ) AS tmp
                        GROUP BY tmp.MovementId, tmp.MLM_OperDate
@@ -140,28 +134,37 @@ BEGIN
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                        )
+          
+  , tmpIncomeGroup AS (SELECT tmpIncome.MovementId
+                            , SUM(CASE WHEN tmpIncome.Income_OperDate < inStartDate THEN (tmpIncome.IncomeSumma) ELSE 0 END) AS IncomeTotalSumma_Before
+                            , SUM(CASE WHEN tmpIncome.Income_OperDate Between inStartDate AND inEndDate THEN (tmpIncome.IncomeSumma) ELSE 0 END) AS IncomeTotalSumma
+                            --, CASE WHEN tmpIncome.Income_OperDate > inEndDate THEN SUM(tmpIncome.IncomeSumma) ELSE 0 END AS IncomeTotalSumma_After
+                       FROM tmpIncome 
+                       GROUP BY tmpIncome.MovementId
+                       )
 
-
-  SELECT tmpMIInvoice.InvNumber
+  SELECT tmpMIInvoice.MovementId
+       , tmpMIInvoice.InvNumber
        , tmpMIInvoice.OperDate
        , tmpMIInvoice.JuridicalId
        , tmpMIInvoice.JuridicalName
        , Object_NameBefore.ValueData  AS NameBeforeName
-       , tmpMIInvoice.Amount
-       , tmpMIInvoice.Price
-       , tmpMIInvoice.TotalSumm
-       , tmpMLM.ServiceSumma
-       , (tmpMIInvoice.TotalSumm - tmpMLM.BankSumma_Before)   AS RemStart                 --ост.нач.счет
-       , tmpMLM.BankSumma
-       , (tmpMIInvoice.TotalSumm - tmpMLM.BankSumma_Before - tmpMLM.BankSumma)   AS RemEnd
-       , tmpIncomeGroup.IncomeTotalSumma
-       , tmpIncome.IncomeSumma
+       , tmpMIInvoice.Amount              ::TFloat
+       , tmpMIInvoice.Price               ::TFloat
+       , tmpMIInvoice.TotalSumm           ::TFloat
+       , tmpMLM.ServiceSumma              ::TFloat
+       , (tmpMIInvoice.TotalSumm - tmpMLM.BankSumma_Before)  ::TFloat  AS RemStart                 --ост.нач.счет
+       , tmpMLM.BankSumma                 ::TFloat
+       , (tmpMIInvoice.TotalSumm - tmpMLM.BankSumma_Before - tmpMLM.BankSumma)   ::TFloat  AS RemEnd
+       , tmpIncomeGroup.IncomeTotalSumma  ::TFloat
+       , tmpIncome.IncomeSumma            ::TFloat
+       , (tmpMIInvoice.TotalSumm - tmpIncomeGroup.IncomeTotalSumma_Before - tmpMLM.ServiceSumma_Before)  ::TFloat AS DebetStart
+       , (tmpMIInvoice.TotalSumm - tmpIncomeGroup.IncomeTotalSumma_Before - tmpMLM.ServiceSumma_Before - tmpIncomeGroup.IncomeTotalSumma - tmpMLM.ServiceSumma)  ::TFloat AS DebetEnd
   FROM tmpMIInvoice 
        LEFT JOIN tmpMLM ON tmpMLM.MovementId = tmpMIInvoice.MovementId
        LEFT JOIN tmpIncome ON tmpIncome.MovementItemId = tmpMIInvoice.MovementItemId
-       LEFT JOIN (SELECT tmpIncome.MovementId, SUM(IncomeSumma) AS IncomeTotalSumma FROM tmpIncome GROUP BY tmpIncome.MovementId) AS tmpIncomeGroup ON tmpIncomeGroup.MovementId = tmpMIInvoice.MovementId
-       
-       LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = tmpMIInvoice.NameBeforeId
+       LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = COALESCE(tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId)
+       LEFT JOIN tmpIncomeGroup ON tmpIncomeGroup.MovementId = tmpMIInvoice.MovementId
     ;
          
 END;

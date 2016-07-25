@@ -721,6 +721,9 @@ type
     actProductionUnionTechReceiptDelic: TdsdOpenForm;
     N115: TMenuItem;
     N123: TMenuItem;
+    actReport_Invoice: TdsdOpenForm;
+    N124: TMenuItem;
+    N125: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

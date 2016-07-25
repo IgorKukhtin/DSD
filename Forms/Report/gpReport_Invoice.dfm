@@ -23,6 +23,8 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 347
+        ExplicitLeft = -32
+        ExplicitTop = 3
         ExplicitWidth = 1073
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -60,11 +62,6 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
               Kind = skSum
             end
             item
-              Format = ',0.##'
-              Kind = skSum
-              Column = OperDate
-            end
-            item
               Format = ',0.####'
               Kind = skSum
             end
@@ -218,7 +215,6 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
               Kind = skSum
               Column = JuridicalName
             end
@@ -264,6 +260,36 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BankSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = IncomeSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DebetStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DebetEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = IncomeTotalSumma
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -299,11 +325,6 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
               Kind = skSum
             end
             item
-              Format = ',0.##'
-              Kind = skSum
-              Column = OperDate
-            end
-            item
               Format = ',0.####'
               Kind = skSum
             end
@@ -459,11 +480,6 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = JuridicalName
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount
             end
             item
@@ -503,6 +519,36 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BankSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = IncomeSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DebetStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DebetEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = IncomeTotalSumma
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -519,7 +565,7 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 112
+            Width = 72
           end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
@@ -527,7 +573,7 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 87
+            Width = 67
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
@@ -535,16 +581,15 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 228
+            Width = 210
           end
           object NameBeforeName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057'/'#1056#1072#1073#1086#1090#1099')'
             DataBinding.FieldName = 'NameBeforeName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 162
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
@@ -552,11 +597,10 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 66
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -567,7 +611,7 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 55
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
@@ -578,6 +622,74 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 63
+          end
+          object RemStart: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'. '#1089#1095#1077#1090
+            DataBinding.FieldName = 'RemStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object BankSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090
+            DataBinding.FieldName = 'BankSumma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
+          object RemEnd: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085'. '#1089#1095#1077#1090
+            DataBinding.FieldName = 'RemEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object DebetStart: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
+            DataBinding.FieldName = 'DebetStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object IncomeTotalSumma: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'IncomeTotalSumma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object IncomeSumma: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'IncomeSumma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
             Width = 100
           end
           object ServiceSumma: TcxGridDBColumn
@@ -589,51 +701,18 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 65
           end
-          object RemStart: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'. '#1089#1095#1077#1090
-            DataBinding.FieldName = 'RemStart'
+          object DebetEnd: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075' '#1082#1086#1085#1077#1095#1085#1099#1081
+            DataBinding.FieldName = 'DebetEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
-          end
-          object RemEnd: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085'. '#1089#1095#1077#1090
-            DataBinding.FieldName = 'RemEnd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object BankSumma: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090
-            DataBinding.FieldName = 'BankSumma'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object IncomeTotalSumma: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1092#1072#1082#1090
-            DataBinding.FieldName = 'IncomeTotalSumma'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
+            Width = 69
           end
         end
       end
@@ -730,8 +809,8 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'1'
-      ReportNameParam.Value = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'1'
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
