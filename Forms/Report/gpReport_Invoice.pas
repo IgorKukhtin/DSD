@@ -27,6 +27,7 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    MovementId: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -23,8 +23,6 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 347
-        ExplicitLeft = -32
-        ExplicitTop = 3
         ExplicitWidth = 1073
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -290,6 +288,11 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = IncomeTotalSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -549,6 +552,11 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = IncomeTotalSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -613,15 +621,28 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             Options.Editing = False
             Width = 55
           end
-          object TotalSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
-            DataBinding.FieldName = 'TotalSumm'
+            DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 63
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
             Width = 63
           end
           object RemStart: TcxGridDBColumn
@@ -713,6 +734,12 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
+          end
+          object MovementId: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
       end

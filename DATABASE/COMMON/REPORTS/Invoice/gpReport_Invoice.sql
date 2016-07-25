@@ -13,6 +13,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              
              , Amount TFloat  -- 
              , Price TFloat  -- 
+             , AmountSumm TFloat  
              , TotalSumm TFloat  -- 
              , ServiceSumma TFloat
              , RemStart TFloat
@@ -49,7 +50,7 @@ BEGIN
                                LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
                            WHERE Movement_Invoice.DescId = zc_Movement_Invoice()
                              AND Movement_Invoice.StatusId <> zc_Enum_Status_Erased()
-                             AND Movement_Invoice.Operdate BETWEEN inStartDate AND '2016-8-01'
+                             AND Movement_Invoice.Operdate BETWEEN inStartDate AND inEndDate
                            
                          ) 
 
@@ -65,12 +66,17 @@ BEGIN
                                , MovementItem.Amount                             AS Amount
                                , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
                                , COALESCE (MILinkObject_Goods.ObjectId, 0)       AS GoodsId
-                                --, COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
-                                --, COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
+                               , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) > 0
+                                      THEN CAST (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
+                                      ELSE CAST (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                 END :: TFloat AS AmountSumm
                            FROM tmpListInvoice
                                   INNER JOIN MovementItem ON MovementItem.MovementId = tmpListInvoice.MovementId 
                                                          AND MovementItem.DescId   = zc_MI_Master()
                                                          AND MovementItem.isErased = FALSE
+                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice() 
                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()   
@@ -109,11 +115,22 @@ BEGIN
       , tmpIncome AS (SELECT tmpMIInvoice.MovementItemId
                            , tmpMIInvoice.MovementId
                            , Movement.OperDate AS Income_OperDate
-                           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                  THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                                  ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                             END AS TFloat) AS IncomeSumma
+                           , CASE WHEN Movement.OperDate < inStartDate
+                                  THEN (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                             THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                                             ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                                        END)
+                                  ELSE 0 
+                             END AS IncomeSumma_Before
+                           , CASE WHEN Movement.OperDate Between inStartDate AND inEndDate 
+                                  THEN (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                             THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                                             ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                                        END)
+                                  ELSE 0 
+                             END AS IncomeSumma
                       FROM tmpMIInvoice
+                      
                            INNER JOIN MovementItemFloat AS MIFloat_Income
                                                         ON CAST(MIFloat_Income.ValueData AS integer) = tmpMIInvoice.MovementItemId   
                                                        AND MIFloat_Income.DescId = zc_MIFloat_MovementItemId()
@@ -136,9 +153,8 @@ BEGIN
                        )
           
   , tmpIncomeGroup AS (SELECT tmpIncome.MovementId
-                            , SUM(CASE WHEN tmpIncome.Income_OperDate < inStartDate THEN (tmpIncome.IncomeSumma) ELSE 0 END) AS IncomeTotalSumma_Before
-                            , SUM(CASE WHEN tmpIncome.Income_OperDate Between inStartDate AND inEndDate THEN (tmpIncome.IncomeSumma) ELSE 0 END) AS IncomeTotalSumma
-                            --, CASE WHEN tmpIncome.Income_OperDate > inEndDate THEN SUM(tmpIncome.IncomeSumma) ELSE 0 END AS IncomeTotalSumma_After
+                            , SUM(tmpIncome.IncomeSumma_Before) AS IncomeTotalSumma_Before
+                            , SUM(tmpIncome.IncomeSumma)        AS IncomeTotalSumma
                        FROM tmpIncome 
                        GROUP BY tmpIncome.MovementId
                        )
@@ -151,6 +167,7 @@ BEGIN
        , Object_NameBefore.ValueData  AS NameBeforeName
        , tmpMIInvoice.Amount              ::TFloat
        , tmpMIInvoice.Price               ::TFloat
+       , tmpMIInvoice.AmountSumm          ::TFloat
        , tmpMIInvoice.TotalSumm           ::TFloat
        , tmpMLM.ServiceSumma              ::TFloat
        , (tmpMIInvoice.TotalSumm - tmpMLM.BankSumma_Before)  ::TFloat  AS RemStart                 --ост.нач.счет
@@ -162,9 +179,9 @@ BEGIN
        , (tmpMIInvoice.TotalSumm - tmpIncomeGroup.IncomeTotalSumma_Before - tmpMLM.ServiceSumma_Before - tmpIncomeGroup.IncomeTotalSumma - tmpMLM.ServiceSumma)  ::TFloat AS DebetEnd
   FROM tmpMIInvoice 
        LEFT JOIN tmpMLM ON tmpMLM.MovementId = tmpMIInvoice.MovementId
-       LEFT JOIN tmpIncome ON tmpIncome.MovementItemId = tmpMIInvoice.MovementItemId
        LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = COALESCE(tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId)
        LEFT JOIN tmpIncomeGroup ON tmpIncomeGroup.MovementId = tmpMIInvoice.MovementId
+       LEFT JOIN tmpIncome ON tmpIncome.MovementItemId = tmpMIInvoice.MovementItemId
     ;
          
 END;
