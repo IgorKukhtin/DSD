@@ -24,7 +24,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
                UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
                isLeaf Boolean, isPartionDate Boolean,
-               isErased Boolean
+               isErased Boolean,
+               Address TVarChar
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -105,11 +106,17 @@ BEGIN
 
            , Object_Unit_View.isLeaf
            , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
+
            , Object_Unit_View.isErased
 
+           , ObjectString_Unit_Address.ValueData   AS Address
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                   ON ObjectString_Unit_Address.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
                                  ON ObjectLink_Unit_HistoryCost.ObjectId = Object_Unit_View.Id
@@ -219,7 +226,7 @@ BEGIN
            , TRUE AS isLeaf
            , FALSE AS isPartionDate
            , FALSE AS isErased
-
+           , CAST ('' as TVarChar)  AS Address 
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id
@@ -286,6 +293,7 @@ BEGIN
            , TRUE AS isLeaf
            , FALSE AS isPartionDate
            , FALSE AS isErased
+           , CAST ('' as TVarChar)  AS Address 
       ;
 
 END;
@@ -297,6 +305,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.07.16         * Address
  03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting
  15.04.15         * add Contract
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
@@ -310,3 +319,5 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_Unit (zfCalc_UserAdmin())
+
+

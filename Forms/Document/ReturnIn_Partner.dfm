@@ -3771,6 +3771,37 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ComponentItem = 'AssetId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_PartionTop'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_PartionMI'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Partion'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId_Partion'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Partion'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPartionMovementName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionMovementName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 368

@@ -1,11 +1,16 @@
 -- Function: gpInsertUpdate_Object_Storage()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Storage(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Storage(Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Storage(
  INOUT ioId             Integer   ,     -- ключ объекта <Места хранения> 
     IN inCode           Integer   ,     -- Код объекта  
     IN inName           TVarChar  ,     -- Название объекта 
+    IN inComment        TVarChar  ,     -- Примечание
+    IN inAddress        TVarChar  ,     -- Адрес места
+    IN inUnitId         Integer   ,     -- Подразделение
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -31,19 +36,28 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Storage(), vbCode_calc, inName);
+
+   -- сохранили свойство <адрес>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Storage_Address(), ioId, inAddress);
+   -- сохранили свойство <Примечание>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Storage_Comment(), ioId, inComment);
+   -- сохранили связь с <Подразделение>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Storage_Unit(), ioId, inUnitId);
+   
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Storage (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Storage (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.07.16         *
  28.07.14         *
 */
 
