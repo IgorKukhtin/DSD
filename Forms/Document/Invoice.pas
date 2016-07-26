@@ -169,9 +169,8 @@ type
     PriceOrderIncome: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
-    actInsertRecordAsset: TInsertRecord;
-    actAssetChoiceFormGoods: TOpenChoiceForm;
-    bbInsertRecordAsset: TdxBarButton;
+    actUpdateAsset_toGoods: TOpenChoiceForm;
+    bbUpdateAsset_toGoods: TdxBarButton;
   private
   public
   end;
