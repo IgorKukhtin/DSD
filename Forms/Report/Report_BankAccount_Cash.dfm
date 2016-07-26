@@ -4,7 +4,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
   ClientWidth = 982
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 998
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -649,7 +649,6 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
       Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDItems'
@@ -723,11 +722,9 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
       Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
           GridView = cxGridDBTableView
         end>
       Params = <

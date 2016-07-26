@@ -92,3 +92,4 @@ initialization
   RegisterClass(TReport_BankAccountForm)
 
 end.
+//actPrint_byElements_byComments - cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment
