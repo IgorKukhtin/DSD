@@ -6,7 +6,7 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 439
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -735,6 +735,17 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             Options.Editing = False
             Width = 69
           end
+          object PaymentPlan: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090
+            DataBinding.FieldName = 'PaymentPlan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
           object MovementId: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId'
             Visible = False
@@ -851,23 +862,6 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Invoice'
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     Left = 112
     Top = 208
   end
