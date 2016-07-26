@@ -1089,7 +1089,6 @@
         Value = '0'
         Component = InvoiceGuides
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1117,7 +1116,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 524
-    Top = 184
+    Left = 508
+    Top = 192
   end
 end

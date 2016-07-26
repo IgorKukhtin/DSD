@@ -97,7 +97,7 @@ BEGIN
 
       SELECT Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
-           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName,  MovementString_InvNumberPartner.ValueData||'/'||Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
+           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName,  COALESCE(MovementString_InvNumberPartner.ValueData,'')||'/'||Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
            , Movement.OperDate                      AS OperDate
            , Object_Status.ObjectCode               AS StatusCode

@@ -101,7 +101,7 @@ BEGIN
            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE) AS isCopy
 
            , Movement_Invoice.Id                 AS MovementId_Invoice
-           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, MovementString_InvNumberPartner.ValueData || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
            , MS_Comment_Invoice.ValueData        AS Comment_Invoice
 
        FROM tmpStatus
