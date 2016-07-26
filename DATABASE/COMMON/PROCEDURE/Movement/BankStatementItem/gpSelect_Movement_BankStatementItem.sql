@@ -89,7 +89,7 @@ BEGIN
            , Object_BankAccount_View.BankName    AS LinkBankNameId
 
            , Movement_Invoice.Id                 AS MovementId_Invoice
-           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, MovementString_InvNumberPartner.ValueData || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
            , MS_Comment_Invoice.ValueData        AS Comment_Invoice
 
        FROM Movement
@@ -180,6 +180,9 @@ BEGIN
                                           AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement_Invoice.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementString AS MS_Comment_Invoice
                                      ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
                                     AND MS_Comment_Invoice.DescId = zc_MovementString_Comment()

@@ -22,8 +22,6 @@ inherited CashJournalForm: TCashJournalForm
       inherited cxGrid: TcxGrid
         Width = 959
         Height = 494
-        ExplicitLeft = 107
-        ExplicitTop = -20
         ExplicitWidth = 959
         ExplicitHeight = 494
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -112,7 +110,6 @@ inherited CashJournalForm: TCashJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -159,6 +156,7 @@ inherited CashJournalForm: TCashJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object clMoneyPlaceName: TcxGridDBColumn
@@ -176,6 +174,7 @@ inherited CashJournalForm: TCashJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object OKPO: TcxGridDBColumn
@@ -191,6 +190,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object clPartionMovementName: TcxGridDBColumn
@@ -239,6 +239,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'PositionName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 111
           end
           object PersonalServiceListCode: TcxGridDBColumn
@@ -247,6 +248,7 @@ inherited CashJournalForm: TCashJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object PersonalServiceListName: TcxGridDBColumn
@@ -254,6 +256,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'PersonalServiceListName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object clInfoMoneyCode: TcxGridDBColumn
@@ -262,6 +265,7 @@ inherited CashJournalForm: TCashJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object clInfoMoneyGroupName: TcxGridDBColumn
@@ -270,6 +274,7 @@ inherited CashJournalForm: TCashJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object clInfoMoneyDestinationName: TcxGridDBColumn
@@ -278,6 +283,7 @@ inherited CashJournalForm: TCashJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object clInfoMoneyName: TcxGridDBColumn
@@ -295,6 +301,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'InfoMoneyName_all'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object colContractCode: TcxGridDBColumn
@@ -312,6 +319,7 @@ inherited CashJournalForm: TCashJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colContractTagName: TcxGridDBColumn
@@ -328,6 +336,7 @@ inherited CashJournalForm: TCashJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clUnitName: TcxGridDBColumn
@@ -344,12 +353,14 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
           end
           object clAmountCurrency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
             DataBinding.FieldName = 'AmountCurrency'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clAmountSumm: TcxGridDBColumn
@@ -357,6 +368,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'AmountSumm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clCurrencyName: TcxGridDBColumn
@@ -364,6 +376,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'CurrencyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clCurrencyPartnerValue: TcxGridDBColumn
@@ -371,6 +384,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'CurrencyPartnerValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clParPartnerValue: TcxGridDBColumn
@@ -378,6 +392,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'ParPartnerValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clCurrencyValue: TcxGridDBColumn
@@ -385,6 +400,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'CurrencyValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clParValue: TcxGridDBColumn
@@ -392,7 +408,38 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'ParValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
+          end
+          object colInvNumber_Invoice: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object colMovementId_Invoice: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_Invoice'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object colComment_Invoice: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'.'#1057#1095#1077#1090')'
+            DataBinding.FieldName = 'Comment_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
         end
       end
@@ -461,23 +508,27 @@ inherited CashJournalForm: TCashJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inCashId_top'
           Value = ''
           Component = CashGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -489,23 +540,27 @@ inherited CashJournalForm: TCashJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inCashId_top'
           Value = ''
           Component = CashGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end>
     end
     inherited MovementProtocolOpenForm: TdsdOpenForm
@@ -520,24 +575,28 @@ inherited CashJournalForm: TCashJournalForm
       FormName = 'TReport_CashForm'
       FormNameParam.Value = 'TReport_CashForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashId'
           Value = ''
           Component = CashGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName'
@@ -545,6 +604,7 @@ inherited CashJournalForm: TCashJournalForm
           Component = CashGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -557,6 +617,7 @@ inherited CashJournalForm: TCashJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -564,6 +625,7 @@ inherited CashJournalForm: TCashJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -571,10 +633,76 @@ inherited CashJournalForm: TCashJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Invoice
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Invoice
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
+    object actInvoiceJournalDetailChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'acInvoiceJournalDetailChoiceForm'
+      FormName = 'TInvoiceJournalDetailChoiceForm'
+      FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Invoice'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Invoice'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment_Invoice'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -594,6 +722,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -601,6 +730,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashId'
@@ -608,6 +738,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = CashGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
@@ -615,6 +746,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -622,6 +754,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 96
@@ -753,18 +886,21 @@ inherited CashJournalForm: TCashJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashId_top'
@@ -772,6 +908,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = CashGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashName_top'
@@ -780,6 +917,7 @@ inherited CashJournalForm: TCashJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
@@ -787,6 +925,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -795,6 +934,7 @@ inherited CashJournalForm: TCashJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -807,6 +947,7 @@ inherited CashJournalForm: TCashJournalForm
     LookupControl = ceCash
     FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -815,6 +956,7 @@ inherited CashJournalForm: TCashJournalForm
         Value = ''
         Component = CashGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -822,12 +964,14 @@ inherited CashJournalForm: TCashJournalForm
         Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = Null
         Component = CurrencyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -835,6 +979,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = CurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 552
     Top = 5
@@ -844,6 +989,7 @@ inherited CashJournalForm: TCashJournalForm
     LookupControl = ceCurrency
     FormNameParam.Value = 'TCurrencyValue_ForCashForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrencyValue_ForCashForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -852,6 +998,7 @@ inherited CashJournalForm: TCashJournalForm
         Value = ''
         Component = CurrencyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -859,6 +1006,7 @@ inherited CashJournalForm: TCashJournalForm
         Component = CurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -866,8 +1014,41 @@ inherited CashJournalForm: TCashJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 744
     Top = 65532
+  end
+  object spUpdate_Invoice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementLink_Invoice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Invoice'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 153
   end
 end

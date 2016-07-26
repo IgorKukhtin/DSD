@@ -194,8 +194,8 @@ BEGIN
            , MovementItem.isErased
      
            , MI_Invoice.Id              AS MIId_Invoice
-           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
-           
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, MovementString_InvNumberPartner_Invoice.ValueData || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -249,6 +249,9 @@ BEGIN
                                                 AND MI_Invoice.isErased = FALSE
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MI_Invoice.MovementId
             LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Invoice
+                                     ON MovementString_InvNumberPartner_Invoice.MovementId =  Movement_Invoice.Id
+                                    AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
             --
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -386,7 +389,8 @@ BEGIN
            , tmpMI_Goods.isErased               AS isErased
 
            , MI_Invoice.Id                      AS MIId_Invoice
-           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, MovementString_InvNumberPartner_Invoice.ValueData || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+
    
        FROM tmpMI_Goods
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
@@ -399,6 +403,9 @@ BEGIN
                                                 AND MI_Invoice.isErased = FALSE
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MI_Invoice.MovementId
             LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Invoice
+                                     ON MovementString_InvNumberPartner_Invoice.MovementId =  Movement_Invoice.Id
+                                    AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
             --
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId

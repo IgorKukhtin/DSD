@@ -51,6 +51,9 @@ type
     cxLabel15: TcxLabel;
     ceCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
+    spUpdate_Invoice: TdsdStoredProc;
   private
     { Private declarations }
   public

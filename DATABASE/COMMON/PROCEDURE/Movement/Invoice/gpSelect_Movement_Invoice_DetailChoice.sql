@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice_DetailChoice(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
+             , InvNumberPartner TVarChar
              , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
@@ -96,7 +97,8 @@ BEGIN
 
       SELECT Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
-           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
+           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName,  MovementString_InvNumberPartner.ValueData||'/'||Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
            , Movement.OperDate                      AS OperDate
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
@@ -175,6 +177,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id

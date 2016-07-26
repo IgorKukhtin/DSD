@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , MovementId_Partion Integer, PartionMovementName TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              )
 AS
 $BODY$
@@ -77,6 +78,10 @@ BEGIN
 
            , 0                          AS MovementId_Partion
            , CAST ('' AS TVarChar)  	AS PartionMovementName
+
+           , 0                                                 AS MovementId_Invoice
+           , CAST ('' as TVarChar)                             AS InvNumber_Invoice
+           , CAST ('' as TVarChar)                             AS Comment_Invoice
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inCashId -- IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
@@ -147,6 +152,10 @@ BEGIN
            , MIFloat_MovementId.ValueData :: Integer AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
+           , Movement_Invoice.Id                 AS MovementId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, MovementString_InvNumberPartner.ValueData || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , MS_Comment_Invoice.ValueData        AS Comment_Invoice
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -168,6 +177,18 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+            LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                           ON MLM_Invoice.MovementId = Movement.Id
+                                          AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement_Invoice.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            LEFT JOIN MovementString AS MS_Comment_Invoice
+                                     ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
+                                    AND MS_Comment_Invoice.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
@@ -238,6 +259,7 @@ ALTER FUNCTION gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 26.07.16         * invoice
  27.04.15         * add MIFloat_MovementId (sale)
  06.03.15         * add Currency...
  30.08.14                                        * all
