@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -18,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inContractId          Integer   , -- Договора
     IN inInfoMoneyId         Integer   , -- Управленческие статьи
     IN inUnitId              Integer   , -- Подразделения
+    IN inMovementId_Invoice  Integer   , -- документ счет
 
     IN inCurrencyId           Integer   , -- Валюта 
    OUT outCurrencyValue       TFloat    , -- Курс для перевода в валюту баланса
@@ -113,6 +116,10 @@ BEGIN
                                          , inUserId      := vbUserId
                                           );
 
+     -- сохранили связь с документом <Счет>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
+
+
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
@@ -134,6 +141,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.07.16         *
  27.05.15         * add MovementId_Partion
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  09.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...

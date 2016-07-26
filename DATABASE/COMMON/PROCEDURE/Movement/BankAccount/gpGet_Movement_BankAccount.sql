@@ -127,7 +127,7 @@ BEGIN
            , MovementFloat_ParPartnerValue.ValueData           AS ParPartnerValue
 
            , Movement_Invoice.Id                 AS MovementId_Invoice
-           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, MovementString_InvNumberPartner.ValueData || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
            , MS_Comment_Invoice.ValueData        AS Comment_Invoice
 
        FROM Movement
@@ -158,6 +158,9 @@ BEGIN
                                            ON MLM_Invoice.MovementId = Movement.Id
                                           AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement_Invoice.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
             LEFT JOIN MovementString AS MS_Comment_Invoice
                                      ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
@@ -206,6 +209,7 @@ ALTER FUNCTION gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. 
+ 26.07.16         * invoice
  21.07.16         *
  14.11.14                                        * add Currency...
  07.05.14                                        * add inMovementId_Value

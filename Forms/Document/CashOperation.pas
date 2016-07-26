@@ -58,6 +58,11 @@ type
     cxLabel19: TcxLabel;
     edInvNumberSale: TcxButtonEdit;
     SaleChoiceGuides: TdsdGuides;
+    cxLabel17: TcxLabel;
+    ceInvoice: TcxButtonEdit;
+    cxLabel18: TcxLabel;
+    ceComment_Invoice: TcxTextEdit;
+    InvoiceGuides: TdsdGuides;
   private
     { Private declarations }
   public

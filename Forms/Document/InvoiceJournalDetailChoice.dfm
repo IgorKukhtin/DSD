@@ -219,6 +219,14 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
+      object colInvNumberPartner: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'InvNumberPartner'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
