@@ -6,7 +6,11 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Storage(
     IN inId          Integer,       -- ключ объекта <Места хранения>
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , Address TVarChar, Comment TVarChar
+             , isErased boolean
+) AS
 $BODY$
 BEGIN
 
