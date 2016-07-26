@@ -4,7 +4,7 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
   ClientWidth = 1073
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -182,6 +182,22 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
+          end
+          object colInvNumber_MasterFull: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'InvNumber_MasterFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090'.'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 36
           end
         end
       end

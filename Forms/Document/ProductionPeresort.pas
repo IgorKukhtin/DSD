@@ -50,6 +50,9 @@ type
     colGoodsChildGroupNameFull: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     colAmountIn: TcxGridDBColumn;
+    cxLabel19: TcxLabel;
+    edInvNumberSale: TcxButtonEdit;
+    SaleChoiceGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -16,7 +16,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , MeasureName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightTotal TFloat
-             , isOrder Boolean)
+             , isOrder Boolean
+             , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar
+             , GoodsKindSubId Integer, GoodsKindSubName TVarChar
+)
 AS
 $BODY$
 BEGIN
@@ -52,7 +55,14 @@ BEGIN
            , COALESCE (ObjectFloat_WeightPackage.ValueData,0)::TFloat  AS WeightPackage
            , COALESCE (ObjectFloat_WeightTotal.ValueData,0)  ::TFloat  AS WeightTotal
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
-           
+
+           , Object_GoodsSub.Id               AS GoodsSubId
+           , Object_GoodsSub.ObjectCode       AS GoodsSubCode
+           , Object_GoodsSub.ValueData        AS GoodsSubName
+
+           , Object_GoodsKindSub.Id           AS GoodsKindSubId
+           , Object_GoodsKindSub.ValueData    AS GoodsKindSubName
+         
        FROM Object_GoodsByGoodsKind_View
            LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
                                  ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
@@ -65,6 +75,18 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                    ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                   AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
+                                ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+           LEFT JOIN Object AS Object_GoodsSub ON Object_GoodsSub.Id = ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+           LEFT JOIN Object AS Object_GoodsKindSub ON Object_GoodsKindSub.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
+
+
 
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
@@ -119,6 +141,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.07.16        *
  17.06.15                                       * all
  18.03.15        * add redmine 17.03.2015
  29.01.14                        * 
