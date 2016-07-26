@@ -1037,7 +1037,7 @@ object InvoiceForm: TInvoiceForm
       Category = 0
     end
     object bbInsertRecordAsset: TdxBarButton
-      Action = actInsertRecordAsset
+      Action = actAssetChoiceFormGoods
       Category = 0
     end
   end
@@ -1366,7 +1366,9 @@ object InvoiceForm: TInvoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'AssetChoiceForm'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1057
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1057
+      ImageIndex = 1
       FormName = 'TAssetForm'
       FormNameParam.Value = 'TAssetForm'
       FormNameParam.DataType = ftString
