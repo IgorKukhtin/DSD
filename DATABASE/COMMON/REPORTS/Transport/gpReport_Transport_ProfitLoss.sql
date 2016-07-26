@@ -75,10 +75,11 @@ BEGIN
                                        , MIContainer.WhereObjectId_Analyzer          AS CarId
                                        , MIContainer.ObjectIntId_Analyzer            AS UnitId
                                        , MIContainer.ObjectExtId_Analyzer            AS BranchId
-                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
+                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
                                        , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId) AS RouteId
                                        , CLO_ProfitLoss.ObjectId                     AS ProfitLossId
                                        , CLO_Business.ObjectId                       AS BusinessId
+                                       -- , MIContainer.AnalyzerId
                                
                                   FROM MovementItemContainer AS MIContainer
                                        JOIN ContainerLinkObject AS CLO_ProfitLoss
@@ -89,7 +90,7 @@ BEGIN
                                                                     AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
                                                            
                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                                                    ON MovementLinkObject_PersonalDriver.MovementId =MIContainer.MovementId
+                                                                    ON MovementLinkObject_PersonalDriver.MovementId = MIContainer.MovementId
                                                                    AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
          
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
@@ -111,16 +112,17 @@ BEGIN
                                           , MIContainer.WhereObjectId_Analyzer 
                                           , MIContainer.ObjectIntId_Analyzer 
                                           , MIContainer.ObjectExtId_Analyzer
+                                          , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END
                                           , MILinkObject_Route.ObjectId
                                           , CLO_ProfitLoss.ObjectId , CLO_Business.ObjectId 
-                                          , MovementLinkObject_PersonalDriver.ObjectId   
+                                          -- , MovementLinkObject_PersonalDriver.ObjectId   
                                           , MovementItem.Id
                                           , MovementItem.ObjectId
                             ) AS tmpContainer   
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = tmpContainer.MovementId
                                                        AND MovementItem.ObjectId   = tmpContainer.RouteId
                                                        AND MovementItem.DescId     = zc_MI_Master()
-                                                       AND MovementItem.isErased   = False
+                                                       AND MovementItem.isErased   = FALSE
                                  LEFT JOIN MovementItemFloat AS MIFloat_Distance
                                                              ON MIFloat_Distance.MovementItemId = MovementItem.Id
                                                             AND MIFloat_Distance.DescId = CASE WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN zc_MIFloat_DistanceFuelChild()
@@ -386,4 +388,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Transport_ProfitLoss (inStartDate:= '31.07.2015', inEndDate:= '13.08.2015', inBusinessId:= 0, inBranchId:= 0, inUnitId:= 0, inCarId:= 0, inIsMovement:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_Transport_ProfitLoss (inStartDate:= '31.07.2016', inEndDate:= '13.08.2016', inBusinessId:= 0, inBranchId:= 0, inUnitId:= 0, inCarId:= 0, inIsMovement:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации

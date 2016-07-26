@@ -23,8 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BankAccountId Integer, BankAccountName TVarChar
              , LinkBankId Integer, LinkBankName TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
-
-)
+              )
 AS
 $BODY$
 BEGIN
