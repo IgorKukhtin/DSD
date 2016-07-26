@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1376
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -89,12 +89,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'ToId'
-          Value = 8447
+          Value = 8448
           MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
-          Value = #1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081
+          Value = #1062#1045#1061' '#1076#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -702,12 +702,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'ToId'
-          Value = 8447
+          Value = 8448
           MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
-          Value = #1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081
+          Value = #1062#1045#1061' '#1076#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074
           DataType = ftString
           MultiSelectSeparator = ','
         end>
