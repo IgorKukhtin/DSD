@@ -2,8 +2,8 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-  ClientHeight = 139
-  ClientWidth = 295
+  ClientHeight = 289
+  ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,12 +24,12 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 49
+    Top = 53
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 100
+    Top = 251
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 100
+    Top = 251
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -57,6 +57,45 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 146
+    Caption = #1040#1076#1088#1077#1089
+  end
+  object ceAddress: TcxTextEdit
+    Left = 10
+    Top = 165
+    TabOrder = 7
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 191
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit
+    Left = 10
+    Top = 210
+    TabOrder = 9
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 99
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object edUnit: TcxButtonEdit
+    Left = 10
+    Top = 119
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
     Width = 273
   end
   object ActionList: TActionList
@@ -78,6 +117,7 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -87,6 +127,7 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -100,12 +141,14 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -113,7 +156,33 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAddress'
+        Value = Null
+        Component = ceAddress
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 104
     Top = 56
   end
@@ -123,6 +192,7 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 8
@@ -138,18 +208,51 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Address'
+        Value = Null
+        Component = ceAddress
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 184
     Top = 16
   end
@@ -165,11 +268,38 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 152
-    Top = 96
+    Left = 264
+    Top = 184
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 8
+    Left = 56
     Top = 48
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 117
   end
 end

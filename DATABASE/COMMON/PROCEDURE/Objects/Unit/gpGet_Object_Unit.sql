@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                AreaId Integer, AreaName TVarChar,
                PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
-               isPartionDate boolean
+               isPartionDate boolean,
+               Address TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -77,6 +78,7 @@ BEGIN
            , CAST (NULL AS Boolean) AS isErased
            , CAST (NULL AS Boolean) AS isLeaf
            , CAST (NULL AS Boolean) AS isPartionDate
+           , CAST ('' as TVarChar)  AS Address
 ;
    ELSE
        RETURN QUERY 
@@ -126,9 +128,15 @@ BEGIN
            , Object_Unit_View.isLeaf
 
            , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
+           , ObjectString_Unit_Address.ValueData   AS Address
 
        FROM Object_Unit_View
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                   ON ObjectString_Unit_Address.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection -- "Аналитика ОПиУ - направление" установлена !!!только!!! у следующего после самого верхнего уровня 
                                  ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit_View.Id
                                 AND ObjectLink_Unit_ProfitLossDirection.DescId = zc_ObjectLink_Unit_ProfitLossDirection()
@@ -178,6 +186,7 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.07.16         *
  24.11.15         * add PersonalSheetWorkTime
  19.07.15         * add Area
  03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting

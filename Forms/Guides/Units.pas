@@ -80,6 +80,7 @@ type
     PersonalSheetWorkTimeName: TcxGridDBColumn;
     UnitCode_HistoryCost: TcxGridDBColumn;
     UnitName_HistoryCost: TcxGridDBColumn;
+    ceAddress: TcxGridDBColumn;
   private
     { Private declarations }
   public

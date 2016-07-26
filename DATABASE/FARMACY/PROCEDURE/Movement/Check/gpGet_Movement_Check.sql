@@ -40,8 +40,12 @@ BEGIN
            , Movement_Check.Bayer
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
-           , Movement_Check.DiscountCardName
+           , (Movement_Check.DiscountCardName ||' '||COALESCE(Object_Object.ValueData,'')) ::TVarChar
         FROM Movement_Check_View AS Movement_Check
+             LEFT JOIN ObjectLink AS ObjectLink_Object
+                                  ON ObjectLink_Object.ObjectId = Movement_Check.DiscountCardId
+                                 AND ObjectLink_Object.DescId = zc_ObjectLink_DiscountCard_Object()
+             LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
        WHERE Movement_Check.Id =  inMovementId;
 
 END;
