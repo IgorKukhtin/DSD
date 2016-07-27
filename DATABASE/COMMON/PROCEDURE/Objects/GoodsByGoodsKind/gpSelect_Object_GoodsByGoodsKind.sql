@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightTotal TFloat
              , isOrder Boolean
-             , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar
+             , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
 )
 AS
@@ -59,6 +59,7 @@ BEGIN
            , Object_GoodsSub.Id               AS GoodsSubId
            , Object_GoodsSub.ObjectCode       AS GoodsSubCode
            , Object_GoodsSub.ValueData        AS GoodsSubName
+           , Object_MeasureSub.ValueData      AS MeasureSubName
 
            , Object_GoodsKindSub.Id           AS GoodsKindSubId
            , Object_GoodsKindSub.ValueData    AS GoodsKindSubName
@@ -75,18 +76,6 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                    ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                   AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-
-           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
-                                ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
-                               AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
-           LEFT JOIN Object AS Object_GoodsSub ON Object_GoodsSub.Id = ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
-
-           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
-                                ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
-                               AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
-           LEFT JOIN Object AS Object_GoodsKindSub ON Object_GoodsKindSub.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
-
-
 
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
@@ -130,6 +119,22 @@ BEGIN
                                   ON ObjectLink_Goods_InfoMoney.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
+                                ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+           LEFT JOIN Object AS Object_GoodsSub ON Object_GoodsSub.Id = ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsSub_Measure
+                                ON ObjectLink_GoodsSub_Measure.ObjectId = Object_GoodsSub.Id
+                               AND ObjectLink_GoodsSub_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN Object AS Object_MeasureSub ON Object_MeasureSub.Id = ObjectLink_GoodsSub_Measure.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+           LEFT JOIN Object AS Object_GoodsKindSub ON Object_GoodsKindSub.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
+
       ;
 
 END;

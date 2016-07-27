@@ -183,9 +183,9 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colInvNumber_MasterFull: TcxGridDBColumn
+          object colInvNumber_ProductionFull: TcxGridDBColumn
             Caption = #1044#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'InvNumber_MasterFull'
+            DataBinding.FieldName = 'InvNumber_ProductionFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

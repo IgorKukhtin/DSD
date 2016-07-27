@@ -1766,10 +1766,6 @@
 				<Form>QualityParamsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
-				<Form>ProductionUnionForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Goods_Object.pas">
 				<Form>Goods_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2727,6 +2723,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\gpReport_Invoice.pas">
 				<Form>Report_InvoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
+				<Form>ProductionUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -2,7 +2,6 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 712
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -96,17 +95,6 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
-          end
-          inherited colGoodsName: TcxGridDBColumn
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsChoiceMaster
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Options.Editing = True
           end
           object colMeasureName: TcxGridDBColumn [3]
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -657,40 +645,6 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
-    object actGoodsChoiceMaster: TOpenChoiceForm [23]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actGoodsChoiceChild'
-      FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = 'TGoods_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsCode'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object actGoodsKindCompleteChoiceChild: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1103,7 +1057,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     Left = 498
-    Top = 192
+    Top = 232
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -1131,7 +1085,6 @@ inherited ProductionUnionForm: TProductionUnionForm
       item
         Control = edDocumentKind
       end>
-    Top = 185
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'

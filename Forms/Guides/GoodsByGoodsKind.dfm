@@ -161,13 +161,13 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 61
           end
           object clGoodsSubCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087#1077#1088#1077#1089#1086#1088#1090'.-'#1088#1072#1089#1093#1086#1076')'
+            Caption = #1050#1086#1076' ('#1090#1086#1074'.'#1087'/'#1088')'
             DataBinding.FieldName = 'GoodsSubCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'-'#1088#1072#1089#1093#1086#1076')'
             Options.Editing = False
-            Width = 75
+            Width = 61
           end
           object clGoodsSubName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' - '#1088#1072#1089#1093#1086#1076')'
@@ -185,7 +185,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 155
           end
           object clGoodsKindSubName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074'. ('#1087#1077#1088#1077#1089#1086#1088#1090'.-'#1088#1072#1089#1093#1086#1076')'
+            Caption = #1042#1080#1076' ('#1090#1086#1074'. '#1087'/'#1088')'
             DataBinding.FieldName = 'GoodsKindSubName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -199,6 +199,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'-'#1088#1072#1089#1093#1086#1076')'
             Width = 70
+          end
+          object clMeasureSubName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1090#1086#1074'.'#1087'/'#1088')'
+            DataBinding.FieldName = 'MeasureSubName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1076'. '#1080#1079#1084'. '#1090#1086#1074#1072#1088#1072'. ('#1087#1077#1088#1077#1089#1086#1088#1090'.-'#1088#1072#1089#1093#1086#1076')'
+            Options.Editing = False
+            Width = 62
           end
           object clisOrder: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
@@ -337,6 +346,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsSubCode'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureSubName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
