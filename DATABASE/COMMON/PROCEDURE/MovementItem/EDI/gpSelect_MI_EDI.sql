@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_EDI(
 )
 RETURNS TABLE (MovementId Integer, MovementItemId Integer, GLNCode TVarChar, GoodsNameEDI TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName  TVarChar
-             , Price TFloat
+             , Price TFloat, Price_EDI TFloat
              , AmountOrderEDI TFloat, AmountOrder TFloat
              , AmountNoticeEDI TFloat, AmountNotice TFloat
              , AmountPartnerEDI TFloat, AmountPartner TFloat
@@ -62,7 +62,7 @@ BEGIN
      RETURN QUERY
        WITH tmpMI_Order AS (SELECT inMovementId   AS MovementId
                               , vbGoodsPropertyId AS GoodsPropertyId
-                              , 0                                                   AS MovementItemId
+                              -- , 0                                                   AS MovementItemId
                               , MovementItem.ObjectId                               AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                               , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
@@ -100,6 +100,7 @@ BEGIN
                                      , tmpMI_Order.GoodsId
                                      , tmpMI_Order.GoodsKindId
                              )
+       -- –≈«”À‹“¿“
        SELECT
              tmpMI.MovementId
            , tmpMI.MovementItemId :: Integer AS MovementItemId
@@ -110,7 +111,8 @@ BEGIN
            , Object_Goods.ValueData          AS GoodsName
            , Object_GoodsKind.ValueData      AS GoodsKindName
 
-           , tmpMI.Price :: TFloat AS Price
+           , tmpMI.Price   :: TFloat AS Price
+           , MIFloat_Price.ValueData AS Price_EDI
 
            , tmpMI.AmountOrderEDI :: TFloat AS AmountOrderEDI
            , tmpMI.AmountOrder :: TFloat AS AmountOrder
@@ -245,7 +247,7 @@ BEGIN
                         UNION ALL
                          SELECT tmpMI_Order.MovementId
                               , tmpMI_Order.GoodsPropertyId
-                              , tmpMI_Order.MovementItemId
+                              , 0 AS MovementItemId -- tmpMI_Order.MovementItemId
                               , tmpMI_Order.GoodsId
                               , tmpMI_Order.GoodsKindId
                               , tmpMI_Order.Price
@@ -267,6 +269,9 @@ BEGIN
                     , tmpMI.Price
             ) AS tmpMI
 
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = tmpMI.MovementItemId
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT JOIN MovementItemString AS MIString_GoodsName
                                          ON MIString_GoodsName.MovementItemId = tmpMI.MovementItemId
                                         AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
@@ -295,4 +300,4 @@ ALTER FUNCTION gpSelect_MI_EDI (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_MI_EDI (inStartDate:= '08.10.2015', inEndDate:= '08.10.2015', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_EDI (inMovementId:= 1, inSession:= zfCalc_UserAdmin())

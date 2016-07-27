@@ -184,6 +184,7 @@ type
     spUpdate_DateRegistered: TdsdStoredProc;
     actUpdate_DateRegistered: TdsdExecStoredProc;
     actShowMessage: TShowMessageAction;
+    clPrice_EDI: TcxGridDBColumn;
   private
     { Private declarations }
   public
