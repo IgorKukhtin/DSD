@@ -42,7 +42,7 @@ BEGIN
      END IF;
 
      -- замена
-     IF ioGoodsId > 0 AND inNameBeforeName <> (SELECT ValueData FROM Object WHERE Id = ioGoodsId)
+     IF ioGoodsId > 0 AND inNameBeforeName <> COALESCE ((SELECT ValueData FROM Object WHERE Id = ioGoodsId), '')
         AND zc_Object_Goods() = (SELECT DescId FROM Object WHERE Id = ioGoodsId)
      THEN
          ioGoodsId:= 0;
@@ -70,7 +70,7 @@ BEGIN
      -- если надо ...
      IF (COALESCE (ioGoodsId, 0) = 0 OR zc_Object_Asset() = (SELECT DescId FROM Object WHERE Id = ioGoodsId))
         AND inNameBeforeName <> ''
-        AND inNameBeforeName <> (SELECT ValueData FROM Object WHERE Id = ioGoodsId AND DescId = zc_Object_Asset())
+        AND inNameBeforeName <> COALESCE ((SELECT ValueData FROM Object WHERE Id = ioGoodsId AND DescId = zc_Object_Asset()), '')
      THEN 
          -- ищем Товар/ОС/работы
          vbNameBeforeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_NameBefore() AND Object.ValueData = inNameBeforeName);
@@ -78,7 +78,7 @@ BEGIN
      -- если надо ...
      IF (COALESCE (ioGoodsId, 0) = 0 OR zc_Object_Asset() = (SELECT DescId FROM Object WHERE Id = ioGoodsId))
         AND COALESCE (vbNameBeforeId, 0) = 0 AND inNameBeforeName <> ''
-        AND inNameBeforeName <> (SELECT ValueData FROM Object WHERE Id = ioGoodsId AND DescId = zc_Object_Asset())
+        AND inNameBeforeName <> COALESCE ((SELECT ValueData FROM Object WHERE Id = ioGoodsId AND DescId = zc_Object_Asset()), '')
      THEN
          -- сохранение
          vbNameBeforeId:= gpInsertUpdate_Object_NameBefore   (ioId              := 0
