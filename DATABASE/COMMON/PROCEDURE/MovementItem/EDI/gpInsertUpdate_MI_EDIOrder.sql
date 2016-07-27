@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_EDI()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EDIOrder(Integer, Integer, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EDIOrder(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_EDIOrder(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_EDIOrder(
     IN inGoodsName           TVarChar  , -- Товар
     IN inGLNCode             TVarChar  , -- Товар
     IN inAmountOrder         TFloat    , -- Количество Заказа
+    IN inPriceOrder          TFloat    , -- Цена из Эксайта
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID AS
@@ -117,6 +119,8 @@ BEGIN
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), vbMovementItemId, vbGoodsKindId);
 
+     -- сохранили <Цена из Эксайта>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbMovementItemId, inPriceOrder)
 
      -- Проверка
      IF 1 < (SELECT COUNT (*)

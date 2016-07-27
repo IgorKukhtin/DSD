@@ -35,9 +35,9 @@ BEGIN
                                                    , inUserId             := inUserId
                                                     ) AS tmp;
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), inMovementItemId_EDI, vbPrice);
+     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), inMovementItemId_EDI, vbPrice);
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), inMovementItemId_EDI, vbCountForPrice);
+     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), inMovementItemId_EDI, vbCountForPrice);
 
 END;
 $BODY$

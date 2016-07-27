@@ -1880,6 +1880,7 @@ begin
       ParamByName('inGoodsName').Value := CHARACTERISTIC.DESCRIPTION;
       ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
       ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY);
+      ParamByName('inPriceOrder').Value := gfStrToFloat(ORDERPRICE);
       Execute;
     end;
 end;

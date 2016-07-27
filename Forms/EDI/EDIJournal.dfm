@@ -3,7 +3,6 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -511
   ExplicitWidth = 1300
   ExplicitHeight = 488
   PixelsPerInch = 96
@@ -1951,6 +1950,13 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inAmountOrder'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceOrder'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
