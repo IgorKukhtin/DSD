@@ -7,9 +7,12 @@ CREATE OR REPLACE FUNCTION gpReport_Invoice(
     IN inEndDate           TDateTime ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
              , JuridicalId Integer, JuridicalName TVarChar
              , NameBeforeName TVarChar
+             , AssetName TVarChar
+             , UnitName TVarChar
+             , Comment TVarChar
              
              , Amount TFloat  -- 
              , Price TFloat  -- 
@@ -164,10 +167,16 @@ BEGIN
 
   SELECT tmpMIInvoice.MovementId
        , tmpMIInvoice.InvNumber
+       , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
        , tmpMIInvoice.OperDate
        , tmpMIInvoice.JuridicalId
        , tmpMIInvoice.JuridicalName
        , Object_NameBefore.ValueData  AS NameBeforeName
+
+       , COALESCE (Object_Asset.ValueData, '') :: TVarChar AS AssetName
+       , COALESCE (Object_Unit.ValueData, '')  :: TVarChar AS UnitName
+       , MIString_Comment.ValueData            :: TVarChar AS Comment
+
        , tmpMIInvoice.Amount              ::TFloat
        --, tmpMIInvoice.Price               ::TFloat
        , CASE WHEN tmpMIInvoice.CountForPrice > 0
@@ -189,13 +198,32 @@ BEGIN
        , (COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0))  ::TFloat AS DebetStart
        , (COALESCE (tmpMLM.BankSumma_Before, 0) + COALESCE (tmpMLM.BankSumma, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma, 0) - COALESCE (tmpMLM.ServiceSumma, 0))  ::TFloat AS DebetEnd
        , tmpMIInvoiceChild.AmountSumm      ::TFloat  AS PaymentPlan
+
   FROM tmpMIInvoice
        LEFT JOIN tmpMLM         ON tmpMLM.MovementId_Invoice         = tmpMIInvoice.MovementId
        LEFT JOIN tmpIncomeGroup ON tmpIncomeGroup.MovementId_Invoice = tmpMIInvoice.MovementId
-       LEFT JOIN tmpIncome      ON tmpIncome.MovementItemId_Invoice  = tmpMIInvoice.MovementItemId
+
+       LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                ON MovementString_InvNumberPartner.MovementId = tmpMIInvoice.MovementId
+                               AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+       LEFT JOIN tmpIncome ON tmpIncome.MovementItemId_Invoice = tmpMIInvoice.MovementItemId
        LEFT JOIN tmpMIInvoiceChild ON tmpMIInvoiceChild.MovementId = tmpMIInvoice.MovementId
        LEFT JOIN Object AS Object_find ON Object_find.Id = tmpMIInvoice.GoodsId
        LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = CASE WHEN Object_find.DescId IN (zc_Object_Asset(), zc_Object_Goods()) THEN Object_find.Id ELSE COALESCE (tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId) END
+
+       LEFT JOIN MovementItemString AS MIString_Comment
+                                    ON MIString_Comment.MovementItemId = tmpMIInvoice.MovementItemId
+                                   AND MIString_Comment.DescId = zc_MIString_Comment()
+       LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                        ON MILinkObject_Asset.MovementItemId = tmpMIInvoice.MovementItemId
+                                       AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+       LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+       LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                        ON MILinkObject_Unit.MovementItemId = tmpMIInvoice.MovementItemId
+                                       AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+       
   ORDER BY tmpMIInvoice.MovementId, Object_NameBefore.ValueData
     ;
          

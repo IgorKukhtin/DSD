@@ -575,6 +575,14 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 72
           end
+          object InvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'InvNumberPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
@@ -589,11 +597,35 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 210
+            Width = 181
           end
           object NameBeforeName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057'/'#1056#1072#1073#1086#1090#1099')'
             DataBinding.FieldName = 'NameBeforeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 140
+          end
+          object AssetName: TcxGridDBColumn
+            Caption = #1076#1083#1103' '#1054'C / '#1052#1053#1052#1040
+            DataBinding.FieldName = 'AssetName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 126
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

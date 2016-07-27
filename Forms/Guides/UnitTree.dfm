@@ -84,7 +84,6 @@ object UnitTreeForm: TUnitTreeForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -120,13 +119,21 @@ object UnitTreeForm: TUnitTreeForm
         HeaderAlignmentVert = vaCenter
         SortIndex = 1
         SortOrder = soAscending
-        Width = 163
+        Width = 160
       end
       object ceBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 120
+      end
+      object ceAddress: TcxGridDBColumn
+        Caption = #1040#1076#1088#1077#1089
+        DataBinding.FieldName = 'Address'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -326,10 +333,12 @@ object UnitTreeForm: TUnitTreeForm
       FormName = 'TUnitEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = GridDS
@@ -344,12 +353,15 @@ object UnitTreeForm: TUnitTreeForm
       FormName = 'TUnitEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -373,21 +385,27 @@ object UnitTreeForm: TUnitTreeForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ParentId'
+          Value = Null
           Component = TreeDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -412,6 +430,7 @@ object UnitTreeForm: TUnitTreeForm
       FormName = 'TUnitForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -424,6 +443,7 @@ object UnitTreeForm: TUnitTreeForm
         DataSet = TreeDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 152
     Top = 152
   end
@@ -450,6 +470,7 @@ object UnitTreeForm: TUnitTreeForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 416
     Top = 160
   end
