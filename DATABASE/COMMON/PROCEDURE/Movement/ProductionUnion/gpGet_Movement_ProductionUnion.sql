@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
+             , MovementId_Master Integer, InvNumber_MasterFull TVarChar
                )
 AS
 $BODY$
@@ -42,6 +43,9 @@ BEGIN
              , CAST (False as Boolean)                          AS isAuto
              , Null:: TDateTime                                 AS InsertDate
 
+             , 0                                                AS MovementId_Master
+             , CAST ('' AS TVarChar) 				AS InvNumber_MasterFull
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -59,6 +63,9 @@ BEGIN
          , Object_DocumentKind.ValueData            AS DocumentKindName
          , COALESCE(MovementBoolean_isAuto.ValueData, False)         AS isAuto
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
+
+         , Movement_DocumentMaster.Id               AS MovementId_Master
+         , zfCalc_PartionMovementName (Movement_DocumentMaster.DescId, MovementDesc_Master.ItemName, Movement_DocumentMaster.InvNumber, Movement_DocumentMaster.OperDate) AS InvNumber_MasterFull
 
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -86,6 +93,12 @@ BEGIN
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                         ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+          LEFT JOIN MovementDesc AS MovementDesc_Master ON MovementDesc_Master.Id = Movement_DocumentMaster.DescId
+
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionUnion();
 
@@ -100,6 +113,7 @@ ALTER FUNCTION gpGet_Movement_ProductionUnion (Integer, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.06.16         *
  13.06.16         *
  23.06.14                                                        *
  16.07.13         *

@@ -2,14 +2,19 @@
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
     IN inGoodsId             Integer  , -- Товары
     IN inGoodsKindId         Integer  , -- Виды товаров
+    IN inGoodsSubId          Integer  , -- Товары
+    IN inGoodsKindSubId      Integer  , -- Виды товаров
     IN inWeightPackage       TFloat   , -- вес пакета
     IN inWeightTotal         TFloat   , -- вес в упаковки
    -- IN inIsOrder             Boolean  , -- используется в заявках
+
     IN inSession             TVarChar 
 )
 RETURNS Integer
@@ -54,6 +59,12 @@ BEGIN
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKind(), ioId, inGoodsKindId);
 
+   -- сохранили связь с <Товары  (пересортица - расход)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSub(), ioId, inGoodsSubId);
+   -- сохранили связь с <Виды товаров  (пересортица - расход)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub(), ioId, inGoodsKindSubId);
+
+
    -- сохранили свойство <вес пакета>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackage(), ioId, inWeightPackage);
    -- сохранили свойство <вес в упаковки>
@@ -73,6 +84,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.07.16         *
  23.02.16         * dell inIsOrder - сохраняется в др. процке, разделение прав
  17.06.15                                        *   -- !!!надо создавать!!!
  19.03.15         *

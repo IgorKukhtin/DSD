@@ -339,6 +339,24 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       Caption = #1050#1086#1084#1091
     end
   end
+  object cxLabel19: TcxLabel [2]
+    Left = 231
+    Top = 45
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1088#1086#1076#1072#1078#1080
+  end
+  object edInvNumberSale: TcxButtonEdit [3]
+    Left = 232
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 233
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -1418,8 +1436,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 16
+    Left = 368
+    Top = 8
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1449,5 +1467,51 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       end>
     Left = 536
     Top = 8
+  end
+  object SaleChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberSale
+    Key = '0'
+    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSaleJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 332
+    Top = 48
   end
 end

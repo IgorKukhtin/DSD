@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
+             , MovementId_Master Integer, InvNumber_MasterFull TVarChar
               )
 AS
 $BODY$
@@ -58,6 +59,9 @@ BEGIN
          , COALESCE(MovementBoolean_isAuto.ValueData, False)          AS isAuto
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
  
+         , Movement_DocumentMaster.Id               AS MovementId_Master
+         , zfCalc_PartionMovementName (Movement_DocumentMaster.DescId, MovementDesc_Master.ItemName, Movement_DocumentMaster.InvNumber, Movement_DocumentMaster.OperDate) AS InvNumber_MasterFull
+
      FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ProductionUnion() AND Movement.StatusId = tmpStatus.StatusId
@@ -103,6 +107,13 @@ BEGIN
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                         ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+          LEFT JOIN MovementDesc AS MovementDesc_Master ON MovementDesc_Master.Id = Movement_DocumentMaster.DescId
+           
     ;
 
 END;
@@ -112,6 +123,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.07.16         *
  13.06.16         * DocumentKind
  26.12.14                                        * add inIsPeresort
  26.12.14                                        * del inArticleLossId

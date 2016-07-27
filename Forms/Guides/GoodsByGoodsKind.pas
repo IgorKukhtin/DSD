@@ -26,6 +26,8 @@ type
     bbInsertRecord: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    GoodsSubOpenChoice: TOpenChoiceForm;
+    GoodsKindSubChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

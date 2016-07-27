@@ -23,6 +23,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , IncomeSumma TFloat
              , DebetStart TFloat
              , DebetEnd TFloat
+             , PaymentPlan TFloat
              ) 
 AS
 $BODY$
@@ -100,6 +101,19 @@ BEGIN
                                  , tmpMIInvoice.JuridicalName
                             FROM tmpMIInvoice
                            ) 
+       , tmpMIInvoiceChild AS (SELECT tmpListInvoice.MovementId
+                                    , SUM (MovementItem.Amount) AS AmountSumm
+                               FROM tmpListInvoice
+                                 INNER JOIN MovementItem 
+                                         ON MovementItem.MovementId = tmpListInvoice.MovementId
+                                        AND MovementItem.DescId   = zc_MI_Child()
+                                        AND MovementItem.isErased = FALSE
+                                 INNER JOIN MovementItemDate AS MIDate_OperDate
+                                        ON MIDate_OperDate.MovementItemId =  MovementItem.Id
+                                       AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
+                                       AND MIDate_OperDate.ValueData BETWEEN inStartDate AND inENDDate
+                               GROUP BY tmpListInvoice.MovementId
+                               )
          , tmpMLM AS (SELECT tmp.MovementId_Invoice
                            , SUM (CASE WHEN tmp.MLM_OperDate < inStartDate THEN tmp.BankSumma ELSE 0 END) AS BankSumma_Before
                            , SUM (CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN tmp.BankSumma ELSE 0 END) AS BankSumma
@@ -174,11 +188,12 @@ BEGIN
        , tmpIncome.IncomeSumma            ::TFloat
        , (tmpMIInvoice.TotalSumm - tmpIncomeGroup.IncomeTotalSumma_Before - tmpMLM.ServiceSumma_Before)  ::TFloat AS DebetStart
        , (tmpMIInvoice.TotalSumm - tmpIncomeGroup.IncomeTotalSumma_Before - tmpMLM.ServiceSumma_Before - tmpIncomeGroup.IncomeTotalSumma - tmpMLM.ServiceSumma)  ::TFloat AS DebetEnd
+       , tmpMIInvoiceChild.AmountSumm      ::TFloat  AS PaymentPlan
   FROM tmpMIInvoice
        LEFT JOIN tmpMLM         ON tmpMLM.MovementId_Invoice         = tmpMIInvoice.MovementId
        LEFT JOIN tmpIncomeGroup ON tmpIncomeGroup.MovementId_Invoice = tmpMIInvoice.MovementId
        LEFT JOIN tmpIncome      ON tmpIncome.MovementItemId_Invoice  = tmpMIInvoice.MovementItemId
-
+       LEFT JOIN tmpMIInvoiceChild ON tmpMIInvoiceChild.MovementId = tmpMIInvoice.MovementId
        LEFT JOIN Object AS Object_find ON Object_find.Id = tmpMIInvoice.GoodsId
        LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = CASE WHEN Object_find.DescId = zc_Object_Asset() THEN Object_find.Id ELSE COALESCE (tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId) END
   ORDER BY tmpMIInvoice.MovementId, Object_NameBefore.ValueData
