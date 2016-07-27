@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
-             , MovementId_Master Integer, InvNumber_Master TVarChar, InvNumber_MasterFull TVarChar
+             , MovementId_Master Integer, InvNumber_MasterFull TVarChar
               )
 AS
 $BODY$
@@ -60,7 +60,6 @@ BEGIN
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
  
          , Movement_DocumentMaster.Id               AS MovementId_Master
-         , Movement_DocumentMaster.InvNumber        AS InvNumber_Master
          , zfCalc_PartionMovementName (Movement_DocumentMaster.DescId, MovementDesc_Master.ItemName, Movement_DocumentMaster.InvNumber, Movement_DocumentMaster.OperDate) AS InvNumber_MasterFull
 
      FROM (SELECT Movement.id
@@ -113,7 +112,7 @@ BEGIN
                                          ON MovementLinkMovement_Master.MovementId = Movement.Id
                                         AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
           LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
-          LEFT JOIN MovementDesc AS MovementDesc_Master ON MovementDesc_Master.Id = Movement_Master.DescId
+          LEFT JOIN MovementDesc AS MovementDesc_Master ON MovementDesc_Master.Id = Movement_DocumentMaster.DescId
            
     ;
 

@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
-             , MovementId_Master Integer, InvNumber_Master TVarChar, InvNumber_MasterFull TVarChar
+             , MovementId_Master Integer, InvNumber_MasterFull TVarChar
                )
 AS
 $BODY$
@@ -44,7 +44,6 @@ BEGIN
              , Null:: TDateTime                                 AS InsertDate
 
              , 0                                                AS MovementId_Master
-             , CAST ('' AS TVarChar) 				AS InvNumber_Master
              , CAST ('' AS TVarChar) 				AS InvNumber_MasterFull
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -66,7 +65,6 @@ BEGIN
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
 
          , Movement_DocumentMaster.Id               AS MovementId_Master
-         , Movement_DocumentMaster.InvNumber        AS InvNumber_Master
          , zfCalc_PartionMovementName (Movement_DocumentMaster.DescId, MovementDesc_Master.ItemName, Movement_DocumentMaster.InvNumber, Movement_DocumentMaster.OperDate) AS InvNumber_MasterFull
 
      FROM Movement
