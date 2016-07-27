@@ -186,8 +186,8 @@ BEGIN
        , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpMLM.BankSumma, 0))   ::TFloat  AS RemEnd
        , tmpIncomeGroup.IncomeTotalSumma  ::TFloat
        , tmpIncome.IncomeSumma            ::TFloat
-       , (tmpMIInvoice.TotalSumm - tmpIncomeGroup.IncomeTotalSumma_Before - tmpMLM.ServiceSumma_Before)  ::TFloat AS DebetStart
-       , (tmpMIInvoice.TotalSumm - tmpIncomeGroup.IncomeTotalSumma_Before - tmpMLM.ServiceSumma_Before - tmpIncomeGroup.IncomeTotalSumma - tmpMLM.ServiceSumma)  ::TFloat AS DebetEnd
+       , (tmpMIInvoice.TotalSumm - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0))  ::TFloat AS DebetStart
+       , (tmpMIInvoice.TotalSumm - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma, 0) - COALESCE (tmpMLM.ServiceSumma, 0))  ::TFloat AS DebetEnd
        , tmpMIInvoiceChild.AmountSumm      ::TFloat  AS PaymentPlan
   FROM tmpMIInvoice
        LEFT JOIN tmpMLM         ON tmpMLM.MovementId_Invoice         = tmpMIInvoice.MovementId
@@ -195,7 +195,7 @@ BEGIN
        LEFT JOIN tmpIncome      ON tmpIncome.MovementItemId_Invoice  = tmpMIInvoice.MovementItemId
        LEFT JOIN tmpMIInvoiceChild ON tmpMIInvoiceChild.MovementId = tmpMIInvoice.MovementId
        LEFT JOIN Object AS Object_find ON Object_find.Id = tmpMIInvoice.GoodsId
-       LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = CASE WHEN Object_find.DescId = zc_Object_Asset() THEN Object_find.Id ELSE COALESCE (tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId) END
+       LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = CASE WHEN Object_find.DescId IN (zc_Object_Asset(), zc_Object_Goods()) THEN Object_find.Id ELSE COALESCE (tmpMIInvoice.NameBeforeId, tmpMIInvoice.GoodsId) END
   ORDER BY tmpMIInvoice.MovementId, Object_NameBefore.ValueData
     ;
          
