@@ -4,8 +4,8 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   ClientWidth = 853
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 861
-  ExplicitHeight = 530
+  ExplicitWidth = 869
+  ExplicitHeight = 534
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,6 +28,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -136,66 +137,84 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Price'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StorageName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StorageName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDatePartion'
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
           ParamType = ptUnknown
-        end
-        item
-          Value = Null
-          DataType = ftString
-          ParamType = ptUnknown
-        end
-        item
-          Value = Null
-          ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
           DataType = ftString
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Value = Null
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
           DataType = ftString
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
           DataType = ftFloat
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction
@@ -234,6 +253,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Component = FormParams
         ComponentItem = 'inGoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -241,6 +261,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Component = FormParams
         ComponentItem = 'inUnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -248,6 +269,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 82
@@ -313,11 +335,13 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Name = 'inUnitId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 152

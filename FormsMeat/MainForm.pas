@@ -724,6 +724,12 @@ type
     actReport_Invoice: TdsdOpenForm;
     N124: TMenuItem;
     N125: TMenuItem;
+    actPartionRemains: TdsdOpenForm;
+    N126: TMenuItem;
+    actPartionGoods: TdsdOpenForm;
+    N127: TMenuItem;
+    N128: TMenuItem;
+    N129: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

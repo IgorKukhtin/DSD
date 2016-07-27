@@ -89,6 +89,7 @@ type
     procedure LoadPartnerFormTest;
     procedure LoadPartnerTagFormTest;
     procedure LoadPartionGoodsChoiceFormTest;
+    procedure LoadPartionRemainsFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
@@ -1148,6 +1149,12 @@ begin
   //это ж !!!Enum!!!
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindEditForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
+end;
+
+procedure TLoadFormTest.LoadPartionRemainsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionRemainsForm');
 end;
 
 procedure TLoadFormTest.LoadPaidKindFormTest;
