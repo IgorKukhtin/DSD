@@ -88,6 +88,7 @@ type
     actDeleteMovement: TChangeGuidesStatus;
     actMIChildProtocol: TdsdOpenForm;
     bbMIChildProtocol: TdxBarButton;
+    actGoodsChoiceMaster: TOpenChoiceForm;
   private
     { Private declarations }
   public

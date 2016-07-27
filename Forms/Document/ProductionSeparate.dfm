@@ -2,9 +2,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 903
-  ExplicitTop = -256
   ExplicitWidth = 919
-  ExplicitHeight = 713
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -285,6 +284,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
       ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
@@ -316,11 +316,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
       ReportNameParam.Value = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actUpdateChildDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
@@ -488,6 +490,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -496,24 +499,28 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -521,12 +528,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -534,12 +543,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -547,16 +558,19 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartionGoods'
         Value = ''
         Component = cePartionGoods
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 168
@@ -570,6 +584,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -577,6 +592,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -584,6 +600,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -591,6 +608,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -598,6 +616,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -605,6 +624,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = cePartionGoods
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited GuidesFiller: TGuidesFiller
@@ -655,6 +675,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -662,6 +683,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -669,6 +691,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -677,6 +700,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLiveWeight'
@@ -685,6 +709,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'LiveWeight'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
@@ -693,6 +718,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
@@ -702,6 +728,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -709,6 +736,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -716,23 +744,27 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLiveWeight'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited ChildCDS: TClientDataSet
@@ -754,6 +786,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -761,11 +794,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -773,6 +808,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -781,6 +817,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLiveWeight'
@@ -789,6 +826,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'LiveWeight'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
@@ -797,6 +835,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited GuidesTo: TdsdGuides
@@ -815,6 +854,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -822,11 +862,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -834,6 +876,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -842,6 +885,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLiveWeight'
@@ -850,6 +894,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'LiveWeight'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
@@ -858,6 +903,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   object spSelectPrint: TdsdStoredProc
@@ -878,6 +924,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 751
@@ -901,11 +948,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 679

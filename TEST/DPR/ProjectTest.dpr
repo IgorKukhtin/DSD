@@ -595,7 +595,6 @@ uses
   ProductionPeresortJournal in '..\..\Forms\Document\ProductionPeresortJournal.pas' {ProductionPeresortJournalForm: TParentForm},
   ProductionPeresort in '..\..\Forms\Document\ProductionPeresort.pas' {ProductionPeresortForm: TParentForm},
   QualityParams in '..\..\Forms\Document\QualityParams.pas' {QualityParamsForm: TParentForm},
-  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
   Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm: TParentForm},
   Receipt_Object in '..\..\Forms\Guides\Receipt_Object.pas' {Receipt_ObjectForm: TParentForm},
   Receipt in '..\..\Forms\Guides\Receipt.pas' {ReceiptForm: TParentForm},
@@ -843,7 +842,8 @@ uses
   ProductionUnionTechReceiptJournal in '..\..\Forms\Document\ProductionUnionTechReceiptJournal.pas' {ProductionUnionTechReceiptJournalForm: TParentForm},
   InvoiceJournalDetailChoice in '..\..\Forms\Document\InvoiceJournalDetailChoice.pas' {InvoiceJournalDetailChoiceForm: TParentForm},
   gpReport_InvoiceDialog in '..\..\Forms\Report\gpReport_InvoiceDialog.pas' {Report_InvoiceDialogForm: TParentForm},
-  gpReport_Invoice in '..\..\Forms\Report\gpReport_Invoice.pas' {Report_InvoiceForm: TParentForm};
+  gpReport_Invoice in '..\..\Forms\Report\gpReport_Invoice.pas' {Report_InvoiceForm: TParentForm},
+  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
