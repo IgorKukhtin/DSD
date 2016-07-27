@@ -2,11 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpCalculate_ExternalOrder (Integer, TVarChar);
 
--- Function: gpcalculate_externalorder(integer, tvarchar)
+-- Function: gpCalculate_ExternalOrder(integer, tvarchar)
 
--- DROP FUNCTION gpcalculate_externalorder(integer, tvarchar);
+-- DROP FUNCTION gpCalculate_ExternalOrder(integer, tvarchar);
 
-CREATE OR REPLACE FUNCTION gpcalculate_externalorder(ininternalorder integer, insession tvarchar)
+CREATE OR REPLACE FUNCTION gpCalculate_ExternalOrder (inInternalOrder integer, inSession tvarchar)
   RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -26,14 +26,14 @@ BEGIN
      PERFORM lpDelete_Movement(MovementId, '') 
        FROM MovementLinkMovement 
       WHERE DescId = zc_MovementLinkMovement_Master()
-        AND MovementChildId = ininternalorder;
+        AND MovementChildId = inInternalOrder;
      
     SELECT  MovementLinkObject_Unit.ObjectId INTO vbUnitId 
       FROM  MovementLinkObject AS MovementLinkObject_Unit
       WHERE MovementLinkObject_Unit.MovementId = inInternalOrder
         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
 
-    PERFORM lpCreateTempTable_OrderInternal(ininternalorder, vbObjectId, 0, vbUserId);
+    PERFORM lpCreateTempTable_OrderInternal(inInternalOrder, vbObjectId, 0, vbUserId);
    
    -- Просто запрос, где у позиции определяется лучший поставщик. Если поставщика нет, то закинуть в пустой документ. 
 
@@ -88,7 +88,7 @@ BEGIN
                     LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                        ON MIString_Comment.MovementItemId = MovementItem.Id
                                                       AND MIString_Comment.DescId = zc_MIString_Comment()
-            WHERE MovementItem.MovementId = ininternalorder
+            WHERE MovementItem.MovementId = inInternalOrder
               AND MovementItem.DescId     = zc_MI_Master()
               AND MovementItem.isErased   = FALSE
               AND COALESCE(MIFloat_AmountManual.ValueData,(MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
@@ -156,7 +156,7 @@ BEGIN
                                   WHERE Id = MinId
                                  ) AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
 
-            WHERE MovementItem.MovementId = ininternalorder
+            WHERE MovementItem.MovementId = inInternalOrder
               AND MovementItem.DescId     = zc_MI_Master()
               AND MovementItem.isErased   = FALSE
               AND COALESCE (MIFloat_AmountManual.ValueData, (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
@@ -184,7 +184,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION gpcalculate_externalorder(integer, tvarchar)
+ALTER FUNCTION gpCalculate_ExternalOrder(integer, tvarchar)
   OWNER TO postgres;
 
 
