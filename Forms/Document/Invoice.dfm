@@ -308,6 +308,10 @@ object InvoiceForm: TInvoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSummOrderIncome
+            end
+            item
+              Kind = skSum
+              Column = colPrice
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -2017,10 +2021,10 @@ object InvoiceForm: TInvoiceForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 6
+        DataSummaryItemIndex = 4
       end>
-    Left = 99
-    Top = 393
+    Left = 131
+    Top = 377
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 238
