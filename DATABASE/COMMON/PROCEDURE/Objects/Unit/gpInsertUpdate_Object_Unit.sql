@@ -33,6 +33,9 @@ $BODY$
    DECLARE vbCode_calc Integer;  
    DECLARE vbOldId Integer;
    DECLARE vbOldParentId integer;
+   DECLARE vbOldValue_Address TVarChar;
+   DECLARE vbAddress TVarChar;
+
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
@@ -48,6 +51,13 @@ BEGIN
 
    -- проверка цикл у дерева
    PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_Unit_Parent(), inParentId);
+
+   -- сохраняем прошлое значение адреса
+   vbOldValue_Address := (SELECT COALESCE(ObjectString_Unit_Address.ValueData,'') AS Address 
+                          FROM ObjectString AS ObjectString_Unit_Address
+                          WHERE ObjectString_Unit_Address.ObjectId = ioId --8426  -- inUnitId 
+                            AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address());
+
 
    -- сохранили
    vbOldId:= ioId;
@@ -84,9 +94,7 @@ BEGIN
    -- сохранили связь с <Сотрудник (доступ к табелю р.времени)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_PersonalSheetWorkTime(), ioId, inPersonalSheetWorkTimeId);
 
-   -- сохранили свойство <адрес>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Address(), ioId, inAddress);
-
+  
 
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
@@ -102,6 +110,28 @@ BEGIN
    IF COALESCE (vbOldParentId, 0) <> 0 THEN
       PERFORM lpUpdate_isLeaf (vbOldParentId, zc_ObjectLink_Unit_Parent());
    END IF;
+   
+   vbAddress := COALESCE (inAddress, '') ;
+
+   IF vbAddress = '' THEN
+     vbAddress := (SELECT COALESCE(ObjectString_Unit_Address.ValueData,'') as Address
+                   FROM lfSelect_Object_UnitParent_byUnit (ioId) AS tmpUnitList
+                        INNER JOIN ObjectString AS ObjectString_Unit_Address 
+                                ON ObjectString_Unit_Address.ObjectId = tmpUnitList.UnitId
+                               AND COALESCE(ObjectString_Unit_Address.ValueData,'') <>''
+                   ORDER BY tmpUnitList.Level
+                   LIMIT 1);
+   END IF;     
+        
+   
+   -- сохранили свойство <адрес>
+   -- установить у Подразделения и всех Child новый адрес, у которых был такой же или пустой
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Address(), tmpUnitList.UnitId, vbAddress)
+   FROM lfSelect_Object_Unit_byGroup (ioId) AS tmpUnitList
+         LEFT JOIN ObjectString AS ObjectString_Unit_Address 
+                                ON ObjectString_Unit_Address.ObjectId = tmpUnitList.UnitId
+   WHERE (COALESCE(ObjectString_Unit_Address.ValueData,'') = vbOldValue_Address OR COALESCE(ObjectString_Unit_Address.ValueData,'') = '');
+                                          
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

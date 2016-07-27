@@ -66,6 +66,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     bbUnitChoiceForm: TdxBarButton;
     dsdOpenUnitForm: TdsdOpenForm;
+    ceAddress: TcxGridDBColumn;
   private
     { Private declarations }
   public
