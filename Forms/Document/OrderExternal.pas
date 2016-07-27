@@ -97,6 +97,7 @@ type
     MovementPromo: TcxGridDBColumn;
     PricePromo: TcxGridDBColumn;
     LineNum: TcxGridDBColumn;
+    isPriceEDIDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

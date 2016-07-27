@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , MovementPromo TVarChar, PricePromo TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
+             , isPeresort Boolean
               )
 AS
 $BODY$
@@ -258,6 +259,25 @@ BEGIN
                                                                ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                                               AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                              )
+
+           -- товары пересорт да/нет
+          , tmpGoodsByGoodsKindSub AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                            , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                            --, ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     AS GoodsSubId
+                                            --, ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId AS GoodsKindSubId
+                                            , CASE WHEN COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)<>0 OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0 
+                                                   THEN TRUE ELSE FALSE 
+                                              END AS isPeresort
+                                       FROM Object_GoodsByGoodsKind_View 
+                                         LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub 
+                                                              ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                                             AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                         LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                                              ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                             AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                                       WHERE COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)<>0 OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0 
+                                       )
+
        SELECT
              0                          AS Id
            , 0                          AS LineNum
@@ -318,7 +338,7 @@ BEGIN
            , tmpGoods.InfoMoneyName_all
 
            , FALSE AS isErased
-
+           , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
                   , Object_Goods.ObjectCode                                AS GoodsCode
                   , Object_Goods.ValueData                                 AS GoodsName
@@ -331,7 +351,7 @@ BEGIN
                   , Object_InfoMoney_View.InfoMoneyDestinationName
                   , Object_InfoMoney_View.InfoMoneyName
                   , Object_InfoMoney_View.InfoMoneyName_all
-
+                 
              FROM Object_InfoMoney_View
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -341,6 +361,7 @@ BEGIN
                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                   /*LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье*/
+                 
              WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()
                                                                                                        , zc_Enum_InfoMoneyDestination_21000()
                                                                                                        , zc_Enum_InfoMoneyDestination_21100()
@@ -370,7 +391,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
+            LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpGoods.GoodsId
+                                            AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpGoods.GoodsKindId
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -459,7 +481,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName_all
 
            , tmpMI_Goods.isErased
-
+           , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
        FROM tmpMI_Goods
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
                                 AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
@@ -493,6 +515,9 @@ BEGIN
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+            LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpMI_Goods.GoodsId
+                                            AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpMI_Goods.GoodsKindId
            ;
      ELSE
 
@@ -635,6 +660,24 @@ BEGIN
                                                                ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                                               AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                              )
+            -- товары пересорт да/нет
+          , tmpGoodsByGoodsKindSub AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                            , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                            --, ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     AS GoodsSubId
+                                            --, ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId AS GoodsKindSubId
+                                            , CASE WHEN COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)<>0 OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0 
+                                                   THEN TRUE ELSE FALSE 
+                                              END AS isPeresort
+                                       FROM Object_GoodsByGoodsKind_View 
+                                         LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub 
+                                                              ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                                             AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                         LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                                              ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                             AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                                       WHERE COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)<>0 OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0 
+                                       )
+
        SELECT
              tmpMI_Goods.MovementItemId             AS Id
            , CAST (row_number() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
@@ -719,6 +762,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName_all
 
            , tmpMI_Goods.isErased
+           , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
 
        FROM tmpMI_Goods
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
@@ -753,6 +797,9 @@ BEGIN
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+            LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpMI_Goods.GoodsId
+                                            AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpMI_Goods.GoodsKindId
            ;
 
      END IF;

@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , GoodsGroupNameFull TVarChar
              , AmountRemains TFloat, Amount TFloat, AmountEDI TFloat, AmountSecond TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
-             , Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
+             , Price TFloat, PriceEDI TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , ArticleGLN TVarChar
              , MovementPromo TVarChar, PricePromo TFloat
@@ -167,6 +167,7 @@ BEGIN
                                  , MovementItem.Amount                           AS Amount
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+                                 , COALESCE (MIFloat_PriceEDI.ValueData, 0)      AS PriceEDI
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                                  , MIFloat_AmountSecond.ValueData                AS AmountSecond
                                  , MIFloat_Summ.ValueData                        AS Summ
@@ -182,6 +183,10 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PriceEDI
+                                                             ON MIFloat_PriceEDI.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PriceEDI.DescId = zc_MIFloat_PriceEDI()
+
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -245,6 +250,7 @@ BEGIN
                            , COALESCE (tmpRemains.Amount, 0)                            AS AmountRemains
                            , COALESCE (tmpMI_Goods.GoodsKindId, tmpRemains.GoodsKindId) AS GoodsKindId
                            , COALESCE (tmpMI_Goods.Price, 0)                            AS Price
+                           , COALESCE (tmpMI_Goods.PriceEDI, 0)                         AS PriceEDI
                            , COALESCE (tmpMI_Goods.CountForPrice, 1)                    AS CountForPrice
                            , COALESCE (tmpMI_Goods.AmountSecond, 0)                     AS AmountSecond
                            , COALESCE (tmpMI_Goods.Summ, 0)                             AS Summ

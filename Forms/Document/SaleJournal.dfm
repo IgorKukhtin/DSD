@@ -22,6 +22,8 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 1242
         Height = 584
+        ExplicitLeft = 168
+        ExplicitTop = -25
         ExplicitWidth = 1242
         ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -737,6 +739,14 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colInvNumber_ProductionFull: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082' '#1087#1077#1088#1077#1089#1086#1088#1090
+            DataBinding.FieldName = 'InvNumber_ProductionFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
           end
           object isPrinted: TcxGridDBColumn
             Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085

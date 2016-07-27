@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertDate TDateTime
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
               )
 AS
 $BODY$
@@ -212,6 +213,10 @@ BEGIN
 
            , Object_ReestrKind.Id             		    AS ReestrKindId
            , Object_ReestrKind.ValueData       		    AS ReestrKindName
+
+           , Movement_DocumentProduction.Id               AS MovementId_Production
+           , zfCalc_PartionMovementName (Movement_DocumentProduction.DescId, MovementDesc_Production.ItemName, Movement_DocumentProduction.InvNumber, Movement_DocumentProduction.OperDate) AS InvNumber_ProductionFull
+
 
        FROM (SELECT Movement.Id
                   , tmpRoleAccessKey.AccessKeyId
@@ -497,6 +502,13 @@ BEGIN
             LEFT JOIN MovementDate AS MD_EndSale
                                    ON MD_EndSale.MovementId =  Movement_Promo.Id
                                   AND MD_EndSale.DescId = zc_MovementDate_EndSale()
+
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                         ON MovementLinkMovement_Production.MovementChildId = Movement.Id                                   --MovementLinkMovement_Production.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
+          LEFT JOIN Movement AS Movement_DocumentProduction ON Movement_DocumentProduction.Id = MovementLinkMovement_Production.MovementId  --MovementLinkMovement_Production.MovementChildId
+          LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_DocumentProduction.DescId
+
 
      WHERE (vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE))
