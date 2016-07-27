@@ -3,6 +3,7 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -511
   ExplicitWidth = 1300
   ExplicitHeight = 488
   PixelsPerInch = 96
@@ -639,6 +640,17 @@ inherited EDIJournalForm: TEDIJournalForm
               Options.Editing = False
               Width = 45
             end
+            object clPrice_EDI: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072' (EDI)'
+              DataBinding.FieldName = 'Price_EDI'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 45
+            end
             object clAmountOrder: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'.'
               DataBinding.FieldName = 'AmountOrder'
@@ -917,7 +929,9 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediInvoice
       HeaderDataSet = PrintHeaderCDS
@@ -927,7 +941,9 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediOrdrsp
       HeaderDataSet = PrintHeaderCDS
@@ -939,9 +955,11 @@ inherited EDIJournalForm: TEDIJournalForm
       StartDateParam.Value = 42125d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 42125d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediRecadv
       spHeader = spInsertRecadv
@@ -1001,9 +1019,11 @@ inherited EDIJournalForm: TEDIJournalForm
       StartDateParam.Value = 42005d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 42005d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediError
       Directory = '/error'
@@ -1040,7 +1060,9 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediDesadv
       HeaderDataSet = PrintHeaderCDS
@@ -1095,9 +1117,11 @@ inherited EDIJournalForm: TEDIJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediComDoc
       spHeader = spHeaderComDoc
@@ -1165,9 +1189,11 @@ inherited EDIJournalForm: TEDIJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediOrder
       spHeader = spHeaderOrder
@@ -1203,17 +1229,20 @@ inherited EDIJournalForm: TEDIJournalForm
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId_Sale'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = 'false'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
@@ -1221,6 +1250,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Component = MasterCDS
           ComponentItem = 'OperDatePartner_Sale'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1293,7 +1323,9 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediDeclar
       HeaderDataSet = PrintHeaderCDS
@@ -1314,7 +1346,9 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediReceipt
       spHeader = spInsert_Protocol_EDIReceipt
@@ -1324,7 +1358,9 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'EDI COMDOC'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediReturnComDoc
       spHeader = spGetFileName
@@ -1336,7 +1372,9 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediDeclarReturn
       HeaderDataSet = PrintHeaderCDS
@@ -1463,6 +1501,7 @@ inherited EDIJournalForm: TEDIJournalForm
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = 'TContractChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -1470,6 +1509,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Component = MasterCDS
           ComponentItem = 'ContractId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
@@ -1477,6 +1517,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Component = MasterCDS
           ComponentItem = 'ContractCode'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1485,12 +1526,14 @@ inherited EDIJournalForm: TEDIJournalForm
           ComponentItem = 'ContractName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId_Find'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
@@ -1498,6 +1541,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalNameFind'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagName'
@@ -1506,6 +1550,7 @@ inherited EDIJournalForm: TEDIJournalForm
           ComponentItem = 'ContractTagName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1517,6 +1562,7 @@ inherited EDIJournalForm: TEDIJournalForm
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -1524,6 +1570,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Component = MasterCDS
           ComponentItem = 'UnitId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1532,6 +1579,7 @@ inherited EDIJournalForm: TEDIJournalForm
           ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1577,6 +1625,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1584,6 +1633,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 56
   end
@@ -1831,32 +1881,38 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOrderOperDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLN'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNPlace'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyId'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168
@@ -1871,29 +1927,34 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'inMovementId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsPropertyId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCode'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountOrder'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168
@@ -1913,6 +1974,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -1942,6 +2004,7 @@ inherited EDIJournalForm: TEDIJournalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1955,14 +2018,17 @@ inherited EDIJournalForm: TEDIJournalForm
     ConnectionParams.Host.Component = FormParams
     ConnectionParams.Host.ComponentItem = 'Host'
     ConnectionParams.Host.DataType = ftString
+    ConnectionParams.Host.MultiSelectSeparator = ','
     ConnectionParams.User.Value = Null
     ConnectionParams.User.Component = FormParams
     ConnectionParams.User.ComponentItem = 'UserName'
     ConnectionParams.User.DataType = ftString
+    ConnectionParams.User.MultiSelectSeparator = ','
     ConnectionParams.Password.Value = Null
     ConnectionParams.Password.Component = FormParams
     ConnectionParams.Password.ComponentItem = 'Password'
     ConnectionParams.Password.DataType = ftString
+    ConnectionParams.Password.MultiSelectSeparator = ','
     Left = 416
     Top = 56
   end
@@ -1976,86 +2042,101 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOrderOperDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerInvNumber'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerOperDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDateTax'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberSaleLink'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDateSaleLink'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOKPO'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDesc'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNPlace'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComDocDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyId'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -2070,41 +2151,48 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'inMovementId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsPropertyId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCode'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountPartner'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPricePartner'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummPartner'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 376
@@ -2154,6 +2242,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 840
@@ -2184,6 +2273,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = FormParams
         ComponentItem = 'Host'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UserName'
@@ -2191,6 +2281,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = FormParams
         ComponentItem = 'UserName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Password'
@@ -2198,6 +2289,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = FormParams
         ComponentItem = 'Password'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 464
@@ -2209,16 +2301,19 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'Host'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UserName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Password'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 48
@@ -2234,6 +2329,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -2241,12 +2337,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Sale'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner_Sale'
@@ -2254,6 +2352,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDatePartner_Sale'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_Tax'
@@ -2261,6 +2360,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDate_Tax'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_TaxCorrective'
@@ -2268,6 +2368,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDate_TaxCorrective'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Sale'
@@ -2275,6 +2376,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumber_Sale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner_Tax'
@@ -2282,6 +2384,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner_Tax'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner_TaxCorrective'
@@ -2289,24 +2392,28 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner_TaxCorrective'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Tax'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Tax'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_TaxCorrective'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_TaxCorrective'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Order'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Order'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_Order'
@@ -2314,6 +2421,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDate_Order'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Order'
@@ -2321,6 +2429,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumber_Order'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName_Sale'
@@ -2328,6 +2437,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'FromName_Sale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName_Sale'
@@ -2335,6 +2445,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'ToName_Sale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm_Sale'
@@ -2342,6 +2453,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'TotalSumm_Sale'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCountPartner_Sale'
@@ -2349,18 +2461,21 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'TotalCountPartner_Sale'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractCode'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -2368,6 +2483,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'ContractName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTagName'
@@ -2375,12 +2491,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'ContractTagName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -2388,6 +2506,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'UnitName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalNameFind'
@@ -2395,6 +2514,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'JuridicalNameFind'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerNameFind'
@@ -2402,6 +2522,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'PartnerNameFind'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MessageText'
@@ -2409,6 +2530,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 680
@@ -2425,12 +2547,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Sale'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner_Sale'
@@ -2438,6 +2562,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDatePartner_Sale'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Sale'
@@ -2445,12 +2570,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumber_Sale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Order'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Order'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_Order'
@@ -2458,6 +2585,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDate_Order'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Order'
@@ -2465,6 +2593,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumber_Order'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName_Sale'
@@ -2472,6 +2601,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'FromName_Sale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName_Sale'
@@ -2479,6 +2609,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'ToName_Sale'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm_Sale'
@@ -2486,6 +2617,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'TotalSumm_Sale'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCountPartner_Sale'
@@ -2493,18 +2625,21 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'TotalCountPartner_Sale'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractCode'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -2512,6 +2647,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'ContractName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTagName'
@@ -2519,12 +2655,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'ContractTagName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -2532,6 +2670,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'UnitName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 712
@@ -2555,6 +2694,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 679
@@ -2590,12 +2730,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 647
@@ -2611,42 +2753,49 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTaxNumber'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEDIEvent'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperMonth'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFileName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberRegistered'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateRegistered'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -2661,6 +2810,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'inMovementId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -2675,11 +2825,13 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'inMovementId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outFileName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 400
@@ -2703,12 +2855,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_TaxCorrective'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 679
@@ -2725,6 +2879,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -2732,6 +2887,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -2739,6 +2895,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 536
@@ -2755,12 +2912,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiOrdspr'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 848
@@ -2777,12 +2936,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiInvoice'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 904
@@ -2799,12 +2960,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiDesadv'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 968
@@ -2820,24 +2983,28 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNPlace'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDesadvNumber'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -2854,6 +3021,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Tax'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Corrective'
@@ -2861,6 +3029,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_TaxCorrective'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 856
