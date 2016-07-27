@@ -1,28 +1,30 @@
 inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
-  ClientHeight = 499
+  ClientHeight = 502
   ClientWidth = 1128
   ExplicitWidth = 1144
-  ExplicitHeight = 537
+  ExplicitHeight = 540
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1128
-    Height = 373
+    Height = 376
     ExplicitTop = 126
     ExplicitWidth = 1128
     ExplicitHeight = 373
-    ClientRectBottom = 373
+    ClientRectBottom = 376
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1128
       ExplicitHeight = 349
       inherited cxGrid: TcxGrid
         Width = 1128
-        Height = 349
+        Height = 352
+        ExplicitLeft = 536
+        ExplicitTop = 88
         ExplicitWidth = 1128
-        ExplicitHeight = 349
+        ExplicitHeight = 405
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -575,12 +577,11 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Top = 432
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 96
+    Top = 432
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionPeresort'
@@ -727,8 +728,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 265
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
-    Top = 464
+    Left = 768
+    Top = 344
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -781,7 +782,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         MultiSelectSeparator = ','
       end>
     Left = 344
-    Top = 496
+    Top = 432
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -872,15 +873,18 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'MovementId_Production'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
+        Name = 'InvNumber_ProductionFull'
         Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1095,13 +1099,13 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionPeresort_SetErased'
-    Left = 718
-    Top = 512
+    Left = 782
+    Top = 400
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionPeresort_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 710
+    Top = 376
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionPeresort'

@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
-             , MovementId_Master Integer, InvNumber_MasterFull TVarChar
+             , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
                )
 AS
 $BODY$
@@ -43,8 +43,8 @@ BEGIN
              , CAST (False as Boolean)                          AS isAuto
              , Null:: TDateTime                                 AS InsertDate
 
-             , 0                                                AS MovementId_Master
-             , CAST ('' AS TVarChar) 				AS InvNumber_MasterFull
+             , 0                                                AS MovementId_Production
+             , CAST ('' AS TVarChar) 				AS InvNumber_ProductionFull
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -64,8 +64,8 @@ BEGIN
          , COALESCE(MovementBoolean_isAuto.ValueData, False)         AS isAuto
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
 
-         , Movement_DocumentMaster.Id               AS MovementId_Master
-         , zfCalc_PartionMovementName (Movement_DocumentMaster.DescId, MovementDesc_Master.ItemName, Movement_DocumentMaster.InvNumber, Movement_DocumentMaster.OperDate) AS InvNumber_MasterFull
+         , Movement_DocumentProduction.Id               AS MovementId_Production
+         , zfCalc_PartionMovementName (Movement_DocumentProduction.DescId, MovementDesc_Production.ItemName, Movement_DocumentProduction.InvNumber, Movement_DocumentProduction.OperDate) AS InvNumber_ProductionFull
 
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -93,11 +93,11 @@ BEGIN
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
-          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                         ON MovementLinkMovement_Master.MovementId = Movement.Id
-                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-          LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
-          LEFT JOIN MovementDesc AS MovementDesc_Master ON MovementDesc_Master.Id = Movement_DocumentMaster.DescId
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                         ON MovementLinkMovement_Production.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
+          LEFT JOIN Movement AS Movement_DocumentProduction ON Movement_DocumentProduction.Id = MovementLinkMovement_Production.MovementChildId
+          LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_DocumentProduction.DescId
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionUnion();
