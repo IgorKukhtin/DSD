@@ -3,9 +3,8 @@
   ClientHeight = 645
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -525
   ExplicitWidth = 1314
-  ExplicitHeight = 680
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -474,6 +473,14 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object colisPeresort: TcxGridDBColumn [35]
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' '#1076#1072'/'#1085#1077#1090
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
           end
           inherited colIsErased: TcxGridDBColumn
             Width = 25

@@ -689,6 +689,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object colInvNumber_ProductionFull: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082' '#1087#1077#1088#1077#1089#1086#1088#1090
+            DataBinding.FieldName = 'InvNumber_ProductionFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
         end
       end
     end
