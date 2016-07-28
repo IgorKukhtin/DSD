@@ -17,13 +17,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderExternal_EDI(
 RETURNS Integer
 AS
 $BODY$
+   DECLARE vbId Integer;
    DECLARE vbPrice TFloat;
    DECLARE vbCountForPrice TFloat;
 BEGIN
 
      -- сохранили
-     SELECT tmp.ioPrice, tmp.ioCountForPrice
-            INTO vbPrice, vbCountForPrice
+     SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice
+            INTO vbId, vbPrice, vbCountForPrice
      FROM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := ioId
                                                    , inMovementId         := inMovementId
                                                    , inGoodsId            := inGoodsId
@@ -38,6 +39,10 @@ BEGIN
      -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), inMovementItemId_EDI, vbPrice);
      -- сохранили
      -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), inMovementItemId_EDI, vbCountForPrice);
+
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceEDI(), vbId, COALESCE ((SELECT MovementItemFloat.ValueData FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId = inMovementItemId_EDI AND MovementItemFloat.DescId = zc_MIFloat_Price()), 0));
+
 
 END;
 $BODY$
