@@ -190,6 +190,9 @@ type
     actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
+    cxLabel19: TcxLabel;
+    edInvNumberInvoice: TcxButtonEdit;
+    InvoiceGuides: TdsdGuides;
   private
   public
   end;

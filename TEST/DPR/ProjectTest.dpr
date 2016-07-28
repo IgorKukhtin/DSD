@@ -844,7 +844,8 @@ uses
   gpReport_InvoiceDialog in '..\..\Forms\Report\gpReport_InvoiceDialog.pas' {Report_InvoiceDialogForm: TParentForm},
   gpReport_Invoice in '..\..\Forms\Report\gpReport_Invoice.pas' {Report_InvoiceForm: TParentForm},
   ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
-  PartionRemains in '..\..\Forms\Guides\PartionRemains.pas' {PartionRemainsForm: TParentForm};
+  PartionRemains in '..\..\Forms\Guides\PartionRemains.pas' {PartionRemainsForm: TParentForm},
+  InvoiceJournalChoice in '..\..\Forms\Document\InvoiceJournalChoice.pas' {InvoiceJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

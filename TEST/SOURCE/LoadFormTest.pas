@@ -992,6 +992,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalDetailChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalDetailChoiceForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

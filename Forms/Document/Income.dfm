@@ -3,7 +3,7 @@ object IncomeForm: TIncomeForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 492
-  ClientWidth = 956
+  ClientWidth = 943
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object IncomeForm: TIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 956
+    Width = 943
     Height = 140
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 956
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -275,39 +276,59 @@ object IncomeForm: TIncomeForm
       Width = 127
     end
     object cxLabel16: TcxLabel
-      Left = 451
+      Left = 603
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 451
+      Left = 603
       Top = 103
       TabOrder = 32
-      Width = 530
+      Width = 332
+    end
+    object cxLabel19: TcxLabel
+      Left = 453
+      Top = 85
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1089#1095#1077#1090')'
+    end
+    object edInvNumberInvoice: TcxButtonEdit
+      Left = 450
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 34
+      Width = 145
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 166
-    Width = 956
+    Width = 943
     Height = 326
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 956
     ClientRectBottom = 326
-    ClientRectRight = 956
+    ClientRectRight = 943
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 956
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 956
+        Width = 943
         Height = 302
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 956
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -696,16 +717,15 @@ object IncomeForm: TIncomeForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 956
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 956
+        Width = 943
         Height = 302
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 956
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceCost
@@ -2418,6 +2438,21 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceId'
+        Value = Null
+        Component = InvoiceGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceName'
+        Value = Null
+        Component = InvoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -3157,5 +3192,142 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 816
     Top = 305
+  end
+  object InvoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberInvoice
+    Key = '0'
+    FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = InvoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = InvoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyDocumentId'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyDocumentName'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = 'True'
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 484
+    Top = 96
   end
 end
