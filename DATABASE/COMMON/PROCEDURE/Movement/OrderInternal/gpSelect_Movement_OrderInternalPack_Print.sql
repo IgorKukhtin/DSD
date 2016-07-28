@@ -131,7 +131,8 @@ BEGIN
              Object_Unit.ObjectCode          AS UnitCode
            , Object_Unit.ValueData           AS UnitName 
            , Object_Goods_basis.ObjectCode   AS GoodsCode_basis
-           , Object_Goods_basis.ValueData    AS GoodsName_basis
+           -- , Object_Goods_basis.ValueData    AS GoodsName_basis
+           , '' :: TVarChar                  AS GoodsName_basis
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData     AS GoodsGroupName
