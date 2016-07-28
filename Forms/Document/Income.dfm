@@ -26,7 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 956
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -313,14 +312,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 956
     ClientRectBottom = 326
     ClientRectRight = 943
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 956
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -328,7 +325,6 @@ object IncomeForm: TIncomeForm
         Height = 302
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 956
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -378,6 +374,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount_parent
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -428,6 +429,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount_parent
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -632,6 +638,28 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 100
           end
+          object colAmount_parent: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'Amount_parent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colPrice_parent: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'Price_parent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -717,7 +745,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitWidth = 956
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -725,7 +752,6 @@ object IncomeForm: TIncomeForm
         Height = 302
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 956
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceCost
@@ -939,6 +965,14 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceId'
+        Value = Null
+        Component = InvoiceGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

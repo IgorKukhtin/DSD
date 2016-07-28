@@ -622,6 +622,12 @@ object IncomePartnerForm: TIncomePartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInvoiceId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inShowAll'
         Value = False
         Component = FormParams
