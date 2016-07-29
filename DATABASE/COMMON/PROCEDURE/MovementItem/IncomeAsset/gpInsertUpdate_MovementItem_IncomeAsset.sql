@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_IncomeAsset (Integer, Intege
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeAsset(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inAssetId             Integer   , -- Товары
+    IN inGoodsId             Integer   , -- Товары
  INOUT ioAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
     IN inMIId_Invoice        TFloat    , -- элемент документа Cчет
@@ -19,8 +19,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeAsset());
-
+    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeAsset());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Заменили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
@@ -28,7 +28,7 @@ BEGIN
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_IncomeAsset (ioId                 := ioId
                                                    , inMovementId         := inMovementId
-                                                   , inAssetId            := inAssetId
+                                                   , inGoodsId            := inGoodsId
                                                    , inAmount             := ioAmount
                                                    , inPrice              := inPrice
                                                    , inCountForPrice      := ioCountForPrice

@@ -54,7 +54,7 @@ type
     cxTabSheetMain: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colAssetCode: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
@@ -64,7 +64,7 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colCountForPrice: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -127,13 +127,12 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
-    actGoodsChoiceForm: TOpenChoiceForm;
+    actAssetChoiceForm: TOpenChoiceForm;
     colAmountRemains: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
@@ -174,6 +173,8 @@ type
     cxLabel19: TcxLabel;
     edInvNumberInvoice: TcxButtonEdit;
     InvoiceGuides: TdsdGuides;
+    InsertRecordAsset: TInsertRecord;
+    bbInsertAsset: TdxBarButton;
   private
   public
   end;

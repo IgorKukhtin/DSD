@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_IncomeAsset()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeAsset (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeAsset (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeAsset(
@@ -86,7 +85,6 @@ BEGIN
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
-           , Object_Member.ValueData                     AS PersonalPackerName
 
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData            AS CurrencyPartnerName
