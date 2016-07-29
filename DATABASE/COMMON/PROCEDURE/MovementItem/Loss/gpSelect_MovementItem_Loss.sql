@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
-             , Amount TFloat, Count TFloat, HeadCount TFloat
+             , Amount TFloat, AmountRemains TFloat, Count TFloat, HeadCount TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -24,6 +24,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbBranchId_Constraint Integer;
+  DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Loss());
@@ -31,6 +32,13 @@ BEGIN
 
    -- определяется уровень доступа
    vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
+
+     -- определяется
+     vbUnitId:= (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId AND Object.DescId = zc_Object_Unit() WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_From());
+     IF COALESCE (vbUnitId, 0) = 0
+     THEN
+         vbUnitId:= (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_To());
+     END IF;
 
 
      IF inShowAll THEN
@@ -113,6 +121,24 @@ BEGIN
                         OR Object_InfoMoney_View.InfoMoneyDestinationId IN  (zc_Enum_InfoMoneyDestination_20500()) -- Общефирменные + Оборотная тара
                         OR vbBranchId_Constraint = 0
                     )
+
+            -- Остатки
+          , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
+                                , Container.Amount                            AS Amount
+                                , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                           FROM ContainerLinkObject AS CLO_Unit
+                                INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
+                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                              ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                              ON CLO_Account.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                           WHERE CLO_Unit.ObjectId = vbUnitId
+                             AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                             AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                          )
+
        SELECT
              0                          AS Id
            , tmpGoods.GoodsId           AS GoodsId
@@ -122,6 +148,7 @@ BEGIN
            , Object_Measure.ValueData                    AS MeasureName
 
            , CAST (NULL AS TFloat)      AS Amount
+           , COALESCE (tmpRemains.Amount, 0)  :: TFloat  AS AmountRemains
            , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
@@ -158,7 +185,14 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
+                                AND tmpRemains.GoodsKindId = CASE WHEN tmpGoods.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                              , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                              , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                )
+                                                                  THEN tmpGoods.GoodsKindId
+                                                                  ELSE 0
+                                                              END
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -171,6 +205,7 @@ BEGIN
            , Object_Measure.ValueData                    AS MeasureName
 
            , tmpMI.Amount
+           , COALESCE (tmpRemains.Amount, 0)  :: TFloat  AS AmountRemains
            , tmpMI.Count
            , tmpMI.HeadCount
            , tmpMI.PartionGoodsDate
@@ -195,7 +230,7 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
@@ -225,10 +260,36 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
+                                AND tmpRemains.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                                  , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                                  , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                                   )
+                                                                   THEN tmpMI.GoodsKindId
+                                                                   ELSE 0
+                                                              END
             ;
      ELSE
      -- Результат
      RETURN QUERY
+     WITH   -- Остатки
+            tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
+                                , Container.Amount                            AS Amount
+                                , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                           FROM ContainerLinkObject AS CLO_Unit
+                                INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
+                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                              ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                              ON CLO_Account.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                           WHERE CLO_Unit.ObjectId = vbUnitId
+                             AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                             AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                          )
+
        SELECT
              MovementItem.Id                    AS Id
            , Object_Goods.Id                    AS GoodsId
@@ -238,6 +299,7 @@ BEGIN
            , Object_Measure.ValueData                    AS MeasureName
 
            , MovementItem.Amount                AS Amount
+           , COALESCE (tmpRemains.Amount, 0) :: TFloat   AS AmountRemains
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
@@ -322,6 +384,14 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId 
 
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
+                                AND tmpRemains.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                                  , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                                  , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                                   )
+                                                                   THEN Object_GoodsKind.Id
+                                                                   ELSE 0
+                                                              END
             ;
 
      END IF;
@@ -335,6 +405,7 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.07.16         * 
  31.03.15         * add GoodsGroupNameFull, MeasureName
  17.10.14         * add св-ва PartionGoods
  08.10.14                                        * add Object_InfoMoney_View

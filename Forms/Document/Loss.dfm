@@ -3,7 +3,7 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -124,7 +124,18 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [7]
+          object AmountRemains: TcxGridDBColumn [7]
+            Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object colAmount: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -134,7 +145,7 @@ inherited LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCount: TcxGridDBColumn [8]
+          object colCount: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -146,7 +157,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 80
           end
-          object colHeadCount: TcxGridDBColumn [9]
+          object colHeadCount: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -158,7 +169,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 80
           end
-          object colAssetName: TcxGridDBColumn [10]
+          object colAssetName: TcxGridDBColumn [11]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -167,7 +178,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 80
           end
-          object clInfoMoneyCode: TcxGridDBColumn [11]
+          object clInfoMoneyCode: TcxGridDBColumn [12]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -176,7 +187,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 55
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn [12]
+          object clInfoMoneyGroupName: TcxGridDBColumn [13]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -185,7 +196,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn [13]
+          object clInfoMoneyDestinationName: TcxGridDBColumn [14]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -194,7 +205,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn [14]
+          object clInfoMoneyName: TcxGridDBColumn [15]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -203,7 +214,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 155
           end
-          object colPartionGoodsName: TcxGridDBColumn [15]
+          object colPartionGoodsName: TcxGridDBColumn [16]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1080#1085#1074'.'#1085#1086#1084#1077#1088')'
             DataBinding.FieldName = 'PartionGoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -219,7 +230,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 96
           end
-          object colPartionGoodsOperDate: TcxGridDBColumn [16]
+          object colPartionGoodsOperDate: TcxGridDBColumn [17]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072' '#1058#1052#1062')'
             DataBinding.FieldName = 'PartionGoodsOperDate'
             Visible = False
@@ -228,7 +239,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 75
           end
-          object colStorageName_Partion: TcxGridDBColumn [17]
+          object colStorageName_Partion: TcxGridDBColumn [18]
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'StorageName_Partion'
             Visible = False
@@ -236,15 +247,6 @@ inherited LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
-          end
-          object colPrice: TcxGridDBColumn [18]
-            Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1094#1077#1085#1072')'
-            DataBinding.FieldName = 'Price'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
           end
           object colUnitName: TcxGridDBColumn [19]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
@@ -255,6 +257,15 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 80
           end
+          object colPrice: TcxGridDBColumn [20]
+            Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1094#1077#1085#1072')'
+            DataBinding.FieldName = 'Price'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
         end
       end
     end
@@ -262,6 +273,8 @@ inherited LossForm: TLossForm
   inherited DataPanel: TPanel
     Width = 985
     TabOrder = 3
+    ExplicitLeft = 8
+    ExplicitTop = -6
     ExplicitWidth = 985
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -364,12 +377,14 @@ inherited LossForm: TLossForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -377,12 +392,14 @@ inherited LossForm: TLossForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -407,6 +424,7 @@ inherited LossForm: TLossForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Loss'
       ReportNameParam.Value = 'PrintMovement_Loss'
@@ -436,12 +454,14 @@ inherited LossForm: TLossForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -449,6 +469,7 @@ inherited LossForm: TLossForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -473,18 +494,21 @@ inherited LossForm: TLossForm
       FormName = 'TPartionGoodsChoiceForm'
       FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inGoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inUnitId'
           Value = ''
           Component = GuidesFrom
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Key'
@@ -492,6 +516,7 @@ inherited LossForm: TLossForm
           Component = MasterCDS
           ComponentItem = 'PartionGoodsId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -500,6 +525,7 @@ inherited LossForm: TLossForm
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price'
@@ -508,14 +534,16 @@ inherited LossForm: TLossForm
           ComponentItem = 'Price'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDatePartion'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -524,6 +552,7 @@ inherited LossForm: TLossForm
           ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -545,6 +574,7 @@ inherited LossForm: TLossForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -552,6 +582,7 @@ inherited LossForm: TLossForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -559,16 +590,19 @@ inherited LossForm: TLossForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -669,6 +703,7 @@ inherited LossForm: TLossForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
     Left = 830
@@ -690,12 +725,14 @@ inherited LossForm: TLossForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -703,24 +740,28 @@ inherited LossForm: TLossForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameLoss'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameLossTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameLossBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 552
@@ -743,25 +784,29 @@ inherited LossForm: TLossForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -769,6 +814,7 @@ inherited LossForm: TLossForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -776,12 +822,14 @@ inherited LossForm: TLossForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -789,12 +837,14 @@ inherited LossForm: TLossForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -802,12 +852,14 @@ inherited LossForm: TLossForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ArticleLossId'
         Value = ''
         Component = GuidesArticleLoss
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ArticleLossName'
@@ -815,81 +867,98 @@ inherited LossForm: TLossForm
         Component = GuidesArticleLoss
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -903,6 +972,7 @@ inherited LossForm: TLossForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -910,6 +980,7 @@ inherited LossForm: TLossForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -917,6 +988,7 @@ inherited LossForm: TLossForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -924,6 +996,7 @@ inherited LossForm: TLossForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -931,6 +1004,7 @@ inherited LossForm: TLossForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inArticleLossId'
@@ -938,57 +1012,69 @@ inherited LossForm: TLossForm
         Component = GuidesArticleLoss
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1051,6 +1137,7 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1058,6 +1145,7 @@ inherited LossForm: TLossForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1065,6 +1153,7 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1073,6 +1162,7 @@ inherited LossForm: TLossForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCount'
@@ -1081,6 +1171,7 @@ inherited LossForm: TLossForm
         ComponentItem = 'Count'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
@@ -1089,14 +1180,16 @@ inherited LossForm: TLossForm
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -1105,6 +1198,7 @@ inherited LossForm: TLossForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1112,6 +1206,7 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAssetId'
@@ -1119,6 +1214,7 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsId'
@@ -1126,6 +1222,7 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1137,6 +1234,7 @@ inherited LossForm: TLossForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1144,6 +1242,7 @@ inherited LossForm: TLossForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1151,32 +1250,37 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
@@ -1185,6 +1289,7 @@ inherited LossForm: TLossForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1192,6 +1297,7 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAssetId'
@@ -1199,6 +1305,7 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsId'
@@ -1206,6 +1313,7 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 272
@@ -1216,6 +1324,7 @@ inherited LossForm: TLossForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -1259,6 +1368,7 @@ inherited LossForm: TLossForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -1269,6 +1379,7 @@ inherited LossForm: TLossForm
     LookupControl = edFrom
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1278,6 +1389,7 @@ inherited LossForm: TLossForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1286,6 +1398,7 @@ inherited LossForm: TLossForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 440
   end
@@ -1294,6 +1407,7 @@ inherited LossForm: TLossForm
     LookupControl = edTo
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1303,6 +1417,7 @@ inherited LossForm: TLossForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1311,6 +1426,7 @@ inherited LossForm: TLossForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 648
     Top = 8
@@ -1320,6 +1436,7 @@ inherited LossForm: TLossForm
     LookupControl = edArticleLoss
     FormNameParam.Value = 'TArticleLossForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TArticleLossForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1329,6 +1446,7 @@ inherited LossForm: TLossForm
         Component = GuidesArticleLoss
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1337,6 +1455,7 @@ inherited LossForm: TLossForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 840
     Top = 24
