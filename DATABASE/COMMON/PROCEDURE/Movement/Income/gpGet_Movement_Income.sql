@@ -248,7 +248,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -273,4 +272,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Movement_Income (inMovementId := 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_Income (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
