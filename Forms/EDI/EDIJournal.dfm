@@ -441,9 +441,10 @@ inherited EDIJournalForm: TEDIJournalForm
             DataBinding.FieldName = 'PersonalSigningName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object Id: TcxGridDBColumn
             Caption = #1050#1083#1102#1095
             DataBinding.FieldName = 'Id'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -1107,8 +1108,8 @@ inherited EDIJournalForm: TEDIJournalForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1074#1080#1090#1072#1085#1094#1080#1080' '#1080#1079' EXITE?'
       InfoAfterExecute = #1050#1074#1080#1090#1072#1085#1094#1080#1080' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1074#1080#1090#1072#1085#1094#1080#1080' '#1080#1079' EXITE'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1074#1080#1090#1072#1085#1094#1080#1080' '#1080#1079' EXITE'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
     end
     object EDIActionComdocLoad: TEDIAction
       Category = 'EDI Load'
@@ -1224,7 +1225,9 @@ inherited EDIJournalForm: TEDIJournalForm
     object actOpenSaleForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'actOpenSaleForm'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      ImageIndex = 39
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
       FormNameParam.DataType = ftString
@@ -1239,16 +1242,21 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Name = 'ShowAll'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'OperDatePartner_Sale'
+          Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = '1'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1608,6 +1616,42 @@ inherited EDIJournalForm: TEDIJournalForm
         end>
       Caption = 'actUpdate_DateRegistered'
     end
+    object actOpenOrderForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1103#1074#1082#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1103#1074#1082#1072'>'
+      FormName = 'TOrderExternalForm'
+      FormNameParam.Value = 'TOrderExternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Order'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -1652,6 +1696,22 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbGotoSale'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbLoadOrder'
         end
         item
@@ -1668,9 +1728,10 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbEDIRecadvLoad'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1680,10 +1741,13 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbReceipt'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1772,6 +1836,7 @@ inherited EDIJournalForm: TEDIJournalForm
     inherited dxBarStatic: TdxBarStatic
       Caption = '    '
       Hint = '    '
+      ShowCaption = False
     end
     object bbLoadComDoc: TdxBarButton
       Action = maEDIComDocLoad
@@ -1779,10 +1844,6 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbLoadOrder: TdxBarButton
       Action = maEDIOrdersLoad
-      Category = 0
-    end
-    object bbGotoSale: TdxBarButton
-      Action = actOpenSaleForm
       Category = 0
     end
     object bbUpdate_EDIComdoc_Params: TdxBarButton
@@ -1825,8 +1886,16 @@ inherited EDIJournalForm: TEDIJournalForm
       Action = mactErrorEDI
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
+    object bbEDIRecadvLoad: TdxBarButton
       Action = maEDIRecadvLoad
+      Category = 0
+    end
+    object bbGotoSale: TdxBarButton
+      Action = actOpenSaleForm
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actOpenOrderForm
       Category = 0
     end
   end

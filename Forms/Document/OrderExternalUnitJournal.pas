@@ -69,6 +69,7 @@ type
     RouteGroupName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

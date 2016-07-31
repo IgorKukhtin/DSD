@@ -229,4 +229,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_IncomeAsset (inMovementId := 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_IncomeAsset (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())

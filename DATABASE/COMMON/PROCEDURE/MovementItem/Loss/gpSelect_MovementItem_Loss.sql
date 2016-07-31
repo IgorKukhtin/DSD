@@ -42,7 +42,8 @@ BEGIN
 
 
      IF inShowAll THEN
-     -- Результат
+
+     -- Результат такой
      RETURN QUERY
        WITH tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.Amount                           AS Amount
@@ -123,10 +124,14 @@ BEGIN
                     )
 
             -- Остатки
+          , tmpDescWhereObject AS (SELECT zc_ContainerLinkObject_Unit() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId)
           , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
                                 , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
-                           FROM ContainerLinkObject AS CLO_Unit
+                           FROM tmpDescWhereObject
+                                INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                               ON CLO_Unit.ObjectId = vbUnitId
+                                                              AND CLO_Unit.DescId = tmpDescWhereObject.DescId
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                               ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
@@ -134,11 +139,10 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                           WHERE CLO_Unit.ObjectId = vbUnitId
-                             AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                             AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                           )
 
+       -- Результат
        SELECT
              0                          AS Id
            , tmpGoods.GoodsId           AS GoodsId
@@ -271,13 +275,18 @@ BEGIN
                                                               END
             ;
      ELSE
-     -- Результат
+
+     -- Результат другой
      RETURN QUERY
      WITH   -- Остатки
-            tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
+            tmpDescWhereObject AS (SELECT zc_ContainerLinkObject_Unit() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId)
+          , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
                                 , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
-                           FROM ContainerLinkObject AS CLO_Unit
+                           FROM tmpDescWhereObject
+                                INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                               ON CLO_Unit.ObjectId = vbUnitId
+                                                              AND CLO_Unit.DescId = tmpDescWhereObject.DescId
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                               ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
@@ -285,11 +294,9 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                           WHERE CLO_Unit.ObjectId = vbUnitId
-                             AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                             AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                           )
-
+       -- Результат
        SELECT
              MovementItem.Id                    AS Id
            , Object_Goods.Id                    AS GoodsId

@@ -4,7 +4,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   ClientWidth = 1072
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1088
-  ExplicitHeight = 699
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -455,7 +455,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 15
+    Top = 194
     object actPrintSilent: TdsdPrintAction [0]
       Category = 'Print'
       MoveParams = <
@@ -464,10 +465,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -493,11 +496,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_OrderExternal'
       ReportNameParam.Value = 'PrintMovement_OrderExternal'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactSilentPrint: TMultiAction [1]
       Category = 'Print'
@@ -507,10 +512,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -530,10 +537,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -557,17 +566,20 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actPrint: TdsdPrintAction [22]
@@ -578,10 +590,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -606,11 +620,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_OrderExternal'
       ReportNameParam.Value = 'PrintMovement_OrderExternal'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actSPSavePrintState: TdsdExecStoredProc
       Category = 'Print'
@@ -631,10 +647,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -656,6 +674,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -663,6 +682,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -670,10 +690,15 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   inherited MasterDS: TDataSource
@@ -692,6 +717,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -699,6 +725,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -706,18 +733,20 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
   end
   inherited BarManager: TdxBarManager
-    Left = 224
-    Top = 155
+    Left = 64
+    Top = 195
     DockControlHeights = (
       0
       0
@@ -831,6 +860,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outPrinted'
@@ -838,6 +868,15 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -851,6 +890,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outPrinted'
@@ -858,6 +898,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -871,6 +912,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outPrinted'
@@ -878,6 +920,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -888,36 +931,42 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameOrderExternal'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameOrderExternalTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPrinted'
         Value = True
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -952,6 +1001,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -968,6 +1018,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inNewPrinted'
@@ -976,6 +1027,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outPrinted'
@@ -983,6 +1035,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 712

@@ -161,7 +161,7 @@ BEGIN
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
-      WHERE Object_Juridical.Id = inJuridicalId or inJuridicalId=0
+      WHERE Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0
            ;
 
 END;
@@ -176,4 +176,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Invoice_Choice (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Invoice_Choice (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inJuridicalId:= 1, inIsErased := FALSE, inSession:= '2')
