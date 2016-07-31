@@ -4570,9 +4570,6 @@ inherited MainForm: TMainForm
       object miIncome: TMenuItem
         Action = actIncome
       end
-      object N130: TMenuItem
-        Action = actIncomeAsset
-      end
       object N68: TMenuItem
         Action = actIncomePartionGoods
       end
@@ -4902,6 +4899,12 @@ inherited MainForm: TMainForm
       end
       object N111: TMenuItem
         Action = actNameBefore
+      end
+      object N131: TMenuItem
+        Caption = '-'
+      end
+      object N130: TMenuItem
+        Action = actIncomeAsset
       end
     end
     object miHistory: TMenuItem [5]
