@@ -630,6 +630,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeAssetJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeAssetJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetPlace_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetPlace_ObjectForm');
+
 end;
 
 procedure TLoadFormTest.LoadOrderIncomeFormTest;

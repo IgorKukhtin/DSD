@@ -847,7 +847,8 @@ uses
   PartionRemains in '..\..\Forms\Guides\PartionRemains.pas' {PartionRemainsForm: TParentForm},
   InvoiceJournalChoice in '..\..\Forms\Document\InvoiceJournalChoice.pas' {InvoiceJournalChoiceForm: TParentForm},
   IncomeAssetJournal in '..\..\Forms\Document\IncomeAssetJournal.pas' {IncomeAssetJournalForm: TParentForm},
-  IncomeAsset in '..\..\Forms\Document\IncomeAsset.pas' {IncomeAssetForm: TParentForm};
+  IncomeAsset in '..\..\Forms\Document\IncomeAsset.pas' {IncomeAssetForm: TParentForm},
+  AssetPlace_Object in '..\..\Forms\Guides\AssetPlace_Object.pas' {AssetPlace_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

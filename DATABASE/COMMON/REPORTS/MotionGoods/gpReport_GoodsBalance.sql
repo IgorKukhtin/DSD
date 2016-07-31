@@ -19,6 +19,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CarCode Integer, CarName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
+             , BarCode_Main TVarChar
              , Weight TFloat
              , PartionGoodsDate TDateTime, PartionGoodsName TVarChar, AssetToName TVarChar
 
@@ -120,7 +121,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
 AS
 $BODY$
   DECLARE vbUserId Integer;
-
+  DECLARE vbGoodsPropertyId_basis Integer;
   DECLARE vbIsSummIn Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -132,6 +133,8 @@ BEGIN
 
     -- !!!может так будет быстрее!!!
     inAccountGroupId:= COALESCE (inAccountGroupId, 0);
+
+    vbGoodsPropertyId_basis := zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0);
 
     -- !!!меняются параметры для филиала!!!
     IF 0 < (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
@@ -380,7 +383,31 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-          WITH tmpMIContainer AS (-- Остатки + Движение товара :  zc_Container_Count and zc_Container_Summ
+   WITH 
+      tmpObject_GoodsPropertyValue_basis AS
+       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+             , Object_GoodsPropertyValue.ValueData  AS Name
+             , ObjectString_BarCode.ValueData       AS BarCode
+        FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+             ) AS tmpGoodsProperty
+             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                   ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+             INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                           -- AND Object_GoodsPropertyValue.ValueData <> ''
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+             LEFT JOIN ObjectString AS ObjectString_BarCode
+                                    ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+       )
+
+             , tmpMIContainer AS (-- Остатки + Движение товара :  zc_Container_Count and zc_Container_Summ
                                   SELECT _tmpContainer.ContainerDescId
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
@@ -1007,7 +1034,11 @@ BEGIN
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
         , CAST (COALESCE(Object_GoodsKind_complete.ValueData, '') AS TVarChar) AS GoodsKindName_complete
+        
         , Object_Measure.ValueData       AS MeasureName
+        
+        , tmpObject_GoodsPropertyValue_basis.BarCode AS BarCode_Main
+
         , ObjectFloat_Weight.ValueData   AS Weight
         , CASE WHEN tmpResult.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpResult.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
         , tmpResult.PartionGoodsName :: TVarChar  AS PartionGoodsName
@@ -1222,7 +1253,8 @@ BEGIN
         LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpResult.GoodsId
         LEFT JOIN tmpPriceEnd ON tmpPriceEnd.GoodsId = tmpResult.GoodsId
 
-
+        LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpResult.GoodsId
+                                                    AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpResult.GoodsKindId
         WHERE tmpResult.CountReal <> 0
            OR tmpResult.SummReal <> 0
 
@@ -1252,6 +1284,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.07.16         * add tmpObject_GoodsPropertyValue_basis
  01.07.15         *
  02.05.15         * 
 */

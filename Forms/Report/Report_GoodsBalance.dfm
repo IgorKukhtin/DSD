@@ -25,6 +25,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     Height = 590
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 87
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -599,6 +600,13 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object ceBarCode_Main: TcxGridDBColumn
+        Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
+        DataBinding.FieldName = 'BarCode_Main'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -1797,6 +1805,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintBarCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint3'
         end
         item
@@ -1892,6 +1908,11 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       Action = actPrint_Inventory
       Category = 0
     end
+    object bbPrintBarCode: TdxBarButton
+      Action = actPrintBarCode
+      Category = 0
+      ImageIndex = 15
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1929,6 +1950,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       FormName = 'TReport_GoodsBalanceDialogForm'
       FormNameParam.Value = 'TReport_GoodsBalanceDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1936,6 +1958,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1943,6 +1966,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
@@ -1951,6 +1975,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -1959,6 +1984,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupId'
@@ -1966,6 +1992,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesGoodsGroup
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -1974,6 +2001,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupId'
@@ -1981,6 +2009,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesUnitGroup
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -1989,6 +2018,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationId'
@@ -1996,6 +2026,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesLocation
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -2004,6 +2035,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
@@ -2011,6 +2043,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesAccountGroup
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -2018,6 +2051,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesAccountGroup
           ComponentItem = 'TextValue'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
@@ -2025,10 +2059,92 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = cbInfoMoney
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPrintBarCode: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1096#1090#1088#1080#1093'-'#1082#1086#1076')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1096#1090#1088#1080#1093'-'#1082#1086#1076')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
+            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
+            'l'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAmount'
+          Value = 'False'
+          Component = cbAmount
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1096#1090#1088#1080#1093#1082#1086#1076')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1096#1090#1088#1080#1093#1082#1086#1076')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -2053,12 +2169,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -2066,6 +2184,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -2073,6 +2192,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesLocation
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -2080,40 +2200,47 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = Null
           Component = GuidesGoods
           ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
           Value = Null
           Component = cbGoodsKind
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
           Value = Null
           Component = cbPartionGoods
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
           Value = Null
           Component = cbAmount
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
           Value = Null
           Component = cbInfoMoney
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1076#1074#1080#1078#1077#1085#1080#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1076#1074#1080#1078#1077#1085#1080#1077')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object SaleJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -2122,24 +2249,28 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       FormName = 'TMovementGoodsJournalForm'
       FormNameParam.Value = 'TMovementGoodsJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindId'
           Value = 0
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindName'
@@ -2147,12 +2278,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -2160,12 +2293,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionGoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionGoodsName'
@@ -2173,12 +2308,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = MasterCDS
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'LocationId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -2186,12 +2323,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = MasterCDS
           ComponentItem = 'LocationName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = GuidesAccountGroup
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -2199,12 +2338,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesAccountGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId_Detail'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -2212,12 +2353,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_Detail'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupId'
           Value = Null
           Component = GuidesUnitGroup
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -2225,6 +2368,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -2232,6 +2376,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = FormParams
           ComponentItem = 'SaleDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2269,12 +2414,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -2282,6 +2429,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -2289,6 +2437,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesLocation
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -2296,40 +2445,47 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = ''
           Component = GuidesGoods
           ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
           Value = 'False'
           Component = cbGoodsKind
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
           Value = 'False'
           Component = cbPartionGoods
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
           Value = 'False'
           Component = cbAmount
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
           Value = 'False'
           Component = cbInfoMoney
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1076#1074#1080#1078#1077#1085#1080#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1076#1074#1080#1078#1077#1085#1080#1077')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint3: TdsdPrintAction
       Category = 'DSDLib'
@@ -2353,12 +2509,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -2366,6 +2524,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -2373,6 +2532,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesLocation
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -2380,40 +2540,47 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = ''
           Component = GuidesGoods
           ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
           Value = 'False'
           Component = cbGoodsKind
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
           Value = 'False'
           Component = cbPartionGoods
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
           Value = 'False'
           Component = cbAmount
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
           Value = 'False'
           Component = cbInfoMoney
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Loss: TdsdPrintAction
       Category = 'DSDLib'
@@ -2437,12 +2604,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -2450,6 +2619,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -2457,6 +2627,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesLocation
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -2464,57 +2635,67 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = ''
           Component = GuidesGoods
           ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
           Value = 'False'
           Component = cbGoodsKind
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
           Value = 'False'
           Component = cbPartionGoods
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
           Value = 'False'
           Component = cbAmount
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
           Value = 'False'
           Component = cbInfoMoney
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName_by'
           Value = ''
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName_by'
           Value = ''
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isLoss'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Inventory: TdsdPrintAction
       Category = 'DSDLib'
@@ -2538,12 +2719,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -2551,6 +2734,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -2558,6 +2742,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesLocation
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -2565,57 +2750,67 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = ''
           Component = GuidesGoods
           ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
           Value = 'False'
           Component = cbGoodsKind
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
           Value = 'False'
           Component = cbPartionGoods
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
           Value = 'False'
           Component = cbAmount
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
           Value = 'False'
           Component = cbInfoMoney
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName_by'
           Value = ''
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName_by'
           Value = ''
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isLoss'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object spReport: TdsdStoredProc
@@ -2632,6 +2827,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -2639,6 +2835,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountGroupId'
@@ -2646,6 +2843,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = GuidesAccountGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitGroupId'
@@ -2653,6 +2851,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = GuidesUnitGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLocationId'
@@ -2660,6 +2859,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = GuidesLocation
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -2667,6 +2867,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -2674,6 +2875,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsInfoMoney'
@@ -2681,6 +2883,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = cbInfoMoney
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -2774,6 +2977,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2784,6 +2988,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2792,6 +2997,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 968
   end
@@ -2800,6 +3006,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     LookupControl = edLocation
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2810,6 +3017,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2818,9 +3026,9 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 24
+    Left = 728
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -2833,6 +3041,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     LookupControl = edUnitGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -2844,6 +3053,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2852,6 +3062,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 600
   end
@@ -2860,6 +3071,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2870,6 +3082,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2878,12 +3091,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 904
     Top = 27
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ShowDialogAction = ExecuteDialog
     ComponentList = <
@@ -2913,6 +3128,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     LookupControl = ceAccountGroup
     FormNameParam.Value = 'TAccountGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2922,6 +3138,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = GuidesAccountGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2930,11 +3147,13 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Goods'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 392
     Top = 5
@@ -2945,56 +3164,67 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Name = 'IncomeDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 424
     Top = 224
@@ -3010,6 +3240,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'IncomeDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
@@ -3017,6 +3248,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'ReturnOutDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
@@ -3024,6 +3256,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'SaleDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
@@ -3031,6 +3264,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'ReturnInDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
@@ -3038,6 +3272,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'MoneyDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
@@ -3045,6 +3280,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'ServiceDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
@@ -3052,6 +3288,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'SendDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
@@ -3059,6 +3296,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'OtherDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
@@ -3066,6 +3304,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'SaleRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
@@ -3073,6 +3312,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'ReturnInRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
@@ -3080,6 +3320,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceCorrectiveDesc'
@@ -3087,6 +3328,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'PriceCorrectiveDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceRealDesc'
@@ -3094,6 +3336,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'ServiceRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ChangeCurrencyDesc'
@@ -3101,6 +3344,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Component = FormParams
         ComponentItem = 'ChangeCurrencyDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 528
