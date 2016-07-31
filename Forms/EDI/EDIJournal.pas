@@ -173,18 +173,20 @@ type
     ClientRefresh: TdsdDataSetRefresh;
     maEDIRecadvLoad: TMultiAction;
     EDIActionRecadvLoad: TEDIAction;
-    dxBarButton1: TdxBarButton;
+    bbEDIRecadvLoad: TdxBarButton;
     spInsertRecadv: TdsdStoredProc;
     InvNumberRecadv: TcxGridDBColumn;
     FileName: TcxGridDBColumn;
     DateRegistered: TcxGridDBColumn;
     InvNumberRegistered: TcxGridDBColumn;
     clPersonalSigningName: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
     spUpdate_DateRegistered: TdsdStoredProc;
     actUpdate_DateRegistered: TdsdExecStoredProc;
     actShowMessage: TShowMessageAction;
     clPrice_EDI: TcxGridDBColumn;
+    actOpenOrderForm: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

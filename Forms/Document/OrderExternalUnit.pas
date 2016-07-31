@@ -123,6 +123,7 @@ type
     mactUpdateFromOrder: TMultiAction;
     actInsertFromOrder: TdsdExecStoredProc;
     spInsertFromOrder: TdsdStoredProc;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

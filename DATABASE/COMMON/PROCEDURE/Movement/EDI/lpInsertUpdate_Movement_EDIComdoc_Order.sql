@@ -5,9 +5,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_Order (Integer, Intege
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_EDIComdoc_Order(
     IN inMovementId      Integer   , --
     IN inUserId          Integer   , -- пользователь
+   OUT outMessageText    Text      ,
     IN inSession         TVarChar    -- сессия пользователя
 )                              
-RETURNS VOID
+RETURNS Text
 AS
 $BODY$
    DECLARE vbIsFind_InvNumberPartner Boolean;
@@ -441,8 +442,9 @@ BEGIN
      IF vbIsFind_InvNumberPartner = FALSE
      THEN
          -- ФИНИШ - Проводим <Заявки сторонние>
-         PERFORM gpComplete_Movement_OrderExternal (inMovementId     := vbMovementId_Order
-                                                  , inSession        := inSession);
+         SELECT tmp.outMessageText INTO outMessageText
+         FROM gpComplete_Movement_OrderExternal (inMovementId     := vbMovementId_Order
+                                               , inSession        := inSession) AS tmp;
      END IF;
 
      -- сохранили <ОКПО>

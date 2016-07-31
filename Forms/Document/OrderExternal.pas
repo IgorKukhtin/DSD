@@ -98,6 +98,8 @@ type
     PricePromo: TcxGridDBColumn;
     LineNum: TcxGridDBColumn;
     isPriceEDIDiff: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

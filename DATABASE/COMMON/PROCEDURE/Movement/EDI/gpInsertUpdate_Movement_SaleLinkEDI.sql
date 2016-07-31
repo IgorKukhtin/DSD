@@ -172,10 +172,11 @@ BEGIN
      IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_OrderExternal() WHERE MovementString.MovementId = inMovementId_EDI AND MovementString.DescId = zc_MovementString_Desc())
      THEN
           -- !!!создаетс€ док-т <«а€вки сторонние>!!!
-          PERFORM lpInsertUpdate_Movement_EDIComdoc_Order (inMovementId    := inMovementId_EDI
-                                                         , inUserId        := vbUserId
-                                                         , inSession       := inSession
-                                                          );
+          SELECT tmp.outMessageText INTO vbMessageText
+          FROM lpInsertUpdate_Movement_EDIComdoc_Order (inMovementId    := inMovementId_EDI
+                                                      , inUserId        := vbUserId
+                                                      , inSession       := inSession
+                                                       ) AS tmp;
      -- END !!!так дл€ за€вки!!!
 
      ELSE

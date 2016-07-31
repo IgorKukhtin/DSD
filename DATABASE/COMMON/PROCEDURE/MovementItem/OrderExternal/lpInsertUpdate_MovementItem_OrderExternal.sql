@@ -20,6 +20,8 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbChangePercent TFloat;
+   DECLARE vbIsChangePercent_Promo Boolean;
    DECLARE vbTaxPromo TFloat;
    DECLARE vbPartnerId Integer;
 BEGIN
@@ -33,7 +35,8 @@ BEGIN
                                  ELSE 0
                             END
           , tmp.TaxPromo
-            INTO outMovementId_Promo, outPricePromo, vbTaxPromo
+          , tmp.isChangePercent
+            INTO outMovementId_Promo, outPricePromo, vbTaxPromo, vbIsChangePercent_Promo
      FROM lpGet_Movement_Promo_Data (inOperDate   := CASE WHEN TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
                                                                        FROM ObjectLink AS ObjectLink_Juridical
                                                                             INNER JOIN ObjectLink AS ObjectLink_Retail
@@ -55,6 +58,10 @@ BEGIN
                                    , inUnitId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                    , inGoodsId    := inGoodsId
                                    , inGoodsKindId:= inGoodsKindId) AS tmp;
+
+
+     -- (-)% Скидки (+)% Наценки
+     vbChangePercent:= CASE WHEN COALESCE (vbIsChangePercent_Promo, TRUE) = TRUE THEN COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0) ELSE 0 END;
 
      -- !!!замена для акции!!
      IF outMovementId_Promo > 0 THEN
@@ -79,6 +86,8 @@ BEGIN
      -- сохранили свойство <MovementId-Акция>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, COALESCE (outMovementId_Promo, 0));
 
+     -- сохранили свойство <(-)% Скидки (+)% Наценки>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, vbChangePercent);
 
      -- сохранили свойство <Количество дозаказ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), ioId, inAmountSecond);
@@ -126,3 +135,96 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpInsertUpdate_MovementItem_OrderExternal (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+
+/*
+-- !!!!!!!!!!!! - 0 - !!!!!!!!! 
+select lpInsertUpdate_MovementFloat_TotalSumm  (tmp.Id)
+from (
+select distinct Movement.*
+from Movement
+     inner join MovementFloat AS MF on MF.MovementId = Movement.Id AND MF.DescId = zc_MovementFloat_ChangePercent() and MF.ValueData <> 0
+     inner join MovementItem on MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+          and MovementItem.isErased = FALSE
+
+                                 left JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                             ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+where Movement.DescId = zc_Movement_OrderExternal() 
+-- and Movement.Id = 4111493 
+  and Movement.OperDate between '01.07.2016' and '01.10.2016'
+  and coalesce (MIFloat_ChangePercent.ValueData, 0)  = 0
+) as tmp
+
+
+
+-- !!!!!!!!!!!! - 1 - !!!!!!!!! 
+select Movement.*
+, MIFloat_ChangePercent.*
+, MF.ValueData
+      -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, MF.ValueData)
+from Movement
+     inner join MovementFloat AS MF on MF.MovementId = Movement.Id AND MF.DescId = zc_MovementFloat_ChangePercent() and MF.ValueData <> 0
+     inner join MovementItem on MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+          -- and MovementItem.isErased = FALSE
+
+                                 left JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                             ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+where Movement.DescId = zc_Movement_OrderExternal() 
+-- and Movement.Id = 4111493 
+  and Movement.OperDate between '01.07.2016' and '01.10.2016'
+and coalesce (MIFloat_ChangePercent.ValueData, 0) <> coalesce (MF.ValueData, 0)
+
+
+-- !!!!!!!!!!!! - 2 - !!!!!!!!! 
+select Movement.*
+--     , MovementItem.ObjectId AS GoodsId
+--       , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, 0)
+, MIFloat_ChangePercent.*
+, MIFloat_ChangePercent2.ValueDaTA
+-- , Movement_sale.*
+, MI_sale.*
+from Movement
+     inner join MovementFloat AS MF on MF.MovementId = Movement.Id AND MF.DescId = zc_MovementFloat_ChangePercent() and MF.ValueData <> 0
+
+     inner join MovementLinkMovement AS MLM on  MLM.DescId = zc_MovementLinkMovement_Order()
+                                                           and MLM.MovementChildId = Movement.Id
+     INNER join Movement as Movement_sale on Movement_sale.Id = MLM.MovementId
+                                         and Movement_sale.dESCId = zc_Movement_Sale()
+
+     inner join MovementItem on MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            -- and MovementItem.isErased = FALSE
+
+
+                                 inner JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                                             AND MIFloat_PromoMovement.ValueData > 0
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                                 inner JOIN MovementItemFloat AS MIFloat_ChangePercent2
+                                                             ON MIFloat_ChangePercent2.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_ChangePercent2.DescId = zc_MIFloat_ChangePercent()
+                                                            AND MIFloat_ChangePercent2.ValueDaTA <> 0
+
+     inner join MovementItem as MI_sale on MI_sale.MovementId = MLM.MovementId AND MI_sale.DescId = zc_MI_Master() AND MI_sale.isErased = FALSE AND MI_sale.ObjectId = MovementItem.ObjectId
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_sale
+                                                                  ON MILinkObject_GoodsKind_sale.MovementItemId = MI_sale.Id
+                                                                 AND MILinkObject_GoodsKind_sale.DescId = zc_MILinkObject_GoodsKind()
+
+                                 left JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                             ON MIFloat_ChangePercent.MovementItemId = MI_sale.Id
+                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+where Movement.DescId = zc_Movement_OrderExternal()
+-- and Movement.Id = 4111493 
+  and Movement.OperDate between '01.09.2016' and '01.12.2016'
+  and COALESCE (MIFloat_ChangePercent.ValueData, 0) = 0
+  and coalesce (MILinkObject_GoodsKind_sale.ObjectId , 0) = coalesce (MILinkObject_GoodsKind.ObjectId , 0)
+*/

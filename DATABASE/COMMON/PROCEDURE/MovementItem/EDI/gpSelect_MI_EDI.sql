@@ -65,7 +65,7 @@ BEGIN
                               -- , 0                                                   AS MovementItemId
                               , MovementItem.ObjectId                               AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                              , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                              , COALESCE (MIFloat_Price.ValueData, 0) * (1 + COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100) AS Price
                               , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE MIFloat_CountForPrice.ValueData END AS CountForPrice
                               , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountOrder
                          FROM MovementItem
@@ -81,12 +81,16 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                           ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                          ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                          WHERE MovementItem.MovementId = vbMovementId_Order
                            AND MovementItem.DescId = zc_MI_Master()
                            AND MovementItem.isErased = FALSE
                          GROUP BY MovementItem.ObjectId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                 , COALESCE (MIFloat_Price.ValueData, 0)
+                                , COALESCE (MIFloat_ChangePercent.ValueData, 0)
                                 , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE MIFloat_CountForPrice.ValueData END
                         )
        , tmpMI_OrderPrice AS (SELECT tmpMI_Order.MovementId
@@ -151,12 +155,14 @@ BEGIN
                   , SUM (tmpMI.AmountNotice) AS AmountNotice
                   , SUM (tmpMI.AmountPartner) AS AmountPartner
                   , SUM (tmpMI.SummPartner) AS SummPartner
-             FROM (SELECT inMovementId AS MovementId
+             FROM (-- строчная часть EDI - inMovementId
+                   SELECT inMovementId AS MovementId
                         , MAX (MovementItem.Id)                               AS MovementItemId
                         , MovementItem.ObjectId                               AS GoodsId
                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                         , COALESCE (MIString_GLNCode.ValueData, '')           AS GLNCode
-                        , COALESCE (MIFloat_Price.ValueData, COALESCE (tmpMI_OrderPrice.Price, 0)) AS Price
+                        -- , COALESCE (MIFloat_Price.ValueData, COALESCE (tmpMI_OrderPrice.Price, 0)) AS Price
+                        , COALESCE (tmpMI_OrderPrice.Price, 0)                AS Price
 
                         , SUM (COALESCE (MovementItem.Amount, 0))             AS AmountOrderEDI
                         , SUM (COALESCE (MIFloat_AmountNotice.ValueData, 0))  AS AmountNoticeEDI
@@ -176,10 +182,10 @@ BEGIN
                         LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                     ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                        LEFT JOIN MovementItemFloat AS MIFloat_Price
+                        /*LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                   AND MIFloat_Price.ValueData <> 0
+                                                   AND MIFloat_Price.ValueData <> 0*/
                         LEFT JOIN MovementItemFloat AS MIFloat_SummPartner
                                                     ON MIFloat_SummPartner.MovementItemId = MovementItem.Id
                                                    AND MIFloat_SummPartner.DescId = zc_MIFloat_Summ()
@@ -195,8 +201,10 @@ BEGIN
                    GROUP BY MovementItem.ObjectId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           , COALESCE (MIString_GLNCode.ValueData, '')
-                          , COALESCE (MIFloat_Price.ValueData, COALESCE (tmpMI_OrderPrice.Price, 0))
+                          -- , COALESCE (MIFloat_Price.ValueData, COALESCE (tmpMI_OrderPrice.Price, 0))
+                          , COALESCE (tmpMI_OrderPrice.Price, 0)
                   UNION ALL
+                   -- строчная часть Sale + Order
                    SELECT tmpMI_Sale_Order.MovementId
                         , tmpMI_Sale_Order.MovementItemId
                         , tmpMI_Sale_Order.GoodsId
@@ -214,12 +222,13 @@ BEGIN
                                     THEN CAST (tmpMI_Sale_Order.AmountPartner * tmpMI_Sale_Order.Price / tmpMI_Sale_Order.CountForPrice AS NUMERIC (16, 2))
                                ELSE CAST (tmpMI_Sale_Order.AmountPartner * tmpMI_Sale_Order.Price AS NUMERIC (16, 2))
                           END AS SummPartner
-                   FROM (SELECT inMovementId      AS MovementId
+                   FROM (-- строчная часть Sale - vbMovementId_Sale
+                         SELECT inMovementId      AS MovementId
                               , vbGoodsPropertyId AS GoodsPropertyId
                               , 0                                                   AS MovementItemId
                               , MovementItem.ObjectId                               AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                              , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                              , COALESCE (MIFloat_Price.ValueData, 0) * (1 + COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100) AS Price
                               , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE MIFloat_CountForPrice.ValueData END AS CountForPrice
                               , 0                                                                                AS AmountOrder
                               , SUM (CASE WHEN vbMovementId_Order_Sale <> 0 THEN MovementItem.Amount ELSE 0 END) AS AmountNotice
@@ -237,6 +246,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                           ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                          ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                          WHERE MovementItem.MovementId = vbMovementId_Sale
                            AND MovementItem.DescId = zc_MI_Master()
                            AND MovementItem.isErased = FALSE
@@ -244,7 +256,9 @@ BEGIN
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                 , COALESCE (MIFloat_Price.ValueData, 0)
                                 , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE MIFloat_CountForPrice.ValueData END
+                                , COALESCE (MIFloat_ChangePercent.ValueData, 0)
                         UNION ALL
+                         -- строчная часть Order
                          SELECT tmpMI_Order.MovementId
                               , tmpMI_Order.GoodsPropertyId
                               , 0 AS MovementItemId -- tmpMI_Order.MovementItemId

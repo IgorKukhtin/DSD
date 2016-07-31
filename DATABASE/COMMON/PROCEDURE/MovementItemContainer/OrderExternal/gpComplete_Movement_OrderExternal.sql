@@ -5,9 +5,10 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_OrderExternal (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_OrderExternal(
     IN inMovementId        Integer              , -- ключ Документа
    OUT outPrinted          Boolean              ,
+   OUT outMessageText      Text                 ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS Boolean
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -34,7 +35,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , GoodsId Integer, GoodsKindId Integer
                                , OperCount TFloat, OperCount_Second TFloat, OperSumm_Partner TFloat
-                               , Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
+                               , ChangePercent TFloat, PriceEDI TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
 
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту или Сотуднику и для формирования Аналитик в проводках
@@ -84,7 +85,7 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , GoodsId, GoodsKindId
                          , OperCount, OperCount_Second, OperSumm_Partner
-                         , Price, CountForPrice)
+                         , ChangePercent, PriceEDI, Price, CountForPrice)
         SELECT
               _tmp.MovementItemId
             , _tmp.GoodsId
@@ -114,6 +115,8 @@ BEGIN
                            END
               END AS OperSumm_Partner
 
+            , _tmp.ChangePercent
+            , _tmp.PriceEDI
             , _tmp.Price
             , _tmp.CountForPrice
         FROM
@@ -122,6 +125,8 @@ BEGIN
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
 
+                  , tmpMI.ChangePercent
+                  , tmpMI.PriceEDI
                   , tmpMI.Price
                   , tmpMI.CountForPrice
                     -- количество
@@ -141,12 +146,14 @@ BEGIN
                    , (MovementItem.Amount) AS OperCount
                    , (COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS OperCount_Second
 
-                   , CASE WHEN vbDiscountPercent <> 0
+                   , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
+                   , COALESCE (MIFloat_PriceEDI.ValueData, 0) AS PriceEDI
+                   , CASE WHEN COALESCE (MIFloat_ChangePercent.ValueData, 0) <> 0 -- vbDiscountPercent <> 0
                                -- скидка в цене - с округлением до 2-х знаков
-                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                          WHEN vbExtraChargesPercent <> 0
+                               THEN CAST ( (1 + COALESCE (MIFloat_ChangePercent.ValueData, 0) /* - vbDiscountPercent*/ / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                          WHEN COALESCE (MIFloat_ChangePercent.ValueData, 0) <> 0 -- vbExtraChargesPercent <> 0
                                -- наценка в цене - с округлением до 2-х знаков
-                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                               THEN CAST ( (1 + COALESCE (MIFloat_ChangePercent.ValueData, 0) /*+ vbExtraChargesPercent*/ / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
@@ -161,12 +168,18 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                               AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceEDI
+                                               ON MIFloat_PriceEDI.MovementItemId = MovementItem.Id
+                                              AND MIFloat_PriceEDI.DescId = zc_MIFloat_PriceEDI()
                    LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_OrderExternal()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -224,21 +237,38 @@ BEGIN
                                  );
      END IF;
 
-     -- кроме Админа
+     -- проверка
      IF EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.Price = 0) -- AND vbUserId <> 5
            -- филиал Киев
        -- AND 8379 <> COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 LIMIT 1), 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.%В документе покупателя <%>%для товара <%> <%>%с количеством <%> установлена цена = 0.'
-                                                                                           , CHR(13)
-                                                                                           , lfGet_Object_ValueData (vbPartnerId)
-                                                                                           , CHR(13)
-                                                                                           , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
-                                                                                           , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
-                                                                                           , CHR(13)
-                                                                                           , (SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
-                                                                                            ;
+         outMessageText:= 'Ошибка.Документ сформирован но НЕ ПРОВЕДЕН'
+            -- || CHR(13) || 'Покупатель <' || lfGet_Object_ValueData (vbPartnerId) || '>.'
+            || CHR(13) || 'Для товара <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1) || '>'
+                                 || ' <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1) || '>'
+            || CHR(13) || 'с количеством <' || zfConvert_FloatToString ((SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)) || '> установлена цена = 0.'
+            || CHR(13) || 'Необходимо открыть заявку № <' || COALESCE ((SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), '') || '>'
+                                               || ' от <' || COALESCE ((SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId) :: TVarChar, '') || '> и исправить цену.'
+              ;
+         -- !!! выход !!!
+         RETURN;
      END IF;
+     -- проверка
+     IF 1=0 AND EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END)
+     THEN
+         outMessageText:= 'Ошибка.Документ сформирован но НЕ ПРОВЕДЕН'
+            -- || CHR(13) || 'Покупатель <' || lfGet_Object_ValueData (vbPartnerId) || '>.'
+            || CHR(13) || 'У товара <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1) || '>'
+                               || ' <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1) || '>'
+            || CHR(13) || 'цена = <' || zfConvert_FloatToString ((SELECT _tmpItem.Price FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1)) || '>'
+                       || 'не соответствует цене EDI = <' || zfConvert_FloatToString ((SELECT _tmpItem.PriceEDI FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1)) || '>.'
+            || CHR(13) || 'Необходимо открыть заявку № <' || COALESCE ((SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), '') || '>'
+                                               || ' от <' || COALESCE ((SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId) :: TVarChar, '') || '> и исправить цену.'
+              ;
+         -- !!! выход !!!
+         RETURN;
+     END IF;
+
 
      -- !!!формируются свойства в элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner)

@@ -6,9 +6,11 @@ CREATE OR REPLACE FUNCTION gpUpdate_Status_OrderExternal(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
    OUT outPrinted            Boolean   ,
+   OUT outMessageText        Text      ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Boolean AS
+RETURNS RECORD
+AS
 $BODY$
 BEGIN
      --
@@ -18,7 +20,7 @@ BEGIN
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_OrderExternal (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_OrderExternal (inMovementId, inSession);
+            SELECT tmp.outMessageText INTO outMessageText FROM gpComplete_Movement_OrderExternal (inMovementId, inSession) AS tmp;
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_OrderExternal (inMovementId, inSession);
          ELSE

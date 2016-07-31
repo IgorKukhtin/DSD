@@ -126,7 +126,7 @@ BEGIN
 
 
      -- !!!надо определить - есть ли скидка в цене!!!
-     IF vbMovementDescId = zc_Movement_Sale()
+     IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_OrderExternal())
      THEN
      vbIsChangePrice:= vbPaidKindId <> zc_Enum_PaidKind_SecondForm()
                     OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)
@@ -499,11 +499,11 @@ BEGIN
                              , MovementItem.ObjectId AS GoodsId
                              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
 
-                             , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId = zc_Movement_Sale() -- !!!для НАЛ не учитываем!!!
+                             , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
                                          THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                    WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId <> zc_Movement_Sale() -- !!!для НАЛ не учитываем!!!
+                                    WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
                                          THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                    WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId <> zc_Movement_Sale() -- !!!для НАЛ не учитываем!!!
+                                    WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
                                          THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                                     ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                END AS Price
