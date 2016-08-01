@@ -254,16 +254,18 @@ BEGIN
          RETURN;
      END IF;
      -- проверка
-     IF 1=1 AND EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END)
+     IF 1=1 AND EXISTS (SELECT 1 FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END)
      THEN
          outMessageText:= 'Ошибка.Документ сформирован но НЕ ПРОВЕДЕН'
             -- || CHR(13) || 'Покупатель <' || lfGet_Object_ValueData (vbPartnerId) || '>.'
-            || CHR(13) || 'У товара <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1) || '>'
-                               || ' <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1) || '>'
-            || CHR(13) || 'цена = <' || zfConvert_FloatToString ((SELECT _tmpItem.Price FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1)) || '>'
-                       || 'не соответствует цене EDI = <' || zfConvert_FloatToString ((SELECT _tmpItem.PriceEDI FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1)) || '>.'
+            || CHR(13) || 'У товара <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1) || '>'
+                               || ' <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1) || '>'
+            || CHR(13) || 'цена = <' || zfConvert_FloatToString ((SELECT _tmpItem.Price FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1)) || '>'
+                       || 'не соответствует цене EDI = <' || zfConvert_FloatToString ((SELECT _tmpItem.PriceEDI FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1)) || '>.'
             || CHR(13) || 'Необходимо открыть заявку № <' || COALESCE ((SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), '') || '>'
                                                || ' от <' || COALESCE ((SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId) :: TVarChar, '') || '> и исправить цену.'
+            -- || CHR(13) || ' % <' || zfConvert_FloatToString ((SELECT CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) /*- _tmpItem.PriceEDI*/) / 1 /*_tmpItem.PriceEDI*/ ELSE 0 END FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price * (1 + _tmpItem.ChangePercent / 100) - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1)) || '>'
+            || CHR(13) || ' % <' || zfConvert_FloatToString ((SELECT CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END ORDER BY MovementItemId LIMIT 1)) || '>'
               ;
          -- !!! выход !!!
          RETURN;

@@ -183,8 +183,8 @@ object IncomeAssetForm: TIncomeAssetForm
       Width = 113
     end
     object cxLabel11: TcxLabel
-      Left = 8
-      Top = 40
+      Left = 9
+      Top = 45
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit

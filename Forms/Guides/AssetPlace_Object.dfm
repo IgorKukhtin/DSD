@@ -3,7 +3,7 @@ inherited AssetPlace_ObjectForm: TAssetPlace_ObjectForm
   ClientHeight = 420
   ClientWidth = 699
   ExplicitWidth = 715
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,14 +32,6 @@ inherited AssetPlace_ObjectForm: TAssetPlace_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object DescName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-            DataBinding.FieldName = 'DescName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
           object ceCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
@@ -59,6 +51,14 @@ inherited AssetPlace_ObjectForm: TAssetPlace_ObjectForm
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'DescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object ceIsErased: TcxGridDBColumn
