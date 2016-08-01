@@ -177,6 +177,8 @@ type
     AssetToName: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
     InfoMoneyName_all_Detail: TcxGridDBColumn;
+    actPrintBarCode: TdsdPrintAction;
+    bbPrintBarCode: TdxBarButton;
   private
   public
   end;

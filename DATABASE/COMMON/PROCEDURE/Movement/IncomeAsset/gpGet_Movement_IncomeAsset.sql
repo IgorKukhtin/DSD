@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ChangePercentTo TFloat
              , Comment TVarChar 
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
+             , InvoiceId Integer, InvoiceName TVarChar
                )
 AS
 $BODY$
@@ -79,11 +80,27 @@ BEGIN
              , 0                                    AS MovementId_Transport
              , '' :: TVarChar                       AS InvNumber_Transport 
 
+             , 0                                    AS InvoiceId
+             , CAST ('' as TVarChar) 	            AS InvoiceName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
                                             and ObjectCurrency.id = 14461;	             -- грн
      ELSE
        RETURN QUERY 
+       WITH tmpMI AS (SELECT MI_Invoice.MovementId AS MovementId
+                      FROM MovementItem
+                           INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementItemId()
+                                                       AND MIFloat_MovementId.ValueData > 0
+                           INNER JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id = MIFloat_MovementId.ValueData :: Integer
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                      ORDER BY MovementItem.Id DESC
+                      LIMIT 1
+                     )
+
          SELECT
                Movement.Id
              , Movement.InvNumber
@@ -128,7 +145,14 @@ BEGIN
              , Movement_Transport.Id                     AS MovementId_Transport
              , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
 
+             , tmpMI.MovementId                          AS InvoiceId
+             , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvoiceName
+
        FROM Movement
+            LEFT JOIN tmpMI ON 1 = 1
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = tmpMI.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+           
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner

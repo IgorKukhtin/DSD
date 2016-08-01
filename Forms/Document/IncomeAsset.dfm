@@ -26,7 +26,6 @@ object IncomeAssetForm: TIncomeAssetForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 943
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -298,14 +297,12 @@ object IncomeAssetForm: TIncomeAssetForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 943
     ClientRectBottom = 326
     ClientRectRight = 871
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 943
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -313,7 +310,6 @@ object IncomeAssetForm: TIncomeAssetForm
         Height = 302
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 943
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -558,7 +554,6 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitWidth = 943
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -566,7 +561,6 @@ object IncomeAssetForm: TIncomeAssetForm
         Height = 302
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 943
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceCost
@@ -1664,10 +1658,10 @@ object IncomeAssetForm: TIncomeAssetForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TAssetPlace_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TAssetPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1688,7 +1682,8 @@ object IncomeAssetForm: TIncomeAssetForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
+    Left = 504
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2881,10 +2876,10 @@ object IncomeAssetForm: TIncomeAssetForm
     KeyField = 'Id'
     LookupControl = edInvNumberInvoice
     Key = '0'
-    FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+    FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInvoiceJournalChoiceForm'
+    FormName = 'TInvoiceJournalDetailChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
