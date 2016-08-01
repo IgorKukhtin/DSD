@@ -172,7 +172,7 @@ BEGIN
                                                        , inBoxCount            := inBoxCount
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                        , inLevelNumber         := 0
-                                                       , inPrice               := CASE WHEN vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                       , inPrice               := CASE WHEN vbMovementDescId IN (/*zc_Movement_Sale(), */zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                                                                                             AND vbPriceListId_Dnepr <> 0
                                                                                             THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
                                                                                                                                                                         , inPriceListId:= vbPriceListId_Dnepr
@@ -183,8 +183,8 @@ BEGIN
                                                                                             THEN inPrice_Return
                                                                                        WHEN vbMovementDescId = zc_Movement_Sale()
                                                                                             AND vbMovementId_order = 0 -- !!!если НЕ по заявке!!!
-                                                                                            THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate
-                                                                                                                                                                        , inPriceListId:= inPriceListId
+                                                                                            THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbOperDate_Dnepr    ELSE vbOperDate    END
+                                                                                                                                                                        , inPriceListId:= CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                                                                                                                                         , inGoodsId    := inGoodsId
                                                                                                                                                                         , inSession    := inSession
                                                                                                                                                                          ) AS tmp), 0)
