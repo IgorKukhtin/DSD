@@ -762,8 +762,8 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_IncomeAsset'
+      ReportNameParam.Value = 'PrintMovement_IncomeAsset'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

@@ -12,19 +12,17 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Height = 376
     ExplicitTop = 126
     ExplicitWidth = 1128
-    ExplicitHeight = 373
+    ExplicitHeight = 376
     ClientRectBottom = 376
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1128
-      ExplicitHeight = 349
+      ExplicitHeight = 352
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 352
-        ExplicitLeft = 536
-        ExplicitTop = 88
         ExplicitWidth = 1128
-        ExplicitHeight = 405
+        ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -523,10 +521,26 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inUnitId'
           Value = ''
           Component = GuidesFrom
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
