@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1376
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4882,6 +4882,12 @@ inherited MainForm: TMainForm
     end
     object miAssetDocuments: TMenuItem [4]
       Caption = #1054#1057
+      object N130: TMenuItem
+        Action = actIncomeAsset
+      end
+      object N131: TMenuItem
+        Caption = '-'
+      end
       object miAssetGroup: TMenuItem
         Action = actAssetGroup
       end
@@ -4899,12 +4905,6 @@ inherited MainForm: TMainForm
       end
       object N111: TMenuItem
         Action = actNameBefore
-      end
-      object N131: TMenuItem
-        Caption = '-'
-      end
-      object N130: TMenuItem
-        Action = actIncomeAsset
       end
     end
     object miHistory: TMenuItem [5]

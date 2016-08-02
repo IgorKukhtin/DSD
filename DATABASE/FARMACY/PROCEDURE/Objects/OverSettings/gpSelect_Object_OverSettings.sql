@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_OverSettings(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_OverSettings(
     IN inSession     TVarChar       -- сессия пользователя
 ) 
-RETURNS TABLE (Id Integer, Linenum Integer
+RETURNS TABLE (Id Integer, LineNum Integer
              , UnitId Integer, UnitName TVarChar
              , MinPrice TFloat, MinPriceEnd TFloat
              , MinimumLot TFloat
@@ -48,8 +48,9 @@ BEGIN
 
 
     WITH tmpData AS (SELECT Object_OverSettings.Id
-                          , ObjectLink_OverSettings_Unit.ChildObjectId  AS UnitId
-                          , ObjectFloat_MinPrice.ValueData ::TFloat AS MinPrice
+                          , COALESCE (ObjectLink_OverSettings_Unit.ChildObjectId, 0) AS UnitId
+                          , ObjectFloat_MinPrice.ValueData                           AS MinPrice
+                          , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_OverSettings_Unit.ChildObjectId, 0), Object_OverSettings.isErased ORDER BY COALESCE (ObjectFloat_MinPrice.ValueData, 0), Object_OverSettings.Id DESC) :: Integer AS LineNum
                           , Object_OverSettings.isErased
                      FROM Object AS Object_OverSettings
                            LEFT JOIN ObjectFloat AS ObjectFloat_MinPrice 
@@ -62,38 +63,38 @@ BEGIN
                      )
             
       SELECT tmpData.Id
-         --  , row_number() OVER (ORDER BY Object_Unit.Id, tmpData.MinPrice) :: Integer as Linenum
-           , row_number() OVER ( PARTITION BY Object_Unit.Id  ORDER BY Object_Unit.Id, tmpData.MinPrice ) :: Integer  as Linenum
-           , Object_Unit.Id               AS UnitId
-           , Object_Unit.ValueData        AS UnitName 
-           , tmpData.MinPrice ::TFloat 
-           , tmpData.MinPriceEnd ::TFloat  
-           , ObjectFloat_MinimumLot.ValueData ::TFloat AS MinimumLot  
+         --  , row_number() OVER (ORDER BY Object_Unit.Id, tmpData.MinPrice) :: Integer as LineNum
+           , tmpData.LineNum       :: Integer AS LineNum
+           , tmpData.UnitId        :: Integer AS UnitId
+           , Object_Unit.ValueData            AS UnitName 
+           , tmpData.MinPrice                 AS MinPrice
+           , tmpData.MinPriceEnd :: TFloat    AS MinPriceEnd
+           , CASE WHEN ObjectFloat_MinimumLot.ValueData > 0 THEN ObjectFloat_MinimumLot.ValueData ELSE 1 END AS MinimumLot  
            , tmpData.isErased
       FROM (SELECT tmpData.Id
                  , tmpData.UnitId
                  , tmpData.MinPrice
                  , tmpData.isErased
-                 , (SELECT min(tmpData1.MinPrice) FROM tmpData as tmpData1 WHERE tmpData1.MinPrice> tmpData.MinPrice and  COALESCE(tmpData.UnitId,0) =  COALESCE(tmpData1.UnitId,0)) AS MinPriceEnd
+                 , tmpData.LineNum
+                 , COALESCE (tmpData_next.MinPrice, 999999) AS MinPriceEnd
             FROM tmpData
-            ) AS tmpData
+                 LEFT JOIN tmpData AS tmpData_next ON tmpData_next.UnitId = tmpData.UnitId AND tmpData_next.isErased = tmpData.isErased AND tmpData_next.LineNum = tmpData.LineNum + 1
+           ) AS tmpData
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
           LEFT JOIN ObjectFloat AS ObjectFloat_MinimumLot 
                                 ON ObjectFloat_MinimumLot.ObjectId =  tmpData.Id
                                AND ObjectFloat_MinimumLot.DescId = zc_ObjectFloat_OverSettings_MinimumLot()
-      ORDER BY Object_Unit.Id, 2 ;
+      ;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  19.07.16         *
-
 */
 
 -- тест
