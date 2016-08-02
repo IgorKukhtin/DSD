@@ -254,7 +254,7 @@ BEGIN
          RETURN;
      END IF;
      -- проверка
-     IF 1=1 AND EXISTS (SELECT 1 FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END)
+     IF 1=0 AND EXISTS (SELECT 1 FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END)
      THEN
          outMessageText:= 'Ошибка.Документ сформирован но НЕ ПРОВЕДЕН'
             -- || CHR(13) || 'Покупатель <' || lfGet_Object_ValueData (vbPartnerId) || '>.'

@@ -32,6 +32,8 @@ BEGIN
      -- сохранили свойство <скидка в цене>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePrice(), inId, vbChangePrice);
    
+     -- пересчитали »тоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inId);
 
      -- перепроводим док.
      IF vbStatusId = zc_Enum_Status_Complete()

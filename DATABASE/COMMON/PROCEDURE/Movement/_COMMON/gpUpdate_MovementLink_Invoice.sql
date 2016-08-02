@@ -12,14 +12,18 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользовател€ на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_MovementLink_Invoice());
+     IF inMovementId_Invoice <> 0
+     THEN
+         -- проверка прав пользовател€ на вызов процедуры
+         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_MovementLink_Invoice());
 
-     -- сохранили св€зь с документом <—чет>
-     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inId, inMovementId_Invoice);
+         -- сохранили св€зь с документом <—чет>
+         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inId, inMovementId_Invoice);
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+
+     END IF;
   
 END;
 $BODY$

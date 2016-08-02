@@ -173,6 +173,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 77
           end
+          inherited colGoodsName: TcxGridDBColumn
+            Options.Editing = False
+          end
           object colMeasureName: TcxGridDBColumn [7]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'

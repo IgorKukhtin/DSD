@@ -1,32 +1,32 @@
 ﻿inherited Report_GoodsMI_SaleReturnInUnitNewForm: TReport_GoodsMI_SaleReturnInUnitNewForm
   Caption = #1054#1090#1095#1077#1090' <'#1057#1082#1083#1072#1076' '#1055#1088#1080#1093#1086#1076' / '#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1076#1072#1090#1077' '#1089#1082#1083#1072#1076'>'
   ClientHeight = 387
-  ClientWidth = 1366
+  ClientWidth = 1362
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -533
-  ExplicitWidth = 1382
+  ExplicitLeft = -674
+  ExplicitWidth = 1378
   ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1366
+    Width = 1362
     Height = 307
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 307
     ClientRectBottom = 307
-    ClientRectRight = 1366
+    ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1366
+      ExplicitWidth = 1362
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1366
+        Width = 1362
         Height = 307
-        ExplicitWidth = 1366
+        ExplicitWidth = 1362
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -144,6 +144,16 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_PriceList
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Return_Summ_PriceList
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -264,6 +274,16 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_PriceList
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Return_Summ_PriceList
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -522,6 +542,17 @@
             Options.Editing = False
             Width = 100
           end
+          object Sale_Summ_PriceList: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'Sale_Summ_PriceList'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object Sale_Summ_10200: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085'. '#1087#1088#1072#1081#1089' (-<) (+>) ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_Summ_10200'
@@ -661,6 +692,17 @@
             Options.Editing = False
             Width = 80
           end
+          object Return_Summ_PriceList: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
+            DataBinding.FieldName = 'Return_Summ_PriceList'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object Return_Summ_10200: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085'. '#1087#1088#1072#1081#1089' (-<) (+>) ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
             DataBinding.FieldName = 'Return_Summ_10200'
@@ -782,9 +824,9 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1366
+    Width = 1362
     Height = 54
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 60

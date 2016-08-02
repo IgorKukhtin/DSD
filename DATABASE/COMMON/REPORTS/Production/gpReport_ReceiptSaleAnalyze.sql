@@ -154,8 +154,8 @@ BEGIN
                        ) AS SummOut_PriceList_return
 
                  , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() THEN tmpContainer.SummOut_Partner ELSE 0 END
-                      + CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE  THEN tmpContainer.SummOut_Partner * -1 ELSE 0 END   -- !!!знак!!!
-                      - CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = FALSE THEN tmpContainer.SummOut_Partner *  1 ELSE 0 END   -- !!!знак!!!
+                      + CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = FALSE /* TRUE */ THEN tmpContainer.SummOut_Partner * -1 ELSE 0 END   -- !!!знак!!!
+                      - CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE  /* FALSE*/ THEN tmpContainer.SummOut_Partner *  1 ELSE 0 END   -- !!!знак!!!
                        ) AS SummOut_return
 
             FROM
