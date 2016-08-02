@@ -246,6 +246,11 @@ BEGIN
                             , RemainsMCS_to, SummaRemainsMCS_to
                             , isClose, isTOP, isFirst, isSecond
                              )
+             WITH tmpOverSettings AS (SELECT *
+                                      FROM gpSelect_Object_OverSettings (inSession) AS tmp
+                                      WHERE tmp.isErased = FALSE AND tmp.MinPrice <> tmp.MinPriceEnd
+                                     )
+             -- Результат
              SELECT
                  tmpGoods_list.GoodsId
                , tmpGoods_list.UnitId
@@ -259,11 +264,39 @@ BEGIN
                , Object_Remains.RemainsStart                       AS RemainsStart
                , (Object_Remains.RemainsStart * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) AS SummaRemainsStart
                
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN FLOOR (Object_Remains.RemainsStart - tmpMCS.MCSValue) ELSE 0 END AS RemainsMCS_from
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN FLOOR (Object_Remains.RemainsStart - tmpMCS.MCSValue) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END AS RemainsMCS_from
+                 -- Излишки
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+                           THEN 0
+                      WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0
+                           THEN FLOOR ((Object_Remains.RemainsStart - tmpMCS.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                      ELSE 0
+                 END AS RemainsMCS_from
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+                           THEN 0
+                      WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0
+                          THEN FLOOR ((Object_Remains.RemainsStart - tmpMCS.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                              * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
+                      ELSE 0
+                 END AS RemainsMCS_from
 
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN CEIL (tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) ELSE 0 END AS RemainsMCS_to
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE THEN 0 WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0 THEN CEIL (tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) * COALESCE (ObjectHistoryFloat_Price.ValueData, 0) ELSE 0 END AS RemainsMCS_to
+                 -- Не хватает
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+                           THEN 0
+                      WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0
+                           THEN CEIL ((tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                      ELSE 0
+                 END AS RemainsMCS_to
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+                           THEN 0
+                      WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0
+                           THEN CEIL ((tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                              * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
+                      ELSE 0
+                 END AS RemainsMCS_to
                
                , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE)   AS isClose
                , COALESCE (ObjectBoolean_Price_Top.ValueData, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
@@ -302,6 +335,14 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
                                         ON ObjectBoolean_Second.ObjectId = tmpGoods_list.GoodsId
                                        AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()
+                LEFT JOIN tmpOverSettings ON tmpOverSettings.UnitId = tmpGoods_list.UnitId
+                                         AND COALESCE (ObjectHistoryFloat_Price.ValueData, 0) >= tmpOverSettings.MinPrice
+                                         AND COALESCE (ObjectHistoryFloat_Price.ValueData, 0) < tmpOverSettings.MinPriceEnd
+                LEFT JOIN tmpOverSettings AS tmpOverSettings_all
+                                          ON tmpOverSettings_all.UnitId = 0
+                                         AND COALESCE (ObjectHistoryFloat_Price.ValueData, 0) >= tmpOverSettings_all.MinPrice
+                                         AND COALESCE (ObjectHistoryFloat_Price.ValueData, 0) < tmpOverSettings_all.MinPriceEnd
+                                         AND tmpOverSettings.UnitId IS NULL
             ;
        
 

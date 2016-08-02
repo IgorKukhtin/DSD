@@ -1751,7 +1751,7 @@ inherited MainForm: TMainForm
       object miReport_RemainsOverGoods: TMenuItem
         Action = actReport_RemainsOverGoods
       end
-      object N98: TMenuItem
+      object miOverSettings: TMenuItem
         Action = actOverSettings
       end
       object N69: TMenuItem

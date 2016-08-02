@@ -272,7 +272,7 @@ type
     actColor: TdsdOpenForm;
     N97: TMenuItem;
     actOverSettings: TdsdOpenForm;
-    N98: TMenuItem;
+    miOverSettings: TMenuItem;
     actDiscountCard: TdsdOpenForm;
     actBarCode: TdsdOpenForm;
     actDiscountExternal: TdsdOpenForm;

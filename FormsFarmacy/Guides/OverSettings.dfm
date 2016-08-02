@@ -67,27 +67,36 @@ object OverSettingsForm: TOverSettingsForm
       object clMinPrice: TcxGridDBColumn
         Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
         DataBinding.FieldName = 'MinPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
         Options.Editing = False
         Width = 104
       end
+      object colMinPriceEnd: TcxGridDBColumn
+        Caption = #1044#1086' '#1094#1077#1085#1099
+        DataBinding.FieldName = 'MinPriceEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object clMinimumLot: TcxGridDBColumn
         Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' ('#1052#1080#1085'.'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077')'
         DataBinding.FieldName = 'MinimumLot'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' ('#1052#1080#1085'.'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077')'
         Options.Editing = False
         Width = 149
-      end
-      object colMinPriceEnd: TcxGridDBColumn
-        Caption = #1044#1086' '#1094#1077#1085#1099
-        DataBinding.FieldName = 'MinPriceEnd'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
