@@ -39,8 +39,8 @@ BEGIN
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST (ioAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (ioAmountPartner * inPrice AS NUMERIC (16, 2))
+                                THEN CAST (ioAmount * inPrice / ioCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (ioAmount * inPrice AS NUMERIC (16, 2))
                       END;
 
 END;

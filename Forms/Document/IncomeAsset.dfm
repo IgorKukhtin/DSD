@@ -432,9 +432,16 @@ object IncomeAssetForm: TIncomeAssetForm
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1054#1057')'
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actAssetChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 256
           end
           object colAmountRemains: TcxGridDBColumn
@@ -2920,7 +2927,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2929,7 +2936,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2937,7 +2944,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2946,7 +2953,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2954,7 +2961,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = ''
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2963,7 +2970,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Component = CurrencyDocumentGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2971,7 +2978,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2979,7 +2986,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2987,7 +2994,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = 'True'
         Component = edPriceWithVAT
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
