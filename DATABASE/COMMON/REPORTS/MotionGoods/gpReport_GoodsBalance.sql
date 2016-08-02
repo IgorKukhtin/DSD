@@ -1037,7 +1037,7 @@ BEGIN
         
         , Object_Measure.ValueData       AS MeasureName
         
-        , tmpObject_GoodsPropertyValue_basis.BarCode AS BarCode_Main
+        , CASE WHEN tmpObject_GoodsPropertyValue_basis.BarCode <> '' THEN tmpObject_GoodsPropertyValue_basis.BarCode ELSE '0000000000000' END :: TVarChar AS BarCode_Main
 
         , ObjectFloat_Weight.ValueData   AS Weight
         , CASE WHEN tmpResult.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpResult.PartionGoodsDate END :: TDateTime AS PartionGoodsDate

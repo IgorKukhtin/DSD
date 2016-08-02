@@ -25,7 +25,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     Height = 590
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 87
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -1805,14 +1804,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintBarCode'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint3'
         end
         item
@@ -1830,6 +1821,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         item
           Visible = True
           ItemName = 'bbPrint_Inventory'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintBarCode'
         end
         item
           Visible = True
@@ -2075,10 +2074,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
           GridView = cxGridDBTableView
         end>
       Params = <

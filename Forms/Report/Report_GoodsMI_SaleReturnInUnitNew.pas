@@ -114,6 +114,8 @@ type
     GoodsPlatformName: TcxGridDBColumn;
     Sale_Summ_10250: TcxGridDBColumn;
     Return_Summ_10200: TcxGridDBColumn;
+    Sale_Summ_PriceList: TcxGridDBColumn;
+    Return_Summ_PriceList: TcxGridDBColumn;
   private
     { Private declarations }
   public

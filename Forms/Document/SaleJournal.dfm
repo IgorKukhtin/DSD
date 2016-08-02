@@ -4,8 +4,10 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientWidth = 1242
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -571
+  ExplicitTop = -219
   ExplicitWidth = 1258
-  ExplicitHeight = 679
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,8 +24,6 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 1242
         Height = 584
-        ExplicitLeft = 168
-        ExplicitTop = -25
         ExplicitWidth = 1242
         ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -741,7 +741,7 @@ inherited SaleJournalForm: TSaleJournalForm
             Width = 80
           end
           object colInvNumber_ProductionFull: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082' '#1087#1077#1088#1077#1089#1086#1088#1090
+            Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090
             DataBinding.FieldName = 'InvNumber_ProductionFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
