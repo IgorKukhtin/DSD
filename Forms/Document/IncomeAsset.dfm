@@ -2382,7 +2382,7 @@ object IncomeAssetForm: TIncomeAssetForm
     Top = 40
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Income'
+    StoredProcName = 'gpUpdate_Status_IncomeAsset'
     DataSets = <>
     OutputType = otResult
     Params = <

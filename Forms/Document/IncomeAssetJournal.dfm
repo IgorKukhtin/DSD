@@ -1185,7 +1185,7 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
     Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Income'
+    StoredProcName = 'gpComplete_Movement_IncomeAsset'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1194,13 +1194,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = True
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1327,7 +1320,7 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
     Top = 24
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Income'
+    StoredProcName = 'gpCompletePeriod_Movement_Income Asset'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1406,7 +1399,7 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Income'
+    StoredProcName = 'gpReComplete_Movement_IncomeAsset'
     DataSets = <>
     OutputType = otResult
     Params = <
