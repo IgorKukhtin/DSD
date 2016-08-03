@@ -4,8 +4,9 @@ inherited CheckJournalForm: TCheckJournalForm
   ClientWidth = 831
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -58
   ExplicitWidth = 847
-  ExplicitHeight = 592
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -148,6 +149,12 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object IsDeferred: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085
+            DataBinding.FieldName = 'IsDeferred'
+            Options.Editing = False
+            Width = 55
           end
         end
       end

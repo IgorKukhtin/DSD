@@ -49,7 +49,7 @@ BEGIN
 
          , Object_Asset.isErased            AS isErased
          
-     FROM OBJECT AS Object_Asset
+     FROM Object AS Object_Asset
           LEFT JOIN ObjectLink AS ObjectLink_Asset_AssetGroup
                                ON ObjectLink_Asset_AssetGroup.ObjectId = Object_Asset.Id
                               AND ObjectLink_Asset_AssetGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
@@ -93,8 +93,39 @@ BEGIN
                                 ON ObjectFloat_PeriodUse.ObjectId = Object_Asset.Id
                                AND ObjectFloat_PeriodUse.DescId = zc_ObjectFloat_Asset_PeriodUse()
                                 
-     WHERE Object_Asset.DescId = zc_Object_Asset();
-  
+     WHERE Object_Asset.DescId = zc_Object_Asset()
+
+      UNION ALL
+       SELECT 
+           0 :: Integer AS Id 
+         , NULL :: Integer AS Code
+         , '<ÏÓÑÒÎ>' :: TVarChar AS Name
+         
+         , 0 :: Integer AS AssetGroupId
+         , NULL :: Integer AS AssetGroupCode
+         , '<ÓÄÀËÈÒÜ>' :: TVarChar AS AssetGroupName
+         
+         , 0 :: Integer AS JuridicalId
+         , NULL :: Integer AS JuridicalCode
+         , '' :: TVarChar AS JuridicalName
+
+         , 0 :: Integer AS MakerId
+         , NULL :: Integer AS MakerCode
+         , '' :: TVarChar AS MakerName
+         
+         , CAST (CURRENT_DATE AS TDateTime) AS Release
+         
+         , '' :: TVarChar AS InvNumber
+         , '' :: TVarChar AS FullName
+         , '' :: TVarChar AS SerialNumber
+         , '' :: TVarChar AS PassportNumber
+         , '' :: TVarChar AS Comment
+
+         , NULL :: TFloat AS PeriodUse
+
+         , FALSE AS isErased
+       ;  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -1,4 +1,4 @@
-п»ї-- Function: gpSelect_Object_PartionGoods()
+-- Function: gpSelect_Object_PartionGoods()
 
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Integer, Integer, Boolean, TVarChar);
@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
     IN inGoodsId      Integer   ,
     IN inUnitId       Integer   ,    
     IN inShowAll      Boolean,     
-    IN inSession      TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar 
              , OperDate TDateTime, Price TFloat
@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , isErased boolean
              ) AS
 $BODY$BEGIN
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
 
      RETURN QUERY 
@@ -63,24 +63,24 @@ $BODY$BEGIN
            , Object_PartionGoods.isErased AS isErased
 
      FROM ObjectLink AS ObjectLink_Goods
-          INNER JOIN Object as Object_PartionGoods  ON Object_PartionGoods.Id = ObjectLink_Goods.ObjectId                       --РїР°СЂС‚РёСЏ
+          INNER JOIN Object as Object_PartionGoods  ON Object_PartionGoods.Id = ObjectLink_Goods.ObjectId                       --партия
 
-          INNER JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = ObjectLink_Goods.ObjectId                    -- РґР°С‚Р°
+          INNER JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = ObjectLink_Goods.ObjectId                    -- дата
                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
                                                         
-          JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = ObjectLink_Goods.ObjectId                       -- С†РµРЅР°
+          JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = ObjectLink_Goods.ObjectId                       -- цена
                                                AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()    
 
-          LEFT JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId		        -- РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
+          LEFT JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId		        -- подразделение
                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
                                                   --AND (ObjectLink_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
           JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
                                     
-          LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = ObjectLink_Goods.ObjectId		-- СЃРєР»Р°Рґ
+          LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = ObjectLink_Goods.ObjectId		-- склад
                                                      AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
           LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId  
                                                                                  
-          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId                                 -- С‚РѕРІР°СЂ         
+          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId                                 -- товар         
 
           JOIN  tmpContainer_Count ON tmpContainer_Count.PartionGoodsId =  Object_PartionGoods.Id
                                        AND tmpContainer_Count.GoodsId =  ObjectLink_Goods.ChildObjectId   
@@ -91,17 +91,15 @@ $BODY$BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  09.10.14         *
 */
 
--- С‚РµСЃС‚
---select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
---select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False' ,  inSession := '5');
+-- тест
+-- select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
+-- select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False',  inSession := '5');

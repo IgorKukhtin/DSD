@@ -314,9 +314,25 @@ BEGIN
                                     AND ObjectLink_PersonalDriver_Member.DescId = zc_ObjectLink_Personal_Member()
 
            WHERE Movement.Id = inMovementId
-             AND Movement.DescId = zc_Movement_Income()
+             AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset())
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
+
+
+
+     -- !!!!!!!!!! ВРЕМЕННО !!!!!!!!!!
+     IF vbMovementDescId = zc_Movement_IncomeAsset() THEN
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_IncomeAsset()
+                                , inUserId     := inUserId
+                                 );
+
+     RETURN; -- !!!!!!!!!!!!!!!!!!!!
+     END IF;
+     -- !!!!!!!!!! ВРЕМЕННО !!!!!!!!!!
+
+
 
      -- проверка Сотрудник (если заправка <физ-лицо> и НЕ <Учредитель>)
      IF vbMemberId_To <> 0 AND vbFounderId_To = 0
@@ -2483,7 +2499,7 @@ BEGIN
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_Income()
+                                , inDescId     := vbMovementDescId -- zc_Movement_Income()
                                 , inUserId     := inUserId
                                  );
 
