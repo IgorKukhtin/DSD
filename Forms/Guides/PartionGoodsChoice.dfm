@@ -41,7 +41,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 244
           end
           object coInvNumber: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
@@ -49,7 +49,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 88
+            Width = 147
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
@@ -114,7 +114,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 144
+            Width = 176
           end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
