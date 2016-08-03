@@ -16,8 +16,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , Amount TFloat
              , isErased boolean
-             ) AS
-$BODY$BEGIN
+              ) AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
 

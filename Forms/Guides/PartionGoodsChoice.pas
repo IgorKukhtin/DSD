@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxImageComboBox;
+  dxSkinXmas2008Blue, cxImageComboBox, cxContainer, dsdGuides, cxLabel,
+  cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls;
 
 type
   TPartionGoodsChoiceForm = class(TAncestorEnumForm)
@@ -35,6 +36,14 @@ type
     colUnitName: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     colAmount: TcxGridDBColumn;
+    Panel: TPanel;
+    edGoods: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    GoodsGuides: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

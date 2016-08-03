@@ -273,8 +273,6 @@ inherited LossForm: TLossForm
   inherited DataPanel: TPanel
     Width = 985
     TabOrder = 3
-    ExplicitLeft = 8
-    ExplicitTop = -6
     ExplicitWidth = 985
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -504,10 +502,26 @@ inherited LossForm: TLossForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inUnitId'
           Value = ''
           Component = GuidesFrom
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item

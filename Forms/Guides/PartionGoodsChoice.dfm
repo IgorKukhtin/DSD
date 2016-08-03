@@ -1,28 +1,30 @@
 inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 496
+  ClientHeight = 399
   ClientWidth = 853
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 534
+  ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 57
     Width = 853
-    Height = 470
+    Height = 342
+    ExplicitTop = 57
     ExplicitWidth = 853
-    ExplicitHeight = 470
-    ClientRectBottom = 470
+    ExplicitHeight = 439
+    ClientRectBottom = 342
     ClientRectRight = 853
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 853
-      ExplicitHeight = 470
+      ExplicitHeight = 439
       inherited cxGrid: TcxGrid
         Width = 853
-        Height = 470
+        Height = 342
         ExplicitWidth = 853
-        ExplicitHeight = 470
+        ExplicitHeight = 439
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -127,9 +129,65 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       end
     end
   end
+  object Panel: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 853
+    Height = 31
+    Align = alTop
+    TabOrder = 5
+    object edGoods: TcxButtonEdit
+      Left = 433
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 0
+      Width = 300
+    end
+    object cxLabel3: TcxLabel
+      Left = 393
+      Top = 7
+      Caption = #1058#1086#1074#1072#1088
+    end
+  end
+  object cxLabel1: TcxLabel [2]
+    Left = 4
+    Top = 7
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+  end
+  object edUnit: TcxButtonEdit [3]
+    Left = 94
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 283
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
     Top = 200
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = UnitGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GoodsGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     Left = 95
@@ -250,16 +308,16 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       item
         Name = 'inGoodsId'
         Value = '0'
-        Component = FormParams
-        ComponentItem = 'inGoodsId'
+        Component = GoodsGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
         Value = '0'
-        Component = FormParams
-        ComponentItem = 'inUnitId'
+        Component = UnitGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -334,16 +392,111 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       item
         Name = 'inUnitId'
         Value = '0'
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
         Value = '0'
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 152
+  end
+  object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsFuel_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 576
+    Top = 3
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 264
+    Top = 65528
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = UnitGuides
+      end
+      item
+        Component = GoodsGuides
+      end>
+    Left = 512
+    Top = 328
   end
 end
