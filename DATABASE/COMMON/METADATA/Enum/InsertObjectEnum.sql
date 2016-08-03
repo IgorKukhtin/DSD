@@ -813,6 +813,13 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_InPartner(), inDescId:= zc_Object_ReestrKind(), inCode:= 2, inName:= 'Получено от клиента'   , inEnumName:= 'zc_Enum_ReestrKind_InPartner');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_InBuh()    , inDescId:= zc_Object_ReestrKind(), inCode:= 3, inName:= 'Получено в бухгалтерию', inEnumName:= 'zc_Enum_ReestrKind_InBuh');
 END $$;
+
+DO $$
+BEGIN
+     -- !!! Статус заказа
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_UnComplete()  , inDescId:= zc_Object_ConfirmedKind(), inCode:= 1, inName:= 'Не подтвержден'    , inEnumName:= 'zc_Enum_ConfirmedKind_UnComplete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_Complete(), inDescId:= zc_Object_ConfirmedKind(), inCode:= 2, inName:= 'Подтвержден'           , inEnumName:= 'zc_Enum_ConfirmedKind_Complete');
+END $$;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

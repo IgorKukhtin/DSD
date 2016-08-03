@@ -3,15 +3,15 @@ inherited CheckForm: TCheckForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 110
-    Height = 306
+    Top = 147
+    Height = 269
     ExplicitTop = 110
     ExplicitHeight = 306
-    ClientRectBottom = 306
+    ClientRectBottom = 269
     inherited tsMain: TcxTabSheet
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Height = 282
+        Height = 245
         ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -142,54 +142,58 @@ inherited CheckForm: TCheckForm
     end
   end
   inherited DataPanel: TPanel
-    Height = 84
-    ExplicitHeight = 84
+    Height = 121
+    ExplicitHeight = 121
     inherited edInvNumber: TcxTextEdit
-      Left = 150
+      Left = 7
       Top = 14
       Text = 'edInvNumber'
-      ExplicitLeft = 150
+      ExplicitLeft = 7
       ExplicitTop = 14
+      ExplicitWidth = 142
+      Width = 142
     end
     inherited cxLabel1: TcxLabel
-      Left = 150
+      Left = 7
       Top = -1
-      ExplicitLeft = 150
+      ExplicitLeft = 7
       ExplicitTop = -1
     end
     inherited edOperDate: TcxDateEdit
-      Left = 241
+      Left = 155
       Top = 14
       EditValue = 42261d
       Properties.ReadOnly = True
-      ExplicitLeft = 241
+      ExplicitLeft = 155
       ExplicitTop = 14
+      ExplicitWidth = 90
+      Width = 90
     end
     inherited cxLabel2: TcxLabel
-      Left = 241
+      Left = 155
       Top = -1
-      ExplicitLeft = 241
+      ExplicitLeft = 155
       ExplicitTop = -1
     end
     inherited cxLabel15: TcxLabel
-      Top = -1
-      ExplicitTop = -1
+      Top = 37
+      ExplicitTop = 37
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 14
+      Top = 52
       PopupMenu = nil
-      ExplicitTop = 14
+      ExplicitTop = 52
       ExplicitWidth = 141
       ExplicitHeight = 22
       Width = 141
     end
     object edUnitName: TcxTextEdit
-      Left = 342
+      Left = 251
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 6
       Text = 'edUnitName'
-      Width = 121
+      Width = 212
     end
     object edCashRegisterName: TcxTextEdit
       Left = 586
@@ -200,7 +204,7 @@ inherited CheckForm: TCheckForm
       Width = 121
     end
     object cxLabel3: TcxLabel
-      Left = 342
+      Left = 251
       Top = -1
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
@@ -223,28 +227,28 @@ inherited CheckForm: TCheckForm
       Width = 121
     end
     object lblCashMember: TcxLabel
-      Left = 8
+      Left = 251
       Top = 36
       Caption = #1052#1077#1085#1077#1076#1078#1077#1088
     end
     object edCashMember: TcxTextEdit
-      Left = 8
+      Left = 251
       Top = 52
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 232
+      Width = 212
     end
     object lblBayer: TcxLabel
-      Left = 241
-      Top = 36
+      Left = 8
+      Top = 76
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edBayer: TcxTextEdit
-      Left = 241
-      Top = 52
+      Left = 8
+      Top = 92
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 222
+      Width = 237
     end
     object cxLabel6: TcxLabel
       Left = 708
@@ -279,6 +283,43 @@ inherited CheckForm: TCheckForm
       TabOrder = 20
       Width = 215
     end
+  end
+  object edInvNumberOrder: TcxTextEdit [2]
+    Left = 155
+    Top = 52
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Text = 'edInvNumberOrder'
+    Width = 90
+  end
+  object cxLabel9: TcxLabel [3]
+    Left = 155
+    Top = 37
+    Caption = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
+  end
+  object cxLabel10: TcxLabel [4]
+    Left = 251
+    Top = 76
+    Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085' ('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+  end
+  object edBayerPhone: TcxTextEdit [5]
+    Left = 251
+    Top = 92
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 212
+  end
+  object cxLabel8: TcxLabel [6]
+    Left = 586
+    Top = 76
+    Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
+  end
+  object edConfirmedKind: TcxTextEdit [7]
+    Left = 586
+    Top = 92
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 212
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased
@@ -627,6 +668,27 @@ inherited CheckForm: TCheckForm
         Name = 'DiscountCardName'
         Value = Null
         Component = edDiscountCard
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Value = Null
+        Component = edBayerPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberOrder'
+        Value = 'edInvNumberOrder'
+        Component = edInvNumberOrder
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedKindName'
+        Value = Null
+        Component = edConfirmedKind
         DataType = ftString
         MultiSelectSeparator = ','
       end>

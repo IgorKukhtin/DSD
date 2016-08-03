@@ -281,6 +281,8 @@ type
     N101: TMenuItem;
     N102: TMenuItem;
     N103: TMenuItem;
+    actConfirmedKind: TdsdOpenForm;
+    N98: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

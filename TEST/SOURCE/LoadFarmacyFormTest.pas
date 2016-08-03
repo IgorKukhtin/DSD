@@ -374,6 +374,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TConfirmedKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TConfirmedKindForm');
+
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;

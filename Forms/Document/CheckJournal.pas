@@ -40,6 +40,9 @@ type
     clTotalSummChangePercent: TcxGridDBColumn;
     clDiscountCardName: TcxGridDBColumn;
     cxDiscountCard_ObjectName: TcxGridDBColumn;
+    BayerPhone: TcxGridDBColumn;
+    InvNumberOrder: TcxGridDBColumn;
+    ConfirmedKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

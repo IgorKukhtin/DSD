@@ -132,9 +132,14 @@ CREATE OR REPLACE FUNCTION zc_MovementString_FiscalCheckNumber() RETURNS Integer
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_FiscalCheckNumber', 'Номер фискального чека' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_FiscalCheckNumber');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_BayerPhone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_BayerPhone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_BayerPhone', 'Контактный телефон (Покупателя)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_BayerPhone');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.08.16         *
  30.07.14                         *
  19.07.14                                        * del zc_MovementString_SaleInvNumber
  17.06.14         * add zc_MovementString_InvNumberPartner()

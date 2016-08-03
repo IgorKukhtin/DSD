@@ -1555,7 +1555,7 @@ inherited OrderInternalForm: TOrderInternalForm
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 368
-    Top = 272
+    Top = 360
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 420
@@ -1568,8 +1568,8 @@ inherited OrderInternalForm: TOrderInternalForm
     ComponentList = <
       item
       end>
-    Left = 512
-    Top = 328
+    Left = 496
+    Top = 376
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1644,8 +1644,8 @@ inherited OrderInternalForm: TOrderInternalForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 888
-    Top = 184
+    Left = 872
+    Top = 192
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>

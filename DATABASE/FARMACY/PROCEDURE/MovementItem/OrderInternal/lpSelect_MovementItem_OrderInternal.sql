@@ -70,10 +70,10 @@ BEGIN
                    WHERE Object_Price_View.UnitId = vbUnitId
                      AND Object_Price_View.isTop  = TRUE
                   )
-
+ 
        -- Результат 1
        SELECT
-             tmpMI.Id                   AS Id
+             tmpMI.Id                                                AS Id
            , tmpMI.GoodsId                                           AS GoodsId
            , Object_Goods.GoodsCodeInt                               AS GoodsCode
            , Object_Goods.GoodsName                                  AS GoodsName

@@ -54,7 +54,8 @@ BEGIN
                                            LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
                                                                            ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
                                       WHERE MovementItem.MovementId = inMovementId
-                                       AND ((inGoodsId = 0) OR (inGoodsId = MovementItem.ObjectId))
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND ((inGoodsId = 0) OR (inGoodsId = MovementItem.ObjectId))
                                   )
                 -- Маркетинговый контракт
               , tmpOperDate AS (SELECT date_trunc ('day', Movement.OperDate) AS OperDate FROM Movement WHERE Movement.Id = inMovementId)
