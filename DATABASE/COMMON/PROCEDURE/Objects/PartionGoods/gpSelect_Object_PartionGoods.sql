@@ -16,8 +16,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , Amount TFloat
              , isErased boolean
-             ) AS
-$BODY$BEGIN
+              ) AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
 
@@ -91,10 +92,8 @@ $BODY$BEGIN
   
 END;
 $BODY$
+  LANGUAGE plpgsql VOLATILE;
 
-LANGUAGE plpgsql VOLATILE;
-
- 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -103,5 +102,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
---select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False' ,  inSession := '5');
+-- select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
+-- select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False',  inSession := '5');

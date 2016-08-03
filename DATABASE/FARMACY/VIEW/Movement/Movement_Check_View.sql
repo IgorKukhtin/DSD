@@ -105,4 +105,4 @@ ALTER TABLE Movement_Check_View
 */
 
 -- тест
--- SELECT * FROM Movement_Income_View where id = 805
+-- SELECT * FROM Movement_Check_View where id = 805

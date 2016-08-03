@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
              , TotalCount TFloat, TotalSumm TFloat, TotalSummChangePercent TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean
+             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean, IsDeferred Boolean
              , DiscountCardName TVarChar, DiscountCard_ObjectName TVarChar
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
@@ -74,6 +74,7 @@ BEGIN
            , Movement_Check.Bayer
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
+           , Movement_Check.IsDeferred
            , Movement_Check.DiscountCardName
            , Object_Object.ValueData   AS DiscountCard_ObjectName
            , MovementString_BayerPhone.ValueData     AS BayerPhone
@@ -119,4 +120,4 @@ ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderInternal (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inUnitId:= 1, inSession:= '2')
