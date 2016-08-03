@@ -77,29 +77,16 @@ BEGIN
            , Movement_Check.IsDeferred
            , Movement_Check.DiscountCardName
            , Object_Object.ValueData   AS DiscountCard_ObjectName
-           , MovementString_BayerPhone.ValueData     AS BayerPhone
-           , MovementString_InvNumberOrder.ValueData AS InvNumberOrder
-           , Object_ConfirmedKind.ValueData          AS ConfirmedKindName
+           , Movement_Check.BayerPhone
+           , Movement_Check.InvNumberOrder
+           , Movement_Check.ConfirmedKindName
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
              LEFT JOIN ObjectLink AS ObjectLink_Object
                                   ON ObjectLink_Object.ObjectId = Movement_Check.DiscountCardId
                                  AND ObjectLink_Object.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
-           
-             LEFT JOIN MovementString AS MovementString_BayerPhone
-                                      ON MovementString_BayerPhone.MovementId = Movement_Check.Id
-                                     AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
-
-             LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                      ON MovementString_InvNumberOrder.MovementId = Movement_Check.Id
-                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
-                                          ON MovementLinkObject_ConfirmedKind.MovementId = Movement_Check.Id
-                                         AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
-             LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
-                                       
+                           
        WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
          AND (Movement_Check.UnitId = inUnitId)
          AND (vbReteilId = vbObjectId)

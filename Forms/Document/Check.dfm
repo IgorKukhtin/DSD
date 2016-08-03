@@ -5,20 +5,25 @@ inherited CheckForm: TCheckForm
   inherited PageControl: TcxPageControl
     Top = 147
     Height = 269
-    ExplicitTop = 110
-    ExplicitHeight = 306
+    ExplicitTop = 147
+    ExplicitHeight = 269
     ClientRectBottom = 269
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 282
+      ExplicitHeight = 245
       inherited cxGrid: TcxGrid
         Height = 245
-        ExplicitHeight = 282
+        ExplicitHeight = 245
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = colSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountOrder
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -42,6 +47,11 @@ inherited CheckForm: TCheckForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountOrder
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -85,6 +95,17 @@ inherited CheckForm: TCheckForm
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object colAmountOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -731,6 +752,10 @@ inherited CheckForm: TCheckForm
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     Left = 536
     Top = 280
+  end
+  inherited spGetTotalSumm: TdsdStoredProc
+    Left = 460
+    Top = 204
   end
   object spUpdate_Movement_Check: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check'

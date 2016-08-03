@@ -31,6 +31,10 @@ SELECT
 
            , Object_DiscountCard.Id                     AS DiscountCardId 
            , Object_DiscountCard.ValueData              AS DiscountCardName
+
+           , MovementString_BayerPhone.ValueData     AS BayerPhone
+           , MovementString_InvNumberOrder.ValueData AS InvNumberOrder
+           , Object_ConfirmedKind.ValueData          AS ConfirmedKindName
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -91,6 +95,20 @@ SELECT
                                          ON MovementLinkObject_DiscountCard.MovementId = Movement.Id
                                         AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
             LEFT JOIN Object AS Object_DiscountCard ON Object_DiscountCard.Id = MovementLinkObject_DiscountCard.ObjectId
+
+             LEFT JOIN MovementString AS MovementString_BayerPhone
+                                      ON MovementString_BayerPhone.MovementId = Movement.Id
+                                     AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+             LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                      ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                          ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+             LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
+                       
 
         WHERE Movement.DescId = zc_Movement_Check();
 

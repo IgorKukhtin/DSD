@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , PriceSale TFloat
              , ChangePercent TFloat
              , SummChangePercent TFloat
+             , AmountOrder TFloat
              -- , DiscountCardId Integer
              -- , DiscountCardName TVarChar
              , isErased Boolean
@@ -42,6 +43,7 @@ BEGIN
            , MovementItem.PriceSale
            , MovementItem.ChangePercent
            , MovementItem.SummChangePercent
+           , MovementItem.AmountOrder
            -- , MovementItem.DiscountCardId
            -- , MovementItem.DiscountCardName
            , MovementItem.isErased
@@ -57,6 +59,7 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А
+ 03.08.16         *
  03.07.15                                                                       * Добавлен НДС
  25.05.15                         *
 */
