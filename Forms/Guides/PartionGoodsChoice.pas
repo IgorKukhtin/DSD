@@ -34,7 +34,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     colUnitName: TcxGridDBColumn;
-    PartionGoodsChoiceForm: TdsdFormParams;
+    FormParams: TdsdFormParams;
     colAmount: TcxGridDBColumn;
     Panel: TPanel;
     edGoods: TcxButtonEdit;

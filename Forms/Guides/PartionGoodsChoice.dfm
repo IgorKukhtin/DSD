@@ -1,29 +1,30 @@
 inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 496
+  ClientHeight = 399
   ClientWidth = 853
   AddOnFormData.isAlwaysRefresh = True
-  AddOnFormData.Params = PartionGoodsChoiceForm
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 534
+  ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
     Width = 853
-    Height = 439
+    Height = 342
+    ExplicitTop = 57
     ExplicitWidth = 853
-    ExplicitHeight = 470
-    ClientRectBottom = 439
+    ExplicitHeight = 439
+    ClientRectBottom = 342
     ClientRectRight = 853
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 853
-      ExplicitHeight = 470
+      ExplicitHeight = 439
       inherited cxGrid: TcxGrid
         Width = 853
-        Height = 439
+        Height = 342
         ExplicitWidth = 853
-        ExplicitHeight = 470
+        ExplicitHeight = 439
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -135,7 +136,6 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -6
     object edGoods: TcxButtonEdit
       Left = 433
       Top = 6
@@ -387,7 +387,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   inherited PopupMenu: TPopupMenu
     Left = 160
   end
-  object PartionGoodsChoiceForm: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'inUnitId'
