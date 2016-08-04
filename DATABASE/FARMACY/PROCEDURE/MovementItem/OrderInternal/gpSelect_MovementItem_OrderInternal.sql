@@ -38,6 +38,8 @@ BEGIN
               AND MB_Document.DescId = zc_MovementBoolean_Document()
     WHERE Movement.Id =inMovementId;
    
+
+
     IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() THEN
      OPEN Cursor1 FOR
      SELECT $1 FROM lpSelect_MovementItem_OrderInternal (inMovementId, inIsErased, inSession) AS tmp;

@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 
 AS
@@ -70,6 +72,11 @@ BEGIN
            , MovementFloat_MCSDay.ValueData         AS MCSDay
            , COALESCE(MovementBoolean_Checked.ValueData, false)  ::Boolean  AS Checked
 
+           , Object_Insert.ValueData              AS InsertName
+           , MovementDate_Insert.ValueData        AS InsertDate
+           , Object_Update.ValueData              AS UpdateName
+           , MovementDate_Update.ValueData        AS UpdateDate
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
@@ -123,6 +130,22 @@ BEGIN
            LEFT JOIN MovementFloat AS MovementFloat_MCSDay
                                    ON MovementFloat_MCSDay.MovementId =  Movement.Id
                                   AND MovementFloat_MCSDay.DescId = zc_MovementFloat_MCSDay()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+            LEFT JOIN MovementDate AS MovementDate_Update
+                                   ON MovementDate_Update.MovementId = Movement.Id
+                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
+            LEFT JOIN MovementLinkObject AS MLO_Update
+                                         ON MLO_Update.MovementId = Movement.Id
+                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
         
