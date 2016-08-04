@@ -1,4 +1,5 @@
-DROP FUNCTION IF EXISTS gpSelect_GoodsPartionHistory (Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+-- Function: gpSelect_GoodsPartionHistory()
+
 DROP FUNCTION IF EXISTS gpSelect_GoodsPartionHistory (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsPartionHistory(
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsPartionHistory(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE ( 
+    ContainerId      Integer,   --ИД 
     MovementId       Integer,   --ИД накдалдной
     OperDate         TDateTime, --Дата документа
     InvNumber        TVarChar,  --№ документа
@@ -38,8 +40,8 @@ RETURNS TABLE (
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbRemainsStart TFloat;
-   DECLARE vbRemainsEnd TFloat;
+--   DECLARE vbRemainsStart TFloat;
+--   DECLARE vbRemainsEnd TFloat;
    DECLARE vbObjectId Integer;
 BEGIN
 
@@ -54,17 +56,21 @@ BEGIN
     END IF;
 
 
+    CREATE TEMP TABLE _tmpRem (ContainerId Integer, RemainsStart TFloat, RemainsEnd TFloat) ON COMMIT DROP;
+
+    INSERT INTO _tmpRem (ContainerId, RemainsStart, RemainsEnd)
     --
-    SELECT
-      SUM(AmountStart)::TFloat,
-      SUM(AmountEnd)::TFloat
-    INTO
-      vbRemainsStart,
-      vbRemainsEnd
+    SELECT tmp.ContainerId, tmp.RemainsStart, tmp.RemainsEnd
+    FROM
+   (SELECT *, ROW_NUMBER() OVER(ORDER BY ABS (tmp.RemainsStart) DESC, tmp.ContainerId DESC) AS num 
+    FROM
+   (SELECT CASE WHEN inIsPartion = TRUE THEN Remains.ContainerId ELSE 0 END AS ContainerId
+         , SUM (Remains.AmountStart) AS RemainsStart
+         , SUM (Remains.AmountEnd)   AS RemainsEnd
     FROM(
-            SELECT
+            SELECT Container.Id AS ContainerId,
               Container.Amount - COALESCE(SUM(MovementItemContainer.Amount),0) AS AmountStart,
-              Container.Amount - COALESCE(SUM(CASE WHEN date_trunc('day',MovementItemContainer.OperDate) > inEndDate THEN MovementItemContainer.Amount ELSE 0 END),0) AS AmountEnd
+              Container.Amount - COALESCE(SUM(CASE WHEN DATE_TRUNC ('DAY', MovementItemContainer.OperDate) > inEndDate THEN MovementItemContainer.Amount ELSE 0 END),0) AS AmountEnd
               
             FROM (-- !!!временно захардкодил, будут все сети!!!!
                   SELECT ObjectLink_Child_ALL.ChildObjectId AS GoodsId
@@ -94,18 +100,26 @@ BEGIN
                                                     ON CLO_Party.containerid = container.id 
                                                    AND CLO_Party.descid = zc_ContainerLinkObject_PartionMovementItem()
                 LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
-                                                     AND date_trunc('day',MovementItemContainer.OperDate) >= inStartDate
+                                                     -- AND DATE_TRUNC ('DAY', MovementItemContainer.OperDate) >= inStartDate
+                                                     AND MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
             WHERE (CLO_Party.ObjectId = inPartyId
                 OR COALESCE (inPartyId, 0) = 0
                    )
             GROUP BY Container.Amount
                    , Container.Id
-        ) AS Remains;
+        ) AS Remains
+      GROUP BY CASE WHEN inIsPartion = TRUE THEN Remains.ContainerId ELSE 0 END
+      ) AS tmp
+      ) AS tmp
+      WHERE RemainsStart <> 0 OR RemainsEnd <> 0 OR num = 1
+     ;
+
     -- Результат
     RETURN QUERY
         WITH RES AS
         (
             SELECT
+                MovementItemContainer.ContainerId                     AS ContainerId,
                 Movement.Id                                           AS MovementId,   --ИД накдалдной
                 MovementItemContainer.OperDate                        AS OperDate, --Дата документа
                 Movement.InvNumber                                    AS InvNumber,  --№ документа
@@ -146,7 +160,7 @@ BEGIN
                 (SUM(MovementItemContainer.Amount)OVER(ORDER BY MovementItemContainer.OperDate, 
                                                                 CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
                                                                 CASE WHEN MovementItemContainer.Amount > 0 THEN 0 ELSE 0 END,
-                                                                MovementItemContainer.MovementId,MovementItemContainer.MovementItemId,CLO_Party.ObjectID))+vbRemainsStart AS Saldo
+                                                                MovementItemContainer.MovementId,MovementItemContainer.MovementItemId,CLO_Party.ObjectID)) + _tmpRem.RemainsStart AS Saldo
             FROM (-- !!!временно захардкодил, будут все сети!!!!
                   SELECT ObjectLink_Child_ALL.ChildObjectId AS GoodsId
                   FROM ObjectLink AS ObjectLink_Child
@@ -167,6 +181,7 @@ BEGIN
                  ) tmp
                 INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
                                     AND Container.DescId = zc_Container_Count()
+                LEFT JOIN _tmpRem ON _tmpRem.ContainerId = Container.Id OR _tmpRem.ContainerId = 0
                 INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                               AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
                                               AND ContainerLinkObject.ObjectId = inUnitId
@@ -219,6 +234,7 @@ BEGIN
                   )
             UNION ALL
             SELECT
+                _tmpRem.ContainerId        AS ContainerId,
                 NULL                       AS MovementId,   --ИД накдалдной
                 inStartDate                AS OperDate, --Дата документа
                 NULL                       AS InvNumber,  --№ документа
@@ -236,17 +252,20 @@ BEGIN
                 Object_Price_View.MCSValue AS MCSValue,     --НТЗ
                 NULL                       AS CheckMember,  --Менеджер
                 NULL                       AS Bayer,        --Покупатель
-                NULL                       AS PartyId,      --# партии 
+                CLO_Party.ObjectID         AS PartyId,      --# партии
                 0                          AS OrdNum,
-                vbRemainsStart             AS Saldo
-            FROM
-                Object AS Object_Goods
+                _tmpRem.RemainsStart       AS Saldo
+            FROM _tmpRem
+                LEFT JOIN Container ON Container.Id = _tmpRem.ContainerId
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (Container.ObjectId, inGoodsId)
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.UnitId = inUnitId
                                                  AND Object_Price_View.GoodsId = Object_Goods.Id
-            WHERE
-                Object_Goods.Id = inGoodsId
-            UNION ALL
+                LEFT OUTER JOIN ContainerLinkObject AS CLO_Party
+                                                    ON CLO_Party.containerid = container.id 
+                                                   AND CLO_Party.descid = zc_ContainerLinkObject_PartionMovementItem()                              
+           UNION ALL
             SELECT
+                _tmpRem.ContainerId        AS ContainerId,
                 NULL                       AS MovementId,   --ИД накдалдной
                 inEndDate                  AS OperDate, --Дата документа
                 NULL                       AS InvNumber,  --№ документа
@@ -264,18 +283,21 @@ BEGIN
                 Object_Price_View.MCSValue AS MCSValue,     --НТЗ
                 NULL                       AS CheckMember,  --Менеджер
                 NULL                       AS Bayer,        --Покупатель
-                NULL                       AS PartyId,      --# партии 
+                CLO_Party.ObjectID         AS PartyId,      --# партии
                 999999999                  AS OrdNum,
-                vbRemainsEnd               AS Saldo 
-            FROM
-                Object AS Object_Goods
-                LEFT OUTER JOIN Object_Price_View ON Object_Price_View.UnitId = inUnitId
+                _tmpRem.RemainsEnd               AS Saldo 
+            FROM _tmpRem
+                LEFT JOIN Container ON Container.Id = _tmpRem.ContainerId
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (Container.ObjectId, inGoodsId)
+                LEFT JOIN Object_Price_View ON Object_Price_View.UnitId = inUnitId
                                                  AND Object_Price_View.GoodsId = Object_Goods.Id
-            WHERE
-                Object_Goods.Id = inGoodsId
+                LEFT OUTER JOIN ContainerLinkObject AS CLO_Party
+                                                    ON CLO_Party.containerid = container.id 
+                                                   AND CLO_Party.descid = zc_ContainerLinkObject_PartionMovementItem()                              
         )
 
         SELECT
+            Res.ContainerId,
             Res.MovementId::Integer,   --ИД накдалдной
             Res.OperDate::TDateTime, --Дата документа
             Res.InvNumber::TVarChar,  --№ документа
@@ -318,17 +340,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_GoodsPartionHistory (Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  01.07.16         * add inIsPartion
  26.08.15                                                                       *
-
 */
 
 -- тест
 -- SELECT * FROM gpSelect_GoodsPartionHistory (inPartyId := 0,inGoodsId := 0,inUnitId := 0,inStartDate := '20150801',inEndDate := '20150830', inSession := '3')
-

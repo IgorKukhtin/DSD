@@ -26,36 +26,34 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
-   -- Ищем созданный заказ
-   SELECT  Movement.Id INTO vbMovementId
-     FROM  Movement 
-     
-           INNER JOIN MovementLinkMovement 
-                   ON MovementLinkMovement.MovementId = Movement.Id
-                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
-                  AND ((MovementLinkMovement.MovementChildId = inInternalOrder AND inInternalOrder <> 0)
-                    OR (MovementLinkMovement.MovementChildId IS NULL AND COALESCE (inInternalOrder, 0) = 0)
-                      )
+   -- поиск созданный заказ
+   vbMovementId:= (SELECT Movement.Id
+                   FROM Movement 
+                        INNER JOIN MovementLinkMovement 
+                                ON MovementLinkMovement.MovementId = Movement.Id
+                               AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
+                               AND ((MovementLinkMovement.MovementChildId = inInternalOrder AND inInternalOrder <> 0)
+                                 OR (MovementLinkMovement.MovementChildId IS NULL AND COALESCE (inInternalOrder, 0) = 0)
+                                   )
+                         LEFT JOIN MovementLinkObject 
+                                ON MovementLinkObject.MovementId = Movement.Id
+                               AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
+                         LEFT JOIN MovementLinkObject AS Movement_Contract
+                                ON Movement_Contract.MovementId = Movement.Id
+                               AND Movement_Contract.DescId = zc_MovementLinkObject_Contract()
 
-            LEFT JOIN MovementLinkObject 
-                   ON MovementLinkObject.MovementId = Movement.Id
-                  AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
-
-            LEFT JOIN MovementLinkObject AS Movement_Contract
-                   ON Movement_Contract.MovementId = Movement.Id
-                  AND Movement_Contract.DescId = zc_MovementLinkObject_Contract()
-
-    WHERE  Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate = CURRENT_DATE
-           AND ((MovementLinkObject.ObjectId = inJuridicalId AND inJuridicalId <> 0)
-             OR (MovementLinkObject.ObjectId IS NULL AND COALESCE (inJuridicalId, 0) = 0)
-               )
-           AND ((Movement_Contract.ObjectId = inContractId AND inContractId <> 0)
-             OR (Movement_Contract.ObjectId IS NULL AND COALESCE (inContractId, 0) = 0)
-               )
-           ;
+                   WHERE  Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate = CURRENT_DATE
+                          AND ((MovementLinkObject.ObjectId = inJuridicalId AND inJuridicalId <> 0)
+                            OR (MovementLinkObject.ObjectId IS NULL AND COALESCE (inJuridicalId, 0) = 0)
+                              )
+                          AND ((Movement_Contract.ObjectId = inContractId AND inContractId <> 0)
+                            OR (Movement_Contract.ObjectId IS NULL AND COALESCE (inContractId, 0) = 0)
+                              )
+                 );
    
     IF COALESCE (vbMovementId, 0) = 0
     THEN
+       -- создание Документа
        vbMovementId := lpInsertUpdate_Movement_OrderExternal(
                           ioId := 0  , -- Ключ объекта <Документ Перемещение>
                    inInvNumber := '' , -- Номер документа
@@ -67,20 +65,25 @@ BEGIN
                       inUserId := inUserId);
     END IF;
  
-    SELECT MovementItem.id INTO vbMovementItemId
-      FROM MovementItem
-      
-           JOIN MovementItemLinkObject AS MILinkObject_Goods
+
+    -- поиск элемента
+    vbMovementItemId:= (SELECT MovementItem.id
+                        FROM MovementItem
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
                                        ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                       AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                       AND ((MILinkObject_Goods.ObjectId = inGoodsId AND COALESCE(inGoodsId, 0) <> 0) OR (MILinkObject_Goods.ObjectId IS NULL AND COALESCE(inGoodsId, 0) = 0))
-     WHERE MovementItem.movementid = vbMovementId AND MovementItem.objectid = inMainGoodsId;
+                        WHERE MovementItem.MovementId = vbMovementId AND MovementItem.DesdcId = zc_MI_Master() AND MovementItem.ObjectId = inMainGoodsId
+                       );
     
-    vbMovementItemId := lpInsertUpdate_MovementItem_OrderExternal(vbMovementItemId, vbMovementId, inMainGoodsId, inGoodsId
-                                                    , inAmount, inPrice, inPartionGoodsDate, inUserId);
+    -- всегда - сохраним
+    vbMovementItemId := lpInsertUpdate_MovementItem_OrderExternal (vbMovementItemId, vbMovementId, inMainGoodsId, inGoodsId
+                                                                 , inAmount, inPrice, inPartionGoodsDate, inUserId);
+    -- Сохранили 
     PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_Calculated(), vbMovementItemId, true);
-    --Сохранили комментарий из внутренней заявки
-    IF COALESCE(inComment,'') <> ''
+
+    -- Сохранили комментарий из внутренней заявки
+    IF COALESCE (inComment,'') <> ''
     THEN
         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
     END IF;
@@ -90,7 +93,6 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
