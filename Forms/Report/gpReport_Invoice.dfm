@@ -10,21 +10,23 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 59
     Width = 1073
-    Height = 347
+    Height = 345
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1073
-    ExplicitHeight = 347
-    ClientRectBottom = 347
+    ExplicitHeight = 345
+    ClientRectBottom = 345
     ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1073
-      ExplicitHeight = 347
+      ExplicitHeight = 345
       inherited cxGrid: TcxGrid
         Width = 1073
-        Height = 347
+        Height = 345
         ExplicitWidth = 1073
-        ExplicitHeight = 347
+        ExplicitHeight = 345
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -591,6 +593,12 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             Options.Editing = False
             Width = 67
           end
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            Options.Editing = False
+            Width = 50
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
             DataBinding.FieldName = 'JuridicalName'
@@ -790,7 +798,9 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
   end
   inherited Panel: TPanel
     Width = 1073
+    Height = 33
     ExplicitWidth = 1073
+    ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 97
       Properties.SaveTime = False
@@ -809,6 +819,65 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
       Left = 189
       ExplicitLeft = 189
     end
+  end
+  object cxLabel7: TcxLabel [2]
+    Left = 421
+    Top = 6
+    Caption = #1070#1088'.'#1051#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit [3]
+    Left = 472
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 267
+  end
+  object cxLabel6: TcxLabel [4]
+    Left = 745
+    Top = 6
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+  end
+  object edPaidKind: TcxButtonEdit [5]
+    Left = 826
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 101
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = JuridicalGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = PaidKindGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog
@@ -835,6 +904,40 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Juridicalid'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -894,6 +997,39 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Invoice'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 112
     Top = 208
   end
@@ -967,8 +1103,10 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalGuides
       end
       item
+        Component = PaidKindGuides
       end>
     Left = 224
     Top = 136
@@ -977,5 +1115,64 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
     Params = <>
     Left = 328
     Top = 170
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 544
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 862
+    Top = 65528
   end
 end

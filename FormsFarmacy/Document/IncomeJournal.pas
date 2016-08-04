@@ -65,6 +65,7 @@ type
     bbisDocument: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     FromOKPO: TcxGridDBColumn;
+    PaymentDays: TcxGridDBColumn;
   private
     { Private declarations }
   public

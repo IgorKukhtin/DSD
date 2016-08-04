@@ -15,7 +15,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
              , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean, IsDeferred Boolean
              , DiscountCardName TVarChar, DiscountCard_ObjectName TVarChar
-              )
+             , BayerPhone TVarChar
+             , InvNumberOrder TVarChar
+             , ConfirmedKindName TVarChar
+)
 
 AS
 $BODY$
@@ -74,13 +77,16 @@ BEGIN
            , Movement_Check.IsDeferred
            , Movement_Check.DiscountCardName
            , Object_Object.ValueData   AS DiscountCard_ObjectName
+           , Movement_Check.BayerPhone
+           , Movement_Check.InvNumberOrder
+           , Movement_Check.ConfirmedKindName
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
              LEFT JOIN ObjectLink AS ObjectLink_Object
                                   ON ObjectLink_Object.ObjectId = Movement_Check.DiscountCardId
                                  AND ObjectLink_Object.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
-
+                           
        WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
          AND (Movement_Check.UnitId = inUnitId)
          AND (vbReteilId = vbObjectId)

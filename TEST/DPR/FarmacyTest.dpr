@@ -441,7 +441,8 @@ uses
   BarCode in '..\..\FormsFarmacy\Guides\BarCode.pas' {BarCodeForm: TParentForm},
   DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm},
   DiscountCardEdit in '..\..\FormsFarmacy\Guides\DiscountCardEdit.pas' {DiscountCardEditForm: TParentForm},
-  DiscountExternal_Object in '..\..\FormsFarmacy\Guides\DiscountExternal_Object.pas' {DiscountExternal_ObjectForm: TParentForm};
+  DiscountExternal_Object in '..\..\FormsFarmacy\Guides\DiscountExternal_Object.pas' {DiscountExternal_ObjectForm: TParentForm},
+  ConfirmedKind in '..\..\FormsFarmacy\Kind\ConfirmedKind.pas' {ConfirmedKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

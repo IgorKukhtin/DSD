@@ -28,6 +28,13 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     MovementId: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -38,6 +38,12 @@ type
     chbNotMCS: TcxCheckBox;
     cxLabel7: TcxLabel;
     edDiscountCard: TcxTextEdit;
+    edInvNumberOrder: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    edBayerPhone: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edConfirmedKind: TcxTextEdit;
   private
     { Private declarations }
   public

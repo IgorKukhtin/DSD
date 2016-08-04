@@ -29,9 +29,18 @@ BEGIN
 
     --
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+    SELECT COALESCE(MB_Document.ValueData, False) :: Boolean AS isDocument 
+         , Movement.StatusId
+   INTO vbisDocument, vbStatusId
+    FROM Movement
+        LEFT JOIN MovementBoolean AS MB_Document
+               ON MB_Document.MovementId = Movement.Id
+              AND MB_Document.DescId = zc_MovementBoolean_Document()
+    WHERE Movement.Id =inMovementId;
    
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() THEN
 
+
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() THEN
      OPEN Cursor1 FOR
      SELECT $1 FROM lpSelect_MovementItem_OrderInternal (inMovementId, inIsErased, inSession) AS tmp;
      RETURN NEXT Cursor1;
@@ -114,7 +123,7 @@ BEGIN
 
        -- Результат 1
        SELECT
-             tmpMI.Id                   AS Id
+             tmpMI.Id                                                AS Id
            , COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)              AS GoodsId
            , COALESCE (tmpMI.GoodsCode, tmpGoods.GoodsCode)          AS GoodsCode
            , COALESCE (tmpMI.GoodsName, tmpGoods.GoodsName)          AS GoodsName

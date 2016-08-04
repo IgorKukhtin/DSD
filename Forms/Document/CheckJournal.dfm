@@ -4,9 +4,9 @@ inherited CheckJournalForm: TCheckJournalForm
   ClientWidth = 831
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -58
+  ExplicitLeft = -101
   ExplicitWidth = 847
-  ExplicitHeight = 589
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -153,8 +153,37 @@ inherited CheckJournalForm: TCheckJournalForm
           object IsDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085
             DataBinding.FieldName = 'IsDeferred'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 65
+          end
+          object BayerPhone: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083'. ('#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'BayerPhone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085' ('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+            Options.Editing = False
+            Width = 102
+          end
+          object InvNumberOrder: TcxGridDBColumn
+            Caption = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
+            DataBinding.FieldName = 'InvNumberOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072' ('#1089' '#1089#1072#1081#1090#1072')'
+            Options.Editing = False
+            Width = 90
+          end
+          object ConfirmedKindName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'ConfirmedKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
+            Options.Editing = False
+            Width = 80
           end
         end
       end

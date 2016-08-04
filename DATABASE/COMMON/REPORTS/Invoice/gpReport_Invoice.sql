@@ -1,19 +1,23 @@
 -- Function: gpReport_Invoice ()
 
 DROP FUNCTION IF EXISTS gpReport_Invoice (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Invoice (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Invoice(
     IN inStartDate         TDateTime ,
     IN inEndDate           TDateTime ,
+    IN inJuridicalId       Integer ,
+    IN inPaidKindId        Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
+             , PaidKindName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , NameBeforeName TVarChar
              , AssetName TVarChar
              , UnitName TVarChar
              , Comment TVarChar
-             
+                         
              , Amount TFloat  -- 
              , Price TFloat  -- 
              , AmountSumm TFloat  
@@ -39,6 +43,7 @@ BEGIN
     WITH tmpMIInvoice AS (SELECT Movement_Invoice.Id             AS MovementId
                                , Movement_Invoice.OperDate
                                , Movement_Invoice.InvNumber
+                               , Object_PaidKind.ValueData              AS PaidKindName
                                , MovementFloat_TotalSumm.ValueData      AS TotalSumm
                                , Object_Juridical.Id                    AS JuridicalId
                                , Object_Juridical.ValueData             AS JuridicalName
@@ -58,6 +63,18 @@ BEGIN
                                , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
 
                            FROM Movement AS Movement_Invoice
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                       ON MovementLinkObject_Juridical.MovementId = Movement_Invoice.Id
+                                      AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                      AND (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
+                               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                       ON MovementLinkObject_PaidKind.MovementId = Movement_Invoice.Id
+                                      AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                      AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+                               LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
                                LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                       ON MovementFloat_TotalSumm.MovementId =  Movement_Invoice.Id
                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()   
@@ -71,11 +88,7 @@ BEGIN
                                LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                      ON MovementFloat_ChangePercent.MovementId =  Movement_Invoice.Id
                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-                                                      
-                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                      ON MovementLinkObject_Juridical.MovementId = Movement_Invoice.Id
-                                     AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+                               
 
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Invoice.Id
                                                          AND MovementItem.DescId   = zc_MI_Master()
@@ -169,9 +182,10 @@ BEGIN
        , tmpMIInvoice.InvNumber
        , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
        , tmpMIInvoice.OperDate
+       , tmpMIInvoice.PaidKindName
        , tmpMIInvoice.JuridicalId
        , tmpMIInvoice.JuridicalName
-       , Object_NameBefore.ValueData  AS NameBeforeName
+       , Object_NameBefore.ValueData               AS NameBeforeName
 
        , COALESCE (Object_Asset.ValueData, '') :: TVarChar AS AssetName
        , COALESCE (Object_Unit.ValueData, '')  :: TVarChar AS UnitName
@@ -234,8 +248,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.08.16         *
  24.07.16         * 
 */
 
 -- тест
--- SELECT * FROM gpReport_Invoice (inStartDate:= '01.06.2016', inEndDate:= '30.06.2016', inSession:= '2')
+-- select * from gpReport_Invoice(inStartDate := ('29.06.2016')::TDateTime , inEndDate := ('03.07.2016')::TDateTime , inJuridicalId := 15444 , inPaidKindId := 0 ,  inSession := '5');

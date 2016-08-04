@@ -18,6 +18,7 @@ CREATE OR REPLACE VIEW MovementItem_Check_View AS
            , MIFloat_PriceSale.ValueData         AS PriceSale
            , MIFloat_ChangePercent.ValueData     AS ChangePercent
            , MIFloat_SummChangePercent.ValueData AS SummChangePercent
+           , MIFloat_AmountOrder.ValueData       AS AmountOrder
            -- , Object_DiscountCard.Id              AS DiscountCardId
            -- , Object_DiscountCard.ValueData       AS DiscountCardName
 
@@ -34,6 +35,9 @@ CREATE OR REPLACE VIEW MovementItem_Check_View AS
             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                         ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                        ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
             /*LEFT JOIN MovementItemLinkObject AS MILO_DiscountCard
                                              ON MILO_DiscountCard.MovementItemId = MovementItem.Id
                                             AND MILO_DiscountCard.DescId = zc_MILinkObject_DiscountCard()

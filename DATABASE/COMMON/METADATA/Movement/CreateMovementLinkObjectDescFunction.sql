@@ -298,6 +298,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_discountcard() RETURNS Integer 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_discountcard', 'Дисконтные карты' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_discountcard');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_ConfirmedKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ConfirmedKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_ConfirmedKind', 'Статус заказа (Состояние VIP-чека)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ConfirmedKind');
+
 
 /*-------------------------------------------------------------------------------
 

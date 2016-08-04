@@ -23,6 +23,12 @@ type
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
+    cxLabel1: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

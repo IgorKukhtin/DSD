@@ -70,10 +70,10 @@ BEGIN
                    WHERE Object_Price_View.UnitId = vbUnitId
                      AND Object_Price_View.isTop  = TRUE
                   )
-
+ 
        -- Результат 1
        SELECT
-             tmpMI.Id                   AS Id
+             tmpMI.Id                                                AS Id
            , tmpMI.GoodsId                                           AS GoodsId
            , Object_Goods.GoodsCodeInt                               AS GoodsCode
            , Object_Goods.GoodsName                                  AS GoodsName
@@ -333,8 +333,9 @@ BEGIN
                                               ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
                                              AND MILinkObject_Contract.MovementItemId = _tmpMI.PriceListMovementItemId
              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
-            ;
-
+                                                                        
+                  
+;
    RETURN NEXT Cursor2;
 
 END;
@@ -345,8 +346,10 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  15.07.16         *
+
 */
 
 -- тест
--- SELECT * FROM lpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM lpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM lpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM lpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- select * from lpSelect_MovementItem_OrderInternal(inMovementId := 2158888 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

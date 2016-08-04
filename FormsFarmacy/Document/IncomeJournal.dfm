@@ -256,6 +256,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object PaymentDays: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1086#1087#1083#1072#1090#1099' ('#1076#1085#1077#1081')'
+            DataBinding.FieldName = 'PaymentDays'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object colPaySumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'PaySumm'
@@ -437,17 +448,20 @@ inherited IncomeJournalForm: TIncomeJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited MovementProtocolOpenForm: TdsdOpenForm
@@ -475,10 +489,12 @@ inherited IncomeJournalForm: TIncomeJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -504,12 +520,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ADOQueryAction1: TADOQueryAction
       Category = 'dsdImportExport'
@@ -571,6 +589,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       FormName = 'TIncomePartnerDataDialogForm'
       FormNameParam.Value = 'TIncomePartnerDataDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'InvNumber'
@@ -579,6 +598,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
           ComponentItem = 'InvNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaymentDate'
@@ -587,6 +607,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
           ComponentItem = 'PaymentDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -618,6 +639,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -625,6 +647,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -632,6 +655,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -654,6 +678,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -661,6 +686,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -668,11 +694,13 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -880,6 +908,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -893,6 +922,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -906,6 +936,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -916,30 +947,35 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncome'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncomeTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
@@ -947,6 +983,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumber'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaymentDate'
@@ -954,6 +991,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'PaymentDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -988,6 +1026,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -1010,12 +1049,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ConnectionString'
         Value = Null
         Component = ADOQueryAction1
         ComponentItem = 'ConnectionString'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'QueryText'
@@ -1023,6 +1064,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = ADOQueryAction1
         ComponentItem = 'QueryText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 440
@@ -1039,12 +1081,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ConnectionString'
         Value = Null
         Component = ADOQueryAction1
         ComponentItem = 'ConnectionString'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'QueryText'
@@ -1052,6 +1096,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = ADOQueryAction1
         ComponentItem = 'QueryText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 472
@@ -1068,6 +1113,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1076,6 +1122,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'InvNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaymentDate'
@@ -1084,6 +1131,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'PaymentDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 536
@@ -1100,6 +1148,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisDocument'
@@ -1108,6 +1157,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'isDocument'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 760

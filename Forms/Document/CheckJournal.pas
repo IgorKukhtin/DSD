@@ -41,6 +41,9 @@ type
     clDiscountCardName: TcxGridDBColumn;
     cxDiscountCard_ObjectName: TcxGridDBColumn;
     IsDeferred: TcxGridDBColumn;
+    BayerPhone: TcxGridDBColumn;
+    InvNumberOrder: TcxGridDBColumn;
+    ConfirmedKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
