@@ -203,7 +203,8 @@ BEGIN
           , Object_Update.ValueData              AS UpdateName
           , MovementDate_Update.ValueData        AS UpdateDate
 
-          , date_part('day', Movement_Income.PaymentDate - Movement_Income.OperDate) ::TFloat AS PaymentDays 
+         -- , date_part('day', Movement_Income.PaymentDate - Movement_Income.OperDate) ::TFloat AS PaymentDays 
+          , (Movement_Income.PaymentDate::Date - Movement_Income.OperDate::Date) ::TFloat AS PaymentDays 
     
 
         FROM
