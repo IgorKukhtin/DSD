@@ -69,7 +69,7 @@ BEGIN
            , Object_Unit.ValueData            AS UnitName 
            , tmpData.MinPrice                 AS MinPrice
            , tmpData.MinPriceEnd :: TFloat    AS MinPriceEnd
-           , CASE WHEN ObjectFloat_MinimumLot.ValueData > 0 THEN ObjectFloat_MinimumLot.ValueData ELSE 1 END AS MinimumLot  
+           , CASE WHEN ObjectFloat_MinimumLot.ValueData > 0 THEN ObjectFloat_MinimumLot.ValueData ELSE 1 END :: TFloat AS MinimumLot  
            , tmpData.isErased
       FROM (SELECT tmpData.Id
                  , tmpData.UnitId
