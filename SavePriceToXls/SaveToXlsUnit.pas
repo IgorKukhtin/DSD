@@ -164,7 +164,7 @@ begin
     while not qryUnit.Eof do
     Begin
       qryPrice.Close;
-      qryPrice.SQL.Text := 'Select * from gpSelect_Object_Price('+qryUnit.FieldByName('Id').AsString+',False,False,''3'');';
+      qryPrice.SQL.Text := 'Select * from gpSelect_Object_Price('+qryUnit.FieldByName('Id').AsString+',0,False,False,''3'');';
       try
         qryPrice.Open;
       except on E: Exception do
