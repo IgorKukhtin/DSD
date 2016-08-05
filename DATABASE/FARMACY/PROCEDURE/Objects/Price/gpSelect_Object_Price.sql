@@ -3,7 +3,7 @@
   процедура так же вызывается в программе PROJECT\DSD\DPR\SavePriceToXls.dpr
   unit: SaveToXlsUnit
   row: 167 = qryPrice.SQL.Text := 'Select * from gpSelect_Object_Price...
-  exe ложить на //91.210.37.210:2511/d$/ (его запускает служба)
+  exe класть на //91.210.37.210:2511/d$/ (его запускает служба)
 */
 DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, TDateTime, Boolean,Boolean,TVarChar);
