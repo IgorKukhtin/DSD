@@ -96,7 +96,13 @@ BEGIN
                      AND Object_Price_View.isTop  = TRUE
                   )
 
-
+  , tmpMI_Child AS (SELECT MI_Child.ParentId AS MIMasterId
+                         , MI_Child.Id       AS MIId
+                    FROM MovementItem AS MI_Child 
+                    WHERE MI_Child.MovementId = inMovementId
+                      AND MI_Child.DescId     = zc_MI_Child()
+                      AND MI_Child.isErased   = False
+                    )
   
        -- Результат 1
        SELECT
@@ -194,10 +200,10 @@ BEGIN
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId 
             LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = tmpMI.PartnerGoodsId 
                     
-             LEFT JOIN (SELECT _tmpMI.MovementItemId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
-                        FROM _tmpOrderInternal_MI AS _tmpMI
-                        GROUP BY _tmpMI.MovementItemId
-                       ) AS tmpOneJuridical ON tmpOneJuridical.MovementItemId = tmpMI.MovementItemId
+             LEFT JOIN (SELECT tmpMI.MIMasterId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
+                        FROM tmpMI_Child AS tmpMI
+                        GROUP BY tmpMI.MIMasterId
+                       ) AS tmpOneJuridical ON tmpOneJuridical.MIMasterId = tmpMI.MovementItemId
                        
              LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                  AND GoodsPromo.GoodsId = tmpMI.GoodsId 
