@@ -37,23 +37,22 @@ BEGIN
              , MCS TFloat
              , Remains TFloat
              , Income TFloat
-             , Check TFloat
+             , CheckAmount TFloat
              , isClose Boolean
              , isFirst Boolean
              , isSecond Boolean
              , isTOP Boolean
              , isUnitTOP Boolean
-             , isMCSNotRecalc Boolean
-             , isMCSIsClose Boolean
+             , MCSNotRecalc Boolean
+             , MCSIsClose Boolean
              , isErased Boolean
 
 ) ON COMMIT DROP;
 
-
       -- Сохраниели данные
       INSERT INTO _tmpOrderInternal_MI 
 
-           WITH MovementItemOrder AS (SELECT MovementItem.*,
+           WITH MovementItemOrder AS (SELECT MovementItem.Id, MovementItem.ObjectId, MovementItem.isErased, MovementItem.Movementid, MovementItem.Amount
                                       FROM MovementItem    
                 
                                       WHERE MovementItem.MovementId = inMovementId
@@ -64,7 +63,7 @@ BEGIN
             , MovementItem.Id                      AS MovementItemId
             , Object_Goods.Id                      AS GoodsId
             , Object_PartnerGoods.Id               AS PartnerGoodsId
-            , Object_Goods.ValueData               AS MainGoodsName
+            
             , Object_Juridical.Id                  AS JuridicalId
             , Object_Juridical.ValueData           AS JuridicalName
             , Object_Contract.Id                   AS ContractId
@@ -77,7 +76,7 @@ BEGIN
             , MIFloat_MCS.ValueData                AS MCS
             , MIFloat_Remains.ValueData            AS Remains
             , MIFloat_Income.ValueData             AS Income
-            , MIFloat_Check.ValueData              AS Check
+            , MIFloat_Check.ValueData              AS CheckAmount
 
             , COALESCE(MIBoolean_Close.ValueData, False)              AS isClose
             , COALESCE(MIBoolean_First.ValueData, False)              AS isFirst
