@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpselect_movement_email_send(
   RETURNS TABLE(rowdata tblob) AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbPartnerId Integer;
 
    DECLARE vbGoodsPropertyId Integer;
    DECLARE vbGoodsPropertyId_basis Integer;
@@ -16,7 +17,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId := lpGetUserBySession (inSession);
 
 
      -- Таблица для результата
@@ -28,7 +29,7 @@ BEGIN
           , tmp.GoodsPropertyId
           , tmp.GoodsPropertyId_basis
           , tmp.ExportKindId
-            INTO vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId
+            INTO vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId
      FROM
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
      SELECT Object_Partner.Id AS PartnerId
