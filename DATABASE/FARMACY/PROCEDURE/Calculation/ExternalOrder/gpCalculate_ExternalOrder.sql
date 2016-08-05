@@ -81,9 +81,9 @@ BEGIN
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MCSNotRecalc(), MovementItem.Id, _tmpMI_OrderInternal_Master.isMCSNotRecalc)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MCSIsClose(), MovementItem.Id, _tmpMI_OrderInternal_Master.isMCSIsClose)
                --
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), MovementItem.Id, _tmpMI_OrderInternal_Master.GoodsId_partner)
              , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Juridical(), MovementItem.Id, _tmpMI_OrderInternal_Master.JuridicalId)
              , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), MovementItem.Id, _tmpMI_OrderInternal_Master.ContractId)
-             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), MovementItem.Id, _tmpMI_OrderInternal_Master.GoodsId_partner)
        FROM MovementItem
             LEFT JOIN _tmpMI_OrderInternal_Master ON _tmpMI_OrderInternal_Master.MovementItemId = MovementItem.Id
        WHERE MovementItem.MovementId = inInternalOrder

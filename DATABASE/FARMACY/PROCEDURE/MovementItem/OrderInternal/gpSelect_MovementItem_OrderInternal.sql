@@ -131,9 +131,12 @@ BEGIN
            , tmpMI.PartionGoodsDate
            , MIString_Comment.ValueData                             AS Comment
            
+           , Object_PartnerGoods.Id                                 AS PartnerGoodsId
            , Object_PartnerGoods.ObjectCode                         AS PartnerGoodsCode 
            , Object_PartnerGoods.ValueData                          AS PartnerGoodsName
+           , tmpMI.JuridicalId
            , tmpMI.JuridicalName 
+           , tmpMI.ContractId
            , tmpMI.ContractName 
            , tmpMI.MakerName                                        AS Maker
            
@@ -363,10 +366,13 @@ BEGIN
            , tmpMI.MinimumLot
            , tmpMI.PartionGoodsDate
            , tmpMI.Comment
+           , tmpMI.PartnerGoodsId
            , tmpMI.PartnerGoodsCode 
            , tmpMI.PartnerGoodsName
+           , tmpMI.JuridicalId
            , tmpMI.JuridicalName 
-           , tmpMI.ContractName 
+           , tmpMI.ContractId
+           , tmpMI.ContractName
            , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
            , COALESCE(tmpMI.isCalculated, FALSE)                    AS isCalculated
@@ -433,10 +439,12 @@ BEGIN
                             , ObjectFloat_Goods_MinimumLot.valuedata                           AS MinimumLot
                             , COALESCE(PriceList.Price, MinPrice.Price)                        AS Price
                             , COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate)  AS PartionGoodsDate
+                            , COALESCE(PriceList.GoodsId, MinPrice.GoodsId)                    AS PartnerGoodsId
                             , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)                AS PartnerGoodsCode 
                             , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)                AS PartnerGoodsName
                             , COALESCE(PriceList.JuridicalId, MinPrice.JuridicalId)            AS JuridicalId
                             , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName)        AS JuridicalName
+                            , COALESCE(PriceList.ContractId, MinPrice.ContractId)              AS ContractId
                             , COALESCE(PriceList.ContractName, MinPrice.ContractName)          AS ContractName
                             , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
                             , COALESCE (Object_Goods.isTOP, False)                             AS Goods_isTOP
