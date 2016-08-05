@@ -1,10 +1,6 @@
--- Function: gpSelect_Movement_Income()
+-- Function: gpCalculate_ExternalOrder()
 
 DROP FUNCTION IF EXISTS gpCalculate_ExternalOrder (Integer, TVarChar);
-
--- Function: gpCalculate_ExternalOrder(integer, TVarChar)
-
--- DROP FUNCTION gpCalculate_ExternalOrder(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCalculate_ExternalOrder (inInternalOrder integer, inSession TVarChar)
   RETURNS void AS
@@ -38,11 +34,15 @@ BEGIN
       WHERE MovementLinkObject_Unit.MovementId = inInternalOrder
         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
 
-   IF 1=1
+   IF 1=0
    THEN
        PERFORM lpCreateTempTable_OrderInternal(inInternalOrder, vbObjectId, 0, vbUserId);
    ELSE
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, Remains TFloat, Income TFloat, Check TFloat, Maker TVarChar, isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean) ON COMMIT DROP;
+
+       -- вернем обратно, что б gpSelect вернул "текущие" данные
+       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), inInternalOrder, FALSE);
+
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, Remains TFloat, Income TFloat, CheckAmount TFloat, Maker TVarChar, isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean, GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
        CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, PriceListMovementItemId Integer, Maker TVarChar, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
        --
        SELECT zfCalc_Word_Split (tmp.CurName_all, ';', 1) AS CurName1
@@ -56,15 +56,83 @@ BEGIN
        --
        FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName1)
        LOOP
-           INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, Remains, Income, Check, Maker, isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose)
-             VALUES (vbRec.Id, PartionGoodsDate, MinimumLot, MCS, );
+           INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, Remains, Income, CheckAmount, Maker, isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose, GoodsId_partner, JuridicalId, ContractId)
+             VALUES (vbRec.Id, vbRec.PartionGoodsDate, vbRec.MinimumLot, vbRec.MCS, vbRec.RemainsInUnit, vbRec.Income_Amount, vbRec.CheckAmount, vbRec.MakerName, vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0));
        END LOOP;
        --
        FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName2)
        LOOP
            INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, PriceListMovementItemId, Maker, JuridicalId, ContractId)
-             VALUES (vbRec.Id);
+             VALUES (vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, vbRec.PriceListMovementItemId, vbRec.MakerName, COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0));
        END LOOP;
+
+       -- Сохранили 
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), MovementItem.Id, _tmpMI_OrderInternal_Master.PartionGoods)
+             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_MinimumLot(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.MinimumLot, 0))
+             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_MCS(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.MCS, 0))
+             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.Remains, 0))
+             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Check(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.CheckAmount, 0))
+             , lpInsertUpdate_MovementItemString (zc_MIString_Maker(), MovementItem.Id, _tmpMI_OrderInternal_Master.Maker)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), MovementItem.Id, _tmpMI_OrderInternal_Master.isClose)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_First(), MovementItem.Id, _tmpMI_OrderInternal_Master.isFirst)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Second(), MovementItem.Id, _tmpMI_OrderInternal_Master.isSecond)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TOP(), MovementItem.Id, _tmpMI_OrderInternal_Master.isTOP)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_UnitTOP(), MovementItem.Id, _tmpMI_OrderInternal_Master.isUnitTOP)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MCSNotRecalc(), MovementItem.Id, _tmpMI_OrderInternal_Master.isMCSNotRecalc)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MCSIsClose(), MovementItem.Id, _tmpMI_OrderInternal_Master.isMCSIsClose)
+               --
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), MovementItem.Id, _tmpMI_OrderInternal_Master.GoodsId_partner)
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Juridical(), MovementItem.Id, _tmpMI_OrderInternal_Master.JuridicalId)
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), MovementItem.Id, _tmpMI_OrderInternal_Master.ContractId)
+       FROM MovementItem
+            LEFT JOIN _tmpMI_OrderInternal_Master ON _tmpMI_OrderInternal_Master.MovementItemId = MovementItem.Id
+       WHERE MovementItem.MovementId = inInternalOrder
+         AND MovementItem.DescId = zc_MI_Master()
+      ;
+
+       -- сохранили протокол
+       PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
+       FROM MovementItem
+       WHERE MovementItem.MovementId = inInternalOrder
+         AND MovementItem.DescId = zc_MI_Master();
+
+       -- Сохранили 
+       PERFORM lpInsertUpdate_MovementItem_OrderInternal_child (ioId                        := COALESCE (MovementItem.MovementItemId, 0)
+                                                              , inMovementId                := inInternalOrder
+                                                              , inParentId                  := COALESCE (MovementItem.ParentId, _tmpMI_OrderInternal_Child.MovementItemId)
+                                                              , inGoodsId                   := COALESCE (MovementItem.GoodsId, _tmpMI_OrderInternal_Child.GoodsId)
+                                                              , inAmount                    := 0
+                                                              , inPrice                     := COALESCE (_tmpMI_OrderInternal_Child.Price, 0)
+                                                              , inJuridicalPrice            := COALESCE (_tmpMI_OrderInternal_Child.JuridicalPrice, 0)
+                                                              , inPriceListMovementItemId   := _tmpMI_OrderInternal_Child.PriceListMovementItemId
+                                                              , inPartionGoods              := _tmpMI_OrderInternal_Child.PartionGoods
+                                                              , inMaker                     := _tmpMI_OrderInternal_Child.Maker
+                                                              , inJuridicalId               := COALESCE (MovementItem.JuridicalId, _tmpMI_OrderInternal_Child.JuridicalId)
+                                                              , inContractId                := COALESCE (MovementItem.ContractId, _tmpMI_OrderInternal_Child.ContractId)
+                                                              , inUserId                    := vbUserId
+                                                               )
+       FROM (SELECT MovementItem.Id AS MovementItemId, MovementItem.ParentId
+                  , COALESCE (MovementItem.ObjectId, 0)           AS GoodsId
+                  , COALESCE (MILinkObject_Juridical.ObjectId, 0) AS JuridicalId
+                  , COALESCE (MILinkObject_Contract.ObjectId, 0)  AS ContractId
+             FROM MovementItem
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
+                         ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+                        AND MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
+                         ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                        AND MILinkObject_Contract.MovementItemId = MovementItem.Id
+             WHERE MovementItem.MovementId = inInternalOrder
+               AND MovementItem.DescId = zc_MI_Child()
+            ) AS MovementItem
+            FULL JOIN _tmpMI_OrderInternal_Child ON _tmpMI_OrderInternal_Child.MovementItemId = MovementItem.ParentId
+                                                AND _tmpMI_OrderInternal_Child.JuridicalId    = MovementItem.JuridicalId
+                                                AND _tmpMI_OrderInternal_Child.ContractId     = MovementItem.ContractId
+                                                AND _tmpMI_OrderInternal_Child.GoodsId        = MovementItem.GoodsId
+      ;
+
+       -- 
+       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), inInternalOrder, TRUE);
 
 
    END IF;
@@ -213,13 +281,13 @@ BEGIN
     WHERE
         COALESCE(ddd.AmountManual, ddd.Amount + COALESCE(AmountSecond,0)) > 0;
 
+
+    -- RAISE EXCEPTION '<%>   <%>', (select count(*) from _tmpMI_OrderInternal_Master), (select count(*) from _tmpMI_OrderInternal_Child);
+
+
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpCalculate_ExternalOrder(integer, TVarChar)
-  OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -228,4 +296,4 @@ ALTER FUNCTION gpCalculate_ExternalOrder(integer, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 2333613, inSession:= '3');
