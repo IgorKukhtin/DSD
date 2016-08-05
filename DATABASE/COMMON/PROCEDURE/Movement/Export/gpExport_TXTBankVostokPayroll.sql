@@ -16,6 +16,8 @@ RETURNS TABLE(
 $BODY$
 	DECLARE r RECORD;
 	DECLARE i integer; -- автонумерация
+	DECLARE e text;
+	DECLARE er text;
 BEGIN
 	-- *** Временная таблица для сбора результата
 	CREATE TEMP TABLE _tmpPayrollResult(TXTRes TVarChar) ON COMMIT DROP;
@@ -52,20 +54,37 @@ BEGIN
 	i := 0; -- обнуляем автонумерацию
 	FOR r IN (select card, personalname, inn, summcardrecalc from gpSelect_MovementItem_PersonalService(inMovementId := inPayrollID, inShowAll := 'False', inIsErased := 'False',  inSession := inSession))
 	LOOP
-		-- Номер карточного счета
-		INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_NUM='||r.card);
-		-- ФИО держателя карты
-		INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_HOLDER='||r.personalname);
-		-- ИНН держателя карты
-		INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_HOLDER_INN='||r.inn);
-		-- Сумма зачисления
-		INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.AMOUNT='||ROUND(r.summcardrecalc::numeric, 2));
-		i := i + 1; -- увеличиваем значение автонумерации
+		IF (char_length(r.card)<>14) 
+		   OR (NOT ISNUMERIC(r.card))
+		   --OR (NOT ISNUMERIC(r.inn)) 
+		   --OR (char_length(r.inn)<>10) 
+		   OR (char_length(r.personalname)=0) THEN
+		   BEGIN
+			e := 'Неверные/неполные данные: Карта - ' || r.card || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.summcardrecalc || CHR(13) || CHR(10);
+			er := concat(er, e);
+		   END;
+		ELSE
+		BEGIN
+			-- Номер карточного счета
+			INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_NUM='||r.card);
+			-- ФИО держателя карты
+			INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_HOLDER='||LEFT(REPLACE(r.personalname, chr(39), ''), 80));
+			-- ИНН держателя карты
+			INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_HOLDER_INN='||r.inn);
+			-- Сумма зачисления
+			INSERT INTO _tmpPayrollResult (TXTRes) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.AMOUNT='||ROUND(r.summcardrecalc::numeric, 2));
+			i := i + 1; -- увеличиваем значение автонумерации
+		END;
+		END IF;
 	END LOOP;
 
 	-- *** Возврат результата
+	IF er <> '' THEN
+		RAISE EXCEPTION '%', er;
+	ELSE
 	RETURN QUERY
 		SELECT * FROM _tmpPayrollResult;
+	END IF;
 END;
 $BODY$
   LANGUAGE plpgsql;
