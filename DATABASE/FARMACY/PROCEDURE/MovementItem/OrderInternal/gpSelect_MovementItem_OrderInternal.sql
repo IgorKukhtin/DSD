@@ -140,11 +140,11 @@ BEGIN
            , Object_PartnerGoods.Id                                 AS PartnerGoodsId
            , Object_PartnerGoods.ObjectCode                         AS PartnerGoodsCode 
            , Object_PartnerGoods.ValueData                          AS PartnerGoodsName
-           , tmpMI.JuridicalId
-           , tmpMI.JuridicalName 
+           , tmpMI.JuridicalId               
+           , tmpMI.JuridicalName             
            , tmpMI.ContractId
            , tmpMI.ContractName 
-           , tmpMI.MakerName                                        AS Maker
+           , tmpMI.MakerName                                        AS MakerName
            
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
            , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN 456
@@ -196,7 +196,7 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated 
                                           ON MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
                                          AND MIBoolean_Calculated.MovementItemId = tmpMI.MovementItemId
-
+                                   
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId 
             LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = tmpMI.PartnerGoodsId 
                     
@@ -229,6 +229,7 @@ BEGIN
               , Object_Juridical.ValueData     AS JuridicalName
               , MIString_Maker.ValueData       AS MakerName
               , Object_Contract.ValueData      AS ContractName
+              , COALESCE(MIDate_PartionGoods.ValueData, Null) ::TDateTime AS PartionGoodsDate
               , CASE WHEN MIDate_PartionGoods.ValueData < vbDate180 THEN 456
                      ELSE 0
                 END                            AS PartionGoodsDateColor      
