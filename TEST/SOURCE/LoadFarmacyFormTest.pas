@@ -434,7 +434,7 @@ procedure TLoadFormTest.LoadReportFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
-  exit;
+  //exit;
   // отчет распределение остатков
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
@@ -470,12 +470,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveDialogForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckDialogForm');
-  // для фармацевта
+  {// для фармацевта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckFarmForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFarmForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckFarmDialogForm'));

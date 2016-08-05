@@ -375,11 +375,18 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       Width = 94
     end
     object cbPartionPrice: TcxCheckBox
-      Left = 657
+      Left = 647
       Top = 5
       Action = actRefreshPartionPrice
       TabOrder = 7
       Width = 200
+    end
+    object cbJuridical: TcxCheckBox
+      Left = 857
+      Top = 5
+      Action = actRefreshJuridical
+      TabOrder = 8
+      Width = 112
     end
   end
   inherited ActionList: TActionList
@@ -410,6 +417,19 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actRefreshJuridical: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefreshPartionPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -419,7 +439,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
           StoredProc = spSelect
         end>
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -492,6 +512,14 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
           Name = 'inisPartionPrice'
           Value = Null
           Component = cbPartionPrice
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisJuridical'
+          Value = Null
+          Component = cbJuridical
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -593,6 +621,14 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisJuridical'
+        Value = Null
+        Component = cbJuridical
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 160
@@ -661,8 +697,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 208
-    Top = 0
+    Left = 152
+    Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 432
@@ -676,8 +712,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       item
         Component = UnitGuides
       end>
-    Left = 296
-    Top = 56
+    Left = 280
+    Top = 64
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
