@@ -2,16 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpCalculate_ExternalOrder (Integer, TVarChar);
 
--- Function: gpCalculate_ExternalOrder(integer, tvarchar)
+-- Function: gpCalculate_ExternalOrder(integer, TVarChar)
 
--- DROP FUNCTION gpCalculate_ExternalOrder(integer, tvarchar);
+-- DROP FUNCTION gpCalculate_ExternalOrder(integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpCalculate_ExternalOrder (inInternalOrder integer, inSession tvarchar)
+CREATE OR REPLACE FUNCTION gpCalculate_ExternalOrder (inInternalOrder integer, inSession TVarChar)
   RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbObjectId Integer;
+
+   DECLARE vbCurName1 TVarChar;
+   DECLARE vbCurName2 TVarChar;
+   DECLARE vbRec Record;
+
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -33,10 +38,38 @@ BEGIN
       WHERE MovementLinkObject_Unit.MovementId = inInternalOrder
         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
 
-    PERFORM lpCreateTempTable_OrderInternal(inInternalOrder, vbObjectId, 0, vbUserId);
+   IF 1=1
+   THEN
+       PERFORM lpCreateTempTable_OrderInternal(inInternalOrder, vbObjectId, 0, vbUserId);
+   ELSE
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, Remains TFloat, Income TFloat, Check TFloat, Maker TVarChar, isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, PriceListMovementItemId Integer, Maker TVarChar, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
+       --
+       SELECT zfCalc_Word_Split (tmp.CurName_all, ';', 1) AS CurName1
+            , zfCalc_Word_Split (tmp.CurName_all, ';', 2) AS CurName2
+              INTO vbCurName1, vbCurName2
+       FROM (SELECT STRING_AGG (tmp.CurName, ';') AS CurName_all
+             FROM (SELECT gpSelect_MovementItem_OrderInternal (inInternalOrder, FALSE, FALSE, inSession) :: TVarChar AS CurName
+                  ) AS tmp
+            ) AS tmp;
+
+       --
+       FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName1)
+       LOOP
+           INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, Remains, Income, Check, Maker, isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose)
+             VALUES (vbRec.Id, PartionGoodsDate, MinimumLot, MCS, );
+       END LOOP;
+       --
+       FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName2)
+       LOOP
+           INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, PriceListMovementItemId, Maker, JuridicalId, ContractId)
+             VALUES (vbRec.Id);
+       END LOOP;
+
+
+   END IF;
    
    -- Просто запрос, где у позиции определяется лучший поставщик. Если поставщика нет, то закинуть в пустой документ. 
-
    PERFORM lpCreate_ExternalOrder(
              inInternalOrder := inInternalOrder ,
                inJuridicalId := COALESCE(PriceList.JuridicalId, MinPrice.JuridicalId),
@@ -184,7 +217,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION gpCalculate_ExternalOrder(integer, tvarchar)
+ALTER FUNCTION gpCalculate_ExternalOrder(integer, TVarChar)
   OWNER TO postgres;
 
 
