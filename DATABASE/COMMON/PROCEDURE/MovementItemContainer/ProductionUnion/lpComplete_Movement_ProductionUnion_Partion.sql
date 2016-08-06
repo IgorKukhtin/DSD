@@ -19,21 +19,21 @@ BEGIN
 
         -- данные по элементам прихода с производства
         WITH tmpMI_master AS (-- поиск Партий по св-ву MovementItemDate
-                              SELECT _tmpItem.MovementItemId
-                                   , _tmpItem.GoodsId
-                                   , _tmpItem.GoodsKindId
-                                   , _tmpItem.OperCount
+                              SELECT _tmpItem_pr.MovementItemId
+                                   , _tmpItem_pr.GoodsId
+                                   , _tmpItem_pr.GoodsKindId
+                                   , _tmpItem_pr.OperCount
                                    , MIDate_PartionGoods.ValueData AS PartionGoodsDate
                                    , COALESCE (MIFloat_Count.ValueData, 0) AS Count_onCount
-                              FROM _tmpItem
+                              FROM _tmpItem_pr
                                    INNER JOIN MovementItemDate AS MIDate_PartionGoods
-                                                               ON MIDate_PartionGoods.MovementItemId = _tmpItem.MovementItemId
+                                                               ON MIDate_PartionGoods.MovementItemId = _tmpItem_pr.MovementItemId
                                                               AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                                               AND MIDate_PartionGoods.ValueData > zc_DateStart()
                                    LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                                               ON MIFloat_Count.MovementItemId = _tmpItem.MovementItemId
+                                                               ON MIFloat_Count.MovementItemId = _tmpItem_pr.MovementItemId
                                                               AND MIFloat_Count.DescId = zc_MIFloat_Count()
-                                   LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose ON MIBoolean_PartionClose.MovementItemId = _tmpItem.MovementItemId
+                                   LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose ON MIBoolean_PartionClose.MovementItemId = _tmpItem_pr.MovementItemId
                                                                                           AND MIBoolean_PartionClose.DescId         = zc_MIBoolean_PartionClose()
                                                                                           AND MIBoolean_PartionClose.ValueData      = TRUE
                               WHERE MIBoolean_PartionClose.MovementItemId IS NULL -- !!!т.е. партия закрыта в элементе прихода (в расходе пока не всегда получается этот признак отследить)!!!

@@ -41,7 +41,7 @@ BEGIN
    -- !!!только при создании!!!
    IF vbIsInsert = TRUE AND inUserId IN (zc_Enum_Process_Auto_Defroster(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Kopchenie())
    THEN
-       -- сохранили свойство <пересорт>
+       -- сохранили свойство <автоматически сформирован>
        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), ioId, TRUE);
        -- сохранили св€зь с <ѕользователь>
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, inUserId);

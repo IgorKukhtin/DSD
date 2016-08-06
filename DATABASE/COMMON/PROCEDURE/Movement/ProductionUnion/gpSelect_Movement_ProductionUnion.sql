@@ -56,11 +56,18 @@ BEGIN
          , Object_DocumentKind.Id                   AS DocumentKindId
          , Object_DocumentKind.ValueData            AS DocumentKindName
 
-         , COALESCE(MovementBoolean_isAuto.ValueData, False)          AS isAuto
-         , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
+         , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) AS isAuto
+         , MovementDate_Insert.ValueData            AS InsertDate
  
-         , Movement_DocumentProduction.Id               AS MovementId_Production
-         , zfCalc_PartionMovementName (Movement_DocumentProduction.DescId, MovementDesc_Production.ItemName, Movement_DocumentProduction.InvNumber, Movement_DocumentProduction.OperDate) AS InvNumber_ProductionFull
+         , Movement_Sale.Id                        AS MovementId_Production
+         , (CASE WHEN Movement_Sale.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Sale.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Sale.DescId, MovementDesc_Sale.ItemName, Movement_Sale.InvNumber, Movement_Sale.OperDate)
+             ) :: TVarChar AS InvNumber_ProductionFull
 
      FROM (SELECT Movement.id
              FROM tmpStatus
@@ -108,11 +115,11 @@ BEGIN
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
-          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
-                                         ON MovementLinkMovement_Production.MovementId = Movement.Id
-                                        AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
-          LEFT JOIN Movement AS Movement_DocumentProduction ON Movement_DocumentProduction.Id = MovementLinkMovement_Production.MovementChildId
-          LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_DocumentProduction.DescId
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                         ON MovementLinkMovement_Sale.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Production()
+          LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Sale.MovementChildId
+          LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = Movement_Sale.DescId
            
     ;
 
@@ -135,4 +142,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnion (inStartDate:= '01.06.2014', inEndDate:= '01.07.2014', inIsErased:=true, inIsPeresort:=false, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ProductionUnion (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased:=true, inIsPeresort:=false, inSession:= '2')
