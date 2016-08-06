@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_IncomeAsset()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeAsset(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
+    IN inUnitId              Integer   , -- Подразделение
  INOUT ioAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
     IN inMIId_Invoice        TFloat    , -- элемент документа Cчет
@@ -29,6 +31,7 @@ BEGIN
      ioId:= lpInsertUpdate_MovementItem_IncomeAsset (ioId                 := ioId
                                                    , inMovementId         := inMovementId
                                                    , inGoodsId            := inGoodsId
+                                                   , inUnitId             := inUnitId
                                                    , inAmount             := ioAmount
                                                    , inPrice              := inPrice
                                                    , inCountForPrice      := ioCountForPrice
@@ -50,6 +53,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.08.16         *
  29.07.16         *
 */
 

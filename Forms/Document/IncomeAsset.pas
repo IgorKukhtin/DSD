@@ -175,6 +175,7 @@ type
     InvoiceGuides: TdsdGuides;
     InsertRecordAsset: TInsertRecord;
     bbInsertAsset: TdxBarButton;
+    actUnitChoiceForm: TOpenChoiceForm;
   private
   public
   end;
