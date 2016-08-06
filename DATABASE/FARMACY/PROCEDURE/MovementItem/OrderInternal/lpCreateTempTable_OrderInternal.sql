@@ -1,6 +1,5 @@
 -- Function: lpCreateTempTable_OrderInternal()
 
-DROP FUNCTION IF EXISTS lpCreateTempTable_OrderInternal (Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpCreateTempTable_OrderInternal(

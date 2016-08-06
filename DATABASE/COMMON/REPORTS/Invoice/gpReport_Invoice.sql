@@ -1,6 +1,5 @@
 -- Function: gpReport_Invoice ()
 
-DROP FUNCTION IF EXISTS gpReport_Invoice (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Invoice (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Invoice(

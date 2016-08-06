@@ -9,14 +9,21 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_IncomeAsset(
 RETURNS VOID
 AS
 $BODY$
-
 BEGIN
 
+/*
      -- ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_IncomeAsset()
                                 , inUserId     := inUserId
                                  );
+*/
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Income_CreateTemp();
+     -- Проводим Документ
+     PERFORM lpComplete_Movement_Income (inMovementId     := inMovementId
+                                       , inUserId         := inUserId
+                                       , inIsLastComplete := FALSE);
 
 END;
 $BODY$
