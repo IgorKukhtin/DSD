@@ -725,14 +725,16 @@ type
     N124: TMenuItem;
     N125: TMenuItem;
     actPartionRemains: TdsdOpenForm;
-    N126: TMenuItem;
+    miPartionRemains: TMenuItem;
     actPartionGoods: TdsdOpenForm;
-    N127: TMenuItem;
-    N128: TMenuItem;
-    N129: TMenuItem;
+    miPartionGoods: TMenuItem;
     actIncomeAsset: TdsdOpenForm;
     N130: TMenuItem;
     N131: TMenuItem;
+    N132: TMenuItem;
+    N126: TMenuItem;
+    N127: TMenuItem;
+    N128: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

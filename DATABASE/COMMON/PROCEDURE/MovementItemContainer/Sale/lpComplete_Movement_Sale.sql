@@ -837,6 +837,12 @@ BEGIN
      END IF;
 
 
+     -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!
+     PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
+                                            , inUnitId     := vbUnitId_From
+                                            , inUserId     := inUserId);
+
+
      -- !!!
      -- IF NOT EXISTS (SELECT MovementItemId FROM _tmpItem) THEN RETURN; END IF;
 

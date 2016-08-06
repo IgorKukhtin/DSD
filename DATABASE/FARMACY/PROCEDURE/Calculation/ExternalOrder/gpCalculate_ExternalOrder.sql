@@ -297,3 +297,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 2333613, inSession:= '3');
+-- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 1730977, inSession:= '3');
