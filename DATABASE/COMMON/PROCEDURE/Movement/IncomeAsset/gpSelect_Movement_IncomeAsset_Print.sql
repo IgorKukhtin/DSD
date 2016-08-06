@@ -130,8 +130,9 @@ BEGIN
            , Object_From.ValueData             AS FromName
            , Object_To.ValueData               AS ToName
            , Object_PaidKind.ValueData         AS PaidKindName
-           , View_Contract_InvNumber.ContractCode AS ContractCode
-           , View_Contract_InvNumber.InvNumber AS ContractName
+           , Object_Contract_View.ContractCode AS ContractCode
+           , Object_Contract_View.InvNumber AS ContractName
+           , Object_Contract_View.ContractKindName  AS ContractKind
            , ObjectDate_Signing.ValueData      AS ContractSigningDate
 
            , Object_JuridicalFrom.ValueData    AS JuridicalName_From
@@ -150,7 +151,23 @@ BEGIN
                   ELSE ''
              END AS Price_info
 
-           
+           , ObjectHistory_JuridicalDetails_View.JuridicalId       AS JuridicalId_From
+           , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
+           , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
+           , OH_JuridicalDetails_From.OKPO              AS OKPO_From
+           , OH_JuridicalDetails_From.INN               AS INN_From
+           , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
+           , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
+           , OH_JuridicalDetails_From.BankName          AS BankName_From
+           , OH_JuridicalDetails_From.MFO               AS BankMFO_From
+           , OH_JuridicalDetails_From.Phone             AS Phone_From
+      
+           , OH_JuridicalDetails_To.Phone               AS Phone_To
+   
+           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
+                  ELSE 'м.ƒнiпропетровськ' 
+                  END  :: TVarChar   AS PlaceOf 
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -212,13 +229,13 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN ObjectDate AS ObjectDate_Signing
-                                 ON ObjectDate_Signing.ObjectId = View_Contract_InvNumber.ContractId -- MovementLinkObject_Contract.ObjectId
+                                 ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId -- MovementLinkObject_Contract.ObjectId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
-                                AND View_Contract_InvNumber.InvNumber <> '-'
+                                AND Object_Contract_View.InvNumber <> '-'
 
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
@@ -243,8 +260,23 @@ BEGIN
                                  ON ObjectLink_To_Juridical.ObjectId = Object_To.Id
                                 AND ObjectLink_To_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_To_Juridical.ChildObjectId
-                               
+                  
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                ON OH_JuridicalDetails_To.JuridicalId = Object_JuridicalTo.Id
+                                                               AND Movement.OperDate >= OH_JuridicalDetails_To.StartDate
+                                                               AND Movement.OperDate <  OH_JuridicalDetails_To.EndDate
 
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                                                                ON OH_JuridicalDetails_From.JuridicalId = Object_JuridicalFrom.Id
+                                                               AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate
+                                                               AND Movement.OperDate <  OH_JuridicalDetails_From.EndDate
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId =  Object_JuridicalFrom.Id --Object_From.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN ObjectString AS ObjectString_PlaceOf
+                                   ON ObjectString_PlaceOf.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                                  AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()   
+         
       WHERE Movement.Id = inMovementId
         AND Movement.DescId = zc_Movement_IncomeAsset();
      
