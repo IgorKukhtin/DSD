@@ -5346,9 +5346,6 @@ inherited MainForm: TMainForm
       object N33: TMenuItem
         Caption = '-'
       end
-      object miPaidKind: TMenuItem
-        Action = actPaidKind
-      end
       object miBank: TMenuItem
         Action = actBank
       end
@@ -5388,12 +5385,6 @@ inherited MainForm: TMainForm
       object miPriceList: TMenuItem
         Action = actPriceList
       end
-      object N55: TMenuItem
-        Action = actGoodsPlatform
-      end
-      object miTradeMark: TMenuItem
-        Action = actTradeMark
-      end
       object N119: TMenuItem
         Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
         object miGoodsGroup: TMenuItem
@@ -5406,17 +5397,38 @@ inherited MainForm: TMainForm
           Action = actGoodsGroupStat
         end
       end
-      object miGoodsTag: TMenuItem
-        Action = actGoodsTag
-      end
-      object miGoods_List: TMenuItem
-        Action = actGoods_List
-      end
-      object miGoods: TMenuItem
-        Action = actGoods
-      end
-      object miMeasure: TMenuItem
-        Action = actMeasure
+      object N126: TMenuItem
+        Caption = #1058#1086#1074#1072#1088#1099
+        object miGoods_List: TMenuItem
+          Action = actGoods_List
+        end
+        object miGoods: TMenuItem
+          Action = actGoods
+        end
+        object miMeasure: TMenuItem
+          Action = actMeasure
+        end
+        object N128: TMenuItem
+          Caption = '-'
+        end
+        object miGoodsKind: TMenuItem
+          Action = actGoodsKind
+        end
+        object miGoodsKindWeighing: TMenuItem
+          Action = actGoodsKindWeighing
+        end
+        object N127: TMenuItem
+          Caption = '-'
+        end
+        object N55: TMenuItem
+          Action = actGoodsPlatform
+        end
+        object miTradeMark: TMenuItem
+          Action = actTradeMark
+        end
+        object miGoodsTag: TMenuItem
+          Action = actGoodsTag
+        end
       end
       object N48: TMenuItem
         Action = actGoodsByGoodsKind
@@ -5424,20 +5436,8 @@ inherited MainForm: TMainForm
       object N98: TMenuItem
         Action = actGoodsByGoodsKind_Order
       end
-      object miGoodsKind: TMenuItem
-        Action = actGoodsKind
-      end
-      object miGoodsKindWeighing: TMenuItem
-        Action = actGoodsKindWeighing
-      end
       object miBox: TMenuItem
         Action = actBox
-      end
-      object N128: TMenuItem
-        Action = actPartionGoods
-      end
-      object N129: TMenuItem
-        Action = actPartionRemains
       end
       object N1: TMenuItem
         Caption = '-'
@@ -5642,34 +5642,46 @@ inherited MainForm: TMainForm
         object N121: TMenuItem [2]
           Caption = '-'
         end
-        object N108: TMenuItem [3]
+        object miPaidKind: TMenuItem [3]
+          Action = actPaidKind
+        end
+        object N108: TMenuItem [4]
           Action = actDocumentKind
         end
-        object miImportType: TMenuItem [4]
+        object miImportType: TMenuItem [5]
           Action = actImportType
         end
-        object miImportSettings: TMenuItem [5]
+        object miImportSettings: TMenuItem [6]
           Action = actImportSettings
         end
-        object miImportGroup: TMenuItem [6]
+        object miImportGroup: TMenuItem [7]
           Action = actImportGroup
         end
-        object miImportExportLink: TMenuItem [7]
+        object miImportExportLink: TMenuItem [8]
           Action = actImportExportLink
         end
-        object miContactPersonKind: TMenuItem [8]
+        object miContactPersonKind: TMenuItem [9]
           Action = actContactPersonKind
         end
-        object miSetUserDefaults: TMenuItem [9]
+        object miSetUserDefaults: TMenuItem [10]
           Action = actSetUserDefaults
         end
-        object miRouteSorting: TMenuItem [10]
+        object miRouteSorting: TMenuItem [11]
           Action = actRouteSorting
         end
-        object N122: TMenuItem [11]
+        object N122: TMenuItem [12]
           Caption = '-'
         end
-        object N40: TMenuItem [12]
+        object miPartionRemains: TMenuItem [13]
+          Action = actPartionRemains
+        end
+        object miPartionGoods: TMenuItem [14]
+          Action = actPartionGoods
+        end
+        object N132: TMenuItem [15]
+          Caption = '-'
+        end
+        object N40: TMenuItem [16]
           Action = actGlobalConst
         end
       end
@@ -5724,16 +5736,10 @@ inherited MainForm: TMainForm
       object miToolsWeighingTree: TMenuItem [10]
         Action = actToolsWeighingTree
       end
-      object N127: TMenuItem [11]
-        Action = actPartionGoods
-      end
-      object N126: TMenuItem [12]
-        Action = actPartionRemains
-      end
-      object N31: TMenuItem [13]
+      object N31: TMenuItem [11]
         Caption = '-'
       end
-      object miEmail: TMenuItem [14]
+      object miEmail: TMenuItem [12]
         Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1086#1095#1090#1099
         object N104: TMenuItem
           Action = actEmailSettings
@@ -5751,7 +5757,7 @@ inherited MainForm: TMainForm
           Action = actExportKind
         end
       end
-      object N90: TMenuItem [15]
+      object N90: TMenuItem [13]
         Action = actForms
       end
       inherited N116: TMenuItem
@@ -5765,7 +5771,7 @@ inherited MainForm: TMainForm
         inherited miMovementProtocol: TMenuItem [3]
         end
       end
-      object N91: TMenuItem [19]
+      object N91: TMenuItem [17]
         Action = mactHelp
       end
     end
