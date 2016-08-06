@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Movement_Check (Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Movement_Check (Integer, TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Movement_Check (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Check (Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_Check(
     IN inUnitId           Integer  ,  -- Подразделение
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Check(
     IN inDateFinal        TDateTime,  -- Дата окончания
     IN inIsPartion        Boolean,    -- 
     IN inisPartionPrice   Boolean,    -- 
+    IN inisJuridical      Boolean,    -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -103,7 +105,7 @@ BEGIN
                         )
            , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END AS MovementId_Income
                               , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END AS MovementId_find
-                              , MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income
+                              , CASE WHEN inisJuridical = TRUE OR inIsPartion = TRUE THEN MovementLinkObject_From_Income.ObjectId ELSE 0 END  AS JuridicalId_Income
                               , MovementLinkObject_NDSKind_Income.ObjectId                                 AS NDSKindId_Income
                               , tmpData_all.GoodsId
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
@@ -155,7 +157,7 @@ BEGIN
 
                          GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END
                                 , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END
-                                , MovementLinkObject_From_Income.ObjectId
+                                , CASE WHEN inisJuridical = TRUE OR inIsPartion = TRUE THEN MovementLinkObject_From_Income.ObjectId ELSE 0 END
                                 , MovementLinkObject_NDSKind_Income.ObjectId
                                 , tmpData_all.GoodsId
                                 , CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0) = 0 THEN 0 ELSE 1 END

@@ -56,6 +56,8 @@ type
     OurJuridicalName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    cbJuridical: TcxCheckBox;
+    actRefreshJuridical: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

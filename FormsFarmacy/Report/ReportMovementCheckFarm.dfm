@@ -367,12 +367,10 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 42370d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 142
-      EditValue = 42370d
       ExplicitLeft = 142
     end
     inherited cxLabel1: TcxLabel
@@ -469,6 +467,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
       FormName = 'TReport_MovementCheckFarmDialogForm'
       FormNameParam.Value = 'TReport_MovementCheckFarmDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -476,6 +475,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -483,6 +483,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -490,6 +491,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -498,18 +500,21 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inIsPartion'
           Value = 'False'
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inisPartionPrice'
           Value = 'False'
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -535,12 +540,14 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
           Value = 42370d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42370d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -548,10 +555,12 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
           Component = UnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -571,6 +580,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateStart'
@@ -578,6 +588,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateFinal'
@@ -585,18 +596,28 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartion'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisPartionPrice'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisJuridical'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 160
@@ -674,6 +695,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -687,6 +709,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -696,6 +719,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -704,6 +728,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 48
@@ -718,6 +743,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -725,6 +751,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
