@@ -126,10 +126,8 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lfSelect_Object_Unit_byProfitLossDirection () OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -138,6 +136,17 @@ ALTER FUNCTION lfSelect_Object_Unit_byProfitLossDirection () OWNER TO postgres;
  12.11.13                                        * add Object_ProfitLossDirection_View
  21.10.13                                        * err
  26.08.13                                        *
+*/
+
+/*
+select *
+from (
+SELECT a.ProfitLossGroupId as ProfitLossGroupId1, (lfGet_Object_Unit_byProfitLossDirection (a.UnitId)).ProfitLossGroupId as ProfitLossGroupId2
+     , a.ProfitLossDirectionId as ProfitLossDirectionId1, (lfGet_Object_Unit_byProfitLossDirection (a.UnitId)).ProfitLossDirectionId as ProfitLossDirectionId2
+     , a.*
+FROM lfSelect_Object_Unit_byProfitLossDirection ()  as a
+) as aa
+where coalesce (ProfitLossGroupId2, 0) <> coalesce (ProfitLossGroupId1, 0) or coalesce (ProfitLossDirectionId2, 0) <> coalesce (ProfitLossDirectionId1, 0)
 */
 
 -- ÚÂÒÚ
