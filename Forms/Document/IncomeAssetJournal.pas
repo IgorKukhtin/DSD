@@ -85,9 +85,6 @@ type
     cxLabel2: TcxLabel;
     colOperDatePartner: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
     colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;

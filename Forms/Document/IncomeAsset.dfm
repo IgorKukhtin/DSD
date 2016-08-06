@@ -430,7 +430,7 @@ object IncomeAssetForm: TIncomeAssetForm
             Width = 50
           end
           object colGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' ('#1054#1057')'
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1054#1057')'
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -576,6 +576,9 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0

@@ -71,6 +71,7 @@ type
     procedure LoadImportTypeFormTest;
     procedure LoadInfoMoneyFormTest;
     procedure LoadIncomeFormTest;
+    procedure LoadIncomeAssetFormTest;
     procedure LoadInventoryFormTest;
     procedure LoadInvoiceFormTest;
     procedure LoadJuridicalGroupFormTest;
@@ -625,7 +626,10 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
-  //
+
+end;
+procedure TLoadFormTest.LoadIncomeAssetFormTest;
+begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeAssetJournalForm'));
@@ -633,7 +637,6 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetPlace_ObjectForm');
-
 end;
 
 procedure TLoadFormTest.LoadOrderIncomeFormTest;

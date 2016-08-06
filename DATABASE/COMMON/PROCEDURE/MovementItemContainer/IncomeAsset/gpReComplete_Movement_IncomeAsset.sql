@@ -23,7 +23,7 @@ BEGIN
 
      -- Проводим Документ
      PERFORM lpComplete_Movement_IncomeAsset (inMovementId     := inMovementId
-                                        , inUserId         := vbUserId);
+                                            , inUserId         := vbUserId);
 
 END;
 $BODY$

@@ -80,10 +80,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = colTotalSummSpending
         end
         item
@@ -105,18 +101,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colTotalCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -132,10 +116,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = colTotalSummSpending
         end
         item
@@ -152,18 +132,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colTotalSummPVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -675,10 +643,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
       Action = dsdGridToExcel
       Category = 0
     end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
-      Category = 0
-    end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
       Category = 0
@@ -908,21 +872,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
       ImageIndex = 13
       Status = mtDelete
       DataSource = DataSource
-    end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -1319,31 +1268,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
     Left = 576
     Top = 24
   end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Income Asset'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 288
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_IncomeAsset_Print'
     DataSet = PrintHeaderCDS
@@ -1408,13 +1332,6 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = 'True'
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

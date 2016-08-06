@@ -615,9 +615,19 @@ BEGIN
      END IF;
 
      -- проверка - если есть Суммы < 0, то <Ошибка>
-     IF EXISTS (SELECT MovementItemId FROM _tmpItem WHERE tmpOperSumm_Partner < 0 OR OperSumm_Partner < 0 OR OperSumm_PartnerTo < 0)
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE tmpOperSumm_Partner < 0 OR OperSumm_Partner < 0 OR OperSumm_PartnerTo < 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Есть элементы с отрицательной суммой.';
+     END IF;
+     -- проверка - если Товар не определен
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE COALESCE (GoodsId, 0) = 0)
+     THEN
+         IF vbMovementDescId = zc_Movement_IncomeAsset()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определено значение <Название (ОС)>.';
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Не определено значение <Товар>.';
+         END IF;
      END IF;
 
 
