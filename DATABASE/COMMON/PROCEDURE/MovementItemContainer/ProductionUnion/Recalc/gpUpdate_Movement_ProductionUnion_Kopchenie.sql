@@ -28,8 +28,8 @@ BEGIN
 
     -- !!!Удалили, временно пока Пересчет Send здесь!!!
     DROP TABLE _tmpResult ;
-    DROP TABLE _tmpItem;
-    DROP TABLE _tmpItemSumm;
+    DROP TABLE _tmpItem_pr;
+    DROP TABLE _tmpItemSumm_pr;
 
     -- Пересчет, !!!Временно здесь, потом надо будет независимо!!!
     PERFORM lpUpdate_Movement_Send_DocumentKind (inIsUpdate  := TRUE

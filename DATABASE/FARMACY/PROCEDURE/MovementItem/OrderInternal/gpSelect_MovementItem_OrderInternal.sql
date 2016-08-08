@@ -56,7 +56,10 @@ BEGIN
     vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
      
    
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() THEN
+    -- !!!Только для таких документов!!!
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete()
+    THEN
+
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
 
      SELECT Object_Unit_View.JuridicalId
@@ -290,6 +293,10 @@ BEGIN
 
 
     ELSE
+
+
+    -- !!!Только для ДРУГИХ документов!!!
+
 
     PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 

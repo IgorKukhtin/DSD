@@ -83,5 +83,33 @@ $BODY$
  29.07.15                                                                       *
  */
 
+/*
+select  Movement.*
+             -- сохранили свойство <ƒата создани€>
+             , lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), a.Id, mp1.OperDate)
+             -- сохранили свойство <ѕользователь (создание)>
+             , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), a.Id, mp1.UserId)
+
+
+             , lpInsertUpdate_MovementDate (zc_MovementDate_Update(), a.Id, mp2.OperDate)
+             -- сохранили свойство <ѕользователь (создание)>
+             , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), a.Id, mp2.UserId)
+from (
+SELECT Movement.Id, min (MovementProtocol.Id) as id1, max (MovementProtocol.Id) as id2
+FROM Movement
+            LEFT JOIN MovementProtocol on MovementProtocol.MovementId = Movement.Id
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+where Movement.descId = zc_Movement_Send()
+   and MLO_Insert.MovementId is null
+--   and Movement.OperDate < '01.07.2016'
+group by Movement.Id
+) as a
+            LEFT JOIN Movement on Movement.Id = a.Id
+            LEFT JOIN MovementProtocol as mp1  on mp1.Id = a.Id1
+            LEFT JOIN MovementProtocol as mp2  on mp2.Id = a.Id2 and  a.Id1 <> a.Id2
+
+*/
 -- тест
 -- SELECT * FROM lpInsertUpdate_Movement_Send (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

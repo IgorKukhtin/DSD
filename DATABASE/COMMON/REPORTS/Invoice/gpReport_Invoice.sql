@@ -163,7 +163,7 @@ BEGIN
                                                             ON MIContainer.MovementItemId = MovementItem.Id
                                                            AND MIContainer.MovementId     = MovementItem.MovementId
                                                            AND MIContainer.DescId         = zc_MIContainer_Summ()
-                                                           AND MIContainer.MovementDescId = zc_Movement_Income()
+                                                           AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset())
                                                            AND MIContainer.isActive       = FALSE
                       WHERE MIFloat_Income.ValueData IN (SELECT tmpMIInvoice.MovementItemId FROM tmpMIInvoice)
                         AND MIFloat_Income.DescId = zc_MIFloat_MovementItemId()
