@@ -19,24 +19,26 @@ type
     gURL, gService, gPort, gUserName, gPassword, gCardNumber : String;
     gDiscountExternalId : Integer;
     // так криво будем хранить "текущие" параметры-Item
-    gGoodsId : Integer;
-    gPriceSale, gPrice, gChangePercent, gSummChangePercent : Currency;
+    //gGoodsId : Integer;
+    //gPriceSale, gPrice, gChangePercent, gSummChangePercent : Currency;
     //
     // обнулим "нужные" параметры-Item
-    procedure pSetParamItemNull;
+    //procedure pSetParamItemNull;
     // попробуем обновить "нужные" параметры-Main
     procedure pGetDiscountExternal (lDiscountExternalId : Integer; lCardNumber : String);
     // проверка карты + сохраним "текущие" параметры-Main
     function fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string; lDiscountExternalId : Integer) :Boolean;
     // получили Дисконт + сохраним "текущие" параметры-Item
-    function fGetSale (var lMsg : string; var lPrice, lChangePercent, lSummChangePercent : Currency;
-                                        lCardNumber : string; lDiscountExternalId, lGoodsId : Integer; lQuantity, lPriceSale : Currency;
-                                        lGoodsCode : Integer; lGoodsName  : string) :Boolean;
-    // Commit Дисконт
-    function fCommitSale (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
+    //function fGetSale (var lMsg : string; var lPrice, lChangePercent, lSummChangePercent : Currency;
+    //                                    lCardNumber : string; lDiscountExternalId, lGoodsId : Integer; lQuantity, lPriceSale : Currency;
+    //                                    lGoodsCode : Integer; lGoodsName  : string) :Boolean;
+    // Update Дисконт в CDS - по всем "обновим" Дисконт
+    function fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
+    // Commit Дисконт из CDS - по всем
+    function fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
     //
     // update DataSet - еще раз по всем "обновим" Дисконт
-    function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lCardNumber : string; lDiscountExternalId : Integer) : Boolean;
+    //function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
   end;
 
 var
@@ -48,8 +50,81 @@ uses Soap.XSBuiltIns
    , MainCash
    , XMLIntf, XMLDoc, OPToSOAPDomConv;
 
+// для Теста
+procedure SaveToXMLFile_CheckItem(Source : ArrayOfCardCheckItem);
+var
+  i : integer;
+  Converter: IObjConverter;
+  NodeObject: IXMLNode;
+  NodeParent: IXMLNode;
+  NodeRoot: IXMLNode;
+  XML: IXMLDocument;
+  XMLStr: InvString;
+begin
+  XML:= NewXMLDocument;
+  NodeRoot:= XML.AddChild('Root');
+  NodeParent:= NodeRoot.AddChild('Parent');
+  Converter:= TSOAPDomConv.Create(NIL);
+  for i := 0 to Length(Source) - 1 do
+    NodeObject:= Source[i].ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
+
+  XML.SaveToFile('D:\11Item.xml');
+end;
+procedure SaveToXMLFile_CheckItemResult(Source : ArrayOfCardCheckResultItem);
+var
+  i : integer;
+  Converter: IObjConverter;
+  NodeObject: IXMLNode;
+  NodeParent: IXMLNode;
+  NodeRoot: IXMLNode;
+  XML: IXMLDocument;
+  XMLStr: InvString;
+begin
+  XML:= NewXMLDocument;
+  NodeRoot:= XML.AddChild('Root');
+  NodeParent:= NodeRoot.AddChild('Parent');
+  Converter:= TSOAPDomConv.Create(NIL);
+  for i := 0 to Length(Source) - 1 do
+    NodeObject:= Source[i].ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
+
+  XML.SaveToFile('D:\12ItemRes.xml');
+end;
+procedure SaveToXMLFile_ItemCommit(Source : TRemotable);
+var
+      Converter: IObjConverter;
+      NodeObject: IXMLNode;
+      NodeParent: IXMLNode;
+      NodeRoot: IXMLNode;
+      XML: IXMLDocument;
+      XMLStr: InvString;
+begin
+      XML:= NewXMLDocument;
+      NodeRoot:= XML.AddChild('Root');
+      NodeParent:= NodeRoot.AddChild('Parent');
+      Converter:= TSOAPDomConv.Create(NIL);
+      NodeObject:= Source.ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
+      XML.SaveToFile('D:\21ItemCommit.xml');
+end;
+procedure SaveToXMLFile_ItemCommitRes(Source : TRemotable);
+var
+      Converter: IObjConverter;
+      NodeObject: IXMLNode;
+      NodeParent: IXMLNode;
+      NodeRoot: IXMLNode;
+      XML: IXMLDocument;
+      XMLStr: InvString;
+begin
+      XML:= NewXMLDocument;
+      NodeRoot:= XML.AddChild('Root');
+      NodeParent:= NodeRoot.AddChild('Parent');
+      Converter:= TSOAPDomConv.Create(NIL);
+      NodeObject:= Source.ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
+      XML.SaveToFile('D:\22ItemCommitRes.xml');
+end;
+
+
 // update DataSet - еще раз по всем "обновим" Дисконт
-function TDiscountServiceForm.fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lCardNumber : string; lDiscountExternalId : Integer) : Boolean;
+{function TDiscountServiceForm.fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
 var
   GoodsId: Integer;
 begin
@@ -117,7 +192,7 @@ begin
     CheckCDS.EnableControls;
   end;
 
-end;
+end;}
 
 // проверка карты + сохраним "текущие" параметры-Main
 function TDiscountServiceForm.fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string; lDiscountExternalId : Integer) :Boolean;
@@ -138,12 +213,12 @@ begin
       lMsg := (HTTPRIO as CardServiceSoap).checkCard(lCardNumber, lUserName, lPassword);
       Result:= LowerCase(lMsg) = LowerCase('Продажа доступна');
       //
-      if not Result then ShowMessage ('Ошибка.Карта № <' + lCardNumber + '>.' + #10+ #13 + lMsg);
+      if not Result then ShowMessage ('Ошибка <' + lService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + lMsg);
 
   except
         Self.Cursor := crDefault;
         lMsg:='Error';
-        ShowMessage ('Ошибка на сервере.' + #10+ #13
+        ShowMessage ('Ошибка на сервере <' + lURL + '>.' + #10+ #13
         + #10+ #13 + 'Для карты № <' + lCardNumber + '>.');
   end;
   //finally
@@ -206,26 +281,8 @@ begin
      end;
 end;
 
-// для Теста
-procedure SaveToXMLFile_TRemotable(Source : TRemotable);
-var
-      Converter: IObjConverter;
-      NodeObject: IXMLNode;
-      NodeParent: IXMLNode;
-      NodeRoot: IXMLNode;
-      XML: IXMLDocument;
-      XMLStr: InvString;
-begin
-      XML:= NewXMLDocument;
-      NodeRoot:= XML.AddChild('Root');
-      NodeParent:= NodeRoot.AddChild('Parent');
-      Converter:= TSOAPDomConv.Create(NIL);
-      NodeObject:= Source.ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
-      XML.SaveToFile('D:\1.txt');
-end;
-
-// Commit Дисконт
-function TDiscountServiceForm.fCommitSale (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
+// Commit Дисконт из CDS - по всем
+function TDiscountServiceForm.fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
 var
   aSaleRequest : CardSaleRequest;
   SendList : ArrayOfCardSaleRequestItem;
@@ -236,6 +293,7 @@ var
   BarCode_find : String;
   GoodsId : Integer;
   i : Integer;
+  llMsg : String;
 begin
   Result:=false;
   lMsg:='';
@@ -254,32 +312,28 @@ begin
 
   try
     aSaleRequest := CardSaleRequest.Create;
-    Item         := CardSaleRequestItem.Create;
-    ResList      := CardSaleResult.Create;
-    ResItem      := CardSaleResultItem.Create;
     //
     //ИД операции в учетной системе
     aSaleRequest.CheckId := '1';
     //Номер чека
-    aSaleRequest.CheckCode := '1';
+    aSaleRequest.CheckCode := fCheckNumber;
     //Дата/время чека (дата продажи)
     aSaleRequest.CheckDate:= TXSDateTime.Create;
     aSaleRequest.CheckDate.AsDateTime:= now;
     //Код карточки
     aSaleRequest.MdmCode := lCardNumber;
     //Тип продажи (0 коммерческий\1 акционный)
-    aSaleRequest.SaleType := '1'; // ???????
+    aSaleRequest.SaleType := '1'; // Re: Иногда ставят и 0 - когда продажа без карты
 
     //
     i := 1;
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
-
       //
       //Start
       //
-      if lDiscountExternalId > 0
+      if (lDiscountExternalId > 0) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
         with spGet_BarCode do begin
@@ -295,6 +349,7 @@ begin
       if BarCode_find <> '' then
       begin
           try
+            Item         := CardSaleRequestItem.Create;
             //ИД строки в учетной системе
             Item.ItemId:='1';
             //Код карточки
@@ -302,7 +357,7 @@ begin
             //Штрих код товара
             Item.ProductFormCode := BarCode_find;
             //Тип продажи (0 коммерческий\1 акционный)
-            Item.SaleType := '1'; // ???????
+            Item.SaleType := '1'; // Re: Иногда ставят и 0 - когда продажа без карты
 
             //Цена без учета скидки
             Item.PrimaryPrice := TXSDecimal.Create;
@@ -325,45 +380,88 @@ begin
             SetLength(SendList, i);
             SendList[i-1] := Item;
 
-
+            // будет следующий
             i := i + 1;
 
           except
-                ShowMessage ('Ошибка на сервере.' + #10+ #13
+                ShowMessage ('Ошибка при заполнении структуры SendList.' + #10+ #13
                 + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
                 + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
                 //ошибка
                 lMsg:='Error';
-                Result := false;
+                exit;
           end;
-          //finally
 
       end; // if BarCode_find <> ''
-      //
-      //Finish
       //
       CheckCDS.Next;
 
     end; // while
 
-            aSaleRequest.Items := SendList;
-            //SaveToXMLFile_TRemotable(aSaleRequest);//!!!для теста!!!
-            // Отправили запрос
-            ResList := (HTTPRIO as CardServiceSoap).commitCardSale(aSaleRequest, gUserName, gPassword);
-            // Получили результат
-            ResItem := ResList.Items[0];
+
+    //Второй цикл
+
+    // если была хоть одна продажа со штрих-кодом
+    if i > 1 then
+    try
+          //ResList      := CardSaleResult.Create;
+          //ResItem      := CardSaleResultItem.Create;
+
+          //эту инфу и будем отправлять
+          aSaleRequest.Items := SendList;
+
+          //!!!для теста!!!
+          SaveToXMLFile_ItemCommit(aSaleRequest);
+          //!!!для теста!!!
+          // Отправили запрос
+          ResList := (HTTPRIO as CardServiceSoap).commitCardSale(aSaleRequest, gUserName, gPassword);
+          //!!!для теста!!!
+          SaveToXMLFile_ItemCommitRes(ResList);
+          //!!!для теста!!!
+
+
+          // Получили результат - если элементов в результате не будет
+          if (Length(ResList.Items)) = 0 then
+          begin
+            //обработали результат
+            llMsg:= ResList.ResultDescription;
+            lMsg:= lMsg + llMsg;
+            Result:= LowerCase(llMsg) = LowerCase('Продажа доступна');
+            //
+            if not Result
+            then ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
+          end;
+
+          // начало второго цикла - по результату каждого элемента
+          for i := 0 to Length(ResList.Items) - 1 do
+          begin
+
+            // Получили результат - по элементу
+            ResItem := ResList.Items[i];
 
             //обработали результат
-            lMsg:= ResItem.ResultDescription;
-            Result:= LowerCase(lMsg) = LowerCase('Продажа доступна');
+            llMsg:= ResItem.ResultDescription;
+            lMsg:= lMsg + llMsg;
+            Result:= LowerCase(llMsg) = LowerCase('Продажа осуществлена');
 
             if not Result
-            then ShowMessage ('Ошибка.Карта № <' + lCardNumber + '>.' + #10+ #13 + lMsg);
+            then ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
 
-            aSaleRequest := nil;
-            SendList:= nil;
-            Item := nil;
-            ResItem := nil;
+          end;
+
+    except
+        ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13
+        + #10+ #13 + 'Для карты № <' + lCardNumber + '>.');
+        //ошибка
+        lMsg:='Error';
+    end; // if i > 1 // если была хоть одна продажа со штрих-кодом
+
+    // завершили - очистили
+    aSaleRequest.Free;
+    SendList:= nil;
+    Item := nil;
+    ResList := nil;
+    ResItem := nil;
 
   finally
     CheckCDS.Filtered := True;
@@ -374,8 +472,278 @@ begin
 
 end;
 
+// Update Дисконт в CDS - по всем "обновим" Дисконт
+function TDiscountServiceForm.fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
+var
+  GoodsId : Integer;
+  //
+  SendList : ArrayOfCardCheckItem;
+  Item : CardCheckItem;
+  ResList : ArrayOfCardCheckResultItem;
+  ResItem : CardCheckResultItem;
+  //
+  List_GoodsId : TStringList;
+  List_BarCode : TStringList;
+  BarCode_find : String;
+  i, index : Integer;
+  llMsg: String;
+  lQuantity, lPriceSale, lPrice, lChangePercent, lSummChangePercent : Currency;
+
+begin
+  Result:= false;
+  lMsg  := '';
+  //Если пусто - ничего не делаем
+  CheckCDS.DisableControls;
+  CheckCDS.filtered := False;
+  if CheckCDS.IsEmpty then
+  Begin
+    CheckCDS.filtered := true;
+    CheckCDS.EnableControls;
+    exit;
+  End;
+
+  List_GoodsId :=TStringList.Create;
+  List_BarCode :=TStringList.Create;
+
+  //открючаем реакции
+  GoodsId := CheckCDS.FieldByName('GoodsId').asInteger;
+
+  try
+    i := 1;
+    CheckCDS.First;
+    //Первый цикл
+    while not CheckCDS.Eof do
+    begin
+      // на всяк случай - с условием
+      if CheckCDS.FieldByName('PriceSale').asFloat > 0
+      then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
+      else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
+      //
+      if (lDiscountExternalId > 0) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
+      then
+        //поиск Штрих-код
+        with spGet_BarCode do begin
+           ParamByName('inObjectId').Value := lDiscountExternalId;
+           ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+           Execute;
+           BarCode_find := trim (ParamByName('outBarCode').Value);
+        end
+      else
+          BarCode_find := '';
+
+      //если Штрих-код нашелся
+      if BarCode_find <> '' then
+      begin
+          try
+            Item := CardCheckItem.Create;
+            //Код карточки
+            Item.MdmCode := lCardNumber;
+            //Штрих код товара
+            Item.ProductFormCode := BarCode_find;
+            //Тип продажи (0 коммерческий\1 акционный)
+            Item.SaleType := '1'; // Re: Иногда ставят и 0 - когда продажа без карты
+
+            //Предполагаемая цена товара
+            Item.RequestedPrice := TXSDecimal.Create;
+            Item.RequestedPrice.XSToNative(FloatToStr(lPriceSale));
+            //Предполагаемое кол-во товара
+            Item.RequestedQuantity := TXSDecimal.Create;
+            Item.RequestedQuantity.XSToNative(FloatToStr(CheckCDS.FieldByName('Amount').AsFloat));
+            //Предполагаемая сумма за кол-во товара
+            Item.RequestedAmount := TXSDecimal.Create;
+            Item.RequestedAmount.XSToNative(FloatToStr( GetSumm(CheckCDS.FieldByName('Amount').AsFloat, lPriceSale)));
+
+
+            // Подготовили список для отправки
+            SetLength(SendList, i);
+            SendList[i-1] := Item;
+            // будет следующий
+            i := i + 1;
+            // сохраним в список
+            List_GoodsId.Add(CheckCDS.FieldByName('GoodsId').AsString);
+            List_BarCode.Add(BarCode_find);
+
+          except
+                ShowMessage ('Ошибка при заполнении структуры SendList.' + #10+ #13
+                + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                //ошибка
+                lMsg:='Error';
+                exit;
+          end;
+          //finally
+
+      end // if BarCode_find <> ''
+
+      // иначе - обнуляем скидку
+      else begin
+               // на всяк случай - с условием
+               if CheckCDS.FieldByName('PriceSale').asFloat > 0
+               then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
+               else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
+               // Update
+               CheckCDS.Edit;
+               CheckCDS.FieldByName('Price').asCurrency             :=lPriceSale;
+               CheckCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
+               //Рекомендованная скидка в виде % от цены
+               CheckCDS.FieldByName('ChangePercent').asCurrency     :=0;
+               //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+               CheckCDS.FieldByName('SummChangePercent').asCurrency :=0;
+               CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,lPriceSale);
+               CheckCDS.Post;
+           end;
+      //
+      CheckCDS.Next;
+
+    end; // while not CheckCDS.Eof
+
+    //отсортировали, т.к. будем искать
+    List_GoodsId.Sort;
+    List_BarCode.Sort;
+
+
+    //Второй цикл
+
+    // если была хоть одна продажа со штрих-кодом
+    if i > 1 then
+    try
+          //
+          //ResItem := CardCheckResultItem.Create;
+
+          //!!!для теста!!!
+          SaveToXMLFile_CheckItem(SendList);
+          //!!!для теста!!!
+          // Отправили запрос на ВСЕ элементы
+          ResList := (HTTPRIO as CardServiceSoap).checkCardSale(SendList, gUserName, gPassword);
+
+          //!!!для теста!!!
+          SaveToXMLFile_CheckItemResult(ResList);
+          //!!!для теста!!!
+
+          // начало второго цикла - по результату каждого элемента
+          for i := 0 to Length(ResList) - 1 do
+          begin
+
+          // Получили результат - по элементу
+          ResItem := ResList[i];
+
+          //конечно такой код не найдется, но выходить не надо
+          if ResItem.ProductFormCode = ''
+          then // ничего не делаем, хотя надо будет обнулить ВСЕМ элементам скидку
+          else
+          //позиционируем checkCDS для Update
+          if not List_BarCode.Find(ResItem.ProductFormCode,index)
+          then begin ShowMessage('Не найден BarCode в списке - List_BarCode.Find(' + ResItem.ProductFormCode + ')');
+                     lMsg:= 'Error';
+                     exit;
+               end
+          else
+          if not checkCDS.Locate('GoodsId',List_GoodsId[index],[])
+          then begin ShowMessage('Не найден GoodsId - checkCDS.Locate(List_GoodsId[index])');
+                     lMsg:= 'Error';
+                     exit;
+               end;
+
+          //Предполагаемое кол-во товара
+          lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+          // на всяк случай - с условием
+          if CheckCDS.FieldByName('PriceSale').asFloat > 0
+          then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
+          else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
+
+          //обработали результат
+          llMsg:= ResItem.ResultDescription;
+          lMsg:= lMsg + llMsg;
+          Result:= LowerCase(llMsg) = LowerCase('Продажа доступна');
+
+          //получили остальные значения
+          if Result then
+          begin
+               //Рекомендованная скидка в виде % от цены
+               lChangePercent     := ResItem.ResultDiscountPercent;
+               //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+               lSummChangePercent := ResItem.ResultDiscountAmount;
+
+               //!!! расчет Цена - уже со скидкой !!!
+               if lSummChangePercent > 0
+               then
+                   // типа как для кол-ва = 1, может так правильно округлит?
+                   lPrice:= GetSumm(1, (GetSumm(lQuantity, lPriceSale) - lSummChangePercent) / lQuantity)
+               else begin
+                   // тоже типа как для кол-ва = 1, может так правильно округлит?
+                   lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100));
+                   // а еще досчитаем сумму скидки
+                   lSummChangePercent := GetSumm(lQuantity, lPriceSale) - GetSumm(lQuantity, lPrice)
+               end;
+
+               //проверка
+               if lSummChangePercent >= GetSumm(lQuantity, lPriceSale) then
+               begin
+                    ShowMessage ('Ошибка.Сумма скидки  <' + FloatToStr(lSummChangePercent) + '> не может быть больше чем <' + FloatToStr(GetSumm(lQuantity, lPriceSale)) + '>.'
+                    + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                    + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                    //ошибка
+                    lMsg:=lMsg + 'Error';
+                    //
+                    lPrice             := lPriceSale;
+                    lChangePercent     := 0;
+                    lSummChangePercent := 0;
+               end;
+          end
+          else begin
+                    lPrice             := lPriceSale;
+                    lChangePercent     := 0;
+                    lSummChangePercent := 0;
+                    //
+                    ShowMessage ('Ошибка <' + gService + '>.Карта № <' + gCardNumber + '>.' + #10+ #13 + llMsg);
+               end;
+
+
+           //Update
+           CheckCDS.Edit;
+           CheckCDS.FieldByName('Price').asCurrency             :=lPrice;
+           CheckCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
+           //Рекомендованная скидка в виде % от цены
+           CheckCDS.FieldByName('ChangePercent').asCurrency     :=lChangePercent;
+           //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+           CheckCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
+           CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity,lPrice);
+           CheckCDS.Post;
+
+          end; // for i := 0 to Length(ResList) - 1
+
+    except
+        ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13
+        + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+        + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+        //ошибка
+        lMsg:='Error';
+    end; // if i > 1 // если была хоть одна продажа со штрих-кодом
+
+    // завершили - очистили
+    SendList:= nil;
+    Item := nil;
+    ResList := nil;
+    ResItem := nil;
+
+  finally
+    CheckCDS.Filtered := True;
+    if GoodsId <> 0 then
+      CheckCDS.Locate('GoodsId',GoodsId,[]);
+    CheckCDS.EnableControls;
+    //
+    List_GoodsId.Free;
+    List_BarCode.Free;
+  end;
+
+  // Вернули есть ли ошибка
+  Result := lMsg = '';
+
+end;
+
+
 // получили Дисконт + сохраним "текущие" параметры-Item
-function TDiscountServiceForm.fGetSale (var lMsg : string; var lPrice, lChangePercent, lSummChangePercent : Currency;
+{function TDiscountServiceForm.fGetSale (var lMsg : string; var lPrice, lChangePercent, lSummChangePercent : Currency;
                                         lCardNumber : string; lDiscountExternalId, lGoodsId : Integer; lQuantity, lPriceSale : Currency;
                                         lGoodsCode : Integer; lGoodsName  : string) :Boolean;
 var
@@ -424,7 +792,7 @@ begin
     //Штрих код товара
     Item.ProductFormCode := BarCode_find;
     //Тип продажи (0 коммерческий\1 акционный)
-    Item.SaleType := '1'; // ???????
+    Item.SaleType := '1'; // Re: Иногда ставят и 0 - когда продажа без карты
     //Предполагаемая цена товара
     Item.RequestedPrice := TXSDecimal.Create;
     Item.RequestedPrice.XSToNative(FloatToStr(lPriceSale));
@@ -487,9 +855,9 @@ begin
          gSummChangePercent := lSummChangePercent;
     end
     else
-        ShowMessage ('Ошибка.Карта № <' + gCardNumber + '>.' + #10+ #13 + lMsg);
+        ShowMessage ('Ошибка <' + gService + '>.Карта № <' + gCardNumber + '>.' + #10+ #13 + lMsg);
   except
-        ShowMessage ('Ошибка на сервере.' + #10+ #13
+        ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13
         + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
         + #10+ #13 + 'Товар (' + IntToStr(lGoodsCode) + ')' + lGoodsName);
         //ошибка, НЕ сохранится в CheckCDS (хотя не всегда)
@@ -499,10 +867,10 @@ begin
   //finally
     Item := nil;
     ResItem := nil;
-end;
+end;}
 
 // обнулим "нужные" параметры-Item
-procedure TDiscountServiceForm.pSetParamItemNull;
+{procedure TDiscountServiceForm.pSetParamItemNull;
 begin
   //очистили
   gGoodsId           := 0;
@@ -510,6 +878,6 @@ begin
   gPrice             := 0;
   gChangePercent     := 0;
   gSummChangePercent := 0;
-end;
+end;}
 
 end.

@@ -472,12 +472,12 @@ begin
             // обнулим, пусть фармацевт начнет заново
             FormParams.ParamByName('DiscountExternalId').Value:= 0;
             // обнулим "нужные" параметры-Item
-            DiscountServiceForm.pSetParamItemNull;
+            //DiscountServiceForm.pSetParamItemNull;
          end;
 
     end;
-    // update DataSet - еще раз по всем "обновим" Дисконт
-    DiscountServiceForm.fUpdateCDS_Item(CheckCDS, lMsg, FormParams.ParamByName('DiscountCardNumber').Value, FormParams.ParamByName('DiscountExternalId').Value);
+    // Update Дисконт в CDS - по всем "обновим" Дисконт
+    DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
     //***20.07.16
     lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
     lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
@@ -560,7 +560,7 @@ begin
     Begin
 
       if (FormParams.ParamByName('DiscountExternalId').Value > 0)
-      then fErr:= not DiscountServiceForm.fCommitSale (CheckCDS, lMsg , FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value)
+      then fErr:= not DiscountServiceForm.fCommitCDS_Discount (CheckNumber, CheckCDS, lMsg , FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value)
       else fErr:= false;
 
       if fErr = true
@@ -738,7 +738,7 @@ begin
   FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
   FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
   // update DataSet - еще раз по всем "обновим" Дисконт
-  DiscountServiceForm.fUpdateCDS_Item(CheckCDS, lMsg, FormParams.ParamByName('DiscountCardNumber').Value, FormParams.ParamByName('DiscountExternalId').Value);
+  DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
   //
   pnlDiscount.Visible    := DiscountExternalId > 0;
   lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
@@ -1123,6 +1123,7 @@ begin
              then lPriceSale_bySoldRegim := CheckCDS.FieldByName('PriceSale').asCurrency
              else lPriceSale_bySoldRegim := CheckCDS.FieldByName('Price').asCurrency;
        end;
+  {
   //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
   lQuantity := fGetCheckAmountTotal (lGoodsId_bySoldRegim, ceAmount.Value);
   //если установлен Проект (дисконтные карты) ***20.07.16
@@ -1146,13 +1147,13 @@ begin
               else exit // !!!выход ???и еще раз ругнуться
          else // все хорошо и сохраним скидку
   end
-  else begin
+  else} begin
          lPrice             := lPriceSale_bySoldRegim;
          lPriceSale         := lPriceSale_bySoldRegim;
          lChangePercent     := 0;
          lSummChangePercent := 0;
          // обнулим "нужные" параметры-Item
-         DiscountServiceForm.pSetParamItemNull;
+         //DiscountServiceForm.pSetParamItemNull;
   end; // else если установлен Проект (дисконтные карты) ***20.07.16
   //
   //
@@ -1185,12 +1186,20 @@ begin
       CheckCDS.EnableControls;
     end;
     UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').asInteger,ceAmount.Value);
+    //Update Дисконт в CDS - по всем "обновим" Дисконт
+    if FormParams.ParamByName('DiscountExternalId').Value > 0
+    then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+
     CalcTotalSumm;
   End
   else
   if not SoldRegim AND (ceAmount.Value < 0) then
   Begin
     UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger,ceAmount.Value);
+    //Update Дисконт в CDS - по всем "обновим" Дисконт
+    if FormParams.ParamByName('DiscountExternalId').Value > 0
+    then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+
     CalcTotalSumm;
   End
   else
@@ -1698,6 +1707,7 @@ begin
       if (AGoodsId = 0) or (CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) then
       Begin
         CheckCDS.Edit;
+        {
         //сначала допишем скидку, и изменим цену, надеюсь она сохранена правильно ***20.07.16
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and (AGoodsId <> 0)
           // На всяк случай условие
@@ -1710,7 +1720,7 @@ begin
             checkCDS.FieldByName('ChangePercent').asCurrency     :=DiscountServiceForm.gChangePercent;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=DiscountServiceForm.gSummChangePercent;
         end
-        else begin
+        else} begin
             // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
             if checkCDS.FieldByName('PriceSale').asCurrency > 0
             then checkCDS.FieldByName('Price').asCurrency        := checkCDS.FieldByName('PriceSale').asCurrency;

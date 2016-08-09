@@ -1,7 +1,6 @@
- -- Function: gpInsertUpdate_MovementItem_Income()
+-- Function: gpInsertUpdate_MovementItem_Income()
 
--- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <строка документа>
@@ -9,12 +8,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
-    IN inPriceSale           TFloat    , -- Цена без скидки
-    IN inChangePercent       TFloat    , -- % Скидки
-    IN inSummChangePercent   TFloat    , -- Сумма Скидки
+--    IN inPriceSale           TFloat   DEFAULT 0,  -- Цена без скидки
+--    IN inChangePercent       TFloat   DEFAULT 0,  -- % Скидки
+--    IN inSummChangePercent   TFloat   DEFAULT 0,  -- Сумма Скидки
     -- IN inDiscountExternalId  Integer  DEFAULT 0,  -- Проект дисконтных карт
     -- IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inSession             TVarChar DEFAULT ''  -- сессия пользователя
 )
 AS
 $BODY$
@@ -24,6 +23,8 @@ $BODY$
    DECLARE vbReserve TFloat;
    DECLARE vbRemains TFloat;
    DECLARE vbIsInsert Boolean;
+
+   DECLARE inPriceSale TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
@@ -55,15 +56,15 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      
     -- !!!замена!!!
-    IF COALESCE (inPriceSale, 0) = 0 AND COALESCE (inChangePercent, 0) = 0 AND COALESCE (inSummChangePercent, 0) = 0 THEN inPriceSale:= inPrice; END IF;
+    inPriceSale:= inPrice;
     -- сохранили свойство <Цена без скидки>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inPriceSale);
 
     -- сохранили свойство <% Скидки>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
+    -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
 
     -- сохранили свойство <Сумма Скидки>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, inSummChangePercent);
+    -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, inSummChangePercent);
 
     -- сохранили связь с <Дисконтная карта> + здесь же и сформировали <Дисконтная карта>
     -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountCard(), ioId, lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardNumber, inUserId:= vbUserId));
@@ -77,7 +78,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -86,20 +86,4 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer
  03.11.2015                                                                      *
  07.08.2015                                                                      *
  26.05.15                        *
-*/
-
-/*
-select lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), MovementItem.Id, MIFloat_Price.ValueData)
-, *
-from Movement
-     inner join MovementItem on MovementId = Movement.Id and MovementItem.DescId = zc_MI_Master()
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-where Movement.descId = zc_Movement_Check()
-and Movement.OperDate >= '01.08.2016'
-and MIFloat_PriceSale.MovementItemId is null
 */

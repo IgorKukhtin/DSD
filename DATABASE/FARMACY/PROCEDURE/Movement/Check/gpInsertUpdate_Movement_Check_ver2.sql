@@ -1,20 +1,20 @@
 -- Function: gpInsertUpdate_Movement_Check()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar);
   
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
-    IN inDate                TDateTime , --Дата/время документа
-    IN inCashRegister        TVarChar  , --Серийник кассового аппарата
-    IN inPaidType            Integer   , --тип оплаты
-    IN inManagerId           Integer   , --Менеджер
-    IN inBayer               TVarChar  , --Покупатель ВИП 
-    IN inFiscalCheckNumber   TVarChar  , --Номер фискального чека
-    IN inNotMCS              Boolean  ,  --Не участвует в расчете НТЗ
-    IN inDiscountExternalId  Integer  DEFAULT 0,  -- Проект дисконтных карт
-    IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
-    IN inSession             TVarChar DEFAULT ''  -- сессия пользователя
+    IN inDate                TDateTime , -- Дата/время документа
+    IN inCashRegister        TVarChar  , -- Серийник кассового аппарата
+    IN inPaidType            Integer   , -- тип оплаты
+    IN inManagerId           Integer   , -- Менеджер
+    IN inBayer               TVarChar  , -- Покупатель ВИП 
+    IN inFiscalCheckNumber   TVarChar  , -- Номер фискального чека
+    IN inNotMCS              Boolean   , -- Не участвует в расчете НТЗ
+    IN inDiscountExternalId  Integer   , -- Проект дисконтных карт
+    IN inDiscountCardNumber  TVarChar  , -- № Дисконтной карты
+    IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$

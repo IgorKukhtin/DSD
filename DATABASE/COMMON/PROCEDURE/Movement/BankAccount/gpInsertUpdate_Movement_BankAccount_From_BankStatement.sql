@@ -14,6 +14,40 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount_From_BankS());
 
 
+     -- проверка
+     IF EXISTS (SELECT 1
+                FROM Movement
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
+                                                  ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
+                                                 AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
+                     INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
+                                                     AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                     LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                                    ON MLM_Invoice.MovementId = Movement.Id
+                                                   AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                WHERE Movement.DescId = zc_Movement_BankStatementItem()
+                  AND Movement.ParentId = inMovementId
+                  AND MLM_Invoice.MovementChildId IS NULL
+               )
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <№ док. Счет>.'
+            , lfGet_Object_ValueData
+              ((SELECT MovementLinkObject_InfoMoney.ObjectId
+                FROM Movement
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
+                                                  ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
+                                                 AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
+                     INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
+                                                     AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                     LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                                    ON MLM_Invoice.MovementId = Movement.Id
+                                                   AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                WHERE Movement.DescId = zc_Movement_BankStatementItem()
+                  AND Movement.ParentId = inMovementId
+                  AND MLM_Invoice.MovementChildId IS NULL
+               ));
+     END IF;
+
      -- распроводим Документы
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount())
      THEN
@@ -166,6 +200,13 @@ BEGIN
                                 , inUserId     := vbUserId)
      FROM Movement
      WHERE ParentId = inMovementId AND DescId = zc_Movement_BankStatementItem();
+
+
+if inSession = '5'
+then
+    RAISE EXCEPTION 'inSession ';
+    -- 'Повторите действие через 3 мин.'
+end if;
 
 
 END;

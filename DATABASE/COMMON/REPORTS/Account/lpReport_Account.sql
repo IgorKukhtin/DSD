@@ -76,6 +76,8 @@ BEGIN
                     )
                    ) OR inIsMovement
                 OR (inProfitLossId <> 0 AND inBusinessId <> 0)-- 8371 - ћ€со 
+                OR (inAccountGroupId = zc_Enum_AccountGroup_110000()) -- “ранзит
+                -- OR (inAccountDirectionId = zc_Enum_AccountDirection_110200()) -- деньги в пути
                   ;
 
     --
@@ -179,9 +181,15 @@ BEGIN
              , COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId) AS InfoMoneyId
              , ContainerLO_PaidKind.ObjectId  AS PaidKindId
              , ContainerLO_Contract.ObjectId  AS ContractId
-             , COALESCE (ContainerLO_Cash.ObjectId, COALESCE (ContainerLO_BankAccount.ObjectId, COALESCE (ContainerLO_Juridical.ObjectId, COALESCE (ContainerLO_Unit.ObjectId, COALESCE (ContainerLO_Car.ObjectId, COALESCE (ContainerLO_Member.ObjectId
-                       , COALESCE (ContainerLO_Juridical_inf.ObjectId, COALESCE (ContainerLO_Unit_inf.ObjectId, COALESCE (ContainerLO_Car_inf.ObjectId, ContainerLO_Member_inf.ObjectId))))))))) AS ObjectId_Direction
-             , COALESCE (ContainerLO_Goods.ObjectId, ContainerLO_Goods_inf.ObjectId) AS ObjectId_Destination
+             , CASE WHEN tmpReport_All.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                         THEN tmpReport_All.ObjectId_inf
+                    ELSE COALESCE (ContainerLO_Cash.ObjectId, COALESCE (ContainerLO_BankAccount.ObjectId, COALESCE (ContainerLO_Juridical.ObjectId, COALESCE (ContainerLO_Unit.ObjectId, COALESCE (ContainerLO_Car.ObjectId, COALESCE (ContainerLO_Member.ObjectId
+                                 , COALESCE (ContainerLO_Juridical_inf.ObjectId, COALESCE (ContainerLO_Unit_inf.ObjectId, COALESCE (ContainerLO_Car_inf.ObjectId, ContainerLO_Member_inf.ObjectId)))))))))
+               END AS ObjectId_Direction
+             , CASE WHEN tmpReport_All.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                         THEN COALESCE (ContainerLO_Cash_inf.ObjectId, ContainerLO_BankAccount_inf.ObjectId)
+                    ELSE COALESCE (ContainerLO_Goods.ObjectId, ContainerLO_Goods_inf.ObjectId)
+               END AS ObjectId_Destination
 
              , SUM (tmpReport_All.SummStart)  AS SummStart
              , SUM (tmpReport_All.SummIn)     AS SummIn
@@ -280,7 +288,7 @@ BEGIN
                           , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END :: TVarChar  AS InvNumber
                           , CASE WHEN vbIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDateTime AS OperDate
 
-                          , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer ELSE 0 END :: Integer            AS ObjectId_inf
+                          , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer    ELSE 0 END :: Integer AS ObjectId_inf
                           , CASE WHEN vbIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END :: Integer AS MoneyPlaceId_inf
 
                           , MILinkObject_Route.ObjectId  AS RouteId_inf
@@ -408,6 +416,12 @@ BEGIN
             LEFT JOIN ContainerLinkObject AS ContainerLO_Member_inf ON ContainerLO_Member_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                    AND ContainerLO_Member_inf.DescId = zc_ContainerLinkObject_Member()
                                                                    AND ContainerLO_Member_inf.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_Cash_inf ON ContainerLO_Cash_inf.ContainerId = tmpReport_All.ContainerId_inf
+                                                                 AND ContainerLO_Cash_inf.DescId = zc_ContainerLinkObject_Cash()
+                                                                 AND ContainerLO_Cash_inf.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_BankAccount_inf ON ContainerLO_BankAccount_inf.ContainerId = tmpReport_All.ContainerId_inf
+                                                                        AND ContainerLO_BankAccount_inf.DescId = zc_ContainerLinkObject_BankAccount()
+                                                                        AND ContainerLO_BankAccount_inf.ObjectId > 0
 
             LEFT JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -426,9 +440,16 @@ BEGIN
                , COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId)
                , ContainerLO_PaidKind.ObjectId
                , ContainerLO_Contract.ObjectId
-               , COALESCE (ContainerLO_Cash.ObjectId, COALESCE (ContainerLO_BankAccount.ObjectId, COALESCE (ContainerLO_Juridical.ObjectId, COALESCE (ContainerLO_Unit.ObjectId, COALESCE (ContainerLO_Car.ObjectId, COALESCE (ContainerLO_Member.ObjectId
-                         , COALESCE (ContainerLO_Juridical_inf.ObjectId, COALESCE (ContainerLO_Unit_inf.ObjectId, COALESCE (ContainerLO_Car_inf.ObjectId, ContainerLO_Member_inf.ObjectId)))))))))
-               , COALESCE (ContainerLO_Goods.ObjectId, ContainerLO_Goods_inf.ObjectId)
+               , CASE WHEN tmpReport_All.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                           THEN tmpReport_All.ObjectId_inf
+                      ELSE COALESCE (ContainerLO_Cash.ObjectId, COALESCE (ContainerLO_BankAccount.ObjectId, COALESCE (ContainerLO_Juridical.ObjectId, COALESCE (ContainerLO_Unit.ObjectId, COALESCE (ContainerLO_Car.ObjectId, COALESCE (ContainerLO_Member.ObjectId
+                                   , COALESCE (ContainerLO_Juridical_inf.ObjectId, COALESCE (ContainerLO_Unit_inf.ObjectId, COALESCE (ContainerLO_Car_inf.ObjectId, ContainerLO_Member_inf.ObjectId)))))))))
+                 END
+               , CASE WHEN tmpReport_All.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                           THEN COALESCE (ContainerLO_Cash_inf.ObjectId, ContainerLO_BankAccount_inf.ObjectId)
+                      ELSE COALESCE (ContainerLO_Goods.ObjectId, ContainerLO_Goods_inf.ObjectId)
+                 END
+
 
                , tmpReport_All.MovementDescId
                , tmpReport_All.OperDate
@@ -470,8 +491,20 @@ BEGIN
 
        LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
 
-       LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (tmpReport.ObjectId_Direction, CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_inf ELSE tmpReport.MoneyPlaceId_inf END)
-       LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = COALESCE (tmpReport.ObjectId_Destination, CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.MoneyPlaceId_inf ELSE tmpReport.ObjectId_inf END)
+       LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id
+                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) -- AND tmpReport.ObjectId_Destination > 0 AND tmpReport.ObjectId_Direction > 0
+                                     THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Direction ELSE /*tmpReport.ObjectId_Direction*/ tmpReport.ObjectId_Destination END
+                                ELSE COALESCE (tmpReport.ObjectId_Direction
+                                             , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_inf ELSE tmpReport.MoneyPlaceId_inf END
+                                              )
+                           END
+       LEFT JOIN Object AS Object_Destination ON Object_Destination.Id
+                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) -- AND tmpReport.ObjectId_Destination > 0 AND tmpReport.ObjectId_Direction > 0
+                                     THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Destination ELSE /*tmpReport.ObjectId_Destination*/ tmpReport.ObjectId_Direction END
+                                ELSE COALESCE (tmpReport.ObjectId_Destination
+                                             , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.MoneyPlaceId_inf ELSE tmpReport.ObjectId_inf END
+                                              )
+                           END
 
        LEFT JOIN ObjectDesc AS ObjectDesc_Direction ON ObjectDesc_Direction.Id = Object_Direction.DescId
        LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
@@ -503,4 +536,4 @@ ALTER FUNCTION lpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 0, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2016', inEndDate:= '01.12.2016', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 0, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());

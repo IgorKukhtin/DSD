@@ -117,6 +117,7 @@ BEGIN
                                                AND tmpResult.GoodsKindId     = tmpMaster.GoodsKindId
                                                AND tmpResult.Price_original  = tmpMaster.Price_original
                        WHERE tmpMaster.Amount <> COALESCE (tmpResult.Amount, 0)
+                         AND tmpMaster.Price_original <> 0
                        LIMIT 1
                       );
 
