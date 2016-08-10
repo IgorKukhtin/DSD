@@ -350,6 +350,12 @@ BEGIN
      END IF;
 
 
+     -- !!!пересчитали!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, vbExtraChargesPercent - vbDiscountPercent)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = ioId
+       AND MovementItem.DescId = zc_MI_Master();
+
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId

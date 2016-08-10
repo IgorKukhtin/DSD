@@ -209,6 +209,7 @@ type
     MovementItemId_sale: TcxGridDBColumn;
     MovementId_sale: TcxGridDBColumn;
     isError: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1013,7 +1013,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementDescName_order;ObjectByName;OperDate;InvNumber'
+          IndexFieldNames = 'MovementDescName_order;OperDate;ObjectByName;InvNumber'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1022,12 +1022,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -1035,6 +1037,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -1042,12 +1045,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = LocationGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupId'
           Value = Null
           Component = GoodsGroupGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -1055,6 +1060,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -1062,16 +1068,19 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = GoodsGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isSumm_branch'
           Value = Null
           Component = cbSumm_branch
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1082,6 +1091,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       FormName = 'TReport_GoodsDialogForm'
       FormNameParam.Value = 'TReport_GoodsDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1089,6 +1099,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1096,6 +1107,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
@@ -1104,6 +1116,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -1112,6 +1125,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupId'
@@ -1119,6 +1133,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = GoodsGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -1127,6 +1142,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupId'
@@ -1134,6 +1150,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = GuidesUnitGroup
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -1142,6 +1159,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationId'
@@ -1149,6 +1167,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = LocationGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -1157,6 +1176,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartner'
@@ -1164,6 +1184,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = cbPartner
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1187,6 +1208,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1194,6 +1216,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitGroupId'
@@ -1201,6 +1224,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = GuidesUnitGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLocationId'
@@ -1208,6 +1232,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = LocationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -1215,6 +1240,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1222,6 +1248,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartner'
@@ -1229,6 +1256,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = cbPartner
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -1336,6 +1364,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1345,6 +1374,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1353,6 +1383,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 712
     Top = 27
@@ -1362,6 +1393,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     LookupControl = edLocation
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1372,6 +1404,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1380,6 +1413,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 48
@@ -1389,6 +1423,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     LookupControl = edUnitGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -1400,6 +1435,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1408,6 +1444,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 384
   end
@@ -1416,6 +1453,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1426,6 +1464,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1434,6 +1473,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 792
   end

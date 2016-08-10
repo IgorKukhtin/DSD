@@ -68,10 +68,9 @@ BEGIN
                                       AND (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
                                LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
-                               INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                       ON MovementLinkObject_PaidKind.MovementId = Movement_Invoice.Id
-                                      AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                      AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                            ON MovementLinkObject_PaidKind.MovementId = Movement_Invoice.Id
+                                                           AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                                LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
                                LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
@@ -79,14 +78,14 @@ BEGIN
                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()   
 
                                LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Invoice.Id
-                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                                         ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Invoice.Id
+                                                        AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
                                LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                     ON MovementFloat_VATPercent.MovementId =  Movement_Invoice.Id
-                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                                                        ON MovementFloat_VATPercent.MovementId =  Movement_Invoice.Id
+                                                       AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
                                LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                     ON MovementFloat_ChangePercent.MovementId =  Movement_Invoice.Id
-                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                                        ON MovementFloat_ChangePercent.MovementId =  Movement_Invoice.Id
+                                                       AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                                
 
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Invoice.Id
@@ -106,6 +105,7 @@ BEGIN
                                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                            WHERE Movement_Invoice.DescId = zc_Movement_Invoice()
                              AND Movement_Invoice.StatusId = zc_Enum_Status_Complete()
+                             AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                             )
        , tmpListInvoice AS (SELECT DISTINCT
                                    tmpMIInvoice.MovementId

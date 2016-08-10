@@ -242,8 +242,8 @@ BEGIN
 
      -- сохранили свойство <zc_MIFloat_SummCard>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), MovementItemId_to, SummCardRecalc)
-           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), MovementItemId_to, PersonalServiceListId_from)
-     FROM _tmpMI_Recalc
+           -- , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), MovementItemId_to, PersonalServiceListId_from)
+     FROM (SELECT _tmpMI_Recalc.MovementItemId_to, /*_tmpMI_Recalc.PersonalServiceListId_from,*/ SUM (_tmpMI_Recalc.SummCardRecalc) AS SummCardRecalc FROM _tmpMI_Recalc GROUP BY _tmpMI_Recalc.MovementItemId_to /*, _tmpMI_Recalc.PersonalServiceListId_from*/) AS _tmpMI_Recalc
      WHERE MovementItemId_to <> 0;
 
      -- для остальных переносится в текущий MovementItemId

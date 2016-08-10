@@ -197,6 +197,7 @@ type
     edJuridicalFrom: TcxButtonEdit;
     SaleChoiceGuides: TdsdGuides;
     actSaleJournalChoice: TOpenChoiceForm;
+    ChangePercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

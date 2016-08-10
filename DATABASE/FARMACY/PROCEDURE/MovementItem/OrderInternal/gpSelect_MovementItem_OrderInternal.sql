@@ -135,7 +135,9 @@ BEGIN
            , tmpMI.Amount   ::TFloat                                AS Amount
            , COALESCE(MIFloat_Summ.ValueData, 0)  ::TFloat          AS Summ
            , COALESCE (tmpMI.isErased, FALSE)     ::Boolean         AS isErased
-           , COALESCE (MIFloat_Price.ValueData,0) ::TFloat          AS Price
+           , COALESCE (MIFloat_Price.ValueData,0) ::TFloat          AS Price            -- !!!на самом деле здесь zc_MIFloat_PriceFrom!!!
+           , COALESCE (MIFloat_JuridicalPrice.ValueData,0) ::TFloat AS SuperFinalPrice
+
            , tmpMI.MinimumLot            
            , tmpMI.PartionGoodsDate
            , MIString_Comment.ValueData                             AS Comment
@@ -178,9 +180,13 @@ BEGIN
            
        FROM  _tmpOrderInternal_MI AS tmpMI
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Price                                           
-                                        ON MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.DescId = zc_MIFloat_PriceFrom() -- !!!не ошибка!!!
                                        AND MIFloat_Price.MovementItemId = tmpMI.MovementItemId
+            LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice               
+                                        ON MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                                       AND MIFloat_JuridicalPrice.MovementItemId = tmpMI.MovementItemId
+
             LEFT JOIN MovementItemFloat AS MIFloat_Summ                                           
                                         ON MIFloat_Summ.DescId = zc_MIFloat_Summ()
                                        AND MIFloat_Summ.MovementItemId = tmpMI.MovementItemId
@@ -614,6 +620,34 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
  15.07.14                                                       *
  15.07.14                                                       *
  03.07.14                                                       *
+*/
+
+/*
+-- вот так хотели залить инфу, но сказали что не надо :)
+with tmp1 as (
+select distinct MovementItem.*
+, coalesce (MIFloat_Price.ValueData, 0) AS Price
+, coalesce (MIFloat_JuridicalPrice.ValueData, 0) AS JuridicalPrice
+FROM Movement
+        inner JOIN MovementBoolean AS MB_Document
+               ON MB_Document.MovementId = Movement.Id
+              AND MB_Document.DescId = zc_MovementBoolean_Document()
+              AND MB_Document.ValueData = TRUE
+
+                            JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                             AND MovementItem.DescId     = zc_MI_Child()
+                                             AND MovementItem.isErased   = FALSE
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price                                           
+                                        ON MIFloat_Price.DescId = zc_MIFloat_Price()
+                                       AND MIFloat_Price.MovementItemId = MovementItem.Id
+            LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice                                           
+                                        ON MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                                       AND MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
+
+where Movement.DescId = zc_Movement_OrderInternal()
+)
+, tmp2 as (select distinct from tmp1)
 */
 
 -- тест
