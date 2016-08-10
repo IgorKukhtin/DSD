@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , PriceSale TFloat
              , ChangePercent TFloat
              , SummChangePercent TFloat
+             , List_UID TVarChar
               )
 AS
 $BODY$
@@ -31,23 +32,21 @@ BEGIN
 
     RETURN QUERY
         WITH 
-            tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId)   
-          , tmpMov AS(SELECT Movement.Id
-                      FROM tmpStatus
-                        LEFT JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
-                                          AND Movement.DescId = zc_Movement_Check()
-                                          
-                        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                     AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
-
+            tmpMov AS(SELECT Movement.Id
+                      FROM 
+                        Movement
                         INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                    ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                                                  AND MovementBoolean_Deferred.ValueData = True 
-       
-                      )
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                       WHERE Movement.DescId = zc_Movement_Check()
+                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                         AND MovementBoolean_Deferred.ValueData = True 
+                         AND (MovementLinkObject_Unit.ObjectId = vbUnitId 
+                              OR 
+                              vbUnitId = 0))
 
        SELECT
              MovementItem.Id          AS Id,
@@ -62,9 +61,10 @@ BEGIN
            , MIFloat_PriceSale.ValueData         AS PriceSale
            , MIFloat_ChangePercent.ValueData     AS ChangePercent
            , MIFloat_SummChangePercent.ValueData AS SummChangePercent
+           , MIString_UID.ValueData              AS List_UID
        FROM tmpMov
           INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
-                                 AND MovementItem.isErased   = false
+                                 
           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -87,7 +87,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                 ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
-      ;
+          LEFT JOIN MovementItemString AS MIString_UID
+                                       ON MIString_UID.MovementItemId = MovementItem.Id
+                                      AND MIString_UID.DescId = zc_MIString_UID()
+     WHERE MovementItem.isErased = false;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -97,6 +100,7 @@ ALTER FUNCTION gpSelect_MovementItem_CheckDeferred (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А
+ 10.08.16                                                                     * MIString_UID.ValueData AS List_UID + оптимизация
  08.04.16         *
  03.07.15                                                                       * 
  25.05.15                         *
@@ -104,5 +108,5 @@ ALTER FUNCTION gpSelect_MovementItem_CheckDeferred (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_CheckDeferred ('2')
+-- SELECT * FROM gpSelect_MovementItem_CheckDeferred ('3')
 -- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

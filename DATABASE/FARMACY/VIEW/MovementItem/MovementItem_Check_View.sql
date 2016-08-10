@@ -19,6 +19,7 @@ CREATE OR REPLACE VIEW MovementItem_Check_View AS
            , MIFloat_ChangePercent.ValueData     AS ChangePercent
            , MIFloat_SummChangePercent.ValueData AS SummChangePercent
            , MIFloat_AmountOrder.ValueData       AS AmountOrder
+           , MIString_UID.ValueData              AS List_UID
            -- , Object_DiscountCard.Id              AS DiscountCardId
            -- , Object_DiscountCard.ValueData       AS DiscountCardName
 
@@ -38,6 +39,9 @@ CREATE OR REPLACE VIEW MovementItem_Check_View AS
             LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
                                         ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+            LEFT JOIN MovementItemString AS MIString_UID
+                                         ON MIString_UID.MovementItemId = MovementItem.Id
+                                        AND MIString_UID.DescId = zc_MIString_UID()
             /*LEFT JOIN MovementItemLinkObject AS MILO_DiscountCard
                                              ON MILO_DiscountCard.MovementItemId = MovementItem.Id
                                             AND MILO_DiscountCard.DescId = zc_MILinkObject_DiscountCard()
@@ -54,7 +58,8 @@ ALTER TABLE MovementItem_Check_View
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 10.08.16                                                       * MIString_UID.ValueData AS LIST_UID            
  26.05.15                        *
 */
 

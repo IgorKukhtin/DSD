@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , AmountOrder TFloat
              -- , DiscountCardId Integer
              -- , DiscountCardName TVarChar
+             , List_UID TVarChar
              , isErased Boolean
               )
 AS
@@ -46,6 +47,7 @@ BEGIN
            , MovementItem.AmountOrder
            -- , MovementItem.DiscountCardId
            -- , MovementItem.DiscountCardName
+           , MovementItem.List_UID
            , MovementItem.isErased
 
        FROM MovementItem_Check_View AS MovementItem 
@@ -59,10 +61,11 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А
+ 10.08.16                                                                      * + MovementItem.LIST_UID
  03.08.16         *
  03.07.15                                                                       * Добавлен НДС
  25.05.15                         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Check (inMovementId:= 25173, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_Check (inMovementId:= 2333612, inSession:= '9818')

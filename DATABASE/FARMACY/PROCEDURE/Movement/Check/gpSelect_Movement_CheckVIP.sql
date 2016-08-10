@@ -40,9 +40,26 @@ BEGIN
      vbUnitId := vbUnitKey::Integer;
 
      RETURN QUERY
-       WITH tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId
-                          UNION
-                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE)
+       WITH tmpMov AS(SELECT Movement.Id
+                      FROM 
+                        Movement
+                        INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                       WHERE Movement.DescId = zc_Movement_Check()
+                         AND (Movement.StatusId = zc_Enum_Status_UnComplete()
+                             OR
+                             (Movement.StatusId = zc_Enum_Status_Erased() AND inIsErased = TRUE)) 
+                         AND MovementBoolean_Deferred.ValueData = True 
+                         AND (MovementLinkObject_Unit.ObjectId = vbUnitId 
+                              OR 
+                              vbUnitId = 0))
+       --tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId
+       --                   UNION
+       --                   SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE)
          
        SELECT Movement.Id
             , Movement.InvNumber
@@ -60,22 +77,21 @@ BEGIN
 	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
 	    , Object_DiscountCard.ValueData              AS DiscountCardNumber
 
-       FROM tmpStatus
-            LEFT JOIN Movement ON Movement.StatusId = tmpStatus.StatusId 
-                              AND Movement.DescId = zc_Movement_Check() 
+       FROM tmpMov
+            LEFT JOIN Movement ON Movement.Id = tmpMov.Id 
+                               
                               
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                        AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
+                                        
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
    	    INNER JOIN MovementBoolean AS MovementBoolean_Deferred
 		                       ON MovementBoolean_Deferred.MovementId = Movement.Id
 		                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-				      AND COALESCE(MovementBoolean_Deferred.ValueData,False) = TRUE
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -117,10 +133,11 @@ ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 10.08.16                                                                     * оптимизация
  07.04.16         * ушли от вьюхи
  12.09.2015                                                                   *[17:23] Кухтин Игорь: вторую кнопку закрыть и перекинуть их в запрос ВИП
  04.07.15                                                                     * 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_CheckVIP (inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_CheckVIP (inIsErased := FALSE, inSession:= '3')
