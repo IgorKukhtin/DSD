@@ -10,8 +10,8 @@ inherited MainCashForm: TMainCashForm
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 781
-  ExplicitHeight = 450
+  ExplicitWidth = 773
+  ExplicitHeight = 447
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1479,10 +1479,16 @@ inherited MainCashForm: TMainCashForm
       item
         Name = 'isErased'
         DataType = ftBoolean
+      end
+      item
+        Name = 'LIST_UID'
+        DataType = ftString
+        Size = 50
       end>
     IndexDefs = <>
     Params = <>
     StoreDefs = True
+    BeforePost = CheckCDSBeforePost
     Left = 208
     Top = 256
   end
